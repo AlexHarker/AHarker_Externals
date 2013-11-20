@@ -1,0 +1,35 @@
+
+// Xcode target configuration settings 
+
+PRODUCT_NAME = $TARGET_NAME
+
+// Paths
+
+C74SUPPORT = $(SRCROOT)/../../AH_Max5_Support/c74support
+HEADER_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes" "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(SRCROOT)/../../AH_MaxMSP_Headers/FFT"
+FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes" 
+
+// Special Files
+
+GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
+INFOPLIST_FILE = ../../AH_Externals_Info.plist
+
+// Per architecture and deployment settings
+
+SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk
+
+GCC_VERSION = 4.0
+
+MACOSX_DEPLOYMENT_TARGET = 10.4
+
+ARCHS = ppc i386 
+
+// Static Configuration (don't change these)
+
+WRAPPER_EXTENSION = mxo
+DEPLOYMENT_LOCATION = NO
+GENERATE_PKGINFO_FILE = YES
+
+// Turn off C99 to minimise time spent working in Visual Studio
+
+WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement -Werror

@@ -1,0 +1,513 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		B8E15A1D11E33C7500FA3CFA /* randomvals msp + max */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals msp + max" */;
+			buildPhases = (
+			);
+			dependencies = (
+				B8E15A2211E33C7F00FA3CFA /* PBXTargetDependency */,
+				B8E15A2411E33C7F00FA3CFA /* PBXTargetDependency */,
+			);
+			name = "randomvals msp + max";
+			productName = "randomvals msp + max";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		B818C1B010E8363F00049E56 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AE10E8363F00049E56 /* MaxAPI.framework */; };
+		B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
+		B8DBD5060EDEB1DC00049F0E /* randomvals.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* randomvals.c */; };
+		B8E15A0D11E33C5500FA3CFA /* randomvals.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* randomvals.c */; };
+		B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AE10E8363F00049E56 /* MaxAPI.framework */; };
+		B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B8E15A2111E33C7F00FA3CFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "randomvals~";
+		};
+		B8E15A2311E33C7F00FA3CFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8E15A0911E33C5500FA3CFA;
+			remoteInfo = randomvals;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		B818C1AE10E8363F00049E56 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
+		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		B81F571D0D2422E0000D5E50 /* randomvals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "randomvals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8DE14DC0EB46B030050BDFE /* randomvals.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = randomvals.c; sourceTree = "<group>"; };
+		B8E15A1711E33C5500FA3CFA /* randomvals.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randomvals.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D01CCCD0486CAD60068D4B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
+				B818C1B010E8363F00049E56 /* MaxAPI.framework in Frameworks */,
+				B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E15A0E11E33C5500FA3CFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */,
+				B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */,
+				B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* plus~ */ = {
+			isa = PBXGroup;
+			children = (
+				B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */,
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = "plus~";
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				B818C1AE10E8363F00049E56 /* MaxAPI.framework */,
+				B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */,
+				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77ADFE841716C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				B8DE14DC0EB46B030050BDFE /* randomvals.c */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B81F571D0D2422E0000D5E50 /* randomvals~.mxo */,
+				B8E15A1711E33C5500FA3CFA /* randomvals.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8D01CCC70486CAD60068D4B7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E15A0A11E33C5500FA3CFA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8D01CCC60486CAD60068D4B7 /* randomvals~ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "randomvals~" */;
+			buildPhases = (
+				8D01CCC70486CAD60068D4B7 /* Headers */,
+				8D01CCC90486CAD60068D4B7 /* Resources */,
+				8D01CCCB0486CAD60068D4B7 /* Sources */,
+				8D01CCCD0486CAD60068D4B7 /* Frameworks */,
+				8D01CCCF0486CAD60068D4B7 /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "randomvals~";
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = MSPExternal;
+			productReference = B81F571D0D2422E0000D5E50 /* randomvals~.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+		B8E15A0911E33C5500FA3CFA /* randomvals */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8E15A1311E33C5500FA3CFA /* Build configuration list for PBXNativeTarget "randomvals" */;
+			buildPhases = (
+				B8E15A0A11E33C5500FA3CFA /* Headers */,
+				B8E15A0B11E33C5500FA3CFA /* Resources */,
+				B8E15A0C11E33C5500FA3CFA /* Sources */,
+				B8E15A0E11E33C5500FA3CFA /* Frameworks */,
+				B8E15A1211E33C5500FA3CFA /* Rez */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = randomvals;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = MSPExternal;
+			productReference = B8E15A1711E33C5500FA3CFA /* randomvals.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "randomvals~" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D01CCC60486CAD60068D4B7 /* randomvals~ */,
+				B8E15A0911E33C5500FA3CFA /* randomvals */,
+				B8E15A1D11E33C7500FA3CFA /* randomvals msp + max */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D01CCC90486CAD60068D4B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E15A0B11E33C5500FA3CFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		8D01CCCF0486CAD60068D4B7 /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E15A1211E33C5500FA3CFA /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D01CCCB0486CAD60068D4B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8DBD5060EDEB1DC00049F0E /* randomvals.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E15A0C11E33C5500FA3CFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8E15A0D11E33C5500FA3CFA /* randomvals.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B8E15A2211E33C7F00FA3CFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D01CCC60486CAD60068D4B7 /* randomvals~ */;
+			targetProxy = B8E15A2111E33C7F00FA3CFA /* PBXContainerItemProxy */;
+		};
+		B8E15A2411E33C7F00FA3CFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8E15A0911E33C5500FA3CFA /* randomvals */;
+			targetProxy = B8E15A2311E33C7F00FA3CFA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0FFBC541097463A900D78707 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		0FFBC542097463A900D78707 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DEBUGGING_SYMBOLS = default;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		0FFBC543097463A900D78707 /* Default */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+			};
+			name = Default;
+		};
+		0FFBC545097463A900D78707 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+			};
+			name = Development;
+		};
+		0FFBC546097463A900D78707 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+			};
+			name = Deployment;
+		};
+		0FFBC547097463A900D78707 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+			};
+			name = Default;
+		};
+		B8E15A1411E33C5500FA3CFA /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		B8E15A1511E33C5500FA3CFA /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DEBUGGING_SYMBOLS = default;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		B8E15A1611E33C5500FA3CFA /* Default */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
+			buildSettings = {
+				GCC_ALTIVEC_EXTENSIONS = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_TRIGRAPHS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_UNROLL_LOOPS = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				OTHER_CFLAGS = "";
+			};
+			name = Default;
+		};
+		B8E15A1E11E33C7500FA3CFA /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "randomvals msp + max";
+			};
+			name = Development;
+		};
+		B8E15A1F11E33C7500FA3CFA /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "randomvals msp + max";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		B8E15A2011E33C7500FA3CFA /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "randomvals msp + max";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "randomvals~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0FFBC541097463A900D78707 /* Development */,
+				0FFBC542097463A900D78707 /* Deployment */,
+				0FFBC543097463A900D78707 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		0FFBC544097463A900D78707 /* Build configuration list for PBXProject "randomvals~" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0FFBC545097463A900D78707 /* Development */,
+				0FFBC546097463A900D78707 /* Deployment */,
+				0FFBC547097463A900D78707 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		B8E15A1311E33C5500FA3CFA /* Build configuration list for PBXNativeTarget "randomvals" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8E15A1411E33C5500FA3CFA /* Development */,
+				B8E15A1511E33C5500FA3CFA /* Deployment */,
+				B8E15A1611E33C5500FA3CFA /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals msp + max" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8E15A1E11E33C7500FA3CFA /* Development */,
+				B8E15A1F11E33C7500FA3CFA /* Deployment */,
+				B8E15A2011E33C7500FA3CFA /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
