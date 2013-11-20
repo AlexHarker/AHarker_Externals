@@ -1,10 +1,15 @@
 {
 	"patcher" : 	{
 		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 6,
+			"minor" : 1,
+			"revision" : 4,
+			"architecture" : "x86"
+		}
+,
 		"rect" : [ 108.0, 80.0, 511.0, 231.0 ],
 		"bglocked" : 0,
-		"defrect" : [ 108.0, 80.0, 511.0, 231.0 ],
-		"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
@@ -12,12 +17,16 @@
 		"gridonopen" : 0,
 		"gridsize" : [ 15.0, 15.0 ],
 		"gridsnaponopen" : 0,
+		"statusbarvisible" : 2,
 		"toolbarvisible" : 1,
 		"boxanimatetime" : 200,
 		"imprint" : 0,
 		"enablehscroll" : 1,
 		"enablevscroll" : 1,
 		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
 		"boxes" : [ 			{
 				"box" : 				{
 					"fontname" : "Arial",
@@ -29,10 +38,15 @@
 					"numoutlets" : 0,
 					"patcher" : 					{
 						"fileversion" : 1,
+						"appversion" : 						{
+							"major" : 6,
+							"minor" : 1,
+							"revision" : 4,
+							"architecture" : "x86"
+						}
+,
 						"rect" : [ 50.0, 94.0, 264.0, 148.0 ],
 						"bglocked" : 0,
-						"defrect" : [ 50.0, 94.0, 264.0, 148.0 ],
-						"openrect" : [ 0.0, 0.0, 0.0, 0.0 ],
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
 						"default_fontface" : 0,
@@ -40,12 +54,16 @@
 						"gridonopen" : 0,
 						"gridsize" : [ 15.0, 15.0 ],
 						"gridsnaponopen" : 0,
+						"statusbarvisible" : 2,
 						"toolbarvisible" : 1,
 						"boxanimatetime" : 200,
 						"imprint" : 0,
 						"enablehscroll" : 1,
 						"enablevscroll" : 1,
 						"devicewidth" : 0.0,
+						"description" : "",
+						"digest" : "",
+						"tags" : "",
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -91,8 +109,8 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-3", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ],
 									"source" : [ "obj-2", 0 ]
 								}
 
@@ -100,8 +118,8 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-2", 0 ],
+									"disabled" : 0,
 									"hidden" : 0,
-									"midpoints" : [  ],
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -111,13 +129,16 @@
 ,
 					"patching_rect" : [ 420.0, 135.0, 69.0, 20.0 ],
 					"saved_object_attributes" : 					{
-						"fontname" : "Arial",
-						"default_fontsize" : 12.0,
-						"globalpatchername" : "",
-						"fontface" : 0,
-						"fontsize" : 12.0,
 						"default_fontface" : 0,
-						"default_fontname" : "Arial"
+						"default_fontname" : "Arial",
+						"default_fontsize" : 12.0,
+						"description" : "",
+						"digest" : "",
+						"fontface" : 0,
+						"fontname" : "Arial",
+						"fontsize" : 12.0,
+						"globalpatchername" : "",
+						"tags" : ""
 					}
 ,
 					"text" : "p see_also"
@@ -148,7 +169,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 196.0, 194.0, 101.0, 18.0 ]
+					"patching_rect" : [ 196.0, 194.0, 106.0, 18.0 ],
+					"text" : "e0:f8:47:1b:83:8c"
 				}
 
 			}
@@ -156,11 +178,12 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 11.595187,
+					"frgb" : 0.0,
 					"id" : "obj-17",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 10.0, 98.0, 156.0, 20.0 ],
+					"patching_rect" : [ 10.0, 98.0, 156.0, 19.0 ],
 					"text" : "bang to return MAC address"
 				}
 
@@ -199,8 +222,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 196.0, 130.0, 80.0, 20.0 ],
-					"text" : "MACaddress"
+					"patching_rect" : [ 196.0, 130.0, 76.0, 20.0 ],
+					"text" : "macaddress"
 				}
 
 			}
@@ -213,7 +236,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 359.0, 162.0, 55.0, 20.0 ],
+					"patching_rect" : [ 359.0, 162.0, 55.0, 19.0 ],
 					"text" : "autohelp"
 				}
 
@@ -223,13 +246,13 @@
 					"fontface" : 3,
 					"fontname" : "Arial",
 					"fontsize" : 20.871338,
-					"frgb" : [ 0.93, 0.93, 0.97, 1.0 ],
+					"frgb" : 0.0,
 					"id" : "obj-4",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 10.0, 8.0, 485.0, 30.0 ],
-					"text" : "MACaddress",
+					"text" : "macaddress",
 					"textcolor" : [ 0.93, 0.93, 0.97, 1.0 ],
 					"varname" : "autohelp_top_title"
 				}
@@ -239,7 +262,7 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 12.754705,
-					"frgb" : [ 0.93, 0.93, 0.97, 1.0 ],
+					"frgb" : 0.0,
 					"id" : "obj-5",
 					"maxclass" : "comment",
 					"numinlets" : 1,
@@ -255,13 +278,14 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 11.595187,
+					"frgb" : 0.0,
 					"id" : "obj-6",
 					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 10.0, 57.0, 495.0, 33.0 ],
-					"text" : "MACaddress is an object for obtaining the MAC address of any wireless interface to provide a unique identifier for the host computer.",
+					"patching_rect" : [ 10.0, 57.0, 495.0, 32.0 ],
+					"text" : "macaddress is an object for obtaining the MAC address of any wireless interface to provide a unique identifier for the host computer.",
 					"varname" : "autohelp_top_description"
 				}
 
@@ -283,12 +307,13 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "int" ],
-					"patching_rect" : [ 319.045441, 22.0, 180.954559, 14.666666 ],
-					"presentation_rect" : [ 0.0, 0.0, 180.954559, 14.666666 ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 319.045471, 22.0, 177.435791, 14.249397 ],
+					"presentation_rect" : [ 0.0, 0.0, 177.435791, 14.249397 ],
 					"spacing_x" : 0.0,
 					"spacing_y" : 0.0,
-					"text" : "open MACaddress reference",
-					"textcolor" : [ 0.283, 0.365, 0.488, 1.0 ],
+					"text" : "open macaddress reference",
+					"textcolor" : [ 0.27, 0.35, 0.47, 1.0 ],
 					"textoncolor" : [ 0.27, 0.35, 0.47, 1.0 ],
 					"textovercolor" : [ 0.4, 0.5, 0.65, 1.0 ],
 					"underline" : 1,
@@ -301,11 +326,12 @@
 					"fontface" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 11.595187,
+					"frgb" : 0.0,
 					"id" : "obj-79",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 364.0, 166.0, 100.0, 20.0 ],
+					"patching_rect" : [ 364.0, 166.0, 100.0, 19.0 ],
 					"text" : "See Also:",
 					"varname" : "autohelp_see_title"
 				}
@@ -321,8 +347,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "", "" ],
-					"patching_rect" : [ 364.0, 186.0, 130.0, 20.0 ],
-					"types" : [  ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 364.0, 186.0, 130.0, 19.0 ],
 					"varname" : "autohelp_see_menu"
 				}
 
@@ -361,8 +387,8 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-9", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ],
 					"source" : [ "obj-13", 0 ]
 				}
 
@@ -370,8 +396,8 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-18", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ],
 					"source" : [ "obj-16", 0 ]
 				}
 
@@ -379,6 +405,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-18", 0 ],
+					"disabled" : 0,
 					"hidden" : 1,
 					"midpoints" : [ 117.5, 187.5, 205.5, 187.5 ],
 					"source" : [ "obj-19", 0 ]
@@ -388,8 +415,8 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-11", 0 ],
+					"disabled" : 0,
 					"hidden" : 1,
-					"midpoints" : [  ],
 					"source" : [ "obj-80", 1 ]
 				}
 
@@ -397,11 +424,16 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-16", 0 ],
+					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [  ],
 					"source" : [ "obj-9", 0 ]
 				}
 
+			}
+ ],
+		"dependency_cache" : [ 			{
+				"name" : "macaddress.mxo",
+				"type" : "iLaX"
 			}
  ]
 	}
