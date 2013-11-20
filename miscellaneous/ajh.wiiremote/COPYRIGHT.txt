@@ -1,4 +1,6 @@
-Max porting by Masayuki Akamatsu
+ajh.wiiremote by Alex Harker
+Copyright (c) 2010-2013 by Alex Harker
+based on aka.wiiremote by Masayuki Akamatsu
 Copyright (c) 2006-2007, Masayuki Akamatsu
 Based on "DarwiinRemote" by Hiroaki Kimura
 Copyright (c) 2006, Hiroaki Kimura
