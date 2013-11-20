@@ -232,7 +232,7 @@ void OBJNAME_FIRST(_dsp)(OBJNAME_SECOND(t_) *x, t_signal **sp, short *count)
 		
 		routine += 3;
 		
-#ifndef USE_F32_VEC_ARRAY
+#ifdef USE_F32_VEC_ARRAY
 		// Make temporary array for array-based vector routines
 		
 		if (routine != 3)
@@ -581,7 +581,6 @@ void OBJNAME_FIRST(_dsp64)(OBJNAME_SECOND(t_) *x, t_object *dsp64, short *count,
 				x->temp_memory = ALIGNED_MALLOC(maxvectorsize * sizeof(double));
 #endif
 		}
-			
 #endif
 			
 		switch (routine)
