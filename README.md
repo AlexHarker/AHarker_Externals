@@ -25,7 +25,7 @@ A brief overview of some areas addressed:
 * utility objects
 * SIMD versions of 35 basic MSP objects
 
-The AHarker Externals are licensed freely for non-commercial use (see _Docs_License_.rtf for details of the specifics of licensing for particular objects). At this time it is not possible to license in a less restrictive way due to some current dependencies. I intend to remove these dependencies for the next major release.
+The AHarker Externals are licensed freely for non-commercial use (see \_Docs\_License\_ for details of the specifics of licensing for particular objects). At this time it is not possible to license in a less restrictive way due to some current dependencies. I intend to remove these dependencies for the next major release.
 
 Portions of this work have been supported by the Arts and Humanities Research Council, and the HISSTools Project at the University of Huddersfield.
 
