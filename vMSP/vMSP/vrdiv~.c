@@ -14,9 +14,9 @@
 
 // Object and function naming
 
-#define OBJNAME_STR "vdiv~"
-#define OBJNAME_FIRST(a) vdiv ## a
-#define OBJNAME_SECOND(a) a ## vdiv
+#define OBJNAME_STR "vrdiv~"
+#define OBJNAME_FIRST(a) vrdiv ## a
+#define OBJNAME_SECOND(a) a ## vrdiv
 
 // [The reverse of divide]
 
