@@ -52,7 +52,7 @@ typedef struct _randomvals
 void *randomvals_new ();
 void randomvals_free (t_randomvals *x);
 void randomvals_assist (t_randomvals *x, void *b, long m, long a, char *s);
-void randomvals_list (t_randomvals *x, t_symbol *msg, short argc, t_atom *argv);
+void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
 
 #ifdef MSP_VERSION
 
@@ -64,12 +64,12 @@ void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sam
 
 #else
 
-void randomvals_int (t_randomvals *x, long in);
+void randomvals_int (t_randomvals *x, t_atom_long value);
 
 #endif
 
 
-int main (void)
+int C74_EXPORT main (void)
 {
 	
 #ifdef MSP_VERSION
@@ -145,7 +145,7 @@ void randomvals_free(t_randomvals *x)
 }
 
 
-void randomvals_list (t_randomvals *x, t_symbol *msg, short argc, t_atom *argv)
+void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double *means = x->means;
 	double *devs = x->devs;
@@ -364,7 +364,7 @@ void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sam
 
 #else
 
-void randomvals_int (t_randomvals *x, long in)
+void randomvals_int (t_randomvals *x, t_atom_long value)
 {		
 	t_rand_gen *gen = &x->gen;
 	
@@ -378,7 +378,7 @@ void randomvals_int (t_randomvals *x, long in)
 	long i;
 	long num_params = x->num_params;
 	
-	if (in >= 2)
+	if (value >= 2)
 	{
 		// Summed windowed gaussians random distribution
 		

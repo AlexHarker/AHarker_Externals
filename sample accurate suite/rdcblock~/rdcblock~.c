@@ -6,8 +6,6 @@
  *
  *	There are two reset modes, one that zeros the memory, another that resets to the current input value.
  *
- *  rdcblock~ is heavily based on dcblock~ from the PeRColate objects by Dan Trueman and R. Luke DuBois. ( http://www.music.columbia.edu/PeRColate/ ).
- *
  *	Copyright 2010 Alex Harker. All rights reserved.
  *
  */
@@ -29,12 +27,12 @@ typedef struct _rdcblock
 	double in_mem;
 	double y;
 	
-	long mode;
+	t_atom_long mode;
 	
 } t_rdcblock;
 
 
-void *rdcblock_new (long mode);
+void *rdcblock_new (t_atom_long mode);
 void rdcblock_free (t_rdcblock *x);
 void rdcblock_assist (t_rdcblock *x, void *b, long m, long a, char *s);
 
@@ -47,7 +45,7 @@ void rdcblock_perform_inval64 (t_rdcblock *x, t_object *dsp64, double **ins, lon
 void rdcblock_dsp64 (t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("rdcblock~",
 				(method)rdcblock_new,
@@ -68,7 +66,7 @@ int main (void)
 }
 
 
-void *rdcblock_new(long mode)
+void *rdcblock_new(t_atom_long mode)
 {
     t_rdcblock *x = (t_rdcblock *)object_alloc(this_class);
     

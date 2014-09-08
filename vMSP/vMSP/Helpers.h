@@ -1,16 +1,17 @@
 
 
 #include <AH_VectorOps.h>
+#include <ext.h>
 
 
 // Nan Handling Array
 
-unsigned long long zero_bits_64 = 0x000000000000000ULL;
-unsigned long zero_bits_32 = 0x00000000UL;
-unsigned long long nan_mask_64 = 0x7FF0000000000000ULL;
-unsigned long nan_mask_32 = 0x7F800000UL;
-unsigned long long inf_mask_64 = 0x7FFFFFFFFFFFFFFFULL;
-unsigned long inf_mask_32 = 0x7FFFFFFFUL;
+t_uint64 zero_bits_64 = 0x000000000000000U;
+t_uint32 zero_bits_32 = 0x00000000U;
+t_uint64 nan_mask_64 = 0x7FF0000000000000U;
+t_uint32 nan_mask_32 = 0x7F800000U;
+t_uint64 inf_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+t_uint32 inf_mask_32 = 0x7FFFFFFFU;
 
 vFloat v_zero_32 = {0.f, 0.f, 0.f, 0.f};
 vFloat v_nan_mask_32;
@@ -34,14 +35,14 @@ v_nan_mask_32 = float2vector(*(float *)&nan_mask_32);
 
 static __inline float nan_fix_scalar_32 (float in)
 {
-	unsigned long in_ulong = *((unsigned long *) (&in));
+	t_uint32 in_ulong = *((t_uint32 *) (&in));
 	return ((in_ulong & 0x7F800000UL) == 0x7F800000UL) && ((in_ulong & 0x007FFFFFUL) != 0) ? 0.f : in;
 }
 
 
 static __inline double nan_fix_scalar_64 (double in)
 {
-	unsigned long long in_ulong = *((unsigned long long *) (&in));
+	t_uint64 in_ulong = *((t_uint64 *) (&in));
 	return ((in_ulong & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) && ((in_ulong & 0x000FFFFFFFFFFFFFULL) != 0) ? 0.0 : in;
 }
 
@@ -63,7 +64,7 @@ static __inline void nan_fix_array_32(float *out, float *in, long length)
 	
 	// N.B. we can assume that there are an exact number of vectors
 	
-	if (((long) in % 16) && ((long) out % 16) )
+	if (((t_ptr_uint) in % 16) && ((t_ptr_uint) out % 16) )
 	{
 		for (; length > 0; length -= 4)
 		{
@@ -112,7 +113,7 @@ static __inline void mul_const_array_32(float *out, float *in, long length, vFlo
 	
 	// N.B. we can assume that there are an exact number of vectors
 	
-	if (((long) in % 16) && ((long) out % 16) )
+	if (((t_ptr_uint) in % 16) && ((t_ptr_uint) out % 16) )
 	{
 		for (; length > 0; length -= 4)
 			*v_out++ = F32_VEC_MUL_OP(constant, *v_in++);
@@ -153,7 +154,7 @@ static __inline void mul_add_const_array_32(float *out, float *in, long length, 
 	
 	// N.B. we can assume that there are an exact number of vectors
 	
-	if (((long) in % 16) && ((long) out % 16) )
+	if (((t_ptr_uint) in % 16) && ((t_ptr_uint) out % 16) )
 	{
 		for (; length > 0; length -= 4)
 			*v_out++ = F32_VEC_ADD_OP(add, F32_VEC_MUL_OP(mul, *v_in++));

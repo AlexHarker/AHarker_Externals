@@ -31,7 +31,7 @@ typedef struct _tsah
 } t_tsah;
 
 
-void *tsah_new (long num_outlets);
+void *tsah_new (t_atom_long num_outlets);
 void tsah_free (t_tsah *x);
 void tsah_assist (t_tsah *x, void *b, long m, long a, char *s);
 
@@ -45,13 +45,13 @@ void tsah_perform_multiple64_unroll (t_tsah *x, t_object *dsp64, double **ins, l
 void tsah_dsp64 (t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("tsah~",
 				(method)tsah_new,
 				(method)tsah_free,
 				sizeof(t_tsah), 
-						   NULL,
+                NULL,
 				A_DEFLONG, 
 				0);
 	
@@ -66,7 +66,7 @@ int main (void)
 }
 
 
-void *tsah_new (long num_outlets)
+void *tsah_new (t_atom_long num_outlets)
 {	
 	long i;
 	
@@ -162,8 +162,8 @@ void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
 	{
 		for (i = 0; i < x->num_outlets; i++)
 		{
-			x->sig_ins[i] = sp[i]->s_vec;
-			x->sig_outs[i] = sp[x->num_outlets + i + 1]->s_vec;
+			x->sig_ins[i] = (float *) sp[i]->s_vec;
+			x->sig_outs[i] = (float *) sp[x->num_outlets + i + 1]->s_vec;
 		}
 			 
 		dsp_add(tsah_perform_multiple, 3, sp[x->num_outlets]->s_vec, sp[0]->s_n, x);

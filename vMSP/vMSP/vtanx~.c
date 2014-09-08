@@ -44,28 +44,28 @@ static __inline void tan_array_64(double *out, double *in, long length)
 // Op functions
 
 #ifdef F32_VEC_TAN_OP
-__inline vFloat tan_vec_32 (vFloat a)
+static __inline vFloat tan_vec_32 (vFloat a)
 {
 	vFloat temp = F32_VEC_TAN_OP(a);
 	return F32_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline float tan_scalar_32 (float a)
+static __inline float tan_scalar_32 (float a)
 {
 	float temp = tanf(a);
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
 
 #ifdef F64_VEC_TAN_OP
-__inline vDouble tan_vec_64 (vDouble a)
+static __inline vDouble tan_vec_64 (vDouble a)
 {
 	vDouble temp = F64_VEC_TAN_OP(a);
 	return F64_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline double tan_scalar_64 (float a)
+static __inline double tan_scalar_64 (float a)
 {
 	double temp = tan(a);
 	return F64_SCALAR_NAN_FIX_OP(temp);

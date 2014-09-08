@@ -797,10 +797,12 @@ void dynamicserial_loadpatch (t_dynamicserial *x, long index, t_symbol *patch_na
 	for (i = 0; i < argc; i++) 
 		patch_space_ptr->x_argv[i] = argv[i];
 	
-	// Compile the dspchain in case dsp is on
-	
-	dynamicserial_dsp_internal(patch_space_ptr, x->last_vec_size, x->last_samp_rate);
-	
+    // Compile the dspchain in case dsp is on
+	// FIX - do this twice as hack for gen~ patchers...
+    
+	dynamicserial_dsp_internal (patch_space_ptr, x->last_vec_size, x->last_samp_rate);
+	dynamicserial_dsp_internal (patch_space_ptr, x->last_vec_size, x->last_samp_rate);
+    
 	// The patch is valid and ready to go
 	
 	patch_space_ptr->patch_valid = 1;
@@ -1306,7 +1308,7 @@ void dynamicserial_dsp_internal (t_patchspace *patch_space_ptr, long vec_size, l
 	
 	// Recompile 
 	
-	patch_space_ptr->the_dspchain = dspchain_compile(patch_space_ptr->the_patch, vec_size, samp_rate);	
+	patch_space_ptr->the_dspchain = dspchain_compile(patch_space_ptr->the_patch, vec_size, samp_rate);
 }
 
 
@@ -1531,7 +1533,7 @@ void dynamicserial_dowclose(t_dynamicserial *x, t_symbol *s, short argc, t_atom 
 
 
 // ========================================================================================================================================== //
-// Patcher Utilities (these deal with various updating and necessary behind the scens state stuff)
+// Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
 // ========================================================================================================================================== //
 
 
@@ -1560,7 +1562,7 @@ short dynamicserial_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynam
 		if (b->b_firstin) 
 		{
 			index = 0;
-			while (p2 = object_subpatcher(b->b_firstin, &index, arg))
+			while ((p2 = object_subpatcher(b->b_firstin, &index, arg)))
 			{
 				if (dynamicserial_patcher_descend(p2, fn, arg, x))
 					return 1;
@@ -1573,7 +1575,7 @@ short dynamicserial_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynam
 		if (b) 
 		{
 			index = 0;
-			while (p2 = object_subpatcher(jbox_get_object(b), &index, arg))
+			while ((p2 = object_subpatcher(jbox_get_object(b), &index, arg)))
 				if (dynamicserial_patcher_descend(p2, fn, arg, x))
 					return 1;
 		}

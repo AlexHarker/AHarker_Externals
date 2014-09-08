@@ -88,9 +88,9 @@ void OBJNAME_FIRST(_assist)(OBJNAME_SECOND(t_) *x, void *b, long m, long a, char
 
 // Main routine
 
-int main(void)
+int C74_EXPORT main(void)
 {
-    this_class = class_new (OBJNAME_STR, (method) OBJNAME_FIRST(_new), (method)OBJNAME_FIRST(_free), (short)sizeof(OBJNAME_SECOND(t_)), NULL, 0);
+    this_class = class_new (OBJNAME_STR, (method) OBJNAME_FIRST(_new), (method)OBJNAME_FIRST(_free), sizeof(OBJNAME_SECOND(t_)), NULL, 0);
 	
 	class_addmethod(this_class, (method)OBJNAME_FIRST(_dsp), "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)OBJNAME_FIRST(_dsp64), "dsp64", A_CANT, 0);
@@ -148,7 +148,7 @@ void OBJNAME_FIRST(_dsp)(OBJNAME_SECOND(t_) *x, t_signal **sp, short *count)
 
 		// Check memory alignment of all relevant vectors
 
-		if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
+		if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
 		{
 			current_perform_routine = (method) OBJNAME_FIRST(_perform_misaligned);
 			post ("%s: handed a misaligned signal vector - update to Max 5.1.3 or later", OBJNAME_STR);
@@ -168,7 +168,7 @@ void OBJNAME_FIRST(_dsp)(OBJNAME_SECOND(t_) *x, t_signal **sp, short *count)
 
 t_int *OBJNAME_FIRST(_perform)(t_int *w)
 {	
-    int vec_size;
+    long vec_size;
     OBJNAME_SECOND(t_) *x;
 	
     vFloat *in1 = (vFloat *)(w[2]);
@@ -191,7 +191,7 @@ t_int *OBJNAME_FIRST(_perform)(t_int *w)
 
 t_int *OBJNAME_FIRST(_perform_misaligned)(t_int *w)
 {	
-    int vec_size;
+    long vec_size;
     OBJNAME_SECOND(t_) *x;
 	
     vFloat *in1 = (vFloat *)(w[2]);
@@ -220,7 +220,7 @@ t_int *OBJNAME_FIRST(_perform_misaligned)(t_int *w)
 
 t_int *OBJNAME_FIRST(_perform_scalar)(t_int *w)
 {	
-    int vec_size;
+    long vec_size;
     OBJNAME_SECOND(t_) *x;
 	float out_val;
 

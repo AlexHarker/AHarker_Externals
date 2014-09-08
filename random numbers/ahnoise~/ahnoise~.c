@@ -37,7 +37,7 @@ void ahnoise_perform64 (t_ahnoise *x, t_object *dsp64, double **ins, long numins
 void ahnoise_dsp64 (t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("ahnoise~",
 						   (method)ahnoise_new,

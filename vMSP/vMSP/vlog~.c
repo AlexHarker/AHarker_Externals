@@ -35,7 +35,7 @@ typedef struct _vlog
 {
     t_pxobject x_obj;
 	
-	float float_val;
+	double double_val;
 
 	long proxy_id;
 	void *base_input;
@@ -47,8 +47,8 @@ void *vlog_new();
 void vlog_free(t_vlog *x);
 
 
-void vlog_float(t_vlog *x, double datain);
-void vlog_int(t_vlog *x, long datain);
+void vlog_float(t_vlog *x, double value);
+void vlog_int(t_vlog *x, t_atom_long value);
 
 void vlog_dsp(t_vlog *x, t_signal **sp, short *count);
 #if (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
@@ -66,7 +66,7 @@ void vlog_perform_scalar64 (t_vlog *x, t_object *dsp64, double **ins, long numin
 void vlog_assist(t_vlog *x, void *b, long m, long a, char *s);
 
 
-__inline float log_scalar_32 (float a, float base_const)
+static __inline float log_scalar_32 (float a, float base_const)
 {
 	a = a < MIN_INPUT_VAL ? MIN_INPUT_VAL : a;
 	
@@ -74,7 +74,7 @@ __inline float log_scalar_32 (float a, float base_const)
 }
 
 
-__inline double log_scalar_64 (double a, double base_const)
+static __inline double log_scalar_64 (double a, double base_const)
 {
 	a = a < MIN_INPUT_VAL ? MIN_INPUT_VAL : a;
 	
@@ -82,9 +82,9 @@ __inline double log_scalar_64 (double a, double base_const)
 }
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
-    this_class = class_new ("vlog~", (method) vlog_new, (method)vlog_free, (short)sizeof(t_vlog), NULL, A_DEFFLOAT, 0);
+    this_class = class_new ("vlog~", (method) vlog_new, (method)vlog_free, sizeof(t_vlog), NULL, A_DEFFLOAT, 0);
 	
 	class_addmethod(this_class, (method)vlog_float, "float", A_FLOAT, 0);
 	class_addmethod(this_class, (method)vlog_int, "int", A_LONG, 0);
@@ -118,21 +118,21 @@ void *vlog_new(double base)
 	if (base)
 		vlog_float(x, base);
 	else 
-		x->float_val = 1.f;
+		x->double_val = 1.0;
 
     return (x);
 }
 
 
-void vlog_float(t_vlog *x, double datain)
+void vlog_float(t_vlog *x, double value)
 {
-	x->float_val = 1.0 / log(datain);
+	x->double_val = 1.0 / log(value);
 }
 
 
-void vlog_int(t_vlog *x, long datain)
+void vlog_int(t_vlog *x, t_atom_long value)
 {
-	vlog_float(x,  (float) datain);
+	vlog_float(x,  (double) value);
 }
 
 
@@ -150,7 +150,7 @@ void vlog_dsp(t_vlog *x, t_signal **sp, short *count)
 		
 		// Check memory alignment of all relevant vectors
 		
-		if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
+		if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
 		{
 			current_perform_routine = (method) vlog_perform_misaligned;
 			post ("vlog~: handed a misaligned signal vector - update to Max 5.1.3 or later");
@@ -185,7 +185,7 @@ t_int *vlog_perform(t_int *w)
     long vec_size = w[4];
     t_vlog *x = (t_vlog *) w[5];
 
-	vFloat base_const = float2vector(x->float_val);
+	vFloat base_const = float2vector((float) x->double_val);
 
 	while (vec_size--)
 		*out1++ = F32_VEC_MUL_OP(base_const, F32_VEC_LOG_OP(F32_VEC_MAX_OP(min_input_val_3232, *in1++)));
@@ -206,7 +206,7 @@ t_int *vlog_perform_misaligned(t_int *w)
     t_vlog *x = (t_vlog *) w[5];
 	
 	vFloat Temp;
-	vFloat base_const = float2vector(x->float_val);
+	vFloat base_const = float2vector((float) x->double_val);
 
 	while (vec_size--)
 	{
@@ -228,7 +228,7 @@ t_int *vlog_perform_scalar(t_int *w)
     long vec_size = w[4];
     t_vlog *x = (t_vlog *) w[5];
 	
-	float base_const = x->float_val;
+	float base_const = (float) x->double_val;
 	
 	while (vec_size--)
 		*out1++ = log_scalar_32(*in1++, base_const);
@@ -262,7 +262,7 @@ void vlog_dsp64 (t_vlog *x, t_object *dsp64, short *count, double samplerate, lo
 
 void vlog_perform64 (t_vlog *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-	vDouble base_const = double2vector(x->float_val);
+	vDouble base_const = double2vector(x->double_val);
 
 #ifndef F64_VEC_LOG_OP
 	min_clip_array_64(outs[0], ins[0], vec_size, min_input_val_3264);	
@@ -289,7 +289,7 @@ void vlog_perform_scalar64 (t_vlog *x, t_object *dsp64, double **ins, long numin
 	double *in1 = ins[0];
 	double *out1 = outs[0];
 	
-	double base_const = x->float_val;
+	double base_const = x->double_val;
 
 	while (vec_size--)
 		*out1++ = log_scalar_64(*in1++, base_const);

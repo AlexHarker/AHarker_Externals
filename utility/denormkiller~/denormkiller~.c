@@ -41,12 +41,12 @@ void denormkiller_dsp64 (t_denormkiller *x, t_object *dsp64, short *count, doubl
 void denormkiller_perform64 (t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class = class_new ("denormkiller~",
 							(method)denormkiller_new,
 							(method)dsp_free,
-							(short) sizeof(t_denormkiller), 
+							sizeof(t_denormkiller),
 							NULL, 
 							0);	
 	

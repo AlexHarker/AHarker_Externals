@@ -45,28 +45,28 @@ static __inline void atanh_array_64(double *out, double *in, long length)
 // Op functions
 
 #ifdef F32_VEC_ATANH_OP
-__inline vFloat atanh_vec_32 (vFloat a)
+static __inline vFloat atanh_vec_32 (vFloat a)
 {
 	vFloat temp = F32_VEC_ATANH_OP(a);
 	return F32_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline float atanh_scalar_32 (float a)
+static __inline float atanh_scalar_32 (float a)
 {
 	float temp = atanhf(a);
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
 
 #ifdef F64_VEC_ATANH_OP
-__inline vDouble atanh_vec_64 (vDouble a)
+static __inline vDouble atanh_vec_64 (vDouble a)
 {
 	vDouble temp = F64_VEC_ATANH_OP(a);
 	return F64_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline double atanh_scalar_64 (float a)
+static __inline double atanh_scalar_64 (float a)
 {
 	double temp = atanh(a);
 	return F64_SCALAR_NAN_FIX_OP(temp);

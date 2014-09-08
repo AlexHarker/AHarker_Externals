@@ -26,27 +26,27 @@
 
 // Core functions (all intrinsic-based)
 
-__inline vFloat sqrt_vec_32 (vFloat a)
+static __inline vFloat sqrt_vec_32 (vFloat a)
 {
 	vFloat temp = F32_VEC_SQRT_OP(a);
 	return F32_VEC_NAN_FIX_OP(temp);
 }
 
-__inline float sqrt_scalar_32 (float a)
+static __inline float sqrt_scalar_32 (float a)
 {
 	float temp = sqrtf(a);
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
 
 #ifdef VECTOR_F64_128BIT
-__inline vDouble sqrt_vec_64 (vDouble a)
+static __inline vDouble sqrt_vec_64 (vDouble a)
 {
 	vDouble temp = F64_VEC_SQRT_OP(a);
 	return F64_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline double sqrt_scalar_64 (float a)
+static __inline double sqrt_scalar_64 (float a)
 {
 	double temp = sqrt(a);
 	return F64_SCALAR_NAN_FIX_OP(temp);

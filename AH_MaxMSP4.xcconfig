@@ -16,11 +16,9 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings
 
-SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk
-
-GCC_VERSION = 4.0
-
-MACOSX_DEPLOYMENT_TARGET = 10.4
+GCC_VERSION = com.apple.compilers.llvm.clang.1_0
+MACOSX_DEPLOYMENT_TARGET = 10.5
+SDKROOT = macosx10.5
 
 ARCHS = ppc i386 
 
@@ -33,3 +31,7 @@ GENERATE_PKGINFO_FILE = YES
 // Turn off C99 to minimise time spent working in Visual Studio
 
 WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement -Werror
+
+// Allow old-style use of __inline (revise later)
+
+OTHER_CFLAGS = -std=gnu89

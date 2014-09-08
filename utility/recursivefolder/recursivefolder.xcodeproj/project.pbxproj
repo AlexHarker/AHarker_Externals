@@ -14,8 +14,8 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1A2C27A0A4C295800236386 /* recursivefolder.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = recursivefolder.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		B88F34711694A7CF000900C3 /* AH_MaxMSP6.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP6.xcconfig; path = ../../AH_MaxMSP6.xcconfig; sourceTree = SOURCE_ROOT; };
 		B88F34B21694A8DE000900C3 /* recursivefolder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = recursivefolder.c; sourceTree = "<group>"; };
+		B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,7 +33,7 @@
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B88F34711694A7CF000900C3 /* AH_MaxMSP6.xcconfig */,
+				B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -111,6 +111,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "recursivefolder" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -164,7 +166,6 @@
 /* Begin XCBuildConfiguration section */
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B88F34711694A7CF000900C3 /* AH_MaxMSP6.xcconfig */;
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 			};
@@ -172,32 +173,33 @@
 		};
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B88F34711694A7CF000900C3 /* AH_MaxMSP6.xcconfig */;
 			buildSettings = {
 			};
 			name = Deployment;
 		};
 		0FF6670D096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B88F34711694A7CF000900C3 /* AH_MaxMSP6.xcconfig */;
 			buildSettings = {
 			};
 			name = Default;
 		};
 		0FF6670F096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 			};
 			name = Development;
 		};
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 			};
 			name = Deployment;
 		};
 		0FF66711096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 			};
 			name = Default;

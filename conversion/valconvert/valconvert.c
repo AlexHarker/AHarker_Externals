@@ -74,7 +74,7 @@ t_symbol *ps_ipitch;
 t_symbol *ps_list;
 
 
-void *valconvert_new (t_symbol *msg, short argc, t_atom *argv);
+void *valconvert_new (t_symbol *msg, long argc, t_atom *argv);
 void valconvert_free(t_valconvert *x);
 
 #ifdef MSP_VERSION
@@ -94,18 +94,18 @@ void valconvert_dsp64 (t_valconvert *x, t_object *dsp64, short *count, double sa
 #else
 
 double valconvert_scale (t_valconvert *x, double input);
-void valconvert_int (t_valconvert *x, long i_in);
+void valconvert_int (t_valconvert *x, t_atom_long i_in);
 void valconvert_float (t_valconvert *x, double f_in);
-void valconvert_list (t_valconvert *x, t_symbol *msg, short argc, t_atom *argv);
+void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 
 #endif
 
-void valconvert_anything (t_valconvert *x, t_symbol *msg, short argc, t_atom *argv);
+void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	
 #ifdef MSP_VERSION
@@ -179,7 +179,7 @@ void valconvert_free(t_valconvert *x)
 	
 }
 
-void *valconvert_new (t_symbol *msg, short argc, t_atom *argv)
+void *valconvert_new (t_symbol *msg, long argc, t_atom *argv)
 {
     t_valconvert *x = (t_valconvert *) object_alloc (this_class);
 	
@@ -535,13 +535,13 @@ void valconvert_float (t_valconvert *x, double f_in)
 } 
 
 
-void valconvert_int (t_valconvert *x, long l_in)
+void valconvert_int (t_valconvert *x, t_atom_long l_in)
 { 	
 	outlet_float (x->theOutlet, valconvert_scale(x, l_in));
 } 
 
 
-void valconvert_list (t_valconvert *x, t_symbol *msg, short argc, t_atom *argv)
+void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
 #ifdef __APPLE__
 	t_atom list[argc];
@@ -567,7 +567,7 @@ void valconvert_list (t_valconvert *x, t_symbol *msg, short argc, t_atom *argv)
 #endif
 
 
-void valconvert_anything (t_valconvert *x, t_symbol *msg, short argc, t_atom *argv)
+void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	t_conversion_mode mode = CONVERT_LINEAR;
 	

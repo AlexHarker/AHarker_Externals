@@ -147,7 +147,4 @@ static __inline void f64_pow_array(double *out, double *in1, double *in2, long l
 
 #endif
 
-
-
-
 #endif	/* _AH_CROSS_PLATFORM_VECTOR_OPS_EXTENDED_ */

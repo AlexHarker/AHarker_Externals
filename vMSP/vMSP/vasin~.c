@@ -45,28 +45,28 @@ static __inline void asin_array_64(double *out, double *in, long length)
 // Op functions
 
 #ifdef F32_VEC_ASIN_OP
-__inline vFloat asin_vec_32 (vFloat a)
+static __inline vFloat asin_vec_32 (vFloat a)
 {
 	vFloat temp = F32_VEC_ASIN_OP(a);
 	return F32_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline float asin_scalar_32 (float a)
+static __inline float asin_scalar_32 (float a)
 {
 	float temp = asinf(a);
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
 
 #ifdef F64_VEC_ASIN_OP
-__inline vDouble asin_vec_64 (vDouble a)
+static __inline vDouble asin_vec_64 (vDouble a)
 {
 	vDouble temp = F64_VEC_ASIN_OP(a);
 	return F64_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline double asin_scalar_64 (float a)
+static __inline double asin_scalar_64 (float a)
 {
 	double temp = asin(a);
 	return F64_SCALAR_NAN_FIX_OP(temp);

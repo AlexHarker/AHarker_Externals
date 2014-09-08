@@ -40,9 +40,9 @@
 
 
 // The current implementation in use is the 1024 WELL RNG from http://www.iro.umontreal.ca/~panneton/WELLRNG.html
-// The memory requirement is 33 usigned integers
+// The memory requirement is 33 unsigned 32 bit integers
 //	Period length is 2^1024 - 1 which shold be more than adequate for most purposes
-// The follwing copyright and autohorsip notice applies only to this section of the file (down till the next three line comment block)
+// The follwing copyright and authorship notice applies only to this section of the file (down till the next three line comment block)
 
 
 /* ***************************************************************************** */
@@ -149,7 +149,7 @@ static __inline unsigned int rand_int (t_rand_gen *gen)
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////// The below routines are RNG Agnositc /////////////////////////////////////////// 
+/////////////////////////////////////////// The below routines are RNG Agnostic /////////////////////////////////////////// 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

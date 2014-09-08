@@ -10,6 +10,7 @@
 
 
 #include <AH_VectorOps.h>
+#include <ext.h>
 
 
 // Object and function naming
@@ -22,8 +23,8 @@
 
 vFloat v_bit_mask_32;
 
-unsigned long long bit_mask_64 = 0x7FFFFFFFFFFFFFFFULL; 
-unsigned long bit_mask_32 = 0x7FFFFFFFUL;
+t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+t_uint32 bit_mask_32 = 0x7FFFFFFFU;
 
 #ifdef VECTOR_F64_128BIT
 vDouble v_bit_mask_64; 
@@ -37,15 +38,15 @@ v_bit_mask_32 = float2vector(*(float *)&bit_mask_32);
 
 // Core functions (all intrinsic-based)
 
-__inline float abs_scalar_32 (float in)
+static __inline float abs_scalar_32 (float in)
 {
-	unsigned long temp = (*(unsigned long *) &in) & 0x7FFFFFFF; 
+	t_uint32 temp = (*(t_uint32 *) &in) & 0x7FFFFFFF; 
 	return *(float *) &temp;
 }
 
-__inline double abs_scalar_64 (double in)
+static __inline double abs_scalar_64 (double in)
 {
-	unsigned long long temp = (*(unsigned long long*) &in) & 0x7FFFFFFFFFFFFFFFULL; 
+	t_uint64 temp = (*(t_uint64*) &in) & 0x7FFFFFFFFFFFFFFFULL;
 	return *(double *) &temp;
 }
 

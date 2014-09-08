@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>F311D7C4-F7C0-44BF-A87F-9E2B4869C769</string>
+	<key>IDESourceControlProjectName</key>
+	<string>rdcblock~</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CA50886C-9DC1-4912-8883-616218E4462B</key>
+		<string>https://github.com/AlexHarker/AHarker_Externals.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>sample accurate suite/rdcblock~/rdcblock~.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CA50886C-9DC1-4912-8883-616218E4462B</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/AlexHarker/AHarker_Externals.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CA50886C-9DC1-4912-8883-616218E4462B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CA50886C-9DC1-4912-8883-616218E4462B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>- AHarker Externals</string>
+		</dict>
+	</array>
+</dict>
+</plist>

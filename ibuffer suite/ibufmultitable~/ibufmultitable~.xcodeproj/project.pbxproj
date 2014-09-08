@@ -130,6 +130,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "ibufmultitable~" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -200,7 +202,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -223,7 +224,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -243,7 +243,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};

@@ -20,12 +20,12 @@
 
 // Core functions (all intrinsic-based)
 
-__inline float minimum_scalar_32 (float in1, float in2)
+static __inline float minimum_scalar_32 (float in1, float in2)
 {
 	return (in1 < in2) ? in1 : in2;
 }
 
-__inline double minimum_scalar_64 (double in1, double in2)
+static __inline double minimum_scalar_64 (double in1, double in2)
 {
 	return (in1 < in2) ? in1 : in2;
 }

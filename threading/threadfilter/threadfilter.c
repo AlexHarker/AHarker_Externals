@@ -36,15 +36,15 @@ t_symbol *ps_bang;
 void *threadfilter_new();
 void threadfilter_free(t_threadfilter *x);
 
-void threadfilter_int(t_threadfilter *x, long intinput);
-void threadfilter_float(t_threadfilter *x, double floatinput);
+void threadfilter_int(t_threadfilter *x, t_atom_long value);
+void threadfilter_float(t_threadfilter *x, double value);
 void threadfilter_bang(t_threadfilter *x);
-void threadfilter_anything (t_threadfilter *x, t_symbol *msg, short argc, t_atom *argv);
+void threadfilter_anything (t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv);
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("threadfilter", 
 							(method) threadfilter_new, 
@@ -87,21 +87,21 @@ void *threadfilter_new ()
 }
 
 
-void threadfilter_int(t_threadfilter *x, long intinput)
+void threadfilter_int(t_threadfilter *x, t_atom_long value)
 {
 	if (isr())
-		outlet_int(x->message_out_hi, intinput); 
+		outlet_int(x->message_out_hi, value); 
 	else
-		outlet_int(x->message_out_lo, intinput); 
+		outlet_int(x->message_out_lo, value); 
 }
 
 
-void threadfilter_float(t_threadfilter *x, double floatinput)
+void threadfilter_float(t_threadfilter *x, double value)
 {
 	if (isr())
-		outlet_float(x->message_out_hi, floatinput); 
+		outlet_float(x->message_out_hi, value); 
 	else
-		outlet_float(x->message_out_lo, floatinput); 
+		outlet_float(x->message_out_lo, value); 
 }
 
 
@@ -114,7 +114,7 @@ void threadfilter_bang(t_threadfilter *x)
 }
 
 
-void threadfilter_anything (t_threadfilter *x, t_symbol *msg, short argc, t_atom *argv)
+void threadfilter_anything (t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (isr())
 		outlet_anything (x->message_out_hi, msg, argc, argv);

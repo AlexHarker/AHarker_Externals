@@ -10,6 +10,7 @@
 
 
 #include <AH_VectorOps.h>
+#include "ext.h"
 
 
 // Object and function naming
@@ -23,17 +24,20 @@
 vFloat v_largest_int_32; 
 vFloat v_bit_mask_32;
 
-unsigned long long bit_mask_64 = 0x7FFFFFFFFFFFFFFFULL; 
-unsigned long bit_mask_32 = 0x7FFFFFFFUL;
+t_uint64 large_mask_64 = 0xFFFFFFFFE0000000U;
+t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+t_uint32 bit_mask_32 = 0x7FFFFFFFU;
 
 float largest_int_32 = 8388608.f;
 double largest_int_64 = 4503599627370496.0;
 
 #ifdef VECTOR_F64_128BIT
-vDouble v_bit_mask_64; 
+vDouble v_large_mask_64;
+vDouble v_bit_mask_64;
 vDouble v_intermediate_int_64;
 vDouble v_largest_int_64;
 #define SET_CONSTANTS											\
+v_large_mask_64 = double2vector(*(double *)&large_mask_64);     \
 v_bit_mask_64 = double2vector(*(double *)&bit_mask_64);			\
 v_bit_mask_32 = float2vector(*(float *)&bit_mask_32);			\
 v_largest_int_64 = double2vector(largest_int_64);				\
@@ -47,33 +51,36 @@ v_largest_int_32 = float2vector(largest_int_32);
 
 // Core functions
 
-__inline float trunc_scalar_32(float in)
+static __inline float trunc_scalar_32(float in)
 {
-	unsigned long abs_temp = (*(unsigned long *) &in) & 0x7FFFFFFFUL; 
+	t_uint32 abs_temp = (*(t_uint32 *) &in) & 0x7FFFFFFFUL;
 	float abs_float = *(float *) &abs_temp;
-	long trunc_temp = (long) in;
+	t_int32 trunc_temp = (t_int32) in;
 	return (abs_float < largest_int_32) ? (float) trunc_temp : in;
 }
 
-__inline double trunc_scalar_64(double in)
+static __inline double trunc_scalar_64(double in)
 {
-	unsigned long long abs_temp = (*(unsigned long *) &in) & 0x7FFFFFFF; 
+	t_uint64 abs_temp = (*(t_uint64 *) &in) & 0x7FFFFFFF;
 	double abs_double = *(double *) &abs_temp;
-	long long trunc_temp = (long long) in;
+	t_int64 trunc_temp = (t_int64) in;
 	return (abs_double < largest_int_64) ? (double) trunc_temp : in;
 }
 
-__inline vFloat trunc_vec_32(vFloat in)
+static __inline vFloat trunc_vec_32(vFloat in)
 {
 	vFloat trunc_vec= F32_VEC_FROM_I32(I32_VEC_FROM_F32_TRUNC(in));
 	return F32_VEC_SEL_OP(trunc_vec, in, F32_VEC_GT_OP(F32_VEC_AND_OP(in, v_bit_mask_32), v_largest_int_32));
 }
 
 #ifdef VECTOR_F64_128BIT
-__inline vDouble trunc_vec_64(vDouble in)
+
+// N.B. large_vec has 0.5 subtracted pre conversion to avoid incorrect rounding - always integer saturated when used so results are correct
+
+static __inline vDouble trunc_vec_64(vDouble in)
 {
 	vDouble abs_vec = F64_VEC_AND_OP(in, v_bit_mask_64);
-	vDouble large_vec = F64_VEC_FROM_F32(F32_VEC_FROM_F64(in));
+	vDouble large_vec = F64_VEC_AND_OP(in, v_large_mask_64);
 	vDouble trunc_vec1 = F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(in));
 	vDouble trunc_vec2 = F64_VEC_ADD_OP(F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(F64_VEC_SUB_OP(in, large_vec))), large_vec);
 	vDouble trunc_vec = F64_VEC_SEL_OP(trunc_vec1, trunc_vec2, F64_VEC_GT_OP(abs_vec, v_intermediate_int_64));

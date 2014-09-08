@@ -21,27 +21,28 @@ typedef struct depack{
 	t_object a_obj;
 	
 	long num_outlets;
+    
 	void *outlet_array[256];
 		
 } t_depack;
 
 
-void *depack_new (long num_outlets);
+void *depack_new (t_atom_long num_outlets);
 void depack_free (t_depack *x);
 
 void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset);
 
-//void depack_int (t_depack *x, long i_in);
-//void depack_float (t_depack *x, double f_in);
-void depack_int (t_depack *x, t_symbol *msg, short argc, t_atom *argv);
-void depack_float (t_depack *x, t_symbol *msg, short argc, t_atom *argv);
-void depack_list (t_depack *x, t_symbol *msg, short argc, t_atom *argv);
-void depack_anything (t_depack *x, t_symbol *msg, short argc, t_atom *argv);
+//void depack_int (t_depack *x, t_atom_long value);
+//void depack_float (t_depack *x, double value);
+void depack_int (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
+void depack_float (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
+void depack_list (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
+void depack_anything (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
 
 void depack_assist (t_depack *x, void *b, long m, long a, char *s);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("depack", 
 							(method) depack_new, 
@@ -68,7 +69,7 @@ void depack_free (t_depack *x)
 }
 
 
-void *depack_new (long num_outlets)
+void *depack_new (t_atom_long num_outlets)
 {
     t_depack *x = (t_depack *) object_alloc (this_class);
 	void **outlet_array;
@@ -114,27 +115,27 @@ void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
 }
 
 
-void depack_float (t_depack *x, t_symbol *msg, short argc, t_atom *argv)
+void depack_float (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 { 
 	if (argc)
 		outlet_float (x->outlet_array[0], atom_getfloat(argv));
 } 
 
 
-void depack_int (t_depack *x, t_symbol *msg, short argc, t_atom *argv)
+void depack_int (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 { 	
 	if (argc)
 		outlet_int (x->outlet_array[0], atom_getlong(argv));
 } 
 
 
-void depack_list (t_depack *x, t_symbol *msg, short argc, t_atom *argv)
+void depack_list (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	depack_do_args (x, argc, argv, 0);
 }
 
 
-void depack_anything (t_depack *x, t_symbol *msg, short argc, t_atom *argv)
+void depack_anything (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	depack_do_args (x, argc, argv, 1);
 	outlet_anything (x->outlet_array[0], msg, 0, 0);

@@ -43,7 +43,7 @@ void macaddress_bang (t_macaddress *x);
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class = class_new ("macaddress",
 							(method)macaddress_new,
@@ -89,8 +89,8 @@ void macaddress_bang (t_macaddress *x)
 	SCNetworkInterfaceRef next_interface, found_interface;
 	
 	char const *mac_address_str;
-	unsigned int found = 0;
-	unsigned int i, loop;
+	unsigned long found = 0;
+	unsigned long i, loop;
 	
 	interface_array = SCNetworkInterfaceCopyAll();
 	loop = CFArrayGetCount(interface_array);

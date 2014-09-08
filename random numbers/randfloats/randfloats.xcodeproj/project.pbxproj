@@ -17,7 +17,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B818C1AE10E8363F00049E56 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
-		B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8DE14DC0EB46B030050BDFE /* randfloats.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = randfloats.c; sourceTree = "<group>"; };
 		B8E15A1711E33C5500FA3CFA /* randfloats.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randfloats.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -39,7 +39,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */,
+				B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -119,6 +119,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "randfloats" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -172,6 +174,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -179,6 +182,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -186,6 +190,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -193,7 +198,6 @@
 		};
 		B8E15A1411E33C5500FA3CFA /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEBUGGING_SYMBOLS = YES;
 				GCC_ALTIVEC_EXTENSIONS = YES;
@@ -209,14 +213,12 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E15A1511E33C5500FA3CFA /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_AUTO_VECTORIZATION = YES;
@@ -232,14 +234,12 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E15A1611E33C5500FA3CFA /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 				GCC_AUTO_VECTORIZATION = YES;
@@ -252,7 +252,6 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};

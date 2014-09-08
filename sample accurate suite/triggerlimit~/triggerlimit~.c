@@ -23,14 +23,14 @@ typedef struct _triggerlimit
 {
     t_pxobject x_obj;
 	
-	long limit;
-	long count;
+	t_atom_long limit;
+	t_atom_long count;
 	
 } t_triggerlimit;
 
 
-void *triggerlimit_new (long limit);
-void triggerlimit_int(t_triggerlimit *x, long limit);
+void *triggerlimit_new (t_atom_long limit);
+void triggerlimit_int(t_triggerlimit *x, t_atom_long limit);
 void triggerlimit_free (t_triggerlimit *x);
 void triggerlimit_assist (t_triggerlimit *x, void *b, long m, long a, char *s);
 
@@ -41,7 +41,7 @@ void triggerlimit_perform64 (t_triggerlimit *x, t_object *dsp64, double **ins, l
 void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("triggerlimit~",
 				(method)triggerlimit_new,
@@ -63,7 +63,7 @@ int main (void)
 }
 
 
-void *triggerlimit_new(long limit)
+void *triggerlimit_new(t_atom_long limit)
 {	
 	t_triggerlimit *x = (t_triggerlimit *)object_alloc(this_class);
     
@@ -79,7 +79,7 @@ void *triggerlimit_new(long limit)
 }
 
 
-void triggerlimit_int(t_triggerlimit *x, long limit)
+void triggerlimit_int(t_triggerlimit *x, t_atom_long limit)
 {
 	if (limit < 1)
 		limit = 1;
@@ -101,8 +101,8 @@ t_int *triggerlimit_perform (t_int *w)
 	long vec_size = w[3];
 	t_triggerlimit *x = (t_triggerlimit *) w[4];
 	
-	long limit = x->limit;
-	long count = x->count;
+	t_atom_long limit = x->limit;
+	t_atom_long count = x->count;
 	long i;
 	
 	float in_val;
@@ -143,8 +143,8 @@ void triggerlimit_perform64 (t_triggerlimit *x, t_object *dsp64, double **ins, l
 	double *in = ins[0];
 	double *out = outs[0];
 	
-	long limit = x->limit;
-	long count = x->count;
+	t_atom_long limit = x->limit;
+	t_atom_long count = x->count;
 	long i;
 	
 	double in_val;

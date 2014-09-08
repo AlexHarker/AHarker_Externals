@@ -32,24 +32,24 @@ vDouble zero_64 = {0.0, 0.0};
 
 // Core functions
 
-__inline vFloat divide_vec_32 (vFloat a, vFloat b)
+static __inline vFloat divide_vec_32 (vFloat a, vFloat b)
 {
 	return F32_VEC_SEL_OP(F32_VEC_DIV_OP(a,b), zero_32, F32_VEC_EQUAL_OP(b, zero_32));
 }
 
-__inline float divide_scalar_32 (float a, float b)
+static __inline float divide_scalar_32 (float a, float b)
 {
 	return !b ? 0.f : (a / b);
 }
 
 #ifdef VECTOR_F64_128BIT
-__inline vDouble divide_vec_64 (vDouble a, vDouble b)
+static __inline vDouble divide_vec_64 (vDouble a, vDouble b)
 {
 	return F64_VEC_SEL_OP(F64_VEC_DIV_OP(a,b), zero_64, F64_VEC_EQUAL_OP(b, zero_64));
 }
 #endif
 
-__inline float divide_scalar_64 (float a, float b)
+static __inline float divide_scalar_64 (float a, float b)
 {
 	return !b ? 0.f : (a / b);
 }

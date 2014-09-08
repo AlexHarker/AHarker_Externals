@@ -130,6 +130,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "ibufplayer~" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -204,10 +206,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -216,10 +215,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8141A7010EB522900CB75FA /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -237,10 +232,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -262,10 +254,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 			};
 			name = Default;
 		};

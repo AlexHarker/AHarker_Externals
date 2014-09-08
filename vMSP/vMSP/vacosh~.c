@@ -48,14 +48,14 @@ static __inline void acosh_array_64(double *out, double *in, long length)
 
 // Op functions
 
-__inline float acosh_scalar_32 (float a)
+static __inline float acosh_scalar_32 (float a)
 {
 	a = a < 1.f ? 1.f : a;
 	
 	return acoshf(a);
 }
 
-__inline double acosh_scalar_64 (double a)
+static __inline double acosh_scalar_64 (double a)
 {
 	a = a < 1.0 ? 1.0 : a;
 	

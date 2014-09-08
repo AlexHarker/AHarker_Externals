@@ -29,22 +29,21 @@ void *getthread_new();
 void getthread_free(t_getthread *x);
 
 void getthread_doit (t_getthread *x);
-void getthread_int (t_getthread *x, long i_in);
-void getthread_float (t_getthread *x, double f_in);
-void getthread_list (t_getthread *x, t_symbol *msg, short argc, t_atom *argv);
-void getthread_anything (t_getthread *x, t_symbol *msg, short argc, t_atom *argv);
+void getthread_int (t_getthread *x, t_atom_long value);
+void getthread_float (t_getthread *x, double float_in);
+void getthread_list (t_getthread *x, t_symbol *msg, long argc, t_atom *argv);
+void getthread_anything (t_getthread *x, t_symbol *msg, long argc, t_atom *argv);
 
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("getthread", 
 						   (method) getthread_new, 
 						   (method) getthread_free, 
 						   sizeof(t_getthread), 
 						   NULL, 
-						   A_DEFLONG,
 						   0);
 	
 	class_addmethod (this_class, (method)getthread_doit, "bang", 0);
@@ -81,25 +80,25 @@ void getthread_doit (t_getthread *x)
 }
 
 
-void getthread_int (t_getthread *x, long i_in) 
+void getthread_int (t_getthread *x, t_atom_long value)
 { 	
 	getthread_doit(x);
 } 
 
 
-void getthread_float (t_getthread *x, double f_in) 
+void getthread_float (t_getthread *x, double float_in) 
 { 
 	getthread_doit(x);
 } 
 
 
-void getthread_list (t_getthread *x, t_symbol *msg, short argc, t_atom *argv)
+void getthread_list (t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	getthread_doit(x);
 }
 
 
-void getthread_anything (t_getthread *x, t_symbol *msg, short argc, t_atom *argv)
+void getthread_anything (t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	getthread_doit(x);
 }

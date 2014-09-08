@@ -25,6 +25,15 @@
 void *this_class;
 
 
+typedef enum {
+    
+    FLAG_NONE,
+    FLAG_PLAY,
+    FLAG_STOP,
+    
+} t_transport_flag;
+
+
 typedef struct _ibufplayer
 {
     t_pxobject x_obj;
@@ -34,8 +43,10 @@ typedef struct _ibufplayer
 	
 	double pos, speed, start_samp, min_samp, max_samp, sr_div;
 	float vol1, vol2, vol3, vol4;
-	
-	char sig_control, input_connected, playing, play_flag, stop_flag;
+
+    t_transport_flag transport_flag;
+    
+	char sig_control, input_connected, playing;
 	long interp_mode, obj_n_chans;
 	
 	void **temp_mem;
@@ -48,6 +59,8 @@ typedef struct _ibufplayer
 	void *bang_outlet;
 	
 } t_ibufplayer;
+
+
 
 
 void *ibufplayer_new (long obj_n_chans);
@@ -140,8 +153,7 @@ void *ibufplayer_new (long obj_n_chans)
 	x->speed = 1;
 	x->sig_control = 0;
 	x->playing = 0;
-	x->play_flag = 0;
-	x->stop_flag = 0;
+	x->transport_flag = FLAG_NONE;
 	x->obj_n_chans = obj_n_chans;
 	x->input_connected = 0;
 	
@@ -280,7 +292,7 @@ void ibufplayer_interp (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 
 void ibufplayer_stop (t_ibufplayer *x)
 {	
-	x->stop_flag = 1;
+	x->transport_flag = FLAG_STOP;
 }
 
 
@@ -350,7 +362,7 @@ void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 	}
 	
 	x->sig_control = sig_control;
-	x->play_flag = 1;
+	x->transport_flag = FLAG_PLAY;
 }
 
 
@@ -643,10 +655,10 @@ t_int *ibufplayer_perform (t_int *w)
 		
 		length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
 		
-		if (x->play_flag)
+		if (x->transport_flag == FLAG_PLAY)
 			pos = start_samp;
 		
-		if (x->stop_flag)
+		if (x->transport_flag == FLAG_STOP)
 			x->pos = pos = -1.0;
 		
 		if (pos <= max_samp && pos >= min_samp)
@@ -656,8 +668,7 @@ t_int *ibufplayer_perform (t_int *w)
 		}
 	}
 	
-	x->play_flag = 0;
-	x->stop_flag = 0;
+	x->transport_flag = FLAG_NONE;
 	
 	// Calculate output
 	
@@ -816,10 +827,10 @@ t_int *ibufplayer_perform_small (t_int *w)
 		
 		length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
 		
-		if (x->play_flag)
+		if (x->transport_flag == FLAG_PLAY)
 			pos = start_samp;
 		
-		if (x->stop_flag)
+		if (x->transport_flag == FLAG_STOP)
 			x->pos = pos = -1.0;
 		
 		if (pos <= max_samp && pos >= min_samp)
@@ -829,8 +840,7 @@ t_int *ibufplayer_perform_small (t_int *w)
 		}
 	}
 	
-	x->play_flag = 0;
-	x->stop_flag = 0;
+	x->transport_flag = FLAG_NONE;
 	
 	// Calculate output
 	
@@ -1222,10 +1232,10 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 		
 		length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
 		
-		if (x->play_flag)
+		if (x->transport_flag == FLAG_PLAY)
 			pos = start_samp;
 		
-		if (x->stop_flag)
+		if (x->transport_flag == FLAG_STOP)
 			x->pos = pos = -1.0;
 		
 		if (pos <= max_samp && pos >= min_samp)
@@ -1235,8 +1245,7 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 		}
 	}
 	
-	x->play_flag = 0;
-	x->stop_flag = 0;
+    x->transport_flag = FLAG_NONE;
 	
 	// Calculate output
 	
@@ -1388,10 +1397,10 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 		
 		length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
 		
-		if (x->play_flag)
+		if (x->transport_flag == FLAG_PLAY)
 			pos = start_samp;
 		
-		if (x->stop_flag)
+		if (x->transport_flag == FLAG_STOP)
 			x->pos = pos = -1.0;
 		
 		if (pos <= max_samp && pos >= min_samp)
@@ -1401,8 +1410,7 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 		}
 	}
 	
-	x->play_flag = 0;
-	x->stop_flag = 0;
+    x->transport_flag = FLAG_NONE;
 	
 	// Calculate output
 	

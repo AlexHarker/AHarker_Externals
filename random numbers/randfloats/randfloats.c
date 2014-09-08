@@ -47,16 +47,16 @@ void *randfloats_new ();
 void randfloats_free (t_randfloats *x);
 void randfloats_assist (t_randfloats *x, void *b, long m, long a, char *s);
 
-void randfloats_int (t_randfloats *x, long intin);
-void randfloats_float (t_randfloats *x, double floatin);
+void randfloats_int (t_randfloats *x, t_atom_long value);
+void randfloats_float (t_randfloats *x, double value);
 void randfloats_bang (t_randfloats *x);
-void randfloats_list (t_randfloats *x, t_symbol *msg, short argc, t_atom *argv);
+void randfloats_list (t_randfloats *x, t_symbol *msg, long argc, t_atom *argv);
 
 double triplegaussrand (t_rand_gen *gen, double *params);
 double erfweighting (float mean, float dev);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("randfloats",
 						   (method)randfloats_new,
@@ -143,13 +143,13 @@ void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s)
 }
 
 
-void randfloats_int (t_randfloats *x, long intin)
+void randfloats_int (t_randfloats *x, t_atom_long value)
 {
-	randfloats_float (x, (double) intin);
+	randfloats_float (x, (double) value);
 }
 
 
-void randfloats_float (t_randfloats *x, double floatin)
+void randfloats_float (t_randfloats *x, double value)
 {
 	double randval = 0;
 
@@ -166,7 +166,7 @@ void randfloats_float (t_randfloats *x, double floatin)
 			break;
 	}
 	
-	randval *= floatin;
+	randval *= value;
 	
 	outlet_float (x->the_outlet, randval);
 }
@@ -193,7 +193,7 @@ void randfloats_bang (t_randfloats *x)
 }
 
 
-void randfloats_list (t_randfloats *x, t_symbol *msg, short argc, t_atom *argv)
+void randfloats_list (t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double *params = x->params;
 	double temp;

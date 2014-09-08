@@ -59,7 +59,6 @@
 		0FF3254009473DCC00B01934 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B86DC23B10EEB949001B2A98 /* AH_MaxMSP4.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */; };
 		B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFF98210AED1BE008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFF98310AED1BE008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
@@ -504,8 +503,8 @@
 		0FF3253F09473DCC00B01934 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
 		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
 		B887FAFA1838D67200C83570 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
+		B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminimum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmaximum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF9CC10AED226008EB5B2 /* vmaximum~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vmaximum~.c"; sourceTree = "<group>"; };
@@ -971,7 +970,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */,
+				B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -2058,6 +2057,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "- vMSP~" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -2145,7 +2146,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B86DC23B10EEB949001B2A98 /* AH_MaxMSP4.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3073,7 +3073,6 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3092,7 +3091,6 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_ALTIVEC_EXTENSIONS = YES;
@@ -3108,7 +3106,6 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_ALTIVEC_EXTENSIONS = YES;
@@ -3122,6 +3119,7 @@
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -3129,6 +3127,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -3136,6 +3135,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -3143,7 +3143,6 @@
 		};
 		B8BFF98710AED1BE008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3166,12 +3165,7 @@
 		};
 		B8BFF98810AED1BE008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3190,7 +3184,6 @@
 		};
 		B8BFF98910AED1BE008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3207,7 +3200,6 @@
 		};
 		B8BFF99810AED1C5008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3230,12 +3222,7 @@
 		};
 		B8BFF99910AED1C5008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3254,7 +3241,6 @@
 		};
 		B8BFF99A10AED1C5008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3271,7 +3257,6 @@
 		};
 		B8BFFA9510AEEE18008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3294,12 +3279,7 @@
 		};
 		B8BFFA9610AEEE18008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3318,7 +3298,6 @@
 		};
 		B8BFFA9710AEEE18008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3335,7 +3314,6 @@
 		};
 		B8BFFAA710AEEE1C008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3358,12 +3336,7 @@
 		};
 		B8BFFAA810AEEE1C008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3382,7 +3355,6 @@
 		};
 		B8BFFAA910AEEE1C008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3399,7 +3371,6 @@
 		};
 		B8BFFAB910AEEE1F008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3422,12 +3393,7 @@
 		};
 		B8BFFABA10AEEE1F008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3446,7 +3412,6 @@
 		};
 		B8BFFABB10AEEE1F008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3463,7 +3428,6 @@
 		};
 		B8BFFACB10AEEE21008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3486,12 +3450,7 @@
 		};
 		B8BFFACC10AEEE21008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3510,7 +3469,6 @@
 		};
 		B8BFFACD10AEEE21008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3527,7 +3485,6 @@
 		};
 		B8BFFADD10AEEE62008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3550,12 +3507,7 @@
 		};
 		B8BFFADE10AEEE62008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3574,7 +3526,6 @@
 		};
 		B8BFFADF10AEEE62008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3591,7 +3542,6 @@
 		};
 		B8BFFB0D10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3614,12 +3564,7 @@
 		};
 		B8BFFB0E10AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3638,7 +3583,6 @@
 		};
 		B8BFFB0F10AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3655,7 +3599,6 @@
 		};
 		B8BFFB1F10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3678,12 +3621,7 @@
 		};
 		B8BFFB2010AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3702,7 +3640,6 @@
 		};
 		B8BFFB2110AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3719,7 +3656,6 @@
 		};
 		B8BFFB3110AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3742,12 +3678,7 @@
 		};
 		B8BFFB3210AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3766,7 +3697,6 @@
 		};
 		B8BFFB3310AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3783,7 +3713,6 @@
 		};
 		B8BFFB4310AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3806,12 +3735,7 @@
 		};
 		B8BFFB4410AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3830,7 +3754,6 @@
 		};
 		B8BFFB4510AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3847,7 +3770,6 @@
 		};
 		B8BFFB5510AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3870,12 +3792,7 @@
 		};
 		B8BFFB5610AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3894,7 +3811,6 @@
 		};
 		B8BFFB5710AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3911,7 +3827,6 @@
 		};
 		B8BFFB6710AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3934,12 +3849,7 @@
 		};
 		B8BFFB6810AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3958,7 +3868,6 @@
 		};
 		B8BFFB6910AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -3975,7 +3884,6 @@
 		};
 		B8E393731095B8640081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -3998,12 +3906,7 @@
 		};
 		B8E393741095B8640081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4022,7 +3925,6 @@
 		};
 		B8E393751095B8640081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4039,7 +3941,6 @@
 		};
 		B8E3956C1096138D0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4062,12 +3963,7 @@
 		};
 		B8E3956D1096138D0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4086,7 +3982,6 @@
 		};
 		B8E3956E1096138D0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4103,7 +3998,6 @@
 		};
 		B8E3957E109613900081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4126,12 +4020,7 @@
 		};
 		B8E3957F109613900081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4150,7 +4039,6 @@
 		};
 		B8E39580109613900081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4167,7 +4055,6 @@
 		};
 		B8E395F8109616AB0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4190,12 +4077,7 @@
 		};
 		B8E395F9109616AB0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4214,7 +4096,6 @@
 		};
 		B8E395FA109616AB0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4231,7 +4112,6 @@
 		};
 		B8E3960A109616B20081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4254,12 +4134,7 @@
 		};
 		B8E3960B109616B20081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4278,7 +4153,6 @@
 		};
 		B8E3960C109616B20081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4295,7 +4169,6 @@
 		};
 		B8E39621109616ED0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4318,12 +4191,7 @@
 		};
 		B8E39622109616ED0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4342,7 +4210,6 @@
 		};
 		B8E39623109616ED0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4359,7 +4226,6 @@
 		};
 		B8E492FF1095A32500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4385,12 +4251,7 @@
 		};
 		B8E493001095A32500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4412,7 +4273,6 @@
 		};
 		B8E493011095A32500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4432,7 +4292,6 @@
 		};
 		B8E493101095A32800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4455,12 +4314,7 @@
 		};
 		B8E493111095A32800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4479,7 +4333,6 @@
 		};
 		B8E493121095A32800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4525,7 +4378,6 @@
 		};
 		B8E4943B1095AB2B00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4542,19 +4394,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4943C1095AB2B00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4566,14 +4412,12 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E4943D1095AB2B00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4585,13 +4429,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};
 		B8E4944C1095AB2F00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4608,19 +4450,13 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4944D1095AB2F00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4633,14 +4469,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E4944E1095AB2F00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4652,13 +4486,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};
 		B8E4945D1095AB3200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4681,12 +4513,7 @@
 		};
 		B8E4945E1095AB3200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4705,7 +4532,6 @@
 		};
 		B8E4945F1095AB3200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4722,7 +4548,6 @@
 		};
 		B8E4946E1095AB3700A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4745,12 +4570,7 @@
 		};
 		B8E4946F1095AB3700A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4769,7 +4589,6 @@
 		};
 		B8E494701095AB3700A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4786,7 +4605,6 @@
 		};
 		B8E4947F1095AB3C00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4809,12 +4627,7 @@
 		};
 		B8E494801095AB3C00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4833,7 +4646,6 @@
 		};
 		B8E494811095AB3C00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4850,7 +4662,6 @@
 		};
 		B8E494901095AB4200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4874,12 +4685,7 @@
 		};
 		B8E494911095AB4200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4899,7 +4705,6 @@
 		};
 		B8E494921095AB4200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4917,7 +4722,6 @@
 		};
 		B8E494A11095AB4500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -4940,12 +4744,7 @@
 		};
 		B8E494A21095AB4500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4964,7 +4763,6 @@
 		};
 		B8E494A31095AB4500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -4981,7 +4779,6 @@
 		};
 		B8E494B21095AB4800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5004,12 +4801,7 @@
 		};
 		B8E494B31095AB4800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5028,7 +4820,6 @@
 		};
 		B8E494B41095AB4800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5045,7 +4836,6 @@
 		};
 		B8FE3F901098759000780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5068,12 +4858,7 @@
 		};
 		B8FE3F911098759000780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5092,7 +4877,6 @@
 		};
 		B8FE3F921098759000780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5109,7 +4893,6 @@
 		};
 		B8FE40851098795600780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5132,12 +4915,7 @@
 		};
 		B8FE40861098795600780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5156,7 +4934,6 @@
 		};
 		B8FE40871098795600780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5173,7 +4950,6 @@
 		};
 		B8FE40961098795A00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5196,12 +4972,7 @@
 		};
 		B8FE40971098795A00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5220,7 +4991,6 @@
 		};
 		B8FE40981098795A00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5237,7 +5007,6 @@
 		};
 		B8FE40A71098795D00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5260,12 +5029,7 @@
 		};
 		B8FE40A81098795D00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5284,7 +5048,6 @@
 		};
 		B8FE40A91098795D00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5301,7 +5064,6 @@
 		};
 		B8FE40B81098795F00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -5324,12 +5086,7 @@
 		};
 		B8FE40B91098795F00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -5348,7 +5105,6 @@
 		};
 		B8FE40BA1098795F00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B86DC23A10EEB949001B2A98 /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";

@@ -40,17 +40,17 @@ t_symbol *ps_bang;
 void *schedulemessage_new (double delay);
 void schedulemessage_free(t_schedulemessage *x);
 
-void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, short argc, t_atom *argv);
-void schedulemessage_int(t_schedulemessage *x, long intinput);
-void schedulemessage_float(t_schedulemessage *x, double floatinput);
+void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
+void schedulemessage_int(t_schedulemessage *x, t_atom_long value);
+void schedulemessage_float(t_schedulemessage *x, double float_in);
 void schedulemessage_bang(t_schedulemessage *x);
-void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, short argc, t_atom *argv);
+void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
 void schedulemessage_delay(t_schedulemessage *x, double delay);
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("schedulemessage", 
 							(method) schedulemessage_new, 
@@ -97,7 +97,7 @@ void schedulemessage_free(t_schedulemessage *x)
 }
 
 
-void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, short argc, t_atom *argv)
+void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if(!NOGOOD(x))
 	{
@@ -126,21 +126,21 @@ void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, short argc, t_
 }
 
 
-void schedulemessage_int(t_schedulemessage *x, long intinput)
+void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
 {
 	t_atom out_atom;
 	
-	SETLONG(&out_atom, intinput);
+	atom_setlong(&out_atom, value);
 	
 	schedulemessage_anything (x, ps_int, 1, &out_atom);
 }
 
 
-void schedulemessage_float(t_schedulemessage *x, double floatinput)
+void schedulemessage_float(t_schedulemessage *x, double float_in)
 {
 	t_atom out_atom;
 	
-	SETFLOAT(&out_atom, floatinput);
+	atom_setfloat(&out_atom, float_in);
 	
 	schedulemessage_anything (x, ps_float, 1, &out_atom);
 }
@@ -152,7 +152,7 @@ void schedulemessage_bang(t_schedulemessage *x)
 }
 
 
-void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, short argc, t_atom *argv)
+void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double delay = x->delay;
 	

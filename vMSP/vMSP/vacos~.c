@@ -45,28 +45,28 @@ static __inline void acos_array_64(double *out, double *in, long length)
 // Op functions
 
 #ifdef F32_VEC_ACOS_OP
-__inline vFloat acos_vec_32 (vFloat a)
+static __inline vFloat acos_vec_32 (vFloat a)
 {
 	vFloat temp = F32_VEC_ACOS_OP(a);
 	return F32_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline float acos_scalar_32 (float a)
+static __inline float acos_scalar_32 (float a)
 {
 	float temp = acosf(a);
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
 
 #ifdef F64_VEC_ACOS_OP
-__inline vDouble acos_vec_64 (vDouble a)
+static __inline vDouble acos_vec_64 (vDouble a)
 {
 	vDouble temp = F64_VEC_ACOS_OP(a);
 	return F64_VEC_NAN_FIX_OP(temp);
 }
 #endif
 
-__inline double acos_scalar_64 (float a)
+static __inline double acos_scalar_64 (float a)
 {
 	double temp = acos(a);
 	return F64_SCALAR_NAN_FIX_OP(temp);

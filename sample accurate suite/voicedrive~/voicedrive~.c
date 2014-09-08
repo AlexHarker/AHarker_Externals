@@ -37,7 +37,7 @@ typedef struct _voicedrive
 } t_voicedrive;
 
 
-void *voicedrive_new(long precision, long interrupt_on);
+void *voicedrive_new(t_atom_long precision, t_atom_long interrupt_on);
 void voicedrive_free (t_voicedrive *x);
 void voicedrive_assist (t_voicedrive *x, void *b, long m, long a, char *s);
 
@@ -49,7 +49,7 @@ void voicedrive_perform64 (t_voicedrive *x, t_object *dsp64, double **ins, long 
 void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("voicedrive~",
 						   (method)voicedrive_new,
@@ -71,7 +71,7 @@ int main (void)
 }
 
 
-void *voicedrive_new(long precision, long interrupt_on)
+void *voicedrive_new(t_atom_long precision, t_atom_long interrupt_on)
 {
     t_voicedrive *x = (t_voicedrive *)object_alloc(this_class);
     
@@ -83,8 +83,8 @@ void *voicedrive_new(long precision, long interrupt_on)
 	if (precision)
 		outlet_new((t_object *)x, "signal");
 	
-	x->interrupt_on = interrupt_on;
-	x->precision = precision;
+	x->interrupt_on = interrupt_on ? 1 : 0;
+	x->precision = precision ? 1 : 0;
 	x->drive = 1.;
 	x->length = 1.;
 	x->length_val = 1.;

@@ -16,9 +16,9 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1BB1FD90A4ECF4A0012288F /* denormkiller~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "denormkiller~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8141BBD10EB563E00CB75FA /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8AB85B410E6552800828F80 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B8AB85BF10E6555E00828F80 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8D556010EB905E30007D4B5 /* denormkiller~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "denormkiller~.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -39,7 +39,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8141BBD10EB563E00CB75FA /* AH_MaxMSP4.xcconfig */,
+				B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -119,6 +119,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "denormkiller~" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -172,7 +174,6 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141BBD10EB563E00CB75FA /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
@@ -191,17 +192,13 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141BBD10EB563E00CB75FA /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				ARCHS = (
 					ppc,
@@ -221,17 +218,13 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141BBD10EB563E00CB75FA /* AH_MaxMSP4.xcconfig */;
 			buildSettings = {
 				DEPLOYMENT_LOCATION = NO;
 				DSTROOT = "$(PROJECT_DIR)";
@@ -245,15 +238,13 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 			};
 			name = Default;
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -261,6 +252,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
@@ -268,6 +260,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_ALTIVEC_EXTENSIONS = YES;
 			};

@@ -47,4 +47,4 @@ void descriptors_descriptors_rt (t_descriptors *x, t_symbol *msg, short argc, t_
 void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
 
-#endif _DESCRIPTORS_SET_DESCRIPTORS_
+#endif /* _DESCRIPTORS_SET_DESCRIPTORS_ */

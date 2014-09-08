@@ -365,12 +365,12 @@ static __inline void vec_ustore(unsigned char *target, vector unsigned char src)
 {
     src = vec_perm( src, src, vec_lvsr( 0, target ) );
     vec_ste( (vector unsigned char) src, 0, (unsigned char*) target );
-    vec_ste( (vector unsigned short)src,1,(unsigned short*) target );
+    vec_ste( (vector unsigned short) src,1,(unsigned short*) target );
     vec_ste( (vector unsigned int) src, 3, (unsigned int*) target );
     vec_ste( (vector unsigned int) src, 4, (unsigned int*) target );
     vec_ste( (vector unsigned int) src, 8, (unsigned int*) target );
     vec_ste( (vector unsigned int) src, 12, (unsigned int*) target );
-    vec_ste( (vector unsigned short)src,14,(unsigned short*) target );
+    vec_ste( (vector unsigned short) src,14,(unsigned short*) target );
     vec_ste( (vector unsigned char) src,15,(unsigned char*) target );
 }
 

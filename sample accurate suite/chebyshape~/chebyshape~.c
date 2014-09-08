@@ -39,7 +39,7 @@ typedef struct _chebyshape
 } t_chebyshape;
 
 
-void *chebyshape_new (long num_coeff, long offset);
+void *chebyshape_new (t_atom_long num_coeff, t_atom_long offset);
 void chebyshape_free (t_chebyshape *x);
 void chebyshape_assist (t_chebyshape *x, void *b, long m, long a, char *s);
 
@@ -53,7 +53,7 @@ void chebyshape_perform_dynamicdsp64 (t_chebyshape *x, t_object *dsp64, double *
 void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new("chebyshape~",
 				(method)chebyshape_new,
@@ -75,13 +75,21 @@ int main (void)
 }
 
 
-void *chebyshape_new(long num_coeff, long offset)
+void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
 {
     t_chebyshape *x = (t_chebyshape *)object_alloc(this_class);
     
 	void *dynamicdsp_parent;
 	long declaredsigins;
 
+    // Get dynamicdsp~ host (if it exists)
+	
+	dynamicdsp_parent = Get_Dynamic_Object();
+	declaredsigins = Dynamic_Get_Declared_Sigins(dynamicdsp_parent);
+	
+	x->sig_ins = Dynamic_Get_Sigins(dynamicdsp_parent);
+	x->declaredsigins = declaredsigins;
+    
 	// Number of coefficients
 	
 	if (num_coeff < 2) 
@@ -95,6 +103,8 @@ void *chebyshape_new(long num_coeff, long offset)
 	
 	if (offset < 0)
 		offset = 0;
+    if (offset > declaredsigins)
+		offset = declaredsigins;
 	
 	if (!offset)
     {
@@ -106,16 +116,8 @@ void *chebyshape_new(long num_coeff, long offset)
 	{	
 		dsp_setup((t_pxobject *)x, 2);
 		outlet_new((t_object *)x, "signal");
-		x->offset = offset;
+		x->offset = (long) offset;
 	}
-
-	// Get dynamicdsp~ host (if it exists)
-	
-	dynamicdsp_parent = Get_Dynamic_Object();
-	declaredsigins = Dynamic_Get_Declared_Sigins(dynamicdsp_parent);
-	
-	x->sig_ins = Dynamic_Get_Sigins(dynamicdsp_parent);
-	x->declaredsigins = declaredsigins;
 		
 	return (x);
 }

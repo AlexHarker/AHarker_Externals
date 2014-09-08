@@ -40,6 +40,7 @@
 
 
 // FIX - It seems I should clean up the threads better here....
+// FIX - use an atomic counter for autoloadbalance to decrease thread sync costs
 
 // ========================================================================================================================================== //
 // Global Varibles
@@ -856,6 +857,11 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	char windowname[280];
 	void *p;
 		
+    long save_inhibit_state;
+    t_symbol *ps_inhibit_subpatcher_vis = gensym("inhibit_subpatcher_vis");
+    t_symbol *ps_PAT = gensym("#P");
+    t_patcher *saveparent;
+    
 	validtypes[0] = FOUR_CHAR_CODE('maxb');
 	validtypes[1] = FOUR_CHAR_CODE('TEXT');
 	validtypes[2] = FOUR_CHAR_CODE('JSON');
@@ -927,10 +933,20 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	// Load the patch (don't interrupt dsp)
 	
-	saveloadupdate = dsp_setloadupdate(false);
+    saveloadupdate = dsp_setloadupdate(false);
+    saveparent = (t_patcher *)ps_PAT->s_thing;
+    ps_PAT->s_thing = (t_object *) x->parent_patch;
+    save_inhibit_state = ps_inhibit_subpatcher_vis->s_thing;
+    ps_inhibit_subpatcher_vis->s_thing = (t_object *) -1;
+    loadbang_suspend();
+    
+	//saveloadupdate = dsp_setloadupdate(false);
 	p = intload(patch_name, patch_path, 0 , argc, argv, false);
-	dsp_setloadupdate(saveloadupdate);
-	
+	//dsp_setloadupdate(saveloadupdate);
+		
+    ps_inhibit_subpatcher_vis->s_thing = save_inhibit_state;
+    ps_PAT->s_thing = (t_object *) saveparent;
+    
 	// Check something has loaded
 	
 	if (!p) 
@@ -958,14 +974,20 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 #else
 	jpatcher_set_title(p, gensym(windowname));
 #endif
-	
+    
+    object_method(p, gensym("setclass"));
+    
 	// Set the relevant associations (for Max 5 the dynamicdsp_setsubassoc call covers all of this)
 	
 #ifndef MAX5
 	((t_wind *)((t_patcher *)p)->p_wind)->w_refcount = 1;										// set subpatcher flag: no free on close
 #endif
-	dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_setsubassoc, x, x);			// associate subpatches with this instance
-	
+	//dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_setsubassoc, x, x);			// associate subpatches with this instance
+    {
+        long result = 0;
+    object_method((t_patcher *)p,gensym("traverse"),dynamicdsp_setsubassoc,x,&result);
+    }
+    
 	// Link inlets and outlets
 	
 	if (x->declared_ins) 
@@ -973,6 +995,9 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	if (x->declared_outs) 
 		dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_linkoutlets, x, x);
 	
+    dsp_setloadupdate(saveloadupdate);
+    loadbang_resume();
+    
 	// Copy all the relevant data into the patch space
 	
 	patch_space_ptr->the_patch = p;
@@ -997,9 +1022,11 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	}
 	
 	// Compile the dspchain in case dsp is on
-	
+	// FIX - do this twice as hack for gen~ patchers...
+    
 	dynamicdsp_dsp_internal (patch_space_ptr, x->last_vec_size, x->last_samp_rate);
-	
+	//dynamicdsp_dsp_internal (patch_space_ptr, x->last_vec_size, x->last_samp_rate);
+
 	// The patch is valid and ready to go
 	
 	patch_space_ptr->patch_valid = 1;
@@ -1784,16 +1811,38 @@ void dynamicdsp_dsp64 (t_dynamicdsp *x, t_object *dsp64, short *count, double sa
 }
 
 
+t_signal **poly_allocsignals(long numsignals, long vs, long sr)
+{
+	t_signal **sigs = (t_signal **) sysmem_newptr(sizeof(t_signal *) * numsignals);
+	long i;
+	for (i=0; i < numsignals; i++) {
+		t_signal *ps = (t_signal *) sysmem_newptrclear(sizeof(t_signal));
+		ps->s_n = vs;
+		ps->s_size = sizeof(t_sample);   // correct based on MSP64 define
+		ps->s_sr = sr;
+		ps->s_ptr = (char *) sysmem_newptrclear(ps->s_n * ps->s_size + 32);
+		ps->s_vec = (t_sample *) ps->s_ptr;
+		sigs[i] = ps;
+	}
+	return sigs;
+}
+
 void dynamicdsp_dsp_internal (t_patchspace *patch_space_ptr, long vec_size, long samp_rate)
 {
-	// Free the old dspchain
+	t_dspchain *c;
+    // Free the old dspchain
 		
 	if (patch_space_ptr->the_dspchain)
 		freeobject((t_object *)patch_space_ptr->the_dspchain);
 	
 	// Recompile 
 	
-	patch_space_ptr->the_dspchain = dspchain_compile(patch_space_ptr->the_patch, vec_size, samp_rate);	
+	//patch_space_ptr->the_dspchain = dspchain_compile(patch_space_ptr->the_patch, vec_size, samp_rate);
+    
+    c = dspchain_start(vec_size, samp_rate);
+    //c->c_inputs = poly_allocsignals(1, vec_size, samp_rate);
+    //c->c_intype = 1;
+    patch_space_ptr->the_dspchain = dspchain_compile2(patch_space_ptr->the_patch, c);
 }
 
 
@@ -2018,7 +2067,7 @@ void dynamicdsp_dowclose(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 
 
 // ========================================================================================================================================== //
-// Patcher Utilities (these deal with various updating and necessary behind the scens state stuff)
+// Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
 // ========================================================================================================================================== //
 
 
@@ -2047,7 +2096,7 @@ short dynamicdsp_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynamicd
 		if (b->b_firstin) 
 		{
 			index = 0;
-			while (p2 = object_subpatcher(b->b_firstin, &index, arg))
+			while ((p2 = object_subpatcher(b->b_firstin, &index, arg)))
 			{
 				if (dynamicdsp_patcher_descend(p2, fn, arg, x))
 					return 1;
@@ -2060,7 +2109,7 @@ short dynamicdsp_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynamicd
 		if (b) 
 		{
 			index = 0;
-			while (p2 = object_subpatcher(jbox_get_object(b), &index, arg))
+			while ((p2 = object_subpatcher(jbox_get_object(b), &index, arg)))
 				if (dynamicdsp_patcher_descend(p2, fn, arg, x))
 					return 1;
 		}
@@ -2081,7 +2130,7 @@ short dynamicdsp_setsubassoc(t_patcher *p, t_dynamicdsp *x)
 	object_method(p, ps_getassoc, &assoc);
 	if (!assoc) 
 		object_method(p, ps_setassoc, x);
-	object_method(p, ps_noedit, 1);
+	//object_method(p, ps_noedit, 1);
 
 #endif
 	
