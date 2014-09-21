@@ -1196,8 +1196,8 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 	long i;
 	
 	char playing;
-	
-	temp[0] = outs[0];
+	    
+	temp[0] = NULL;
 	temp[1] = (void *) (offsets + vec_size);
 	temp[2] = (void *) ((float *) temp[1] + vec_size);
 	temp[3] = (void *) ((float *) temp[2] + vec_size);

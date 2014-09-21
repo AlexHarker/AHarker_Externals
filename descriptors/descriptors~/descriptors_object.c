@@ -331,7 +331,7 @@ void descriptors_fft_params_internal (t_descriptors *x, long fft_size, long hop_
 	
 	descriptors_generate_window(x, x->window, window_size, x->fft_size, window_select);
 	descriptors_zero_ring_buffers(x, x->fft_size);
-	calc_curves(x);
+    calc_curves(x);
 	
 	x->window_size = window_size;
 	x->reset_fft = 1;
@@ -479,10 +479,10 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	
 	// Calculate the gain of the window
 	
-	for (i = 0, gain = 0; i < window_size; i++)
+	for (i = 0, gain = 0.0; i < window_size; i++)
 		gain += (double) window[i];
 
-	scale = (float) 1. / ((float) gain);
+	scale = (float) (1.0 / gain);
 	
 	for (i = 0; i < window_size; i++)
 		window[i] *= scale;
@@ -497,16 +497,16 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	// Zero pad to fft_size
 		
 	for (i = window_size; i < fft_size; i++)
-		raw_frame[i] = 0;
+		raw_frame[i] = 0.f;
 		
 	// Do fft 
 		
 	hisstools_unzip_f(raw_frame, &raw_fft_frame, fft_size_log2);
-	hisstools_fft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
-		
+	hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
+    
 	// Zero nyquist bin (have to match what is done elsewhere)
 	
-	raw_fft_frame.imagp[0] = 0.;
+	raw_fft_frame.imagp[0] = 0.f;
 	
 	// Calulate square amplitudes
 		
@@ -515,13 +515,12 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 		
 	// Now sum 
 
-	gain = 0.;
-	for (i = 0; i < fft_size_halved; i++)
+	for (i = 0, gain = 0.0; i < fft_size_halved; i++)
 		gain += amplitudes[i];
 		
 	// N.B. - the window has been scaled for amplitude gain
 	
-	x->energy_compensation = 1. / gain;							
+	x->energy_compensation = 1.0 / gain;
 }
 
 
@@ -983,7 +982,7 @@ void calc_loudness_curve (double *loudness_curve, long num_bins, double bin_freq
 		loudness_curve[i] = pow(10., (-3.64 * pow(f, -0.8) + 6.5 * exp(-0.6 * (f - 3.3) * (f - 3.3)) - (0.001 * (f * f * f * f))) / 20.);
 	}
 	
-	// Now square it to get a power curve (so we can do a straight multiply later
+	// Now square it to get a power curve (so we can do a straight multiply later)
 	
 	for (i = 0; i < num_bins; i++)
 		loudness_curve[i] *= loudness_curve[i];
