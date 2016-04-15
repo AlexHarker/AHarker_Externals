@@ -12,6 +12,7 @@ FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-include
 // Special Files
 
 GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
+GCC_PRECOMPILE_PREFIX_HEADER = YES
 INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings

@@ -44,7 +44,7 @@ void ibuffer_init ()
 
 #ifdef __APPLE__
 
-__inline void convert_and_scale_int32_to_float (float *out, AH_SIntPtr n_samps)
+static __inline void convert_and_scale_int32_to_float (float *out, AH_SIntPtr n_samps)
 {
 	vFloat scale = {TWO_POW_31_RECIP, TWO_POW_31_RECIP, TWO_POW_31_RECIP, TWO_POW_31_RECIP};
 	
@@ -67,7 +67,7 @@ __inline void convert_and_scale_int32_to_float (float *out, AH_SIntPtr n_samps)
 
 #else
 
-__inline void convert_and_scale_int32_to_float (float *out, AH_SIntPtr n_samps)
+static __inline void convert_and_scale_int32_to_float (float *out, AH_SIntPtr n_samps)
 {
 	vFloat scale = {TWO_POW_31_RECIP, TWO_POW_31_RECIP, TWO_POW_31_RECIP, TWO_POW_31_RECIP};
 	
@@ -271,17 +271,17 @@ for (i <<= 3; i < n_samps; i++)					\
 for (; i < ((n_samps + 3) >> 2) << 2; i++)		\
 *out++ = 0;
 
-__inline void ibuffer_fetch_samps_float (float *out, float *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
+static __inline void ibuffer_fetch_samps_float (float *out, float *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
 {	
 	IBUFFER_FETCH_LOOP_UNROLL (*out++ = *(samps + *offsets++))
 }
 
-__inline void ibuffer_fetch_samps_16 (AH_SInt32 *out, AH_SInt16 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
+static __inline void ibuffer_fetch_samps_16 (AH_SInt32 *out, AH_SInt16 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
 {
 	IBUFFER_FETCH_LOOP_UNROLL (*out++ = (*(samps + *offsets++) << 16))
 }
 
-__inline void ibuffer_fetch_samps_24 (AH_SInt32 *out, AH_SInt8 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
+static __inline void ibuffer_fetch_samps_24 (AH_SInt32 *out, AH_SInt8 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
 {	
 #if (TARGET_RT_LITTLE_ENDIAN)
 	IBUFFER_FETCH_LOOP_UNROLL (*out++ = (*((AH_SInt32 *) ((samps - 1) + *offsets++)) & MASK_24_BIT))
@@ -290,7 +290,7 @@ __inline void ibuffer_fetch_samps_24 (AH_SInt32 *out, AH_SInt8 *samps, AH_SIntPt
 #endif
 }
 
-__inline void ibuffer_fetch_samps_32 (AH_SInt32 *out, AH_SInt32 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
+static __inline void ibuffer_fetch_samps_32 (AH_SInt32 *out, AH_SInt32 *samps, AH_SIntPtr *offsets, AH_SIntPtr n_samps)
 {
 	IBUFFER_FETCH_LOOP_UNROLL (*out++ = (*(samps + *offsets++)))
 }
@@ -821,7 +821,7 @@ void ibuffer_double_samps_simd_nointerp (void *samps, vDouble *out, AH_SIntPtr *
 		{
 			int_temp = *int_vec++;
 			*out++ = F64_VEC_MUL_OP(scale, F64_VEC_FROM_I32(int_temp));
-			*out++ = F64_VEC_MUL_OP(scale, F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(int_temp, 0xE)));
+			*out++ = F64_VEC_MUL_OP(scale, F64_VEC_FROM_I32(I32_VEC_SHUFFLE(int_temp, 0xE)));
 		}
 	}
 }
@@ -892,8 +892,8 @@ void ibuffer_lin_interp_int_to_double (vDouble *out, void **inbuffers, vDouble *
 			
 		*out++ = F64_VEC_MUL_OP (scale, F64_VEC_ADD_OP (y0, F64_VEC_MUL_OP (*fracts++, F64_VEC_SUB_OP (y1, y0))));  
 		
-		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(ya, 0xE));
-		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yb, 0xE)); 
+		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(ya, 0xE));
+		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yb, 0xE));
 		
 		*out++ = F64_VEC_MUL_OP (scale, F64_VEC_ADD_OP (y0, F64_VEC_MUL_OP (*fracts++, F64_VEC_SUB_OP (y1, y0))));  
 	}
@@ -1030,10 +1030,10 @@ void ibuffer_cubic_bspline_int_to_double (vDouble *out, void **inbuffers, vDoubl
 		
 		*out++ = F64_VEC_MUL_OP (scale, F64_VEC_ADD_OP (c0, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c1, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c2, F64_VEC_MUL_OP (xval, c3))))))); 
 		
-		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(ya, 0xE));
-		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yb, 0xE)); 
-		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yc, 0xE));
-		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yd, 0xE));
+		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(ya, 0xE));
+		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yb, 0xE));
+		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yc, 0xE));
+		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yd, 0xE));
 		
 		xval = *in1++;
 		y0py2 = F64_VEC_ADD_OP (y0 , y2);								
@@ -1179,10 +1179,10 @@ void ibuffer_cubic_hermite_int_to_double (vDouble *out, void **inbuffers, vDoubl
 		
 		*out++ = F64_VEC_MUL_OP (scale, F64_VEC_ADD_OP (y1, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c1, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c2, F64_VEC_MUL_OP (xval, c3))))))); 
 		
-		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(ya, 0xE));
-		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yb, 0xE)); 
-		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yc, 0xE));
-		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yd, 0xE));
+		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(ya, 0xE));
+		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yb, 0xE));
+		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yc, 0xE));
+		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yd, 0xE));
 		
 		xval = *in1++;
 		c1 = F64_VEC_MUL_OP (Half, F64_VEC_SUB_OP (y2, y0));
@@ -1325,10 +1325,10 @@ void ibuffer_cubic_lagrange_int_to_double (vDouble *out, void **inbuffers, vDoub
 		
 		*out++ = F64_VEC_MUL_OP (scale, F64_VEC_ADD_OP (y1, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c1, F64_VEC_MUL_OP (xval, F64_VEC_ADD_OP (c2, F64_VEC_MUL_OP (xval, c3))))))); 
 		
-		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(ya, 0xE));
-		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yb, 0xE)); 
-		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yc, 0xE));
-		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE_OP(yd, 0xE));
+		y0 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(ya, 0xE));
+		y1 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yb, 0xE));
+		y2 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yc, 0xE));
+		y3 = F64_VEC_FROM_I32(I32_VEC_SHUFFLE(yd, 0xE));
 		
 		xval = *in1++;
 		c1 = F64_VEC_SUB_OP (F64_VEC_SUB_OP (y2, F64_VEC_MUL_OP (Third, y0)) , F64_VEC_ADD_OP (F64_VEC_MUL_OP (Half, y1), F64_VEC_MUL_OP (Sixth, y3)));

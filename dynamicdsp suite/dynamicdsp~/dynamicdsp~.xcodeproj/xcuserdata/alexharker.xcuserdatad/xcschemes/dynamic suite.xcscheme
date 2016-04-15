@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0600"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
-               BuildableName = "dynamic suite"
-               BlueprintName = "dynamic suite"
+               BuildableName = "dynamic objects"
+               BlueprintName = "dynamic objects"
                ReferencedContainer = "container:dynamicdsp~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -40,8 +40,18 @@
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <PathRunnable
-         FilePath = "/Applications/Max 6.1/Max Runtime.app">
+         runnableDebuggingMode = "0"
+         FilePath = "/Applications/Max.app">
       </PathRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
+            BuildableName = "dynamic objects"
+            BlueprintName = "dynamic objects"
+            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -51,6 +61,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Deployment"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
+            BuildableName = "dynamic objects"
+            BlueprintName = "dynamic objects"
+            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Development">

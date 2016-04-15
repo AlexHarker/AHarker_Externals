@@ -16,127 +16,111 @@
 
 #include <ext.h>
 
-
 #define DynamicIsValid(x) \
 (x && ((((t_symbol *) ob_sym (x)) == gensym("dynamicdsp~")) || (ob_sym (x)) == gensym("dynamicserial~")))
-
 
 //////////////////////////////////////////////// Object Queries ////////////////////////////////////////////////
 
 // These routines *must* be called these routines at loadbang - they are bogus at any other time
 
-__inline void *Get_Dynamic_Object() 
+static __inline void *Get_Dynamic_Object() 
 {
-	void *Dynamic_Object = (void *) gensym("___DynamicDSP~___")->s_thing;
+	void *obj = (void *) gensym("___DynamicDSP~___")->s_thing;
 
-	if (DynamicIsValid(Dynamic_Object))
-		return Dynamic_Object;
+	if (DynamicIsValid(obj))
+		return obj;
 	else
-		return 0;
+		return NULL;
 }
 
-
-__inline long Get_Dynamic_Patch_Index(void *Dynamic_Object) 
+static __inline long Get_Dynamic_Patch_Index(void *obj)
 {
-	if (DynamicIsValid(Dynamic_Object))
+	if (DynamicIsValid(obj))
 		return (long) gensym("___DynamicPatchIndex___")->s_thing;
 	else
-		return 0;
+		return 0L;
 }
-
 
 //////////////////////////////////////////////// Signal IO Queries ////////////////////////////////////////////////
 
-
-__inline long Dynamic_Get_Declared_Sigins(void *Dynamic_Object)
+static __inline long Dynamic_Get_Num_Sig_Ins(void *obj)
 {
-	if (DynamicIsValid(Dynamic_Object))
-		return (long) mess0((t_object *)Dynamic_Object, gensym("get_declared_sigins"));
+	if (DynamicIsValid(obj))
+		return (long) mess0((t_object *)obj, gensym("get_num_sigins"));
 	else
-		return 0;
+		return 0L;
 }
 
-
-__inline long Dynamic_Get_Declared_Sigouts(void *Dynamic_Object)
+static __inline long Dynamic_Get_Num_Sig_Outs(void *obj)
 {
-	if (DynamicIsValid(Dynamic_Object))
-		return (long) mess0((t_object *)Dynamic_Object, gensym ("get_declared_sigouts"));
+	if (DynamicIsValid(obj))
+		return (long) mess0((t_object *)obj, gensym ("get_num_sigouts"));
 	else
-		return 0;
+		return 0L;
 }
 
-
-__inline void **Dynamic_Get_Sigins(void *Dynamic_Object)
+static __inline void **Dynamic_Get_Sig_In_Ptrs(void *obj)
 {
-	if (DynamicIsValid(Dynamic_Object))
-		return mess0((t_object *)Dynamic_Object, gensym ("get_sigins"));
+	if (DynamicIsValid(obj))
+		return mess0((t_object *)obj, gensym ("get_sigins"));
 	else	
-		return 0;
+		return NULL;
 }
 
-
-__inline void ***Dynamic_Get_Outptrs_Ptr(void *Dynamic_Object, long index)
+static __inline void ***Dynamic_Get_Sig_Out_Handle(void *obj, long index)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		return mess1((t_object *)Dynamic_Object, gensym("get_outptrs_ptr"), (void *)index);
+	if (DynamicIsValid(obj) && index > 0)
+		return mess1((t_object *)obj, gensym("get_sigouts"), (void *)index);
 	else
-		return 0;
+		return NULL;
 }
-
 
 //////////////////////////////////////////////// State Queries ////////////////////////////////////////////////
 
-
-__inline long Dynamic_Get_Patch_On (void *Dynamic_Object, long index)
+static __inline t_atom_long Dynamic_Get_Patch_On(void *obj, long index)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		return (long) mess1((t_object *)Dynamic_Object, gensym("get_patch_on"), (void *)index);
+	if (DynamicIsValid(obj) && index > 0)
+		return (t_atom_long) mess1((t_object *)obj, gensym("get_patch_on"), (void *)index);
 	
 	return 0;
 }
 
-
-__inline void Dynamic_Set_Patch_Busy (void *Dynamic_Object, long index, long state)
+static __inline t_atom_long Dynamic_Get_Patch_Busy(void *obj, long index)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		mess2((t_object *)Dynamic_Object, gensym("set_patch_busy"), (void *)index, (void *)state);
+    if (DynamicIsValid(obj) && index > 0)
+        return (t_atom_long) mess1((t_object *)obj, gensym("get_patch_busy"), (void *)index);
+    
+    return 0;
 }
 
-
-__inline void Dynamic_Set_Patch_On (void *Dynamic_Object, long index, long state)
+static __inline void Dynamic_Set_Patch_Busy(void *obj, long index, t_atom_long state)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		mess2((t_object *)Dynamic_Object, gensym("set_patch_on"), (void *)index, (void *)state);
+	if (DynamicIsValid(obj) && index > 0)
+		mess2((t_object *)obj, gensym("set_patch_busy"), (void *)index, (void *)state);
 }
 
-
-__inline long Dynamic_Get_Patch_Busy (void *Dynamic_Object, long index)
+static __inline void Dynamic_Set_Patch_On (void *obj, long index, t_atom_long state)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		return (long) mess1((t_object *)Dynamic_Object, gensym("get_patch_busy"), (void *)index);
-	
-	return 0;
+	if (DynamicIsValid(obj) && index > 0)
+		mess2((t_object *)obj, gensym("set_patch_on"), (void *)index, (void *)state);
 }
 
 //////////////////////////////////////////////// Temporary Memory Queries ////////////////////////////////////////////////
 
-
-__inline long Dynamic_Temp_Mem_Resize (void *Dynamic_Object, long index, long size)
+static __inline void **Dynamic_Get_Temp_Mem(void *obj, long index, void **default_memory)
 {
-	if (DynamicIsValid(Dynamic_Object))
-		return (long) mess2((t_object *)Dynamic_Object, gensym("temp_mem_resize"), (void *) index, (void *) size);
+	if (DynamicIsValid(obj) && index > 0)
+		return mess1((t_object *)obj, gensym("get_temp_mem"), (void *)index);
 	else
-		return 0;
+		return default_memory;
 }
 
-
-__inline void **Dynamic_Get_TempMem (void *Dynamic_Object, long index, void **DefMem)
+static __inline long Dynamic_Temp_Mem_Resize(void *obj, long index, t_ptr_uint size)
 {
-	if (DynamicIsValid(Dynamic_Object) && index > 0)
-		return mess1((t_object *)Dynamic_Object, gensym("get_temp_mem"), (void *) index);
-	else
-		return DefMem;
+    if (DynamicIsValid(obj))
+        return (long) mess2((t_object *)obj, gensym("temp_mem_resize"), (void *)index, (void *)size);
+    else
+        return 0;
 }
-
 
 #endif		/* _DYNAMICDSP_	*/

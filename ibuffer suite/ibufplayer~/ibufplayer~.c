@@ -46,7 +46,7 @@ typedef struct _ibufplayer
 
     t_transport_flag transport_flag;
     
-	char sig_control, input_connected, playing;
+	bool sig_control, input_connected, playing;
 	long interp_mode, obj_n_chans;
 	
 	void **temp_mem;
@@ -61,42 +61,40 @@ typedef struct _ibufplayer
 } t_ibufplayer;
 
 
+void *ibufplayer_new(t_atom_long obj_n_chans);
+void ibufplayer_free(t_ibufplayer *x);
+void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s);
 
-
-void *ibufplayer_new (long obj_n_chans);
-void ibufplayer_free (t_ibufplayer *x);
-void ibufplayer_assist (t_ibufplayer *x, void *b, long m, long a, char *s);
-
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, short argc, t_atom *argv);
+void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s);
-void ibufplayer_vols (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv);
-void ibufplayer_interp (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv);
-void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv);
-void ibufplayer_stop (t_ibufplayer *x);
+void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
+void ibufplayer_interp(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
+void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
+void ibufplayer_stop(t_ibufplayer *x);
 
-void ibufplayer_done_bang (t_ibufplayer *x);
+void ibufplayer_done_bang(t_ibufplayer *x);
 
-__inline long ibufplayer_phase (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-							  char sig_control, vFloat *in,  vFloat *fracts, long *offsets, float *phase_out, long vec_size);
+static __inline long ibufplayer_phase(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+							  bool sig_control, vFloat *in,  vFloat *fracts, AH_SIntPtr *offsets, float *phase_out, long vec_size);
 
-__inline long ibufplayer_phase_scalar (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-									 char sig_control, float *f_in,  float *f_fracts, long *offsets, float *phase_out, long vec_size);
+static __inline long ibufplayer_phase_scalar(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+									 bool sig_control, float *f_in,  float *f_fracts, AH_SIntPtr *offsets, float *phase_out, long vec_size);
 
-t_int *ibufplayer_perform (t_int *w);
-t_int *ibufplayer_perform_small (t_int *w);
-void ibufplayer_dsp (t_ibufplayer *x, t_signal **sp, short *count);
+t_int *ibufplayer_perform(t_int *w);
+t_int *ibufplayer_perform_small(t_int *w);
+void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
 
-__inline long ibufplayer_phase64 (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-								char sig_control, double *in,  double *fracts, long *l_offsets, double *d_phase_out, long vec_size);
+//static __inline long ibufplayer_phase64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+//								bool sig_control, double *in,  double *fracts, AH_SIntPtr *l_offsets, double *d_phase_out, long vec_size);
 
-__inline long ibufplayer_phase_scalar64 (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-										 char sig_control, double *f_in,  double *f_fracts, long *offsets, double *phase_out, long vec_size);
+static __inline long ibufplayer_phase_scalar64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+										 bool sig_control, double *in,  double *fracts, AH_SIntPtr *offsets, double *phase_out, long vec_size);
 
-void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufplayer_dsp64 (t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibufplayer_perform_small64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class = class_new ("ibufplayer~",
 							(method) ibufplayer_new, 
@@ -118,13 +116,13 @@ int main(void)
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
 	
-	ibuffer_init ();
-	
+	ibuffer_init();
+	  
 	return 0;
 }
 
 
-void *ibufplayer_new (long obj_n_chans)
+void *ibufplayer_new(t_atom_long obj_n_chans)
 {
     long i;
 	
@@ -151,11 +149,11 @@ void *ibufplayer_new (long obj_n_chans)
 	
 	x->pos = 0;
 	x->speed = 1;
-	x->sig_control = 0;
-	x->playing = 0;
-	x->transport_flag = FLAG_NONE;
+	x->sig_control = FALSE;
+	x->playing = FALSE;
+	x->input_connected = FALSE;
+    x->transport_flag = FLAG_NONE;
 	x->obj_n_chans = obj_n_chans;
-	x->input_connected = 0;
 	
 	x->buffer_pointer = 0;
 	x->buffer_name = 0;
@@ -170,7 +168,7 @@ void *ibufplayer_new (long obj_n_chans)
 	
 	x->interp_mode = INTERP_TYPE_CUBIC_BSPLINE;
 	
-	x->done_clock = clock_new (x, (method) ibufplayer_done_bang);
+	x->done_clock = clock_new(x, (method) ibufplayer_done_bang);
 	
 	// Get dynamicdsp~ host if it exists (for temporary memory)
 	
@@ -181,7 +179,7 @@ void *ibufplayer_new (long obj_n_chans)
 }
 
 
-void ibufplayer_free (t_ibufplayer *x)
+void ibufplayer_free(t_ibufplayer *x)
 {
 	dsp_free(&x->x_obj);
 	ALIGNED_FREE(x->default_mem);
@@ -189,7 +187,7 @@ void ibufplayer_free (t_ibufplayer *x)
 }
 
 
-void ibufplayer_assist (t_ibufplayer *x, void *b, long m, long a, char *s)
+void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
     {
@@ -231,15 +229,15 @@ void ibufplayer_assist (t_ibufplayer *x, void *b, long m, long a, char *s)
 }
 
 
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, short argc, t_atom *argv)
+void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	ibufplayer_set_internal(x, argc ? atom_getsym(argv) : 0);
 }
 
 
-void ibufplayer_set_internal (t_ibufplayer *x, t_symbol *s)
+void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 {
-	void *b = ibuffer_get_ptr (s);
+	void *b = ibuffer_get_ptr(s);
 	
 	if (b) 
 	{	
@@ -254,12 +252,12 @@ void ibufplayer_set_internal (t_ibufplayer *x, t_symbol *s)
 		x->buffer_pointer = 0;
 		x->buffer_name = 0;
 		if (s)
-			error ("ibufplayer~: no buffer %s", s->s_name);
+			error("ibufplayer~: no buffer %s", s->s_name);
 	}
 }
 
 
-void ibufplayer_vols (t_ibufplayer *x,  t_symbol *s, short argc, t_atom *argv)
+void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 {
 	x->vol1 = atom_getfloat(argv++);
 	
@@ -274,7 +272,7 @@ void ibufplayer_vols (t_ibufplayer *x,  t_symbol *s, short argc, t_atom *argv)
 }
 
 
-void ibufplayer_interp (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
+void ibufplayer_interp(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
 {
 	t_symbol *mode = argc ? atom_getsym(argv) : ps_bspline;
 	
@@ -290,13 +288,13 @@ void ibufplayer_interp (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 }
 
 
-void ibufplayer_stop (t_ibufplayer *x)
+void ibufplayer_stop(t_ibufplayer *x)
 {	
 	x->transport_flag = FLAG_STOP;
 }
 
 
-void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
+void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
 {
 	double sr_ms = 44.1;
 	double start_samp;
@@ -304,11 +302,11 @@ void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 	double start = 0; 
 	double end = -1; 
 	double speed = 1;
-	long sig_control = 0; 
+	t_atom_long sig_control = 0;
 	
 	// Set buffer if there is one named
 	
-	if (argc && argv[0].a_type == A_SYM) 
+	if (argc && atom_gettype(argv) == A_SYM) 
 	{
 		ibufplayer_set_internal(x, atom_getsym(argv++));
 		argc--;
@@ -335,7 +333,7 @@ void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 	
 	// Calculate parameters and set the play flag to be picked up in the perform routine
 	
-	sr_ms = 0.001 * ibuffer_sample_rate (x->buffer_pointer);
+	sr_ms = 0.001 * ibuffer_sample_rate(x->buffer_pointer);
 	if (start < 0) 
 		start = 0;
 	if (end < 0) 
@@ -361,12 +359,12 @@ void ibufplayer_play (t_ibufplayer *x, t_symbol *s, short argc, t_atom *argv)
 		x->max_samp = start_samp;
 	}
 	
-	x->sig_control = sig_control;
+    x->sig_control = sig_control ? TRUE : FALSE;
 	x->transport_flag = FLAG_PLAY;
 }
 
 
-void ibufplayer_done_bang (t_ibufplayer *x)
+void ibufplayer_done_bang(t_ibufplayer *x)
 {
 	outlet_bang(x->bang_outlet);
 }		
@@ -379,8 +377,8 @@ void ibufplayer_done_bang (t_ibufplayer *x)
 
 // SIMD phasors for varispeed / fixed speed - these can only be used under intel as there is no double precision floating point type under Altivec
 
-__inline long ibufplayer_phase (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-							  char sig_control, vFloat *in,  vFloat *fracts, long *l_offsets, float *f_phase_out, long vec_size)
+static __inline long ibufplayer_phase(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+							  bool sig_control, vFloat *in,  vFloat *fracts, AH_SIntPtr *l_offsets, float *f_phase_out, long vec_size)
 {
 	double phase_test[4];
 	double vpos_init[2];
@@ -395,12 +393,14 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 	vDouble vstartsamp			= {start_samp, start_samp};
 	vDouble	vlength_recip		= {length_recip, length_recip};
 	
+    // N.B. Here it is assumed that AH_SIntPtr is 32 bits wide, which is safe, because this function is only ever called when Max 5 is running (in 32 bits)
+
 	vDouble vpos, vfract1, vfract2, vphase1, vphase2, vmultspeed, vnextmultspeed;
 	vSInt32 *offsets = (vSInt32 *) l_offsets;
 	vFloat *phase_out = (vFloat *) f_phase_out;
 	vFloat *temp_fracts = fracts;
 	vFloat vspeedin, vnextspeedin;
-	vFloat vspeed = float2vector (speed);
+	vFloat vspeed = float2vector(speed);
 	vSInt32 vipos1, vipos2;
 	
 	if (sig_control)
@@ -410,10 +410,10 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 		
 		vpos_init[0] = pos;
 		vpos_init[1] = pos + *f_fracts;
-		vpos = F64_VEC_ULOAD (vpos_init);
+		vpos = F64_VEC_ULOAD(vpos_init);
 		
 		vnextspeedin = *fracts;
-		vnextmultspeed = F64_VEC_FROM_F32 (vnextspeedin);
+		vnextmultspeed = F64_VEC_FROM_F32(vnextspeedin);
 		
 		for (i = 0; i < vec_size >> 2; i++)
 		{
@@ -423,36 +423,36 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 			vnextspeedin = *(fracts + 1);				
 			
 			vmultspeed = vnextmultspeed;
-			vnextmultspeed = F64_VEC_FROM_F32 (F32_VEC_MOVE_HI (vspeedin, vspeedin));
+			vnextmultspeed = F64_VEC_FROM_F32(F32_VEC_MOVE_HI(vspeedin, vspeedin));
 			
-			vmultspeed = F64_VEC_ADD_OP (F64_VEC_SHUFFLE (vmultspeed, vnextmultspeed, 0x1), vmultspeed);
-			vipos1 = I32_VEC_FROM_F64_TRUNC (vpos);
-			vfract1 = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos1));
-			vphase1 = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vmultspeed = F64_VEC_ADD_OP(F64_VEC_SHUFFLE(vmultspeed, vnextmultspeed, 0x1), vmultspeed);
+			vipos1 = I32_VEC_FROM_F64_TRUNC(vpos);
+			vfract1 = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos1));
+			vphase1 = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			F64_VEC_USTORE (phase_test, F64_VEC_OR_OP (F64_VEC_GT_OP (vpos, vmaxsamp), F64_VEC_LT_OP (vpos, vminsamp)));
-			vpos = F64_VEC_ADD_OP (vpos, vmultspeed);			
+			F64_VEC_USTORE(phase_test, F64_VEC_OR_OP(F64_VEC_GT_OP(vpos, vmaxsamp), F64_VEC_LT_OP(vpos, vminsamp)));
+			vpos = F64_VEC_ADD_OP(vpos, vmultspeed);
 			
 			vmultspeed = vnextmultspeed;
-			vnextmultspeed = F64_VEC_FROM_F32 (vnextspeedin);
+			vnextmultspeed = F64_VEC_FROM_F32(vnextspeedin);
 			
-			vmultspeed = F64_VEC_ADD_OP (F64_VEC_SHUFFLE (vmultspeed, vnextmultspeed, 0x1), vmultspeed);
-			vipos2 = I32_VEC_FROM_F64_TRUNC (vpos);
-			vfract2 = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos2));
-			vphase2 = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vmultspeed = F64_VEC_ADD_OP(F64_VEC_SHUFFLE(vmultspeed, vnextmultspeed, 0x1), vmultspeed);
+			vipos2 = I32_VEC_FROM_F64_TRUNC(vpos);
+			vfract2 = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos2));
+			vphase2 = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			F64_VEC_USTORE (phase_test + 2 , F64_VEC_OR_OP (F64_VEC_GT_OP (vpos, vmaxsamp), F64_VEC_LT_OP (vpos, vminsamp)));
-			vpos = F64_VEC_ADD_OP (vpos, vmultspeed);
+			F64_VEC_USTORE(phase_test + 2 , F64_VEC_OR_OP(F64_VEC_GT_OP(vpos, vmaxsamp), F64_VEC_LT_OP(vpos, vminsamp)));
+			vpos = F64_VEC_ADD_OP(vpos, vmultspeed);
 			
-			*offsets++ = I32_VEC_OR_OP (vipos1, I32_VEC_SHUFFLE_OP (vipos2, 0x4E));
-			*fracts++ = F32_VEC_MOVE_LO (F32_VEC_FROM_F64 (vfract1), F32_VEC_FROM_F64 (vfract2));
-			*phase_out++ = F32_VEC_MOVE_LO (F32_VEC_FROM_F64 (vphase1), F32_VEC_FROM_F64 (vphase2)); 
+			*offsets++ = I32_VEC_OR_OP(vipos1, I32_VEC_SHUFFLE(vipos2, 0x4E));
+			*fracts++ = F32_VEC_MOVE_LO(F32_VEC_FROM_F64(vfract1), F32_VEC_FROM_F64(vfract2));
+			*phase_out++ = F32_VEC_MOVE_LO(F32_VEC_FROM_F64(vphase1), F32_VEC_FROM_F64(vphase2));
 			
 			if (phase_test[0] || phase_test[1] || phase_test[2] || phase_test[3])
 				break;
 		}
 		
-		F64_VEC_STORE_LO (pos_store, vpos);
+		F64_VEC_STORE_LO(pos_store, vpos);
 		todo =  i << 2;
 		
 		if (todo < vec_size)
@@ -479,28 +479,28 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 		vpos_init[0] = pos;
 		vpos_init[1] = pos + speed;
 		
-		vpos = F64_VEC_ULOAD (vpos_init);
+		vpos = F64_VEC_ULOAD(vpos_init);
 		
 		for (i = 0; i < (todo + 3) >> 2; i++)
 		{
-			vipos1 = I32_VEC_FROM_F64_TRUNC (vpos);
-			vfract1 = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos1));
-			vphase1 = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vipos1 = I32_VEC_FROM_F64_TRUNC(vpos);
+			vfract1 = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos1));
+			vphase1 = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			vpos = F64_VEC_ADD_OP (vpos, vdoublespeed);
+			vpos = F64_VEC_ADD_OP(vpos, vdoublespeed);
 			
-			vipos2 = I32_VEC_FROM_F64_TRUNC (vpos);
-			vfract2 = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos2));
-			vphase2 = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vipos2 = I32_VEC_FROM_F64_TRUNC(vpos);
+			vfract2 = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos2));
+			vphase2 = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			vpos = F64_VEC_ADD_OP (vpos, vdoublespeed);
+			vpos = F64_VEC_ADD_OP(vpos, vdoublespeed);
 			
-			*offsets++ = I32_VEC_OR_OP (vipos1, I32_VEC_SHUFFLE_OP (vipos2, 0x4E));
-			*fracts++ = F32_VEC_MOVE_LO (F32_VEC_FROM_F64 (vfract1), F32_VEC_FROM_F64 (vfract2));
-			*phase_out++ = F32_VEC_MOVE_LO (F32_VEC_FROM_F64 (vphase1), F32_VEC_FROM_F64 (vphase2));  
+			*offsets++ = I32_VEC_OR_OP(vipos1, I32_VEC_SHUFFLE(vipos2, 0x4E));
+			*fracts++ = F32_VEC_MOVE_LO(F32_VEC_FROM_F64(vfract1), F32_VEC_FROM_F64(vfract2));
+			*phase_out++ = F32_VEC_MOVE_LO(F32_VEC_FROM_F64(vphase1), F32_VEC_FROM_F64(vphase2));
 		}
 		
-		F64_VEC_STORE_LO (pos_store, vpos);
+		F64_VEC_STORE_LO(pos_store, vpos);
 	}
 	
 	for (i = todo; i < (((todo + 3) >> 2) << 2); i++)
@@ -511,10 +511,10 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 
 #else
 
-__inline long ibufplayer_phase (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-							  char sig_control, vFloat *in,  vFloat *fracts, long *l_offsets, float *f_phase_out, long vec_size)
+static __inline long ibufplayer_phase(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+							  bool sig_control, vFloat *in,  vFloat *fracts, AH_SIntPtr *l_offsets, float *f_phase_out, long vec_size)
 {
-	return ibufplayer_phase_scalar (pos_store, speed, start_samp, min_samp, max_samp, length_recip, sig_control, (float *) in,  (float *) fracts, l_offsets, f_phase_out, vec_size);
+	return ibufplayer_phase_scalar(pos_store, speed, start_samp, min_samp, max_samp, length_recip, sig_control, (float *) in,  (float *) fracts, l_offsets, f_phase_out, vec_size);
 }
 
 #endif
@@ -522,11 +522,12 @@ __inline long ibufplayer_phase (double *pos_store, double speed, double start_sa
 
 // Scalar phasors for use under ppc and for smaller vector sizes
 
-__inline long ibufplayer_phase_scalar (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-									 char sig_control, float *f_in,  float *f_fracts, long *offsets, float *phase_out, long vec_size)
+static __inline long ibufplayer_phase_scalar(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+									 bool sig_control, float *f_in,  float *f_fracts, AH_SIntPtr *offsets, float *phase_out, long vec_size)
 {
-	double pos = *pos_store;
-	long todo, ipos, i;
+    AH_SIntPtr ipos;
+    double pos = *pos_store;
+	long todo, i;
 	float fract;
 	
 	if (sig_control)
@@ -534,7 +535,7 @@ __inline long ibufplayer_phase_scalar (double *pos_store, double speed, double s
 		for (i = 0; i < vec_size; i++)
 		{
 			float multspeed = *f_in++ * speed;
-			*offsets++ = ipos = pos;
+			*offsets++ = ipos = (AH_SIntPtr) pos;
 			fract = pos - (double) ipos;
 			*phase_out++ = (pos - start_samp) * length_recip;
 			pos += multspeed;						
@@ -553,7 +554,7 @@ __inline long ibufplayer_phase_scalar (double *pos_store, double speed, double s
 		
 		for (i = 0; i < todo; i++)
 		{
-			*offsets++ = ipos = pos;
+			*offsets++ = ipos = (AH_SIntPtr) pos;
 			*f_fracts++ = pos - (double) ipos;
 			*phase_out++ = (pos - start_samp) * length_recip;
 			pos += speed;
@@ -565,7 +566,7 @@ __inline long ibufplayer_phase_scalar (double *pos_store, double speed, double s
 }	
 
 
-t_int *ibufplayer_perform (t_int *w)
+t_int *ibufplayer_perform(t_int *w)
 {		
 	// Ignore the copy of this function pointer (due to denormal fixer)
 	
@@ -577,7 +578,7 @@ t_int *ibufplayer_perform (t_int *w)
 	long vec_size = w[8];
     t_ibufplayer *x = (t_ibufplayer *) w[9];
 	
-	long *offsets = *x->temp_mem;
+	AH_SIntPtr *offsets = *x->temp_mem;
 	float *phase_out;
 	vFloat *fracts = (vFloat *) (offsets + vec_size);
 	
@@ -587,9 +588,9 @@ t_int *ibufplayer_perform (t_int *w)
 	
 	void *buffer_pointer = x->buffer_pointer;
 	void *samps = 0;
-	long length = 0;
 	long n_chans = 0;
 	long format = -1;
+    AH_SIntPtr length = 0;
 	
 	// Object and local variables
 	
@@ -605,14 +606,14 @@ t_int *ibufplayer_perform (t_int *w)
 	
 	long obj_n_chans = x->obj_n_chans;
 	long interp_mode = x->interp_mode;
-	char sig_control = x->sig_control;
-	char input_connected = x->input_connected;
-	long ispeed = speed;
+	bool sig_control = x->sig_control;
+	bool input_connected = x->input_connected;
+	bool on = FALSE;
+    long ispeed = speed;
 	long todo = 0;
-	long on = 0;
 	long i;
 
-	char playing;
+	bool playing;
 
 	outs[0] = (float *)(w[3]);
 	outs[1] = (float *)(w[4]);
@@ -663,8 +664,8 @@ t_int *ibufplayer_perform (t_int *w)
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = 1;
-			x->playing = 1;
+			on = TRUE;
+			x->playing = TRUE;
 		}
 	}
 	
@@ -727,16 +728,16 @@ t_int *ibufplayer_perform (t_int *w)
 			for (i = 0; i < obj_n_chans; i++)
 			{
 				if (vols[i] && n_chans > i)													
-					ibuffer_float_samps_simd_nointerp (samps, (vFloat *) outs[i], offsets, todo, n_chans, i, format, vols[i]);
+					ibuffer_float_samps_simd_nointerp(samps, (vFloat *) outs[i], offsets, todo, n_chans, i, format, vols[i]);
 			}
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	
 	playing = !(todo < vec_size);  
 	if (!playing && x->playing) 
-		clock_delay (x->done_clock, 0);
+		clock_delay(x->done_clock, 0);
 	x->playing = playing;
 	
 	return w + 10;
@@ -756,7 +757,7 @@ t_int *ibufplayer_perform_small (t_int *w)
 	long vec_size = w[8];
     t_ibufplayer *x = (t_ibufplayer *) w[9];
 	
-	long *offsets = *x->temp_mem;
+	AH_SIntPtr *offsets = *x->temp_mem;
 	float *phase_out;
 	float *fracts = (float *) (offsets + vec_size);	
 	
@@ -764,9 +765,9 @@ t_int *ibufplayer_perform_small (t_int *w)
 	
 	void *buffer_pointer = x->buffer_pointer;
 	void *samps = 0;
-	long length = 0;
 	long n_chans = 0;
 	long format = -1;
+    AH_SIntPtr length = 0;
 	
 	// Object and local variables
 	
@@ -782,14 +783,14 @@ t_int *ibufplayer_perform_small (t_int *w)
 	
 	long obj_n_chans = x->obj_n_chans;
 	long interp_mode = x->interp_mode;
-	char sig_control = x->sig_control;
-	char input_connected = x->input_connected;
-	long ispeed = speed;
+	bool sig_control = x->sig_control;
+	bool input_connected = x->input_connected;
+    bool on = FALSE;
+    long ispeed = speed;
 	long todo = 0;
-	long on = 0;
 	long i, j;
 	
-	char playing;
+    bool playing;
 
 	vols[0] = x->vol1;
 	vols[1] = x->vol2;
@@ -807,7 +808,7 @@ t_int *ibufplayer_perform_small (t_int *w)
 	// Zero outputs and set default position output
 	
 	for (i = 0; i < obj_n_chans; i++)									
-		memset (outs[i], 0, vec_size * sizeof(float));
+		memset(outs[i], 0, vec_size * sizeof(float));
 	
 	for (i = 0; i < vec_size; i++)									
 		outs[4][i] = 1.f;
@@ -835,8 +836,8 @@ t_int *ibufplayer_perform_small (t_int *w)
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = 1;
-			x->playing = 1;
+			on = TRUE;
+			x->playing = TRUE;
 		}
 	}
 	
@@ -846,11 +847,11 @@ t_int *ibufplayer_perform_small (t_int *w)
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
+		ibuffer_increment_inuse(buffer_pointer);
 		
 		// Calculate the phasor block
 		
-		todo = ibufplayer_phase_scalar (&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
+		todo = ibufplayer_phase_scalar(&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
 		x->pos = todo < vec_size ? -1.0 : pos;
 		
 		// Now get samples interpolate as relevant
@@ -908,9 +909,9 @@ t_int *ibufplayer_perform_small (t_int *w)
 }
 
 
-void ibufplayer_dsp (t_ibufplayer *x, t_signal **sp, short *count)
+void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
 {
-	long mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(long));
+	t_ptr_uint mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(AH_SIntPtr));
 	x->sr_div = 1.0 / sp[0]->s_sr;
 	
 	// Try to access dynamicdsp~ host tempory memory
@@ -920,7 +921,7 @@ void ibufplayer_dsp (t_ibufplayer *x, t_signal **sp, short *count)
 	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
 		x->default_mem = ALIGNED_MALLOC (mem_size);
 
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 	
@@ -977,8 +978,105 @@ void ibufplayer_dsp (t_ibufplayer *x, t_signal **sp, short *count)
 
 // SIMD phasors for varispeed / fixed speed - these can only be used under intel as there is no double precision floating point type under Altivec
 
-__inline long ibufplayer_phase64 (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-								char sig_control, double *d_in,  double *d_fracts, long *l_offsets, double *d_phase_out, long vec_size)
+#ifdef AH_64BIT
+
+//#define ibufplayer_phase64 ibufplayer_phase_scalar64
+
+static __inline long ibufplayer_phase64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+                                         bool sig_control, double *d_in,  double *d_fracts, AH_SIntPtr *l_offsets, double *d_phase_out, long vec_size)
+{
+    double phase_test[2];
+    double vpos_init[2];
+    double pos = *pos_store;
+    
+    long todo, i;
+    
+    vDouble vdoublespeed		= {speed + speed, speed + speed};
+    vDouble vminsamp			= {min_samp, min_samp};
+    vDouble vmaxsamp			= {max_samp, max_samp};
+    vDouble vstartsamp			= {start_samp, start_samp};
+    vDouble	vlength_recip		= {length_recip, length_recip};
+    
+    vSInt64 *offsets = (vSInt64 *) l_offsets;
+    
+    vDouble *in = (vDouble *) d_in;
+    vDouble *phase_out = (vDouble *) d_phase_out;
+    vDouble *fracts = (vDouble *) d_fracts;
+    
+    vDouble vpos, vmultspeed, vnextmultspeed;
+    vDouble vspeed = double2vector(speed);
+    
+    if (sig_control)
+    {
+        vpos_init[0] = pos;
+        vpos_init[1] = pos + (*d_in * speed);
+        vpos = F64_VEC_ULOAD(vpos_init);
+        
+        vnextmultspeed = F64_VEC_MUL_OP(*in++, vspeed);
+        
+        for (i = 0; i < (vec_size >> 1); i++)
+        {
+            // Note - this reads over by one vector but we own the subsequent memory - last vpos calc is incorrect and is discarded
+            
+            vmultspeed = vnextmultspeed;
+            vnextmultspeed = F64_VEC_MUL_OP(*in++, vspeed);
+            vmultspeed = F64_VEC_ADD_OP(F64_VEC_SHUFFLE(vmultspeed, vnextmultspeed, 0x1), vmultspeed);
+            
+            F64_VEC_SPLIT_I64_F64(vpos, offsets++, fracts++);
+            *phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
+            
+            F64_VEC_USTORE(phase_test, F64_VEC_OR_OP(F64_VEC_GT_OP(vpos, vmaxsamp), F64_VEC_LT_OP(vpos, vminsamp)));
+            vpos = F64_VEC_ADD_OP(vpos, vmultspeed);
+            
+            if (phase_test[0] || phase_test[1])
+                break;
+        }
+        
+        F64_VEC_STORE_LO(pos_store, vpos);
+        todo =  i << 1;
+        
+        // FIX - phase values could do with fixing here
+        // FIX - why do values seem bigger when using SIMD?
+        if (todo < vec_size)
+        {
+            if (!phase_test[0])
+            {
+                todo++;
+                if (!phase_test[1])
+                    todo++;
+            }
+        }
+    }
+    else
+    {
+        if (speed > 0)
+            todo = ((vec_size * speed) + pos > max_samp) ? (max_samp - pos) / speed : vec_size;
+        else
+            todo = ((vec_size * speed) + pos < min_samp) ? (min_samp - pos) / speed : vec_size;
+        
+        vpos_init[0] = pos;
+        vpos_init[1] = pos + speed;
+        
+        vpos = F64_VEC_ULOAD(vpos_init);
+        
+        for (i = 0; i < ((todo + 1) >> 1); i++)
+        {
+            F64_VEC_SPLIT_I64_F64(vpos, offsets++, fracts++);
+            *phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
+            vpos = F64_VEC_ADD_OP(vpos, vdoublespeed);
+        }
+        
+        F64_VEC_STORE_LO(pos_store, vpos);
+    }
+    
+    for (i = todo; i < (((todo + 1) >> 1) << 1); i++)
+        d_phase_out[i] = 1.0;
+    
+    return todo;
+}
+#else
+static __inline long ibufplayer_phase64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+								bool sig_control, double *d_in,  double *d_fracts, AH_SIntPtr *l_offsets, double *d_phase_out, long vec_size)
 {
 	double phase_test[4];
 	double vpos_init[2];
@@ -1002,47 +1100,49 @@ __inline long ibufplayer_phase64 (double *pos_store, double speed, double start_
 	vDouble vspeed = double2vector (speed);
 	vSInt32 vipos1, vipos2;
 	
+    return ibufplayer_phase_scalar64(pos_store, speed, start_samp, min_samp, max_samp, length_recip, sig_control, d_in, d_fracts, l_offsets, d_phase_out, vec_size);
+    
 	if (sig_control)
 	{		
 		vpos_init[0] = pos;
 		vpos_init[1] = pos + (*d_in * speed);
 		vpos = F64_VEC_ULOAD (vpos_init);
 		
-		vnextmultspeed = F64_VEC_MUL_OP (*in++, vspeed);
+		vnextmultspeed = F64_VEC_MUL_OP(*in++, vspeed);
 		
-		for (i = 0; i < vec_size >> 2; i++)
+		for (i = 0; i < (vec_size >> 2); i++)
 		{
 			// Note - this reads over by one vector but we own the subsequent memory - last vpos calc is incorrect and is discarded
 			
 			vmultspeed = vnextmultspeed;
-			vnextmultspeed = F64_VEC_MUL_OP (*in++, vspeed);				
-			vmultspeed = F64_VEC_ADD_OP (F64_VEC_SHUFFLE (vmultspeed, vnextmultspeed, 0x1), vmultspeed);
+			vnextmultspeed = F64_VEC_MUL_OP(*in++, vspeed);
+			vmultspeed = F64_VEC_ADD_OP(F64_VEC_SHUFFLE(vmultspeed, vnextmultspeed, 0x1), vmultspeed);
 
-			vipos1 = I32_VEC_FROM_F64_TRUNC (vpos);
-			*fracts++ = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos1));			
-			*phase_out++ = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vipos1 = I32_VEC_FROM_F64_TRUNC(vpos);
+			*fracts++ = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos1));
+			*phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			F64_VEC_USTORE (phase_test, F64_VEC_OR_OP (F64_VEC_GT_OP (vpos, vmaxsamp), F64_VEC_LT_OP (vpos, vminsamp)));
-			vpos = F64_VEC_ADD_OP (vpos, vmultspeed);	
+			F64_VEC_USTORE(phase_test, F64_VEC_OR_OP(F64_VEC_GT_OP(vpos, vmaxsamp), F64_VEC_LT_OP(vpos, vminsamp)));
+			vpos = F64_VEC_ADD_OP(vpos, vmultspeed);
 			
 			vmultspeed = vnextmultspeed;
-			vnextmultspeed = F64_VEC_MUL_OP (*in++, vspeed);
-			vmultspeed = F64_VEC_ADD_OP (F64_VEC_SHUFFLE (vmultspeed, vnextmultspeed, 0x1), vmultspeed);
+			vnextmultspeed = F64_VEC_MUL_OP(*in++, vspeed);
+			vmultspeed = F64_VEC_ADD_OP(F64_VEC_SHUFFLE(vmultspeed, vnextmultspeed, 0x1), vmultspeed);
 			
-			vipos2 = I32_VEC_FROM_F64_TRUNC (vpos);
-			*fracts++ = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos2));			
-			*phase_out++ = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
+			vipos2 = I32_VEC_FROM_F64_TRUNC(vpos);
+			*fracts++ = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos2));
+			*phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
 			
-			F64_VEC_USTORE (phase_test + 2, F64_VEC_OR_OP (F64_VEC_GT_OP (vpos, vmaxsamp), F64_VEC_LT_OP (vpos, vminsamp)));
-			vpos = F64_VEC_ADD_OP (vpos, vmultspeed);	
+			F64_VEC_USTORE(phase_test + 2, F64_VEC_OR_OP(F64_VEC_GT_OP(vpos, vmaxsamp), F64_VEC_LT_OP(vpos, vminsamp)));
+			vpos = F64_VEC_ADD_OP(vpos, vmultspeed);
 			
-			*offsets++ = I32_VEC_OR_OP (vipos1, I32_VEC_SHUFFLE_OP (vipos2, 0x4E));
+			*offsets++ = I32_VEC_OR_OP(vipos1, I32_VEC_SHUFFLE(vipos2, 0x4E));
 			
 			if (phase_test[0] || phase_test[1] || phase_test[2] || phase_test[3])
 				break;
 		}
 		
-		F64_VEC_STORE_LO (pos_store, vpos);
+		F64_VEC_STORE_LO(pos_store, vpos);
 		todo =  i << 2;
 		
 		// FIX - phase values could do with fixing here
@@ -1073,36 +1173,36 @@ __inline long ibufplayer_phase64 (double *pos_store, double speed, double start_
 		
 		vpos = F64_VEC_ULOAD (vpos_init);
 		
-		for (i = 0; i < (todo + 3) >> 2; i++)
-		{
-			vipos1 = I32_VEC_FROM_F64_TRUNC (vpos);
-			*fracts++ = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos1));
-			*phase_out++ = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
-			vpos = F64_VEC_ADD_OP (vpos, vdoublespeed);
-			
-			vipos2 = I32_VEC_FROM_F64_TRUNC (vpos);
-			*fracts++ = F64_VEC_SUB_OP (vpos, F64_VEC_FROM_I32 (vipos2));
-			*phase_out++ = F64_VEC_MUL_OP (F64_VEC_SUB_OP (vpos, vstartsamp), vlength_recip);
-			vpos = F64_VEC_ADD_OP (vpos, vdoublespeed);
-			
-			*offsets++ = I32_VEC_OR_OP (vipos1, I32_VEC_SHUFFLE_OP (vipos2, 0x4E));
-		}
-		
-		F64_VEC_STORE_LO (pos_store, vpos);
+        for (i = 0; i < ((todo + 3) >> 2); i++)
+        {
+            vipos1 = I32_VEC_FROM_F64_TRUNC(vpos);
+            *fracts++ = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos1));
+            *phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
+            vpos = F64_VEC_ADD_OP(vpos, vdoublespeed);
+            
+            vipos2 = I32_VEC_FROM_F64_TRUNC(vpos);
+            *fracts++ = F64_VEC_SUB_OP(vpos, F64_VEC_FROM_I32(vipos2));
+            *phase_out++ = F64_VEC_MUL_OP(F64_VEC_SUB_OP(vpos, vstartsamp), vlength_recip);
+            vpos = F64_VEC_ADD_OP(vpos, vdoublespeed);
+            
+            *offsets++ = I32_VEC_OR_OP(vipos1, I32_VEC_SHUFFLE(vipos2, 0x4E));
+        }
+        
+		F64_VEC_STORE_LO(pos_store, vpos);
 	}
 	
 	for (i = todo; i < (((todo + 3) >> 2) << 2); i++)
 		d_phase_out[i] = 1.0;
 	
 	return todo;
-}	
+}
+#endif
 
-#else
-
-__inline long ibufplayer_phase64 (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-							  char sig_control, double *in,  double *fracts, long *l_offsets, double *d_phase_out, long vec_size)
+#else // VECTOR_F64_128BIT
+static __inline long ibufplayer_phase64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+							  bool sig_control, double *in,  double *fracts, long *l_offsets, double *d_phase_out, long vec_size)
 {
-	return ibufplayer_phase_scalar64 (pos_store, speed, start_samp, min_samp, max_samp, length_recip, sig_control, in, fracts, l_offsets, d_phase_out, vec_size);
+	return ibufplayer_phase_scalar64(pos_store, speed, start_samp, min_samp, max_samp, length_recip, sig_control, in, fracts, l_offsets, d_phase_out, vec_size);
 }
 
 #endif
@@ -1110,23 +1210,24 @@ __inline long ibufplayer_phase64 (double *pos_store, double speed, double start_
 
 // Scalar phasors for use under ppc and for smaller vector sizes
 
-__inline long ibufplayer_phase_scalar64 (double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip, 
-									   char sig_control, double *f_in,  double *f_fracts, long *offsets, double *phase_out, long vec_size)
+static __inline long ibufplayer_phase_scalar64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
+									   bool sig_control, double *in,  double *fracts, AH_SIntPtr *offsets, double *phase_out, long vec_size)
 {
+    AH_SIntPtr ipos;
 	double pos = *pos_store;
-	long todo, ipos, i;
+	long todo, i;
 	double fract;
 	
 	if (sig_control)
 	{
 		for (i = 0; i < vec_size; i++)
 		{
-			double multspeed = *f_in++ * speed;
-			*offsets++ = ipos = pos;
+			double multspeed = *in++ * speed;
+			*offsets++ = ipos = (AH_SIntPtr) pos;
 			fract = pos - (double) ipos;
 			*phase_out++ = (pos - start_samp) * length_recip;
 			pos += multspeed;						
-			*f_fracts++ = fract;
+			*fracts++ = fract;
 			if (pos > max_samp || pos < min_samp)
 				break;
 		}
@@ -1141,8 +1242,8 @@ __inline long ibufplayer_phase_scalar64 (double *pos_store, double speed, double
 		
 		for (i = 0; i < todo; i++)
 		{
-			*offsets++ = ipos = pos;
-			*f_fracts++ = pos - (double) ipos;
+			*offsets++ = ipos = (AH_SIntPtr) pos;
+            *fracts++ = pos - (double) ipos;
 			*phase_out++ = (pos - start_samp) * length_recip;
 			pos += speed;
 		}
@@ -1154,14 +1255,14 @@ __inline long ibufplayer_phase_scalar64 (double *pos_store, double speed, double
 
 #ifdef VECTOR_F64_128BIT
 
-void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
 	// Set pointers
 	
 	double *in = (double *) ins[0];
 	double *fracts = (double *) *x->temp_mem;
 
-	long *offsets = (long *) (fracts + vec_size);
+	AH_SIntPtr *offsets = (AH_SIntPtr *) (fracts + vec_size);
 	double *phase_out;
 	
 	void *temp[4];
@@ -1170,9 +1271,9 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 	
 	void *buffer_pointer = x->buffer_pointer;
 	void *samps = 0;
-	long length = 0;
 	long n_chans = 0;
 	long format = -1;
+    AH_SIntPtr length = 0;
 	
 	// Object and local variables
 	
@@ -1188,15 +1289,15 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 	
 	long obj_n_chans = x->obj_n_chans;
 	long interp_mode = x->interp_mode;
-	char sig_control = x->sig_control;
-	char input_connected = x->input_connected;
-	long ispeed = speed;
+	bool sig_control = x->sig_control;
+	bool input_connected = x->input_connected;
+    bool on = FALSE;
+    long ispeed = speed;
 	long todo = 0;
-	long on = 0;
 	long i;
 	
-	char playing;
-	    
+    bool playing;
+    
 	temp[0] = NULL;
 	temp[1] = (void *) (offsets + vec_size);
 	temp[2] = (void *) ((float *) temp[1] + vec_size);
@@ -1240,8 +1341,8 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = 1;
-			x->playing = 1;
+			on = TRUE;
+			x->playing = TRUE;
 		}
 	}
 	
@@ -1255,8 +1356,8 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 		
 		// Calculate phasor block and preprocess for use with the routines below
 		
-		todo = ibufplayer_phase64 (&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
-		ibuffer_preprocess_offsets (offsets, vec_size, n_chans, format);
+		todo = ibufplayer_phase64(&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
+		ibuffer_preprocess_offsets(offsets, vec_size, n_chans, format);
 		x->pos = todo < vec_size ? -1.0 : pos;
 		
 		// Now get samples interpolate as relevant
@@ -1308,7 +1409,7 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 			}
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	
 	playing = !(todo < vec_size);  
@@ -1319,20 +1420,20 @@ void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long 
 
 #else
 
-void ibufplayer_perform64 (t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	ibufplayer_perform_small64(x, dsp64, ins, numins, outs, numouts, vec_size, flags, userparam);
 }
 
 #endif
 
-void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufplayer_perform_small64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
 	// Set pointers
 	
 	double *in = ins[0];
 			
-	long *offsets = *x->temp_mem;
+	AH_SIntPtr *offsets = *x->temp_mem;
 	double *phase_out;
 	double *fracts = (double *) (offsets + vec_size);	
 	
@@ -1340,9 +1441,9 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 	
 	void *buffer_pointer = x->buffer_pointer;
 	void *samps = 0;
-	long length = 0;
 	long n_chans = 0;
 	long format = -1;
+    AH_SIntPtr length = 0;
 	
 	// Object and local variables
 	
@@ -1358,14 +1459,14 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 	
 	long obj_n_chans = x->obj_n_chans;
 	long interp_mode = x->interp_mode;
-	char sig_control = x->sig_control;
-	char input_connected = x->input_connected;
-	long ispeed = speed;
+	bool sig_control = x->sig_control;
+	bool input_connected = x->input_connected;
+    bool on = FALSE;
+    long ispeed = speed;
 	long todo = 0;
-	long on = 0;
 	long i, j;
 	
-	char playing;
+    bool playing;
 	
 	vols[0] = x->vol1;
 	vols[1] = x->vol2;
@@ -1405,8 +1506,8 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = 1;
-			x->playing = 1;
+			on = TRUE;
+			x->playing = TRUE;
 		}
 	}
 	
@@ -1416,11 +1517,11 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
+		ibuffer_increment_inuse(buffer_pointer);
 		
 		// Calculate the phasor block
 		
-		todo = ibufplayer_phase_scalar64 (&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
+		todo = ibufplayer_phase_scalar64(&pos, speed, start_samp, min_samp, max_samp, length_recip, sig_control && input_connected, in, fracts, offsets, phase_out, vec_size);
 		x->pos = todo < vec_size ? -1.0 : pos;
 		
 		// Now get samples interpolate as relevant
@@ -1434,7 +1535,7 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 					for (j = 0; j < obj_n_chans; j++)	
 					{
 						if (vols[j] && n_chans > j) 
-							ibuffer_double_samps_scalar_cubic_bspline (samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
+							ibuffer_double_samps_scalar_cubic_bspline(samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
 					}
 					break;
 					
@@ -1443,7 +1544,7 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 					for (j = 0; j < obj_n_chans; j++)	
 					{
 						if (vols[j] && n_chans > j) 
-							ibuffer_double_samps_scalar_cubic_hermite (samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
+							ibuffer_double_samps_scalar_cubic_hermite(samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
 					}
 					break;
 					
@@ -1452,7 +1553,7 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 					for (j = 0; j < obj_n_chans; j++)	
 					{
 						if (vols[j] && n_chans > j) 
-							ibuffer_double_samps_scalar_cubic_lagrange (samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
+							ibuffer_double_samps_scalar_cubic_lagrange(samps, outs[j], offsets, fracts, todo, n_chans, j, format, vols[j]);
 					}
 					break;					
 			}
@@ -1466,7 +1567,7 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 			}
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	
 	playing = !(todo < vec_size);  
@@ -1476,9 +1577,9 @@ void ibufplayer_perform_small64 (t_ibufplayer *x, t_object *dsp64, double **ins,
 }
 
 
-void ibufplayer_dsp64 (t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-	long mem_size = maxvectorsize * (3 * sizeof(float) + sizeof (double) + sizeof(long));
+	t_ptr_uint mem_size = maxvectorsize * (3 * sizeof(AH_UInt32) + sizeof(double) + sizeof(AH_SIntPtr));
 	x->sr_div = 1.0 / samplerate;
 	
 	// Try to access dynamicdsp~ host tempory memory
@@ -1486,9 +1587,9 @@ void ibufplayer_dsp64 (t_ibufplayer *x, t_object *dsp64, short *count, double sa
 	ALIGNED_FREE(x->default_mem);
 	
 	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
-		x->default_mem = ALIGNED_MALLOC (mem_size);
+		x->default_mem = ALIGNED_MALLOC(mem_size);
 	
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 	

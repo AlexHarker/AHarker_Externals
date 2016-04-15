@@ -22,51 +22,49 @@
 
 void gesture_maker_multipart_reset(t_gesture_multipart *x)
 {
-	x->num_params = 0;
+	x->num_kernels = 0;
 	x->num_splits = 0;
-	x->current_point = 0;
+	x->current_kernel = 0;
 	
 	x->lo_val = 0.;
 	x->range_recip = 1.;
 	x->last_phase = 1.;	
-	x->force_output = 1;
+	x->force_output = true;
 }
-
 
 // Set the parameters
 
-void gesture_maker_multipart_params(t_gesture_multipart *x, short argc, t_atom *argv)
+void gesture_maker_multipart_params(t_gesture_multipart *x, long argc, t_atom *argv)
 {
-	long num_params = x->num_params;
+	long num_kernels = x->num_kernels;
 	
-	t_atom *params = x->params + (16 * num_params);
-	long *param_count = x->param_count;
+	t_atom *kernel_params = x->kernel_params + (MAX_NUM_KERNEL_PARAMS * num_kernels);
+	long *kernel_param_count = x->kernel_param_count;
 		
-	if (argc && num_params < 64)
+	if (argc && num_kernels < MAX_NUM_KERNELS)
 	{
-		if (argc > 16)
-			argc = 16;
+		if (argc > MAX_NUM_KERNEL_PARAMS)
+			argc = MAX_NUM_KERNEL_PARAMS;
 		
-		param_count[num_params] = argc;
+		kernel_param_count[num_kernels] = argc;
 		
 		while (argc--)
-			*params++ = *argv++;
+			*kernel_params++ = *argv++;
 		
-		x->num_params = num_params + 1;
-		x->force_output = 1;	
+		x->num_kernels++;
+		x->force_output = true;
 	}
 }
 
-
 // Set the timings at which each new inflection gesture starts
 
-void gesture_maker_multipart_timings(t_gesture_multipart *x, short argc, t_atom *argv)
+void gesture_maker_multipart_timings(t_gesture_multipart *x, long argc, t_atom *argv)
 {
 	long num_splits;
 	double *split_points = x->split_points;
 	
-	if (argc > 63)
-		argc = 63;
+	if (argc > MAX_NUM_SPLITS)
+		argc = MAX_NUM_SPLITS;
 	
 	num_splits = argc;
 	
@@ -74,71 +72,68 @@ void gesture_maker_multipart_timings(t_gesture_multipart *x, short argc, t_atom 
 		*split_points++ = nextafterf(atom_getfloat(argv++), -1.);		// There may be a better way to do this that brings us closer to the desired value
 
 	x->num_splits = num_splits;
-	x->force_output = 1;
+	x->force_output = true;
 }
-
 
 // This function takes in the overall gesture phase, updates the inflection gesture (if needed) and returns the inflection gesture phase
 
 double gesture_maker_multipart_phase(t_gesture_multipart *x, t_gesture_kernel *gesture_kernel, double in_val)
 {
-	long num_params = x->num_params;
+	long num_kernels = x->num_kernels;
 	long num_splits = x->num_splits;
-	long current_point = x->current_point;
-	long search_point = x->current_point;
-	long output_point;
+	long current_kernel = x->current_kernel;
+	long search_kernel = x->current_kernel;
 	
 	double last_phase = x->last_phase;
 	
 	double *split_points = x->split_points;
-	t_atom *params = x->params;
-	long *param_count = x->param_count;
+	t_atom *kernel_params = x->kernel_params;
+	long *kernel_param_count = x->kernel_param_count;
 
 	// Gesture has been re-triggered, so reset to the beginning
 	
 	if (in_val < last_phase)
-		search_point = 0;
+		search_kernel = 0;
 	
 	// Search forward to find the current inflection gesture
 	
-	for (; search_point < num_splits && in_val >= split_points[search_point]; search_point++);
+	for (; search_kernel < num_splits && in_val >= split_points[search_kernel]; search_kernel++);
 	
 	// Get the current values and update the inflection gesture parameters
 	// Note (as stated above) that the parameters will cycle round if there are not as many sets of parameters as inflections
 	
-	if ((current_point != search_point || x->force_output))
+	if ((current_kernel != search_kernel || x->force_output))
 	{
-		if (!search_point)
+		if (!search_kernel)
 			x->lo_val = 0.;
 		else 
-			x->lo_val = split_points[search_point - 1];
+			x->lo_val = split_points[search_kernel - 1];
 		
-		if (search_point >= num_splits)
+		if (search_kernel >= num_splits)
 			x->range_recip = 1. / (1. - x->lo_val);
 		else 
-			x->range_recip = 1. / (split_points[search_point] - x->lo_val);
+			x->range_recip = 1. / (split_points[search_kernel] - x->lo_val);
 
-		if (num_params)
+		if (num_kernels)
 		{
-			t_atom *output_ptr;
-			output_point = search_point % num_params;
-			output_ptr = params + (16 * output_point);
-			gesture_maker_kernel_params(gesture_kernel, param_count[output_point], output_ptr);
+            long output_kernel = search_kernel % num_kernels;
+			t_atom *output_params = kernel_params + (MAX_NUM_KERNEL_PARAMS * output_kernel);
+			gesture_maker_kernel_params(gesture_kernel, kernel_param_count[output_kernel], output_params);
 		}
 	}
 	
 	x->last_phase = in_val;
-	x->current_point = search_point;
-	x->force_output = 0;
+	x->current_kernel = search_kernel;
+	x->force_output = false;
 
 	// Calculate and clip inflection phase
 	
 	in_val = (in_val - x->lo_val) * x->range_recip;
 	
-	if (in_val > 1.)
-		in_val = 1.;
-	if (in_val < 0.)
-		in_val = 0.;
+	if (in_val > 1.0)
+		in_val = 1.0;
+	if (in_val < 0.0)
+		in_val = 0.0;
 	
 	return in_val;
 }

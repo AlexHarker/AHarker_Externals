@@ -13,31 +13,35 @@
 #include <ext.h>
 #include <ext_obex.h>
 
+#include <AH_Types.h>
 
 //  Multipart structure
 
+#define MAX_NUM_KERNEL_PARAMS   16
+#define MAX_NUM_KERNELS         64
+#define MAX_NUM_SPLITS          63
+
 typedef struct gesture_multipart
 {
-	long num_params;
-	long num_splits;
-	long current_point;
-	
-	double split_points[63];
-	t_atom params[64 * 16];
-	long param_count[64];
-	
+	double split_points[MAX_NUM_SPLITS];
+    long num_splits;
+    
+    t_atom kernel_params[MAX_NUM_KERNELS * MAX_NUM_KERNEL_PARAMS];
+	long kernel_param_count[MAX_NUM_KERNELS];
+    long num_kernels;
+    long current_kernel;
+    
 	double lo_val;
 	double range_recip;
 	double last_phase;
 	
-	long force_output;
+	AH_Boolean force_output;
     
 } t_gesture_multipart;
-
 
 // Function protypes
 
 void gesture_maker_multipart_reset(t_gesture_multipart *x);
-void gesture_maker_multipart_params(t_gesture_multipart *x, short argc, t_atom *argv);
-void gesture_maker_multipart_timings(t_gesture_multipart *x, short argc, t_atom *argv);
+void gesture_maker_multipart_params(t_gesture_multipart *x, long argc, t_atom *argv);
+void gesture_maker_multipart_timings(t_gesture_multipart *x, long argc, t_atom *argv);
 double gesture_maker_multipart_phase(t_gesture_multipart *x, t_gesture_kernel *gesture_kernel, double in_val);

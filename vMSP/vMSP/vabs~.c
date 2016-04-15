@@ -52,6 +52,8 @@ static __inline double abs_scalar_64 (double in)
 
 // Define operations (all intrinsic-based)
 
+// FIX - move these to header
+
 #define F32_VEC_OP(a) F32_VEC_AND_OP(a, v_bit_mask_32)
 #define F32_SCALAR_OP abs_scalar_32
 

@@ -9,6 +9,7 @@
  */
 
 
+// FIX - threadsafety for resizing
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -18,16 +19,17 @@
 void *this_class;
 
 
-#define MAX_NUM_BUFFERS 4096
+#define BUFFER_GROW_SIZE 512
 
 
 typedef struct _ibuffermulti
 {
     t_pxobject x_obj;
 	
-	t_object *buffers[MAX_NUM_BUFFERS];	
+	t_object **buffers;
 	
 	long num_items;
+    long max_num_items;
 	
 	void *number_out;	
 	
@@ -39,7 +41,7 @@ t_symbol *ps_replace;
 t_symbol *ps_valid;
 
 
-void *ibuffermulti_new (t_symbol *name, t_symbol *path_sym);
+void *ibuffermulti_new ();
 void ibuffermulti_free (t_ibuffermulti *x);
 void ibuffermulti_assist (t_ibuffermulti *x, void *b, long m, long a, char *s);
 
@@ -51,7 +53,7 @@ void ibuffermulti_doload (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *ar
 
 int main (void)
 {
-	this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, (short)sizeof(t_ibuffermulti), 0L, 0);
+	this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, sizeof(t_ibuffermulti), 0L, 0);
 	
 	class_addmethod (this_class, (method)ibuffermulti_clear, "clear", 0);
 	class_addmethod (this_class, (method)ibuffermulti_load, "load", A_GIMME, 0);
@@ -68,15 +70,18 @@ int main (void)
 }
 
 
-void *ibuffermulti_new (t_symbol *name, t_symbol *path_sym)
+void *ibuffermulti_new ()
 {	
     t_ibuffermulti *x = (t_ibuffermulti *) object_alloc (this_class);
 	
 	dsp_setup((t_pxobject *)x, 0);
 	
 	x->num_items =  0;
+    x->max_num_items =  0;
 	x->number_out = intout(x);
 	
+    x->buffers = (t_object **) malloc(BUFFER_GROW_SIZE * sizeof(t_object *));
+    
     return (x);
 }
 
@@ -108,14 +113,9 @@ void ibuffermulti_clear (t_ibuffermulti *x)
 
 
 void ibuffermulti_doclear (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
-{	
-	long i;
-	
-	long num_items = x->num_items;
-	t_object  **buffers = x->buffers;
-	
-	for (i = 0; i < num_items; i++)
-		object_free(buffers[i]);
+{
+	for (long i = 0; i < x->num_items; i++)
+		object_free(x->buffers[i]);
 	
 	x->num_items = 0;
 	outlet_int(x->number_out, 0);
@@ -144,13 +144,27 @@ void ibuffermulti_doload (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *ar
 			freeobject(force_load);
 	}
 	
+    if (x->num_items >= x->max_num_items)
+    {
+        t_object **grow_buffers = realloc(x->buffers, (x->max_num_items + BUFFER_GROW_SIZE) * sizeof(t_object *));
+        
+        if (!grow_buffers)
+        {
+            object_error((t_object *) x, "could not allocate space for new ibuffer~s");
+            return;
+        }
+
+        x->buffers = grow_buffers;
+        x->max_num_items += BUFFER_GROW_SIZE;
+    }
+    
 	// Return a properly allocated object (may still return zero if the .mxo is not present)
 	
 	x->buffers[x->num_items] = current_buffer = object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, 0);
 	
 	// Now load the buffer 
 	
-	if (current_buffer && argc > 1 && argv[0].a_type == A_SYM && argv[1].a_type == A_SYM)
+	if (current_buffer && argc > 1 && atom_gettype(argv) == A_SYM && atom_gettype(argv + 1) == A_SYM)
 	{
 		// Set name, then load file - finally check validity
 		

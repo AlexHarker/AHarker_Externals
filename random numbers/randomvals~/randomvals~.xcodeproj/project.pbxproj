@@ -7,28 +7,26 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		B8E15A1D11E33C7500FA3CFA /* randomvals msp + max */ = {
+		B8E15A1D11E33C7500FA3CFA /* randomvals objects */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals msp + max" */;
+			buildConfigurationList = B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals objects" */;
 			buildPhases = (
 			);
 			dependencies = (
 				B8E15A2211E33C7F00FA3CFA /* PBXTargetDependency */,
 				B8E15A2411E33C7F00FA3CFA /* PBXTargetDependency */,
 			);
-			name = "randomvals msp + max";
+			name = "randomvals objects";
 			productName = "randomvals msp + max";
 		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B818C1B010E8363F00049E56 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AE10E8363F00049E56 /* MaxAPI.framework */; };
 		B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
 		B8DBD5060EDEB1DC00049F0E /* randomvals.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* randomvals.c */; };
 		B8E15A0D11E33C5500FA3CFA /* randomvals.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* randomvals.c */; };
 		B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AE10E8363F00049E56 /* MaxAPI.framework */; };
 		B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
@@ -51,8 +49,7 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B818C1AE10E8363F00049E56 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B81F571D0D2422E0000D5E50 /* randomvals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "randomvals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8589F2719A7D506003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8DE14DC0EB46B030050BDFE /* randomvals.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = randomvals.c; sourceTree = "<group>"; };
@@ -65,7 +62,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B818C1B010E8363F00049E56 /* MaxAPI.framework in Frameworks */,
 				B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,7 +71,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */,
-				B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */,
 				B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,7 +93,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B818C1AE10E8363F00049E56 /* MaxAPI.framework */,
 				B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
@@ -212,7 +206,7 @@
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* randomvals~ */,
 				B8E15A0911E33C5500FA3CFA /* randomvals */,
-				B8E15A1D11E33C7500FA3CFA /* randomvals msp + max */,
+				B8E15A1D11E33C7500FA3CFA /* randomvals objects */,
 			);
 		};
 /* End PBXProject section */
@@ -287,62 +281,28 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DEBUGGING_SYMBOLS = default;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 			};
 			name = Default;
 		};
@@ -350,7 +310,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Development;
 		};
@@ -358,7 +317,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Deployment;
 		};
@@ -366,69 +324,37 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Default;
 		};
 		B8E15A1411E33C5500FA3CFA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E15A1511E33C5500FA3CFA /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DEBUGGING_SYMBOLS = default;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E15A1611E33C5500FA3CFA /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};
@@ -436,9 +362,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "randomvals msp + max";
 			};
 			name = Development;
 		};
@@ -446,17 +369,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = "randomvals msp + max";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E15A2011E33C7500FA3CFA /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "randomvals msp + max";
 			};
 			name = Default;
 		};
@@ -493,7 +412,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals msp + max" */ = {
+		B8E15A2811E33CAE00FA3CFA /* Build configuration list for PBXAggregateTarget "randomvals objects" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8E15A1E11E33C7500FA3CFA /* Development */,

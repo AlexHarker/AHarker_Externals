@@ -130,7 +130,8 @@ enum StatisticsType match_statistics (t_atom **argv, short *argc, double *mask_t
 			(*argc)--;
 			if (*argc)
 			{
-				if ((*argv)->a_type == A_SYM) error("descriptors(rt)~: no mask time given");
+				if (atom_gettype(*argv) == A_SYM)
+                    error("descriptors(rt)~: no mask time given");
 				else	
 				{
 					*mask_time = atom_getfloat(*argv); 
@@ -156,13 +157,14 @@ enum StatisticsType match_statistics (t_atom **argv, short *argc, double *mask_t
 			(*argc)--;
 			if (*argc)
 			{
-				if ((*argv)->a_type == A_SYM) error("descriptors(rt)~: no threshold given");
+				if (atom_gettype(*argv) == A_SYM)
+                    error("descriptors(rt)~: no threshold given");
 				else 
 				{
 					*threshold = atom_getfloat(*argv); 
 					(*argv)++;
 					(*argc)--;
-					if (*argc && (*argv)->a_type == A_SYM)
+					if (*argc && atom_gettype(*argv) == A_SYM)
 						*thresh_type = match_threshold_type(argv, argc);
 				}
 			}
@@ -339,7 +341,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_MAX_POS:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -357,7 +359,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_MIN_POS:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -375,7 +377,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_PEAK_POS:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -393,7 +395,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_TROUGH_POS:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -413,7 +415,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_CROSSINGS_ABOVE:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -435,7 +437,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_CROSSINGS_BELOW:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -455,7 +457,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_LONGEST_CROSSINGS_ABOVE:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -475,7 +477,7 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 			case STATS_LONGEST_CROSSINGS_BELOW:
 				
 				pf_output_params[2] = num_to_output_local;
-				if (argc_local && argv_local->a_type != A_SYM)
+				if (argc_local && atom_gettype(argv_local) != A_SYM)
 				{
 					long_arg_temp = atom_getlong(argv_local++);
 					argc_local--;
@@ -675,7 +677,7 @@ long descriptors_descriptors_pb (enum PBDescriptorType descriptor_type, double *
 			pb_params[1] = 10.;					// NPeaks
 			pb_params[2] = 15.;					// median Span
 								
-			if (argc_local && argv_local->a_type != A_SYM)
+			if (argc_local && atom_gettype(argv_local) != A_SYM)
 			{
 				double_arg_temp = (double) atom_getlong(argv_local++);
 				argc_local--;
@@ -685,7 +687,7 @@ long descriptors_descriptors_pb (enum PBDescriptorType descriptor_type, double *
 					pb_params[1] = double_arg_temp;
 			}
 				
-			if (argc_local && argv_local->a_type != A_SYM)
+			if (argc_local && atom_gettype(argv_local) != A_SYM)
 			{
 				double_arg_temp = atom_getfloat(argv_local++);
 				argc_local--;
@@ -811,14 +813,14 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			if (descriptor_type == DESCRIPTOR_PF_ENERGY || descriptor_type == DESCRIPTOR_PF_SPECTRAL_CREST) 
 				pf_params[3] = 1.;				// db conversion flag
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[1] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			argc_local--;
@@ -827,7 +829,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			if (descriptor_type == DESCRIPTOR_PF_ENERGY || descriptor_type == DESCRIPTOR_PF_SPECTRAL_CREST)
 			{					
-				 if (!argc_local || argv_local->a_type == A_SYM) 
+				 if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 					 break;
 				pf_params[3] = atom_getfloat(argv_local++);
 				argc_local--;
@@ -846,36 +848,36 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			pf_params[5] = 1.;					// normalise spectrum flag
 			pf_params[6] = 1.;					// frames to look back
 						
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[1] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[2] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[3] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[4] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[5] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[6] = atom_getlong(argv_local++);
 			argc_local--;
@@ -899,7 +901,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			pf_params[6] = 0.;					// normalise spectrum flag
 			pf_params[7] = 1.;					// frames to look back
 						
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			if (pf_params[1] < 0) 
@@ -907,34 +909,34 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			argc_local--;
 			
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			if (pf_params[2] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[3] = log(dbtoa(atom_getfloat(argv_local++)));
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[4] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[5] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[6] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[7] = atom_getlong(argv_local++);
 			argc_local--;
@@ -955,26 +957,26 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			pf_params[3] = 1.;					// forward only flag
 			pf_params[4] = 1.;					// frames to look back
 						
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[1] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[2] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[3] = atom_getfloat(argv_local++) != 0.;
 			argc_local--;
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[4] = atom_getlong(argv_local++);
 			argc_local--;
@@ -992,7 +994,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 							
 			pf_params[1] = 0.95;				// threshold
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			double_arg_temp = atom_getfloat(argv_local++);
 			argc_local--;
@@ -1011,7 +1013,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 		
 			pf_params[1] = 1.;					// db Conversion flag
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
@@ -1033,14 +1035,14 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			pf_params[1] = 0.;					// min freq
 			pf_params[2] = 192000.;				// max freq
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[1] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			argc_local--;
@@ -1058,21 +1060,21 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			pf_params[2] = 192000.;				// max freq
 			pf_params[3] = 0.68;				// threshold
 
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[1] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[1] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			pf_params[2] = atom_getfloat(argv_local++);
 			argc_local--;
 			if (pf_params[2] < 0) 
 				error ("descriptors(rt)~: negative frequency");
 			
-			if (!argc_local || argv_local->a_type == A_SYM) 
+			if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 				break;
 			double_arg_temp = atom_getfloat(argv_local++);
 			argc_local--;	
@@ -1091,7 +1093,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 		
 				pf_params[1] = 15.;				// median span
 			
-				if (!argc_local || argv_local->a_type == A_SYM) 
+				if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 					break;
 				double_arg_temp = (double) atom_getlong(argv_local++);
 				argc_local--;
@@ -1108,7 +1110,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 						
 				pf_params[1] = 0.68;			// threshold
 					
-				if (!argc_local || argv_local->a_type == A_SYM) 
+				if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 					break;
 				double_arg_temp = atom_getfloat(argv_local++);
 				argc_local--;	
@@ -1133,7 +1135,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 				if (descriptor_type == DESCRIPTOR_PF_SPECTRAL_PEAKS) 
 					num_to_output_local = 2 * (long) pf_params[1];
 					
-				if (!argc_local || argv_local->a_type == A_SYM) 
+				if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 					break;
 				double_arg_temp = (double) atom_getlong(argv_local++);
 				argc_local--;
@@ -1144,7 +1146,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 				if (descriptor_type == DESCRIPTOR_PF_SPECTRAL_PEAKS)
 					num_to_output_local = 2 * (long) pf_params[1];
 				
-				if (!argc_local || argv_local->a_type == A_SYM) 
+				if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 					break;
 				double_arg_temp = (double) atom_getlong(argv_local++);
 				argc_local--;
@@ -1154,7 +1156,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 				
 				if (descriptor_type == DESCRIPTOR_PF_INHARMONICITY)
 				{
-					 if (!argc_local || argv_local->a_type == A_SYM) 
+					 if (!argc_local || atom_gettype(argv_local) == A_SYM) 
 						 break;
 					double_arg_temp = atom_getfloat(argv_local++);
 					argc_local--;	

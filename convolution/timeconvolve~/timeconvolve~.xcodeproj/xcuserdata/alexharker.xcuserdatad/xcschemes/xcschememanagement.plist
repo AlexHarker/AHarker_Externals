@@ -4,20 +4,10 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>timeconvolve_Max4~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>42</integer>
-		</dict>
-		<key>timeconvolve_Max5~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>52</integer>
-		</dict>
 		<key>timeconvolve~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>27</integer>
+			<integer>16</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

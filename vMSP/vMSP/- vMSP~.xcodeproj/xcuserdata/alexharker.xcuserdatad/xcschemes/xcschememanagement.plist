@@ -4,185 +4,185 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>All Finished.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>96</integer>
-		</dict>
-		<key>vabs~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>32</integer>
-		</dict>
-		<key>vacosh~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>53</integer>
-		</dict>
-		<key>vacos~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>43</integer>
-		</dict>
-		<key>vasinh~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>58</integer>
-		</dict>
-		<key>vasin~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>56</integer>
-		</dict>
-		<key>vatanh~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>60</integer>
-		</dict>
-		<key>vatan~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>62</integer>
-		</dict>
-		<key>vatodb~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>64</integer>
-		</dict>
-		<key>vcosh~.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>66</integer>
-		</dict>
-		<key>vcosx~.xcscheme</key>
+		<key>vMSP objects.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>68</integer>
 		</dict>
+		<key>vabs~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>33</integer>
+		</dict>
+		<key>vacosh~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>35</integer>
+		</dict>
+		<key>vacos~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>34</integer>
+		</dict>
+		<key>vasinh~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>36</integer>
+		</dict>
+		<key>vasin~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>37</integer>
+		</dict>
+		<key>vatanh~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>38</integer>
+		</dict>
+		<key>vatan~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>39</integer>
+		</dict>
+		<key>vatodb~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>40</integer>
+		</dict>
+		<key>vcosh~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>41</integer>
+		</dict>
+		<key>vcosx~.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>42</integer>
+		</dict>
 		<key>vdbtoa~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>70</integer>
+			<integer>43</integer>
 		</dict>
 		<key>vdiv~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>72</integer>
+			<integer>44</integer>
 		</dict>
 		<key>vequals~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>73</integer>
+			<integer>45</integer>
 		</dict>
 		<key>vftom~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>74</integer>
+			<integer>46</integer>
 		</dict>
 		<key>vgreaterthaneq~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>76</integer>
+			<integer>48</integer>
 		</dict>
 		<key>vgreaterthan~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>75</integer>
+			<integer>47</integer>
 		</dict>
 		<key>vlessthaneq~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>78</integer>
+			<integer>50</integer>
 		</dict>
 		<key>vlessthan~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>77</integer>
+			<integer>49</integer>
 		</dict>
 		<key>vlog~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>79</integer>
+			<integer>51</integer>
 		</dict>
 		<key>vmaximum~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>80</integer>
+			<integer>52</integer>
 		</dict>
 		<key>vminimum~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>81</integer>
+			<integer>53</integer>
 		</dict>
 		<key>vminus~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>82</integer>
+			<integer>54</integer>
 		</dict>
 		<key>vmtof~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>83</integer>
+			<integer>55</integer>
 		</dict>
 		<key>vnotequals~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>84</integer>
+			<integer>56</integer>
 		</dict>
 		<key>vplus~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>85</integer>
+			<integer>57</integer>
 		</dict>
 		<key>vpow~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>86</integer>
+			<integer>58</integer>
 		</dict>
 		<key>vrdiv~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>87</integer>
+			<integer>59</integer>
 		</dict>
 		<key>vrminus~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>88</integer>
+			<integer>60</integer>
 		</dict>
 		<key>vsinh~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>89</integer>
+			<integer>61</integer>
 		</dict>
 		<key>vsinx~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>90</integer>
+			<integer>62</integer>
 		</dict>
 		<key>vsqrt~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>91</integer>
+			<integer>63</integer>
 		</dict>
 		<key>vtanh~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>92</integer>
+			<integer>64</integer>
 		</dict>
 		<key>vtanx~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>93</integer>
+			<integer>65</integer>
 		</dict>
 		<key>vtimes~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>94</integer>
+			<integer>66</integer>
 		</dict>
 		<key>vtrunc~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>95</integer>
+			<integer>67</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

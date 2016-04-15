@@ -26,16 +26,13 @@
  *	F32_VEC_ARRAY			- A binary 32 bit floating point SIMD array function (float *out, float *in1, float *in2, long length)
  *	F32_SCALAR_OP			- A binary 32 bit floating point scalar operator (float, float)
  *
- *  To use the array version over the op define USE_F32_VEC_ARRAY
- *	To avoid using 32 bit vectors at all define NO_F32_SIMD
- *	It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
- *
  *	F64_VEC_OP				- A binary 64 bit floating point SIMD operator (vDouble, vDouble)
  *	F64_VEC_ARRAY			- A binary 64 bit floating point SIMD array function (double *out, double *in1, double *in2, long length)
  *	F64_SCALAR_OP			- A binary 64 bit floating point scalar operator (double, double)
  *
- *  To use the array version over the op define USE_F32_VEC_ARRAY or USE_F64_VEC_ARRAY as appropriate 
- *	To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD
+ *
+ *  To use the array version over the op define USE_F32_VEC_ARRAY or USE_F64_VEC_ARRAY as appropriate
+ *	To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD (according to which are available)
  *	It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
  *
  *	Optionally for objects requiring constants you can define:

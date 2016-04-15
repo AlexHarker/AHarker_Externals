@@ -9,14 +9,10 @@
 /* Begin PBXBuildFile section */
 		B8E15A0D11E33C5500FA3CFA /* randfloats.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* randfloats.c */; };
 		B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AE10E8363F00049E56 /* MaxAPI.framework */; };
-		B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B818C1AE10E8363F00049E56 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "../../AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = SOURCE_ROOT; };
-		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8DE14DC0EB46B030050BDFE /* randfloats.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = randfloats.c; sourceTree = "<group>"; };
 		B8E15A1711E33C5500FA3CFA /* randfloats.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randfloats.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -28,8 +24,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E15A0F11E33C5500FA3CFA /* Carbon.framework in Frameworks */,
-				B8E15A1011E33C5500FA3CFA /* MaxAPI.framework in Frameworks */,
-				B8E15A1111E33C5500FA3CFA /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,8 +45,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B818C1AE10E8363F00049E56 /* MaxAPI.framework */,
-				B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -176,7 +168,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Development;
 		};
@@ -184,7 +175,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Deployment;
 		};
@@ -192,66 +182,34 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Default;
 		};
 		B8E15A1411E33C5500FA3CFA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E15A1511E33C5500FA3CFA /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DEBUGGING_SYMBOLS = default;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E15A1611E33C5500FA3CFA /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 			};
 			name = Default;
 		};

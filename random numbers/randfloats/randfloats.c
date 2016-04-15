@@ -316,9 +316,8 @@ double erfweighting (float mean, float dev)
 	double dev_recip = 1.0 / dev;
 	double Z = -mean * dev_recip;
 	double Y = (1.0 - mean) * dev_recip; 
-	double erfval = erf(Y) - erf(Z);
 	
-	return erfval;
+	return erf(Y) - erf(Z);
 }
 
 

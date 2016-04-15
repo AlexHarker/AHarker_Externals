@@ -15,6 +15,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <AH_Types.h>
 #include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <ibuffer_access.h>
@@ -31,8 +32,8 @@ typedef struct _ibuftable
 	t_object *buffer_pointer;
 	t_symbol *buffer_name;
 	
-	long start_samp;
-	long end_samp;
+	AH_SIntPtr start_samp;
+	AH_SIntPtr end_samp;
 	long chan;	
 	long interp_mode;
 	
@@ -45,28 +46,28 @@ typedef struct _ibuftable
 } t_ibuftable;
 
 
-void *ibuftable_new (t_symbol *the_buffer, long start_samp, long end_samp, long chan);
-void ibuftable_free (t_ibuftable *x);
-void ibuftable_assist (t_ibuftable *x, void *b, long m, long a, char *s);
+void *ibuftable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan);
+void ibuftable_free(t_ibuftable *x);
+void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 
-void ibuftable_interp (t_ibuftable *x, t_symbol *s, short argc, t_atom *argv);
-void ibuftable_set(t_ibuftable *x, t_symbol *msg, short argc, t_atom *argv);
-void ibuftable_set_internal (t_ibuftable *x, t_symbol *s);
-void ibuftable_startsamp (t_ibuftable *x, long startsamp);
-void ibuftable_endsamp (t_ibuftable *x, long endsamp);
-void ibuftable_chan (t_ibuftable *x, long chan);
+void ibuftable_interp(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
+void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv);
+void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
+void ibuftable_startsamp(t_ibuftable *x, t_atom_long startsamp);
+void ibuftable_endsamp(t_ibuftable *x, t_atom_long endsamp);
+void ibuftable_chan(t_ibuftable *x, t_atom_long chan);
 
-__inline float ibuftable_clip_zero_one (float in);
-t_int *ibuftable_perform (t_int *w);
-t_int *ibuftable_perform_small (t_int *w);
-void ibuftable_dsp (t_ibuftable *x, t_signal **sp, short *count);
+static __inline float ibuftable_clip_zero_one(float in);
+t_int *ibuftable_perform(t_int *w);
+t_int *ibuftable_perform_small(t_int *w);
+void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count);
 
-__inline double ibuftable_clip_zero_one64 (double in);
-void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibuftable_dsp64 (t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+static __inline double ibuftable_clip_zero_one64(double in);
+void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibuftable_perform_small64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-int main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("ibuftable~",
 						   (method)ibuftable_new,
@@ -91,13 +92,13 @@ int main (void)
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
 	
-	ibuffer_init ();
+	ibuffer_init();
 	
 	return 0;
 }
 
 
-void *ibuftable_new(t_symbol *the_buffer, long start_samp, long end_samp, long chan)
+void *ibuftable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
 {
     t_ibuftable *x = (t_ibuftable *)object_alloc(this_class);
     
@@ -142,7 +143,7 @@ void *ibuftable_new(t_symbol *the_buffer, long start_samp, long end_samp, long c
 	x->dynamicdsp_parent = Get_Dynamic_Object();
 	x->dynamicdsp_index = Get_Dynamic_Patch_Index(x->dynamicdsp_parent);
 	
-	return (x);
+	return x;
 }
 
 
@@ -162,7 +163,7 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
 }
 
 
-void ibuftable_interp(t_ibuftable *x, t_symbol *s, short argc, t_atom *argv)
+void ibuftable_interp(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv)
 {
 	t_symbol *mode = argc ? atom_getsym(argv) : ps_linear;
 	
@@ -176,19 +177,19 @@ void ibuftable_interp(t_ibuftable *x, t_symbol *s, short argc, t_atom *argv)
 		x->interp_mode = INTERP_TYPE_CUBIC_LAGRANGE;
 	
 	if (mode != ps_linear && mode != ps_bspline &&  mode != ps_hermite && mode != ps_lagrange)
-		error ("ibuftable~: no interpolation mode %s", mode->s_name);
+		object_error ((t_object *) x, "ibuftable~: no interpolation mode %s", mode->s_name);
 }
 
 
-void ibuftable_set(t_ibuftable *x, t_symbol *msg, short argc, t_atom *argv)
+void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
 {	
 	ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
 }
 
 
-void ibuftable_set_internal (t_ibuftable *x, t_symbol *s)
+void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
 {
-	void *b = ibuffer_get_ptr (s);
+	void *b = ibuffer_get_ptr(s);
 	
 	if (b) 
 	{	
@@ -200,12 +201,12 @@ void ibuftable_set_internal (t_ibuftable *x, t_symbol *s)
 		x->buffer_pointer = 0;
 		x->buffer_name = 0;
 		if (s)
-			error ("ibuftable~: no buffer %s", s->s_name);
+			object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
 	}
 }
 
 
-void ibuftable_startsamp (t_ibuftable *x, long start_samp)
+void ibuftable_startsamp(t_ibuftable *x, t_atom_long start_samp)
 {
 	if (start_samp < 0)
 		start_samp = 0;
@@ -214,7 +215,7 @@ void ibuftable_startsamp (t_ibuftable *x, long start_samp)
 }
 
 
-void ibuftable_endsamp (t_ibuftable *x, long end_samp)
+void ibuftable_endsamp(t_ibuftable *x, t_atom_long end_samp)
 {
 	if (end_samp < 0)
 		end_samp = 0;
@@ -223,7 +224,7 @@ void ibuftable_endsamp (t_ibuftable *x, long end_samp)
 }
 
 
-void ibuftable_chan (t_ibuftable *x, long chan)
+void ibuftable_chan(t_ibuftable *x, t_atom_long chan)
 {
 	if (chan < 1)
 		chan = 1;
@@ -237,7 +238,7 @@ void ibuftable_chan (t_ibuftable *x, long chan)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 
-__inline float ibuftable_clip_zero_one (float in)
+static __inline float ibuftable_clip_zero_one(float in)
 {
 	in = in > 1.0 ? 1.0 : in;
 	in = in < 0.0 ? 0.0 : in;
@@ -246,7 +247,7 @@ __inline float ibuftable_clip_zero_one (float in)
 }
 
 
-t_int *ibuftable_perform (t_int *w)
+t_int *ibuftable_perform(t_int *w)
 {	
 	// Ignore the copy of this function pointer (due to denormal fixer)
 	
@@ -257,8 +258,10 @@ t_int *ibuftable_perform (t_int *w)
 	long vec_size = w[4];
     t_ibuftable *x = (t_ibuftable *) w[5];
 	
+    // N.B. Here it is assumed that AH_SIntPtr is 32 bits wide, which is safe, because this function is only ever called when Max 5 is running (in 32 bits)
+    
 	vSInt32 *offsets = *x->temp_mem;
-	long *l_offsets = (long *) offsets;
+	AH_SIntPtr *l_offsets = (AH_SIntPtr *) offsets;
 	vFloat *fracts =  (vFloat *) (l_offsets + vec_size);
 	vFloat *temp_fracts = fracts;
 	
@@ -270,12 +273,12 @@ t_int *ibuftable_perform (t_int *w)
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
@@ -286,7 +289,7 @@ t_int *ibuftable_perform (t_int *w)
 	vFloat length_mult;
 	vFloat vec_f;
 	vSInt32 vec_i;
-	long on = 0;	
+	bool on = FALSE;
 	long i;
 		
 	temp[0] = (void *) out;
@@ -299,7 +302,7 @@ t_int *ibuftable_perform (t_int *w)
 	
 	// Check if the buffer is set / valid and get the length information
 
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{		
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -313,52 +316,52 @@ t_int *ibuftable_perform (t_int *w)
 			chan = 0;		
 		
 		if (length >= 1)
-			on = 1;
+			on = TRUE;
 	}
 	
 	// Calculate output
 
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
+		ibuffer_increment_inuse(buffer_pointer);
 		
 		// Calculate the sample position block, clipping first 0 to 1
 		
 		for (i = 0; i < vec_size >> 3; i++)
 		{
-			vec_f = F32_VEC_MUL_OP(length_mult, F32_VEC_MIN_OP (One, F32_VEC_MAX_OP (Zero, *in++)));
+			vec_f = F32_VEC_MUL_OP(length_mult, F32_VEC_MIN_OP(One, F32_VEC_MAX_OP(Zero, *in++)));
 			vec_i = I32_VEC_FROM_F32_TRUNC(vec_f);
 			*temp_fracts++ = F32_VEC_SUB_OP(vec_f, F32_VEC_FROM_I32(vec_i));
 			*offsets++ = vec_i;
-			vec_f = F32_VEC_MUL_OP (length_mult, F32_VEC_MIN_OP (One, F32_VEC_MAX_OP (Zero, *in++)));
-			vec_i = I32_VEC_FROM_F32_TRUNC (vec_f);
-			*temp_fracts++ = F32_VEC_SUB_OP (vec_f, F32_VEC_FROM_I32(vec_i));
+			vec_f = F32_VEC_MUL_OP(length_mult, F32_VEC_MIN_OP(One, F32_VEC_MAX_OP(Zero, *in++)));
+			vec_i = I32_VEC_FROM_F32_TRUNC(vec_f);
+			*temp_fracts++ = F32_VEC_SUB_OP(vec_f, F32_VEC_FROM_I32(vec_i));
 			*offsets++ = vec_i;
 		}
 		
 		// Preprocess ready to use with the routines below
 		
-		ibuffer_preprocess_offsets (l_offsets, vec_size, n_chans, format);
+		ibuffer_preprocess_offsets(l_offsets, vec_size, n_chans, format);
 		
 		// Get samples and interpolate as relevant
 		
 		switch (interp_mode)
 		{
 			case INTERP_TYPE_LIN:
-				ibuffer_float_samps_simd_linear (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_linear(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_BSPLINE:
-				ibuffer_float_samps_simd_cubic_bspline (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_bspline(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_HERMITE:
-				ibuffer_float_samps_simd_cubic_hermite (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_hermite(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_LAGRANGE:
-				ibuffer_float_samps_simd_cubic_lagrange (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_lagrange(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -372,7 +375,7 @@ bail:
 }
 
 
-t_int *ibuftable_perform_small (t_int *w)
+t_int *ibuftable_perform_small(t_int *w)
 {	
 	// Ignore the copy of this function pointer (due to denormal fixer)
 	
@@ -383,29 +386,29 @@ t_int *ibuftable_perform_small (t_int *w)
 	long vec_size = w[4];
     t_ibuftable *x = (t_ibuftable *) w[5];
 	
-	long *offsets = (long *) *x->temp_mem;
+	AH_SIntPtr *offsets = (AH_SIntPtr *) *x->temp_mem;
 	float *fracts =  (float *) (offsets + vec_size);
 	
 	// Standard ibuffer variables
 	
 	void *buffer_pointer = x->buffer_pointer;
 	void *samps = 0;
-	long format = -1;
+    long format = -1;
 	long n_chans = 0;
-	long length = 0;
-	
+    AH_SIntPtr length = 0;
+
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
 	// Local variables
 	
 	float length_mult, f_temp;
-	long o_temp;
-	long on = 0;	
+	AH_SIntPtr o_temp;
+	bool on = FALSE;	
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -427,15 +430,15 @@ t_int *ibuftable_perform_small (t_int *w)
 			chan = 0;		
 		
 		if (length >= 1)
-			on = 1;
+			on = TRUE;;
 	}
 	
 	// Calculate output
 
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
-		samps = ibuffer_offset (samps, start_samp, n_chans, format);
+		ibuffer_increment_inuse(buffer_pointer);
+		samps = ibuffer_offset(samps, start_samp, n_chans, format);
 		
 		// Calculate offsets and fracts
 		
@@ -443,7 +446,7 @@ t_int *ibuftable_perform_small (t_int *w)
 		{
 			f_temp = length_mult * ibuftable_clip_zero_one(*in++);
 			
-			offsets[i] = o_temp =(long) f_temp;
+			offsets[i] = o_temp = (AH_SIntPtr) f_temp;
 			fracts[i] = f_temp - (float) o_temp;
 		}
 			
@@ -468,7 +471,7 @@ t_int *ibuftable_perform_small (t_int *w)
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -484,16 +487,16 @@ bail:
 
 void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
 {	
-	long mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(long));
+	t_ptr_uint mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(AH_SIntPtr));
 	
 	// Try to access dynamicdsp~ host tempory memory
 
 	free(x->default_mem);
 	
-	if (!Dynamic_Temp_Mem_Resize (x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
-		x->default_mem = malloc (mem_size);
+	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size))
+		x->default_mem = malloc(mem_size);
 	
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 
@@ -514,7 +517,7 @@ void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 
-__inline double ibuftable_clip_zero_one64 (double in)
+static __inline double ibuftable_clip_zero_one64(double in)
 {
 	in = in > 1.0 ? 1.0 : in;
 	in = in < 0.0 ? 0.0 : in;
@@ -525,7 +528,13 @@ __inline double ibuftable_clip_zero_one64 (double in)
 
 #ifdef VECTOR_F64_128BIT
 
-void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+#ifdef AH_64BIT
+typedef vSInt64 vOffsetType;
+#else
+typedef vSInt32 vOffsetType;
+#endif
+
+void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 
@@ -534,8 +543,9 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 	
 	vDouble *fracts = *x->temp_mem;
 	vDouble *temp_fracts = fracts;
-	vSInt32 *offsets = (vSInt32 *) (fracts + (vec_size >> 1));
-	long *l_offsets = (long *) offsets;
+
+    vOffsetType *offsets = (vOffsetType *) (fracts + (vec_size >> 1));
+	AH_SIntPtr *l_offsets = (AH_SIntPtr *) offsets;
 	
 	void *temp[4];
 	
@@ -545,12 +555,12 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
@@ -559,9 +569,12 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 	vDouble One = double2vector(1.0);
 	vDouble Zero = double2vector(0.0);
 	vDouble length_mult;
-	vDouble vec_f1;
-	vSInt32 vec_i1, vec_i2;
-	long on = 0;	
+    vDouble vec_f1;
+#ifndef AH_64BIT
+    vSInt32 vec_i1;
+    vSInt32 vec_i2;
+#endif
+	bool on = FALSE;
 	long i;
 		
 	temp[0] = (void *) (out + (vec_size >> 2));
@@ -574,7 +587,7 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 	
 	// Check if the buffer is set / valid and get the length information
 	
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{		
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -588,33 +601,43 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 			chan = 0;		
 		
 		if (length >= 1)
-			on = 1;
+			on = TRUE;;
 	}
 	
 	// Calculate output
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
+		ibuffer_increment_inuse(buffer_pointer);
 		
 		// Calculate the sample position block, clipping first 0 to 1
 		
+#ifdef AH_64BIT
+        for (i = 0; i < vec_size >> 1; i++)
+        {
+            vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
+            F64_VEC_SPLIT_I64_F64(vec_f1, offsets++, temp_fracts++);
+        }
+#else
 		for (i = 0; i < vec_size >> 2; i++)
 		{
 			vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
 			vec_i1 = I32_VEC_FROM_F64_TRUNC(vec_f1);
 			*temp_fracts++ = F64_VEC_SUB_OP(vec_f1, F64_VEC_FROM_I32(vec_i1));
 			
-			vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP (One, F64_VEC_MAX_OP (Zero, *in++)));
+			vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
 			vec_i2 = I32_VEC_FROM_F64_TRUNC(vec_f1);
 			*temp_fracts++ = F64_VEC_SUB_OP(vec_f1, F64_VEC_FROM_I32(vec_i2));
-			
-			*offsets++ = I32_VEC_OR_OP(vec_i1, I32_VEC_SHUFFLE_OP(vec_i2, 0x4E));
+            
+			*offsets++ = I32_VEC_OR_OP(vec_i1, I32_VEC_SHUFFLE(vec_i2, 0x4E));
 		}
+#endif
+        
+        // FIX - WRITE I64_VEC_FROM_F64_TRUNC and F64_VEC_TRUNC_OP
 		
 		// Preprocess ready to use with the routines below
 		
-		ibuffer_preprocess_offsets (l_offsets, vec_size, n_chans, format);
+		ibuffer_preprocess_offsets(l_offsets, vec_size, n_chans, format);
 		
 		// Get samples and interpolate as relevant
 		
@@ -634,7 +657,7 @@ void ibuftable_perform64 (t_ibuftable *x, t_object *dsp64, double **ins, long nu
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -653,13 +676,13 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
 #endif
 
 
-void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibuftable_perform_small64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	double *in = ins[0];
 	double *out = outs[0];
 	
 	double *fracts = (double *) *x->temp_mem;
-	long *offsets = (long *) (fracts + vec_size);
+	AH_SIntPtr *offsets = (AH_SIntPtr *) (fracts + vec_size);
 	
 	// Standard ibuffer variables
 	
@@ -667,20 +690,20 @@ void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, l
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
-	
+    AH_SIntPtr length = 0;
+    
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
 	// Local variables
 	
 	double length_mult, f_temp;
-	long o_temp;
-	long on = 0;
+	AH_SIntPtr o_temp;
+	bool on = FALSE;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -702,15 +725,15 @@ void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, l
 			chan = 0;		
 		
 		if (length >= 1)
-			on = 1;
+			on = TRUE;;
 	}
 	
 	// Calculate output
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
-		samps = ibuffer_offset (samps, start_samp, n_chans, format);
+		ibuffer_increment_inuse(buffer_pointer);
+		samps = ibuffer_offset(samps, start_samp, n_chans, format);
 		
 		// Calculate offsets and fracts
 		
@@ -718,7 +741,7 @@ void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, l
 		{
 			f_temp = length_mult * ibuftable_clip_zero_one64(*in++);
 			
-			offsets[i] = o_temp = (long) f_temp;
+			offsets[i] = o_temp = (AH_SIntPtr) f_temp;
 			fracts[i] = f_temp - (double) o_temp;
 		}
 		
@@ -743,7 +766,7 @@ void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, l
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -752,18 +775,18 @@ void ibuftable_perform_small64 (t_ibuftable *x, t_object *dsp64, double **ins, l
 	}	
 }
 
-void ibuftable_dsp64 (t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {	
-	long mem_size = maxvectorsize * (3 * sizeof(float) + sizeof(double) + sizeof(long));
+	t_ptr_uint mem_size = maxvectorsize * (3 * sizeof(float) + sizeof(double) + sizeof(AH_SIntPtr));
 	
 	// Try to access dynamicdsp~ host tempory memory
 	
 	ALIGNED_FREE(x->default_mem);
 	
-	if (!Dynamic_Temp_Mem_Resize (x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
-		x->default_mem = malloc (mem_size);
+	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size))
+		x->default_mem = malloc(mem_size);
 	
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 	
@@ -777,6 +800,3 @@ void ibuftable_dsp64 (t_ibuftable *x, t_object *dsp64, short *count, double samp
 			object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform_small64);
 	}
 }
-
-
-

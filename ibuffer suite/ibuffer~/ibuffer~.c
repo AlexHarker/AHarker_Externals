@@ -19,7 +19,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include "sndfile.h"
+#include "file_reading/file_reading.h"
 
 #include <AH_Atomic.h>
 #include <ibuffer.h>
@@ -43,7 +43,7 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
 t_symbol *ps_null;
 
 
-int main (void)
+C74_EXPORT int main (void)
 {
 	this_class = class_new ("ibuffer~", (method) ibuffer_new, (method)ibuffer_free, (short)sizeof(t_ibuffer), 0L, A_DEFSYM, A_DEFSYM, 0);
 	
@@ -84,13 +84,13 @@ void *ibuffer_new (t_symbol *name, t_symbol *path_sym)
 	
 	if (name && name != ps_null) 
 	{
-		SETSYM(&temp_atom, name);
+		atom_setsym(&temp_atom, name);
 		ibuffer_name (x, 0, 1, &temp_atom);
 	}
 	
 	if (path_sym && path_sym != ps_null) 
 	{
-		SETSYM(&temp_atom, path_sym);
+		atom_setsym(&temp_atom, path_sym);
 		ibuffer_load (x, 0, 1, &temp_atom);
 	}
 	
@@ -134,7 +134,7 @@ void ibuffer_name_internal (t_ibuffer *x, t_symbol *name, short argc, t_atom *ar
 		return;
 	
 	if (name->s_thing)
-		error ("ibuffer~: name %s already in use!", name->s_name);
+		object_error ((t_object *) x, "ibuffer~: name %s already in use!", name->s_name);
 	else
 	{
 		if (x->name) 
@@ -171,22 +171,19 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	char fullname[2048];
 	char *name_ptr = foldname;
 	
-	int mainformat; 
-	int subformat;
-	int endianness;
-	
 	long channel_order [4];
 	long load_all_channels = 1;
 	long channels_to_load = 1;
 	long format = PCM_FLOAT;
 	long sample_size = 0;
 	long colon = 0;
-	long type = 0;
 	long channels; 
 	long frames;
 	long work_chunk;
 	long i, j, k;
 	
+    t_fourcc type = 0;
+    
 	short path = 0;
 	short err;
 	
@@ -195,9 +192,9 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	UInt8 *load_temp;
 	UInt8 *channels_swap;
 	
-	SF_INFO the_sf_info;
-	SNDFILE *the_sndfile = 0;
-	
+	t_sndfile *the_sndfile = NULL;
+    t_sndfile_info info;
+    
 	// Get path
 	
 	t_symbol *path_sym = atom_getsym (argv++);
@@ -206,13 +203,12 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	// Set the ibuffer as invalid
 	
 	x->valid = 0;
-	the_sf_info.format = 0;
 
 	// Check if in use (can't replace when in use)
 
 	if (ATOMIC_INCREMENT_BARRIER(&x->inuse) > 1) 
 	{
-		error ("ibuffer~: in use - cannot replace contents");
+		object_error ((t_object *) x, "ibuffer~: in use - cannot replace contents");
 		x->valid = prev_valid;
 		return;
 	}
@@ -264,47 +260,57 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 			// Try to open the file using libsndfile
 			
-			the_sndfile  = sf_open (fullname, SFM_READ, &the_sf_info);
-		}
+			the_sndfile  = sndfile_open(fullname, &info, NULL);
+        }
 	}
 		
 	// Load the format data and if we have a valid format load the sample
 	
-	mainformat = the_sf_info.format & SF_FORMAT_TYPEMASK;
-	subformat = the_sf_info.format & SF_FORMAT_SUBMASK;
-	endianness = the_sf_info.format & SF_FORMAT_ENDMASK;
-	
-	if (the_sndfile && ((subformat == SF_FORMAT_PCM_16) || (subformat == SF_FORMAT_PCM_24) || (subformat == SF_FORMAT_PCM_32) || (subformat == SF_FORMAT_FLOAT)))
+	if (the_sndfile)
 	{		
 		// Get sample info 
 		
-		frames = the_sf_info.frames;
-		channels = the_sf_info.channels;
-		sr = the_sf_info.samplerate;
-		
-		switch (subformat)
+		frames = info.frames;
+		channels = info.channels;
+        sample_size = info.depth;
+		sr = info.sample_rate;
+		        
+		switch (sample_size)
 		{
-			case SF_FORMAT_PCM_16:
+			case 2:
 				format = PCM_INT_16;
-				sample_size = 2;
 				break;
 				
-			case SF_FORMAT_PCM_24:
+			case 3:
 				format = PCM_INT_24;
-				sample_size = 3;
 				break;
 				
-			case SF_FORMAT_PCM_32:
+			case 4:
 				format = PCM_INT_32;
-				sample_size = 4;
 				break;
 				
-			case SF_FORMAT_FLOAT:
-				format = PCM_FLOAT;
-				sample_size = 4;
+            default:
+				sample_size = 0;
 				break;
 		}
+        
+        if (info.num_format == NUMFORMAT_FLOAT)
+        {
+            format = PCM_FLOAT;
+            if (sample_size != 4)
+                sample_size = 0;
+        }
 		
+        // Bail if incorrect format
+        
+        if (!sample_size)
+        {
+            object_error ((t_object *) x, "ibuffer~: incorrect sample format");
+            ATOMIC_DECREMENT_BARRIER(&x->inuse);
+            sndfile_close (the_sndfile);
+            return;
+        }
+        
 		// Sort channels to load (assume all)
 		// Only allow 4 channels max
 		
@@ -326,18 +332,18 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		
 		// Bail if no memory
 		
-		if (!x->thebuffer) 
+		if (!x->thebuffer)
 		{
-			error ("ibuffer~: could not allocate memory to load file");
+			object_error ((t_object *) x, "ibuffer~: could not allocate memory to load file");
 			ATOMIC_DECREMENT_BARRIER(&x->inuse);
-			sf_close (the_sndfile);
+			sndfile_close (the_sndfile);
 			return;
 		}
 		
 		// Load the audio data raw and close the file
 		
 		if (load_all_channels)
-			sf_read_raw (the_sndfile, x->samples, sample_size * frames * channels);		
+			sndfile_read_raw (the_sndfile, x->samples, frames);
 		else 
 		{
 			// Here we load in chunks to some temporary memory and then copy out ony the relevant channels
@@ -346,9 +352,9 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 			
 			if (!load_temp) 
 			{
-				error ("ibuffer~: could not allocate memory to load file");
+				object_error ((t_object *) x, "ibuffer~: could not allocate memory to load file");
 				ATOMIC_DECREMENT_BARRIER(&x->inuse);
-				sf_close (the_sndfile);
+				sndfile_close (the_sndfile);
 				return;
 			}
 			
@@ -360,7 +366,7 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 				// Read chunk
 				
 				work_chunk = (i + 1) * DEFAULT_WORK_CHUNK > frames ?  frames - (i * DEFAULT_WORK_CHUNK): DEFAULT_WORK_CHUNK;
-				sf_read_raw (the_sndfile, load_temp, work_chunk * sample_size * channels);
+				sndfile_read_raw (the_sndfile, load_temp, work_chunk);
 				
 				// Copy channels
 				
@@ -381,10 +387,10 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		// If the samples are in the wrong endianness then reverse the byte order for each sample 
 		
 #if (TARGET_RT_LITTLE_ENDIAN || defined (WIN_VERSION))	
-		if (endianness == SF_ENDIAN_BIG || (endianness == SF_ENDIAN_FILE && mainformat != SF_FORMAT_WAV)) 
+		if (info.endianness == ENDIANNESS_BIG)
 			endianness_swap = 1;
 #else
-		if (endianness == SF_ENDIAN_LITTLE || (endianness == SF_ENDIAN_FILE && mainformat == SF_FORMAT_WAV)) 
+		if (info.endianness == ENDIANNESS_LITTLE)
 			endianness_swap = 1;
 #endif
 		
@@ -445,10 +451,10 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	}
 	else 
 	{
-		error ("ibuffer~: could not find / open named file");
+		object_error ((t_object *) x, "ibuffer~: could not find / open named file");
 	}
 	
 	ATOMIC_DECREMENT_BARRIER(&x->inuse);
-	sf_close (the_sndfile);
+	sndfile_close (the_sndfile);
 }
 

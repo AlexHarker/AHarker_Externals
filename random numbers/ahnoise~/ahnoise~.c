@@ -87,12 +87,10 @@ t_int *ahnoise_perform (t_int *w)
 	
 	t_rand_gen *gen = &x->gen;
 		
-	while (vec_size--) 
-	{
-		// Get a random value and convert from [0 to 1] to [-1.0 to 1.0] 
-						
+    // Get random values and convert from [0 to 1] to [-1.0 to 1.0]
+    
+	while (vec_size--)
 		*out++ = (float) ((rand_double(gen) * 2.0) - 1.0);
-	}
 		
 	return w + 4;
 }
@@ -111,12 +109,10 @@ void ahnoise_perform64 (t_ahnoise *x, t_object *dsp64, double **ins, long numins
 	double *out = outs[0];
 	t_rand_gen *gen = &x->gen;
 	
-	while (vec_size--) 
-	{
-		// Get a random value and convert from [0 to 1] to [-1.0 to 1.0] 
-		
+    // Get random values and convert from [0 to 1] to [-1.0 to 1.0]
+
+	while (vec_size--)
 		*out++ = (rand_double(gen) * 2.0) - 1.0;
-	}
 }
 
 
@@ -136,9 +132,5 @@ void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s)
 	{
 		sprintf(s,"(signal) Dummy");
     }
-	
-	
 }
-
-
 

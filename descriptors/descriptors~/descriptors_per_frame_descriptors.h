@@ -57,7 +57,7 @@ double get_brightness_log (t_descriptors *x, float *raw_frame, float *ac_coeffic
 
 // Noisiness and inhormanicity
 
-double get_sfm (float *log_amplitudes, double *cumulate_ptr, double *log_freq, long min_bin, long max_bin);
+double get_sfm (float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin);
 double get_noise_ratio (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *sq_amplitudes, double *cumulate_ptr, double *log_freq, long num_bins, long median_span);
 double get_inharmonicity (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, float *raw_frame, float *ac_coefficients, float *freqs, float *amps, char *mask, long num_bins, long N, long median_span, double bin_freq, double threshold);
 

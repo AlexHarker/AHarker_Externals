@@ -16,7 +16,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include "ibufconcatenate_attach~.h"
+#include "ibufconcatenate_info~.h"
 
 #ifndef FLT_MAX
 #define FLT_MAX 3.402823466e+38f
@@ -35,7 +35,7 @@ typedef struct _ibufconcatedrive
 	double lo;
 	double hi;
 	
-	t_ibufconcatenate_attach *attachment;
+	t_ibufconcatenate_info *attachment;
 		
 } t_ibufconcatedrive;
 
@@ -90,7 +90,7 @@ void *ibufconcatedrive_new(t_symbol *buffer_name, double init_val)
 	x->lo = 0;
 	x->hi = 0;
 	
-	x->attachment = new_ibufconcatenate_attachment(buffer_name);
+	x->attachment = new_ibufconcatenate_info(buffer_name);
 	if (!x->attachment)
 		return 0;
 	
@@ -104,8 +104,8 @@ void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_at
 	
 	if (buffer_name)
 	{
-		detach_ibufconcatenate_attachment(x->attachment);
-		x->attachment = new_ibufconcatenate_attachment(buffer_name);
+		detach_ibufconcatenate_info(x->attachment);
+		x->attachment = new_ibufconcatenate_info(buffer_name);
 	}
 }
 
@@ -113,7 +113,7 @@ void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_at
 void ibufconcatedrive_free(t_ibufconcatedrive *x)
 {
 	dsp_free(&x->x_obj);
-	detach_ibufconcatenate_attachment(x->attachment);
+	detach_ibufconcatenate_info(x->attachment);
 }
 
 

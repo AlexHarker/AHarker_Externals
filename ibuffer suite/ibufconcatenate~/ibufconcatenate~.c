@@ -24,7 +24,7 @@
 #include <z_dsp.h>
 
 #include <ibuffer_access.h>
-#include "ibufconcatenate_attach~.h"
+#include "ibufconcatenate_info~.h"
 
 
 void *this_class;
@@ -37,7 +37,7 @@ typedef struct _ibufconcatenate
 {
     t_pxobject x_obj;
 	
-	t_ibufconcatenate_attach *attachment;
+	t_ibufconcatenate_info *attachment;
 	
 	long max_mode;
 	
@@ -56,7 +56,7 @@ void ibufconcatenate_clear (t_ibufconcatenate *x);
 void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name);
 void ibufconcatenate_entry (t_ibufconcatenate *x, double start, double end);
 
-__inline long mstosamps (double ms, double sr);
+static __inline long mstosamps (double ms, double sr);
 void ibufconcatenate_int(t_ibufconcatenate *x, long in);
 
 t_int *ibufconcatenate_perform (t_int *w);
@@ -114,7 +114,7 @@ void *ibufconcatenate_new (t_symbol *buffer_name, long max_mode)
 		x->data_out = listout(x);
 	}
 	
-	x->attachment = new_ibufconcatenate_attachment(buffer_name);
+	x->attachment = new_ibufconcatenate_info(buffer_name);
 	
 	if (!x->attachment)
 		return 0;
@@ -129,7 +129,7 @@ void ibufconcatenate_free(t_ibufconcatenate *x)
 {
 	if (!x->max_mode)
 		dsp_free(&x->x_obj);
-	detach_ibufconcatenate_attachment(x->attachment);
+	detach_ibufconcatenate_info(x->attachment);
 }
 
 
@@ -190,8 +190,8 @@ void ibufconcatenate_assist (t_ibufconcatenate *x, void *b, long m, long a, char
 
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name)
 {
-	detach_ibufconcatenate_attachment(x->attachment);
-	x->attachment = new_ibufconcatenate_attachment(buffer_name);
+	detach_ibufconcatenate_info(x->attachment);
+	x->attachment = new_ibufconcatenate_info(buffer_name);
 }
 
 
@@ -207,7 +207,7 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 	void *target = ibuffer_get_ptr(x->attachment->buffer_name);
 	void *source = ibuffer_get_ptr(source_name);
 	
-	long t_length, s_length;
+	AH_SIntPtr t_length, s_length;
 	long t_format, s_format;
 	long t_chans, s_chans;
 	
@@ -395,7 +395,7 @@ void ibufconcatenate_entry (t_ibufconcatenate *x, double start, double end)
 }
 
 
-__inline long mstosamps (double ms, double sr)
+static __inline long mstosamps (double ms, double sr)
 {
 #ifdef __APPLE__ 
 	return (long) round((ms * sr) / 1000.);
@@ -418,10 +418,11 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 	double full_length = 0;
 	double sr = 0;
 	
-	long num_items = x->attachment->num_items;
-	long null_temp;
-	long samplength = 0;
-
+	AH_SIntPtr samplength = 0;
+    
+    long num_items = x->attachment->num_items;
+    long null_temp;
+    
 	t_atom atom_out[3];
 
 	if (!x->max_mode)
@@ -485,9 +486,10 @@ t_int *ibufconcatenate_perform (t_int *w)
 	
 	float ftemp;
 	
-	long num_items = x->attachment->num_items;
+    AH_SIntPtr samplength = 0;
+	
+    long num_items = x->attachment->num_items;
 	long null_temp;
-	long samplength = 0;
 	
 	// Get buffer
 	
@@ -557,9 +559,10 @@ void ibufconcatenate_perform64 (t_ibufconcatenate *x, t_object *dsp64, double **
 	double start;
 	double end;
 		
+    AH_SIntPtr samplength = 0;
+    
 	long num_items = x->attachment->num_items;
 	long null_temp;
-	long samplength = 0;
 	
 	// Get buffer
 	

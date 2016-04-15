@@ -11,7 +11,7 @@
  *	The following *MUST* be defined:
  *
  *	OBJNAME_STR			- The object name as a string (i.e. - with quotes)
- *	OBJNAME_FIRST(a)	- A macro to combine the object name fllowed by a given string
+ *	OBJNAME_FIRST(a)	- A macro to combine the object name followed by a given string
  *
  *		Should be defined like:
  *		#define OBJNAME_FIRST(a) objname ## a
@@ -25,16 +25,12 @@
  *	F32_VEC_ARRAY			- A unary 32 bit floating point SIMD array function (float *out, float *out, long length)
  *	F32_SCALAR_OP			- A unary 32 bit floating point scalar operator (float)
  *
- *  To use the array version over the op define USE_F32_VEC_ARRAY
- *	To avoid using 32 bit vectors at all define NO_F32_SIMD
- *	It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
- *
  *	F64_VEC_OP				- A unary 64 bit floating point SIMD operator (vDouble)
  *	F64_VEC_ARRAY			- A unary 64 bit floating point SIMD array function (double *out, double *out, long length)
  *	F64_SCALAR_OP			- A unary 64 bit floating point scalar operator (double)
  *
  *  To use the array version over the op define USE_F32_VEC_ARRAY or USE_F64_VEC_ARRAY as appropriate 
- *	To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD
+ *	To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD (according to which are available)
  *	It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
  *
  *	Optionally for objects requiring constants you can define:

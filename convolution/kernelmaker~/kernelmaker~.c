@@ -28,7 +28,7 @@ typedef struct _kernelmaker
 {
     t_pxobject x_obj;
 	
-	long fades;
+	AH_SIntPtr fades;
 	
 } t_kernelmaker;
 
@@ -37,26 +37,26 @@ t_symbol *ps_dirty;
 
 
 
-void *kernelmaker_new (long fades);
+void *kernelmaker_new (t_atom_long fades);
 void kernelmaker_free (t_kernelmaker *x);
 void kernelmaker_assist (t_kernelmaker *x, void *b, long m, long a, char *s);
 
-void kernelmaker_int (t_kernelmaker *x, long fades);
+void kernelmaker_int (t_kernelmaker *x, t_atom_long fades);
 
-void kernelmaker_normal (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv);
-void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset, long length);
+void kernelmaker_normal (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset, AH_SIntPtr length);
 
-void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv);
-void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset, long slide);
+void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset, AH_SIntPtr slide);
 
-void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv);
-void kernelmaker_ring_mod_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset);
+void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_ring_mod_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset);
 
-void kernelmaker_trap (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv);
-void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, long length);
+void kernelmaker_trap (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, AH_SIntPtr length);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {
     this_class = class_new ("kernelmaker~",
 							(method) kernelmaker_new, 
@@ -83,7 +83,7 @@ int main (void)
 }
 
 
-void *kernelmaker_new (long fades)
+void *kernelmaker_new (t_atom_long fades)
 {
     t_kernelmaker *x = (t_kernelmaker *)object_alloc (this_class);
 	
@@ -104,7 +104,7 @@ void kernelmaker_assist (t_kernelmaker *x, void *b, long m, long a, char *s)
 }
 
 
-void kernelmaker_int (t_kernelmaker *x, long fades)
+void kernelmaker_int (t_kernelmaker *x, t_atom_long fades)
 {
 	if (fades >= 0) 
 		x->fades = fades;
@@ -113,7 +113,7 @@ void kernelmaker_int (t_kernelmaker *x, long fades)
 
 // A kernel windowed by a function stored in a second buffer
 
-void kernelmaker_normal (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv)
+void kernelmaker_normal (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 5)
 		error ("kernelmaker~: not enough argments to message makekernel_env");
@@ -122,17 +122,17 @@ void kernelmaker_normal (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *ar
 }
 
 
-void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset, long length)
+void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset, AH_SIntPtr length)
 {
 	void *target = ibuffer_get_ptr(target_name);
 	void *source = ibuffer_get_ptr(source_name);
 	void *window = ibuffer_get_ptr(window_name);
 
-	long t_length, s_length, w_length;
+	AH_SIntPtr t_length, s_length, w_length;
 	long t_format, s_format, w_format;
 	long t_chans, s_chans, w_chans;
-	long ipos;
-	long i;
+	
+    AH_SIntPtr ipos, i;
 	
 	void *t_samps, *s_samps, *w_samps;
 	float *out_samps;
@@ -173,7 +173,7 @@ void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_sym
 			// Window the next sample
 			
 			pos = i * length_recip;
-			ipos = (long) pos;
+			ipos = (AH_SIntPtr) pos;
 			fract = pos - ipos;
 			
 			lower = ibuffer_double_get_samp (w_samps, ipos, w_chans, 0, w_format); 
@@ -213,7 +213,7 @@ void kernelmaker_normal_internal (t_kernelmaker *x, t_symbol *target_name, t_sym
 
 // Create a kernel windowed by a function stored in another buffer and using an envelope derived from lowpass filtering the absolute vals of a third buffer
 
-void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv)
+void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 5)
 		error ("kernelmaker~: not enough argments to message makekernel_env");
@@ -222,14 +222,14 @@ void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv)
 }
 
 
-void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset, long slide)
+void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset, AH_SIntPtr slide)
 {
 	void *target = ibuffer_get_ptr(target_name);
 	void *source = ibuffer_get_ptr(source_name);
 	void *window = ibuffer_get_ptr(window_name);
 	
 	void *t_samps, *s_samps, *w_samps;
-	long t_length, s_length, w_length;
+	AH_SIntPtr t_length, s_length, w_length;
 	long t_format, s_format, w_format;
 	long t_chans, s_chans, w_chans;
 	
@@ -242,8 +242,8 @@ void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol
 	double current_samp, wind_val;
 	double peak_amp = 0.;
 	
-	long fades = x->fades;
-	long length, i;
+    AH_SIntPtr length, i;
+	AH_SIntPtr fades = x->fades;
 	
 	if (slide < 1)
 		slide = 1;
@@ -328,7 +328,7 @@ void kernelmaker_env_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol
 
 // Create a kernel windowed by a function stored in anohter buffer and ring modulated using a third buffer
 
-void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv)
+void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 4)
 		error ("kernelmaker~: not enough argments to message makekernel_ring");
@@ -337,21 +337,21 @@ void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *
 }
 
 
-void kernelmaker_ring_mod_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, long offset)
+void kernelmaker_ring_mod_internal (t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, AH_SIntPtr offset)
 {
 	void *target = ibuffer_get_ptr(target_name);
 	void *source = ibuffer_get_ptr(source_name);
 	void *window = ibuffer_get_ptr(window_name);
 	
 	void *t_samps, *s_samps, *w_samps;
-	long t_length, s_length, w_length;
+	AH_SIntPtr t_length, s_length, w_length;
 	long t_format, s_format, w_format;
 	long t_chans, s_chans, w_chans;
 	
 	float *out_samps;
 	
-	long fades = x->fades;
-	long length, i;
+	AH_SIntPtr fades = x->fades;
+	AH_SIntPtr length, i;
 	
 	double current_samp;
 	double peak_amp = 0.;
@@ -426,7 +426,7 @@ void kernelmaker_ring_mod_internal (t_kernelmaker *x, t_symbol *target_name, t_s
 // Create a of a trapezioid shape with amplitude 1. with points at each of the normalised samples (0-1) given
 // This mode is used to create simple bandpass filter kernels for driving partconvolve~ in eq mode
 
-void kernelmaker_trap (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv)
+void kernelmaker_trap (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 6)
 		error ("kernelmaker~: not enough argments to message makekernel_trap");
@@ -434,7 +434,7 @@ void kernelmaker_trap (t_kernelmaker *x, t_symbol *msg, short argc, t_atom *argv
 	kernelmaker_trap_internal(x, atom_getsym(argv + 0), atom_getfloat(argv + 1), atom_getfloat(argv + 2), atom_getfloat(argv + 3), atom_getfloat(argv + 4), atom_getlong(argv + 5));
 }
 
-void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, long length)
+void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, AH_SIntPtr length)
 {
 	void *target = ibuffer_get_ptr(target_name);
 	
@@ -442,10 +442,10 @@ void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double 
 	double lengthrecip;
 	
 	void *t_samps;
-	long t_length;
-	long t_format;
+	AH_SIntPtr t_length;
+	AH_SIntPtr i;
+    long t_format;
 	long t_chans;
-	long i;
 	
 	float *out_samps;	
 	
@@ -457,7 +457,6 @@ void kernelmaker_trap_internal (t_kernelmaker *x, t_symbol *target_name, double 
 		ibuffer_increment_inuse(target);
 		
 		out_samps = (float *)t_samps;
-		
 		
 		if (t_length < length) 
 			length = t_length;

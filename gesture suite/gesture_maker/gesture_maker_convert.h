@@ -13,12 +13,21 @@
 #include <ext.h>
 #include <ext_obex.h>
 
+// Internal conversion modes
+
+typedef enum {
+    
+    CONVERT_NONE = 0,
+    CONVERT_LINEAR = 1,
+    CONVERT_LOG_IN = 2,
+
+} t_conversion_mode;
 
 // Conversion structure
 
 typedef struct gesture_maker_convert
 {    
-	long mode;
+	t_conversion_mode mode;
 	
 	double mult;
 	double subtract;
@@ -27,10 +36,9 @@ typedef struct gesture_maker_convert
 		
 } t_gesture_maker_convert;
 
-
 // Function prototypes
 
 void gesture_maker_convert_setup();
 void gesture_maker_convert_init(t_gesture_maker_convert *x);
 double gesture_maker_convert_scale(t_gesture_maker_convert *x, double input);
-void gesture_maker_convert_params(t_gesture_maker_convert *x, short argc, t_atom *argv);
+void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom *argv);

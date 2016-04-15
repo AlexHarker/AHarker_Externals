@@ -32,7 +32,7 @@ typedef struct _chebyshape
 	double coeff[32];
 	
 	long offset;
-	long declaredsigins;
+	long num_sig_ins;
 	
 	void **sig_ins;
 	
@@ -80,15 +80,14 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
     t_chebyshape *x = (t_chebyshape *)object_alloc(this_class);
     
 	void *dynamicdsp_parent;
-	long declaredsigins;
+	long num_sig_ins;
 
     // Get dynamicdsp~ host (if it exists)
 	
 	dynamicdsp_parent = Get_Dynamic_Object();
-	declaredsigins = Dynamic_Get_Declared_Sigins(dynamicdsp_parent);
-	
-	x->sig_ins = Dynamic_Get_Sigins(dynamicdsp_parent);
-	x->declaredsigins = declaredsigins;
+    
+	x->sig_ins = Dynamic_Get_Sig_In_Ptrs(dynamicdsp_parent);
+    x->num_sig_ins = num_sig_ins = Dynamic_Get_Num_Sig_Ins(dynamicdsp_parent);
     
 	// Number of coefficients
 	
@@ -103,8 +102,8 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
 	
 	if (offset < 0)
 		offset = 0;
-    if (offset > declaredsigins)
-		offset = declaredsigins;
+    if (offset > num_sig_ins)
+		offset = num_sig_ins;
 	
 	if (!offset)
     {
@@ -447,7 +446,7 @@ void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count)
 	
 	double *coeff = x->coeff;
 	
-	long declaredsigins = x->declaredsigins;
+	long num_sig_ins = x->num_sig_ins;
 	long num_coeff = x->num_coeff;
 	long offset = x->offset;
 	long i;
@@ -463,7 +462,7 @@ void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count)
 	}
 	else 
 	{
-		if (offset + num_coeff - 1 <= declaredsigins)
+		if (offset + num_coeff - 1 <= num_sig_ins)
 		{
 			for (i = 0; i < num_coeff; i++)
 			{
@@ -483,7 +482,7 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 		
 	double *coeff = x->coeff;
 
-	long declaredsigins = x->declaredsigins;
+	long num_sig_ins = x->num_sig_ins;
 	long num_coeff = x->num_coeff;
 	long offset = x->offset;
 	long i;
@@ -494,7 +493,7 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 		object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform64, 0, NULL);
 	else 
 	{
-		if (offset + num_coeff - 1 <= declaredsigins)
+		if (offset + num_coeff - 1 <= num_sig_ins)
 		{
 			for (i = 0; i < num_coeff; i++)
 			{

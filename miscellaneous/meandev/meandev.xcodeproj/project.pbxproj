@@ -9,15 +9,13 @@
 /* Begin PBXBuildFile section */
 		B8BEAA860CD67F7700F906C8 /* meandev.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BEAA750CD67E2B00F906C8 /* meandev.c */; };
 		B8BEAA880CD67F7700F906C8 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BEAA890CD67F7700F906C8 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
 		B8BEAA750CD67E2B00F906C8 /* meandev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = meandev.c; sourceTree = "<group>"; };
 		B8BEAA8F0CD67F7700F906C8 /* meandev.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = meandev.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8C4F3CE1274340500CC6508 /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,7 +24,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BEAA880CD67F7700F906C8 /* Carbon.framework in Frameworks */,
-				B8BEAA890CD67F7700F906C8 /* MaxAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,7 +33,7 @@
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B8C4F3CE1274340500CC6508 /* AH_MaxMSP4.xcconfig */,
+				B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -48,7 +45,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0F5B62020919440900A62EB9 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -115,6 +111,8 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 0FF6670E096B494E00E9E0B4 /* Build configuration list for PBXProject "meandev" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -186,7 +184,7 @@
 		};
 		B8BEAA8C0CD67F7700F906C8 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 			};
@@ -194,14 +192,14 @@
 		};
 		B8BEAA8D0CD67F7700F906C8 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 			};
 			name = Deployment;
 		};
 		B8BEAA8E0CD67F7700F906C8 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
 			};
 			name = Default;

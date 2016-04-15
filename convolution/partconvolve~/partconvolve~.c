@@ -17,10 +17,9 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Max5.h>
 #include <AH_VectorOps.h>
 #include <AH_Denormals.h>
-#include <AH_Rand_Seed.h>
+#include <AH_Random.h>
 #include <ibuffer_access.h>
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
@@ -28,7 +27,7 @@
 #define MIN_FFT_SIZE_LOG2					5
 #define MAX_FFT_SIZE_LOG2					20
 #define DEFAULT_MAX_FFT_SIZE_LOG2			16;
-#define BUFFERSIZES_DEFAULT					1323000							// N.B. = 44100 * 30 or 30 seconds at 44.1kHz 
+#define BUFFER_SIZE_DEFAULT					1323000							// N.B. = 44100 * 30 or 30 seconds at 44.1kHz 
 
 #define FFTW_TWOPI							6.28318530717958647692
 
@@ -87,25 +86,25 @@ typedef struct _partconvolve
 	
 	// Attributes
 	
-	long chan;
-	long offset;
-	long length;
+	t_atom_long chan;
+	t_atom_long offset;
+	t_atom_long length;
 	
 	// Flags
 	
-	char reset_flag;				// reset fft data on next perform call
-	char memory_flag;				// memory was allocated correctly
-	char direct_flag;				// do not perform fft on impulse when partioning - assume that this has already been done (or we are in eq_flag mode)
-	char eq_flag;					// eq_flag mode on/off
+	bool reset_flag;				// reset fft data on next perform call
+	bool memory_flag;				// memory was allocated correctly
+	bool direct_flag;				// do not perform fft on impulse when partioning - assume that this has already been done (or we are in eq_flag mode)
+	bool eq_flag;					// eq_flag mode on/off
 	
 	float *safe_signal;				// for Max5 (fix for memory alignment issue pre 5.1.3)
 	
 } t_partconvolve;
 
 
-long int_log2 (long in, long *inexact)
+long int_log2 (long long in, long *inexact)
 {
-	long temp = in;
+	long long temp = in;
 	long out = 0;
 	
 	if (in <= 0) 
@@ -130,24 +129,27 @@ long int_log2 (long in, long *inexact)
 
 
 void partconvolve_free(t_partconvolve *x);
-void *partconvolve_new(t_symbol *s, short argc, t_atom *argv);
+void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
-t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
 void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size);
 t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
+t_max_err partconvolve_fft_size_get(t_partconvolve *x, t_object *attr, long *argc, t_atom **argv);
 
-void partconvolve_direct(t_partconvolve *x, t_symbol *msg, short argc, t_atom *argv);
-void partconvolve_eq(t_partconvolve *x,  t_symbol *msg, short argc, t_atom *argv);
-void partconvolve_set(t_partconvolve *x,  t_symbol *msg, short argc, t_atom *argv);
-void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, long direct_flag, long eq_flag);
+t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+
+void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv);
+void partconvolve_eq(t_partconvolve *x,  t_symbol *msg, long argc, t_atom *argv);
+void partconvolve_set(t_partconvolve *x,  t_symbol *msg, long argc, t_atom *argv);
+void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag);
 
 void partconvolve_partition(t_partconvolve *x, long direct_flag);
 
-t_int *partconvolve_perform_mem_alignment(t_int *w);
-t_int *partconvolve_perform(t_int *w);
 void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
 void partconvolve_perform_eq(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
+void partconvolve_perform_internal(t_partconvolve *x, vFloat *in, vFloat *out, long vec_size);
 
+t_int *partconvolve_perform(t_int *w);
+t_int *partconvolve_perform_mem_alignment(t_int *w);
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count);
 
 void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -157,10 +159,8 @@ void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s);
 void partconvolve_memoryusage(t_partconvolve *x);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
-	t_object *attr;
-	
 	this_class = class_new("partconvolve~",
 						   (method)partconvolve_new, 
 						   (method)partconvolve_free, 
@@ -175,29 +175,30 @@ int main(void)
 	
 	class_addmethod(this_class, (method)partconvolve_memoryusage, "memoryusage", 0);
     class_addmethod(this_class, (method)partconvolve_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method)partconvolve_notify, "notify", A_CANT, 0);
 	class_addmethod(this_class, (method)partconvolve_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)partconvolve_dsp64, "dsp64", A_CANT, 0);
 	
 	class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
 	
-	// Add attributes
+    // Add Attributes
+    
+    CLASS_ATTR_LONG(this_class, "fftsize", 0L, t_partconvolve, fft_size);
+    CLASS_ATTR_ACCESSORS(this_class, "fftsize", partconvolve_fft_size_get, partconvolve_fft_size_set);
+    CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
+    
+    CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
+    CLASS_ATTR_FILTER_MIN(this_class, "length", 0);
+    CLASS_ATTR_LABEL(this_class, "length", 0L, "Impulse Length");
+    
+    CLASS_ATTR_LONG(this_class, "offset", 0L, t_partconvolve, offset);
+    CLASS_ATTR_FILTER_MIN(this_class, "offset", 0);
+    CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
+    
+    CLASS_ATTR_LONG(this_class, "chan", 0L, t_partconvolve, chan);
+    CLASS_ATTR_FILTER_CLIP(this_class, "chan", 1, 4);
+    CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
 
-	class_obexoffset_set(this_class, calcoffset(t_partconvolve, obex));
-	
-	attr = attr_offset_new("fftsize", gensym("long"), 0, (method)0L,(method)partconvolve_fft_size_set, calcoffset(t_partconvolve, fft_size));
-	class_addattr(this_class, attr);	
-	
-	attr = attr_offset_new("length", gensym("long"), 0,(method)0L,(method)partconvolve_length_set, calcoffset(t_partconvolve, length));
-	class_addattr(this_class, attr);	
-	
-	attr = attr_offset_new("offset", gensym("long"), 0,(method)0L,(method)0L, calcoffset(t_partconvolve, offset));
-	attr_addfilter_clip(attr, 0, 0, 1, 0);
-	class_addattr(this_class, attr);	
-	
-	attr = attr_offset_new("chan", gensym("long"), 0, (method)0L,(method)0L, calcoffset(t_partconvolve, chan));
-	attr_addfilter_clip(attr, 1, 4, 1, 1); 
-	class_addattr(this_class, attr);	
-	
 	// Add dsp and register 
 	
 	class_dspinit(this_class);
@@ -207,7 +208,7 @@ int main(void)
 	
 	// Seed the random fft offset generator
 
-	srand(get_rand_seed ());	
+	srand(rand_int_os());	
 
 	return 0;
 }
@@ -223,9 +224,9 @@ void partconvolve_free(t_partconvolve *x)
 }
 
 
-void *partconvolve_new(t_symbol *s, short argc, t_atom *argv)
+void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
-    long max_impulse_length = BUFFERSIZES_DEFAULT;
+    long max_impulse_length = BUFFER_SIZE_DEFAULT;
 	long max_fft_over_4;
 	
 	// Setup the object and make inlets / outlets
@@ -254,15 +255,15 @@ void *partconvolve_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Check arguments
 	
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
 		max_impulse_length = atom_getlong(argv);
 		
 		if (max_impulse_length <= 0)
-			max_impulse_length = BUFFERSIZES_DEFAULT;
+			max_impulse_length = BUFFER_SIZE_DEFAULT;
 		if (max_impulse_length < 64)
 		{
-			AH_error (x, "minimum internal buffer size is 64 samples");
+			object_error( (t_object *) x, "minimum internal buffer size is 64 samples");
 			max_impulse_length = 64;
 		}
 		
@@ -272,7 +273,7 @@ void *partconvolve_new(t_symbol *s, short argc, t_atom *argv)
 	
 	x->max_impulse_length = max_impulse_length;
 	
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
 		partconvolve_max_fft_size_set(x, atom_getlong(argv));
 		argv++;
@@ -327,30 +328,9 @@ void *partconvolve_new(t_symbol *s, short argc, t_atom *argv)
 		object_attr_setlong (x, gensym("fftsize"), x->max_fft_size);
 	
 	if (!x->memory_flag)
-		AH_error (x, "couldn't allocate enough memory.....");
+		object_error( (t_object *) x, "couldn't allocate enough memory.....");
 	
 	return (x);
-}
-
-
-t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv)
-{
-	long length = atom_getlong(argv);
-	long max_impulse_length = x->max_impulse_length;
-	
-	if (!argc)
-		return MAX_ERR_NONE;
-	
-	if (length < 0) length = 0;
-	if (length > max_impulse_length)
-	{
-		AH_error (x, "requested length greater than internal buffer size - buffer length is set to %ld", max_impulse_length);
-		length = max_impulse_length;
-	}
-	
-	x->length = length;
-	
-	return MAX_ERR_NONE;
 }
 
 
@@ -367,18 +347,18 @@ void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size)
 	
 	if (max_fft_size_log2 > MAX_FFT_SIZE_LOG2)
 	{
-		AH_error (x, "maximum fft size too large - using %ld", 1 << MAX_FFT_SIZE_LOG2);
+		object_error( (t_object *) x, "maximum fft size too large - using %ld", 1 << MAX_FFT_SIZE_LOG2);
 		max_fft_size_log2 = MAX_FFT_SIZE_LOG2;
 	}
 	
 	if (max_fft_size_log2 && max_fft_size_log2 < MIN_FFT_SIZE_LOG2)
 	{
-		AH_error (x, "maximum fft size too small - using %ld", 1 << MIN_FFT_SIZE_LOG2);
+		object_error( (t_object *) x, "maximum fft size too small - using %ld", 1 << MIN_FFT_SIZE_LOG2);
 		max_fft_size_log2 = MIN_FFT_SIZE_LOG2;
 	}
 	
 	if (inexact)
-		AH_error (x, "maximum fft size must be power of two - using %ld", 1 << max_fft_size_log2);
+		object_error( (t_object *) x, "maximum fft size must be power of two - using %ld", 1 << max_fft_size_log2);
 		
 	x->max_fft_size_log2 = max_fft_size_log2;
 	x->max_fft_size = 1 << max_fft_size_log2;
@@ -403,12 +383,12 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 	
 	if (fft_size_log2 < MIN_FFT_SIZE_LOG2 || fft_size_log2 > x->max_fft_size_log2)
 	{
-		AH_error (x, "fft size out of range - should be between %ld and %ld", 1 << MIN_FFT_SIZE_LOG2, 1 << x->max_fft_size_log2);
+		object_error( (t_object *) x, "fft size out of range - should be between %ld and %ld", 1 << MIN_FFT_SIZE_LOG2, 1 << x->max_fft_size_log2);
 		return MAX_ERR_NONE;
 	}
-	
-	if (inexact)
-		AH_error (x, "fft size must be power of two - using %ld", 1 << fft_size_log2);
+ 
+    if (inexact)
+		object_error( (t_object *) x, "fft size must be power of two - using %ld", 1 << fft_size_log2);
 	
 	// Set fft variables iff the fft size has actually actually changed
 	
@@ -416,7 +396,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 	{
 		x->num_partitions = 0;
 		
-		// Initialise fft Info
+		// Initialise fft info
 		
 		fft_size = 1 << fft_size_log2;
 		x->fft_size_log2 = fft_size_log2;
@@ -447,24 +427,83 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 }
 
 
-void partconvolve_direct(t_partconvolve *x, t_symbol *msg, short argc, t_atom *argv)
+t_max_err partconvolve_fft_size_get(t_partconvolve *x, t_object *attr, long *argc, t_atom **argv)
 {
-	partconvolve_set_internal(x, argc ? atom_getsym(argv) : 0, 1, 0);
+    char alloc;
+    
+    // Allocate return atom
+    
+    atom_alloc(argc, argv, &alloc);
+
+    // Return value
+    
+    atom_setlong(*argv, x->fft_size);
+    
+    return MAX_ERR_NONE;
 }
 
 
-void partconvolve_eq(t_partconvolve *x, t_symbol *msg, short argc, t_atom *argv)
+t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
-	
-	partconvolve_set_internal(x, argc ? atom_getsym(argv) : 0, 1, 1);
+    if (msg == gensym("attr_modified"))
+    {
+        t_symbol *attrname = (t_symbol *) object_method((t_object *)data, gensym("getname"));
+        
+        if (attrname == gensym("fftsize"))
+        {
+            if (x->length > x->max_impulse_length)
+            {
+                object_error((t_object *) x, "requested length greater than internal buffer size - internal buffer length is set to %ld", x->max_impulse_length);
+                x->length = x->max_impulse_length;
+            }
+        }
+    }
+    
+    return MAX_ERR_NONE;
 }
 
-void partconvolve_set(t_partconvolve *x, t_symbol *msg, short argc, t_atom *argv)
+
+t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv)
 {
-	partconvolve_set_internal(x, argc ? atom_getsym(argv) : 0, 0, 0);
+    long length = atom_getlong(argv);
+    long max_impulse_length = x->max_impulse_length;
+    
+    if (!argc)
+        return MAX_ERR_NONE;
+    
+    if (length < 0)
+        length = 0;
+    if (length > max_impulse_length)
+    {
+        object_error( (t_object *) x, "requested length greater than internal buffer size - internal buffer length is set to %ld", max_impulse_length);
+        length = max_impulse_length;
+    }
+    
+    x->length = length;
+    
+    return MAX_ERR_NONE;
 }
 
-void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, long direct_flag, long eq_flag)
+
+void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
+{
+	partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, TRUE, FALSE);
+}
+
+
+void partconvolve_eq(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
+{
+	partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, TRUE, TRUE);
+}
+
+
+void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
+{
+	partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, FALSE, FALSE);
+}
+
+
+void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
 {
 	void *b = ibuffer_get_ptr (s);
 	
@@ -485,7 +524,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, long direct_flag,
 	{
 		if (s)
 		{
-			AH_error (x, "%s is not a valid buffer", s->s_name);
+			object_error( (t_object *) x, "%s is not a valid buffer", s->s_name);
 			x->buffer_pointer = 0;
 			x->buffer_name = s; 
 			x->num_partitions = 0;
@@ -502,6 +541,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, long direct_flag,
 	}
 }
 
+
 void partconvolve_partition(t_partconvolve *x, long direct_flag)
 {
 	// Standard ibuffer variables
@@ -516,16 +556,15 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	
 	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
-	long buffer_pos;
 	long fft_size = x->fft_size;
 	long fft_size_halved = fft_size >> 1;
 	long fft_size_log2 = x->fft_size_log2;
 	
 	// Attributes
 	
-	long offset = x->offset;
-	long length = x->length;
-	long chan = x->chan - 1;
+	t_atom_long offset = x->offset;
+	t_atom_long length = x->length;
+	t_atom_long chan = x->chan - 1;
 	
 	// Partition variables
 	
@@ -533,7 +572,9 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	FFT_SPLIT_COMPLEX_F impulse_buffer = x->impulse_buffer;
 	FFT_SPLIT_COMPLEX_F buffer_temp2;
 	
-	long impulse_length, num_partitions, n_samps, i;
+    AH_SIntPtr impulse_length;
+    AH_SIntPtr buffer_pos;
+    long num_partitions, n_samps, i;
 	
 	// Access buffer
 	
@@ -561,11 +602,11 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	if (x->eq_flag && impulse_length > fft_size_halved)
 		impulse_length = fft_size_halved;
 	if (length && impulse_length < length)
-		AH_error (x, "buffer is shorter than requested length (after offset has been applied)");
+		object_error( (t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
 	if (impulse_length > x->max_impulse_length) 
 	{
 		impulse_length = x->max_impulse_length;
-		AH_error (x, "internal buffer is not large enough to load entire buffer~ into memory");
+		object_error( (t_object *) x, "internal buffer is not large enough to load entire buffer~ into memory");
 	}
 	
 	// Partition / load the impulse
@@ -622,30 +663,61 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	if (!x->num_partitions) 
 		x->reset_flag = 1;
 	x->num_partitions = num_partitions;
-}		
-
-
-t_int *partconvolve_perform_mem_alignment(t_int *w)
-{
-	long bytes;
-	
-    float *in = (float *)(w[1]);
-	float *out = (float *)(w[2]);
-	bytes = w[3];
-	
-	memcpy(out, in, bytes);
-	
-	return w + 4;
 }
 
 
-t_int *partconvolve_perform(t_int *w)
-{	
-    vFloat *in = (vFloat *)(w[2]);
-    vFloat *out = (vFloat *)(w[3]);
-	long vec_size = w[4];
-    t_partconvolve *x = (t_partconvolve *) w[5];
-	
+void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+{
+    vFloat *in_real1 = (vFloat *) in1.realp;
+    vFloat *in_imag1 = (vFloat *) in1.imagp;
+    vFloat *in_real2 = (vFloat *) in2.realp;
+    vFloat *in_imag2 = (vFloat *) in2.imagp;
+    vFloat *out_real = (vFloat *) out.realp;
+    vFloat *out_imag = (vFloat *) out.imagp;
+    
+    //	Do Nyqusit Calculation and then zero these bins
+    
+    float nyquist1 = in1.imagp[0];
+    float nyquist2 = in2.imagp[0];
+    
+    in1.imagp[0] = 0.f;
+    in2.imagp[0] = 0.f;
+    
+    out.imagp[0] += nyquist1 * nyquist2;
+    
+    // Do other bins
+    
+    for (long i = 0; i < num_vecs; i++)
+    {
+        out_real[i] = F32_VEC_ADD_OP (out_real[i], F32_VEC_SUB_OP (F32_VEC_MUL_OP(in_real1[i], in_real2[i]), F32_VEC_MUL_OP(in_imag1[i], in_imag2[i])));
+        out_imag[i] = F32_VEC_ADD_OP (out_imag[i], F32_VEC_ADD_OP (F32_VEC_MUL_OP(in_real1[i], in_imag2[i]), F32_VEC_MUL_OP(in_imag1[i], in_real2[i])));
+    }
+    
+    // Replace nyquist bins
+    
+    in1.imagp[0] = nyquist1;
+    in2.imagp[0] = nyquist2;
+}
+
+
+void partconvolve_perform_eq(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+{
+    vFloat *in_real1 = (vFloat *) in1.realp;
+    vFloat *in_imag1 = (vFloat *) in1.imagp;
+    vFloat *in_real2 = (vFloat *) in2.realp;
+    vFloat *out_real = (vFloat *) out.realp;
+    vFloat *out_imag = (vFloat *) out.imagp;
+    
+    for (long i = 0; i < num_vecs; i++)
+    {
+        out_real[i] = F32_VEC_MUL_OP(in_real1[i], in_real2[i]);
+        out_imag[i] = F32_VEC_MUL_OP(in_imag1[i], in_real2[i]);
+    }
+}
+
+
+void partconvolve_perform_internal(t_partconvolve *x, vFloat *in, vFloat *out, long vec_size)
+{
 	FFT_SPLIT_COMPLEX_F impulse_buffer = x->impulse_buffer;
 	FFT_SPLIT_COMPLEX_F input_buffer = x->input_buffer;
 	FFT_SPLIT_COMPLEX_F accum_buffer = x->accum_buffer;
@@ -683,8 +755,8 @@ t_int *partconvolve_perform(t_int *w)
 	long vec_remain = vec_size >> 2;
 	long random_fft_offset, loop_size, i;
 	
-	char reset_flag = x->reset_flag;
-	char eq_flag = x->eq_flag;
+	bool reset_flag = x->reset_flag;
+	bool eq_flag = x->eq_flag;
 	
 	vFloat vscale_mult = float2vector((float) (1.0 / (double) (fft_size << 2)));	
 	vFloat Zero = {0.,0.,0.,0.};
@@ -894,70 +966,33 @@ t_int *partconvolve_perform(t_int *w)
 	x->valid_partitions = valid_partitions;
 	x->partitions_done = partitions_done;
 	x->last_partition = last_partition;
-	
-    return w + 6;
-	
+		
 zero_output:
 	
 	for (i = 0; i < vec_size >> 2; i++)
 		out[i] = Zero;
-	
-	return w + 6;
 }
 
 
-void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+t_int *partconvolve_perform(t_int *w)
 {
-	vFloat *in_real1 = (vFloat *) in1.realp;
-	vFloat *in_imag1 = (vFloat *) in1.imagp;
-	vFloat *in_real2 = (vFloat *) in2.realp;
-	vFloat *in_imag2 = (vFloat *) in2.imagp;
-	vFloat *out_real = (vFloat *) out.realp;
-	vFloat *out_imag = (vFloat *) out.imagp;
-	
-	float nyquist1, nyquist2;
-	long i;
-	
-	//	Do Nyqusit Calculation and then zero these bins
-	
-	nyquist1 = in1.imagp[0];
-	nyquist2 = in2.imagp[0];
-	
-	in1.imagp[0] = 0.f;
-	in2.imagp[0] = 0.f;
-	
-	out.imagp[0] += nyquist1 * nyquist2;
-	
-	// Do other bins
-	
-	for (i = 0; i < num_vecs; i++)
-	{
-		out_real[i] = F32_VEC_ADD_OP (out_real[i], F32_VEC_SUB_OP (F32_VEC_MUL_OP(in_real1[i], in_real2[i]), F32_VEC_MUL_OP(in_imag1[i], in_imag2[i])));
-		out_imag[i] = F32_VEC_ADD_OP (out_imag[i], F32_VEC_ADD_OP (F32_VEC_MUL_OP(in_real1[i], in_imag2[i]), F32_VEC_MUL_OP(in_imag1[i], in_real2[i])));
-	}
-	
-	// Replace nyquist bins
-	
-    in1.imagp[0] = nyquist1;
-	in2.imagp[0] = nyquist2;
+    // Miss denormal routine
+    
+    partconvolve_perform_internal((t_partconvolve *) w[5], (vFloat *)(w[2]), (vFloat *)(w[3]), (long) (w[4]));
+    
+    return w + 6;
 }
- 
 
-void partconvolve_perform_eq(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+
+t_int *partconvolve_perform_mem_alignment(t_int *w)
 {
-	vFloat *in_real1 = (vFloat *) in1.realp;
-	vFloat *in_imag1 = (vFloat *) in1.imagp;
-	vFloat *in_real2 = (vFloat *) in2.realp;
-	vFloat *out_real = (vFloat *) out.realp;
-	vFloat *out_imag = (vFloat *) out.imagp;
-	
-	long i;
-	
-	for (i = 0; i < num_vecs; i++)
-	{
-		out_real[i] = F32_VEC_MUL_OP(in_real1[i], in_real2[i]);
-		out_imag[i] = F32_VEC_MUL_OP(in_imag1[i], in_real2[i]);
-	}
+    float *in = (float *)(w[1]);
+    float *out = (float *)(w[2]);
+    long bytes = w[3];
+    
+    memcpy(out, in, bytes);
+    
+    return w + 4;
 }
 
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
@@ -980,33 +1015,23 @@ void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
 
 void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-	t_int w[6];
-	
 	double *in = ins[0];
 	double *out = outs[0];
 	float *temp_in = (float *) outs[0];
 	float *temp_out = temp_in + vec_size;
-	
-	long i;
-	
-	w[0] = w[1] = 0;
-	w[2] = (t_int) temp_in;
-	w[3] = (t_int) temp_out;
-	w[4] = (t_int) vec_size;
-	w[5] = (t_int) x;
-	
+		
 	// Copy in
 	
-	for (i = 0; i < vec_size; i++)
+	for (long i = 0; i < vec_size; i++)
 		temp_in[i] = (float) *in++;
 	
 	// Process
 	
-	partconvolve_perform(w);
+	partconvolve_perform_internal(x, (vFloat *) temp_in, (vFloat *) temp_out, vec_size);
 	
 	// Copy out
 	
-	for (i = 0; i < vec_size; i++)
+	for (long i = 0; i < vec_size; i++)
 		*out++ = (double) temp_out[i];
 }
 
@@ -1022,9 +1047,9 @@ void partconvolve_memoryusage(t_partconvolve *x)
 	long memory_size = ((x->max_impulse_length * 4 * sizeof(float)) + ((x->max_fft_size >> 2) * 7 * sizeof(vFloat)));
 	
 	if (memory_size > 1024)
-		AH_post (x, "using %.2lf MB", memory_size / 1048576.0);		
+		object_post ((t_object *)x, "using %.2lf MB", memory_size / 1048576.0);
 	else
-		AH_post (x, "using %.2lf KB", memory_size / 1024.0);	
+		object_post ((t_object *)x, "using %.2lf KB", memory_size / 1024.0);
 }
 
 

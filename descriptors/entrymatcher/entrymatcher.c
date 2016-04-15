@@ -108,7 +108,7 @@ t_symbol *ps_sym_scale_ratio;
 t_symbol *ps_sym_within_ratio;
 
 
-__inline double atom_getdouble_translate (t_atom *arg);
+static __inline double atom_getdouble_translate (t_atom *arg);
 
 void *entrymatcher_new(long max_num_entries, long num_columns);
 void entrymatcher_free(t_entrymatcher *x);
@@ -139,18 +139,18 @@ void entrymatcher_combsort(long *indices, double *distances, long num_points);
 // ========================================================================================================================================== //
 
 
-__inline double atom_getdouble_translate (t_atom *arg)
+static __inline double atom_getdouble_translate (t_atom *arg)
 {
-	switch (arg->a_type)
+	switch (atom_gettype(arg))
 	{
 		case A_LONG:
-			return arg->a_w.w_long;
+			return atom_getlong(arg);
 			break;
 		case A_FLOAT:
-			return arg->a_w.w_float;
+			return atom_getfloat(arg);
 			break;
 		case A_SYM:
-			return (long) arg->a_w.w_sym;
+			return (long) atom_getsym(arg);
 			break;
 		default:
 			return 0.;
@@ -411,9 +411,9 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 	
 	for (i = 0; i < argc; i++)
 	{
-		if (label_modes[i] == (argv->a_type == A_SYM))
+		if (label_modes[i] == (atom_gettype(argv) == A_SYM))
 		{
-			data_types[i] = argv->a_type;
+			data_types[i] = atom_gettype(argv);
 			the_data[i] = atom_getdouble_translate(argv);
 		}
 		else
@@ -491,26 +491,26 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	
 	if (msg == ps_lookup)
 	{
-		switch (argv->a_type)
+		switch (atom_gettype(argv))
 		{
 			case A_SYM:
 				
 				for (i = 0; i < num_entries; i++)
-					if (entry_identifiers[i].a_type == A_SYM && entry_identifiers[i].a_w.w_sym == argv->a_w.w_sym) 
+					if (atom_gettype(entry_identifiers + i) == A_SYM && atom_getsym(entry_identifiers + i) == atom_getsym(argv))
 						break;
 				break;
 				
 			case A_LONG:
 
 				for (i = 0; i < num_entries; i++)
-					if (entry_identifiers[i].a_type == A_LONG && entry_identifiers[i].a_w.w_long == argv->a_w.w_long)
+					if (atom_gettype(entry_identifiers + i) == A_LONG && atom_getlong(entry_identifiers + i) == atom_getlong(argv))
 						break;
 				break;
 				
 			case A_FLOAT:
 				
 				for (i = 0; i < num_entries; i++)
-					if (entry_identifiers[i].a_type == A_FLOAT && entry_identifiers[i].a_w.w_float == argv->a_w.w_float) break;
+					if (atom_gettype(entry_identifiers + i) == A_FLOAT && atom_getfloat(entry_identifiers + i) == atom_getfloat(argv)) break;
 				break;
 		}
 		to_lookup = i;
@@ -544,16 +544,16 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 			switch (data_types[i])
 			{
 				case A_SYM:
-					SETSYM (output_data + i, (t_symbol *) (long) the_data[i]);
+					atom_setsym(output_data + i, (t_symbol *) (long) the_data[i]);
 					break;
 				case A_LONG:
-					SETLONG (output_data + i, (long) the_data[i]);
+					atom_setlong(output_data + i, (long) the_data[i]);
 					break;
 				case A_FLOAT:
-					SETFLOAT (output_data + i, the_data[i]);
+					atom_setfloat(output_data + i, the_data[i]);
 					break;
 				default:
-					SETFLOAT (output_data + i, 0.);
+					atom_setfloat(output_data + i, 0.);
 			}
 		}
 	}
@@ -571,19 +571,19 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 
 			if (column_index == -1)
 			{
-				switch (entry_identifiers[to_lookup].a_type)
+				switch (atom_gettype(entry_identifiers + to_lookup))
 				{
 					case A_SYM:
-						SETSYM (output_data + i, entry_identifiers[to_lookup].a_w.w_sym);
+						atom_setsym(output_data + i, atom_getsym(entry_identifiers + to_lookup));
 						break;
 					case A_LONG:
-						SETLONG (output_data + i, entry_identifiers[to_lookup].a_w.w_long);
+						atom_setlong(output_data + i, atom_getlong(entry_identifiers + to_lookup));
 						break;
 					case A_FLOAT:
-						SETFLOAT (output_data + i, entry_identifiers[to_lookup].a_w.w_float);
+						atom_setfloat(output_data + i, atom_getfloat(entry_identifiers + to_lookup));
 						break;
 					default:
-						SETFLOAT (output_data + i, 0.);
+						atom_setfloat(output_data + i, 0.);
 				}
 			}
 			else 
@@ -591,16 +591,16 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 				switch (data_types[column_index])
 				{
 					case A_SYM:
-						SETSYM (output_data + i, (t_symbol *) (long) the_data[column_index]);
+						atom_setsym(output_data + i, (t_symbol *) (long) the_data[column_index]);
 						break;
 					case A_LONG:
-						SETLONG (output_data + i, (long) the_data[column_index]);
+						atom_setlong(output_data + i, (long) the_data[column_index]);
 						break;
 					case A_FLOAT:
-						SETFLOAT (output_data + i, the_data[column_index]);
+						atom_setfloat(output_data + i, the_data[column_index]);
 						break;
 					default:
-						SETFLOAT (output_data + i, 0.);
+						atom_setfloat(output_data + i, 0.);
 				}
 			}
 		}
@@ -771,7 +771,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 	double distance_limit = HUGE_VAL;
 	long n_limit = 1024;
 	
-	if (argc > 0 && argv->a_type == A_LONG)
+	if (argc > 0 && atom_gettype(argv) == A_LONG)
 	{
 		// Limit by maximum specified number
 		// Limit by ratio
@@ -875,9 +875,9 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 		if (distance > distance_limit) 
 			break;
 		
-		SETFLOAT(output_distances + i, distance);
+		atom_setfloat(output_distances + i, distance);
 		output_identifiers[i] = entry_identifiers[index];
-		SETLONG(output_indices + i, index + 1);
+		atom_setlong(output_indices + i, index + 1);
 	}
 		
 	num_chosen_indices = i;
@@ -889,9 +889,9 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Handle identifiers correctly whether the first identifier is numeric (output list), or symbol (output message)
 	
-	if (output_identifiers[0].a_type == A_SYM)
+	if (atom_gettype(output_identifiers) == A_SYM)
 	{
-		msg = output_identifiers[0].a_w.w_sym;
+        msg = atom_getsym(output_identifiers);
 		nudge = 1;
 		num_identifier_args = num_chosen_indices - 1;
 	}
@@ -1117,23 +1117,23 @@ long entrymatcher_calculate(t_entrymatcher *x)
 
 char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2)
 {
-	if (identifier1->a_type != identifier2->a_type)
+	if (atom_gettype(identifier1) != atom_gettype(identifier2))
 		return 0;
 		
-	switch (identifier1->a_type)
+	switch (atom_gettype(identifier1))
 	{
 		case A_LONG:
-			if (identifier1->a_w.w_long != identifier2->a_w.w_long)
+			if (atom_getlong(identifier1) != atom_getlong(identifier2))
 				return 0;
 			break;
 		
 		case A_FLOAT:
-			if (identifier1->a_w.w_float != identifier2->a_w.w_float)
+			if (atom_getfloat(identifier1) != atom_getfloat(identifier2))
 				return 0;
 			break;
 			
 		case A_SYM:
-			if (identifier1->a_w.w_sym != identifier2->a_w.w_sym)
+			if (atom_getsym(identifier1) != atom_getsym(identifier2))
 				return 0;
 			break;
 			
@@ -1154,7 +1154,7 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 	t_symbol *named_column;
 	long i;
 	
-	if (arg->a_type != A_SYM) 
+	if (atom_gettype(arg) != A_SYM) 
 		return atom_getlong(arg) - 1;
 
 	named_column = atom_getsym(arg);
@@ -1176,19 +1176,20 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 
 long entrymatcher_test_types(t_atom *argv)
 {
-	if (argv->a_type != A_SYM) return 0;
+	if (atom_gettype(argv) != A_SYM)
+        return 0;
 	
-	if (argv->a_w.w_sym == ps_match || argv->a_w.w_sym == ps_sym_match) return TEST_MATCH;
-	if (argv->a_w.w_sym == ps_distance || argv->a_w.w_sym == ps_sym_distance) return TEST_DISTANCE;
-	if (argv->a_w.w_sym == ps_less || argv->a_w.w_sym == ps_sym_less) return TEST_LESS_THAN;
-	if (argv->a_w.w_sym == ps_greater || argv->a_w.w_sym == ps_sym_greater) return TEST_GREATER_THAN;
-	if (argv->a_w.w_sym == ps_lesseq || argv->a_w.w_sym == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
-	if (argv->a_w.w_sym == ps_greatereq || argv->a_w.w_sym == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
-	if (argv->a_w.w_sym == ps_scale || argv->a_w.w_sym == ps_sym_scale) return TEST_SCALE;
-	if (argv->a_w.w_sym == ps_within || argv->a_w.w_sym == ps_sym_within) return TEST_WITHIN;
-	if (argv->a_w.w_sym == ps_distance_ratio || argv->a_w.w_sym == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
-	if (argv->a_w.w_sym == ps_scale_ratio || argv->a_w.w_sym == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
-	if (argv->a_w.w_sym == ps_within_ratio || argv->a_w.w_sym == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
+	if (atom_getsym(argv) == ps_match || atom_getsym(argv) == ps_sym_match) return TEST_MATCH;
+	if (atom_getsym(argv) == ps_distance || atom_getsym(argv) == ps_sym_distance) return TEST_DISTANCE;
+	if (atom_getsym(argv) == ps_less || atom_getsym(argv) == ps_sym_less) return TEST_LESS_THAN;
+	if (atom_getsym(argv) == ps_greater || atom_getsym(argv) == ps_sym_greater) return TEST_GREATER_THAN;
+	if (atom_getsym(argv) == ps_lesseq || atom_getsym(argv) == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
+	if (atom_getsym(argv) == ps_greatereq || atom_getsym(argv) == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
+	if (atom_getsym(argv) == ps_scale || atom_getsym(argv) == ps_sym_scale) return TEST_SCALE;
+	if (atom_getsym(argv) == ps_within || atom_getsym(argv) == ps_sym_within) return TEST_WITHIN;
+	if (atom_getsym(argv) == ps_distance_ratio || atom_getsym(argv) == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
+	if (atom_getsym(argv) == ps_scale_ratio || atom_getsym(argv) == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
+	if (atom_getsym(argv) == ps_within_ratio || atom_getsym(argv) == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
 	
 	return 0;
 }

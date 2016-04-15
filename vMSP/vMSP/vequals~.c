@@ -20,10 +20,10 @@
 
 // Define operations (all intrinsic-based)
 
-#define F32_VEC_OP F32_VEC_EQUAL_MSP_OP
+#define F32_VEC_OP F32_VEC_EQ_MSP_OP
 #define F32_SCALAR_OP(a,b) (a == b)
 
-#define F64_VEC_OP F64_VEC_EQUAL_MSP_OP
+#define F64_VEC_OP F64_VEC_EQ_MSP_OP
 #define F64_SCALAR_OP(a,b) (a == b)
 
 // Having defined the necessary constants and macro the bulk of the code can now be included

@@ -48,10 +48,10 @@ static __inline double nan_fix_scalar_64 (double in)
 
 
 #define F32_SCALAR_NAN_FIX_OP nan_fix_scalar_32
-#define F32_VEC_NAN_FIX_OP(a) (F32_VEC_SEL_OP(a, v_zero_32, F32_VEC_AND_OP(F32_VEC_EQUAL_OP(v_nan_mask_32, F32_VEC_AND_OP(a, v_nan_mask_32)), F32_VEC_NEQUAL_OP(v_nan_mask_32, F32_VEC_AND_OP(a, v_inf_mask_32)))))
+#define F32_VEC_NAN_FIX_OP(a) (F32_VEC_SEL_OP(a, v_zero_32, F32_VEC_AND_OP(F32_VEC_EQ_OP(v_nan_mask_32, F32_VEC_AND_OP(a, v_nan_mask_32)), F32_VEC_NEQ_OP(v_nan_mask_32, F32_VEC_AND_OP(a, v_inf_mask_32)))))
 #define F64_SCALAR_NAN_FIX_OP nan_fix_scalar_64
 #ifdef VECTOR_F64_128BIT
-#define F64_VEC_NAN_FIX_OP(a) (F64_VEC_SEL_OP(a, v_zero_64, F64_VEC_AND_OP(F64_VEC_EQUAL_OP(v_nan_mask_64, F64_VEC_AND_OP(a, v_nan_mask_64)), F64_VEC_NEQUAL_OP(v_nan_mask_64, F64_VEC_AND_OP(a, v_inf_mask_64)))))
+#define F64_VEC_NAN_FIX_OP(a) (F64_VEC_SEL_OP(a, v_zero_64, F64_VEC_AND_OP(F64_VEC_EQ_OP(v_nan_mask_64, F64_VEC_AND_OP(a, v_nan_mask_64)), F64_VEC_NEQ_OP(v_nan_mask_64, F64_VEC_AND_OP(a, v_inf_mask_64)))))
 #endif
 
 

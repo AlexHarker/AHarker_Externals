@@ -200,12 +200,12 @@ void *valconvert_new (t_symbol *msg, long argc, t_atom *argv)
 	{
 		if (argc < 5 && atom_getsym(argv) != ps_none && atom_getsym(argv) != ps_None)
 		{
-			error("valconvert: not enough arguments for parameter set up");
+			object_error((t_object *) x, "not enough arguments for parameter set up");
 		}
 		else
 		{
-			if (argv->a_type == A_SYM)
-				valconvert_anything (x, argv->a_w.w_sym, argc - 1, argv + 1);
+			if (atom_gettype(argv) == A_SYM)
+				valconvert_anything (x, atom_getsym(argv), argc - 1, argv + 1);
 		}
 	}
 	
@@ -543,24 +543,23 @@ void valconvert_int (t_valconvert *x, t_atom_long l_in)
 
 void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
-#ifdef __APPLE__
-	t_atom list[argc];
-#else
-	t_atom list[4096];
-#endif
-
+    
+    t_atom *list = (t_atom *) malloc(argc * sizeof (t_atom));
 	t_atom *listptr = list;
 	long i = argc;
 	
-#ifndef __APPLE__
-	if (i > 4096)
-		i = 4096;
-#endif
+    if (!list)
+    {
+        object_error((t_object *) x, "could not allocate memory for conversion");
+        return;
+    }
 
 	while (i--) 
 		atom_setfloat(listptr++ ,valconvert_scale (x, atom_getfloat(argv++)));
 	
 	outlet_list(x->theOutlet, ps_list, argc, list);
+    
+    free(list);
 }
 
 
@@ -588,12 +587,7 @@ void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *arg
 	
 	if (argc < 4)
 	{
-		
-#ifdef MSP_VERSION		
-		error ("valconvert~: not enough values for parameter change");
-#else
-		error ("valconvert: not enough values for parameter change");
-#endif
+		object_error((t_object *)x, "not enough values for parameter change");
 		return;
 	}
 	
@@ -665,13 +659,8 @@ void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *arg
 	
 	subtract = (min_in * mult) - min_out;
 	
-#ifdef MSP_VERSION	
 	if (mode == CONVERT_LINEAR && msg != ps_scale)
-		error ("valconvert~: unknown conversion type - defaulting to scale");
-#else
-	if (mode == CONVERT_LINEAR && msg != ps_scale)
-		error ("valconvert: unknown conversion type - defaulting to scale");
-#endif
+		object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
 	
 	x->mode = mode;
 	x->mult = mult;

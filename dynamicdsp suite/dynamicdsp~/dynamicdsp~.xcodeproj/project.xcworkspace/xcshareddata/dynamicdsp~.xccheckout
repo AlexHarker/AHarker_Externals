@@ -10,22 +10,26 @@
 	<string>dynamicdsp~</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>1CA00FFE53B26246FFBC5236B99144B0C3389F50</key>
+		<string>https://github.com/AlexHarker/AHarker_Externals.git</string>
 		<key>50FA2685-30DF-4DE9-91C0-2FE7E5BE4336</key>
 		<string>https://github.com/AlexHarker/AHarker_Externals.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj/project.xcworkspace</string>
+	<string>dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>50FA2685-30DF-4DE9-91C0-2FE7E5BE4336</key>
+		<key>1CA00FFE53B26246FFBC5236B99144B0C3389F50</key>
 		<string>../../../..</string>
+		<key>50FA2685-30DF-4DE9-91C0-2FE7E5BE4336</key>
+		<string>../../../../../- AHarker Externals</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/AlexHarker/AHarker_Externals.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>50FA2685-30DF-4DE9-91C0-2FE7E5BE4336</string>
+	<string>1CA00FFE53B26246FFBC5236B99144B0C3389F50</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -35,6 +39,14 @@
 			<string>50FA2685-30DF-4DE9-91C0-2FE7E5BE4336</string>
 			<key>IDESourceControlWCCName</key>
 			<string>- AHarker Externals</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1CA00FFE53B26246FFBC5236B99144B0C3389F50</string>
+			<key>IDESourceControlWCCName</key>
+			<string>-%20AHarker%20Externals</string>
 		</dict>
 	</array>
 </dict>

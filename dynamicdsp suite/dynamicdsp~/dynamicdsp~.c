@@ -18,6 +18,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 #include <ext_wind.h>
+#include <jpatcher_api.h>
 
 #ifdef __APPLE__
 #include <pthread.h>
@@ -31,16 +32,18 @@
 #include <AH_VectorOps.h>
 #include <AH_Memory_Swap.h>
 #include <AH_Atomic.h>
-#include <AH_Max5.h>
 #include <dynamicdsp~.h>
 
-#ifdef MAX5
-#include <jpatcher_api.h>
-#endif
 
+// FIX - hack for descending (could use travese jpatcher system also..)
+
+typedef int (*intfunc) (t_patcher *p, void *arg);
 
 // FIX - It seems I should clean up the threads better here....
 // FIX - use an atomic counter for autoloadbalance to decrease thread sync costs
+// FIx - Rod Constanzo loading issue
+// FIX - potnetial adc~ crashes and inaccuracies
+// FIX - check email threads also
 
 // ========================================================================================================================================== //
 // Global Varibles
@@ -245,7 +248,7 @@ typedef struct _dynamicdsp
 // ========================================================================================================================================== //
 
 
-void *dynamicdsp_new(t_symbol *s, short argc, t_atom *argv);
+void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicdsp_free(t_dynamicdsp *x);
 void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s);
 
@@ -263,7 +266,7 @@ void dynamicdsp_float(t_dynamicdsp *x, double f);
 void dynamicdsp_list(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv);
 void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv);
 void dynamicdsp_target(t_dynamicdsp *x, long target_index, long index, t_symbol *msg, short argc, t_atom *argv);
-short dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args);
+int dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args);
 void dynamicdsp_user_target(t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv);
 void dynamicdsp_user_target_free(t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv);
 
@@ -278,23 +281,23 @@ t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void dynamicdsp_sum_float(t_threadspace *thread_space_ptr, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads);
 void dynamicdsp_sum_double(t_threadspace *thread_space_ptr, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads);
-__inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads);
+static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads);
 #ifdef __APPLE__
 void *dynamicdsp_threadwait(void *arg);
 #else
 DWORD WINAPI dynamicdsp_threadwait (LPVOID arg);
 #endif
-__inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, long temp_mem_size, long vec_size, long thread_num, long threads_running);
+static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, long temp_mem_size, long vec_size, long thread_num, long threads_running);
 
 long dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64 (t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void dynamicdsp_dsp_internal (t_patchspace *patch_space_ptrs, long vec_size, long samp_rate);
 
-short dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x);
-short dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x);
-short dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x);
-short dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x);
+int dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x);
+int dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x);
+int dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x);
+int dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x);
 
 void dynamicdsp_dblclick(t_dynamicdsp *x);
 void dynamicdsp_open(t_dynamicdsp *x, long index);
@@ -303,26 +306,26 @@ void dynamicdsp_pclose(t_dynamicdsp *x);
 void dynamicdsp_wclose(t_dynamicdsp *x, long index);
 void dynamicdsp_dowclose(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv);
 
-short dynamicdsp_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynamicdsp *x);
-short dynamicdsp_setsubassoc(t_patcher *p, t_dynamicdsp *x);
+int dynamicdsp_patcher_descend(t_patcher *p, intfunc fn, void *arg, t_dynamicdsp *x);
+int dynamicdsp_setsubassoc(t_patcher *p, t_dynamicdsp *x);
 void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p);
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg);
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent);
 
-void dynamicdsp_init_patch_space (t_patchspace *patch_space_ptrs);
+void dynamicdsp_init_patch_space(t_patchspace *patch_space_ptrs);
 t_patchspace *dynamicdsp_new_patch_space(t_dynamicdsp *x,long index);
-void dynamicdsp_free_patch_and_dsp (t_dynamicdsp *x, t_patchspace *patch_space_ptrs);
+void dynamicdsp_free_patch_and_dsp(t_dynamicdsp *x, t_patchspace *patch_space_ptrs);
 
-void *dynamicdsp_query_declared_sigins(t_dynamicdsp *x);
-void *dynamicdsp_query_declared_sigouts(t_dynamicdsp *x);
+void *dynamicdsp_query_num_sigins(t_dynamicdsp *x);
+void *dynamicdsp_query_num_sigouts(t_dynamicdsp *x);
 void *dynamicdsp_query_sigins(t_dynamicdsp *x);
-void *dynamicdsp_query_outptrs_ptr(t_dynamicdsp *x, long index);
-void *dynamicdsp_client_get_patch_on (t_dynamicdsp *x, long index);
-void *dynamicdsp_client_get_patch_busy (t_dynamicdsp *x, long index);
-void dynamicdsp_client_set_patch_on (t_dynamicdsp *x, long index, long state);
-void dynamicdsp_client_set_patch_busy (t_dynamicdsp *x, long index, long state);
-void *dynamicdsp_query_temp_mem (t_dynamicdsp *x, long index);
-void *dynamicdsp_client_temp_mem_resize (t_dynamicdsp *x, long index, long size);
+void *dynamicdsp_query_sigouts(t_dynamicdsp *x, long index);
+void *dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_int index);
+void *dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_int index);
+void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
+void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
+void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index);
+void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size);
 
 
 // ========================================================================================================================================== //
@@ -358,7 +361,7 @@ t_symbol *ps_noedit;
 // ========================================================================================================================================== //
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 #ifdef __APPLE__
 	processor_num_actual_threads = MPProcessors();
@@ -406,10 +409,10 @@ int main(void)
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_user_target, "target", A_GIMME, 0);							// MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_user_target_free, "targetfree", A_GIMME, 0);					// MUST FIX TO GIMME FOR NOW
 	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_declared_sigins, "get_declared_sigins", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_declared_sigouts, "get_declared_sigouts", A_CANT, 0);
+	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigins, "get_num_sigins", A_CANT, 0);
+	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigouts, "get_num_sigouts", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_sigins, "get_sigins", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_outptrs_ptr, "get_outptrs_ptr", A_CANT, 0);
+	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_sigouts, "get_sigouts", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_get_patch_on, "get_patch_on", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_get_patch_busy, "get_patch_busy", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_set_patch_on, "set_patch_on", A_CANT, 0);
@@ -453,7 +456,7 @@ int main(void)
 // ========================================================================================================================================== //
 
 
-void *dynamicdsp_new(t_symbol *s, short argc, t_atom *argv)
+void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 {	
 	t_dynamicdsp *x = object_alloc (dynamicdsp_class);									
 	
@@ -479,48 +482,48 @@ void *dynamicdsp_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Check if there is a patch name given to load
 	
-	if (argc && argv->a_type == A_SYM && argv->a_w.w_sym != ps_declareio)				
+	if (argc && atom_gettype(argv) == A_SYM && atom_getsym(argv) != ps_declareio)
 	{
-		patch_name_entered = argv->a_w.w_sym;
+		patch_name_entered = atom_getsym(argv);
 		argc--; argv++;
 	} 
 	
 	// Check for the declareio symbol and ignore to maintain for old style functionality
 	
-	if (argc && argv->a_type == A_SYM && argv->a_w.w_sym == ps_declareio)
+	if (argc && atom_gettype(argv) == A_SYM && atom_getsym(argv) == ps_declareio)
 	{
 		argc--; argv++;
 	}
 	
 	// Check if there is a declaration of the number of inputs and outs (message and signal)
 
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (argv->a_w.w_long >= 0 && argv->a_w.w_long < 256)
-			declared_sig_ins = argv->a_w.w_long;
+		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < 256)
+			declared_sig_ins = atom_getlong(argv);
 		argc--; argv++;
 	}
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (argv->a_w.w_long >= 0 && argv->a_w.w_long < 256)
-			declared_sig_outs = argv->a_w.w_long;
+		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < 256)
+			declared_sig_outs = atom_getlong(argv);
 		argc--; argv++;
 	}
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (argv->a_w.w_long >= 0 && argv->a_w.w_long < 256)
-			declared_ins = argv->a_w.w_long;
+		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < 256)
+			declared_ins = atom_getlong(argv);
 		argc--; argv++;
 	}
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (argv->a_w.w_long >= 0 && argv->a_w.w_long < 256)
-			declared_outs = argv->a_w.w_long;
+		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < 256)
+			declared_outs = atom_getlong(argv);
 		argc--; argv++;
 	}
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		max_obj_threads = argv->a_w.w_long;
+		max_obj_threads = atom_getlong(argv);
 		if (max_obj_threads < 1)
 			max_obj_threads = 1;
 		if (max_obj_threads > processor_num_actual_threads)
@@ -532,9 +535,9 @@ void *dynamicdsp_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Get arguments to patch that is being loaded if there are any
 	
-	if (argc && argv->a_type == A_SYM) 
+	if (argc && atom_gettype(argv) == A_SYM) 
 	{
-		tempsym = argv->a_w.w_sym;
+		tempsym = atom_getsym(argv);
 		argc--; argv++;
 		if (tempsym == ps_args) 
 		{				
@@ -583,6 +586,7 @@ void *dynamicdsp_new(t_symbol *s, short argc, t_atom *argv)
 		x->thread_space_ptr[i].pth = 0;
 		x->thread_space_ptr[i].thread_temp_buffer = ALIGNED_MALLOC (declared_sig_outs * sizeof(void *));
 		x->thread_space_ptr[i].temp_mem_ptr = 0;
+        x->thread_space_ptr[i].temp_mem_size = 0;
 		x->thread_space_ptr[i].dynamicdsp_parent = x;
 		x->thread_space_ptr[i].thread_num = i;
 		x->thread_space_ptr[i].first_thread_space = x->thread_space_ptr;
@@ -743,7 +747,6 @@ void dynamicdsp_free(t_dynamicdsp *x)
 	// Free other resources
 	
 	free_mem_swap(&x->temp_mem);
-	//ALIGNED_FREE(x->temp_mem_ptr);
 	ALIGNED_FREE(x->thread_space_ptr);
 	
 	if (x->declared_sig_ins)
@@ -781,21 +784,22 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 // ========================================================================================================================================== //
 
 
-void dynamicdsp_deletepatch (t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv)
+void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	dynamicdsp_deletepatch_internal(x, argc ? atom_getlong(argv) - 1 : -1); 
 }
 
 
-void dynamicdsp_deletepatch_internal (t_dynamicdsp *x, long index)
+void dynamicdsp_deletepatch_internal(t_dynamicdsp *x, long index)
 {	
 	t_patchspace *patch_space_ptr;
 	t_atom a;
-	SETLONG(&a, index);
+	
+    atom_setlong(&a, index);
 
 	if (index < 0 || index >= x->patch_spaces_allocated)
 	{
-		AH_error(x, "patch index out of range"); 
+		object_error((t_object *) x, "patch index out of range");
 		return;
 	}
 	
@@ -805,10 +809,10 @@ void dynamicdsp_deletepatch_internal (t_dynamicdsp *x, long index)
 	defer(x,(method)dynamicdsp_cleanpatch, 0L, 1, &a);
 }
 
-void dynamicdsp_cleanpatch (t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
+void dynamicdsp_cleanpatch(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 {
 	t_patchspace *patch_space_ptr;
-	long index = argv->a_w.w_long;
+	long index = atom_getlong(argv);
 	
 	// First close the window
 	
@@ -831,36 +835,30 @@ void dynamicdsp_loadexit(t_dynamicdsp *x, long replace_symbol_pointers, void *pr
 	ATOMIC_DECREMENT_BARRIER(&x->patch_is_loading);
 }
 
-void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_symbol *patch_name_in, short argc, t_atom *argv)
+void dynamicdsp_loadpatch(t_dynamicdsp *x, long index, long thread_request, t_symbol *patch_name_in, short argc, t_atom *argv)
 {
 	t_patchspace *patch_space_ptr = 0;
 	t_object *previous;
 	t_object *previousindex;
 	
-	long validtypes[3];
-	
-	// Set the valid types to test for (note that JSON will only be used in the Max 5 version)
-	
-#ifndef MAX5
-	long num_valid_types = 2;
-#else
-	long num_valid_types = 3;
-#endif
+    t_fourcc type;
+    t_fourcc validtypes[3];
 	
 	long patch_spaces_allocated = x->patch_spaces_allocated;
-	long type;
 	long i;
-	
+
 	short patch_path;
 	short saveloadupdate;
 	char patch_name[256];
 	char windowname[280];
 	void *p;
 		
-    long save_inhibit_state;
+    t_object *save_inhibit_state;
     t_symbol *ps_inhibit_subpatcher_vis = gensym("inhibit_subpatcher_vis");
     t_symbol *ps_PAT = gensym("#P");
     t_patcher *saveparent;
+    
+    // Set the valid types to test for
     
 	validtypes[0] = FOUR_CHAR_CODE('maxb');
 	validtypes[1] = FOUR_CHAR_CODE('TEXT');
@@ -870,7 +868,7 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	if (ATOMIC_INCREMENT_BARRIER(&x->patch_is_loading) > 1)
 	{
-		AH_error(x, "patch is loading in another thread");
+		object_error((t_object *) x, "patch is loading in another thread");
 		dynamicdsp_loadexit(x, 0, 0, 0);
 		return;
 	}
@@ -888,7 +886,7 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	if (index >= MAX_NUM_PATCHES) 
 	{
-		AH_error(x, "slot out of range");
+		object_error((t_object *) x, "slot out of range");
 		dynamicdsp_loadexit(x, 0, 0, 0);
 		return;
 	}
@@ -919,9 +917,9 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	strcpy(patch_name, patch_name_in->s_name);
 	
-	if (locatefile_extended(patch_name, &patch_path, &type, validtypes, num_valid_types))		
+	if (locatefile_extended(patch_name, &patch_path, &type, validtypes, 3))
 	{
-		AH_error(x, "no patcher %s", patch_name);
+		object_error((t_object *) x, "no patcher %s", patch_name);
 		dynamicdsp_loadexit(x, 1, previous, previousindex);
 		return;
 	}
@@ -951,7 +949,7 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	if (!p) 
 	{
-		AH_error(x, "error loading %s", patch_name);
+		object_error((t_object *) x, "error loading %s", patch_name);
 		dynamicdsp_loadexit(x, 1, previous, previousindex);
 		return;
 	}
@@ -960,7 +958,7 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	if (!ispatcher(p)) 
 	{
-		AH_error(x, "%s is not a patcher", patch_name);
+		object_error((t_object *) x, "%s is not a patcher", patch_name);
 		freeobject((t_object *)p);
 		dynamicdsp_loadexit(x, 1, previous, previousindex);
 		return;
@@ -968,21 +966,14 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	
 	// Change the window name
 	
-	snprintf(windowname, 256, "%s %s%ld%s", patch_name, "(", index + 1, ")");									
-#ifndef MAX5
-	wind_settitle(((t_patcher *)p)->p_wind, windowname, 0);
-#else
+	snprintf(windowname, 256, "%s %s%ld%s", patch_name, "(", index + 1, ")");
 	jpatcher_set_title(p, gensym(windowname));
-#endif
     
     object_method(p, gensym("setclass"));
     
 	// Set the relevant associations (for Max 5 the dynamicdsp_setsubassoc call covers all of this)
 	
-#ifndef MAX5
-	((t_wind *)((t_patcher *)p)->p_wind)->w_refcount = 1;										// set subpatcher flag: no free on close
-#endif
-	//dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_setsubassoc, x, x);			// associate subpatches with this instance
+	//dynamicdsp_patcher_descend((t_patcher *)p, (intfunc) dynamicdsp_setsubassoc, x, x);			// associate subpatches with this instance
     {
         long result = 0;
     object_method((t_patcher *)p,gensym("traverse"),dynamicdsp_setsubassoc,x,&result);
@@ -991,9 +982,9 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	// Link inlets and outlets
 	
 	if (x->declared_ins) 
-		dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_linkinlets, x, x);
+		dynamicdsp_patcher_descend((t_patcher *)p, (intfunc) dynamicdsp_linkinlets, x, x);
 	if (x->declared_outs) 
-		dynamicdsp_patcher_descend((t_patcher *)p, (fretint) dynamicdsp_linkoutlets, x, x);
+		dynamicdsp_patcher_descend((t_patcher *)p, (intfunc) dynamicdsp_linkoutlets, x, x);
 	
     dsp_setloadupdate(saveloadupdate);
     loadbang_resume();
@@ -1036,15 +1027,13 @@ void dynamicdsp_loadpatch (t_dynamicdsp *x, long index, long thread_request, t_s
 	dynamicdsp_loadexit(x, 1, previous, previousindex);
 }
 
-void dynamicdsp_user_clear (t_dynamicdsp *x)
+void dynamicdsp_user_clear(t_dynamicdsp *x)
 {
-	long i;
-	
-	for (i = 0; i < x->patch_spaces_allocated; i++)
+	for (long i = 0; i < x->patch_spaces_allocated; i++)
 		dynamicdsp_deletepatch_internal (x, i);
 }
 
-void dynamicdsp_user_loadpatch (t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
+void dynamicdsp_user_loadpatch(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 {
 	t_symbol *patch_name_entered = 0;
 	
@@ -1053,12 +1042,12 @@ void dynamicdsp_user_loadpatch (t_dynamicdsp *x, t_symbol *s, short argc, t_atom
 	
 	// Get requested patch index if there is one
 	
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		index = argv->a_w.w_long - 1;
+		index = atom_getlong(argv) - 1;
 		if (index >= MAX_NUM_PATCHES) 
 		{
-			AH_error(x, "patch index out of range");
+			object_error((t_object *) x, "patch index out of range");
 			return;
 		}
 		argc--; argv++;
@@ -1066,23 +1055,23 @@ void dynamicdsp_user_loadpatch (t_dynamicdsp *x, t_symbol *s, short argc, t_atom
 	
 	// Get thread request if there is one
 	
-	if (argc && argv->a_type == A_LONG)
+	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		thread_request = argv->a_w.w_long;
+		thread_request = atom_getlong(argv);
 		argc--; argv++;
 	}
 	
 	// If there is a patch name then try to load the patch
 	
-	if (argc && argv->a_type == A_SYM)			
+	if (argc && atom_gettype(argv) == A_SYM)			
 	{
-		patch_name_entered = argv->a_w.w_sym;
+		patch_name_entered = atom_getsym(argv);
 		argc--; argv++;
 		
 		dynamicdsp_loadpatch (x, index, thread_request, patch_name_entered, argc, argv);
 	} 
 	else 
-		AH_error(x, "no patch specified");
+		object_error((t_object *) x, "no patch specified");
 }
 
 // ========================================================================================================================================== //
@@ -1114,8 +1103,8 @@ void dynamicdsp_int(t_dynamicdsp *x, long n)
 	
 	if (target_index)
 	{
-		t_atom n_atom; 
-		SETLONG (&n_atom, n);
+		t_atom n_atom;
+        atom_setlong (&n_atom, n);
 		dynamicdsp_target(x, target_index, index, ps_int, 1, &n_atom);
 	}
 	else
@@ -1133,7 +1122,7 @@ void dynamicdsp_float(t_dynamicdsp *x, double f)
 	if (target_index)
 	{
 		t_atom f_atom; 
-		SETFLOAT (&f_atom, f);
+		atom_setfloat (&f_atom, f);
 		dynamicdsp_target(x, target_index, index, ps_float, 1, &f_atom);
 	}
 	else
@@ -1182,40 +1171,13 @@ void dynamicdsp_target(t_dynamicdsp *x, long target_index, long index, t_symbol 
 		t_patcher *p = x->patch_space_ptrs[target_index - 1]->the_patch;
 		
 		if (x->patch_space_ptrs[target_index - 1]->patch_valid)
-			dynamicdsp_patcher_descend(p, (fretint) dynamicdsp_targetinlets, &pass_args, x);
+			dynamicdsp_patcher_descend(p, (intfunc) dynamicdsp_targetinlets, &pass_args, x);
 	}
 }
 
-#ifndef MAX5
-
 // - inlet and outlet linking using the in and out objects
 
-short dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args)
-{
-	t_box *b;
-	t_inout *io;	
-	void *outletptr;
-	
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin && ob_sym(b->b_firstin) == ps_in) 
-		{
-			io = (t_inout *) b->b_firstin;
-			if (io->s_index == args->index)
-			{
-				outletptr = io->s_obj.o_outlet;
-				outlet_anything (outletptr, args->msg, args->argc, args->argv);
-			}
-		}
-    }
-	return (0);
-}
-
-#else
-
-// - inlet and outlet linking using the in and out objects
-
-short dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args)
+int dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args)
 {
 	t_box *b;
 	t_inout *io;
@@ -1235,8 +1197,6 @@ short dynamicdsp_targetinlets(t_patcher *p, struct t_args_struct *args)
     }
 	return (0);
 }
-
-#endif
 
 void dynamicdsp_user_target(t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv)
 {
@@ -1320,7 +1280,6 @@ void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, short argc, t_at
 
 void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, short argc, t_atom *argv)
 {
-	
 	long n = 1;
 	
 	if (argc)
@@ -1557,7 +1516,7 @@ void dynamicdsp_sum_double(t_threadspace *thread_space_ptr, void **sig_outs, lon
 }
 
 
-__inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads)
+static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long declared_sig_outs, long vec_size, long num_active_threads)
 {
 	t_threadspace *thread_space_ptr = x->thread_space_ptr;	
 	long i;
@@ -1652,7 +1611,7 @@ DWORD WINAPI dynamicdsp_threadwait(LPVOID arg)
 #endif
 }
 
-__inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, long temp_mem_size, long vec_size, long thread_num, long threads_running)
+static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, long temp_mem_size, long vec_size, long thread_num, long threads_running)
 {
 	t_patchspace **patch_space_ptrs = x->patch_space_ptrs;
 	t_patchspace *next_patch_space_ptr = 0;
@@ -1756,7 +1715,7 @@ long dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 				x->thread_space_ptr[i].thread_temp_buffer[j] = ALIGNED_MALLOC (thread_temp_buffer_size);
 				if (!x->thread_space_ptr[i].thread_temp_buffer[j])
 				{		
-					AH_error(x, "not enough memory");
+					object_error((t_object *) x, "not enough memory");
 					mem_fail = 1;
 					x->x_obj.z_disabled = TRUE;	
 				}
@@ -1850,85 +1809,9 @@ void dynamicdsp_dsp_internal (t_patchspace *patch_space_ptr, long vec_size, long
 // Patcher Link Inlets / Outlets
 // ========================================================================================================================================== //
 
-// There are two sets of routines here - one for the Max 4 SDK and one for the Max 5 SDK
-
-#ifndef MAX5
-
 // - inlet and outlet linking using the in and out objects
 
-short dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x)
-{
-	t_box *b;
-	t_inout *io;
-	
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin && ob_sym(b->b_firstin) == ps_in) 
-		{
-			io = (t_inout *)b->b_firstin;
-			if (io->s_index <= x->declared_ins) outlet_add(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
-		}
-    }
-	return (0);
-}
-
-short dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x)
-{
-	t_box *b;
-	t_inout *io;
-	
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin && ob_sym(b->b_firstin) == ps_out) 
-		{
-			io = (t_inout *)b->b_firstin;
-			if (io->s_index <= x->declared_outs) outlet_add(io->s_outlet, x->out_table[io->s_index - 1]);
-		}
-    }
-	return (0);
-}
-
-// - inlet and outlet removal using the in and out objects
-
-short dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x)
-{
-	t_box *b;
-	t_inout *io;
-	
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin && ob_sym(b->b_firstin) == ps_in) 
-		{
-			io = (t_inout *)b->b_firstin;
-			if (io->s_index <= x->declared_ins)
-				outlet_rm(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
-		}
-    }
-	return (0);
-}
-
-short dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x)
-{
-	t_box *b;
-	t_inout *io;
-	
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin && ob_sym(b->b_firstin) == ps_out) 
-		{
-			io = (t_inout *)b->b_firstin;
-			if (io->s_index <= x->declared_outs)
-				outlet_rm(io->s_outlet, x->out_table[io->s_index - 1]);	
-		}
-    }
-	return (0);
-}
-
-#else
-
-// - inlet and outlet linking using the in and out objects
-
-short dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x)
+int dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x)
 {
 	t_box *b;
 	t_inout *io;
@@ -1938,13 +1821,14 @@ short dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x)
 		if (jbox_get_maxclass(b) == ps_in) 
 		{
 			io = (t_inout *) jbox_get_object(b);
-			if (io->s_index <= x->declared_ins) outlet_add(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
+			if (io->s_index <= x->declared_ins)
+                outlet_add(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
 		}
     }
 	return (0);
 }
 
-short dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x)
+int dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x)
 {
 	t_box *b;
 	t_inout *io;
@@ -1954,7 +1838,8 @@ short dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x)
 		if (jbox_get_maxclass(b) == ps_out) 
 		{
 			io = (t_inout *) jbox_get_object(b);
-			if (io->s_index <= x->declared_outs) outlet_add(io->s_outlet, x->out_table[io->s_index - 1]);
+			if (io->s_index <= x->declared_outs)
+                outlet_add(io->s_outlet, x->out_table[io->s_index - 1]);
 		}
     }
 	return (0);
@@ -1962,7 +1847,7 @@ short dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x)
 
 // - inlet and outlet removal using the in and out objects
 
-short dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x)
+int dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x)
 {
 	t_box *b;
 	t_inout *io;
@@ -1972,13 +1857,14 @@ short dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x)
 		if (jbox_get_maxclass(b) == ps_in) 
 		{
 			io = (t_inout *) jbox_get_object(b);
-			if (io->s_index <= x->declared_ins) outlet_rm(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
+			if (io->s_index <= x->declared_ins)
+                outlet_rm(x->in_table[io->s_index - 1], (struct inlet *)io->s_obj.o_outlet);
 		}
     }
 	return (0);
 }
 
-short dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x)
+int dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x)
 {
 	t_box *b;
 	t_inout *io;
@@ -1988,14 +1874,12 @@ short dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x)
 		if (jbox_get_maxclass(b)  == ps_out) 
 		{
 			io = (t_inout *) jbox_get_object(b);
-			if (io->s_index <= x->declared_outs) outlet_rm(io->s_outlet, x->out_table[io->s_index - 1]);
+			if (io->s_index <= x->declared_outs)
+                outlet_rm(io->s_outlet, x->out_table[io->s_index - 1]);
 		}
     }
 	return (0);
 }
-
-#endif
-
 
 // ========================================================================================================================================== //
 // Patcher Window stuff
@@ -2019,7 +1903,7 @@ void dynamicdsp_dblclick(t_dynamicdsp *x)
 void dynamicdsp_open(t_dynamicdsp *x, long index)
 {
 	t_atom a;
-	SETLONG (&a, index - 1);
+	atom_setlong (&a, index - 1);
 	
 	if (index < 1) return;
 	if (index > x->patch_spaces_allocated) return;
@@ -2030,7 +1914,7 @@ void dynamicdsp_open(t_dynamicdsp *x, long index)
 
 void dynamicdsp_doopen(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 {
-	long index = argv->a_w.w_long;
+	long index = atom_getlong(argv);
 	
 	if (x->patch_space_ptrs[index]->the_patch) 
 		mess0((t_object *)x->patch_space_ptrs[index]->the_patch, ps_front);		// this will always do the right thing
@@ -2044,25 +1928,20 @@ void dynamicdsp_pclose(t_dynamicdsp *x)
 void dynamicdsp_wclose(t_dynamicdsp *x, long index)
 {
 	t_atom a;
-	SETLONG (&a, index - 1);
-	
+    atom_setlong (&a, index - 1);
 	defer(x,(method)dynamicdsp_dowclose, 0L, 1, &a);
 }
 
 void dynamicdsp_dowclose(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 {
-	long index = argv->a_w.w_long;
+	long index = atom_getlong(argv);
 	
 	if (index < 0) return;
 	if (index >= x->patch_spaces_allocated) return;
 	if (!x->patch_space_ptrs[index]->patch_valid) return;
 	
-	if (x->patch_space_ptrs[index]->the_patch) 
-#ifndef MAX5
-		wind_invis((t_wind *)x->patch_space_ptrs[index]->the_patch->p_wind);
-#else
-	object_method(x->patch_space_ptrs[index]->the_patch, gensym("wclose"), x);
-#endif
+	if (x->patch_space_ptrs[index]->the_patch)
+        object_method(x->patch_space_ptrs[index]->the_patch, gensym("wclose"), x);
 }
 
 
@@ -2071,39 +1950,21 @@ void dynamicdsp_dowclose(t_dynamicdsp *x, t_symbol *s, short argc, t_atom *argv)
 // ========================================================================================================================================== //
 
 
-short dynamicdsp_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynamicdsp *x)
+int dynamicdsp_patcher_descend(t_patcher *p, intfunc fn, void *arg, t_dynamicdsp *x)
 {
 	t_box *b;
 	t_patcher *p2;
 	long index;
 	
-#ifndef MAX5
-	if (p->p_assoc && p->p_assoc != x) 
-		return 0;										// Avoid recursion into a poly / pfft / dynamicdsp~
-#else
 	t_object *assoc = 0;
 	object_method(p, ps_getassoc, &assoc);				// Avoid recursion into a poly / pfft / dynamicdsp~
 	if (assoc && (t_dynamicdsp *) assoc != x) 
 		return 0;
-#endif
+
 	// CHANGED - DO NOT PASS x AS ARG
 	if ((*fn)(p, arg))
 		return (1);
 	
-#ifndef MAX5
-	for (b = p->p_box; b; b = b->b_next) 
-	{
-		if (b->b_firstin) 
-		{
-			index = 0;
-			while ((p2 = object_subpatcher(b->b_firstin, &index, arg)))
-			{
-				if (dynamicdsp_patcher_descend(p2, fn, arg, x))
-					return 1;
-			}
-		}
-	}
-#else
 	for (b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))  
 	{
 		if (b) 
@@ -2114,25 +1975,18 @@ short dynamicdsp_patcher_descend(t_patcher *p, fretint fn, void *arg, t_dynamicd
 					return 1;
 		}
 	}
-#endif
+
 	return (0);
 }
 
-short dynamicdsp_setsubassoc(t_patcher *p, t_dynamicdsp *x)
+int dynamicdsp_setsubassoc(t_patcher *p, t_dynamicdsp *x)
 {
-#ifndef MAX5
-	if (!p->p_assoc) 
-		p->p_assoc = x;
-	p->p_noedit = 1;								
-#else
 	t_object *assoc;
 	
 	object_method(p, ps_getassoc, &assoc);
 	if (!assoc) 
 		object_method(p, ps_setassoc, x);
 	//object_method(p, ps_noedit, 1);
-
-#endif
 	
 	return 0;
 }
@@ -2220,8 +2074,10 @@ void dynamicdsp_free_patch_and_dsp (t_dynamicdsp *x, t_patchspace *patch_space_p
 	
 	if (patch_space_ptr->the_patch)
 	{
-		if (x->declared_ins) dynamicdsp_patcher_descend(patch_space_ptr->the_patch, (fretint) dynamicdsp_unlinkinlets, x, x);
-		if (x->declared_outs) dynamicdsp_patcher_descend(patch_space_ptr->the_patch, (fretint) dynamicdsp_unlinkoutlets, x, x);
+		if (x->declared_ins)
+            dynamicdsp_patcher_descend(patch_space_ptr->the_patch, (intfunc) dynamicdsp_unlinkinlets, x, x);
+		if (x->declared_outs)
+            dynamicdsp_patcher_descend(patch_space_ptr->the_patch, (intfunc) dynamicdsp_unlinkoutlets, x, x);
 		freeobject((t_object *)patch_space_ptr->the_patch);
 	}
 }
@@ -2239,89 +2095,85 @@ void dynamicdsp_free_patch_and_dsp (t_dynamicdsp *x, t_patchspace *patch_space_p
 ////////////////////////////////////////////////// Signal IO Queries //////////////////////////////////////////////////
 
 
-void *dynamicdsp_query_declared_sigins(t_dynamicdsp *x)
+void *dynamicdsp_query_num_sigins(t_dynamicdsp *x)
 {
-	return (void *) x->declared_sig_ins;
+    return (void *)x->declared_sig_ins;
 }
 
-void *dynamicdsp_query_declared_sigouts(t_dynamicdsp *x)
+void *dynamicdsp_query_num_sigouts(t_dynamicdsp *x)
 {
-	return (void *) x->declared_sig_outs;
+    return (void *)x->declared_sig_outs;
 }
 
 void *dynamicdsp_query_sigins(t_dynamicdsp *x)
 {
-	return (void *) x->sig_ins;
+    return (void *)x->sig_ins;
 }
 
-void *dynamicdsp_query_outptrs_ptr(t_dynamicdsp *x, long index)
+void *dynamicdsp_query_sigouts(t_dynamicdsp *x, long index)
 {
-	if (index <= x->patch_spaces_allocated)
-		return &x->patch_space_ptrs[index - 1]->out_ptrs;
-	else
-		return 0;
+    if (index <= x->patch_spaces_allocated)
+        return &x->patch_space_ptrs[index - 1]->out_ptrs;
+    else
+        return NULL;
 }
 
 
 //////////////////////////////////////////////////// State Queries ////////////////////////////////////////////////////
 
 
-void dynamicdsp_client_set_patch_on (t_dynamicdsp *x, long index, long state)
+void *dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_int index)
 {
-	if (state) state = 1;
-	if (index <= x->patch_spaces_allocated)
-		x->patch_space_ptrs[index - 1]->patch_on = state;
+    if (index <= x->patch_spaces_allocated)
+        return (void *) (t_atom_long) x->patch_space_ptrs[index - 1]->patch_on;
+    
+    return 0;
 }
 
-void dynamicdsp_client_set_patch_busy (t_dynamicdsp *x, long index, long state)
+void *dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_int index)
 {
-	if (state) state = 1;
-	if (index <= x->patch_spaces_allocated)
-		x->patch_space_ptrs[index - 1]->patch_busy = state;
+    if (index <= x->patch_spaces_allocated)
+        return (void *) (t_atom_long) x->patch_space_ptrs[index - 1]->patch_busy;
+    
+    return 0;
 }
 
-void *dynamicdsp_client_get_patch_on (t_dynamicdsp *x, long index)
+void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state)
 {
-	if (index <= x->patch_spaces_allocated)
-		return (void *) (long) x->patch_space_ptrs[index - 1]->patch_on;
-	
-	return 0;
+    if (index <= x->patch_spaces_allocated)
+        x->patch_space_ptrs[index - 1]->patch_on = state ? 1 : 0;
 }
 
-void *dynamicdsp_client_get_patch_busy (t_dynamicdsp *x, long index)
+void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state)
 {
-	if (index <= x->patch_spaces_allocated)
-		return (void *) (long) x->patch_space_ptrs[index - 1]->patch_busy;
-	
-	return 0;
+    if (index <= x->patch_spaces_allocated)
+        x->patch_space_ptrs[index - 1]->patch_busy =  state ? 1 : 0;
 }
 
 
 //////////////////////////////////////////////// Tempory Memory Queries ///////////////////////////////////////////////
 
 
-// dynamicdsp~ provides memory per audio thread for temporary calculations. 
+// dynamicdsp~ provides memory per audio thread for temporary calculations.
 // Objects requiring temporary memory during their perform method request a minimum size during their dsp routine
 // The pointer should be requested during the perform routine, and should not be stored
 // This reduces memory alloaction, and potentially increases speed by keeping temporary memory in the cache
 
 
-void *dynamicdsp_query_temp_mem (t_dynamicdsp *x, long index)
+void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index)
 {
-	if (index <= x->patch_spaces_allocated)
-		return &x->patch_space_ptrs[index - 1]->temp_mem_ptr;
-	else
-		return 0;
+    if (index <= x->patch_spaces_allocated)
+        return &x->patch_space_ptrs[index - 1]->temp_mem_ptr;
+    else
+        return NULL;
 }
 
-void *dynamicdsp_client_temp_mem_resize (t_dynamicdsp *x, long index, long size)
-{	
-	schedule_grow_mem_swap(&x->temp_mem, x->max_obj_threads * size, size);
-	
-	if (index > 0 && index <= x->patch_spaces_allocated)
-		x->patch_space_ptrs[index - 1]->required_temp_mem_size = size;
-	
-	return (void *) 1;
-	
+void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size)
+{
+    schedule_grow_mem_swap(&x->temp_mem, size, size);
+    
+    if (index > 0 && index <= x->patch_spaces_allocated)
+        x->patch_space_ptrs[index - 1]->required_temp_mem_size = size;
+    
+    return (void *) 1;
 }
-

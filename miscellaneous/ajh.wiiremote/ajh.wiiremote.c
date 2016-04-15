@@ -232,15 +232,15 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 		if (WiiMotionPlusTest(x->wiiremote->expType))
 		{
-			SETFLOAT(av, x->wiiremote->mScaleGyroY);
-			SETFLOAT(av + 1, x->wiiremote->mScaleGyroR);				
-			SETFLOAT(av + 2, x->wiiremote->mScaleGyroP);
-			SETFLOAT(av + 3, x->wiiremote->mGyroY);
-			SETFLOAT(av + 4, x->wiiremote->mGyroR);				
-			SETFLOAT(av + 5, x->wiiremote->mGyroP);
-			SETLONG(av + 6, x->wiiremote->mFastY);
-			SETLONG(av + 7, x->wiiremote->mFastR);				
-			SETLONG(av + 8, x->wiiremote->mFastP);
+			atom_setfloat(av, x->wiiremote->mScaleGyroY);
+			atom_setfloat(av + 1, x->wiiremote->mScaleGyroR);				
+			atom_setfloat(av + 2, x->wiiremote->mScaleGyroP);
+			atom_setfloat(av + 3, x->wiiremote->mGyroY);
+			atom_setfloat(av + 4, x->wiiremote->mGyroR);				
+			atom_setfloat(av + 5, x->wiiremote->mGyroP);
+			atom_setlong(av + 6, x->wiiremote->mFastY);
+			atom_setlong(av + 7, x->wiiremote->mFastR);
+			atom_setlong(av + 8, x->wiiremote->mFastP);
 			outlet_anything(x->dataOut, ps_motionplus, 9, av);
 		}
 			
@@ -254,9 +254,9 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eButtonData != x->last_eButtonData)
 			{
-				SETSYM(av, ps_buttons);
-				SETLONG(av + 1, (0x2 - (eButtonData & 0x2)) >> 0x1);		// Button C
-				SETLONG(av + 2, (0x1 - (eButtonData & 0x1)));				// Button Z
+				atom_setlong(av, ps_buttons);
+				atom_setlong(av + 1, (0x2 - (eButtonData & 0x2)) >> 0x1);		// Button C
+				atom_setlong(av + 2, (0x1 - (eButtonData & 0x1)));				// Button Z
 				outlet_anything(x->dataOut, ps_nunchuk, 3, av);
 			}
 			x->last_eButtonData = eButtonData;
@@ -268,11 +268,11 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (nStickX != x->last_nStickX || nStickY != x->last_nStickY)
 			{
-				SETSYM(av, ps_stick);
-				SETFLOAT(av + 1, x->wiiremote->eScaleStickX1);
-				SETFLOAT(av + 2, x->wiiremote->eScaleStickY1);
-				SETLONG(av + 3, x->wiiremote->eStickX1);
-				SETLONG(av + 4, x->wiiremote->eStickY1);
+				atom_setsym(av, ps_stick);
+				atom_setfloat(av + 1, x->wiiremote->eScaleStickX1);
+				atom_setfloat(av + 2, x->wiiremote->eScaleStickY1);
+				atom_setlong(av + 3, x->wiiremote->eStickX1);
+				atom_setlong(av + 4, x->wiiremote->eStickY1);
 				outlet_anything(x->dataOut, ps_nunchuk, 5, av);
 			}
 			
@@ -285,14 +285,14 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			{
 				eButtonData = x->wiiremote->eButtonData;
 				
-				SETSYM(av, ps_motion);
-				SETFLOAT(av + 1, x->wiiremote->eScaleAccX);
-				SETFLOAT(av + 2, x->wiiremote->eScaleAccY);
-				SETFLOAT(av + 3, x->wiiremote->eScaleAccZ);
-				SETLONG(av + 4, x->wiiremote->eAccX);
-				SETLONG(av + 5, x->wiiremote->eAccY);
-				SETLONG(av + 6, x->wiiremote->eAccZ);
-				SETLONG(av + 7, x->wiiremote->eOrientation);
+				atom_setsym(av, ps_motion);
+				atom_setfloat(av + 1, x->wiiremote->eScaleAccX);
+				atom_setfloat(av + 2, x->wiiremote->eScaleAccY);
+				atom_setfloat(av + 3, x->wiiremote->eScaleAccZ);
+				atom_setlong(av + 4, x->wiiremote->eAccX);
+				atom_setlong(av + 5, x->wiiremote->eAccY);
+				atom_setlong(av + 6, x->wiiremote->eAccZ);
+				atom_setlong(av + 7, x->wiiremote->eOrientation);
 				outlet_anything(x->dataOut, ps_nunchuk, 8, av);
 			}
 		}
@@ -307,22 +307,22 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eButtonData != x->last_eButtonData)
 			{
-				SETSYM(av, ps_buttons);
-				SETLONG(av + 1, eButtonData & 0x0001);					// Button Up
-				SETLONG(av + 2, (eButtonData & 0x4000) >> 0xE);			// Button Down
-				SETLONG(av + 3, (eButtonData & 0x0002) >> 0x1);			// Button Left
-				SETLONG(av + 4, (eButtonData & 0x8000) >> 0xF);			// Button Right
-				SETLONG(av + 5, (eButtonData & 0x1000) >> 0xC);			// Button Minus
-				SETLONG(av + 6, (eButtonData & 0x0800) >> 0xB);			// Button Home
-				SETLONG(av + 7, (eButtonData & 0x0400) >> 0xA);			// Button Plus
-				SETLONG(av + 8, (eButtonData & 0x0008) >> 0x3);			// Button x
-				SETLONG(av + 9, (eButtonData & 0x0020) >> 0x5);			// Button y
-				SETLONG(av + 10, (eButtonData & 0x0010) >> 0x4);		// Button a
-				SETLONG(av + 11, (eButtonData & 0x0040) >> 0x6);		// Button b
-				SETLONG(av + 12, (eButtonData & 0x0080) >> 0x7);		// Button ZL
-				SETLONG(av + 13, (eButtonData & 0x0004) >> 0x2);		// Button ZR
-				SETLONG(av + 14, (eButtonData & 0x2000) >> 0xD);		// Button L Trigger
-				SETLONG(av + 15, (eButtonData & 0x0200) >> 0x9);		// Button R Trigger
+				atom_setsym(av, ps_buttons);
+				atom_setlong(av + 1, eButtonData & 0x0001);					// Button Up
+				atom_setlong(av + 2, (eButtonData & 0x4000) >> 0xE);			// Button Down
+				atom_setlong(av + 3, (eButtonData & 0x0002) >> 0x1);			// Button Left
+				atom_setlong(av + 4, (eButtonData & 0x8000) >> 0xF);			// Button Right
+				atom_setlong(av + 5, (eButtonData & 0x1000) >> 0xC);			// Button Minus
+				atom_setlong(av + 6, (eButtonData & 0x0800) >> 0xB);			// Button Home
+				atom_setlong(av + 7, (eButtonData & 0x0400) >> 0xA);			// Button Plus
+				atom_setlong(av + 8, (eButtonData & 0x0008) >> 0x3);			// Button x
+				atom_setlong(av + 9, (eButtonData & 0x0020) >> 0x5);			// Button y
+				atom_setlong(av + 10, (eButtonData & 0x0010) >> 0x4);		// Button a
+				atom_setlong(av + 11, (eButtonData & 0x0040) >> 0x6);		// Button b
+				atom_setlong(av + 12, (eButtonData & 0x0080) >> 0x7);		// Button ZL
+				atom_setlong(av + 13, (eButtonData & 0x0004) >> 0x2);		// Button ZR
+				atom_setlong(av + 14, (eButtonData & 0x2000) >> 0xD);		// Button L Trigger
+				atom_setlong(av + 15, (eButtonData & 0x0200) >> 0x9);		// Button R Trigger
 				outlet_anything(x->dataOut, ps_classic, 16, av);			
 			}
 			x->last_eButtonData = eButtonData;
@@ -338,11 +338,11 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eStickX1 != x->last_eStickX1 || eStickY1 != x->last_eStickY1)
 			{
-				SETSYM(av, ps_stick1);
-				SETFLOAT(av + 1, x->wiiremote->eScaleStickX1);
-				SETFLOAT(av + 2, x->wiiremote->eScaleStickY1);
-				SETLONG(av + 3, x->wiiremote->eStickX1);
-				SETLONG(av + 4, x->wiiremote->eStickY1);
+				atom_setsym(av, ps_stick1);
+				atom_setfloat(av + 1, x->wiiremote->eScaleStickX1);
+				atom_setfloat(av + 2, x->wiiremote->eScaleStickY1);
+				atom_setlong(av + 3, x->wiiremote->eStickX1);
+				atom_setlong(av + 4, x->wiiremote->eStickY1);
 				outlet_anything(x->dataOut, ps_classic, 5, av);
 			}
 			
@@ -350,11 +350,11 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eStickX2 != x->last_eStickX2 || eStickY2 != x->last_eStickY2)
 			{
-				SETSYM(av, ps_stick2);
-				SETFLOAT(av + 1, x->wiiremote->eScaleStickX2);
-				SETFLOAT(av + 2, x->wiiremote->eScaleStickY2);
-				SETLONG(av + 3, x->wiiremote->eStickX2);
-				SETLONG(av + 4, x->wiiremote->eStickY2);
+				atom_setsym(av, ps_stick2);
+				atom_setfloat(av + 1, x->wiiremote->eScaleStickX2);
+				atom_setfloat(av + 2, x->wiiremote->eScaleStickY2);
+				atom_setlong(av + 3, x->wiiremote->eStickX2);
+				atom_setlong(av + 4, x->wiiremote->eStickY2);
 				outlet_anything(x->dataOut, ps_classic, 5, av);
 			}
 			
@@ -362,9 +362,9 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eCont1 != x->last_eCont1 || eCont2 != x->last_eCont2)
 			{
-				SETSYM(av, ps_analog);
-				SETLONG(av + 1, eCont1);
-				SETLONG(av + 2, eCont2);
+				atom_setsym(av, ps_analog);
+				atom_setlong(av + 1, eCont1);
+				atom_setlong(av + 2, eCont2);
 				outlet_anything(x->dataOut, ps_classic, 3, av);
 			}
 			
@@ -386,17 +386,17 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eButtonData != x->last_eButtonData)
 			{
-				SETSYM(av, ps_buttons);
-				SETLONG(av + 1, (eButtonData & 0x0004) >> 0x2);
-				SETLONG(av + 2, (eButtonData & 0x0010) >> 0x4);
-				SETLONG(av + 3, (eButtonData & 0x0040) >> 0x6);
-				SETLONG(av + 4, (eButtonData & 0x0080) >> 0x7);
-				SETLONG(av + 5, (eButtonData & 0x0100) >> 0x8);
-				SETLONG(av + 6, (eButtonData & 0x0800) >> 0xB);
-				SETLONG(av + 7, (eButtonData & 0x1000) >> 0xC);
-				SETLONG(av + 8, (eButtonData & 0x2000) >> 0xD);
-				SETLONG(av + 9, (eButtonData & 0x4000) >> 0xE);
-				SETLONG(av + 10, (eButtonData & 0x8000) >> 0xF);
+				atom_setsym(av, ps_buttons);
+				atom_setlong(av + 1, (eButtonData & 0x0004) >> 0x2);
+				atom_setlong(av + 2, (eButtonData & 0x0010) >> 0x4);
+				atom_setlong(av + 3, (eButtonData & 0x0040) >> 0x6);
+				atom_setlong(av + 4, (eButtonData & 0x0080) >> 0x7);
+				atom_setlong(av + 5, (eButtonData & 0x0100) >> 0x8);
+				atom_setlong(av + 6, (eButtonData & 0x0800) >> 0xB);
+				atom_setlong(av + 7, (eButtonData & 0x1000) >> 0xC);
+				atom_setlong(av + 8, (eButtonData & 0x2000) >> 0xD);
+				atom_setlong(av + 9, (eButtonData & 0x4000) >> 0xE);
+				atom_setlong(av + 10, (eButtonData & 0x8000) >> 0xF);
 				outlet_anything(x->dataOut, ps_guitar, 11, av);
 			}
 			x->last_eButtonData = eButtonData;
@@ -410,9 +410,9 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eStickX1 != x->last_eStickX1 || eStickY1 != x->last_eStickY1)
 			{
-				SETSYM(av, ps_stick);
-				SETLONG(av + 1, eStickX1);
-				SETLONG(av + 2, eStickY1);
+				atom_setsym(av, ps_stick);
+				atom_setlong(av + 1, eStickX1);
+				atom_setlong(av + 2, eStickY1);
 				outlet_anything(x->dataOut, ps_guitar, 3, av);
 			}
 			
@@ -420,8 +420,8 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eStickY2 != x->last_eStickY2)
 			{
-				SETSYM(av, ps_tap);
-				SETLONG(av + 1, eStickY2);
+				atom_setsym(av, ps_tap);
+				atom_setlong(av + 1, eStickY2);
 				outlet_anything(x->dataOut, ps_guitar, 2, av);
 			}
 			
@@ -429,8 +429,8 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eCont2 != x->last_eCont2)
 			{
-				SETSYM(av, ps_whammy);
-				SETLONG(av + 1, eCont2);
+				atom_setsym(av, ps_whammy);
+				atom_setlong(av + 1, eCont2);
 				outlet_anything(x->dataOut, ps_guitar, 2, av);
 			}
 			
@@ -450,16 +450,16 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eButtonData != x->last_eButtonData)
 			{
-				SETSYM(av, ps_buttons);
-				SETLONG(av + 1, (eButtonData & 0x0004) >> 0x2);
-				SETLONG(av + 2, (eButtonData & 0x0010) >> 0x4);
-				SETLONG(av + 3, (eButtonData & 0x0080) >> 0x7);
-				SETLONG(av + 4, (eButtonData & 0x0400) >> 0xA);
-				SETLONG(av + 5, (eButtonData & 0x0800) >> 0xB);
-				SETLONG(av + 6, (eButtonData & 0x1000) >> 0xC);
-				SETLONG(av + 7, (eButtonData & 0x2000) >> 0xD);
-				SETLONG(av + 8, (eButtonData & 0x4000) >> 0xE);
-				SETLONG(av + 9, (eButtonData & 0x8000) >> 0xF);
+				atom_setsym(av, ps_buttons);
+				atom_setlong(av + 1, (eButtonData & 0x0004) >> 0x2);
+				atom_setlong(av + 2, (eButtonData & 0x0010) >> 0x4);
+				atom_setlong(av + 3, (eButtonData & 0x0080) >> 0x7);
+				atom_setlong(av + 4, (eButtonData & 0x0400) >> 0xA);
+				atom_setlong(av + 5, (eButtonData & 0x0800) >> 0xB);
+				atom_setlong(av + 6, (eButtonData & 0x1000) >> 0xC);
+				atom_setlong(av + 7, (eButtonData & 0x2000) >> 0xD);
+				atom_setlong(av + 8, (eButtonData & 0x4000) >> 0xE);
+				atom_setlong(av + 9, (eButtonData & 0x8000) >> 0xF);
 				outlet_anything(x->dataOut, ps_drums, 10, av);
 			}
 			x->last_eButtonData = eButtonData;
@@ -473,9 +473,9 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eStickX1 != x->last_eStickX1 || eStickY1 != x->last_eStickY1)
 			{
-				SETSYM(av, ps_stick);
-				SETLONG(av + 1, eStickX1);
-				SETLONG(av + 2, eStickY1);
+				atom_setsym(av, ps_stick);
+				atom_setlong(av + 1, eStickX1);
+				atom_setlong(av + 2, eStickY1);
 				outlet_anything(x->dataOut, ps_drums, 3, av);
 			}
 			
@@ -483,9 +483,9 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 			if (eCont2)
 			{
-				SETSYM(av, ps_softness);
-				SETLONG(av + 1, eCont2);
-				SETLONG(av + 1, eCont1);
+				atom_setsym(av, ps_softness);
+				atom_setlong(av + 1, eCont2);
+				atom_setlong(av + 1, eCont1);
 				outlet_anything(x->dataOut, ps_drums, 3, av);
 			}
 			
@@ -499,12 +499,12 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 		{
 			// Data
 			
-			SETLONG(av + 0, x->wiiremote->uData1);
-			SETLONG(av + 1, x->wiiremote->uData2);
-			SETLONG(av + 2, x->wiiremote->uData3);
-			SETLONG(av + 3, x->wiiremote->uData4);
-			SETLONG(av + 4, x->wiiremote->uData5);
-			SETLONG(av + 5, x->wiiremote->uData6);
+			atom_setlong(av + 0, x->wiiremote->uData1);
+			atom_setlong(av + 1, x->wiiremote->uData2);
+			atom_setlong(av + 2, x->wiiremote->uData3);
+			atom_setlong(av + 3, x->wiiremote->uData4);
+			atom_setlong(av + 4, x->wiiremote->uData5);
+			atom_setlong(av + 5, x->wiiremote->uData6);
 			outlet_anything(x->dataOut, ps_unknown, 6, av);
 		}
 	}
@@ -519,19 +519,19 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 			
 		if (buttonData != x->last_buttonData)
 		{
-			SETSYM(av, ps_buttons);
+			atom_setsym(av, ps_buttons);
 	
-			SETLONG(av + 1, (buttonData & 0x0800) >> 0xB);				// Button Up
-			SETLONG(av + 2, (buttonData & 0x0400) >> 0xA);				// Button Down
-			SETLONG(av + 3, (buttonData & 0x0100) >> 0x8);				// Button Left
-			SETLONG(av + 4, (buttonData & 0x0200) >> 0x9);				// Button Right
-			SETLONG(av + 5, (buttonData & 0x0008) >> 0x3);				// Button A
-			SETLONG(av + 6, (buttonData & 0x0004) >> 0x2);				// Button B
-			SETLONG(av + 7, (buttonData & 0x0010) >> 0x4);				// Button Minus
-			SETLONG(av + 8, (buttonData & 0x0080) >> 0x7);				// Button Home
-			SETLONG(av + 9, (buttonData & 0x1000) >> 0xC);				// Button Plus
-			SETLONG(av + 10, (buttonData & 0x0002) >> 0x1);				// Button 1
-			SETLONG(av + 11, (buttonData & 0x0001));					// Button 2
+			atom_setlong(av + 1, (buttonData & 0x0800) >> 0xB);				// Button Up
+			atom_setlong(av + 2, (buttonData & 0x0400) >> 0xA);				// Button Down
+			atom_setlong(av + 3, (buttonData & 0x0100) >> 0x8);				// Button Left
+			atom_setlong(av + 4, (buttonData & 0x0200) >> 0x9);				// Button Right
+			atom_setlong(av + 5, (buttonData & 0x0008) >> 0x3);				// Button A
+			atom_setlong(av + 6, (buttonData & 0x0004) >> 0x2);				// Button B
+			atom_setlong(av + 7, (buttonData & 0x0010) >> 0x4);				// Button Minus
+			atom_setlong(av + 8, (buttonData & 0x0080) >> 0x7);				// Button Home
+			atom_setlong(av + 9, (buttonData & 0x1000) >> 0xC);				// Button Plus
+			atom_setlong(av + 10, (buttonData & 0x0002) >> 0x1);				// Button 1
+			atom_setlong(av + 11, (buttonData & 0x0001));					// Button 2
 	
 			outlet_anything(x->dataOut, ps_remote, 12, av);				
 		}
@@ -542,35 +542,35 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 	
 	if (x->wiiremote->isIRSensorEnabled && x->wiiremote->WiiMotionBogus == false)
 	{
-		SETSYM(av, ps_ir);
-		SETFLOAT(av + 1, x->wiiremote->posX);			
-		SETFLOAT(av + 2, x->wiiremote->posY);
-		SETFLOAT(av + 3, x->wiiremote->angle);
-		SETLONG (av + 4, x->wiiremote->tracking);
+		atom_setsym(av, ps_ir);
+		atom_setfloat(av + 1, x->wiiremote->posX);			
+		atom_setfloat(av + 2, x->wiiremote->posY);
+		atom_setfloat(av + 3, x->wiiremote->angle);
+		atom_setlong (av + 4, x->wiiremote->tracking);
 		outlet_anything(x->dataOut, ps_remote, 5, av);
 		
 		// Raw Data
 		
-		SETSYM(av, ps_irraw);
-		SETLONG(av + 1, 0);
-		SETLONG(av + 2, x->wiiremote->irData[0].x);
-		SETLONG(av + 3, x->wiiremote->irData[0].y);
-		SETLONG(av + 4, x->wiiremote->irData[0].s);
+		atom_setsym(av, ps_irraw);
+		atom_setlong(av + 1, 0);
+		atom_setlong(av + 2, x->wiiremote->irData[0].x);
+		atom_setlong(av + 3, x->wiiremote->irData[0].y);
+		atom_setlong(av + 4, x->wiiremote->irData[0].s);
 		outlet_anything(x->dataOut, ps_remote, 5, av);
-		SETLONG(av + 1, 1);
-		SETLONG(av + 2, x->wiiremote->irData[1].x);
-		SETLONG(av + 3, x->wiiremote->irData[1].y);
-		SETLONG(av + 4, x->wiiremote->irData[1].s);
+		atom_setlong(av + 1, 1);
+		atom_setlong(av + 2, x->wiiremote->irData[1].x);
+		atom_setlong(av + 3, x->wiiremote->irData[1].y);
+		atom_setlong(av + 4, x->wiiremote->irData[1].s);
 		outlet_anything(x->dataOut, ps_remote, 5, av);
-		SETLONG(av + 1, 2);
-		SETLONG(av + 2, x->wiiremote->irData[2].x);
-		SETLONG(av + 3, x->wiiremote->irData[2].y);
-		SETLONG(av + 4, x->wiiremote->irData[2].s);
+		atom_setlong(av + 1, 2);
+		atom_setlong(av + 2, x->wiiremote->irData[2].x);
+		atom_setlong(av + 3, x->wiiremote->irData[2].y);
+		atom_setlong(av + 4, x->wiiremote->irData[2].s);
 		outlet_anything(x->dataOut, ps_remote, 5, av);
-		SETLONG(av + 1, 3);
-		SETLONG(av + 2, x->wiiremote->irData[3].x);
-		SETLONG(av + 3, x->wiiremote->irData[3].y);
-		SETLONG(av + 4, x->wiiremote->irData[3].s);
+		atom_setlong(av + 1, 3);
+		atom_setlong(av + 2, x->wiiremote->irData[3].x);
+		atom_setlong(av + 3, x->wiiremote->irData[3].y);
+		atom_setlong(av + 4, x->wiiremote->irData[3].s);
 		outlet_anything(x->dataOut, ps_remote, 5, av);
 	}
 
@@ -580,14 +580,14 @@ void ajhwiiremote_report(t_ajhwiiremote *x)
 	{
 		buttonData = x->wiiremote->buttonData;
 		
-		SETSYM(av, ps_motion);
-		SETFLOAT(av + 1, x->wiiremote->accScaleX);
-		SETFLOAT(av + 2, x->wiiremote->accScaleY);
-		SETFLOAT(av + 3, x->wiiremote->accScaleZ);
-		SETLONG(av + 4, x->wiiremote->accX);
-		SETLONG(av + 5, x->wiiremote->accY);
-		SETLONG(av + 6, x->wiiremote->accZ);
-		SETLONG(av + 7, x->wiiremote->orientation);
+		atom_setsym(av, ps_motion);
+		atom_setfloat(av + 1, x->wiiremote->accScaleX);
+		atom_setfloat(av + 2, x->wiiremote->accScaleY);
+		atom_setfloat(av + 3, x->wiiremote->accScaleZ);
+		atom_setlong(av + 4, x->wiiremote->accX);
+		atom_setlong(av + 5, x->wiiremote->accY);
+		atom_setlong(av + 6, x->wiiremote->accZ);
+		atom_setlong(av + 7, x->wiiremote->orientation);
 		outlet_anything(x->dataOut, ps_remote, 8, av);
 	}
 }
@@ -709,7 +709,7 @@ void ajhwiiremote_getbattery(t_ajhwiiremote *x)
 	{
 		t_atom	status;
 		
-		SETFLOAT(&status, x->wiiremote->batteryLevel);
+		atom_setfloat(&status, x->wiiremote->batteryLevel);
 		outlet_anything(x->statusOut, ps_battery, 1, &status);		
 	}
 }
@@ -722,9 +722,9 @@ void ajhwiiremote_getexpansion(t_ajhwiiremote *x)
 		t_atom	status;
 		
 		if (x->wiiremote->expType != WiiExpNotAttached || x->wiiremote->expType != WiiExpUninitialised)
-			SETLONG(&status, x->wiiremote->expType - 1);
+			atom_setlong(&status, x->wiiremote->expType - 1);
 		else
-			SETLONG(&status, 0);
+			atom_setlong(&status, 0);
 		outlet_anything(x->statusOut, ps_expansion, 1, &status);
 	}
 }
@@ -736,10 +736,10 @@ void ajhwiiremote_getled(t_ajhwiiremote *x)
 	{
 		t_atom list[4]; 
 		
-		SETLONG(list,     x->wiiremote->isLED1Illuminated);
-		SETLONG(list + 1, x->wiiremote->isLED2Illuminated);
-		SETLONG(list + 2, x->wiiremote->isLED3Illuminated);
-		SETLONG(list + 3, x->wiiremote->isLED4Illuminated);
+		atom_setlong(list,     x->wiiremote->isLED1Illuminated);
+		atom_setlong(list + 1, x->wiiremote->isLED2Illuminated);
+		atom_setlong(list + 2, x->wiiremote->isLED3Illuminated);
+		atom_setlong(list + 3, x->wiiremote->isLED4Illuminated);
 		outlet_anything(x->statusOut, ps_led, 4, list);
 	}
 }
@@ -755,47 +755,47 @@ void ajhwiiremote_getcalibration(t_ajhwiiremote *x)
 		{
 			case WiiNunchuk:
 		
-				SETSYM(list, ps_nunchuk);
-				SETSYM(list + 1, ps_stick);
-				SETLONG(list + 2, x->wiiremote->eStick1CalibData.x_max);
-				SETLONG(list + 3, x->wiiremote->eStick1CalibData.x_min);
-				SETLONG(list + 4, x->wiiremote->eStick1CalibData.x_center);
-				SETLONG(list + 5, x->wiiremote->eStick1CalibData.y_max);
-				SETLONG(list + 6, x->wiiremote->eStick1CalibData.y_min);
-				SETLONG(list + 7, x->wiiremote->eStick1CalibData.y_center);
+				atom_setsym(list, ps_nunchuk);
+				atom_setsym(list + 1, ps_stick);
+				atom_setlong(list + 2, x->wiiremote->eStick1CalibData.x_max);
+				atom_setlong(list + 3, x->wiiremote->eStick1CalibData.x_min);
+				atom_setlong(list + 4, x->wiiremote->eStick1CalibData.x_center);
+				atom_setlong(list + 5, x->wiiremote->eStick1CalibData.y_max);
+				atom_setlong(list + 6, x->wiiremote->eStick1CalibData.y_min);
+				atom_setlong(list + 7, x->wiiremote->eStick1CalibData.y_center);
 				outlet_anything(x->statusOut, ps_calibration, 8, list);
 				
-				SETSYM(list + 1, ps_motion);
-				SETLONG(list + 2, x->wiiremote->eAccCalibData.accX_zero);
-				SETLONG(list + 3, x->wiiremote->eAccCalibData.accY_zero);
-				SETLONG(list + 4, x->wiiremote->eAccCalibData.accZ_zero);
-				SETLONG(list + 5, x->wiiremote->eAccCalibData.accX_1g);
-				SETLONG(list + 6, x->wiiremote->eAccCalibData.accY_1g);
-				SETLONG(list + 7, x->wiiremote->eAccCalibData.accZ_1g);
+				atom_setsym(list + 1, ps_motion);
+				atom_setlong(list + 2, x->wiiremote->eAccCalibData.accX_zero);
+				atom_setlong(list + 3, x->wiiremote->eAccCalibData.accY_zero);
+				atom_setlong(list + 4, x->wiiremote->eAccCalibData.accZ_zero);
+				atom_setlong(list + 5, x->wiiremote->eAccCalibData.accX_1g);
+				atom_setlong(list + 6, x->wiiremote->eAccCalibData.accY_1g);
+				atom_setlong(list + 7, x->wiiremote->eAccCalibData.accZ_1g);
 				outlet_anything(x->statusOut, ps_calibration, 8, list);
 				
 				break;
 				
 			case WiiClassicController:
 		
-				SETSYM(list, ps_classic);
-				SETSYM(list + 1, ps_stick1);
-				SETLONG(list + 2, x->wiiremote->eStick1CalibData.x_max);
-				SETLONG(list + 3, x->wiiremote->eStick1CalibData.x_min);
-				SETLONG(list + 4, x->wiiremote->eStick1CalibData.x_center);
-				SETLONG(list + 5, x->wiiremote->eStick1CalibData.y_max);
-				SETLONG(list + 6, x->wiiremote->eStick1CalibData.y_min);
-				SETLONG(list + 7, x->wiiremote->eStick1CalibData.y_center);
+				atom_setsym(list, ps_classic);
+				atom_setsym(list + 1, ps_stick1);
+				atom_setlong(list + 2, x->wiiremote->eStick1CalibData.x_max);
+				atom_setlong(list + 3, x->wiiremote->eStick1CalibData.x_min);
+				atom_setlong(list + 4, x->wiiremote->eStick1CalibData.x_center);
+				atom_setlong(list + 5, x->wiiremote->eStick1CalibData.y_max);
+				atom_setlong(list + 6, x->wiiremote->eStick1CalibData.y_min);
+				atom_setlong(list + 7, x->wiiremote->eStick1CalibData.y_center);
 				outlet_anything(x->statusOut, ps_calibration, 8, list);
 				
-				SETSYM(list, ps_classic);
-				SETSYM(list + 1, ps_stick2);
-				SETLONG(list + 2, x->wiiremote->eStick2CalibData.x_max);
-				SETLONG(list + 3, x->wiiremote->eStick2CalibData.x_min);
-				SETLONG(list + 4, x->wiiremote->eStick2CalibData.x_center);
-				SETLONG(list + 5, x->wiiremote->eStick2CalibData.y_max);
-				SETLONG(list + 6, x->wiiremote->eStick2CalibData.y_min);
-				SETLONG(list + 7, x->wiiremote->eStick2CalibData.y_center);
+				atom_setsym(list, ps_classic);
+				atom_setsym(list + 1, ps_stick2);
+				atom_setlong(list + 2, x->wiiremote->eStick2CalibData.x_max);
+				atom_setlong(list + 3, x->wiiremote->eStick2CalibData.x_min);
+				atom_setlong(list + 4, x->wiiremote->eStick2CalibData.x_center);
+				atom_setlong(list + 5, x->wiiremote->eStick2CalibData.y_max);
+				atom_setlong(list + 6, x->wiiremote->eStick2CalibData.y_min);
+				atom_setlong(list + 7, x->wiiremote->eStick2CalibData.y_center);
 				outlet_anything(x->statusOut, ps_calibration, 8, list);
 				break;
 			
@@ -803,14 +803,14 @@ void ajhwiiremote_getcalibration(t_ajhwiiremote *x)
 				break;
 		}
 		
-		SETSYM(list, ps_remote);
-		SETSYM(list +  1, ps_motion);
-		SETLONG(list + 2, x->wiiremote->wiiCalibData.accX_zero);
-		SETLONG(list + 3, x->wiiremote->wiiCalibData.accY_zero);
-		SETLONG(list + 4, x->wiiremote->wiiCalibData.accZ_zero);
-		SETLONG(list + 5, x->wiiremote->wiiCalibData.accX_1g);
-		SETLONG(list + 6, x->wiiremote->wiiCalibData.accY_1g);
-		SETLONG(list + 7, x->wiiremote->wiiCalibData.accZ_1g);
+		atom_setsym(list, ps_remote);
+		atom_setsym(list +  1, ps_motion);
+		atom_setlong(list + 2, x->wiiremote->wiiCalibData.accX_zero);
+		atom_setlong(list + 3, x->wiiremote->wiiCalibData.accY_zero);
+		atom_setlong(list + 4, x->wiiremote->wiiCalibData.accZ_zero);
+		atom_setlong(list + 5, x->wiiremote->wiiCalibData.accX_1g);
+		atom_setlong(list + 6, x->wiiremote->wiiCalibData.accY_1g);
+		atom_setlong(list + 7, x->wiiremote->wiiCalibData.accZ_1g);
 		outlet_anything(x->statusOut, ps_calibration, 8, list);
 	}
 }
@@ -824,7 +824,7 @@ void ajhwiiremote_getaddress(t_ajhwiiremote *x)
 		t_atom	address;
 		
 		wiiremote_getaddress(x->wiiremote, str);
-		SETSYM(&address, gensym(str));
+		atom_setsym(&address, gensym(str));
 		outlet_anything(x->statusOut, ps_address, 1, &address);		
 	}
 }
@@ -936,9 +936,9 @@ void *ajhwiiremote_new(t_symbol *s, short ac, t_atom *av)
 	
 	ajhwiiremote_motionsensor(x, 1);
 	
-	if (ac > 0 && av[0].a_type == A_SYM)
+	if (ac > 0 && atom_gettype(av) == A_SYM)
 	{
-		strcpy(x->address, av[0].a_w.w_sym->s_name);
+		strcpy(x->address, atom_getsym(av)->s_name);
 		x->use_address = 1;
 	}
 	else

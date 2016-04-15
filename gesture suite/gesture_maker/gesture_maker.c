@@ -33,6 +33,7 @@
 #include "gesture_maker_convert.h"
 #include "gesture_maker_multipart.h"
 
+#define MUX_NUM_EVENTS  256
 
 void *this_class;
     
@@ -49,7 +50,7 @@ typedef struct gesture_maker
 	
 	t_gesture_multipart multipart_inflections;
 	
-	double event_times[256];
+	double event_times[MUX_NUM_EVENTS];
 	double grain_time;
 	
 	long num_events;
@@ -76,53 +77,52 @@ void gesture_maker_init(t_gesture_maker *x);
 
 void gesture_maker_stop(t_gesture_maker *x);
 void gesture_maker_doclock(t_gesture_maker *x);
-void gesture_maker_events(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
+void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 void gesture_maker_drive(t_gesture_maker *x, double in_val);
-void gesture_maker_list(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
+void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time);
 void gesture_maker_graintime(t_gesture_maker *x, double in_val);
 
-void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
-void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
+void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
+void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 
 void gesture_maker_initial_main(t_gesture_maker *x, double in_val);
 void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val);
 
-void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
+void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 
-void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
-void gesture_maker_scaling_inflections(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv);
+void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
+void gesture_maker_scaling_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 
 void gesture_maker_reset(t_gesture_maker *x);
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s);
 
 
-void gesture_maker_fixit(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
-{
-}
+void gesture_maker_fixit(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv){}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// FIX - review and reconsider non-GIMME methods...
 
-// Safe methods for Max 5 threadsaftey
+// Safe methods for Max 5 threadsafety
 
-#define SAFE_FLOAT_METHOD(base_method) void base_method##_safe(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv){if (argc) base_method(x, atom_getfloat(argv));}
+#define SAFE_FLOAT_METHOD(base_method) void base_method##_safe(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv){if (argc) base_method(x, atom_getfloat(argv));}
 
 SAFE_FLOAT_METHOD(gesture_maker_drive)
 SAFE_FLOAT_METHOD(gesture_maker_graintime)
 SAFE_FLOAT_METHOD(gesture_maker_initial_main)
 SAFE_FLOAT_METHOD(gesture_maker_initial_inflections)
 
-int main(void)
+int C74_EXPORT main(void)
 {
     this_class = class_new ("gesture_maker",
 								(method) gesture_maker_new, 
 								(method)gesture_maker_free, 
-								(short)sizeof(t_gesture_maker), 
+								sizeof(t_gesture_maker),
 								NULL, 
 								0);
 	
@@ -136,7 +136,8 @@ int main(void)
 	class_addmethod(this_class, (method)gesture_maker_initial_main_safe, "initial_main", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_initial_inflections_safe, "initial_inflections", A_GIMME,  0);
 	
-	// N.B. The below solves some errors with a large number of incorrect message spellings in Flunece - to be corrected more properly at a later date
+    // FIX - remove and fix patches...
+	// N.B. The below solves some errors with a large number of incorrect message spellings in Fluence - to be corrected more properly at a later date
 	
 	class_addmethod(this_class, (method)gesture_maker_fixit, "inital_inflections", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_fixit, "inital_main", A_GIMME,  0);
@@ -162,13 +163,11 @@ int main(void)
 	return 0;
 }
 
-
 void gesture_maker_free(t_gesture_maker *x)
 {
 	if (x->gesture_clock)
 		freeobject((t_object *)x->gesture_clock);
 }
-
 
 void *gesture_maker_new()
 {
@@ -188,8 +187,7 @@ void *gesture_maker_new()
 	gesture_maker_convert_init(&x->convert_inflections);
 	
     return (x);
-}	
-
+}
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
 {
@@ -221,11 +219,9 @@ void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////// Initialisation routines //////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void gesture_maker_init(t_gesture_maker *x)
 {
@@ -236,7 +232,6 @@ void gesture_maker_init(t_gesture_maker *x)
 	
 	gesture_maker_stop(x);
 }
-
 
 void gesture_maker_reset(t_gesture_maker *x)
 {
@@ -250,7 +245,8 @@ void gesture_maker_reset(t_gesture_maker *x)
 void gesture_maker_stop(t_gesture_maker *x)
 {	
 	// The stop routine is used internally and by users to cancel any gesture that is currently exectuing (this will *not* cause a bang message to be sent out of the done outlet)
-	clock_unset(x->gesture_clock);
+	
+    clock_unset(x->gesture_clock);
 	
 	x->num_events = 0;
 	x->current_event = -1;
@@ -259,11 +255,9 @@ void gesture_maker_stop(t_gesture_maker *x)
 	x->gesture_time = 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////// Timing and calculation routines //////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void gesture_maker_doclock(t_gesture_maker *x)
 {	
@@ -295,7 +289,7 @@ void gesture_maker_doclock(t_gesture_maker *x)
 		if (current_event != num_events)
 		   clock_time = grain_time = event_times[current_event];
 		else
-			clock_time = grain_time = 0.;
+			clock_time = grain_time = 0.0;
 		x->current_event = current_event + 1;
 	}
 	
@@ -303,10 +297,9 @@ void gesture_maker_doclock(t_gesture_maker *x)
 	
 	gesture_maker_calc(x, phase, grain_time);
 	
-	
 	// If the gesture is over then bang the done outlet, otherwise set the clock for the next output
 	
-	if (gesture_time == 0. || (current_event != -1 && current_event > num_events))
+	if (gesture_time == 0.0 || (current_event != -1 && current_event > num_events))
 		outlet_bang(x->gesture_done_out);
 	else 
 	{
@@ -315,8 +308,7 @@ void gesture_maker_doclock(t_gesture_maker *x)
 	}
 }
 
-
-void gesture_maker_events(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	double *event_times = x->event_times;
 	double event_time;
@@ -324,8 +316,8 @@ void gesture_maker_events(t_gesture_maker *x, t_symbol *s, short argc, t_atom *a
 	
 	// Set the object going in events mode, storing the relevant timings and variables first
 	
-	if (argc > 256) 
-		argc = 256;
+	if (argc > MUX_NUM_EVENTS)
+		argc = MUX_NUM_EVENTS;
 	
 	gesture_maker_stop(x);
 	
@@ -345,7 +337,6 @@ void gesture_maker_events(t_gesture_maker *x, t_symbol *s, short argc, t_atom *a
 	clock_fdelay(x->gesture_clock, 0);
 }
 
-
 void gesture_maker_drive(t_gesture_maker *x, double in_val)
 {
 	// Trigger the gesture in drive mode (regular output)
@@ -360,8 +351,7 @@ void gesture_maker_drive(t_gesture_maker *x, double in_val)
 	clock_fdelay(x->gesture_clock, 0);
 }
 
-
-void gesture_maker_list(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	double phase;
 	double grain_time;
@@ -376,7 +366,6 @@ void gesture_maker_list(t_gesture_maker *x, t_symbol *s, short argc, t_atom *arg
 	
 	gesture_maker_calc(x, phase, grain_time);
 }
-
 
 void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
 {
@@ -403,11 +392,9 @@ void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
 	outlet_list(x->gesture_vals_out, ps_list, 2, output_list);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Various routines for setting the gesture parameters ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void gesture_maker_graintime(t_gesture_maker *x, double in_val)
 {
@@ -415,45 +402,38 @@ void gesture_maker_graintime(t_gesture_maker *x, double in_val)
 		x->grain_time = fabs(in_val);
 }
 
-
-void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	gesture_maker_kernel_params(&x->kernel_main, argc, argv);
 }
 
-
-void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	gesture_maker_multipart_params(&x->multipart_inflections, argc, argv);
 
 }	
-
 
 void gesture_maker_initial_main(t_gesture_maker *x, double in_val)
 {
 	gesture_maker_kernel_initial(&x->kernel_main, in_val);
 }
 
-
 void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val)
 {
 	gesture_maker_kernel_initial(&x->kernel_inflections, in_val);
 }
-									   
 
-void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	gesture_maker_multipart_timings(&x->multipart_inflections, argc, argv);
 }
 
-
-void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	gesture_maker_convert_params(&x->convert_main, argc, argv);
 }
 
-
-void gesture_maker_scaling_inflections(t_gesture_maker *x, t_symbol *s, short argc, t_atom *argv)
+void gesture_maker_scaling_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
 	gesture_maker_convert_params(&x->convert_inflections, argc, argv);
 }

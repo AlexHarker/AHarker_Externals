@@ -13,6 +13,9 @@
 #include <ext_obex.h>
 
 
+#define MAXIMUM_NUM_OUTLETS 256
+
+
 void *this_class;
 
 
@@ -22,7 +25,7 @@ typedef struct depack{
 	
 	long num_outlets;
     
-	void *outlet_array[256];
+	void *outlet_array[MAXIMUM_NUM_OUTLETS];
 		
 } t_depack;
 
@@ -75,8 +78,16 @@ void *depack_new (t_atom_long num_outlets)
 	void **outlet_array;
 	long i;
 	
-	if (num_outlets < 1) num_outlets = 2;
-	if (num_outlets > 256) num_outlets = 256;
+	if (num_outlets < 1)
+    {
+        object_error((t_object *) x, "the minimum number of outlets is 2");
+        num_outlets = 2;
+    }
+	if (num_outlets > 256)
+    {
+        object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
+        num_outlets = MAXIMUM_NUM_OUTLETS;
+    }
 	
 	x->num_outlets = num_outlets;
 	
@@ -99,16 +110,16 @@ void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
 	
 	for (i = argc - 1; i >= 0; i--)
 	{
-		switch (argv[i].a_type)
+		switch (atom_gettype(argv + i))
 		{
 			case A_SYM:
-				outlet_anything (outlet_array[i + offset], argv[i].a_w.w_sym, 0, 0);
+				outlet_anything (outlet_array[i + offset], atom_getsym(argv + i), 0, 0);
 				break;
 			case A_FLOAT:
-				outlet_float (outlet_array[i + offset], argv[i].a_w.w_float);
+				outlet_float (outlet_array[i + offset], atom_getfloat(argv + i));
 				break;
 			case A_LONG:
-				outlet_int (outlet_array[i + offset], argv[i].a_w.w_long);
+				outlet_int (outlet_array[i + offset], atom_getlong(argv + i));
 				break;
 		}
 	}

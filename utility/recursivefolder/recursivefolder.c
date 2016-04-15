@@ -96,9 +96,9 @@ void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
 	
 	if (argc) 
 	{
-		if (argv[argc - 1].a_type == A_LONG)
+		if (atom_gettype(argv + argc - 1) == A_LONG)
 		{
-			x->f_recursion = argv[argc - 1].a_w.w_long;
+            x->f_recursion = atom_getlong(argv + argc - 1);
 			argc--;
 		}
 		recursive_folder_types(x, s , argc, argv); 
@@ -294,7 +294,7 @@ void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_ato
 	x->f_numtypes = 0;
 	while (argc--)
 	{
-		if (argv->a_type == A_SYM) 
+		if (atom_gettype(argv) == A_SYM)
 		{
 			len = strlen(atom_getsym(argv)->s_name);
 			for (i = 0; i < 4; i++) 

@@ -100,8 +100,8 @@ static __inline int SSE2_check()
 
 static const vFloat Vec_Ops_F32_One = {1.,1.,1.,1.};
 
-#define F32_VEC_EQUAL_MSP_OP(a,b)		F32_VEC_AND_OP(Vec_Ops_F32_One, F32_VEC_EQUAL_OP(a,b)) 
-#define F32_VEC_NOTEQUAL_MSP_OP(a,b)	F32_VEC_SUB_OP(Vec_Ops_F32_One, F32_VEC_AND_OP(F32_VEC_EQUAL_OP(a,b), Vec_Ops_F32_One))
+#define F32_VEC_EQ_MSP_OP(a,b)          F32_VEC_AND_OP(Vec_Ops_F32_One, F32_VEC_EQ_OP(a,b))
+#define F32_VEC_NEQ_MSP_OP(a,b)         F32_VEC_SUB_OP(Vec_Ops_F32_One, F32_VEC_AND_OP(F32_VEC_EQ_OP(a,b), Vec_Ops_F32_One))
 #define F32_VEC_GT_MSP_OP(a,b)			F32_VEC_AND_OP(Vec_Ops_F32_One, F32_VEC_GT_OP(a,b))
 #define F32_VEC_LT_MSP_OP(a,b)			F32_VEC_AND_OP(Vec_Ops_F32_One, F32_VEC_LT_OP(a,b)) 
 
@@ -118,8 +118,8 @@ static const vFloat Vec_Ops_F32_One = {1.,1.,1.,1.};
 
 static const vDouble Vec_Ops_F64_One = {1.,1.};
 
-#define F64_VEC_EQUAL_MSP_OP(a,b)		F64_VEC_AND_OP(Vec_Ops_F64_One, F64_VEC_EQUAL_OP(a,b)) 
-#define F64_VEC_NOTEQUAL_MSP_OP(a,b)	F64_VEC_SUB_OP(Vec_Ops_F64_One, F64_VEC_AND_OP(F64_VEC_EQUAL_OP(a,b), Vec_Ops_F64_One))
+#define F64_VEC_EQ_MSP_OP(a,b)          F64_VEC_AND_OP(Vec_Ops_F64_One, F64_VEC_EQ_OP(a,b))
+#define F64_VEC_NEQ_MSP_OP(a,b)         F64_VEC_SUB_OP(Vec_Ops_F64_One, F64_VEC_AND_OP(F64_VEC_EQ_OP(a,b), Vec_Ops_F64_One))
 #define F64_VEC_GT_MSP_OP(a,b)			F64_VEC_AND_OP(Vec_Ops_F64_One, F64_VEC_GT_OP(a,b))
 #define F64_VEC_LT_MSP_OP(a,b)			F64_VEC_AND_OP(Vec_Ops_F64_One, F64_VEC_LT_OP(a,b)) 
 
@@ -142,10 +142,10 @@ static const vDouble Vec_Ops_F64_One = {1.,1.};
 #define F32_VEC_MIN_OP					_mm_min_ps
 #define F32_VEC_MAX_OP					_mm_max_ps
 
-#define F32_VEC_EQUAL_OP(a,b)			_mm_cmpeq_ps(a,b)
-#define F32_VEC_NEQUAL_OP(a,b)			_mm_cmpneq_ps(a,b)
-#define F32_VEC_GT_OP(a,b)				_mm_cmpgt_ps(a,b)
-#define F32_VEC_LT_OP(a,b)				_mm_cmplt_ps(a,b)
+#define F32_VEC_EQ_OP                   _mm_cmpeq_ps
+#define F32_VEC_NEQ_OP                  _mm_cmpneq_ps
+#define F32_VEC_GT_OP                   _mm_cmpgt_ps
+#define F32_VEC_LT_OP                   _mm_cmplt_ps
 
 #define F32_VEC_SQRT_OP					_mm_sqrt_ps
 
@@ -180,8 +180,8 @@ static const vDouble Vec_Ops_F64_One = {1.,1.};
 #define F64_VEC_MIN_OP					_mm_min_pd
 #define F64_VEC_MAX_OP					_mm_max_pd
 
-#define F64_VEC_EQUAL_OP(a,b)			_mm_cmpeq_pd(a,b)
-#define F64_VEC_NEQUAL_OP(a,b)			_mm_cmpneq_pd(a,b)
+#define F64_VEC_EQ_OP                   _mm_cmpeq_pd
+#define F64_VEC_NEQ_OP                  _mm_cmpneq_pd
 #define F64_VEC_GT_OP					_mm_cmpgt_pd
 #define F64_VEC_LT_OP					_mm_cmplt_pd
 
@@ -218,8 +218,39 @@ static const vDouble Vec_Ops_F64_One = {1.,1.};
 
 #define I32_VEC_OR_OP					_mm_or_si128
 #define I32_VEC_AND_OP					_mm_and_si128
+#define I32_VEC_ANDNOT_OP				_mm_andnot_si128
 
-#define I32_VEC_SHUFFLE_OP				_mm_shuffle_epi32
+#define I32_VEC_EQ_OP                   _mm_cmpeq_epi32
+#define I32_VEC_GT_OP                   _mm_cmpgt_epi32
+#define I32_VEC_LT_OP                   _mm_cmplt_epi32
+
+#define I32_VEC_SHUFFLE                 _mm_shuffle_epi32
+
+//#define I32_VEC_SL_OP                   _mm_sll_epi32
+//#define I32_VEC_SR_OP                   _mm_srl_epi32
+//#define I32_VEC_SRA_OP                  _mm_sra_epi32
+#define I32_VEC_SLI_OP                  _mm_slli_epi32
+#define I32_VEC_SRI_OP                  _mm_srli_epi32
+#define I32_VEC_SRAI_OP                 _mm_srai_epi32
+
+// Integer 64 intrinsics
+
+#define I64_VEC_SUB_OP                  _mm_sub_epi64
+#define I64_VEC_ADD_OP                  _mm_add_epi64
+
+#define I64_VEC_SL_OP                   _mm_shift_left_variable_epi64
+#define I64_VEC_SR_OP                   _mm_shift_right_variable_epi64
+//#define I64_VEC_SL_OP                   _mm_sll_epi64
+//#define I64_VEC_SR_OP                   _mm_srl_epi64
+#define I64_VEC_SLI_OP                  _mm_slli_epi64
+#define I64_VEC_SRI_OP                  _mm_srli_epi64
+
+#define I64_VEC_XOR_OP                  _mm_xor_si128
+#define I64_VEC_OR_OP                   _mm_or_si128
+#define I64_VEC_AND_OP                  _mm_and_si128
+#define I64_VEC_ANDNOT_OP               _mm_andnot_si128
+
+
 
 // Altivec has min / max intrinics for 32 bit signed integers, but on intel this must be done in software (although it is provided under windows)
 // These routines are taken directly from the apple SSE migration guide
@@ -248,6 +279,8 @@ static __inline vSInt32 _mm_max_epi32(vSInt32 a, vSInt32 b)
 #ifdef __APPLE__
 static __inline vFloat _mm_sel_ps(vFloat a, vFloat b, vFloat mask) FORCE_INLINE;
 static __inline vUInt32 _mm_sel_epi32(vUInt32 a, vUInt32 b, vUInt32 mask) FORCE_INLINE;
+static __inline vDouble _mm_sel_pd(vDouble a, vDouble b, vDouble mask) FORCE_INLINE;
+static __inline vSInt64 _mm_convert_trunc_pd_epi64(vDouble a) FORCE_INLINE;
 #endif
 
 static __inline vFloat _mm_sel_ps(vFloat a, vFloat b, vFloat mask) FORCE_INLINE_DEFINITION
@@ -271,6 +304,149 @@ static __inline vDouble _mm_sel_pd(vDouble a, vDouble b, vDouble mask) FORCE_INL
     return _mm_or_pd(a, b); 
 } 
 
+
+static __inline vSInt64 _mm_shift_left_variable_epi64(vSInt64 a, vSInt64 shifts)
+{
+    vSInt64 lo = _mm_sll_epi64(a, _mm_move_epi64(shifts));
+    vSInt64 hi = _mm_sll_epi64(a, _mm_srli_si128(shifts, 0x8));
+    
+    return _mm_shuffle_pd(lo, hi, 0x2);
+}
+
+static __inline vSInt64 _mm_shift_right_variable_epi64(vSInt64 a, vSInt64 shifts)
+{
+    vSInt64 lo = _mm_srl_epi64(a, _mm_move_epi64(shifts));
+    vSInt64 hi = _mm_srl_epi64(a, _mm_srli_si128(shifts, 0x8));
+    
+    return _mm_shuffle_pd(lo, hi, 0x2);
+}
+
+
+static __inline void _mm_split_pd_epi64(vDouble a, vSInt64 *whole, vDouble *fract)
+{
+    static const vSInt64 mant_mask = {0xFFFFFFFFFFFFF, 0xFFFFFFFFFFFFF};
+    static const vSInt64 leading_bit = {0x10000000000000, 0x10000000000000};
+    static const vSInt64 exp_mask = {0x7FF0000000000000, 0x7FF0000000000000};
+    //static const vSInt64 max_negative = {0x8000000000000000, 0x8000000000000000};
+    static const vSInt64 shift_bias = {0x43D, 0x43D};
+    //static const vSInt32 shift_bias_32 = {0x43D, 0x43D, 0x43D, 0x43D};
+    //static const vSInt32 min_exp = {0x3FF, 0x3FF, 0x3FF, 0x3FF};
+    
+    //static const vSInt64 neg_one = {-1, -1};
+    //static const vSInt64 shift_bias2 = {0x433, 0x433};
+    static const vSInt32 min_exp = {0x3FF, 0x3FF, 0x3FF, 0x3FF};
+    //static const vSInt32 max_exp = {0x433, 0x433, 0x433, 0x433};
+    
+    vSInt64 expbits = I64_VEC_AND_OP(exp_mask, a);
+    vSInt64 exp = I64_VEC_SRI_OP(expbits, 0x34);
+    
+    // Detect edge cases
+    
+    vSInt32 exp32 = I32_VEC_SHUFFLE(exp, 0xA0);
+    //vSInt32 overflow2 = I32_VEC_GT_OP(exp32, max_exp);
+    
+    // Handle underflow
+    
+    a = I64_VEC_ANDNOT_OP(I32_VEC_LT_OP(exp32, min_exp), a);
+    
+    // Construct mask and apply
+        
+    //vSInt64 mask = I64_VEC_SL_OP(neg_one, I64_VEC_ANDNOT_OP(overflow2, I64_VEC_SUB_OP(shift_bias2, exp)));
+    //a = I64_VEC_AND_OP(mask, a);
+    
+    // Mantissa
+    
+    vSInt64 mantissa = I64_VEC_OR_OP(I64_VEC_AND_OP(mant_mask, a), leading_bit);
+    
+    // Shift
+
+    vSInt64 shift = I64_VEC_SUB_OP(shift_bias, exp);
+    vSInt64 result = I64_VEC_SR_OP(I64_VEC_SLI_OP(mantissa, 0xA), shift);
+    
+    *whole = result;
+    *fract = F64_VEC_SUB_OP(a, F64_VEC_OR_OP(expbits, F64_VEC_ANDNOT_OP(exp_mask, I64_VEC_SRI_OP(I64_VEC_SL_OP(result, shift), 0xA))));
+    /*
+     // Sign
+     
+     vSInt64 sign = I32_VEC_SRAI_OP(I32_VEC_SHUFFLE(a, 0xF5), 0x1F);
+     result = I64_VEC_SUB_OP(I64_VEC_XOR_OP(sign, result), sign);
+     
+     // Handle overflow
+     
+     vSInt32 overflow = I32_VEC_GT_OP(exp32, shift_bias_32);
+     result = I64_VEC_OR_OP(I64_VEC_AND_OP(overflow, max_negative), I64_VEC_ANDNOT_OP(overflow, result));
+     */
+}
+
+
+static __inline vSInt64 _mm_convert_trunc_pd_epi64(vDouble a)
+{
+    static const vSInt64 mant_mask = {0xFFFFFFFFFFFFF, 0xFFFFFFFFFFFFF};
+    static const vSInt64 leading_bit = {0x10000000000000, 0x10000000000000};
+    static const vSInt64 exp_mask = {0x7FF0000000000000, 0x7FF0000000000000};
+    static const vSInt64 max_negative = {0x8000000000000000, 0x8000000000000000};
+    static const vSInt64 shift_bias = {0x43D, 0x43D};
+    static const vSInt32 shift_bias_32 = {0x43D, 0x43D, 0x43D, 0x43D};
+    static const vSInt32 min_exp = {0x3FF, 0x3FF, 0x3FF, 0x3FF};
+    
+    // Mantissa
+    
+    vSInt64 mantissa = I64_VEC_OR_OP(I64_VEC_AND_OP(mant_mask, a), leading_bit);
+    
+    // Shift
+    
+    vSInt64 exp = I64_VEC_SRI_OP(I64_VEC_AND_OP(exp_mask, a), 0x34);
+    vSInt64 result = I64_VEC_SR_OP(I64_VEC_SLI_OP(mantissa, 0xA), I64_VEC_SUB_OP(shift_bias, exp));
+    
+    // Handle underflow
+    
+    vSInt32 exp32 = I32_VEC_SHUFFLE(exp, 0xA0);
+    result = I64_VEC_ANDNOT_OP(I32_VEC_LT_OP(exp32, min_exp), result);
+    
+    // Sign
+    
+    vSInt64 sign = I32_VEC_SRAI_OP(I32_VEC_SHUFFLE(a, 0xF5), 0x1F);
+    result = I64_VEC_SUB_OP(I64_VEC_XOR_OP(sign, result), sign);
+    
+    // Handle overflow
+    
+    vSInt32 overflow = I32_VEC_GT_OP(exp32, shift_bias_32);
+    result = I64_VEC_OR_OP(I64_VEC_AND_OP(overflow, max_negative), I64_VEC_ANDNOT_OP(overflow, result));
+    
+    return result;
+}
+
+static __inline vDouble trunc_vec_64(vDouble a)
+{
+    static const vSInt64 neg_one = {-1, -1};
+    static const vSInt64 exp_mask = {0x7FF0000000000000, 0x7FF0000000000000};
+    static const vSInt64 shift_bias = {0x433, 0x433};
+    static const vSInt32 min_exp = {0x3FF, 0x3FF, 0x3FF, 0x3FF};
+    static const vSInt32 max_exp = {0x433, 0x433, 0x433, 0x433};
+    
+    vSInt64 exp = I64_VEC_SRI_OP(I64_VEC_AND_OP(exp_mask, a), 0x34);
+    
+    // Detect edge cases
+    
+    vSInt32 exp32 = I32_VEC_SHUFFLE(exp, 0xA0);
+    vSInt32 underflow = I32_VEC_LT_OP(exp32, min_exp);
+    vSInt32 overflow = I32_VEC_GT_OP(exp32, max_exp);
+    
+    // Construct mask
+        
+    vSInt64 mask = I64_VEC_ANDNOT_OP(underflow, I64_VEC_SL_OP(neg_one, I64_VEC_ANDNOT_OP(overflow, I64_VEC_SUB_OP(shift_bias, exp))));
+
+    // Apply
+    
+    return I64_VEC_AND_OP(mask, a);
+}
+
+
+// FIX - temp as fuck
+
+#define F64_VEC_TRUNC_OP            trunc_vec_64
+#define I64_VEC_FROM_F64_TRUNC      _mm_convert_trunc_pd_epi64
+#define F64_VEC_SPLIT_I64_F64       _mm_split_pd_epi64
 #else
 
 // Altivec
@@ -292,8 +468,8 @@ static const vFloat Vec_Ops_F32_Zero = {0.f,0.f,0.f,0.f};
 #define F32_VEC_MIN_OP					vec_min
 #define F32_VEC_MAX_OP					vec_max
 
-#define F32_VEC_EQUAL_OP(a,b)			vec_cmpeq(a,b) 
-#define F32_VEC_NEQUAL_OP(a,b)			vec_xor(vec_cmpeq(a,b),Vec_Ops_F32_One) 
+#define F32_VEC_EQ_OP(a,b)              vec_cmpeq(a,b)
+#define F32_VEC_NEQ_OP(a,b)             vec_xor(vec_cmpeq(a,b),Vec_Ops_F32_One)
 #define F32_VEC_GT_OP(a,b)				vec_cmpgt(a,b) 
 #define F32_VEC_LT_OP(a,b)				vec_cmplt(a,b)
 

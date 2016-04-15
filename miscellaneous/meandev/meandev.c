@@ -157,16 +157,16 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv)
     {
         if (i < argc)
         {
-            switch (argv[i].a_type) 
+            switch (atom_gettype(argv + i))
             {
                 case A_LONG:
-					args[i] = argv[i].a_w.w_long;
+                    args[i] = atom_getlong(argv + i);
 					break;
                 case A_SYM:
 					args[i] = 0;
 					break;
                 case A_FLOAT:
-					args[i] = (long) argv[i].a_w.w_float;
+					args[i] = (long) atom_getfloat(argv + i);
             }
         }
         else
@@ -1431,9 +1431,3 @@ void meandev_new_mean(t_meandev *x, double mean, char dur, t_dur_data *duration_
 		clock_delay(duration_pointer->f_clock2, min_time);
     }
 }
-
-
-
-
-
-

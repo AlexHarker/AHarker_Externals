@@ -11,7 +11,6 @@
 
 #include "gesture_maker_convert.h"
 
-
 // Symbols
 
 t_symbol *ps_scale;
@@ -25,7 +24,6 @@ t_symbol *ps_Log;
 t_symbol *ps_Amp;
 t_symbol *ps_Pitch;
 t_symbol *ps_None;
-
 
 // Setup the symbol variables
 
@@ -44,7 +42,6 @@ void gesture_maker_convert_setup()
 	ps_None = gensym("None");
 }
 
-
 // Initialise the convertor to default values
 
 void gesture_maker_convert_init (t_gesture_maker_convert *x)
@@ -56,7 +53,6 @@ void gesture_maker_convert_init (t_gesture_maker_convert *x)
 	x->subtract = 0;
 }
 
-
 // Scale a value accoring to the range and scaling specified
 
 double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
@@ -67,20 +63,20 @@ double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
 	
 	switch (x->mode)
 	{
-		case 0:
+		case CONVERT_NONE:
 			
 			// No scaling
 			
 			return input;
 			
-		case 1:
+		case CONVERT_LINEAR:
 			
 			// Linear scaling
 			
 			scaled = (input * x->mult) - x->subtract;
 			break;
 			
-		case 2:
+		case CONVERT_LOG_IN:
 			
 			// Exponetial scaling (for a logarithmic input scaling)
 			
@@ -98,10 +94,9 @@ double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
 	return scaled;
 }
 
-
 // Routine for setting the parameters of the conversion
 
-void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_atom *argv)
+void gesture_maker_convert_params (t_gesture_maker_convert *x, long argc, t_atom *argv)
 {
 	double min_in;
 	double max_in;
@@ -112,7 +107,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_ato
 	double min;
 	double max;
 	
-	char mode = 1;
+	t_conversion_mode mode = CONVERT_LINEAR;
 	
 	t_symbol *mode_sym;
 
@@ -123,7 +118,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_ato
 	
 	if (mode_sym == ps_none || mode_sym == ps_None)
 	{
-		x->mode = 0;
+		x->mode = CONVERT_NONE;
 		return;
 	}
 	
@@ -162,7 +157,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_ato
 	}
 
 	if (mode_sym == ps_log || mode_sym == ps_amp || mode_sym == ps_pitch)
-		mode = 2;
+		mode = CONVERT_LOG_IN;
 	
 	if (mode_sym == ps_amp)
 	{
@@ -179,7 +174,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_ato
 	min = min_out;
 	max = max_out;
 	
-	if (mode == 2)
+	if (mode == CONVERT_LOG_IN)
 	{
 		min_out = log(min_out);
 		max_out = log(max_out);
@@ -188,7 +183,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, short argc, t_ato
 	mult = (max_out - min_out) / (max_in - min_in);
 	subtract = (min_in * mult) - min_out;
 	
-	if (mode == 1 && mode_sym != ps_scale)
+	if (mode == CONVERT_LINEAR && mode_sym != ps_scale)
 		error ("gesture_maker: unknown conversion type - defaulting to scale");
 
 	x->mode = mode;

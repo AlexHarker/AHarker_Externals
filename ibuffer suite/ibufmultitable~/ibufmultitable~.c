@@ -16,6 +16,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <AH_Types.h>
 #include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <ibuffer_access.h>
@@ -32,8 +33,8 @@ typedef struct _ibufmultitable
 	t_object *buffer_pointer;
 	t_symbol *buffer_name;
 	
-	long start_samp;
-	long end_samp;
+	AH_SIntPtr start_samp;
+	AH_SIntPtr end_samp;
 	long chan;	
 	long interp_mode;
 	
@@ -46,29 +47,29 @@ typedef struct _ibufmultitable
 } t_ibufmultitable;
 
 
-void *ibufmultitable_new (t_symbol *the_buffer, long start_samp, long end_samp, long chan);
-void ibufmultitable_free (t_ibufmultitable *x);
-void ibufmultitable_assist (t_ibufmultitable *x, void *b, long m, long a, char *s);
+void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan);
+void ibufmultitable_free(t_ibufmultitable *x);
+void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s);
 
-void ibufmultitable_interp (t_ibufmultitable *x, t_symbol *msg, short argc, t_atom *argv);
-void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, short argc, t_atom *argv);
-void ibufmultitable_set_internal (t_ibufmultitable *x, t_symbol *s);
-void ibufmultitable_startsamp (t_ibufmultitable *x, long startsamp);
-void ibufmultitable_endsamp (t_ibufmultitable *x, long endsamp);
-void ibufmultitable_chan (t_ibufmultitable *x, long chan);
+void ibufmultitable_interp(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
+void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
+void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s);
+void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long startsamp);
+void ibufmultitable_endsamp(t_ibufmultitable *x, t_atom_long endsamp);
+void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan);
 
-__inline float ibufmultitable_clip_zero_one (float in);
-t_int *ibufmultitable_perform (t_int *w);
-t_int *ibufmultitable_perform_small (t_int *w);
-void ibufmultitable_dsp (t_ibufmultitable *x, t_signal **sp, short *count);
+static __inline float ibufmultitable_clip_zero_one(float in);
+t_int *ibufmultitable_perform(t_int *w);
+t_int *ibufmultitable_perform_small(t_int *w);
+void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count);
 
-__inline double ibufmultitable_clip_zero_one64 (double in);
-void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufmultitable_dsp64 (t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+static __inline double ibufmultitable_clip_zero_one64(double in);
+void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibufmultitable_perform_small64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("ibufmultitable~",
 						   (method)ibufmultitable_new,
@@ -93,13 +94,13 @@ int main (void)
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
 	
-	ibuffer_init ();
+	ibuffer_init();
 	
 	return 0;
 }
 
 
-void *ibufmultitable_new(t_symbol *the_buffer, long start_samp, long end_samp, long chan)
+void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
 {
     t_ibufmultitable *x = (t_ibufmultitable *)object_alloc(this_class);
     
@@ -144,7 +145,7 @@ void *ibufmultitable_new(t_symbol *the_buffer, long start_samp, long end_samp, l
 	x->dynamicdsp_parent = Get_Dynamic_Object();
 	x->dynamicdsp_index = Get_Dynamic_Patch_Index(x->dynamicdsp_parent);
 	
-	return (x);
+	return x;
 }
 
 
@@ -177,7 +178,7 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 }
 
 
-void ibufmultitable_interp (t_ibufmultitable *x, t_symbol *msg, short argc, t_atom *argv)
+void ibufmultitable_interp(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	t_symbol *mode = argc ? atom_getsym(argv) : ps_linear;
 						
@@ -195,15 +196,15 @@ void ibufmultitable_interp (t_ibufmultitable *x, t_symbol *msg, short argc, t_at
 }
 							
 
-void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, short argc, t_atom *argv)
+void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	ibufmultitable_set_internal(x, argc ? atom_getsym(argv) : 0);
 }
 
 
-void ibufmultitable_set_internal (t_ibufmultitable *x, t_symbol *s)
+void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 {
-	void *b = ibuffer_get_ptr (s);
+	void *b = ibuffer_get_ptr(s);
 	
 	if (b) 
 	{	
@@ -215,12 +216,12 @@ void ibufmultitable_set_internal (t_ibufmultitable *x, t_symbol *s)
 		x->buffer_pointer = 0;
 		x->buffer_name = 0;
 		if (s)
-			error ("ibufmultitable~: no buffer %s", s->s_name);
+			object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
 	}
 }
 
 
-void ibufmultitable_startsamp (t_ibufmultitable *x, long start_samp)
+void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long start_samp)
 {
 	if (start_samp < 0)
 		start_samp = 0;
@@ -229,7 +230,7 @@ void ibufmultitable_startsamp (t_ibufmultitable *x, long start_samp)
 }
 
 
-void ibufmultitable_endsamp (t_ibufmultitable *x, long end_samp)
+void ibufmultitable_endsamp(t_ibufmultitable *x, t_atom_long end_samp)
 {
 	if (end_samp < 0)
 		end_samp = 0;
@@ -238,7 +239,7 @@ void ibufmultitable_endsamp (t_ibufmultitable *x, long end_samp)
 }
 
 
-void ibufmultitable_chan (t_ibufmultitable *x, long chan)
+void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan)
 {
 	if (chan < 1)
 		chan = 1;
@@ -252,7 +253,7 @@ void ibufmultitable_chan (t_ibufmultitable *x, long chan)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 
-__inline float ibufmultitable_clip_zero_one (float in)
+static __inline float ibufmultitable_clip_zero_one(float in)
 {
 	in = in > 1.0 ? 1.0 : in;
 	in = in < 0.0 ? 0.0 : in;
@@ -261,7 +262,7 @@ __inline float ibufmultitable_clip_zero_one (float in)
 }
 
 
-t_int *ibufmultitable_perform (t_int *w)
+t_int *ibufmultitable_perform(t_int *w)
 {	
 	// ignore the copy of this function pointer (due to denormal fixer)
 	
@@ -273,8 +274,10 @@ t_int *ibufmultitable_perform (t_int *w)
 	long vec_size = w[5];
     t_ibufmultitable *x = (t_ibufmultitable *) w[6];
 	
+    // N.B. Here it is assumed that AH_SIntPtr is 32 bits wide, which is safe, because this function is only ever called when Max 5 is running (in 32 bits)
+
 	vSInt32 *offsets = *x->temp_mem;
-	long *l_offsets = (long *) offsets;
+	AH_SIntPtr *l_offsets = (AH_SIntPtr *) offsets;
 	vFloat *fracts =  (vFloat *) (l_offsets + vec_size);
 	vFloat *temp_fracts = fracts;
 	
@@ -286,12 +289,12 @@ t_int *ibufmultitable_perform (t_int *w)
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
@@ -303,7 +306,7 @@ t_int *ibufmultitable_perform (t_int *w)
 	vFloat offset_limit;
 	vFloat vec_f;
 	vSInt32 vec_i;
-	long on = 0;	
+	bool on = FALSE;
 	long i;
 		
 	temp[0] = (void *) out;
@@ -316,7 +319,7 @@ t_int *ibufmultitable_perform (t_int *w)
 	
 	// Check if the buffer is set / valid and get the length information
 	
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{		
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -332,7 +335,7 @@ t_int *ibufmultitable_perform (t_int *w)
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = float2vector((float) (length - (start_samp + 1)));
-			on = 1;
+			on = TRUE;
 		}
 	}
 	
@@ -340,46 +343,46 @@ t_int *ibufmultitable_perform (t_int *w)
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
+		ibuffer_increment_inuse(buffer_pointer);
 		
 		for (i = 0; i < vec_size >> 3; i++)
 		{
-			vec_f = F32_VEC_MUL_OP (length_mult, F32_VEC_MIN_OP (One, F32_VEC_MAX_OP (Zero, *in++)));
-			vec_f = F32_VEC_MIN_OP (offset_limit, F32_VEC_MAX_OP (Zero, F32_VEC_ADD_OP(vec_f, *offset_in++)));
-			vec_i = I32_VEC_FROM_F32_TRUNC (vec_f);
-			*temp_fracts++ = F32_VEC_SUB_OP (vec_f, F32_VEC_FROM_I32(vec_i));
+			vec_f = F32_VEC_MUL_OP(length_mult, F32_VEC_MIN_OP(One, F32_VEC_MAX_OP(Zero, *in++)));
+			vec_f = F32_VEC_MIN_OP(offset_limit, F32_VEC_MAX_OP(Zero, F32_VEC_ADD_OP(vec_f, *offset_in++)));
+			vec_i = I32_VEC_FROM_F32_TRUNC(vec_f);
+			*temp_fracts++ = F32_VEC_SUB_OP(vec_f, F32_VEC_FROM_I32(vec_i));
 			*offsets++ = vec_i;
 			
-			vec_f = F32_VEC_MUL_OP (length_mult, F32_VEC_MIN_OP (One, F32_VEC_MAX_OP (Zero, *in++)));
-			vec_f = F32_VEC_MIN_OP (offset_limit, F32_VEC_MAX_OP (Zero, F32_VEC_ADD_OP(vec_f, *offset_in++)));
-			vec_i = I32_VEC_FROM_F32_TRUNC (vec_f);
-			*temp_fracts++ = F32_VEC_SUB_OP (vec_f, F32_VEC_FROM_I32(vec_i));
+			vec_f = F32_VEC_MUL_OP(length_mult, F32_VEC_MIN_OP(One, F32_VEC_MAX_OP(Zero, *in++)));
+			vec_f = F32_VEC_MIN_OP(offset_limit, F32_VEC_MAX_OP(Zero, F32_VEC_ADD_OP(vec_f, *offset_in++)));
+			vec_i = I32_VEC_FROM_F32_TRUNC(vec_f);
+			*temp_fracts++ = F32_VEC_SUB_OP(vec_f, F32_VEC_FROM_I32(vec_i));
 			*offsets++ = vec_i;
 		}
 		
 		// Preprocess ready to use with the routines below
 		
-		ibuffer_preprocess_offsets (l_offsets, vec_size, n_chans, format);
+		ibuffer_preprocess_offsets(l_offsets, vec_size, n_chans, format);
 		
 		// Get samples and interpolate as relevant
 		
 		switch (interp_mode)
 		{
 			case INTERP_TYPE_LIN:
-				ibuffer_float_samps_simd_linear (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_linear(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_BSPLINE:
-				ibuffer_float_samps_simd_cubic_bspline (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_bspline(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_HERMITE:
-				ibuffer_float_samps_simd_cubic_hermite (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_hermite(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 			case INTERP_TYPE_CUBIC_LAGRANGE:
-				ibuffer_float_samps_simd_cubic_lagrange (ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
+				ibuffer_float_samps_simd_cubic_lagrange(ibuffer_offset (samps, start_samp, n_chans, format), out, l_offsets, fracts, temp, vec_size, n_chans, chan, format, 1.f);
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -393,7 +396,7 @@ bail:
 }
 
 
-t_int *ibufmultitable_perform_small (t_int *w)
+t_int *ibufmultitable_perform_small(t_int *w)
 {	
 	// Ignore the copy of this function pointer (due to denormal fixer)
 	
@@ -405,7 +408,7 @@ t_int *ibufmultitable_perform_small (t_int *w)
 	long vec_size = w[5];
     t_ibufmultitable *x = (t_ibufmultitable *) w[6];
 		
-	long *offsets = (long *) *x->temp_mem;
+	AH_SIntPtr *offsets = (AH_SIntPtr *) *x->temp_mem;
 	float *fracts =  (float *) (offsets + vec_size);
 	
 	// Standard ibuffer variables
@@ -414,21 +417,21 @@ t_int *ibufmultitable_perform_small (t_int *w)
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
 	// Local variables
 	
 	float length_mult, f_temp;
-	long offset_limit = 0;
-	long o_temp;
-	long on = 0;	
+	float offset_limit = 0;
+	AH_SIntPtr o_temp;
+	bool on = FALSE;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -436,7 +439,7 @@ t_int *ibufmultitable_perform_small (t_int *w)
 	
 	// Check if the buffer is set / valid and get the length information
 	
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{		
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -452,7 +455,7 @@ t_int *ibufmultitable_perform_small (t_int *w)
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = (float) (length - (start_samp + 1));
-			on = 1;
+			on = TRUE;
 		}
 	}
 	
@@ -460,18 +463,18 @@ t_int *ibufmultitable_perform_small (t_int *w)
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
-		samps = ibuffer_offset (samps, start_samp, n_chans, format);
+		ibuffer_increment_inuse(buffer_pointer);
+		samps = ibuffer_offset(samps, start_samp, n_chans, format);
 		
 		// Calculate offsets and fracts
 		
 		for (i = 0; i < vec_size; i++)
 		{
-			f_temp = length_mult * ibufmultitable_clip_zero_one64(*in++);
+			f_temp = length_mult * ibufmultitable_clip_zero_one(*in++);
 			f_temp += *offset_in++;
 			f_temp = (f_temp > offset_limit) ? offset_limit : f_temp;		
 			f_temp = f_temp < 0 ? 0 : f_temp;
-			o_temp = (long) f_temp;
+			o_temp = (AH_SIntPtr) f_temp;
 			offsets[i] = o_temp;
 			fracts[i] = f_temp - (float) o_temp;
 		}
@@ -497,7 +500,7 @@ t_int *ibufmultitable_perform_small (t_int *w)
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -513,16 +516,16 @@ bail:
 
 void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count)
 {	
-	long mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(long));
+	t_ptr_uint mem_size = sp[0]->s_n * (4 * sizeof(float) + sizeof(AH_SIntPtr));
 	
 	// Try to access dynamicdsp~ host tempory memory
 	
 	ALIGNED_FREE(x->default_mem);
 	
-	if (!Dynamic_Temp_Mem_Resize (x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
-		x->default_mem = ALIGNED_MALLOC (mem_size);
+	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size))
+		x->default_mem = ALIGNED_MALLOC(mem_size);
 	
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 	
@@ -540,7 +543,7 @@ void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 
-__inline double ibufmultitable_clip_zero_one64 (double in)
+static __inline double ibufmultitable_clip_zero_one64(double in)
 {
 	in = in > 1.0 ? 1.0 : in;
 	in = in < 0.0 ? 0.0 : in;
@@ -551,9 +554,13 @@ __inline double ibufmultitable_clip_zero_one64 (double in)
 
 #ifdef VECTOR_F64_128BIT
 
-// FIX N.B. Limits only valid for a start samp of 0..... also offset could be negative!!!
+#ifdef AH_64BIT
+typedef vSInt64 vOffsetType;
+#else
+typedef vSInt32 vOffsetType;
+#endif
 
-void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {		
 	// Set pointers
 	
@@ -563,8 +570,8 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 	
 	vDouble *fracts = *x->temp_mem;
 	vDouble *temp_fracts = fracts;
-	vSInt32 *offsets = (vSInt32 *) (fracts + (vec_size >> 1));
-	long *l_offsets = (long *) offsets;
+	vOffsetType *offsets = (vOffsetType *) (fracts + (vec_size >> 1));
+	AH_SIntPtr *l_offsets = (AH_SIntPtr *) offsets;
 	
 	void *temp[4];
 	
@@ -574,12 +581,12 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
@@ -589,9 +596,12 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 	vDouble Zero = double2vector(0.0);
 	vDouble offset_limit;
 	vDouble length_mult;
-	vDouble vec_f1;
-	vSInt32 vec_i1, vec_i2;
-	long on = 0;	
+    vDouble vec_f1;
+#ifndef AH_64BIT
+    vSInt32 vec_i1;
+    vSInt32 vec_i2;
+#endif
+	bool on = FALSE;
 	long i;
 		
 	temp[0] = (void *) (out + (vec_size >> 2));
@@ -604,7 +614,7 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 	
 	// Check if the buffer is set / valid and get the length information
 	
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{		
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -620,7 +630,7 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = double2vector((double) (length - (start_samp + 1)));
-			on = 1;
+			on = TRUE;
 		}
 	}
 	
@@ -630,24 +640,32 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 	{
 		ibuffer_increment_inuse (buffer_pointer);
 		
-		for (i = 0; i < vec_size >> 2; i++)
+#ifdef AH_64BIT
+		for (i = 0; i < vec_size >> 1; i++)
 		{
-			vec_f1 = F64_VEC_MUL_OP (length_mult, F64_VEC_MIN_OP (One, F64_VEC_MAX_OP (Zero, *in++)));
-			vec_f1 = F64_VEC_MIN_OP (offset_limit, F64_VEC_MAX_OP (Zero, F64_VEC_ADD_OP(vec_f1, *offset_in++)));
-			vec_i1 = I32_VEC_FROM_F64_TRUNC (vec_f1);
-			*temp_fracts++ = F64_VEC_SUB_OP (vec_f1, F64_VEC_FROM_I32(vec_i1));
-
-			vec_f1 = F64_VEC_MUL_OP (length_mult, F64_VEC_MIN_OP (One, F64_VEC_MAX_OP (Zero, *in++)));
-			vec_f1 = F64_VEC_MIN_OP (offset_limit, F64_VEC_MAX_OP (Zero, F64_VEC_ADD_OP(vec_f1, *offset_in++)));
-			vec_i2 = I32_VEC_FROM_F64_TRUNC (vec_f1);
-			*temp_fracts++ = F64_VEC_SUB_OP (vec_f1, F64_VEC_FROM_I32(vec_i2));
-			
-			*offsets++ = I32_VEC_OR_OP (vec_i1, I32_VEC_SHUFFLE_OP (vec_i2, 0x4E));
+			vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
+			vec_f1 = F64_VEC_MIN_OP(offset_limit, F64_VEC_MAX_OP(Zero, F64_VEC_ADD_OP(vec_f1, *offset_in++)));
+            F64_VEC_SPLIT_I64_F64(vec_f1, offsets++, temp_fracts++);
 		}
-		
+#else
+        for (i = 0; i < vec_size >> 2; i++)
+        {
+            vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
+            vec_f1 = F64_VEC_MIN_OP(offset_limit, F64_VEC_MAX_OP(Zero, F64_VEC_ADD_OP(vec_f1, *offset_in++)));
+            vec_i1 = I32_VEC_FROM_F64_TRUNC(vec_f1);
+            *temp_fracts++ = F64_VEC_SUB_OP(vec_f1, F64_VEC_FROM_I32(vec_i1));
+            
+            vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
+            vec_f1 = F64_VEC_MIN_OP(offset_limit, F64_VEC_MAX_OP(Zero, F64_VEC_ADD_OP(vec_f1, *offset_in++)));
+            vec_i2 = I32_VEC_FROM_F64_TRUNC(vec_f1);
+            *temp_fracts++ = F64_VEC_SUB_OP(vec_f1, F64_VEC_FROM_I32(vec_i2));
+            
+            *offsets++ = I32_VEC_OR_OP(vec_i1, I32_VEC_SHUFFLE(vec_i2, 0x4E));
+        }
+#endif
 		// Preprocess ready to use with the routines below
 		
-		ibuffer_preprocess_offsets (l_offsets, vec_size, n_chans, format);
+		ibuffer_preprocess_offsets(l_offsets, vec_size, n_chans, format);
 		
 		// Get samples and interpolate as relevant
 		
@@ -667,7 +685,7 @@ void ibufmultitable_perform64 (t_ibufmultitable *x, t_object *dsp64, double **in
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -686,7 +704,7 @@ void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins
 #endif
 
 
-void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufmultitable_perform_small64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
@@ -694,7 +712,7 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 	double *offset_in = ins[1];
 	double *out = outs[0];
 	
-	long *offsets = (long *) *x->temp_mem;
+	AH_SIntPtr *offsets = (AH_SIntPtr *) *x->temp_mem;
 	double *fracts =  (double *) (offsets + vec_size);
 	
 	// Standard ibuffer variables
@@ -703,12 +721,12 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 	void *samps = 0;
 	long format = -1;
 	long n_chans = 0;
-	long length = 0;
+	AH_SIntPtr length = 0;
 	
 	// Object variables
 	
-	long start_samp = x->start_samp;
-	long end_samp = x->end_samp;
+	AH_SIntPtr start_samp = x->start_samp;
+	AH_SIntPtr end_samp = x->end_samp;
 	long chan = x->chan - 1;
 	long interp_mode = x->interp_mode;
 	
@@ -716,8 +734,8 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 
 	double offset_limit = 0;
 	double length_mult, f_temp;
-	long o_temp;
-	long on = 0;	
+	AH_SIntPtr o_temp;
+	bool on = FALSE;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -725,7 +743,7 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 	
 	// Check if the buffer is set / valid and get the length information
 	
-	if (buffer_pointer && ibuffer_info (buffer_pointer, &samps, &length, &n_chans, &format))
+	if (buffer_pointer && ibuffer_info(buffer_pointer, &samps, &length, &n_chans, &format))
 	{
 		if (start_samp > length - 1) 
 			start_samp = length - 1; 
@@ -741,7 +759,7 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = (double) (length - (start_samp + 1));
-			on = 1;
+			on = TRUE;
 		}
 	}
 	
@@ -749,8 +767,8 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 	
 	if (on)
 	{
-		ibuffer_increment_inuse (buffer_pointer);
-		samps = ibuffer_offset (samps, start_samp, n_chans, format);
+		ibuffer_increment_inuse(buffer_pointer);
+		samps = ibuffer_offset(samps, start_samp, n_chans, format);
 		
 		// Calculate offsets and fracts
 		
@@ -760,7 +778,7 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 			f_temp += *offset_in++;
 			f_temp = (f_temp > offset_limit) ? offset_limit : f_temp;		
 			f_temp = f_temp < 0.0 ? 0.0 : f_temp;
-			o_temp = (long) f_temp;
+			o_temp = (AH_SIntPtr) f_temp;
 			offsets[i] = o_temp;
 			fracts[i] = f_temp - (double) o_temp;
 		}
@@ -786,7 +804,7 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 				break;
 		}
 		
-		ibuffer_decrement_inuse (buffer_pointer);
+		ibuffer_decrement_inuse(buffer_pointer);
 	}
 	else
 	{		
@@ -796,18 +814,18 @@ void ibufmultitable_perform_small64 (t_ibufmultitable *x, t_object *dsp64, doubl
 }
 
 
-void ibufmultitable_dsp64 (t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {	
-	long mem_size = maxvectorsize * (3 * sizeof(float) + sizeof(double) + sizeof(long));
+	t_ptr_uint mem_size = maxvectorsize * (3 * sizeof(float) + sizeof(double) + sizeof(AH_SIntPtr));
 	
 	// Try to access dynamicdsp~ host tempory memory
 	
 	ALIGNED_FREE(x->default_mem);
 	
-	if (!Dynamic_Temp_Mem_Resize (x->dynamicdsp_parent, x->dynamicdsp_index, mem_size)) 
-		x->default_mem = ALIGNED_MALLOC (mem_size);
+	if (!Dynamic_Temp_Mem_Resize(x->dynamicdsp_parent, x->dynamicdsp_index, mem_size))
+		x->default_mem = ALIGNED_MALLOC(mem_size);
 	
-	x->temp_mem = Dynamic_Get_TempMem (x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
+	x->temp_mem = Dynamic_Get_Temp_Mem(x->dynamicdsp_parent, x->dynamicdsp_index, &x->default_mem);
 	
 	// Set buffer again in case it is no longer valid / extant
 	

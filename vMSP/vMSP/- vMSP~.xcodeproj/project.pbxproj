@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		B8E493171095A3C500A88A63 /* All Finished */ = {
+		B8E493171095A3C500A88A63 /* vMSP objects */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = B8E493431095A43200A88A63 /* Build configuration list for PBXAggregateTarget "All Finished" */;
+			buildConfigurationList = B8E493431095A43200A88A63 /* Build configuration list for PBXAggregateTarget "vMSP objects" */;
 			buildPhases = (
 			);
 			dependencies = (
@@ -49,80 +49,66 @@
 				B8BFF9A010AED1DD008EB5B2 /* PBXTargetDependency */,
 				B8BFF9A210AED1DD008EB5B2 /* PBXTargetDependency */,
 			);
-			name = "All Finished";
+			name = "vMSP objects";
 			productName = All;
 		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		0F5B62030919440900A62EB9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		0FF3254009473DCC00B01934 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFF98210AED1BE008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFF98310AED1BE008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFF99310AED1C5008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFF99410AED1C5008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.c */; };
 		B8BFF9D410AED239008EB5B2 /* vminimum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.c */; };
 		B8BFFA8A10AEEE18008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFA9010AEEE18008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFA9110AEEE18008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFA9C10AEEE1C008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAA210AEEE1C008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFAA310AEEE1C008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAAE10AEEE1F008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAB410AEEE1F008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFAB510AEEE1F008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAC010AEEE21008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAC610AEEE21008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFAC710AEEE21008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAD210AEEE62008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAD810AEEE62008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFAD910AEEE62008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB0210AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB0810AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB0910AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB1410AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB1A10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB1B10AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB2610AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB2C10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB2D10AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB3810AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB3E10AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB3F10AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB4A10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB5010AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB5110AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB5C10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB6210AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8BFFB6310AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.c */; };
 		B8BFFB9610AEF01E008EB5B2 /* vsinh~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9510AEF01E008EB5B2 /* vsinh~.c */; };
@@ -137,7 +123,6 @@
 		B8BFFBC610AEF08B008EB5B2 /* vtanx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC510AEF08B008EB5B2 /* vtanx~.c */; };
 		B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E3936E1095B8640081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E3936F1095B8640081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E3937E1095B8990081D095 /* vnotequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3937D1095B8990081D095 /* vnotequals~.c */; };
 		B8E393861095B8C10081D095 /* vequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492EE1095A30E00A88A63 /* vequals~.c */; };
@@ -145,29 +130,24 @@
 		B8E395611096138D0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395661096138D0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E395671096138D0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E395681096138D0081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39573109613900081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39578109613900081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E39579109613900081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E3957A109613900081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395A6109614350081D095 /* vabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E39595109613C90081D095 /* vabs~.c */; };
 		B8E395A71096143B0081D095 /* vcosx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3959A109613F40081D095 /* vcosx~.c */; };
 		B8E395ED109616AB0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E395F3109616AB0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E395F4109616AB0081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395FF109616B20081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39604109616B20081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E39605109616B20081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E39606109616B20081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39616109616ED0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E3961C109616ED0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E3961D109616ED0081D095 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39655109617FB0081D095 /* vlog~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.c */; };
 		B8E39656109618040081D095 /* vsqrt~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962D1096173F0081D095 /* vsqrt~.c */; };
@@ -175,44 +155,34 @@
 		B8E492E31095A2EA00A88A63 /* vtimes~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E21095A2EA00A88A63 /* vtimes~.c */; };
 		B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E492FA1095A32500A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E492FB1095A32500A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E4930B1095A32800A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E4930C1095A32800A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E493A91095A68400A88A63 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494361095AB2B00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E494371095AB2B00A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494471095AB2F00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E494481095AB2F00A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494581095AB3200A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E494591095AB3200A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494691095AB3700A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E4946A1095AB3700A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E4947A1095AB3C00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E4947B1095AB3C00A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E4948B1095AB4200A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E4948C1095AB4200A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E4949C1095AB4500A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E4949D1095AB4500A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494AD1095AB4800A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8E494AE1095AB4800A88A63 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4954A1095AD4600A88A63 /* vdiv~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E493BF1095A73900A88A63 /* vdiv~.c */; };
 		B8E4954B1095AD4F00A88A63 /* vrdiv~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E493EB1095AA2400A88A63 /* vrdiv~.c */; };
@@ -225,24 +195,19 @@
 		B8E8E6401098B8EA00C566B2 /* vmtof~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.c */; };
 		B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE3F8B1098759000780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8FE3F8C1098759000780AF9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE3FA1109875BE00780AF9 /* vpow~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE3FA0109875BE00780AF9 /* vpow~.c */; };
 		B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE40801098795600780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8FE40811098795600780AF9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE40911098795A00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8FE40921098795A00780AF9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE40A21098795D00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8FE40A31098795D00780AF9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE40B31098795F00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
-		B8FE40B41098795F00780AF9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAPI.framework */; };
 		B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE412010987B2000780AF9 /* vatodb~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40681098790500780AF9 /* vatodb~.c */; };
 		B8FE412110987B2900780AF9 /* vdbtoa~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40691098791600780AF9 /* vdbtoa~.c */; };
@@ -499,8 +464,7 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<absolute>"; };
-		0FF3253F09473DCC00B01934 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
+		0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<absolute>"; };
 		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B887FAFA1838D67200C83570 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
@@ -585,7 +549,6 @@
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
 				0F5B62030919440900A62EB9 /* MaxAudioAPI.framework in Frameworks */,
-				0FF3254009473DCC00B01934 /* MaxAPI.framework in Frameworks */,
 				B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -596,7 +559,6 @@
 			files = (
 				B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFF98210AED1BE008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFF98310AED1BE008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -607,7 +569,6 @@
 			files = (
 				B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFF99310AED1C5008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFF99410AED1C5008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -618,7 +579,6 @@
 			files = (
 				B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFA9010AEEE18008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFA9110AEEE18008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -629,7 +589,6 @@
 			files = (
 				B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFAA210AEEE1C008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFAA310AEEE1C008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -640,7 +599,6 @@
 			files = (
 				B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFAB410AEEE1F008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFAB510AEEE1F008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -651,7 +609,6 @@
 			files = (
 				B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFAC610AEEE21008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFAC710AEEE21008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -662,7 +619,6 @@
 			files = (
 				B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFAD810AEEE62008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFAD910AEEE62008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -673,7 +629,6 @@
 			files = (
 				B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB0810AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB0910AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -684,7 +639,6 @@
 			files = (
 				B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB1A10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB1B10AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -695,7 +649,6 @@
 			files = (
 				B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB2C10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB2D10AEEE71008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,7 +659,6 @@
 			files = (
 				B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB3E10AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB3F10AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -717,7 +669,6 @@
 			files = (
 				B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB5010AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB5110AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -728,7 +679,6 @@
 			files = (
 				B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
 				B8BFFB6210AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
-				B8BFFB6310AEEE77008EB5B2 /* MaxAPI.framework in Frameworks */,
 				B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -739,7 +689,6 @@
 			files = (
 				B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */,
 				B8E3936E1095B8640081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E3936F1095B8640081D095 /* MaxAPI.framework in Frameworks */,
 				B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -750,7 +699,6 @@
 			files = (
 				B8E395661096138D0081D095 /* Carbon.framework in Frameworks */,
 				B8E395671096138D0081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E395681096138D0081D095 /* MaxAPI.framework in Frameworks */,
 				B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -761,7 +709,6 @@
 			files = (
 				B8E39578109613900081D095 /* Carbon.framework in Frameworks */,
 				B8E39579109613900081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E3957A109613900081D095 /* MaxAPI.framework in Frameworks */,
 				B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -772,7 +719,6 @@
 			files = (
 				B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */,
 				B8E395F3109616AB0081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E395F4109616AB0081D095 /* MaxAPI.framework in Frameworks */,
 				B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -783,7 +729,6 @@
 			files = (
 				B8E39604109616B20081D095 /* Carbon.framework in Frameworks */,
 				B8E39605109616B20081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E39606109616B20081D095 /* MaxAPI.framework in Frameworks */,
 				B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -794,7 +739,6 @@
 			files = (
 				B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */,
 				B8E3961C109616ED0081D095 /* MaxAudioAPI.framework in Frameworks */,
-				B8E3961D109616ED0081D095 /* MaxAPI.framework in Frameworks */,
 				B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -805,7 +749,6 @@
 			files = (
 				B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */,
 				B8E492FA1095A32500A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E492FB1095A32500A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -816,7 +759,6 @@
 			files = (
 				B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */,
 				B8E4930B1095A32800A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E4930C1095A32800A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -827,7 +769,6 @@
 			files = (
 				B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */,
 				B8E494361095AB2B00A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E494371095AB2B00A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -838,7 +779,6 @@
 			files = (
 				B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */,
 				B8E494471095AB2F00A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E494481095AB2F00A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -849,7 +789,6 @@
 			files = (
 				B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */,
 				B8E494581095AB3200A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E494591095AB3200A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -860,7 +799,6 @@
 			files = (
 				B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */,
 				B8E494691095AB3700A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E4946A1095AB3700A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,7 +809,6 @@
 			files = (
 				B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */,
 				B8E4947A1095AB3C00A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E4947B1095AB3C00A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -882,7 +819,6 @@
 			files = (
 				B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */,
 				B8E4948B1095AB4200A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E4948C1095AB4200A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -893,7 +829,6 @@
 			files = (
 				B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */,
 				B8E4949C1095AB4500A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E4949D1095AB4500A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -904,7 +839,6 @@
 			files = (
 				B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */,
 				B8E494AD1095AB4800A88A63 /* MaxAudioAPI.framework in Frameworks */,
-				B8E494AE1095AB4800A88A63 /* MaxAPI.framework in Frameworks */,
 				B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -915,7 +849,6 @@
 			files = (
 				B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */,
 				B8FE3F8B1098759000780AF9 /* MaxAudioAPI.framework in Frameworks */,
-				B8FE3F8C1098759000780AF9 /* MaxAPI.framework in Frameworks */,
 				B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -926,7 +859,6 @@
 			files = (
 				B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */,
 				B8FE40801098795600780AF9 /* MaxAudioAPI.framework in Frameworks */,
-				B8FE40811098795600780AF9 /* MaxAPI.framework in Frameworks */,
 				B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -937,7 +869,6 @@
 			files = (
 				B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */,
 				B8FE40911098795A00780AF9 /* MaxAudioAPI.framework in Frameworks */,
-				B8FE40921098795A00780AF9 /* MaxAPI.framework in Frameworks */,
 				B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -948,7 +879,6 @@
 			files = (
 				B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */,
 				B8FE40A21098795D00780AF9 /* MaxAudioAPI.framework in Frameworks */,
-				B8FE40A31098795D00780AF9 /* MaxAPI.framework in Frameworks */,
 				B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -959,7 +889,6 @@
 			files = (
 				B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */,
 				B8FE40B31098795F00780AF9 /* MaxAudioAPI.framework in Frameworks */,
-				B8FE40B41098795F00780AF9 /* MaxAPI.framework in Frameworks */,
 				B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -983,9 +912,8 @@
 			isa = PBXGroup;
 			children = (
 				B10347B90AAAE41500981DE1 /* Accelerate.framework */,
-				0FF3253F09473DCC00B01934 /* MaxAPI.framework */,
-				0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
+				0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -2108,7 +2036,7 @@
 				B8BFFA9A10AEEE1C008EB5B2 /* vtanx~ */,
 				8D01CCC60486CAD60068D4B7 /* vtimes~ */,
 				B8E39614109616ED0081D095 /* vtrunc~ */,
-				B8E493171095A3C500A88A63 /* All Finished */,
+				B8E493171095A3C500A88A63 /* vMSP objects */,
 			);
 		};
 /* End PBXProject section */
@@ -3074,46 +3002,24 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 			};
 			name = Default;
 		};
@@ -3121,7 +3027,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Development;
 		};
@@ -3129,7 +3034,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Deployment;
 		};
@@ -3137,1985 +3041,942 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Default;
 		};
 		B8BFF98710AED1BE008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFF98810AED1BE008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFF98910AED1BE008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFF99810AED1C5008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFF99910AED1C5008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFF99A10AED1C5008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFA9510AEEE18008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFA9610AEEE18008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFA9710AEEE18008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFAA710AEEE1C008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFAA810AEEE1C008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFAA910AEEE1C008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFAB910AEEE1F008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFABA10AEEE1F008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFABB10AEEE1F008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFACB10AEEE21008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFACC10AEEE21008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFACD10AEEE21008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFADD10AEEE62008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFADE10AEEE62008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFADF10AEEE62008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB0D10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB0E10AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB0F10AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB1F10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB2010AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB2110AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB3110AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB3210AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB3310AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB4310AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB4410AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB4510AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB5510AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB5610AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB5710AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8BFFB6710AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8BFFB6810AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8BFFB6910AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E393731095B8640081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E393741095B8640081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E393751095B8640081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E3956C1096138D0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E3956D1096138D0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E3956E1096138D0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E3957E109613900081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = YES;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E3957F109613900081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = YES;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E39580109613900081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = YES;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E395F8109616AB0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E395F9109616AB0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E395FA109616AB0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E3960A109616B20081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E3960B109616B20081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E3960C109616B20081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E39621109616ED0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E39622109616ED0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E39623109616ED0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E492FF1095A32500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E493001095A32500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E493011095A32500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E493101095A32800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E493111095A32800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E493121095A32800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E493441095A43200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = All;
 			};
 			name = Development;
 		};
 		B8E493451095A43200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				PRODUCT_NAME = All;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E493461095A43200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = All;
 			};
 			name = Default;
 		};
 		B8E4943B1095AB2B00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4943C1095AB2B00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E4943D1095AB2B00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E4944C1095AB2F00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4944D1095AB2F00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E4944E1095AB2F00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E4945D1095AB3200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4945E1095AB3200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E4945F1095AB3200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E4946E1095AB3700A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E4946F1095AB3700A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E494701095AB3700A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E4947F1095AB3C00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E494801095AB3C00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E494811095AB3C00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E494901095AB4200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E494911095AB4200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E494921095AB4200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
 			};
 			name = Default;
 		};
 		B8E494A11095AB4500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E494A21095AB4500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E494A31095AB4500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8E494B21095AB4800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8E494B31095AB4800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8E494B41095AB4800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8FE3F901098759000780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8FE3F911098759000780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8FE3F921098759000780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8FE40851098795600780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8FE40861098795600780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8FE40871098795600780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8FE40961098795A00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8FE40971098795A00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8FE40981098795A00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8FE40A71098795D00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8FE40A81098795D00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8FE40A91098795D00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
 		B8FE40B81098795F00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B8FE40B91098795F00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B8FE40BA1098795F00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_UNROLL_LOOPS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
 			};
 			name = Default;
 		};
@@ -5352,7 +4213,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		B8E493431095A43200A88A63 /* Build configuration list for PBXAggregateTarget "All Finished" */ = {
+		B8E493431095A43200A88A63 /* Build configuration list for PBXAggregateTarget "vMSP objects" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8E493441095A43200A88A63 /* Development */,

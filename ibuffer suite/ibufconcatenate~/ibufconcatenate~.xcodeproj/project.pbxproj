@@ -7,41 +7,32 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		B88E3A9711CE72A000FD3E96 /* All */ = {
+		B88E3A9711CE72A000FD3E96 /* ibufconcatenate objects */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "All" */;
+			buildConfigurationList = B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "ibufconcatenate objects" */;
 			buildPhases = (
 			);
 			dependencies = (
 				B88E3A9C11CE72A600FD3E96 /* PBXTargetDependency */,
-				B88E3A9E11CE72A800FD3E96 /* PBXTargetDependency */,
 				B88E3AA011CE72A900FD3E96 /* PBXTargetDependency */,
 			);
-			name = All;
+			name = "ibufconcatenate objects";
 			productName = All;
 		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 		0FF3254009473DCC00B01934 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B8691F5E11CE77540083DB47 /* ibufconcatenate_attach~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B8F84A11CE4FE300D06092 /* ibufconcatenate_attach~.c */; };
 		B8691F5F11CE77610083DB47 /* ibufconcatedrive~.c in Sources */ = {isa = PBXBuildFile; fileRef = B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */; };
-		B88E3A4E11CE709F00FD3E96 /* ibufconcatenate_attach~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_attach~.h */; };
-		B88E3A5511CE709F00FD3E96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B88E3A5611CE709F00FD3E96 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
-		B88E3A5711CE709F00FD3E96 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */; };
-		B88E3A5811CE709F00FD3E96 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B88E3A7F11CE729300FD3E96 /* ibufconcatenate_attach~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_attach~.h */; };
+		B88E3A7F11CE729300FD3E96 /* ibufconcatenate_info~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */; };
 		B88E3A8511CE729300FD3E96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B88E3A8611CE729300FD3E96 /* MaxAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAPI.framework */; };
 		B88E3A8711CE729300FD3E96 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */; };
 		B88E3A8811CE729300FD3E96 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
 		B89EF5DB10EB78D100D86409 /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B89EF5DA10EB78D100D86409 /* ibuffer_access.c */; };
 		B8B8F83F11CE46F800D06092 /* ibufconcatenate~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */; };
-		B8B8F85C11CE511700D06092 /* ibufconcatenate_attach~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_attach~.h */; };
+		B8B8F85C11CE511700D06092 /* ibufconcatenate_info~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,13 +42,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "ibufconcatenate~";
-		};
-		B88E3A9D11CE72A800FD3E96 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B88E3A4C11CE709F00FD3E96;
-			remoteInfo = "ibufconcatenate_attach~";
 		};
 		B88E3A9F11CE72A900FD3E96 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -70,18 +54,15 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/max-includes/MaxAPI.framework"; sourceTree = "<absolute>"; };
-		0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max4_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<absolute>"; };
+		0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* ibufconcatenate~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatenate~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B88E3A5E11CE709F00FD3E96 /* ibufconcatenate_attach~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatenate_attach~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufconcatedrive~.c"; sourceTree = "<group>"; };
 		B88E3A8E11CE729300FD3E96 /* ibufconcatedrive~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatedrive~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = AH_MaxMSP4.xcconfig; path = ../../AH_MaxMSP4.xcconfig; sourceTree = SOURCE_ROOT; };
+		B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B89EF5DA10EB78D100D86409 /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
 		B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufconcatenate~.c"; sourceTree = "<group>"; };
-		B8B8F84A11CE4FE300D06092 /* ibufconcatenate_attach~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufconcatenate_attach~.c"; sourceTree = "<group>"; };
-		B8B8F85B11CE511700D06092 /* ibufconcatenate_attach~.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ibufconcatenate_attach~.h"; sourceTree = "<group>"; };
+		B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ibufconcatenate_info~.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,20 +71,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				0F5B62030919440900A62EB9 /* MaxAPI.framework in Frameworks */,
 				0FF3254009473DCC00B01934 /* MaxAudioAPI.framework in Frameworks */,
 				B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B88E3A5411CE709F00FD3E96 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B88E3A5511CE709F00FD3E96 /* Carbon.framework in Frameworks */,
-				B88E3A5611CE709F00FD3E96 /* MaxAPI.framework in Frameworks */,
-				B88E3A5711CE709F00FD3E96 /* MaxAudioAPI.framework in Frameworks */,
-				B88E3A5811CE709F00FD3E96 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +81,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B88E3A8511CE729300FD3E96 /* Carbon.framework in Frameworks */,
-				B88E3A8611CE729300FD3E96 /* MaxAPI.framework in Frameworks */,
 				B88E3A8711CE729300FD3E96 /* MaxAudioAPI.framework in Frameworks */,
 				B88E3A8811CE729300FD3E96 /* Accelerate.framework in Frameworks */,
 			);
@@ -124,7 +92,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */,
+				B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -138,7 +106,6 @@
 			children = (
 				B1D996400A4BB03700CE1530 /* Accelerate.framework */,
 				0FF3253F09473DCC00B01934 /* MaxAudioAPI.framework */,
-				0F5B62020919440900A62EB9 /* MaxAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -154,10 +121,9 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */,
 				B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */,
 				B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */,
-				B8B8F85B11CE511700D06092 /* ibufconcatenate_attach~.h */,
-				B8B8F84A11CE4FE300D06092 /* ibufconcatenate_attach~.c */,
 				B89EF5DA10EB78D100D86409 /* ibuffer_access.c */,
 			);
 			name = Source;
@@ -167,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				B81F571D0D2422E0000D5E50 /* ibufconcatenate~.mxo */,
-				B88E3A5E11CE709F00FD3E96 /* ibufconcatenate_attach~.mxo */,
 				B88E3A8E11CE729300FD3E96 /* ibufconcatedrive~.mxo */,
 			);
 			name = Products;
@@ -180,15 +145,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8B8F85C11CE511700D06092 /* ibufconcatenate_attach~.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B88E3A4D11CE709F00FD3E96 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B88E3A4E11CE709F00FD3E96 /* ibufconcatenate_attach~.h in Headers */,
+				B8B8F85C11CE511700D06092 /* ibufconcatenate_info~.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,7 +153,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B88E3A7F11CE729300FD3E96 /* ibufconcatenate_attach~.h in Headers */,
+				B88E3A7F11CE729300FD3E96 /* ibufconcatenate_info~.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,26 +178,6 @@
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
 			productReference = B81F571D0D2422E0000D5E50 /* ibufconcatenate~.mxo */;
-			productType = "com.apple.product-type.bundle";
-		};
-		B88E3A4C11CE709F00FD3E96 /* ibufconcatenate_attach~ */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B88E3A5A11CE709F00FD3E96 /* Build configuration list for PBXNativeTarget "ibufconcatenate_attach~" */;
-			buildPhases = (
-				B88E3A4D11CE709F00FD3E96 /* Headers */,
-				B88E3A4F11CE709F00FD3E96 /* Resources */,
-				B88E3A5011CE709F00FD3E96 /* Sources */,
-				B88E3A5411CE709F00FD3E96 /* Frameworks */,
-				B88E3A5911CE709F00FD3E96 /* Rez */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "ibufconcatenate_attach~";
-			productInstallPath = "$(HOME)/Library/Bundles";
-			productName = MSPExternal;
-			productReference = B88E3A5E11CE709F00FD3E96 /* ibufconcatenate_attach~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B88E3A7D11CE729300FD3E96 /* ibufconcatedrive~ */ = {
@@ -285,22 +222,14 @@
 			projectRoot = "";
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* ibufconcatenate~ */,
-				B88E3A4C11CE709F00FD3E96 /* ibufconcatenate_attach~ */,
 				B88E3A7D11CE729300FD3E96 /* ibufconcatedrive~ */,
-				B88E3A9711CE72A000FD3E96 /* All */,
+				B88E3A9711CE72A000FD3E96 /* ibufconcatenate objects */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D01CCC90486CAD60068D4B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B88E3A4F11CE709F00FD3E96 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -318,13 +247,6 @@
 
 /* Begin PBXRezBuildPhase section */
 		8D01CCCF0486CAD60068D4B7 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B88E3A5911CE709F00FD3E96 /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -350,14 +272,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B88E3A5011CE709F00FD3E96 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B8691F5E11CE77540083DB47 /* ibufconcatenate_attach~.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B88E3A8111CE729300FD3E96 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -374,11 +288,6 @@
 			target = 8D01CCC60486CAD60068D4B7 /* ibufconcatenate~ */;
 			targetProxy = B88E3A9B11CE72A600FD3E96 /* PBXContainerItemProxy */;
 		};
-		B88E3A9E11CE72A800FD3E96 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B88E3A4C11CE709F00FD3E96 /* ibufconcatenate_attach~ */;
-			targetProxy = B88E3A9D11CE72A800FD3E96 /* PBXContainerItemProxy */;
-		};
 		B88E3AA011CE72A900FD3E96 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B88E3A7D11CE729300FD3E96 /* ibufconcatedrive~ */;
@@ -389,248 +298,97 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_REZFLAGS = "";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_REZFLAGS = "";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_REZFLAGS = "";
 			};
 			name = Default;
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Development;
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
 			};
 			name = Deployment;
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-			};
-			name = Default;
-		};
-		B88E3A5B11CE709F00FD3E96 /* Development */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
-				ZERO_LINK = YES;
-			};
-			name = Development;
-		};
-		B88E3A5C11CE709F00FD3E96 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
-			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		B88E3A5D11CE709F00FD3E96 /* Default */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
-			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 			};
 			name = Default;
 		};
 		B88E3A8B11CE729300FD3E96 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUGGING_SYMBOLS = YES;
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
 		B88E3A8C11CE729300FD3E96 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B88E3A8D11CE729300FD3E96 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* AH_MaxMSP4.xcconfig */;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DSTROOT = "$(PROJECT_DIR)";
-				GCC_ALTIVEC_EXTENSIONS = YES;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "/../../../sysbuild/$(CONFIGURATION)/Cycling '74/externals";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				SECTORDER_FLAGS = "";
 			};
 			name = Default;
 		};
 		B88E3A9811CE72A000FD3E96 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = All;
 			};
 			name = Development;
 		};
 		B88E3A9911CE72A000FD3E96 /* Deployment */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = All;
-				ZERO_LINK = NO;
 			};
 			name = Deployment;
 		};
 		B88E3A9A11CE72A000FD3E96 /* Default */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = All;
 			};
 			name = Default;
 		};
@@ -657,16 +415,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		B88E3A5A11CE709F00FD3E96 /* Build configuration list for PBXNativeTarget "ibufconcatenate_attach~" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B88E3A5B11CE709F00FD3E96 /* Development */,
-				B88E3A5C11CE709F00FD3E96 /* Deployment */,
-				B88E3A5D11CE709F00FD3E96 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
 		B88E3A8A11CE729300FD3E96 /* Build configuration list for PBXNativeTarget "ibufconcatedrive~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -677,7 +425,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "All" */ = {
+		B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "ibufconcatenate objects" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B88E3A9811CE72A000FD3E96 /* Development */,

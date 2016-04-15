@@ -39,12 +39,12 @@ void threadfilter_free(t_threadfilter *x);
 void threadfilter_int(t_threadfilter *x, t_atom_long value);
 void threadfilter_float(t_threadfilter *x, double value);
 void threadfilter_bang(t_threadfilter *x);
-void threadfilter_anything (t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv);
+void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv);
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("threadfilter", 
 							(method) threadfilter_new, 
@@ -54,12 +54,12 @@ int C74_EXPORT main (void)
 							0);
 	
 
-	class_addmethod (this_class, (method)threadfilter_int, "int", A_LONG, 0);
-	class_addmethod (this_class, (method)threadfilter_float, "float", A_FLOAT, 0);
-	class_addmethod (this_class, (method)threadfilter_bang, "bang", 0);
-	class_addmethod (this_class, (method)threadfilter_anything, "list", A_GIMME, 0);
-	class_addmethod (this_class, (method)threadfilter_anything, "anything", A_GIMME, 0);
-	class_addmethod (this_class, (method)threadfilter_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method)threadfilter_int, "int", A_LONG, 0);
+	class_addmethod(this_class, (method)threadfilter_float, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method)threadfilter_bang, "bang", 0);
+	class_addmethod(this_class, (method)threadfilter_anything, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method)threadfilter_anything, "anything", A_GIMME, 0);
+	class_addmethod(this_class, (method)threadfilter_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
 	 
@@ -76,14 +76,14 @@ void threadfilter_free(t_threadfilter *x)
 }
 
 
-void *threadfilter_new ()
+void *threadfilter_new()
 {
-    t_threadfilter *x = (t_threadfilter *) object_alloc (this_class);
+    t_threadfilter *x = (t_threadfilter *) object_alloc(this_class);
 	
 	x->message_out_hi = outlet_new(x, 0);
 	x->message_out_lo = outlet_new(x, 0);
 	
-    return (x);
+    return x;
 }
 
 
@@ -114,12 +114,12 @@ void threadfilter_bang(t_threadfilter *x)
 }
 
 
-void threadfilter_anything (t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
+void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (isr())
-		outlet_anything (x->message_out_hi, msg, argc, argv);
+		outlet_anything(x->message_out_hi, msg, argc, argv);
 	else
-		outlet_anything (x->message_out_lo, msg, argc, argv);
+		outlet_anything(x->message_out_lo, msg, argc, argv);
 }
 
 

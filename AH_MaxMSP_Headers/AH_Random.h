@@ -15,6 +15,7 @@
 #ifndef _AH_RANDOM_
 #define _AH_RANDOM_
 
+#include <AH_Types.h>
 
 // Include lower tail quantile for standard normal distribution function, adapted from http://home.online.no/~pjacklam/notes/invnorm/impl/sprouse/ltqnorm.c
 // This facilities faster generation of windowed gaussian numbers, which are slow for large deviations when using rejection sampling
@@ -39,71 +40,64 @@
 //	The RNG state is stored in a struct t_rand_gen, which *MUST* be defined here
 
 
-// The current implementation in use is the 1024 WELL RNG from http://www.iro.umontreal.ca/~panneton/WELLRNG.html
-// The memory requirement is 33 unsigned 32 bit integers
-//	Period length is 2^1024 - 1 which shold be more than adequate for most purposes
-// The follwing copyright and authorship notice applies only to this section of the file (down till the next three line comment block)
+// The current implementation in use is a complementary modulo with carry algorithm (proposed by George Marsaglia)
+// Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
+// See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm)
+
+// The memory requirement is currently 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE
+// The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
+
+// N.B. CMWC_LAG_SIZE must be a power of two
+// N.B. CMWC_A_VALUE should be a suitable value according to CMWC_LAG_SIZE
 
 
-/* ***************************************************************************** */
-/* Copyright:      Francois Panneton and Pierre L'Ecuyer, University of Montreal */
-/*                 Makoto Matsumoto, Hiroshima University                        */
-/* Notice:         This code can be used freely for personal, academic,          */
-/*                 or non-commercial purposes. For commercial purposes,          */
-/*                 please contact P. L'Ecuyer at: lecuyer@iro.UMontreal.ca       */
-/* ***************************************************************************** */
-
-#define M1 3
-#define M2 24
-#define M3 10
-
-#define MAT0POS(t,v) (v^(v>>t))
-#define MAT0NEG(t,v) (v^(v<<(-(t))))
-#define Identity(v) (v)
-
-#define V0            STATE[state_i                   ]
-#define VM1           STATE[(state_i+M1) & 0x0000001fU]
-#define VM2           STATE[(state_i+M2) & 0x0000001fU]
-#define VM3           STATE[(state_i+M3) & 0x0000001fU]
-#define VRm1          STATE[(state_i+31) & 0x0000001fU]
-#define newV0         STATE[(state_i+31) & 0x0000001fU]
-#define newV1         STATE[state_i                   ]
+#define CMWC_LAG_SIZE 32U
+#define CMWC_A_VALUE 987655670ULL
 
 
 typedef struct _rand_gen_
 {
-	unsigned int state_i;
-	unsigned int STATE[32];
+    AH_UInt32 increment;
+	AH_UInt32 carry;
+	AH_UInt32 STATE[CMWC_LAG_SIZE];
 
 }	t_rand_gen;
 
 
-void InitWELLRNG1024a (t_rand_gen *gen, unsigned int *init)
+void initCMWC (t_rand_gen *gen, AH_UInt32 *init)
 {
-	unsigned int *STATE		= gen->STATE;
-	int i;
+	gen->increment = (CMWC_LAG_SIZE - 1);
+    gen->carry = 123;
 	
-	gen->state_i = 0;
-	
-	for (i = 0; i < 32; i++)
-		STATE[i] = init[i];
+	for (long i = 0; i < CMWC_LAG_SIZE; i++)
+		gen->STATE[i] = init[i];
 }
 
 
-static __inline unsigned int WELLRNG1024a (t_rand_gen *gen)
+static __inline AH_UInt32 CMWC (t_rand_gen *gen)
 {
-	unsigned int *STATE		= gen->STATE;
-	unsigned int state_i	= gen->state_i;
-	
-	unsigned int z0    = VRm1;
-	unsigned int z1    = Identity(V0)       ^ MAT0POS (8, VM1);
-	unsigned int z2    = MAT0NEG (-19, VM2) ^ MAT0NEG(-14,VM3);
-	
-	newV1 = z1                 ^ z2; 
-	newV0 = MAT0NEG (-11,z0)   ^ MAT0NEG(-7,z1)    ^ MAT0NEG(-13,z2) ;
-	gen->state_i = state_i = (state_i + 31) & 0x0000001fU;
-	
-	return STATE[state_i];
+    AH_UInt32 i = gen->increment;
+    AH_UInt32 c = gen->carry;
+    AH_UInt32 x;
+
+    AH_UInt64 t;
+    
+    i = (i + 1) & (CMWC_LAG_SIZE - 1);
+    t = (AH_UInt64) CMWC_A_VALUE * gen->STATE[i] + c;
+    c = (t >> 32);
+    x = t + c;
+    
+    if (x < c)
+    {
+        x++;
+        c++;
+    }
+    
+    gen->STATE[i] = (0xFFFFFFFE - x);
+    gen->increment = i;
+    gen->carry = c;
+    
+	return gen->STATE[i];
 }
 
 
@@ -116,35 +110,59 @@ static __inline unsigned int WELLRNG1024a (t_rand_gen *gen)
 
 void rand_seed (t_rand_gen *gen)
 {
-	unsigned int seed[32];
-	long i;
+	AH_UInt32 seed[CMWC_LAG_SIZE];
 	
 #ifdef __APPLE__
-	for (i = 0; i < 32; i++)
+	for (long i = 0; i < CMWC_LAG_SIZE; i++)
 		seed[i] = arc4random();
 #else
 	HCRYPTPROV hProvider = 0;
-	const DWORD dwLength = 128;
+	const DWORD dwLength = 4 * CMWC_LAG_SIZE;
 	BYTE *pbBuffer = (BYTE *) seed;
 
 	if (!CryptAcquireContextW(&hProvider, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
 		return;
-		 
-	
-		 
+		  
 	CryptGenRandom(hProvider, dwLength, pbBuffer);
 	CryptReleaseContext(hProvider, 0);
 #endif
 	
-	InitWELLRNG1024a (gen, seed);// utime.lo);
+	initCMWC (gen, seed);
 }
 
 
 // Generate a single pseudo-random unsigned integer
 
-static __inline unsigned int rand_int (t_rand_gen *gen)
+static __inline AH_UInt32 rand_int (t_rand_gen *gen)
 {	
-	return WELLRNG1024a(gen);
+	return CMWC(gen);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////// The following routine provides an interface to retrieve a single using OS provided routines (for seeding etc.) /////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+static __inline AH_UInt32 rand_int_os()
+{
+    AH_UInt32 rand;
+    
+#ifdef __APPLE__
+    rand = arc4random();
+#else
+    HCRYPTPROV hProvider = 0;
+    const DWORD dwLength = 4;
+    BYTE *pbBuffer = (BYTE *) &rand;
+    
+    if (!CryptAcquireContextW(&hProvider, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
+        return 0;
+    
+    CryptGenRandom(hProvider, dwLength, pbBuffer);
+    CryptReleaseContext(hProvider, 0);
+#endif
+    
+    return rand;
 }
 
 
@@ -155,12 +173,12 @@ static __inline unsigned int rand_int (t_rand_gen *gen)
 
 #define CONVERT_DOUBLE 2.32830643653869628906e-10
 
-// return an unsigned 32 bit integer
+// Return an unsigned 32 bit integer
 
-static __inline unsigned int rand_int_n (t_rand_gen *gen, unsigned int n)
+static __inline AH_UInt32 rand_int_n (t_rand_gen *gen, AH_UInt32 n)
 {	
-	unsigned int used = n;
-	unsigned int  i;
+	AH_UInt32 used = n;
+	AH_UInt32 i;
 	
 	used |= used >> 1;
 	used |= used >> 2;
@@ -176,15 +194,15 @@ static __inline unsigned int rand_int_n (t_rand_gen *gen, unsigned int n)
 }
 
 
-// return an signed 32 bit integer in the range [lo, hi]
+// Return an signed 32 bit integer in the range [lo, hi]
 
-static __inline int rand_int_range (t_rand_gen *gen, int lo, int hi)
+static __inline AH_SInt32 rand_int_range (t_rand_gen *gen, AH_SInt32 lo, AH_SInt32 hi)
 {	
 	return lo + rand_int_n(gen, hi - lo);
 }
 
 
-// return a 32 bit random double in the range [0,1]
+// Return a 32 bit random double in the range [0,1]
 
 static __inline double rand_double (t_rand_gen *gen)
 {
@@ -192,7 +210,7 @@ static __inline double rand_double (t_rand_gen *gen)
 }
 
 
-// return a 32 bit random double in the range [0, n]
+// Return a 32 bit random double in the range [0, n]
 
 static __inline double rand_double_n (t_rand_gen *gen, double n)
 {	
@@ -200,7 +218,7 @@ static __inline double rand_double_n (t_rand_gen *gen, double n)
 }
 
 
-// return a 32 bit random double in the range [lo, hi]
+// Return a 32 bit random double in the range [lo, hi]
 
 static __inline double rand_double_range (t_rand_gen *gen, double lo, double hi)
 {	
@@ -231,7 +249,7 @@ static __inline double rand_gauss_basic (t_rand_gen *gen, double *ret_x, double 
 }
 
 
-// return a gaussian distribution double with given mean and dev
+// Return a gaussian distribution double with given mean and dev
 
 static __inline double rand_gauss (t_rand_gen *gen, double mean, double dev)
 {
@@ -242,7 +260,7 @@ static __inline double rand_gauss (t_rand_gen *gen, double mean, double dev)
 }
 
 
-// return a gaussian distribution double with given mean and dev and in the range [0, 1]
+// Return a gaussian distribution double with given mean and dev and in the range [0, 1]
 
 static __inline double rand_windgauss_bm (t_rand_gen *gen, double mean, double dev)
 {

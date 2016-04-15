@@ -61,11 +61,15 @@ static __inline float trunc_scalar_32(float in)
 
 static __inline double trunc_scalar_64(double in)
 {
+    // FIX - check this....
+    
 	t_uint64 abs_temp = (*(t_uint64 *) &in) & 0x7FFFFFFF;
 	double abs_double = *(double *) &abs_temp;
 	t_int64 trunc_temp = (t_int64) in;
 	return (abs_double < largest_int_64) ? (double) trunc_temp : in;
 }
+
+// FIX - move to header.
 
 static __inline vFloat trunc_vec_32(vFloat in)
 {
@@ -74,8 +78,9 @@ static __inline vFloat trunc_vec_32(vFloat in)
 }
 
 #ifdef VECTOR_F64_128BIT
-
+/*
 // N.B. large_vec has 0.5 subtracted pre conversion to avoid incorrect rounding - always integer saturated when used so results are correct
+// FIX - explain the above properly
 
 static __inline vDouble trunc_vec_64(vDouble in)
 {
@@ -85,7 +90,7 @@ static __inline vDouble trunc_vec_64(vDouble in)
 	vDouble trunc_vec2 = F64_VEC_ADD_OP(F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(F64_VEC_SUB_OP(in, large_vec))), large_vec);
 	vDouble trunc_vec = F64_VEC_SEL_OP(trunc_vec1, trunc_vec2, F64_VEC_GT_OP(abs_vec, v_intermediate_int_64));
 	return F64_VEC_SEL_OP(trunc_vec, in, F64_VEC_GT_OP(abs_vec, v_largest_int_64));
-}
+}*/
 #endif
 
 // Define operations (all intrinsic-based)

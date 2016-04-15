@@ -108,7 +108,7 @@ t_symbol *ps_sym_distance_ratio;
 t_symbol *ps_sym_scale_ratio;
 t_symbol *ps_sym_within_ratio;
 
-__inline double atom_getdouble_translate (t_atom *a);
+static __inline double atom_getdouble_translate (t_atom *a);
 
 void *entrymatcher_new(long max_entries, long num_columns, long max_matchers);
 void entrymatcher_free(t_entrymatcher *x);
@@ -137,18 +137,18 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 // ========================================================================================================================================== //
 
 
-__inline double atom_getdouble_translate (t_atom *arg)
+static __inline double atom_getdouble_translate (t_atom *arg)
 {
-	switch (arg->a_type)
+	switch (atom_gettype(arg))
 	{
 		case A_LONG:
-			return arg->a_w.w_long;
+            return atom_getlong(arg);
 			break;
 		case A_FLOAT:
-			return arg->a_w.w_float;
+			return atom_getfloat(arg);
 			break;
 		case A_SYM:
-			return (long) arg->a_w.w_sym;
+			return (long) atom_getsym(arg);
 			break;
 		default:
 			return 0.;
@@ -397,7 +397,7 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 
 	for (i = 0; i < argc; i++)
 	{
-		if (argv->a_type != A_SYM)
+		if (atom_gettype(argv) != A_SYM)
 			the_data[i] = atom_getdouble_translate(argv);
 		else
 		{
@@ -693,7 +693,8 @@ long entrymatcher_calculate(t_entrymatcher *x, double *comparision_vals)
 					
 				for (i = 0; i < num_matched_indices; i++)
 				{
-					comparison_value = comparison_value; 
+					// FIX - why?
+                    //comparison_value = comparison_value;
 					current_data = the_data[matched_indices[i] * num_columns + column_index];
 					if (comparison_value > current_data)
 						current_distance = comparison_value / current_data;
@@ -715,7 +716,8 @@ long entrymatcher_calculate(t_entrymatcher *x, double *comparision_vals)
 				
 				for (i = 0; i < num_matched_indices; i++)
 				{
-					comparison_value = comparison_value; 
+                    // FIX - why?
+                    //comparison_value = comparison_value;
 					current_data = the_data[matched_indices[i] * num_columns + column_index];
 					if (comparison_value > current_data)
 						current_distance = comparison_value / current_data;
@@ -848,7 +850,7 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
 	long i;
 	
 	for (i = 0; i < max_matchers; i++)
-		matcher_ins[i] = sp[i + 2]->s_vec;
+		matcher_ins[i] = (float *) sp[i + 2]->s_vec;
 	
 	dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);
 }
@@ -933,23 +935,23 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 
 char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2)
 {
-	if (identifier1->a_type != identifier2->a_type)
+	if (atom_gettype(identifier1) != atom_gettype(identifier2))
 		return 0;
 		
-	switch (identifier1->a_type)
+	switch (atom_gettype(identifier1))
 	{
 		case A_LONG:
-			if (identifier1->a_w.w_long != identifier2->a_w.w_long)
+			if (atom_getlong(identifier1) != atom_getlong(identifier2))
 				return 0;
 			break;
 		
 		case A_FLOAT:
-			if (identifier1->a_w.w_float != identifier2->a_w.w_float)
+			if (atom_getfloat(identifier1) != atom_getfloat(identifier2))
 				return 0;
 			break;
 			
 		case A_SYM:
-			if (identifier1->a_w.w_sym != identifier2->a_w.w_sym)
+			if (atom_getsym(identifier1) != atom_getsym(identifier2))
 				return 0;
 			break;
 			
@@ -970,7 +972,7 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 	t_symbol *named_column;
 	long i;
 	
-	if (arg->a_type != A_SYM) 
+	if (atom_gettype(arg) != A_SYM)
 		return atom_getlong(arg) - 1;
 	
 	named_column = atom_getsym(arg);
@@ -989,19 +991,19 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 
 long entrymatcher_test_types(t_atom *argv)
 {
-	if (argv->a_type != A_SYM) return 0;
+	if (atom_gettype(argv) != A_SYM) return 0;
 	
-	if (argv->a_w.w_sym == ps_match || argv->a_w.w_sym == ps_sym_match) return TEST_MATCH;
-	if (argv->a_w.w_sym == ps_distance || argv->a_w.w_sym == ps_sym_distance) return TEST_DISTANCE;
-	if (argv->a_w.w_sym == ps_less || argv->a_w.w_sym == ps_sym_less) return TEST_LESS_THAN;
-	if (argv->a_w.w_sym == ps_greater || argv->a_w.w_sym == ps_sym_greater) return TEST_GREATER_THAN;
-	if (argv->a_w.w_sym == ps_lesseq || argv->a_w.w_sym == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
-	if (argv->a_w.w_sym == ps_greatereq || argv->a_w.w_sym == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
-	if (argv->a_w.w_sym == ps_scale || argv->a_w.w_sym == ps_sym_scale) return TEST_SCALE;
-	if (argv->a_w.w_sym == ps_within || argv->a_w.w_sym == ps_sym_within) return TEST_WITHIN;
-	if (argv->a_w.w_sym == ps_distance_ratio || argv->a_w.w_sym == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
-	if (argv->a_w.w_sym == ps_scale_ratio || argv->a_w.w_sym == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
-	if (argv->a_w.w_sym == ps_within_ratio || argv->a_w.w_sym == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
+	if (atom_getsym(argv) == ps_match || atom_getsym(argv) == ps_sym_match) return TEST_MATCH;
+	if (atom_getsym(argv) == ps_distance || atom_getsym(argv) == ps_sym_distance) return TEST_DISTANCE;
+	if (atom_getsym(argv) == ps_less || atom_getsym(argv) == ps_sym_less) return TEST_LESS_THAN;
+	if (atom_getsym(argv) == ps_greater || atom_getsym(argv) == ps_sym_greater) return TEST_GREATER_THAN;
+	if (atom_getsym(argv) == ps_lesseq || atom_getsym(argv) == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
+	if (atom_getsym(argv) == ps_greatereq || atom_getsym(argv) == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
+	if (atom_getsym(argv) == ps_scale || atom_getsym(argv) == ps_sym_scale) return TEST_SCALE;
+	if (atom_getsym(argv) == ps_within || atom_getsym(argv) == ps_sym_within) return TEST_WITHIN;
+	if (atom_getsym(argv) == ps_distance_ratio || atom_getsym(argv) == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
+	if (atom_getsym(argv) == ps_scale_ratio || atom_getsym(argv) == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
+	if (atom_getsym(argv) == ps_within_ratio || atom_getsym(argv) == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
 	
 	return 0;
 }

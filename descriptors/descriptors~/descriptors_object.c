@@ -26,8 +26,6 @@ void descriptors_main_common ()
 	class_addmethod (this_class, (method)descriptors_assist, "assist", A_CANT, 0L);
 
 	class_dspinit(this_class);
-
-	ibuffer_init();
 	
 	// Initialise symbols
 	
@@ -861,7 +859,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			cumulate_ptr1 = cumulate_sq_amps;
 			
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
-				descriptor = get_sfm(log_amplitudes, cumulate_ptr1, log_freq, min_bin, max_bin);
+				descriptor = get_sfm(log_amplitudes, cumulate_ptr1, min_bin, max_bin);
 			
 			*param_ptr += 3;
 			break;

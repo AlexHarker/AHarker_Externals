@@ -298,15 +298,15 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 			double descriptor = calc_pf_descriptor(x, raw_frame, windowed_frame, raw_fft_frame, frame_pointer, window_size, fft_size, &pf_params);
 			
 			if ((long) current_param_ptr[0] != DESCRIPTOR_PF_SPECTRAL_PEAKS)
-				SETFLOAT (output_list + i + n_count, descriptor);
+				atom_setfloat(output_list + i + n_count, descriptor);
 			else
 			{
 				long N = (long) current_param_ptr[1];
 				
 				for (j = 0; j < N; j ++)
 				{
-					SETFLOAT(output_list + i + n_count, freqs[j]); n_count++;
-					SETFLOAT(output_list + i + n_count, amps[j]); n_count++;
+					atom_setfloat(output_list + i + n_count, freqs[j]); n_count++;
+					atom_setfloat(output_list + i + n_count, amps[j]); n_count++;
 				}
 				
 				// One descriptor is expected so we need to decrement by one here
@@ -318,7 +318,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	else 
 	{
 		for (i = 0; i < x->output_length; i++)
-			SETFLOAT(output_list + i, FLT_MAX);
+			atom_setfloat(output_list + i, FLT_MAX);
 	}
 	
 	// Output - call A clock To do this!

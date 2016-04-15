@@ -39,17 +39,17 @@ typedef struct _dynamic_patch
 t_symbol *ps_deletepatch; 
 
 
-void *dynamic_patch_new(long state);
+void *dynamic_patch_new(t_atom_long state);
 void dynamic_patch_free(t_dynamic_patch *x);
 void dynamic_patch_loadbang(t_dynamic_patch *x);
 void dynamic_patch_bang(t_dynamic_patch *x);
 void dynamic_patch_delete(t_dynamic_patch *x);
 void clock_delete(t_dynamic_patch *x);
-void dynamic_patch_int(t_dynamic_patch *x, long intin);
+void dynamic_patch_int(t_dynamic_patch *x, t_atom_long intin);
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
     this_class = class_new("dynamic.patch~",
 						   (method)dynamic_patch_new, 
@@ -72,8 +72,7 @@ int main(void)
 	return 0;
 }
 
-
-void *dynamic_patch_new(long state)
+void *dynamic_patch_new(t_atom_long state)
 {
     t_dynamic_patch *x = (t_dynamic_patch *) object_alloc(this_class);
 	
@@ -88,25 +87,21 @@ void *dynamic_patch_new(long state)
 	return (x);
 }
 
-
 void dynamic_patch_free(t_dynamic_patch *x)
 {
 	freeobject((t_object *)x->m_clock);
 }
 
-
-void dynamic_patch_int(t_dynamic_patch *x, long intin)
+void dynamic_patch_int(t_dynamic_patch *x, t_atom_long intin)
 {	
-	Dynamic_Set_Patch_Busy (x->dynamicdsp_parent, x->index, intin);
-	Dynamic_Set_Patch_On (x->dynamicdsp_parent, x->index, intin);
+    Dynamic_Set_Patch_Busy(x->dynamicdsp_parent, x->index, intin);
+	Dynamic_Set_Patch_On(x->dynamicdsp_parent, x->index, intin);
 }
-
 
 void dynamic_patch_loadbang(t_dynamic_patch *x)
 {
 	dynamic_patch_bang(x);
 }
-
 
 void dynamic_patch_bang(t_dynamic_patch *x)
 {
@@ -114,18 +109,16 @@ void dynamic_patch_bang(t_dynamic_patch *x)
 		outlet_int (x->m_outlet, x->index);
 }
 
-
 void dynamic_patch_delete(t_dynamic_patch *x)
 {
 	clock_set(x->m_clock, 0L);
 }
 
-
 void clock_delete(t_dynamic_patch *x)
 {
 	t_atom arg;
 	
-	SETLONG(&arg, x->index);
+	atom_setlong(&arg, x->index);
 	
 	if (x->dynamicdsp_parent)
 		typedmess(((t_object *)x->dynamicdsp_parent), ps_deletepatch, 1, &arg);

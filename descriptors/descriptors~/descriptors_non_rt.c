@@ -19,13 +19,15 @@
 
 #include "descriptors_object.h"
 
+#include <ibuffer_access.h>
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////// Object Basics (main / new / free) /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-int main (void)
+int C74_EXPORT main (void)
 {	
 	this_class = class_new ("descriptors~",
 							(method) descriptors_new, 
@@ -43,6 +45,8 @@ int main (void)
 	
 	class_register(CLASS_BOX, this_class);
 	
+    ibuffer_init();
+
 	return 0;
 }
 
@@ -179,13 +183,13 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 	
 	if (!x->descriptor_data_size) return;
 	
-	if (argc && argv->a_type != A_SYM)
+	if (argc && atom_gettype(argv) != A_SYM)
 	{
 		error ("descriptors(rt)~: no buffer name given for analysis");
 		return;
 	}
 	
-	buffer_name = argv->a_w.w_sym;
+	buffer_name = atom_getsym(argv);
 	
 	// Get arguments
 	
@@ -336,7 +340,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	void *b = x->buffer_pointer;
 	void *buffer_samples_ptr;
 	
-	long file_length;
+	AH_SIntPtr file_length;
 	long num_of_chans;
 	long int_size;
 	
@@ -705,163 +709,163 @@ void calc_descriptors_non_rt (t_descriptors *x)
 				switch (stats_type)
 				{
 					case STATS_MEAN:
-						SETFLOAT(output_list + output_pos, mean);
+						atom_setfloat(output_list + output_pos, mean);
 						break;
 						
 					case STATS_MEDIAN:
-						SETFLOAT(output_list + output_pos, median);
+						atom_setfloat(output_list + output_pos, median);
 						break;
 						
 					case STATS_TIME_CENTROID:
-						SETFLOAT(output_list + output_pos, time_centroid);
+						atom_setfloat(output_list + output_pos, time_centroid);
 						break;
 						
 					case STATS_STANDARD_DEV:
-						SETFLOAT(output_list + output_pos, standard_deviation);
+						atom_setfloat(output_list + output_pos, standard_deviation);
 						break;
 						
 					case STATS_RANGE:
-						SETFLOAT(output_list + output_pos, range);
+						atom_setfloat(output_list + output_pos, range);
 						break;
 						
 					case STATS_MAX:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_max[m]);
+							atom_setfloat(output_list + output_pos + m, n_max[m]);
 						break;
 						
 					case STATS_MIN:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_min[m]);
+							atom_setfloat(output_list + output_pos + m, n_min[m]);
 						break;
 						
 					case STATS_PEAK:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_peaks[m]);
+							atom_setfloat(output_list + output_pos + m, n_peaks[m]);
 						break;
 						
 					case STATS_TROUGH:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_troughs[m]);
+							atom_setfloat(output_list + output_pos + m, n_troughs[m]);
 						break;
 						
 					case STATS_MAX_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_max_pos[m]);
+							atom_setfloat(output_list + output_pos + m, n_max_pos[m]);
 						break;
 						
 					case STATS_MIN_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_min_pos[m]);
+							atom_setfloat(output_list + output_pos + m, n_min_pos[m]);
 						break;
 						
 					case STATS_PEAK_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_peak_pos[m]);
+							atom_setfloat(output_list + output_pos + m, n_peak_pos[m]);
 						break;
 						
 					case STATS_TROUGH_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, n_trough_pos[m]);
+							atom_setfloat(output_list + output_pos + m, n_trough_pos[m]);
 						break;
 						
 					case STATS_CROSSING_PEAK:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_peak[m]);
+							atom_setfloat(output_list + output_pos + m, nc_peak[m]);
 						break;
 						
 					case STATS_CROSSING_PEAK_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_peak_pos[m]);
+							atom_setfloat(output_list + output_pos + m, nc_peak_pos[m]);
 						break;
 						
 					case STATS_CROSSING_ABOVE:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_above_pos1[m]);
+							atom_setfloat(output_list + output_pos + m, nc_above_pos1[m]);
 						break;
 						
 					case STATS_CROSSINGS_ABOVE:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
 						{
-							SETFLOAT(output_list + output_pos + (2 * m), nc_above_pos1[m]);
-							SETFLOAT(output_list + output_pos + (2 * m) + 1, nc_above_pos2[m]);
+							atom_setfloat(output_list + output_pos + (2 * m), nc_above_pos1[m]);
+							atom_setfloat(output_list + output_pos + (2 * m) + 1, nc_above_pos2[m]);
 						}
 						break;
 						
 					case STATS_CROSSING_TROUGH:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_trough[m]);
+							atom_setfloat(output_list + output_pos + m, nc_trough[m]);
 						break;
 						
 					case STATS_CROSSING_TROUGH_POS:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_trough_pos[m]);
+							atom_setfloat(output_list + output_pos + m, nc_trough_pos[m]);
 						break;
 						
 					case STATS_CROSSING_BELOW:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nc_below_pos1[m]);
+							atom_setfloat(output_list + output_pos + m, nc_below_pos1[m]);
 						break;
 						
 					case STATS_CROSSINGS_BELOW:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
 						{
-							SETFLOAT(output_list + output_pos + (2 * m), nc_below_pos1[m]);
-							SETFLOAT(output_list + output_pos + (2 * m) + 1, nc_below_pos2[m]);
+							atom_setfloat(output_list + output_pos + (2 * m), nc_below_pos1[m]);
+							atom_setfloat(output_list + output_pos + (2 * m) + 1, nc_below_pos2[m]);
 						}
 						break;
 						
 					case STATS_LONGEST_CROSS_ABOVE:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nlc_above[m]);
+							atom_setfloat(output_list + output_pos + m, nlc_above[m]);
 						break;
 
 					case STATS_LONGEST_CROSSINGS_ABOVE:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
 						{
-							SETFLOAT(output_list + output_pos + (2 * m), nlc_above_pos1[m]);
-							SETFLOAT(output_list + output_pos + (2 * m) + 1, nlc_above_pos2[m]);
+							atom_setfloat(output_list + output_pos + (2 * m), nlc_above_pos1[m]);
+							atom_setfloat(output_list + output_pos + (2 * m) + 1, nlc_above_pos2[m]);
 						}
 						break;
 					
 					case STATS_LONGEST_CROSS_BELOW:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
-							SETFLOAT(output_list + output_pos + m, nlc_below[m]);
+							atom_setfloat(output_list + output_pos + m, nlc_below[m]);
 						break;
 
 					case STATS_LONGEST_CROSSINGS_BELOW:
 						store_n = *pf_output_params++;
 						for (m = 0; m < store_n; m++)
 						{
-							SETFLOAT(output_list + output_pos + (2 * m), nlc_below_pos1[m]);
-							SETFLOAT(output_list + output_pos + (2 * m) + 1, nlc_below_pos2[m]);
+							atom_setfloat(output_list + output_pos + (2 * m), nlc_below_pos1[m]);
+							atom_setfloat(output_list + output_pos + (2 * m) + 1, nlc_below_pos2[m]);
 						}
 						break;
 	
 					case STATS_RATIO_ABOVE:
-						SETFLOAT(output_list + output_pos, threshold_ratio_above);
+						atom_setfloat(output_list + output_pos, threshold_ratio_above);
 						break;
 						
 					case STATS_RATIO_BELOW:
-						SETFLOAT(output_list + output_pos, threshold_ratio_below);
+						atom_setfloat(output_list + output_pos, threshold_ratio_below);
 						break;
 						
 					case STATS_NONE:
@@ -884,7 +888,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			case DESCRIPTOR_PB_DURATION:
 			
 				descriptor = file_length * samps_to_ms_val;
-				SETFLOAT (output_list + pb_pos[i], descriptor);
+				atom_setfloat (output_list + pb_pos[i], descriptor);
 				
 				pb_params += 1;
 				break;
@@ -905,8 +909,8 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			
 				for (j = 0; j < N; j++)
 				{
-					SETFLOAT (output_list + pb_pos[i] + (2 * j), freqs[j]);
-					SETFLOAT (output_list + pb_pos[i] + (2 * j) + 1, amps[j]);
+					atom_setfloat(output_list + pb_pos[i] + (2 * j), freqs[j]);
+					atom_setfloat(output_list + pb_pos[i] + (2 * j) + 1, amps[j]);
 				}
 				
 				pb_params += 3;

@@ -16,39 +16,43 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <AH_Types.h>
 #include <dynamicdsp~.h>
 
+
 void *this_class;
+
 
 typedef struct _dynamic_request
 {
     t_pxobject x_obj;
 	
-	long declared_sig_ins;
+	long num_sig_ins;
 	void **sig_ins;
 	
-	long valid;
-	long inlet_num;
+	t_atom_long inlet_num;
+    AH_Boolean valid;
 	
 	double lastval;
 	
 } t_dynamic_request;
 
+
 void dynamic_request_free(t_dynamic_request *x);
-void *dynamic_request_new();
+void *dynamic_request_new(t_atom_long inlet_num);
 void dynamic_request_assist(t_dynamic_request *x, void *b, long m, long a, char *s);
 
 void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 void dynamic_request_dsp(t_dynamic_request *x, t_signal **sp, short *count);
 
-void dynamic_request_int(t_dynamic_request *x, long inlet_num);
+void dynamic_request_int(t_dynamic_request *x, t_atom_long inlet_num);
 t_int *dynamic_request_perform(t_int *w);
 t_int *dynamic_request_perform_small(t_int *w);
 void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class = class_new("dynamic.request~",
 						   (method)dynamic_request_new, 
@@ -70,43 +74,42 @@ int main(void)
 	return 0;
 }
 
-
 void dynamic_request_free(t_dynamic_request *x)
 {
 	dsp_free(&x->x_obj);
 }
 
-
-void *dynamic_request_new(long inlet_num)
+void *dynamic_request_new(t_atom_long inlet_num)
 {
     t_dynamic_request *x = (t_dynamic_request *)object_alloc(this_class);
 	void *dynamicdsp_parent = Get_Dynamic_Object();
-	long declared_sig_ins = Dynamic_Get_Declared_Sigins(dynamicdsp_parent);
+	long num_sig_ins = Dynamic_Get_Num_Sig_Ins(dynamicdsp_parent);
 	
+    x->inlet_num = -1;
+    x->valid = false;
+    x->sig_ins = Dynamic_Get_Sig_In_Ptrs(dynamicdsp_parent);
+    x->num_sig_ins = num_sig_ins;
+    x->lastval = 0;
+
+    if (inlet_num <= num_sig_ins && inlet_num >= 1)
+    {
+        x->valid = true;
+        x->inlet_num = inlet_num;
+    }
+    
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
-	
-	x->inlet_num = inlet_num;
-	x->valid = 0;
-	x->sig_ins = Dynamic_Get_Sigins(dynamicdsp_parent);
-	x->declared_sig_ins = declared_sig_ins;
-	x->lastval = 0;
-	
-	if (inlet_num <= declared_sig_ins && inlet_num >= 1)
-		x->valid = 1;
-	
+
     return (x);
 }
-
 
 void dynamic_request_assist(t_dynamic_request *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
-		sprintf(s,"(signal) Requested Input %ld of Patcher", x->inlet_num);
+		sprintf(s,"(signal) Requested Input %ld of Patcher", (long) x->inlet_num);
     else 
 		sprintf(s,"(signal) Request Value / (int) Inlet Number");
 }
-
 
 void dynamic_request_dsp(t_dynamic_request *x, t_signal **sp, short *count)
 {
@@ -119,7 +122,6 @@ void dynamic_request_dsp(t_dynamic_request *x, t_signal **sp, short *count)
 	}
 }
 
-
 void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
 	if (x->valid)
@@ -131,18 +133,16 @@ void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, 
 	}
 }
 
-
 // Unlike dynamic.in~ the request object is either valid when dsp goes on or not, and can only be set to valid inputs (this speeds things up)
 
-void dynamic_request_int(t_dynamic_request *x, long inlet_num)
+void dynamic_request_int(t_dynamic_request *x, t_atom_long inlet_num)
 {		
-	if (inlet_num >= 1 && inlet_num <= x->declared_sig_ins)
+	if (inlet_num >= 1 && inlet_num <= x->num_sig_ins)
 	{
 		x->inlet_num = inlet_num;
-		x->valid = 1;
+		x->valid = true;
 	}
 }
-
 
 // Manually loop unrolled for speed (can't be used for single sample vectors) - if the vs is above 4 then we use this version
 
@@ -154,12 +154,11 @@ t_int *dynamic_request_perform(t_int *w)
     t_dynamic_request *x = (t_dynamic_request *)(w[4]);
 	
 	float *from;
-	long i;
 	float lastval = x->lastval;
 	
 	from = x->sig_ins[x->inlet_num - 1];
 	
-	for (i = 0; i < vec_size >> 1; i++)
+	for (long i = 0; i < vec_size >> 1; i++)
 	{
 		if (*in1++)
 			lastval = *from;
@@ -175,7 +174,6 @@ t_int *dynamic_request_perform(t_int *w)
 	
 	return w + 5;
 }
-
 
 // Non loop unrolled version for small vector sizes
 
@@ -187,12 +185,11 @@ t_int *dynamic_request_perform_small(t_int *w)
 	t_dynamic_request *x = (t_dynamic_request *)(w[4]);
 	
 	float *from;
-	long i;
 	float lastval = x->lastval;
 	
 	from = x->sig_ins[x->inlet_num - 1];
 	
-	for (i = 0; i < vec_size; i++)
+	for (long i = 0; i < vec_size; i++)
 	{
 		if (*in1++)
 			lastval = *from;
@@ -205,7 +202,6 @@ t_int *dynamic_request_perform_small(t_int *w)
 	return w + 5;
 }
 
-
 // 64 Bit Manually loop unrolled for speed (can't be used for single sample vectors) - if the vs is above 4 then we use this version
 
 void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -215,12 +211,10 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
 	double *from;
 	
 	double lastval = x->lastval;
-	
-	long i;
-		
+			
 	from = x->sig_ins[x->inlet_num - 1];
 	
-	for (i = 0; i < vec_size >> 1; i++)
+	for (long i = 0; i < vec_size >> 1; i++)
 	{
 		if (*in1++)
 			lastval = *from;
@@ -235,7 +229,6 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
 	x->lastval = lastval;
 }
 
-
 // 64 Bit Non loop unrolled version for small vector sizes
 
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -245,12 +238,10 @@ void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, doub
 	double *from;
 	
 	double lastval = x->lastval;
-	
-	long i;
-	
+		
 	from = x->sig_ins[x->inlet_num - 1];
 	
-	for (i = 0; i < vec_size; i++)
+	for (long i = 0; i < vec_size; i++)
 	{
 		if (*in1++)
 			lastval = *from;

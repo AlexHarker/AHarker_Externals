@@ -37,20 +37,20 @@ t_symbol *ps_float;
 t_symbol *ps_bang;
 
 
-void *schedulemessage_new (double delay);
+void *schedulemessage_new(double delay);
 void schedulemessage_free(t_schedulemessage *x);
 
-void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
+void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
 void schedulemessage_int(t_schedulemessage *x, t_atom_long value);
 void schedulemessage_float(t_schedulemessage *x, double float_in);
 void schedulemessage_bang(t_schedulemessage *x);
-void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
+void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
 void schedulemessage_delay(t_schedulemessage *x, double delay);
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("schedulemessage", 
 							(method) schedulemessage_new, 
@@ -61,13 +61,13 @@ int C74_EXPORT main (void)
 							0);
 	
 
-	class_addmethod (this_class, (method)schedulemessage_int, "int", A_LONG, 0);
-	class_addmethod (this_class, (method)schedulemessage_float, "float", A_FLOAT, 0);
-	class_addmethod (this_class, (method)schedulemessage_delay, "ft1", A_FLOAT, 0);
-	class_addmethod (this_class, (method)schedulemessage_bang, "bang", 0);
-	class_addmethod (this_class, (method)schedulemessage_anything, "list", A_GIMME, 0);
-	class_addmethod (this_class, (method)schedulemessage_anything, "anything", A_GIMME, 0);
-	class_addmethod (this_class, (method)schedulemessage_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method)schedulemessage_int, "int", A_LONG, 0);
+	class_addmethod(this_class, (method)schedulemessage_float, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method)schedulemessage_delay, "ft1", A_FLOAT, 0);
+	class_addmethod(this_class, (method)schedulemessage_bang, "bang", 0);
+	class_addmethod(this_class, (method)schedulemessage_anything, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method)schedulemessage_anything, "anything", A_GIMME, 0);
+	class_addmethod(this_class, (method)schedulemessage_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
 	 
@@ -79,16 +79,16 @@ int C74_EXPORT main (void)
 }
 
 
-void *schedulemessage_new (double delay)
+void *schedulemessage_new(double delay)
 {
-    t_schedulemessage *x = (t_schedulemessage *) object_alloc (this_class);
+    t_schedulemessage *x = (t_schedulemessage *) object_alloc(this_class);
 	
 	floatin(x, 1);
 	
 	x->message_out = outlet_new(x, 0);
 	x->delay = delay;
 	
-    return (x);
+    return x;
 }
 
 
@@ -97,32 +97,29 @@ void schedulemessage_free(t_schedulemessage *x)
 }
 
 
-void schedulemessage_output (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
+void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	if(!NOGOOD(x))
-	{
-		if (msg == ps_bang)
-		{
-			outlet_bang(x->message_out);
-			return;
-		}
+    if (msg == ps_bang)
+    {
+        outlet_bang(x->message_out);
+        return;
+    }
 		
-		if (msg == ps_int)
-		{
-			if (argc)
-				outlet_int(x->message_out, atom_getlong(argv));
-			return;
-		}
+    if (msg == ps_int)
+    {
+        if (argc)
+            outlet_int(x->message_out, atom_getlong(argv));
+        return;
+    }
 		
-		if (msg == ps_float)
-		{
-			if (argc)
-				outlet_float(x->message_out, atom_getfloat(argv));
-			return;
-		}
+    if (msg == ps_float)
+    {
+        if (argc)
+            outlet_float(x->message_out, atom_getfloat(argv));
+        return;
+    }
 		
-		outlet_anything (x->message_out, msg, argc, argv);
-	}
+    outlet_anything(x->message_out, msg, argc, argv);
 }
 
 
@@ -132,7 +129,7 @@ void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
 	
 	atom_setlong(&out_atom, value);
 	
-	schedulemessage_anything (x, ps_int, 1, &out_atom);
+	schedulemessage_anything(x, ps_int, 1, &out_atom);
 }
 
 
@@ -142,17 +139,17 @@ void schedulemessage_float(t_schedulemessage *x, double float_in)
 	
 	atom_setfloat(&out_atom, float_in);
 	
-	schedulemessage_anything (x, ps_float, 1, &out_atom);
+	schedulemessage_anything(x, ps_float, 1, &out_atom);
 }
 
 
 void schedulemessage_bang(t_schedulemessage *x)
 {
-	schedulemessage_anything (x, ps_bang, 0, 0);
+	schedulemessage_anything(x, ps_bang, 0, 0);
 }
 
 
-void schedulemessage_anything (t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
+void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double delay = x->delay;
 	

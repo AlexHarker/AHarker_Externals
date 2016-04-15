@@ -17,19 +17,25 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include <AH_Rand_Seed.h>
+#include <AH_Random.h>
 #include <AH_Win_Math.h>
+
 
 void *this_class;
 
-    
+
+typedef enum {kOrderAscending, kOrderRandom, kOrderMaintain} t_ordering_mode;
+
+
 typedef struct timefilter{
 
     t_object a_obj;
     
     float stored_list[1024];
 	long stored_list_length;
-	long ordering;
+	
+    t_rand_gen gen;
+    t_ordering_mode ordering;
 	
 	float filter;
 	float randfilter;
@@ -39,42 +45,20 @@ typedef struct timefilter{
 } t_timefilter;
 
 
-__inline long randdecide();
-__inline float randfloat();
-
 void timefilter_free(t_timefilter *x);
 void *timefilter_new();
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s);
 
-void timefilter_list (t_timefilter *x, t_symbol *msg, short argc, t_atom *argv);
+void timefilter_list (t_timefilter *x, t_symbol *msg, long argc, t_atom *argv);
 void timefilter_bang (t_timefilter *x);
 
 void timefilter_float (t_timefilter *x, double filter);
 void timefilter_randfilter (t_timefilter *x, double randfilter);
-void timefilter_ordering (t_timefilter *x, long ordering);
+void timefilter_ordering (t_timefilter *x, t_atom_long ordering);
 void timefilter_reset (t_timefilter *x);
 
 void combsort(float *vals, long num_points);
-void randomsort(float *vals, long num_points);
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////// Random fucntions //////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-double one_over_rand_max = 1.0 / (double) RAND_MAX;
-double rand_max_over_two = RAND_MAX / 2;
-
-__inline long randdecide()
-{
-	return rand() > rand_max_over_two;
-}
-
-__inline float randfloat()
-{
-	return rand() * one_over_rand_max;
-}
+void randomsort(t_rand_gen *gen, float *vals, long num_points);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +66,7 @@ __inline float randfloat()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-int main(void)
+C74_EXPORT int main(void)
 {
 	this_class = class_new("timefilter",
 						   (method)timefilter_new, 
@@ -100,10 +84,6 @@ int main(void)
 	class_addmethod(this_class, (method)timefilter_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
-	
-	// Seed randomness
-	
-	srand(get_rand_seed ());	
 
 	return 0;
 }
@@ -122,8 +102,10 @@ void *timefilter_new()
 		
 	x->filter = 0.;
 	x->randfilter = 0.;
-	x->ordering = 0;
+	x->ordering = kOrderAscending;
 	
+    rand_seed(&x->gen);
+    
     return (x);
 }
 
@@ -147,14 +129,17 @@ void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void timefilter_list (t_timefilter *x, t_symbol *msg, short argc, t_atom *argv)
+void timefilter_list (t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	// Store an input list
 	
 	float *stored_list = x->stored_list;
 	long stored_list_length = x->stored_list_length;
 	
-	while (argc-- && stored_list_length < 256)
+    if (argc > 1024)
+        object_error((t_object *)x, "maximum list length is 1024 items");
+    
+	while (argc-- && stored_list_length < 1024)
 		stored_list[stored_list_length++] = atom_getfloat(argv++);
 		
 	x->stored_list_length = stored_list_length;
@@ -163,7 +148,7 @@ void timefilter_list (t_timefilter *x, t_symbol *msg, short argc, t_atom *argv)
 
 void timefilter_bang (t_timefilter *x)
 {
-	t_atom output_list[256];
+	t_atom output_list[1024];
 	t_atom *list_pointer = output_list;
 
 	float *temp_vals = x->stored_list;
@@ -176,17 +161,17 @@ void timefilter_bang (t_timefilter *x)
 	long output_list_length = stored_list_length;
 	long i;
 	
-	// Sort the input (or leave if no ordering is neither 0 nor 1
+	// Sort the input
 	
 	switch (x->ordering)
 	{
-		case 0:
+		case kOrderAscending:
 			combsort(temp_vals, stored_list_length);
 			break;
-		case 1:
-			randomsort(temp_vals, stored_list_length);
+		case kOrderRandom:
+			randomsort(&x->gen, temp_vals, stored_list_length);
 			break;
-		default:
+        case kOrderMaintain:
 			break;
 	}
 	
@@ -198,19 +183,19 @@ void timefilter_bang (t_timefilter *x)
 		
 		// Check if we are keeping this value
 		
-		if ((randfloat() > randfilter) && fabs(new_val - last_val) >= filter)
+		if ((rand_double(&x->gen) > randfilter) && fabs(new_val - last_val) >= filter)
 		{
 			// If this value is within the filter distance of the next value, we randomly decide which one to lose and skip ahead if we choose this one 
 			// This way the filtering works on distance, regardless of ordering...
 			
-			if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && randdecide())
+			if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && rand_int_n(&x->gen, 1))
 			{
 				new_val = *temp_vals++;
 				output_list_length--;
 				i++;
 			}
 			
-			SETFLOAT (list_pointer, new_val);
+			atom_setfloat(list_pointer, new_val);
 			list_pointer++;
 			last_val = new_val;
 		}
@@ -246,9 +231,14 @@ void timefilter_randfilter (t_timefilter *x, double randfilter)
 }
 
 
-void timefilter_ordering (t_timefilter *x, long ordering)
+void timefilter_ordering (t_timefilter *x, t_atom_long ordering)
 {
-	x->ordering = ordering;
+    t_ordering_mode mode;
+    
+    mode = (ordering == 1) ? kOrderRandom : kOrderAscending;
+    mode = (ordering > 1) ? kOrderMaintain : mode;
+    
+    x->ordering = mode;
 }
 
 
@@ -294,9 +284,9 @@ void combsort(float *vals, long num_points)
 }
 
 
-void randomsort(float *vals, long num_points)
+void randomsort(t_rand_gen *gen, float *vals, long num_points)
 {
-	// Put the input in a roandom order
+	// Put the input in a random order
 	
 	float f_temp;
 	long pos;
@@ -305,7 +295,7 @@ void randomsort(float *vals, long num_points)
 	for (i = 0; i < num_points - 1; i++)
 	{
 		f_temp = vals[i];
-		pos = ((num_points - (i + 1)) * (rand() / ((double) RAND_MAX + 1.0))) + i;
+        pos = rand_int_n(gen, (num_points - (i + 1))) + i;
 		vals[i] = vals[pos];
 		vals[pos] = f_temp;
 	}

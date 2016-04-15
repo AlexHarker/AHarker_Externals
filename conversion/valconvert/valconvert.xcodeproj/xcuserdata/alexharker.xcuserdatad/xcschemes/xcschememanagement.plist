@@ -4,20 +4,20 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>max + msp valconvert.xcscheme</key>
+		<key>valconvert objects.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>49</integer>
+			<integer>69</integer>
 		</dict>
 		<key>valconvert.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>33</integer>
+			<integer>23</integer>
 		</dict>
 		<key>valconvert~.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>44</integer>
+			<integer>24</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

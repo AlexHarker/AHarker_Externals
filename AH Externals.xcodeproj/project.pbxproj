@@ -616,20 +616,6 @@
 			remoteGlobalIDString = B8BEAA810CD67F7700F906C8;
 			remoteInfo = meandev;
 		};
-		B80B925F183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8EBB1261091C24F0040A9B7;
-			remoteInfo = "dynamicdsp_Max4~";
-		};
-		B80B9261183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8D119A70F42638B009EA4DE;
-			remoteInfo = "dynamicdsp_Max5~";
-		};
 		B80B9263183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
@@ -671,20 +657,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = B8ECA04E0F0A57A800B26D31;
 			remoteInfo = "dynamic.out~";
-		};
-		B80B926F183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8600F9512C22A6500864B9B;
-			remoteInfo = "dynamicserial_Max4~";
-		};
-		B80B9271183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8600FA612C22A6500864B9B;
-			remoteInfo = "dynamicserial_Max5~";
 		};
 		B80B9273183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -819,20 +791,6 @@
 			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
 			remoteInfo = "timeconvolve~";
 		};
-		B80B9475183BD7BB0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B80EB1051124444B00EED53F;
-			remoteInfo = "timeconvolve_Max4~";
-		};
-		B80B9477183BD7BB0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B80EB1171124445700EED53F;
-			remoteInfo = "timeconvolve_Max5~";
-		};
 		B80B9491183BD8670014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */;
@@ -853,20 +811,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
 			remoteInfo = "partconvolve~";
-		};
-		B80B94B9183BD8FB0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B80EB1451124451400EED53F;
-			remoteInfo = "partconvolve_Max4~";
-		};
-		B80B94BB183BD8FB0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B80EB1571124451700EED53F;
-			remoteInfo = "partconvolve_Max5~";
 		};
 		B80B94DC183BD98A0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -972,13 +916,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
 			remoteInfo = "ibufconcatenate~";
-		};
-		B80B9595183BDBAE0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0DFD1465F151007FAC6A /* ibufconcatenate~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B88E3A5E11CE709F00FD3E96;
-			remoteInfo = "ibufconcatenate_attach~";
 		};
 		B80B9597183BDBAE0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1203,12 +1140,44 @@
 		B82F0F781465F674007FAC6A /* macaddress.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = macaddress.xcodeproj; path = utility/macaddress/macaddress.xcodeproj; sourceTree = "<group>"; };
 		B82F0F811465F67A007FAC6A /* recursivefolder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = recursivefolder.xcodeproj; path = utility/recursivefolder/recursivefolder.xcodeproj; sourceTree = "<group>"; };
 		B82F0FA31465F7F4007FAC6A /* - vMSP~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "- vMSP~.xcodeproj"; path = "vMSP/vMSP/- vMSP~.xcodeproj"; sourceTree = "<group>"; };
+		B8A7912E1A1F610D007BDF82 /* AH_Atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Atomic.h; sourceTree = "<group>"; };
+		B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Denormals.h; sourceTree = "<group>"; };
+		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
+		B8A791311A1F610D007BDF82 /* AH_Memory_Swap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Memory_Swap.h; sourceTree = "<group>"; };
+		B8A791321A1F610D007BDF82 /* AH_MSP_Version.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_MSP_Version.pch; sourceTree = "<group>"; };
+		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
+		B8A791351A1F610D007BDF82 /* AH_Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Types.h; sourceTree = "<group>"; };
+		B8A791361A1F610D007BDF82 /* AH_VectorOps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_VectorOps.h; sourceTree = "<group>"; };
+		B8A791371A1F610D007BDF82 /* AH_VectorOpsExtended.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_VectorOpsExtended.h; sourceTree = "<group>"; };
+		B8A791381A1F610D007BDF82 /* AH_Win_Complex_Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Win_Complex_Math.h; sourceTree = "<group>"; };
+		B8A791391A1F610D007BDF82 /* AH_Win_Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Win_Math.h; sourceTree = "<group>"; };
+		B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dynamicdsp~.h"; sourceTree = "<group>"; };
+		B8A7913B1A1F610D007BDF82 /* erf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = erf.c; sourceTree = "<group>"; };
+		B8A7913C1A1F610D007BDF82 /* erf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = erf.h; sourceTree = "<group>"; };
+		B8A7913E1A1F610D007BDF82 /* FFT_Calls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Calls.h; sourceTree = "<group>"; };
+		B8A7913F1A1F610D007BDF82 /* FFT_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Header.h; sourceTree = "<group>"; };
+		B8A791401A1F610D007BDF82 /* FFT_Main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Main.h; sourceTree = "<group>"; };
+		B8A791411A1F610D007BDF82 /* FFT_Real.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Real.h; sourceTree = "<group>"; };
+		B8A791421A1F610D007BDF82 /* FFT_Scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Scalar.h; sourceTree = "<group>"; };
+		B8A791431A1F610D007BDF82 /* FFT_Setup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Setup.h; sourceTree = "<group>"; };
+		B8A791441A1F610D007BDF82 /* FFT_SIMD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_SIMD.h; sourceTree = "<group>"; };
+		B8A791451A1F610D007BDF82 /* FFT_Type_Double.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Type_Double.h; sourceTree = "<group>"; };
+		B8A791461A1F610D007BDF82 /* FFT_Type_Float.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Type_Float.h; sourceTree = "<group>"; };
+		B8A791471A1F610D007BDF82 /* HISSTools_FFT.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = HISSTools_FFT.c; sourceTree = "<group>"; };
+		B8A791481A1F610D007BDF82 /* HISSTools_FFT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT.h; sourceTree = "<group>"; };
+		B8A791491A1F610D007BDF82 /* HISSTools_FFT_SIMD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT_SIMD.h; sourceTree = "<group>"; };
+		B8A7914A1A1F610D007BDF82 /* ibuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ibuffer.h; sourceTree = "<group>"; };
+		B8A7914B1A1F610D007BDF82 /* ibuffer_access.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ibuffer_access.c; sourceTree = "<group>"; };
+		B8A7914C1A1F610D007BDF82 /* ibuffer_access.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ibuffer_access.h; sourceTree = "<group>"; };
+		B8A7914D1A1F610D007BDF82 /* nextafterf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = nextafterf.c; sourceTree = "<group>"; };
+		B8A7914E1A1F610D007BDF82 /* nextafterf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nextafterf.h; sourceTree = "<group>"; };
 		B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "dynamicdsp~.xcodeproj"; path = "dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "descriptors~.xcodeproj"; path = "descriptors/descriptors~/descriptors~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = entrymatcher.xcodeproj; path = descriptors/entrymatcher/entrymatcher.xcodeproj; sourceTree = "<group>"; };
 		B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "kernelmaker~.xcodeproj"; path = "convolution/kernelmaker~/kernelmaker~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "convolution/partconvolve~/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "convolution/timeconvolve~/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
+		B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -1354,17 +1323,13 @@
 		B80B9251183BD3D50014C9C4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B80B9260183BD3D50014C9C4 /* dynamicdsp_Max4~.mxo */,
-				B80B9262183BD3D50014C9C4 /* dynamicdsp_Max5~.mxo */,
 				B80B9264183BD3D50014C9C4 /* dynamicdsp~.mxo */,
+				B80B9274183BD3D50014C9C4 /* dynamicserial~.mxo */,
 				B80B9266183BD3D50014C9C4 /* dynamic.patch~.mxo */,
 				B80B9268183BD3D50014C9C4 /* dynamic.this~.mxo */,
 				B80B926A183BD3D50014C9C4 /* dynamic.request~.mxo */,
 				B80B926C183BD3D50014C9C4 /* dynamic.in~.mxo */,
 				B80B926E183BD3D50014C9C4 /* dynamic.out~.mxo */,
-				B80B9270183BD3D50014C9C4 /* dynamicserial_Max4~.mxo */,
-				B80B9272183BD3D50014C9C4 /* dynamicserial_Max5~.mxo */,
-				B80B9274183BD3D50014C9C4 /* dynamicserial~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1432,8 +1397,6 @@
 			isa = PBXGroup;
 			children = (
 				B80B9474183BD7BB0014C9C4 /* timeconvolve~.mxo */,
-				B80B9476183BD7BB0014C9C4 /* timeconvolve_Max4~.mxo */,
-				B80B9478183BD7BB0014C9C4 /* timeconvolve_Max5~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1442,8 +1405,6 @@
 			isa = PBXGroup;
 			children = (
 				B80B94B8183BD8FB0014C9C4 /* partconvolve~.mxo */,
-				B80B94BA183BD8FB0014C9C4 /* partconvolve_Max4~.mxo */,
-				B80B94BC183BD8FB0014C9C4 /* partconvolve_Max5~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1508,7 +1469,6 @@
 			isa = PBXGroup;
 			children = (
 				B80B9594183BDBAE0014C9C4 /* ibufconcatenate~.mxo */,
-				B80B9596183BDBAE0014C9C4 /* ibufconcatenate_attach~.mxo */,
 				B80B9598183BDBAE0014C9C4 /* ibufconcatedrive~.mxo */,
 			);
 			name = Products;
@@ -1656,9 +1616,57 @@
 			name = vMSP;
 			sourceTree = "<group>";
 		};
+		B8A7912D1A1F610D007BDF82 /* AH_MaxMSP_Headers */ = {
+			isa = PBXGroup;
+			children = (
+				B8A7912E1A1F610D007BDF82 /* AH_Atomic.h */,
+				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
+				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
+				B8A791311A1F610D007BDF82 /* AH_Memory_Swap.h */,
+				B8A791321A1F610D007BDF82 /* AH_MSP_Version.pch */,
+				B8A791341A1F610D007BDF82 /* AH_Random.h */,
+				B8A791351A1F610D007BDF82 /* AH_Types.h */,
+				B8A791361A1F610D007BDF82 /* AH_VectorOps.h */,
+				B8A791371A1F610D007BDF82 /* AH_VectorOpsExtended.h */,
+				B8A791381A1F610D007BDF82 /* AH_Win_Complex_Math.h */,
+				B8A791391A1F610D007BDF82 /* AH_Win_Math.h */,
+				B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */,
+				B8A7913B1A1F610D007BDF82 /* erf.c */,
+				B8A7913C1A1F610D007BDF82 /* erf.h */,
+				B8A7913D1A1F610D007BDF82 /* HISSTools_FFT */,
+				B8A7914A1A1F610D007BDF82 /* ibuffer.h */,
+				B8A7914B1A1F610D007BDF82 /* ibuffer_access.c */,
+				B8A7914C1A1F610D007BDF82 /* ibuffer_access.h */,
+				B8A7914D1A1F610D007BDF82 /* nextafterf.c */,
+				B8A7914E1A1F610D007BDF82 /* nextafterf.h */,
+			);
+			path = AH_MaxMSP_Headers;
+			sourceTree = "<group>";
+		};
+		B8A7913D1A1F610D007BDF82 /* HISSTools_FFT */ = {
+			isa = PBXGroup;
+			children = (
+				B8A7913E1A1F610D007BDF82 /* FFT_Calls.h */,
+				B8A7913F1A1F610D007BDF82 /* FFT_Header.h */,
+				B8A791401A1F610D007BDF82 /* FFT_Main.h */,
+				B8A791411A1F610D007BDF82 /* FFT_Real.h */,
+				B8A791421A1F610D007BDF82 /* FFT_Scalar.h */,
+				B8A791431A1F610D007BDF82 /* FFT_Setup.h */,
+				B8A791441A1F610D007BDF82 /* FFT_SIMD.h */,
+				B8A791451A1F610D007BDF82 /* FFT_Type_Double.h */,
+				B8A791461A1F610D007BDF82 /* FFT_Type_Float.h */,
+				B8A791471A1F610D007BDF82 /* HISSTools_FFT.c */,
+				B8A791481A1F610D007BDF82 /* HISSTools_FFT.h */,
+				B8A791491A1F610D007BDF82 /* HISSTools_FFT_SIMD.h */,
+			);
+			path = HISSTools_FFT;
+			sourceTree = "<group>";
+		};
 		B8B56C141465ED1500FE85B0 = {
 			isa = PBXGroup;
 			children = (
+				B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */,
+				B8A7912D1A1F610D007BDF82 /* AH_MaxMSP_Headers */,
 				B82F0DBF1465F0B0007FAC6A /* conversion */,
 				B8B56CC31465EFC100FE85B0 /* convolution */,
 				B8B56CB61465EF9500FE85B0 /* descriptors */,
@@ -1706,6 +1714,8 @@
 /* Begin PBXProject section */
 		B8B56C161465ED1500FE85B0 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = B8B56C191465ED1500FE85B0 /* Build configuration list for PBXProject "AH Externals" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -2224,20 +2234,6 @@
 			remoteRef = B80B91D4183BD1930014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B80B9260183BD3D50014C9C4 /* dynamicdsp_Max4~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicdsp_Max4~.mxo";
-			remoteRef = B80B925F183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9262183BD3D50014C9C4 /* dynamicdsp_Max5~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicdsp_Max5~.mxo";
-			remoteRef = B80B9261183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		B80B9264183BD3D50014C9C4 /* dynamicdsp~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -2278,20 +2274,6 @@
 			fileType = wrapper.cfbundle;
 			path = "dynamic.out~.mxo";
 			remoteRef = B80B926D183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9270183BD3D50014C9C4 /* dynamicserial_Max4~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicserial_Max4~.mxo";
-			remoteRef = B80B926F183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9272183BD3D50014C9C4 /* dynamicserial_Max5~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicserial_Max5~.mxo";
-			remoteRef = B80B9271183BD3D50014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9274183BD3D50014C9C4 /* dynamicserial~.mxo */ = {
@@ -2378,39 +2360,11 @@
 			remoteRef = B80B9473183BD7BB0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B80B9476183BD7BB0014C9C4 /* timeconvolve_Max4~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "timeconvolve_Max4~.mxo";
-			remoteRef = B80B9475183BD7BB0014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9478183BD7BB0014C9C4 /* timeconvolve_Max5~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "timeconvolve_Max5~.mxo";
-			remoteRef = B80B9477183BD7BB0014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		B80B94B8183BD8FB0014C9C4 /* partconvolve~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "partconvolve~.mxo";
 			remoteRef = B80B94B7183BD8FB0014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B94BA183BD8FB0014C9C4 /* partconvolve_Max4~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "partconvolve_Max4~.mxo";
-			remoteRef = B80B94B9183BD8FB0014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B94BC183BD8FB0014C9C4 /* partconvolve_Max5~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "partconvolve_Max5~.mxo";
-			remoteRef = B80B94BB183BD8FB0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94DD183BD98A0014C9C4 /* chebyshape~.mxo */ = {
@@ -2467,13 +2421,6 @@
 			fileType = wrapper.cfbundle;
 			path = "ibufconcatenate~.mxo";
 			remoteRef = B80B9593183BDBAE0014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9596183BDBAE0014C9C4 /* ibufconcatenate_attach~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "ibufconcatenate_attach~.mxo";
-			remoteRef = B80B9595183BDBAE0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9598183BDBAE0014C9C4 /* ibufconcatedrive~.mxo */ = {
