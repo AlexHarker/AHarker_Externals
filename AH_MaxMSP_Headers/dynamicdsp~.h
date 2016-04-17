@@ -62,7 +62,7 @@ static __inline long Dynamic_Get_Num_Sig_Outs(void *obj)
 static __inline void **Dynamic_Get_Sig_In_Ptrs(void *obj)
 {
 	if (DynamicIsValid(obj))
-		return mess0((t_object *)obj, gensym ("get_sigins"));
+		return (void **) mess0((t_object *)obj, gensym ("get_sigins"));
 	else	
 		return NULL;
 }
@@ -70,7 +70,7 @@ static __inline void **Dynamic_Get_Sig_In_Ptrs(void *obj)
 static __inline void ***Dynamic_Get_Sig_Out_Handle(void *obj, long index)
 {
 	if (DynamicIsValid(obj) && index > 0)
-		return mess1((t_object *)obj, gensym("get_sigouts"), (void *)index);
+		return (void ***) mess1((t_object *)obj, gensym("get_sigouts"), (void *)index);
 	else
 		return NULL;
 }
@@ -110,7 +110,7 @@ static __inline void Dynamic_Set_Patch_On (void *obj, long index, t_atom_long st
 static __inline void **Dynamic_Get_Temp_Mem(void *obj, long index, void **default_memory)
 {
 	if (DynamicIsValid(obj) && index > 0)
-		return mess1((t_object *)obj, gensym("get_temp_mem"), (void *)index);
+		return (void **) mess1((t_object *)obj, gensym("get_temp_mem"), (void *)index);
 	else
 		return default_memory;
 }

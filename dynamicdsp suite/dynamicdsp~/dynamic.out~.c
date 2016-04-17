@@ -139,7 +139,7 @@ t_int *dynamic_out_perform_scalar(t_int *w)
 
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = *out_handle[outlet_num - 1]))
+        if ((io_pointer = (*out_handle)[outlet_num - 1]))
 		{
 			for (long i = 0; i < vec_size; i++)
 				*io_pointer++ += *in1++;
@@ -168,7 +168,7 @@ t_int *dynamic_out_perform(t_int *w)
     
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = (vFloat *) *out_handle[outlet_num - 1]))
+        if ((io_pointer = (vFloat *) (*out_handle)[outlet_num - 1]))
         {
             for (long i = 0; i < vec_size >> 2; i++)
             {
@@ -197,7 +197,7 @@ void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **in
     
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = *out_handle[outlet_num - 1]))
+        if ((io_pointer = (*out_handle)[outlet_num - 1]))
         {
 			for (long i = 0; i < vec_size; i++)
 				*io_pointer++ += *in1++;
@@ -225,7 +225,7 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
     
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = (vDouble *) *out_handle[outlet_num - 1]))
+        if ((io_pointer = (vDouble *) (*out_handle)[outlet_num - 1]))
         {
             for (long i = 0; i < vec_size >> 1; i++)
             {
