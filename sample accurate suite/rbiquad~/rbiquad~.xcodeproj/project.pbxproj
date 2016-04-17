@@ -8,13 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */; };
 		B8DBD5060EDEB1DC00049F0E /* rbiquad~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* rbiquad~.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B81F571D0D2422E0000D5E50 /* rbiquad~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rbiquad~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C1837A19A804A000304236 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
 		B8DE14DC0EB46B030050BDFE /* rbiquad~.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = "rbiquad~.c"; sourceTree = "<group>"; };
@@ -26,7 +24,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B818C1B110E8363F00049E56 /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +45,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B818C1AF10E8363F00049E56 /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";

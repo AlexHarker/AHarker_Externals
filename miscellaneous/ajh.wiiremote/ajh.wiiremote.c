@@ -112,7 +112,7 @@ t_symbol *ps_stick_calibration;
 t_symbol *ps_motion_calibration;
 
 
-int main()
+int C74_EXPORT main()
 {
 	NumVersion				outSoftwareVersion;
 	BluetoothHCIVersionInfo	outHardwareVersion;

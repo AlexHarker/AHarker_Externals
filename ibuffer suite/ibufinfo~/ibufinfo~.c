@@ -40,7 +40,7 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name);
 void ibufinfo_bang(t_ibufinfo *x);
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class = class_new ("ibufinfo~",
 							(method) ibufinfo_new, 

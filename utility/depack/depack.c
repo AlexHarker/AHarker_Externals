@@ -66,11 +66,9 @@ int C74_EXPORT main (void)
 	return 0;
 }
 
-
 void depack_free (t_depack *x)
 {
 }
-
 
 void *depack_new (t_atom_long num_outlets)
 {
@@ -80,10 +78,11 @@ void *depack_new (t_atom_long num_outlets)
 	
 	if (num_outlets < 1)
     {
-        object_error((t_object *) x, "the minimum number of outlets is 2");
-        num_outlets = 2;
+        object_error((t_object *) x, "the minimum number of outlets is 1");
+        num_outlets = 1;
     }
-	if (num_outlets > 256)
+    
+	if (num_outlets > MAXIMUM_NUM_OUTLETS)
     {
         object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
         num_outlets = MAXIMUM_NUM_OUTLETS;
@@ -99,7 +98,6 @@ void *depack_new (t_atom_long num_outlets)
     return (x);
 }
 
-
 void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
 {
 	long i;
@@ -113,52 +111,45 @@ void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
 		switch (atom_gettype(argv + i))
 		{
 			case A_SYM:
-				outlet_anything (outlet_array[i + offset], atom_getsym(argv + i), 0, 0);
+				outlet_anything(outlet_array[i + offset], atom_getsym(argv + i), 0, 0);
 				break;
 			case A_FLOAT:
-				outlet_float (outlet_array[i + offset], atom_getfloat(argv + i));
+				outlet_float(outlet_array[i + offset], atom_getfloat(argv + i));
 				break;
 			case A_LONG:
-				outlet_int (outlet_array[i + offset], atom_getlong(argv + i));
+				outlet_int(outlet_array[i + offset], atom_getlong(argv + i));
 				break;
 		}
 	}
 }
 
-
-void depack_float (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
+void depack_float(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 { 
 	if (argc)
-		outlet_float (x->outlet_array[0], atom_getfloat(argv));
+		outlet_float(x->outlet_array[0], atom_getfloat(argv));
 } 
 
-
-void depack_int (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
+void depack_int(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 { 	
 	if (argc)
-		outlet_int (x->outlet_array[0], atom_getlong(argv));
-} 
-
-
-void depack_list (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
-{
-	depack_do_args (x, argc, argv, 0);
+		outlet_int(x->outlet_array[0], atom_getlong(argv));
 }
 
-
-void depack_anything (t_depack *x, t_symbol *msg, long argc, t_atom *argv)
+void depack_list(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	depack_do_args (x, argc, argv, 1);
-	outlet_anything (x->outlet_array[0], msg, 0, 0);
+	depack_do_args(x, argc, argv, 0);
 }
 
+void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
+{
+	depack_do_args(x, argc, argv, 1);
+	outlet_anything(x->outlet_array[0], msg, 0, 0);
+}
 
-void depack_assist (t_depack *x, void *b, long m, long a, char *s)
+void depack_assist(t_depack *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
 		sprintf(s, "Outlet %ld", a + 1);
     else 
         sprintf(s, "Input (anything)");
 }
-	
-	

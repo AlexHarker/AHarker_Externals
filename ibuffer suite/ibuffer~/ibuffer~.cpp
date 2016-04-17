@@ -19,43 +19,44 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include "file_reading/file_reading.h"
+#include "AudioFile/IAudioFile.h"
 
 #include <AH_Atomic.h>
 #include <ibuffer.h>
 
-void *this_class;
+t_class *this_class;
+
 
 #define DEFAULT_WORK_CHUNK 10000
 
-void *ibuffer_new (t_symbol *name, t_symbol *path_sym);
-void ibuffer_name (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
-void ibuffer_name_internal (t_ibuffer *x, t_symbol *name, short argc, t_atom *argv);
-void ibuffer_free (t_ibuffer *x);
-void ibuffer_assist (t_ibuffer *x, void *b, long m, long a, char *s);
+void *ibuffer_new(t_symbol *name, t_symbol *path_sym);
+void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
+void ibuffer_name_internal(t_ibuffer *x, t_symbol *name, short argc, t_atom *argv);
+void ibuffer_free(t_ibuffer *x);
+void ibuffer_assist(t_ibuffer *x, void *b, long m, long a, char *s);
 
-void ibuffer_name (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
-void *ibuffer_valid (t_ibuffer *x);
-void ibuffer_load (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
-void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
+void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
+void *ibuffer_valid(t_ibuffer *x);
+void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
+void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
 
 
 t_symbol *ps_null;
 
 
-C74_EXPORT int main (void)
+int C74_EXPORT main (void)
 {
 	this_class = class_new ("ibuffer~", (method) ibuffer_new, (method)ibuffer_free, (short)sizeof(t_ibuffer), 0L, A_DEFSYM, A_DEFSYM, 0);
 	
-	class_addmethod (this_class, (method)ibuffer_name, "name", A_GIMME, 0);
-	class_addmethod (this_class, (method)ibuffer_name, "set", A_GIMME, 0);
-	class_addmethod (this_class, (method)ibuffer_load, "open", A_GIMME, 0);
-	class_addmethod (this_class, (method)ibuffer_load, "replace", A_GIMME, 0);
-	class_addmethod (this_class, (method)ibuffer_valid, "valid", A_CANT, 0);
-	class_addmethod (this_class, (method)ibuffer_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method)ibuffer_name, "name", A_GIMME, 0);
+	class_addmethod(this_class, (method)ibuffer_name, "set", A_GIMME, 0);
+	class_addmethod(this_class, (method)ibuffer_load, "open", A_GIMME, 0);
+	class_addmethod(this_class, (method)ibuffer_load, "replace", A_GIMME, 0);
+	class_addmethod(this_class, (method)ibuffer_valid, "valid", A_CANT, 0);
+	class_addmethod(this_class, (method)ibuffer_assist, "assist", A_CANT, 0);
 	
-	class_dspinit (this_class);
-	class_register (CLASS_BOX, this_class);
+	class_dspinit(this_class);
+	class_register(CLASS_BOX, this_class);
 	
 	ps_null = gensym("");
 	
@@ -67,7 +68,7 @@ void *ibuffer_new (t_symbol *name, t_symbol *path_sym)
 {
 	t_atom temp_atom;
 	
-    t_ibuffer *x = (t_ibuffer *) object_alloc (this_class);
+    t_ibuffer *x = (t_ibuffer *) object_alloc(this_class);
 	
 	dsp_setup((t_pxobject *)x, 0);
 	
@@ -85,32 +86,32 @@ void *ibuffer_new (t_symbol *name, t_symbol *path_sym)
 	if (name && name != ps_null) 
 	{
 		atom_setsym(&temp_atom, name);
-		ibuffer_name (x, 0, 1, &temp_atom);
+		ibuffer_name(x, 0, 1, &temp_atom);
 	}
 	
 	if (path_sym && path_sym != ps_null) 
 	{
 		atom_setsym(&temp_atom, path_sym);
-		ibuffer_load (x, 0, 1, &temp_atom);
+		ibuffer_load(x, 0, 1, &temp_atom);
 	}
 	
     return (x);
 }
 
 
-void ibuffer_free (t_ibuffer *x)
+void ibuffer_free(t_ibuffer *x)
 {
 	x->valid = 0;
 	
 	dsp_free(&x->x_obj);
-	free (x->thebuffer);
+	free(x->thebuffer);
 	
 	if (x->name) 
 		x->name->s_thing = 0;
 }
 
 
-void ibuffer_assist (t_ibuffer *x, void *b, long m, long a, char *s)
+void ibuffer_assist(t_ibuffer *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET) 
 		sprintf(s,"(bang) Buffer Loaded");
@@ -119,7 +120,7 @@ void ibuffer_assist (t_ibuffer *x, void *b, long m, long a, char *s)
 }
 
 
-void ibuffer_name (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
 	// Send name of buffer as the calling symbol
 	
@@ -128,13 +129,13 @@ void ibuffer_name (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 }
 
 
-void ibuffer_name_internal (t_ibuffer *x, t_symbol *name, short argc, t_atom *argv)
+void ibuffer_name_internal(t_ibuffer *x, t_symbol *name, short argc, t_atom *argv)
 {	
 	if (!name || name == ps_null || name == x->name) 
 		return;
 	
 	if (name->s_thing)
-		object_error ((t_object *) x, "ibuffer~: name %s already in use!", name->s_name);
+		object_error((t_object *) x, "ibuffer~: name %s already in use!", name->s_name);
 	else
 	{
 		if (x->name) 
@@ -145,20 +146,20 @@ void ibuffer_name_internal (t_ibuffer *x, t_symbol *name, short argc, t_atom *ar
 }
 
 
-void *ibuffer_valid (t_ibuffer *x)
+void *ibuffer_valid(t_ibuffer *x)
 {	
 	return (void *) &x->valid;
 }
 
 
-void ibuffer_load (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
 	if (argc)
 		defer(x, (method) ibuffer_doload, s, argc, argv);
 }
 
 
-void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
 	double sr;
 	
@@ -192,12 +193,11 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	UInt8 *load_temp;
 	UInt8 *channels_swap;
 	
-	t_sndfile *the_sndfile = NULL;
-    t_sndfile_info info;
+    HISSTools::Utility::IAudioFile file;
     
 	// Get path
 	
-	t_symbol *path_sym = atom_getsym (argv++);
+	t_symbol *path_sym = atom_getsym(argv++);
 	argc--;
 	
 	// Set the ibuffer as invalid
@@ -208,7 +208,7 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 	if (ATOMIC_INCREMENT_BARRIER(&x->inuse) > 1) 
 	{
-		object_error ((t_object *) x, "ibuffer~: in use - cannot replace contents");
+		object_error((t_object *) x, "ibuffer~: in use - cannot replace contents");
 		x->valid = prev_valid;
 		return;
 	}
@@ -220,7 +220,7 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		strcpy(filename, path_sym->s_name);
 		err = locatefile_extended(filename, &path , &type, &type,-1);
 		err |= path_topathname(path, &null_char, foldname);
-		err |= path_nameconform (foldname, fullname, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
+		err |= path_nameconform(foldname, fullname, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
 		
 		// If we now how a valid filename and folder name copy the strings into a fullname in the correct format 
 		
@@ -260,54 +260,54 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 			// Try to open the file using libsndfile
 			
-			the_sndfile  = sndfile_open(fullname, &info, NULL);
+            file.open(fullname);
         }
 	}
 		
 	// Load the format data and if we have a valid format load the sample
 	
-	if (the_sndfile)
+	if (file.isOpen())
 	{		
 		// Get sample info 
 		
-		frames = info.frames;
-		channels = info.channels;
-        sample_size = info.depth;
-		sr = info.sample_rate;
+		frames = file.getFrames();
+		channels = file.getChannels();
+		sr = file.getSamplingRate();
 		        
-		switch (sample_size)
+		switch (file.getPCMFormat())
 		{
-			case 2:
+            case HISSTools::Utility::BaseAudioFile::kAudioFileInt16:
 				format = PCM_INT_16;
+                sample_size = 2;
 				break;
 				
-			case 3:
+			case HISSTools::Utility::BaseAudioFile::kAudioFileInt24:
 				format = PCM_INT_24;
+                sample_size = 3;
 				break;
 				
-			case 4:
+			case HISSTools::Utility::BaseAudioFile::kAudioFileInt32:
 				format = PCM_INT_32;
+                sample_size = 4;
 				break;
 				
+            case HISSTools::Utility::BaseAudioFile::kAudioFileFloat32:
+                format = PCM_FLOAT;
+                sample_size = 4;
+                break;
+                
             default:
 				sample_size = 0;
 				break;
 		}
-        
-        if (info.num_format == NUMFORMAT_FLOAT)
-        {
-            format = PCM_FLOAT;
-            if (sample_size != 4)
-                sample_size = 0;
-        }
-		
+
         // Bail if incorrect format
         
         if (!sample_size)
         {
-            object_error ((t_object *) x, "ibuffer~: incorrect sample format");
+            object_error((t_object *) x, "ibuffer~: incorrect sample format");
             ATOMIC_DECREMENT_BARRIER(&x->inuse);
-            sndfile_close (the_sndfile);
+            file.close();
             return;
         }
         
@@ -326,36 +326,36 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		// Free previous memory and allocate memory to store the sample
 		
 		free (x->thebuffer);
-		x->thebuffer = calloc (sample_size, (frames * channels_to_load + 64));
-		x->samples = (void *) ((char *) x->thebuffer + (16 * sample_size));
-		data = x->samples;
+		x->thebuffer = calloc(sample_size, (frames * channels_to_load + 64));
+		x->samples = (void *)((char *) x->thebuffer + (16 * sample_size));
+		data = (UInt8 *)x->samples;
 		
 		// Bail if no memory
 		
 		if (!x->thebuffer)
 		{
-			object_error ((t_object *) x, "ibuffer~: could not allocate memory to load file");
+			object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
 			ATOMIC_DECREMENT_BARRIER(&x->inuse);
-			sndfile_close (the_sndfile);
-			return;
+            file.close();
+            return;
 		}
 		
 		// Load the audio data raw and close the file
 		
 		if (load_all_channels)
-			sndfile_read_raw (the_sndfile, x->samples, frames);
+            file.readRaw(x->samples, frames);
 		else 
 		{
 			// Here we load in chunks to some temporary memory and then copy out ony the relevant channels
 			
-			load_temp = malloc (DEFAULT_WORK_CHUNK * sample_size * channels);
+			load_temp = (UInt8 *)malloc(DEFAULT_WORK_CHUNK * sample_size * channels);
 			
 			if (!load_temp) 
 			{
-				object_error ((t_object *) x, "ibuffer~: could not allocate memory to load file");
+				object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
 				ATOMIC_DECREMENT_BARRIER(&x->inuse);
-				sndfile_close (the_sndfile);
-				return;
+                file.close();
+                return;
 			}
 			
 			for (i = 0; i < channels_to_load; i++)
@@ -366,7 +366,7 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 				// Read chunk
 				
 				work_chunk = (i + 1) * DEFAULT_WORK_CHUNK > frames ?  frames - (i * DEFAULT_WORK_CHUNK): DEFAULT_WORK_CHUNK;
-				sndfile_read_raw (the_sndfile, load_temp, work_chunk);
+                file.readRaw(load_temp, work_chunk);
 				
 				// Copy channels
 				
@@ -379,18 +379,18 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 			
 			// Free temp memory and store relevant variables
 			
-			free (load_temp);
+			free(load_temp);
 			channels = channels_to_load;
-			data = x->samples;
+			data = (UInt8 *)x->samples;
 		}
 		
 		// If the samples are in the wrong endianness then reverse the byte order for each sample 
 		
 #if (TARGET_RT_LITTLE_ENDIAN || defined (WIN_VERSION))	
-		if (info.endianness == ENDIANNESS_BIG)
+        if (file.getHeaderEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileBigEndian)
 			endianness_swap = 1;
 #else
-		if (info.endianness == ENDIANNESS_LITTLE)
+        if (file.getHeaderEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileLittleEndian)
 			endianness_swap = 1;
 #endif
 		
@@ -451,10 +451,10 @@ void ibuffer_doload (t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	}
 	else 
 	{
-		object_error ((t_object *) x, "ibuffer~: could not find / open named file");
+		object_error((t_object *) x, "ibuffer~: could not find / open named file");
 	}
 	
 	ATOMIC_DECREMENT_BARRIER(&x->inuse);
-	sndfile_close (the_sndfile);
+    file.close();
 }
 

@@ -55,60 +55,46 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0F5B62030919440900A62EB9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF98210AED1BE008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF99310AED1C5008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.c */; };
 		B8BFF9D410AED239008EB5B2 /* vminimum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.c */; };
 		B8BFFA8A10AEEE18008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFA9010AEEE18008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFA9C10AEEE1C008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAA210AEEE1C008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAAE10AEEE1F008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAB410AEEE1F008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAC010AEEE21008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAC610AEEE21008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFAD210AEEE62008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAD810AEEE62008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB0210AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB0810AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB1410AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB1A10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB2610AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB2C10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB3810AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB3E10AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB4A10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB5010AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB5C10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB6210AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.c */; };
 		B8BFFB9610AEF01E008EB5B2 /* vsinh~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9510AEF01E008EB5B2 /* vsinh~.c */; };
@@ -122,67 +108,51 @@
 		B8BFFBC410AEF07E008EB5B2 /* vsinx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC310AEF07E008EB5B2 /* vsinx~.c */; };
 		B8BFFBC610AEF08B008EB5B2 /* vtanx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC510AEF08B008EB5B2 /* vtanx~.c */; };
 		B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3936E1095B8640081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E3937E1095B8990081D095 /* vnotequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3937D1095B8990081D095 /* vnotequals~.c */; };
 		B8E393861095B8C10081D095 /* vequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492EE1095A30E00A88A63 /* vequals~.c */; };
 		B8E393921095B8E10081D095 /* vplus~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E81095A2FA00A88A63 /* vplus~.c */; };
 		B8E395611096138D0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395661096138D0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395671096138D0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39573109613900081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39578109613900081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E39579109613900081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395A6109614350081D095 /* vabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E39595109613C90081D095 /* vabs~.c */; };
 		B8E395A71096143B0081D095 /* vcosx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3959A109613F40081D095 /* vcosx~.c */; };
 		B8E395ED109616AB0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395F3109616AB0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395FF109616B20081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39604109616B20081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E39605109616B20081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39616109616ED0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3961C109616ED0081D095 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39655109617FB0081D095 /* vlog~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.c */; };
 		B8E39656109618040081D095 /* vsqrt~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962D1096173F0081D095 /* vsqrt~.c */; };
 		B8E396571096180E0081D095 /* vtrunc~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E39627109617180081D095 /* vtrunc~.c */; };
 		B8E492E31095A2EA00A88A63 /* vtimes~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E21095A2EA00A88A63 /* vtimes~.c */; };
 		B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E492FA1095A32500A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4930B1095A32800A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E493A91095A68400A88A63 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494361095AB2B00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494471095AB2F00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494581095AB3200A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494691095AB3700A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4947A1095AB3C00A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4948B1095AB4200A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4949C1095AB4500A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494AD1095AB4800A88A63 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4954A1095AD4600A88A63 /* vdiv~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E493BF1095A73900A88A63 /* vdiv~.c */; };
 		B8E4954B1095AD4F00A88A63 /* vrdiv~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E493EB1095AA2400A88A63 /* vrdiv~.c */; };
@@ -194,20 +164,15 @@
 		B8E495511095AD8D00A88A63 /* vlessthan~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CA1095A76A00A88A63 /* vlessthan~.c */; };
 		B8E8E6401098B8EA00C566B2 /* vmtof~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.c */; };
 		B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE3F8B1098759000780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE3FA1109875BE00780AF9 /* vpow~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE3FA0109875BE00780AF9 /* vpow~.c */; };
 		B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40801098795600780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40911098795A00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40A21098795D00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40B31098795F00780AF9 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */; };
 		B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE412010987B2000780AF9 /* vatodb~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40681098790500780AF9 /* vatodb~.c */; };
 		B8FE412110987B2900780AF9 /* vdbtoa~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40691098791600780AF9 /* vdbtoa~.c */; };
@@ -464,7 +429,6 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<absolute>"; };
 		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B887FAFA1838D67200C83570 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
@@ -548,7 +512,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				0F5B62030919440900A62EB9 /* MaxAudioAPI.framework in Frameworks */,
 				B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,7 +521,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF98210AED1BE008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -568,7 +530,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF99310AED1C5008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -578,7 +539,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFA9010AEEE18008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,7 +548,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAA210AEEE1C008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -598,7 +557,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAB410AEEE1F008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,7 +566,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAC610AEEE21008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -618,7 +575,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAD810AEEE62008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -628,7 +584,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB0810AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -638,7 +593,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB1A10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -648,7 +602,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB2C10AEEE71008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,7 +611,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB3E10AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -668,7 +620,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB5010AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,7 +629,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB6210AEEE77008EB5B2 /* MaxAudioAPI.framework in Frameworks */,
 				B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -688,7 +638,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */,
-				B8E3936E1095B8640081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -698,7 +647,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E395661096138D0081D095 /* Carbon.framework in Frameworks */,
-				B8E395671096138D0081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -708,7 +656,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E39578109613900081D095 /* Carbon.framework in Frameworks */,
-				B8E39579109613900081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -718,7 +665,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */,
-				B8E395F3109616AB0081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -728,7 +674,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E39604109616B20081D095 /* Carbon.framework in Frameworks */,
-				B8E39605109616B20081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -738,7 +683,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */,
-				B8E3961C109616ED0081D095 /* MaxAudioAPI.framework in Frameworks */,
 				B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -748,7 +692,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */,
-				B8E492FA1095A32500A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -758,7 +701,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */,
-				B8E4930B1095A32800A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,7 +710,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494361095AB2B00A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -778,7 +719,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494471095AB2F00A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -788,7 +728,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */,
-				B8E494581095AB3200A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -798,7 +737,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */,
-				B8E494691095AB3700A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -808,7 +746,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */,
-				B8E4947A1095AB3C00A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -818,7 +755,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */,
-				B8E4948B1095AB4200A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -828,7 +764,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */,
-				B8E4949C1095AB4500A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -838,7 +773,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */,
-				B8E494AD1095AB4800A88A63 /* MaxAudioAPI.framework in Frameworks */,
 				B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -848,7 +782,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */,
-				B8FE3F8B1098759000780AF9 /* MaxAudioAPI.framework in Frameworks */,
 				B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -858,7 +791,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40801098795600780AF9 /* MaxAudioAPI.framework in Frameworks */,
 				B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -868,7 +800,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40911098795A00780AF9 /* MaxAudioAPI.framework in Frameworks */,
 				B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -878,7 +809,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40A21098795D00780AF9 /* MaxAudioAPI.framework in Frameworks */,
 				B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -888,7 +818,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40B31098795F00780AF9 /* MaxAudioAPI.framework in Frameworks */,
 				B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -913,7 +842,6 @@
 			children = (
 				B10347B90AAAE41500981DE1 /* Accelerate.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
-				0F5B62020919440900A62EB9 /* MaxAudioAPI.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";

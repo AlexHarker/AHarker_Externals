@@ -162,7 +162,7 @@ static __inline double atom_getdouble_translate (t_atom *arg)
 // ========================================================================================================================================== //
 
 
-int main(void)
+int C74_EXPORT main(void)
 {
 	this_class	= class_new	("entrymatcher",
 				(method) entrymatcher_new, 

@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B816D0A50EDC513400DE7CB1 /* ibuffer~.c in Sources */ = {isa = PBXBuildFile; fileRef = B1BB1FD70A4ECF2D0012288F /* ibuffer~.c */; };
-		B86499A51A4C8E0000889AC9 /* extended.c in Sources */ = {isa = PBXBuildFile; fileRef = B86499A31A4C8E0000889AC9 /* extended.c */; };
-		B86499A61A4C8E0000889AC9 /* file_reading.h in Headers */ = {isa = PBXBuildFile; fileRef = B86499A41A4C8E0000889AC9 /* file_reading.h */; };
-		B8BB0A9F12152E58001C041D /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8BB0A9E12152E58001C041D /* MaxAudioAPI.framework */; };
+		B816D0A50EDC513400DE7CB1 /* ibuffer~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1BB1FD70A4ECF2D0012288F /* ibuffer~.cpp */; };
+		B89B135C1CC18525008B0E1A /* BaseAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */; };
+		B89B135D1CC18525008B0E1A /* BaseAudioFile.h in Headers */ = {isa = PBXBuildFile; fileRef = B89B13591CC18525008B0E1A /* BaseAudioFile.h */; };
+		B89B135E1CC18525008B0E1A /* IAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B89B135A1CC18525008B0E1A /* IAudioFile.cpp */; };
+		B89B135F1CC18525008B0E1A /* IAudioFile.h in Headers */ = {isa = PBXBuildFile; fileRef = B89B135B1CC18525008B0E1A /* IAudioFile.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B1BB1FD70A4ECF2D0012288F /* ibuffer~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "ibuffer~.c"; sourceTree = "<group>"; };
+		B1BB1FD70A4ECF2D0012288F /* ibuffer~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "ibuffer~.cpp"; sourceTree = "<group>"; };
 		B1BB1FD90A4ECF4A0012288F /* ibuffer~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibuffer~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B86499A31A4C8E0000889AC9 /* extended.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = extended.c; sourceTree = "<group>"; };
-		B86499A41A4C8E0000889AC9 /* file_reading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = file_reading.h; sourceTree = "<group>"; };
-		B8BB0A9E12152E58001C041D /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
+		B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAudioFile.cpp; path = AudioFile/BaseAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B13591CC18525008B0E1A /* BaseAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAudioFile.h; path = AudioFile/BaseAudioFile.h; sourceTree = SOURCE_ROOT; };
+		B89B135A1CC18525008B0E1A /* IAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAudioFile.cpp; path = AudioFile/IAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B135B1CC18525008B0E1A /* IAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioFile.h; path = AudioFile/IAudioFile.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,7 +32,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B8BB0A9F12152E58001C041D /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,7 +53,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B8BB0A9E12152E58001C041D /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";
@@ -68,8 +68,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B1BB1FD70A4ECF2D0012288F /* ibuffer~.c */,
-				B86499A21A4C8E0000889AC9 /* file_reading */,
+				B1BB1FD70A4ECF2D0012288F /* ibuffer~.cpp */,
+				B86499A21A4C8E0000889AC9 /* AudioFile */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -82,12 +82,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B86499A21A4C8E0000889AC9 /* file_reading */ = {
+		B86499A21A4C8E0000889AC9 /* AudioFile */ = {
 			isa = PBXGroup;
 			children = (
-				B86499A31A4C8E0000889AC9 /* extended.c */,
-				B86499A41A4C8E0000889AC9 /* file_reading.h */,
+				B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */,
+				B89B13591CC18525008B0E1A /* BaseAudioFile.h */,
+				B89B135A1CC18525008B0E1A /* IAudioFile.cpp */,
+				B89B135B1CC18525008B0E1A /* IAudioFile.h */,
 			);
+			name = AudioFile;
 			path = file_reading;
 			sourceTree = "<group>";
 		};
@@ -98,7 +101,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B86499A61A4C8E0000889AC9 /* file_reading.h in Headers */,
+				B89B135D1CC18525008B0E1A /* BaseAudioFile.h in Headers */,
+				B89B135F1CC18525008B0E1A /* IAudioFile.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,8 +180,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B86499A51A4C8E0000889AC9 /* extended.c in Sources */,
-				B816D0A50EDC513400DE7CB1 /* ibuffer~.c in Sources */,
+				B89B135C1CC18525008B0E1A /* BaseAudioFile.cpp in Sources */,
+				B89B135E1CC18525008B0E1A /* IAudioFile.cpp in Sources */,
+				B816D0A50EDC513400DE7CB1 /* ibuffer~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

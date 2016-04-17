@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B816D0A50EDC513400DE7CB1 /* ibuffermulti~.c in Sources */ = {isa = PBXBuildFile; fileRef = B1BB1FD70A4ECF2D0012288F /* ibuffermulti~.c */; };
-		B8BB0AA912152E61001C041D /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8BB0AA812152E61001C041D /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,7 +16,6 @@
 		B1BB1FD70A4ECF2D0012288F /* ibuffermulti~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "ibuffermulti~.c"; sourceTree = "<group>"; };
 		B1BB1FD90A4ECF4A0012288F /* ibuffermulti~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibuffermulti~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8BB0AA812152E61001C041D /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,7 +24,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B8BB0AA912152E61001C041D /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +45,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B8BB0AA812152E61001C041D /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";

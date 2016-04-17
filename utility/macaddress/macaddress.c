@@ -20,7 +20,8 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-void *this_class;
+
+t_class *this_class;
 
 
 typedef struct macaddress{
@@ -62,22 +63,19 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void *macaddress_new()
 {
     t_macaddress *x = (t_macaddress *) object_alloc(this_class);
 	
-	x->output = outlet_new (x, 0);
+	x->output = outlet_new(x, 0);
 	
-    return (x);
+    return x;
 	
 }
-
 
 void macaddress_free(t_macaddress *x)
 {
 }
-
 
 #ifdef __APPLE__
 

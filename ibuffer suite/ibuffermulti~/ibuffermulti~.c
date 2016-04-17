@@ -51,7 +51,7 @@ void ibuffermulti_load (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv
 void ibuffermulti_doload (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv);
 
 
-int main (void)
+int C74_EXPORT main (void)
 {
 	this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, sizeof(t_ibuffermulti), 0L, 0);
 	

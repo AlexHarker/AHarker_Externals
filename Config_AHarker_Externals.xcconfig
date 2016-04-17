@@ -5,7 +5,7 @@ PRODUCT_NAME = $TARGET_NAME
 
 // Paths
 
-C74SUPPORT = $(SRCROOT)/../../AH_Max6_Support/c74support
+C74SUPPORT = $(SRCROOT)/../../AH_Max_SDK/c74support
 HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
@@ -23,7 +23,7 @@ SDKROOT = macosx10.5
 
 ARCHS = i386 x86_64 
 
-GCC_PREPROCESSOR_DEFINITIONS = "DENORM_WANT_FIX = 1"
+GCC_PREPROCESSOR_DEFINITIONS = DENORM_WANT_FIX=1 NO_TRANSLATION_SUPPORT=1
 
 // Static Configuration (don't change these)
 
@@ -43,7 +43,7 @@ OTHER_CFLAGS = -std=gnu89
 
 C74_SYM_LINKER_FLAGS = @$(C74SUPPORT)/max-includes/c74_linker_flags.txt
 
-OTHER_LDFLAGS = $(C74_SYM_LINKER_FLAGS)
+OTHER_LDFLAGS = -framework MaxAudioAPI -framework JitterAPI $(C74_SYM_LINKER_FLAGS)
 
 // hide all symbols by default
 // mark a function to be exported with the C74_EXPORT macro -- most likely this will only apply to the main() function

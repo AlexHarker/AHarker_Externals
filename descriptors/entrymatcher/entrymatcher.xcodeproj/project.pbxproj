@@ -25,7 +25,6 @@
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8998A4111CECDFB0028A17C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8998A5311CECE260028A17C /* entrymatcher~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8998A5211CECE260028A17C /* entrymatcher~.c */; };
-		B8998B2211CED9CB0028A17C /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8998B2111CED9CB0028A17C /* MaxAudioAPI.framework */; };
 		B8EC9F050F0A433600B26D31 /* entrymatcher.c in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher.c */; };
 /* End PBXBuildFile section */
 
@@ -51,7 +50,6 @@
 		8D01CCD20486CAD60068D4B7 /* entrymatcher.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = entrymatcher.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8998A4811CECDFB0028A17C /* entrymatcher~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "entrymatcher~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8998A5211CECE260028A17C /* entrymatcher~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "entrymatcher~.c"; sourceTree = "<group>"; };
-		B8998B2111CED9CB0028A17C /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../AH_Max6_Support/c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = SOURCE_ROOT; };
 		B8EC9F040F0A433600B26D31 /* entrymatcher.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = entrymatcher.c; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -70,7 +68,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8998A4111CECDFB0028A17C /* Carbon.framework in Frameworks */,
-				B8998B2211CED9CB0028A17C /* MaxAudioAPI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,7 +89,6 @@
 		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				B8998B2111CED9CB0028A17C /* MaxAudioAPI.framework */,
 				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
 			);
 			name = "External Frameworks and Libraries";

@@ -117,7 +117,7 @@ static __inline void **Dynamic_Get_Temp_Mem(void *obj, long index, void **defaul
 
 static __inline long Dynamic_Temp_Mem_Resize(void *obj, long index, t_ptr_uint size)
 {
-    if (DynamicIsValid(obj))
+    if (DynamicIsValid(obj) && index > 0)
         return (long) mess2((t_object *)obj, gensym("temp_mem_resize"), (void *)index, (void *)size);
     else
         return 0;

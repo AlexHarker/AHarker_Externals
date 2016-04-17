@@ -44,7 +44,7 @@
 // Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
 // See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm)
 
-// The memory requirement is currently 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE
+// The memory requirement is currently 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
 // The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
 
 // N.B. CMWC_LAG_SIZE must be a power of two
@@ -63,7 +63,6 @@ typedef struct _rand_gen_
 
 }	t_rand_gen;
 
-
 void initCMWC (t_rand_gen *gen, AH_UInt32 *init)
 {
 	gen->increment = (CMWC_LAG_SIZE - 1);
@@ -72,7 +71,6 @@ void initCMWC (t_rand_gen *gen, AH_UInt32 *init)
 	for (long i = 0; i < CMWC_LAG_SIZE; i++)
 		gen->STATE[i] = init[i];
 }
-
 
 static __inline AH_UInt32 CMWC (t_rand_gen *gen)
 {
@@ -100,11 +98,9 @@ static __inline AH_UInt32 CMWC (t_rand_gen *gen)
 	return gen->STATE[i];
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// The following routines provide an interface with the basic 32 bit UInt RNG ///////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 // Seed the random number generator randomly using OS specific routines
 
@@ -130,7 +126,6 @@ void rand_seed (t_rand_gen *gen)
 	initCMWC (gen, seed);
 }
 
-
 // Generate a single pseudo-random unsigned integer
 
 static __inline AH_UInt32 rand_int (t_rand_gen *gen)
@@ -138,11 +133,9 @@ static __inline AH_UInt32 rand_int (t_rand_gen *gen)
 	return CMWC(gen);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////// The following routine provides an interface to retrieve a single using OS provided routines (for seeding etc.) /////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 static __inline AH_UInt32 rand_int_os()
 {
@@ -165,11 +158,9 @@ static __inline AH_UInt32 rand_int_os()
     return rand;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////// The below routines are RNG Agnostic /////////////////////////////////////////// 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 #define CONVERT_DOUBLE 2.32830643653869628906e-10
 
@@ -193,22 +184,19 @@ static __inline AH_UInt32 rand_int_n (t_rand_gen *gen, AH_UInt32 n)
 	return i;
 }
 
-
 // Return an signed 32 bit integer in the range [lo, hi]
 
-static __inline AH_SInt32 rand_int_range (t_rand_gen *gen, AH_SInt32 lo, AH_SInt32 hi)
+static __inline AH_SInt32 rand_int_range(t_rand_gen *gen, AH_SInt32 lo, AH_SInt32 hi)
 {	
 	return lo + rand_int_n(gen, hi - lo);
 }
 
-
 // Return a 32 bit random double in the range [0,1]
 
-static __inline double rand_double (t_rand_gen *gen)
+static __inline double rand_double(t_rand_gen *gen)
 {
 	return rand_int(gen) * CONVERT_DOUBLE;
 }
-
 
 // Return a 32 bit random double in the range [0, n]
 
@@ -217,18 +205,16 @@ static __inline double rand_double_n (t_rand_gen *gen, double n)
 	return rand_double(gen) * n;
 }
 
-
 // Return a 32 bit random double in the range [lo, hi]
 
-static __inline double rand_double_range (t_rand_gen *gen, double lo, double hi)
+static __inline double rand_double_range(t_rand_gen *gen, double lo, double hi)
 {	
 	return lo + rand_double(gen) * (hi - lo); 
 }
 
-
 // This is for internal use only (unless you need two independent gaussian numbers at the same time...)
 
-static __inline double rand_gauss_basic (t_rand_gen *gen, double *ret_x, double *ret_y)
+static __inline double rand_gauss_basic(t_rand_gen *gen, double *ret_x, double *ret_y)
 {
 	double x, y;
 	double R = 0;
@@ -248,10 +234,9 @@ static __inline double rand_gauss_basic (t_rand_gen *gen, double *ret_x, double 
 	return R;
 }
 
-
 // Return a gaussian distribution double with given mean and dev
 
-static __inline double rand_gauss (t_rand_gen *gen, double mean, double dev)
+static __inline double rand_gauss(t_rand_gen *gen, double mean, double dev)
 {
 	double x, y;
 	double R = rand_gauss_basic (gen, &x, &y);
@@ -259,10 +244,9 @@ static __inline double rand_gauss (t_rand_gen *gen, double mean, double dev)
 	return (R * x) * dev + mean; 
 }
 
-
 // Return a gaussian distribution double with given mean and dev and in the range [0, 1]
 
-static __inline double rand_windgauss_bm (t_rand_gen *gen, double mean, double dev)
+static __inline double rand_windgauss_bm(t_rand_gen *gen, double mean, double dev)
 {
 	double x, y;
 	double R = -1.;
@@ -281,10 +265,9 @@ static __inline double rand_windgauss_bm (t_rand_gen *gen, double mean, double d
 	return R; 
 }
 
-
 // N.B. This direct method is faster than the box muller for high values of dev, hence it is default
 
-static __inline double rand_windgauss (t_rand_gen *gen, double mean, double dev)
+static __inline double rand_windgauss(t_rand_gen *gen, double mean, double dev)
 {
 	double dev_recip = 1. / (dev * sqrt(2.));
 	double mmean_t_dev = -mean * dev_recip;

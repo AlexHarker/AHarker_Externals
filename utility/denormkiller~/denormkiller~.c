@@ -40,6 +40,7 @@ void denormkiller_dsp (t_denormkiller *x, t_signal **sp, short *count);
 void denormkiller_perform64 (t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void denormkiller_dsp64 (t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+
 int C74_EXPORT main(void)
 {
 	this_class = class_new ("denormkiller~",
@@ -67,16 +68,14 @@ void *denormkiller_new ()
 	
     dsp_setup((t_pxobject *)x, 0);
 	
-    return (x);
+    return x;
 }
-
 
 void denormkiller_assist (t_denormkiller *x, void *b, long m, long a, char *s)
 {
 	if (m == ASSIST_INLET) 
         sprintf(s, "Dummy");
 }
-
 
 t_int *denormkiller_perform(t_int *w)
 {	
@@ -89,12 +88,10 @@ t_int *denormkiller_perform(t_int *w)
 	return w + 1;
 }
 
-
 void denormkiller_dsp (t_denormkiller *x, t_signal **sp, short *count)
 {
     dsp_add(denormkiller_perform, 0);
 }
-
 
 void denormkiller_perform64 (t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
@@ -104,7 +101,6 @@ void denormkiller_perform64 (t_denormkiller *x, t_object *dsp64, double **ins, l
 	_mm_setcsr(_mm_getcsr() | 0x8040);					
 #endif
 }
-
 
 void denormkiller_dsp64 (t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
