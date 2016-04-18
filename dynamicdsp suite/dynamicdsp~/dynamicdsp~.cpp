@@ -20,15 +20,6 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#ifdef __APPLE__
-#include <pthread.h>
-#include <mach/semaphore.h>
-#include <mach/task.h>
-#else
-#include <Windows.h>
-#define snprintf _snprintf
-#endif 
-
 #include <AH_Atomic.h>
 #include <AH_Memory_Swap.h>
 #include <AH_Types.h>
@@ -37,6 +28,7 @@
 #include <dynamicdsp~.h>
 #include "PatchSlot.h"
 #include "PatchSet.h"
+#include "ThreadSet.h"
 
 // FIX - gen~ loading issue - workaround in place
 
@@ -53,7 +45,6 @@
 
 t_class *dynamicdsp_class;
 
-static unsigned long processor_num_actual_threads;
 static t_ptr_uint sig_size;
 
 #define MAX_ARGS 16
@@ -108,41 +99,6 @@ public:
     }
 };
 
-////////////////////////////// Structure for thread and related data /////////////////////////////
-
-typedef struct thread_space {
-	
-	// Thread and Semaphores
-	
-#ifdef __APPLE__
-	pthread_t pth;
-#else
-	HANDLE pth;
-	AH_Boolean exiting;
-#endif
-
-	t_int32_atomic processed;
-	
-	// Internal Buffer Pointer
-	
-	void **thread_temp_buffer;
-	
-	// Temporary Memory For Objects Within Patch
-	
-	t_ptr_uint temp_mem_size;
-	void *temp_mem_ptr;
-	
-	void *first_thread_space;
-	
-	// Variables
-	
-	void *dynamicdsp_parent;
-	
-	long thread_num;
-	long vec_size;
-	
-} t_threadspace;
-
 ////////////////////////////////////// The object structure //////////////////////////////////////
 
 typedef struct _dynamicdsp
@@ -150,12 +106,6 @@ typedef struct _dynamicdsp
     t_pxobject x_obj;
     
 	t_patcher *parent_patch;
-	
-	// Patch Data and Variables 
-	
-    ThreadedPatchSet *slots;
-	
-	long target_index;
 	
 	long last_vec_size;
 	long last_samp_rate;
@@ -184,22 +134,12 @@ typedef struct _dynamicdsp
 	
 	long max_obj_threads;
 	
-#ifdef __APPLE__
-	task_t the_task;
-	semaphore_t tick_semaphore;	
-#else
-	HANDLE tick_semaphore;
-#endif
-	
-	// Thread Data
-	
-	t_threadspace *thread_space_ptr;
-	t_ptr_uint thread_temp_buffer_size;
-
-	// Temporary Memory Variables
-	
+    // Temporary Memory / Thread Data / Patches
+    
 	t_safe_mem_swap temp_mem;
-	
+    ThreadSet *threads;
+    ThreadedPatchSet *slots;
+    
 } t_dynamicdsp;
 
 
@@ -229,15 +169,10 @@ void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *a
 void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
-static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
-#ifdef __APPLE__
-void *dynamicdsp_threadwait(void *arg);
-#else
-DWORD WINAPI dynamicdsp_threadwait(LPVOID arg);
-#endif
-static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long threads_running);
-void dynamicdsp_sum_float(t_threadspace *thread_space_ptr, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
-void dynamicdsp_sum_double(t_threadspace *thread_space_ptr, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
+static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
+void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long num_active_threads);
+void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
+void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -245,11 +180,6 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
-
-int dynamicdsp_linkinlets(t_patcher *p, t_dynamicdsp *x);
-int dynamicdsp_linkoutlets(t_patcher *p, t_dynamicdsp *x);
-int dynamicdsp_unlinkinlets(t_patcher *p, t_dynamicdsp *x);
-int dynamicdsp_unlinkoutlets(t_patcher *p, t_dynamicdsp *x);
 
 void dynamicdsp_dblclick(t_dynamicdsp *x);
 void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index);
@@ -289,15 +219,6 @@ t_symbol *ps_declareio;
 
 int C74_EXPORT main(void)
 {
-#ifdef __APPLE__
-	processor_num_actual_threads = MPProcessors();
-#else
-	SYSTEM_INFO sysinfo;
-	GetSystemInfo(&sysinfo);
-	
-	processor_num_actual_threads = sysinfo.dwNumberOfProcessors;
-#endif
-
 	dynamicdsp_class = class_new("dynamicdsp~",
 								 (method)dynamicdsp_new, 
 								 (method)dynamicdsp_free, 
@@ -381,13 +302,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	long num_sig_outs = 2;
 	long num_ins = 2;
 	long num_outs = 2;	
-	long max_obj_threads = processor_num_actual_threads;
-	
-#ifdef __APPLE__
-	pthread_attr_t tattr;
-	struct sched_param param;
-	int newprio = 63;		
-#endif
+    long max_obj_threads = ThreadSet::getNumProcessors();
 	
 	// Check if there is a patch name given to load
 	
@@ -463,68 +378,13 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 		x->multithread_flag = 0;									
 	else 
 		x->multithread_flag = 1;
-	
-#ifdef __APPLE__
-	x->the_task = mach_task_self();
-#endif
 
 	// Multithreading variables
 	
-	x->thread_space_ptr = (t_threadspace *) malloc(max_obj_threads * sizeof(t_threadspace));
 	x->manual_threading = 1;
 	x->request_manual_threading = 1;
 	x->request_num_active_threads = max_obj_threads;
-	x->thread_temp_buffer_size = 0;
 	
-	// Setup temporary memory 
-	
-	alloc_mem_swap(&x->temp_mem, 0, 0);
-				
-	// Create and eetup each threads variables
-	
-	for (long i = 0; i < max_obj_threads; i++)
-	{
-		x->thread_space_ptr[i].pth = NULL;
-		x->thread_space_ptr[i].thread_temp_buffer = (void **) ALIGNED_MALLOC(num_sig_outs * sizeof(void *));
-		x->thread_space_ptr[i].temp_mem_ptr = NULL;
-        x->thread_space_ptr[i].temp_mem_size = 0;
-		x->thread_space_ptr[i].dynamicdsp_parent = x;
-		x->thread_space_ptr[i].thread_num = i;
-		x->thread_space_ptr[i].first_thread_space = x->thread_space_ptr;
-		
-		for (long j = 0; j < num_sig_outs; j++)
-			x->thread_space_ptr[i].thread_temp_buffer[j] = NULL;
-	}
-	
-	// Create the extra threads and associated semaphores (thread zero is the main audio thread)
-
-#ifdef __APPLE__	
-	semaphore_create(x->the_task, &x->tick_semaphore, 0, 0);
-#else
-	//x->tick_semaphore = CreateEvent(NULL, TRUE, FALSE, NULL);
-	x->tick_semaphore = CreateSemaphore(NULL, 0, max_obj_threads - 1, NULL);
-#endif 
-
-	for (long i = 1; i < max_obj_threads; i++)
-	{
-		x->thread_space_ptr[i].processed = 1;
-		//x->thread_space_ptr[i].tick_semaphore = x->tick_semaphore;
-#ifdef __APPLE__
-		pthread_attr_init (&tattr);																// initialized with default attributes 
-		pthread_attr_getschedparam (&tattr, &param);											// safe to get existing scheduling param 
-		param.sched_priority = newprio;															// set the priority; others are unchanged 
-		pthread_attr_setschedparam (&tattr, &param);											// setting the new scheduling param 
-		pthread_create(&(x->thread_space_ptr[i].pth), &tattr, dynamicdsp_threadwait, x->thread_space_ptr + i);
-#else
-		//x->thread_space_ptr[i].tick_semaphore = CreateEvent(NULL, TRUE, FALSE, NULL);
-		//x->thread_space_ptr[i].ret_semaphore = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-		x->thread_space_ptr[i].pth = CreateThread(NULL, 0, dynamicdsp_threadwait, x->thread_space_ptr + i, 0, NULL);
-		SetThreadPriority(x->thread_space_ptr[i].pth, THREAD_PRIORITY_TIME_CRITICAL);
-
-		x->thread_space_ptr[i].exiting = false;
-#endif
-	}
     
 	// Set other variables to defaults
 	
@@ -534,7 +394,6 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	x->num_outs = num_outs;
 	
 	x->update_thread_map = 0;
-	x->target_index = 0;	
 	
 	x->last_vec_size = 64;
 	x->last_samp_rate = 44100;
@@ -566,8 +425,10 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	for (long i = 0; i < num_sig_outs; i++)
 		outlet_new((t_object *)x, "signal");
 	
-    // Setup slots
-    
+    // Setup temporary memory / threads / slots
+	
+	alloc_mem_swap(&x->temp_mem, 0, 0);
+    x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
     x->slots = new ThreadedPatchSet((t_object *)x, num_ins, num_outs, outs);
     
 	// Initialise parent patcher
@@ -586,44 +447,14 @@ void dynamicdsp_free(t_dynamicdsp *x)
 {
 	dsp_free((t_pxobject *)x);
 	
-	// Free semaphores
+	// Free temporary memory / threads / patches
 
-#ifdef __APPLE__
-	semaphore_destroy(x->the_task, x->tick_semaphore);
-#else
-	for (long i = 1; i < x->max_obj_threads; i++)
-	{
-		x->thread_space_ptr[i].exiting = true;
-		//SetEvent(x->thread_space_ptr[i].tick_semaphore);
-	}
-	ReleaseSemaphore(x->tick_semaphore, x->max_obj_threads - 1, NULL);
-	CloseHandle(x->tick_semaphore);
-#endif
-	
-	// Free thread temporary buffers
-	
-	for (long i = 0; i < x->max_obj_threads; i++)
-    {
-        if (x->thread_space_ptr[i].thread_temp_buffer)
-        {
-            for (long j = 0; j < x->num_sig_outs; j ++)
-            {
-                if (x->thread_space_ptr[i].thread_temp_buffer[j])
-                    ALIGNED_FREE(x->thread_space_ptr[i].thread_temp_buffer[j]);
-            }
-        
-            free(x->thread_space_ptr[i].thread_temp_buffer);
-        }
-    }
-	
-	// Free patches
-	
+    free_mem_swap(&x->temp_mem);
+    delete x->threads;
 	delete x->slots;
 	
 	// Free other resources
 	
-	free_mem_swap(&x->temp_mem);
-	free(x->thread_space_ptr);
 	if (x->num_sig_ins)
 		free(x->sig_ins);
 	if (x->num_sig_outs)
@@ -811,100 +642,24 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 // ========================================================================================================================================== //
 
 
-static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
 {
-    t_threadspace *thread_space_ptr = x->thread_space_ptr;
+    // Tick the threads and process in this thread (the main audio thread)
     
-    for (long i = 1; i < num_active_threads; i++)
-        thread_space_ptr[i].processed = 0;
+    x->threads->tick(vec_size, num_active_threads, sig_outs);
     
-    // Tick the worker threads and process in this thread (the main audio thread)
-    
-#ifdef __APPLE__
-    
-    OSMemoryBarrier();
-    
-    for (long i = 1; i < num_active_threads; i++)
-        semaphore_signal(x->tick_semaphore);
-#else
-    
-    MemoryBarrier();
-    ReleaseSemaphore(x->tick_semaphore, num_active_threads - 1, NULL);
-    
-#endif
-    
-    // Process thread
-    
-    dynamicdsp_threadprocess(x, thread_space_ptr->thread_temp_buffer, thread_space_ptr->temp_mem_ptr, thread_space_ptr->temp_mem_size, vec_size, 0, num_active_threads);
-    
-    // Wait for all the other threads to return
-    
-    for (long i = 1; i < num_active_threads; i++)
-        while (thread_space_ptr[i].processed != 1);
-    
-    // Sum outputs
-    
-    if (sig_size == sizeof(float))
-        dynamicdsp_sum_float(thread_space_ptr, sig_outs, num_sig_outs, vec_size, num_active_threads);
-    else
-        dynamicdsp_sum_double(thread_space_ptr, sig_outs, num_sig_outs, vec_size, num_active_threads);
-}
-
-#ifdef __APPLE__
-#define THREAD_RETURN_VALUE NULL
-#else
-#define THREAD_RETURN_VALUE 0;
-#endif
-
-#ifdef __APPLE__
-void *dynamicdsp_threadwait(void *arg)
-#else
-DWORD WINAPI dynamicdsp_threadwait(LPVOID arg)
-#endif
-{
-    t_dynamicdsp *x = (t_dynamicdsp *) ((t_threadspace *) arg)->dynamicdsp_parent;
-    t_threadspace *thread_ptrs = (t_threadspace *) ((t_threadspace *) arg)->first_thread_space;
-    t_threadspace *this_thread;
-    t_threadspace *constant_thread;
-    long thread_num = ((t_threadspace *) arg)->thread_num;
-    long current_thread_num;
-    long num_active_threads;
-    
-    constant_thread = thread_ptrs + thread_num;
-    
-    while(1)
+    if (num_active_threads > 1)
     {
-#ifdef __APPLE__
-        kern_return_t tick_return = semaphore_wait(x->tick_semaphore);
-        if (tick_return == KERN_TERMINATED)
-            break;
-#else
-        WaitForSingleObject(x->tick_semaphore, INFINITE);
-        if (constant_thread->exiting)
-            break;
-#endif
-        
-        num_active_threads = x->num_active_threads;
-        
-        for (long i = thread_num; i < thread_num + num_active_threads - 1; i++)
-        {
-            // N.B. Get values from thread each time in case they have been changed
-            
-            current_thread_num = (i % (num_active_threads - 1)) + 1;
-            this_thread = thread_ptrs + current_thread_num;
-            
-            if (Atomic_Compare_And_Swap(0, 2, (t_int32_atomic *) &this_thread->processed))
-            {
-                dynamicdsp_threadprocess(x, this_thread->thread_temp_buffer, this_thread->temp_mem_ptr, this_thread->temp_mem_size, this_thread->vec_size, current_thread_num, num_active_threads);
-                this_thread->processed = 1;
-            }
-        }
-    }
+        // Sum outputs
     
-    return THREAD_RETURN_VALUE;
+        if (sig_size == sizeof(float))
+            dynamicdsp_sum_float(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
+        else
+            dynamicdsp_sum_double(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
+    }
 }
 
-static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long threads_running)
+void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long num_active_threads)
 {
     long num_sig_outs = x->num_sig_outs;
     
@@ -923,12 +678,12 @@ static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, 
     if (x->manual_threading)
     {
         for (long i = 0; i < x->slots->size(); i++)
-            x->slots->processIfThreadMatches(i, temp_mem_ptr, sig_outs, temp_mem_size, thread_num, threads_running);
+            x->slots->processIfThreadMatches(i, temp_mem_ptr, sig_outs, temp_mem_size, thread_num, num_active_threads);
     }
     else
     {
         long size = x->slots->size();
-        long index = (thread_num * (size / threads_running)) - 1;
+        long index = (thread_num * (size / num_active_threads)) - 1;
         for (long i = 0; i < size; i++)
         {
             if (++index >= size)
@@ -945,7 +700,7 @@ static __inline void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, 
 #endif
 }
 
-void dynamicdsp_sum_float(t_threadspace *thread_space_ptr, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
     // Sum output of threads for each signal outlet
     
@@ -953,16 +708,17 @@ void dynamicdsp_sum_float(t_threadspace *thread_space_ptr, void **sig_outs, long
     {
         for (long j = 0; j < num_active_threads; j++)
         {
-            float *io_pointer = (float *) sig_outs[i];
-            float *next_sig_pointer = (float *) thread_space_ptr[j].thread_temp_buffer[i];
+            float *io_pointer = (float *)sig_outs[i];
+            float *next_sig_pointer = (float *)threads->getThreadOut(j, i);
             
-            for (long k = 0; k < vec_size; k++)
-                *io_pointer++ += *next_sig_pointer++;
+            if (next_sig_pointer)
+                for (long k = 0; k < vec_size; k++)
+                    *io_pointer++ += *next_sig_pointer++;
         }
     }
 }
 
-void dynamicdsp_sum_double(t_threadspace *thread_space_ptr, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
     // Sum output of threads for each signal outlet
     
@@ -970,34 +726,29 @@ void dynamicdsp_sum_double(t_threadspace *thread_space_ptr, void **sig_outs, lon
     {
         for (long j = 0; j < num_active_threads; j++)
         {
-            double *io_pointer = (double *) sig_outs[i];
-            double *next_sig_pointer = (double *) thread_space_ptr[j].thread_temp_buffer[i];
+            double *io_pointer = (double *)sig_outs[i];
+            double *next_sig_pointer = (double *)threads->getThreadOut(j, i);
             
-            for (long k = 0; k < vec_size; k++)
-                *io_pointer++ += *next_sig_pointer++;
+            if (next_sig_pointer)
+                for (long k = 0; k < vec_size; k++)
+                    *io_pointer++ += *next_sig_pointer++;
         }	
     } 
 }
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
-	t_threadspace *thread_space_ptr = x->thread_space_ptr;
-		
     void *new_temp_mem_ptr;
     t_ptr_uint new_temp_mem_size;
 	
-	long num_sig_outs = x->num_sig_outs;
-	long num_active_threads = x->request_num_active_threads;	
+	long num_active_threads = x->request_num_active_threads;
     long multithread_flag = (x->slots->size() > 1) && x->multithread_flag;
 	
 	// Zero Outputs
 	
-	for (long i = 0; i < num_sig_outs; i++)
+	for (long i = 0; i < x->num_sig_outs; i++)
 		memset(sig_outs[i], 0, sig_size * vec_size);
 	
-	if (x->x_obj.z_disabled)
-		return;
-
 	// Update multithreading parameters (this is done in one thread and before all threads process to ensure uninterrupted audio processing
 	
     x->num_active_threads = num_active_threads;
@@ -1023,50 +774,44 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 		new_temp_mem_size = x->temp_mem.current_size;
 		
 		for (long i = 0; i < x->max_obj_threads; i++)
-		{
-			thread_space_ptr[i].temp_mem_ptr = (char *) new_temp_mem_ptr + (new_temp_mem_size * i);
-			thread_space_ptr[i].temp_mem_size = new_temp_mem_size;
-		}
+            x->threads->setTempMemory(i, (char *) new_temp_mem_ptr + (new_temp_mem_size * i), new_temp_mem_size);
 	}
     
-	// Do multithreaded or non-multithread processing - the former case is switched to try to get more speed out of inlining with a fixed loop size
-	
+	// Do processing - the switching aims to get more speed out of inlining with a fixed loop size
+	// Note that the signle threaded case is handled as a special case in the ThreadSet class
+    
 	switch (num_active_threads)
-    {
-        case 1:
-            dynamicdsp_threadprocess(x, (void **) sig_outs, x->thread_space_ptr[0].temp_mem_ptr, x->thread_space_ptr[0].temp_mem_size, vec_size, 0, 1);
-            break;
-                
+    {                
         case 2:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 2);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 2);
             break;
 				
         case 3:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 3);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 3);
             break;
 				
         case 4:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 4);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 4);
             break;
 				
         case 5:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 5);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 5);
             break;
 				
         case 6:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 6);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 6);
             break;
 				
         case 7:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 7);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 7);
             break;
 				
         case 8:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, 8);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 8);
             break;
 				
         default:
-            dynamicdsp_multithread_perform(x, sig_outs, num_sig_outs, vec_size, num_active_threads);
+            dynamicdsp_multithread_perform(x, sig_outs, vec_size, num_active_threads);
             break;
 	}
 }
@@ -1077,7 +822,8 @@ t_int *dynamicdsp_perform(t_int *w)
 	void **sig_outs = (void **) x->sig_outs;
 	long vec_size = x->last_vec_size;
 	
-	dynamicdsp_perform_common(x, sig_outs, vec_size);
+    if (!x->x_obj.z_disabled)
+        dynamicdsp_perform_common(x, sig_outs, vec_size);
 	
 	return w + 2;	
 }
@@ -1098,33 +844,7 @@ void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long 
 
 AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 {	
-    AH_Boolean mem_fail = false;
-	t_ptr_uint thread_temp_buffer_size;
-	
-	for (long i = 0; i < x->max_obj_threads; i++)
-		x->thread_space_ptr[i].vec_size = vec_size;
-	
-	// Memory allocation for temporary thread buffers 
-	
-	thread_temp_buffer_size = vec_size * sig_size;
-	
-	if (thread_temp_buffer_size != x->thread_temp_buffer_size)
-	{
-		for (long i = 0; i < x->max_obj_threads; i++)
-		{
-			for (long j = 0; j < x->num_sig_outs; j++)
-			{
-				ALIGNED_FREE(x->thread_space_ptr[i].thread_temp_buffer[j]);
-				x->thread_space_ptr[i].thread_temp_buffer[j] = ALIGNED_MALLOC(thread_temp_buffer_size);
-				if (!x->thread_space_ptr[i].thread_temp_buffer[j])
-				{		
-					object_error((t_object *) x, "not enough memory");
-					mem_fail = true;
-					x->x_obj.z_disabled = TRUE;	
-				}
-			}
-		}
-	}
+    AH_Boolean mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	
@@ -1132,11 +852,6 @@ AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
     
 	x->last_vec_size = vec_size;
 	x->last_samp_rate = samp_rate;
-	
-	if (!mem_fail)
-		x->thread_temp_buffer_size = thread_temp_buffer_size;
-    else
-        x->thread_temp_buffer_size = 0;
 	
 	return mem_fail;
 }
@@ -1147,7 +862,6 @@ void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count)
 	
 	for (long i = 0; i < x->num_sig_ins; i++)
 		x->sig_ins[i] = sp[i]->s_vec;
-    // FIX - check the below...
 	for (long i = 0; i < x->num_sig_outs; i++)
 		x->sig_outs[i] = sp[i + x->num_proxies]->s_vec;
 	

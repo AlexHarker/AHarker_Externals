@@ -528,9 +528,6 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 	for (long i = 0; i < num_sig_outs; i++)
 		memset(sig_outs[i], 0, sig_size * vec_size);
 	
-	if (x->x_obj.z_disabled)
-		return;
-	
 	// Update the temporary memory if relevant
 	
 	attempt_mem_swap(&x->temp_mem);
@@ -591,7 +588,8 @@ void dynamicserial_perform_denormal_handled(t_dynamicserial *x)
 
 t_int *dynamicserial_perform(t_int *w)
 {
-	dynamicserial_perform_denormal_handled((t_dynamicserial *) w[1]);
+    if (!((t_dynamicserial *) (w[1]))->x_obj.z_disabled)
+        dynamicserial_perform_denormal_handled((t_dynamicserial *) w[1]);
 	
 	return w + 2;	
 }
