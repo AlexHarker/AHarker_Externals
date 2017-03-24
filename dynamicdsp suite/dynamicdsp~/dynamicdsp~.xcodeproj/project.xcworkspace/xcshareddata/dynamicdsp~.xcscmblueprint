@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1CA00FFE53B26246FFBC5236B99144B0C3389F50",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "50FA2685-30DF-4DE9-91C0-2FE7E5BE4336" : 0,
+    "1CA00FFE53B26246FFBC5236B99144B0C3389F50" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "BC1892F8-EC60-40A1-B9C0-11B9B05094EE",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "50FA2685-30DF-4DE9-91C0-2FE7E5BE4336" : "- AHarker Externals",
+    "1CA00FFE53B26246FFBC5236B99144B0C3389F50" : "-%20AHarker%20Externals"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "dynamicdsp~",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "dynamicdsp suite\/dynamicdsp~\/dynamicdsp~.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AlexHarker\/AHarker_Externals.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1CA00FFE53B26246FFBC5236B99144B0C3389F50"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AlexHarker\/AHarker_Externals.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "50FA2685-30DF-4DE9-91C0-2FE7E5BE4336"
+    }
+  ]
+}
