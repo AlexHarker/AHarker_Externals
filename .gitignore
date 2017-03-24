@@ -18,6 +18,7 @@
 *.pbxuser
 *.perspectivev3
 *.xcuserstate
+*.xcuserdata
 
 !default.pbxuser
 !default.mode1
