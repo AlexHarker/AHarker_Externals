@@ -347,7 +347,7 @@ void entrymatcher_top_n(std::vector<long>& matched_indices, std::vector<double>&
 // Perform and DSP routines:
 // ========================================================================================================================================== //
 
-t_int *entrymatcher_perform (t_int *w)
+t_int *entrymatcher_perform(t_int *w)
 {
     // Set pointers
     
@@ -420,7 +420,7 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
 // 64bit Perform and DSP routines:
 // ========================================================================================================================================== //
 
-void entrymatcher_perform64 (t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
     // Set pointers
     
