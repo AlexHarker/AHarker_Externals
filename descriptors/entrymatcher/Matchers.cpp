@@ -3,11 +3,10 @@
 #include <algorithm>
 #include <functional>
 
-inline bool Matchers::Matcher::match(const EntryDatabase *database, long idx, double& overallDistance) const
+inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
 {
-    const FloatSym data = database->getData(idx, mColumn);
+    const FloatSym data = accessor.getData(idx, mColumn);
     double distance = HUGE_VAL;
-    double value;
     
     switch (mType)
     {
@@ -30,34 +29,32 @@ inline bool Matchers::Matcher::match(const EntryDatabase *database, long idx, do
         case kTestGreaterEqual:     return comparison(data.mValue, std::greater_equal<double>());
             
         case kTestDistance:
-            
-            value = data.mValue;
+        case kTestDistanceReject:
             
             for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
             {
-                double currentDistance = ((*it).mValue - value) * mScale;
+                double currentDistance = ((*it).mValue - data.mValue) * mScale;
                 distance = std::min(distance, currentDistance * currentDistance);
             }
             
             overallDistance += distance;
-            return !mReject || distance <= 1.0;
+            return mType == kTestDistance || distance <= 1.0;
             
         case kTestRatio:
+        case kTestRatioReject:
             
             // FIX - check this
             
-            value = data.mValue;
-            
             for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
             {
-                double currentDistance = ((*it).mValue > value) ? (*it).mValue / value : value / (*it).mValue;
+                double currentDistance = ((*it).mValue > data.mValue) ? (*it).mValue / data.mValue : data.mValue / (*it).mValue;
                 currentDistance = (currentDistance - 1.0) * mScale;
                 distance = std::min(distance, currentDistance * currentDistance);
                 
             }
             
             overallDistance += distance;
-            return !mReject || distance <= 1.0;
+            return mType == kTestRatio || distance <= 1.0;
     }
 }
 
@@ -69,6 +66,8 @@ long Matchers::match(const EntryDatabase *database, std::vector<long>& indices, 
     indices.resize(numItems);
     distances.resize(numItems);
     
+    const EntryDatabase::Accessor accessor = database->accessor();
+    
     for (long i = 0; i < numItems; i++)
     {
         // Assume a match for each entry (for the case of no matchers)
@@ -77,7 +76,7 @@ long Matchers::match(const EntryDatabase *database, std::vector<long>& indices, 
         double distance = 0.0;
         
         for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(database, i, distance)))
+            if (!(matched = it->match(accessor, i, distance)))
                 break;
         
         // Store the entry if it is a valid match
@@ -113,7 +112,7 @@ void Matchers::addTarget(t_symbol *value)
     }
 }
 
-void Matchers::addMatcher(TestType type, long column, double scale, bool reject)
+void Matchers::addMatcher(TestType type, long column, double scale)
 {
-    mMatchers.push_back(Matcher(type, column, scale, reject));
+    mMatchers.push_back(Matcher(type, column, scale));
 }

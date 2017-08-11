@@ -49,6 +49,21 @@ class EntryDatabase
     
 public:
     
+    class Accessor
+    {
+        
+    public:
+        
+        Accessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
+        
+        inline FloatSym getData(long idx, long column) const { return mIterator[idx * mNumColumns + column]; }
+
+    private:
+        
+        const long mNumColumns;
+        const std::vector<const FloatSym>::iterator mIterator;
+    };
+    
     EntryDatabase(long numCols)     { mColumns.resize(numCols); }
     
     void reserve(long items)
@@ -65,6 +80,8 @@ public:
     
     size_t numItems() const         { return mIdentifiers.size(); }
     size_t numColumns() const       { return mColumns.size(); }
+    
+    Accessor accessor() const       { return Accessor(*this); }
     
     void labelModes(long argc, t_atom *argv);
     void names(long argc, t_atom *argv);

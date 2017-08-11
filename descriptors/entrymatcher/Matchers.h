@@ -9,7 +9,7 @@ class Matchers
     
 public:
     
-    enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio };
+    enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
     
 private:
     
@@ -18,8 +18,8 @@ private:
         
     public:
         
-        Matcher(TestType type, long column, double scale = 1.0, bool reject = false)
-        : mType(type), mColumn(column), mScale(scale), mReject(reject) {}
+        Matcher(TestType type, long column, double scale = 1.0)
+        : mColumn(column), mType(type), mScale(scale) {}
         
         long getColumn() const                  { return mColumn; }
         void addTarget(double value)            { mValues.push_back(value); }
@@ -31,7 +31,7 @@ private:
             mValues[0] = value;
         }
 
-        inline bool match(const EntryDatabase *database, long idx, double& overallDistance) const;
+        inline bool match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const;
         
     private:
         
@@ -43,11 +43,10 @@ private:
             return false;
         }
         
-        TestType mType;
         long mColumn;
-        double mScale;
-        bool mReject;
+        TestType mType;
         std::vector<FloatSym> mValues;
+        double mScale;
     };
     
 public:
@@ -64,7 +63,7 @@ public:
     
     void addTarget(double value);
     void addTarget(t_symbol *value);
-    void addMatcher(TestType type, long column, double scale = 1.0, bool reject = false);
+    void addMatcher(TestType type, long column, double scale = 1.0);
     
     size_t size() { return mMatchers.size(); }
     

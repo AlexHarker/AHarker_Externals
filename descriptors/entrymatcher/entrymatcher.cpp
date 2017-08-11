@@ -317,10 +317,10 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
                 case TEST_GREATER_THAN_EQ:      x->mMatchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
                 case TEST_DISTANCE:             x->mMatchers->addMatcher(Matchers::kTestDistance, column);                   break;
                 case TEST_SCALE:                x->mMatchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
-                case TEST_WITHIN:               x->mMatchers->addMatcher(Matchers::kTestDistance, column, scale, true);      break;
+                case TEST_WITHIN:               x->mMatchers->addMatcher(Matchers::kTestDistanceReject, column, scale);      break;
                 case TEST_DISTANCE_RATIO:       x->mMatchers->addMatcher(Matchers::kTestRatio, column);                      break;
                 case TEST_SCALE_RATIO:          x->mMatchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
-                case TEST_WITHIN_RATIO:         x->mMatchers->addMatcher(Matchers::kTestRatio, column, scale, true);         break;
+                case TEST_WITHIN_RATIO:         x->mMatchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
             }
             
             for ( ; argc; argc--, argv++)
