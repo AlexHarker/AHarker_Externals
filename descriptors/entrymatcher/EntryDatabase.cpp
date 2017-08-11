@@ -80,24 +80,21 @@ void EntryDatabase::names(long argc, t_atom *argv)
 
 void EntryDatabase::entry(long argc, t_atom *argv)
 {
-    if (!argc)
+    if (!argc--)
         return;
     
-    // Get the identifier
+    // Get the identifier and find any prexisting entry with this identifier
     
     t_atom identifier = *argv++;
-    long idx;
+    long idx = itemFromIdentifier(identifier);
 
-    // See if an entry with this identifier already exists (if so replace it)
+    // Make a space for a new entry in the case that this identifier does *not* exist
     
-    for (idx = 0; idx < numItems(); idx++)
-        if (compareIdentifiers(identifier, mEntries[idx].mIdentifier))
-            break;
-    
-    // Check that we have space for a new entry in the case that this identifier does *not* exist
-    
-    if (idx == numItems())
-        mEntries.push_back(Entry(identifier, numColumns()));
+    if (idx < 0)
+    {
+        idx = numItems();
+        addItem(identifier);
+    }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
     
@@ -106,13 +103,13 @@ void EntryDatabase::entry(long argc, t_atom *argv)
         FloatSym data = argv;
         
         if (i < argc && mColumns[i].mLabel == (data.mType == FloatSym::kSymbol))
-            mEntries[idx].mData[i] = data;
+            setData(idx, i, data);
         else
         {
             if (i < argc)
                 error("entrymatcher: incorrect type in entry - column number %ld", i + 1);
             
-            mEntries[idx].mData[i] = mColumns[i].mLabel ? FloatSym(gensym("")) : FloatSym();
+            setData(idx, i, mColumns[i].mLabel ? FloatSym(gensym("")) : FloatSym());
         }
     }
 }
@@ -130,7 +127,7 @@ void EntryDatabase::lookup(std::vector<t_atom>& output, long idx, long argc, t_a
         // If no columns are specified construct a list of all colums for that entry
         
         for (long i = 0; i < numColumns(); i++)
-            output[i] = mEntries[idx].mData[i].getAtom();
+            output[i] = getDataAtom(idx, i);
     }
     else
     {
@@ -145,7 +142,7 @@ void EntryDatabase::lookup(std::vector<t_atom>& output, long idx, long argc, t_a
             long columnIndex = columnFromSpecifier(*argv++);
             columnIndex = (columnIndex < -1 || columnIndex >= numColumns()) ? 0 : columnIndex;
             
-            output[i] = (columnIndex == -1) ? mEntries[idx].mIdentifier : mEntries[idx].mData[columnIndex].getAtom();
+            output[i] = (columnIndex == -1) ? getIdentifier(idx) : getDataAtom(idx, columnIndex);
         }
     }
 }
@@ -165,7 +162,7 @@ long EntryDatabase::calculate(std::vector<Matcher>& matchers, std::vector<long>&
         double distance = 0.0;
         
         for (std::vector<Matcher>::iterator it = matchers.begin(); it != matchers.end(); it++)
-            if (!(matched = it->match(mEntries[i].mData[it->getcolumn()], distance)))
+            if (!(matched = it->match(getData(i, it->getcolumn()), distance)))
                 break;
         
         // Store the entry if it is a valid match
@@ -183,7 +180,7 @@ long EntryDatabase::calculate(std::vector<Matcher>& matchers, std::vector<long>&
 long EntryDatabase::itemFromIdentifier(t_atom& identifier) const
 {
     for (long i = 0; i < numItems(); i++)
-        if (compareIdentifiers(identifier, mEntries[i].mIdentifier))
+        if (compareIdentifiers(identifier, getIdentifier(i)))
             return i;
 
     return -1;
@@ -191,6 +188,19 @@ long EntryDatabase::itemFromIdentifier(t_atom& identifier) const
 
 bool EntryDatabase::compareIdentifiers(const t_atom& identifier1, const t_atom& identifier2) const
 {
+    if (identifier1.a_type != identifier2.a_type)
+        return false;
+    
+    switch (identifier1.a_type)
+    {
+        case A_LONG:        return identifier1.a_w.w_long == identifier2.a_w.w_long;
+        case A_FLOAT:       return identifier1.a_w.w_float == identifier2.a_w.w_float;
+        case A_SYM:         return identifier1.a_w.w_sym == identifier2.a_w.w_sym;
+        default:
+            return false;
+    }
+    
+    /*
     if (atom_gettype(&identifier1) != atom_gettype(&identifier2))
         return false;
     
@@ -202,7 +212,7 @@ bool EntryDatabase::compareIdentifiers(const t_atom& identifier1, const t_atom& 
             
         default:
             return false;
-    }
+    }*/
 }
 
 long EntryDatabase::columnFromSpecifier(const t_atom& specifier) const

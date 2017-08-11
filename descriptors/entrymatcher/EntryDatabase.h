@@ -13,14 +13,7 @@ struct FloatSym
     FloatSym(double val) : mType(kDouble), mValue(val) {}
     FloatSym(t_atom_long val) : mType(kInt), mValue(val) {}
     FloatSym(t_symbol *sym) : mType(kSymbol), mSymbol(sym) {}
-    
-    FloatSym(t_atom *a)
-    {
-        if (atom_gettype(a) == A_SYM)
-            *this = FloatSym(atom_getsym(a));
-        else
-            *this = FloatSym(atom_getfloat(a));
-    }
+    FloatSym(const t_atom *a) { *this = atom_gettype(a) == A_SYM ? FloatSym(atom_getsym(a)) : FloatSym(atom_getfloat(a)); }
     
     t_atom getAtom() const
     {
@@ -28,9 +21,9 @@ struct FloatSym
         
         switch (mType)
         {
-            case kSymbol:   atom_setsym(&a, mSymbol); break;
-            case kDouble:   atom_setfloat(&a, mValue); break;
-            case kInt:   atom_setlong(&a, mValue); break;
+            case kSymbol:   atom_setsym(&a, mSymbol);   break;
+            case kDouble:   atom_setfloat(&a, mValue);  break;
+            case kInt:      atom_setlong(&a, mValue);   break;
 
         }
         
@@ -90,29 +83,23 @@ class EntryDatabase
         bool mLabel;
     };
     
-    struct Entry
-    {
-        Entry(const t_atom& identifier, const long size)
-        {
-            t_atom zeroAtom;
-            atom_setfloat(&zeroAtom, 0.0);
-            
-            mIdentifier = identifier;
-            mData.resize(size);
-        }
-        
-        t_atom mIdentifier;
-        std::vector<FloatSym> mData;
-    };
-    
 public:
     
     EntryDatabase(long numCols)     { mColumns.resize(numCols); }
     
-    void reserve(long items)        { mEntries.reserve(items); }
+    void reserve(long items)
+    {
+        mIdentifiers.reserve(items);
+        mEntries.reserve(items * numColumns());
+    }
     
-    void clear()                    { mEntries.clear(); }
-    size_t numItems() const         { return mEntries.size(); }
+    void clear()
+    {
+        mEntries.clear();
+        mIdentifiers.clear();
+    }
+    
+    size_t numItems() const         { return mIdentifiers.size(); }
     size_t numColumns() const       { return mColumns.size(); }
     
     void labelModes(long argc, t_atom *argv);
@@ -121,21 +108,34 @@ public:
     
     t_symbol *getName(long idx) const       { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const       { return mColumns[idx].mLabel; }
-    t_atom getIdentifier(long idx) const    { return mEntries[idx].mIdentifier; }
+    t_atom getIdentifier(long idx) const    { return mIdentifiers[idx]; }
     
     void lookup(std::vector<t_atom>& output, long idx, long argc, t_atom *argv) const;
     long itemFromIdentifier(t_atom& identifier) const;
     long columnFromSpecifier(const t_atom& specifier) const;
     long calculate(std::vector<Matcher>& matchers, std::vector<long>& indices, std::vector<double>& distances) const;
 
+    inline FloatSym getData(long idx, long column) const       { return mEntries[idx * numColumns() + column]; }
+    inline t_atom getDataAtom(long idx, long column) const     { return getData(idx, column).getAtom(); }
+    
 private:
 
     bool compareIdentifiers(const t_atom& identifier1, const t_atom& identifier2) const;
 
+    inline void addItem(const t_atom& identifier)
+    {
+        long size = numItems();
+        mEntries.resize((size + 1) * numColumns());
+        mIdentifiers.push_back(identifier);
+    }
+    
+    inline void setData(long idx, long column, const FloatSym& data)   { mEntries[idx * numColumns() + column] = data; }
+    
     // Data
     
     std::vector<ColumnInfo> mColumns;
-    std::vector<Entry> mEntries;
+    std::vector<t_atom> mIdentifiers;
+    std::vector<FloatSym> mEntries;
 };
 
 #endif
