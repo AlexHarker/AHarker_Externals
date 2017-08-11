@@ -236,6 +236,8 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 {
     long max_matchers = x->max_matchers;
     
+    x->mMatchers->clear();
+    
     while (argc > 1 && x->mMatchers->size() < max_matchers)
     {
         // Find the column index for the test and the test type

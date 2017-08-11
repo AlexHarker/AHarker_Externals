@@ -108,7 +108,7 @@ t_symbol *ps_sym_distance_ratio;
 t_symbol *ps_sym_scale_ratio;
 t_symbol *ps_sym_within_ratio;
 
-static __inline double atom_getdouble_translate (t_atom *a);
+__inline double atom_getdouble_translate (t_atom *a);
 
 void *entrymatcher_new(long max_entries, long num_columns, long max_matchers);
 void entrymatcher_free(t_entrymatcher *x);
@@ -137,18 +137,18 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 // ========================================================================================================================================== //
 
 
-static __inline double atom_getdouble_translate (t_atom *arg)
+__inline double atom_getdouble_translate (t_atom *arg)
 {
-	switch (atom_gettype(arg))
+	switch (arg->a_type)
 	{
 		case A_LONG:
-            return atom_getlong(arg);
+			return arg->a_w.w_long;
 			break;
 		case A_FLOAT:
-			return atom_getfloat(arg);
+			return arg->a_w.w_float;
 			break;
 		case A_SYM:
-			return (long) atom_getsym(arg);
+			return (long) arg->a_w.w_sym;
 			break;
 		default:
 			return 0.;
@@ -397,7 +397,7 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 
 	for (i = 0; i < argc; i++)
 	{
-		if (atom_gettype(argv) != A_SYM)
+		if (argv->a_type != A_SYM)
 			the_data[i] = atom_getdouble_translate(argv);
 		else
 		{
@@ -693,8 +693,6 @@ long entrymatcher_calculate(t_entrymatcher *x, double *comparision_vals)
 					
 				for (i = 0; i < num_matched_indices; i++)
 				{
-					// FIX - why?
-                    //comparison_value = comparison_value;
 					current_data = the_data[matched_indices[i] * num_columns + column_index];
 					if (comparison_value > current_data)
 						current_distance = comparison_value / current_data;
@@ -716,8 +714,6 @@ long entrymatcher_calculate(t_entrymatcher *x, double *comparision_vals)
 				
 				for (i = 0; i < num_matched_indices; i++)
 				{
-                    // FIX - why?
-                    //comparison_value = comparison_value;
 					current_data = the_data[matched_indices[i] * num_columns + column_index];
 					if (comparison_value > current_data)
 						current_distance = comparison_value / current_data;
@@ -935,23 +931,23 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 
 char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2)
 {
-	if (atom_gettype(identifier1) != atom_gettype(identifier2))
+	if (identifier1->a_type != identifier2->a_type)
 		return 0;
 		
-	switch (atom_gettype(identifier1))
+	switch (identifier1->a_type)
 	{
 		case A_LONG:
-			if (atom_getlong(identifier1) != atom_getlong(identifier2))
+			if (identifier1->a_w.w_long != identifier2->a_w.w_long)
 				return 0;
 			break;
 		
 		case A_FLOAT:
-			if (atom_getfloat(identifier1) != atom_getfloat(identifier2))
+			if (identifier1->a_w.w_float != identifier2->a_w.w_float)
 				return 0;
 			break;
 			
 		case A_SYM:
-			if (atom_getsym(identifier1) != atom_getsym(identifier2))
+			if (identifier1->a_w.w_sym != identifier2->a_w.w_sym)
 				return 0;
 			break;
 			
@@ -972,7 +968,7 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 	t_symbol *named_column;
 	long i;
 	
-	if (atom_gettype(arg) != A_SYM)
+	if (arg->a_type != A_SYM) 
 		return atom_getlong(arg) - 1;
 	
 	named_column = atom_getsym(arg);
@@ -991,19 +987,19 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 
 long entrymatcher_test_types(t_atom *argv)
 {
-	if (atom_gettype(argv) != A_SYM) return 0;
+	if (argv->a_type != A_SYM) return 0;
 	
-	if (atom_getsym(argv) == ps_match || atom_getsym(argv) == ps_sym_match) return TEST_MATCH;
-	if (atom_getsym(argv) == ps_distance || atom_getsym(argv) == ps_sym_distance) return TEST_DISTANCE;
-	if (atom_getsym(argv) == ps_less || atom_getsym(argv) == ps_sym_less) return TEST_LESS_THAN;
-	if (atom_getsym(argv) == ps_greater || atom_getsym(argv) == ps_sym_greater) return TEST_GREATER_THAN;
-	if (atom_getsym(argv) == ps_lesseq || atom_getsym(argv) == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
-	if (atom_getsym(argv) == ps_greatereq || atom_getsym(argv) == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
-	if (atom_getsym(argv) == ps_scale || atom_getsym(argv) == ps_sym_scale) return TEST_SCALE;
-	if (atom_getsym(argv) == ps_within || atom_getsym(argv) == ps_sym_within) return TEST_WITHIN;
-	if (atom_getsym(argv) == ps_distance_ratio || atom_getsym(argv) == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
-	if (atom_getsym(argv) == ps_scale_ratio || atom_getsym(argv) == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
-	if (atom_getsym(argv) == ps_within_ratio || atom_getsym(argv) == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
+	if (argv->a_w.w_sym == ps_match || argv->a_w.w_sym == ps_sym_match) return TEST_MATCH;
+	if (argv->a_w.w_sym == ps_distance || argv->a_w.w_sym == ps_sym_distance) return TEST_DISTANCE;
+	if (argv->a_w.w_sym == ps_less || argv->a_w.w_sym == ps_sym_less) return TEST_LESS_THAN;
+	if (argv->a_w.w_sym == ps_greater || argv->a_w.w_sym == ps_sym_greater) return TEST_GREATER_THAN;
+	if (argv->a_w.w_sym == ps_lesseq || argv->a_w.w_sym == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
+	if (argv->a_w.w_sym == ps_greatereq || argv->a_w.w_sym == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
+	if (argv->a_w.w_sym == ps_scale || argv->a_w.w_sym == ps_sym_scale) return TEST_SCALE;
+	if (argv->a_w.w_sym == ps_within || argv->a_w.w_sym == ps_sym_within) return TEST_WITHIN;
+	if (argv->a_w.w_sym == ps_distance_ratio || argv->a_w.w_sym == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
+	if (argv->a_w.w_sym == ps_scale_ratio || argv->a_w.w_sym == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
+	if (argv->a_w.w_sym == ps_within_ratio || argv->a_w.w_sym == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
 	
 	return 0;
 }

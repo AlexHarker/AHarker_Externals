@@ -22,22 +22,22 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		B80770B91F3B9DAA006E6C0B /* EntryDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */; };
 		B80770BA1F3B9DAA006E6C0B /* EntryDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = B80770B71F3B9DAA006E6C0B /* EntryDatabase.h */; };
 		B80770BB1F3B9DAA006E6C0B /* EntryDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = B80770B71F3B9DAA006E6C0B /* EntryDatabase.h */; };
-		B85C98EA1F3DB180003F468F /* EntryDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */; };
-		B85C98EB1F3DB183003F468F /* entrymatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */; };
-		B85C98EE1F3DDA96003F468F /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
-		B85C98EF1F3DDA96003F468F /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
 		B85C98F01F3DDA96003F468F /* Matchers.h in Headers */ = {isa = PBXBuildFile; fileRef = B85C98ED1F3DDA96003F468F /* Matchers.h */; };
 		B85C98F11F3DDA96003F468F /* Matchers.h in Headers */ = {isa = PBXBuildFile; fileRef = B85C98ED1F3DDA96003F468F /* Matchers.h */; };
-		B85C98F31F3DDE5F003F468F /* entrymatcher~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */; };
-		B85C98F61F3DFAE7003F468F /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
-		B85C98F71F3DFAE7003F468F /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
 		B85C98F81F3DFAE7003F468F /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = B85C98F51F3DFAE7003F468F /* utilities.h */; };
 		B85C98F91F3DFAE7003F468F /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = B85C98F51F3DFAE7003F468F /* utilities.h */; };
+		B85C99051F3E392B003F468F /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
+		B85C99061F3E392D003F468F /* EntryDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */; };
+		B85C99071F3E3930003F468F /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
 		B8636C521F3D370C00CD96B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8636C511F3D370C00CD96B2 /* Carbon.framework */; };
 		B8636C531F3D370C00CD96B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8636C511F3D370C00CD96B2 /* Carbon.framework */; };
+		B8CB69D11F3E3B7A00F6215A /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
+		B8CB69D21F3E3B7D00F6215A /* EntryDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */; };
+		B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
+		B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */; };
+		B8CB69D51F3E3B9800F6215A /* entrymatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,8 +132,8 @@
 				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
 				B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */,
 				B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */,
-				B8998A5211CECE260028A17C /* entrymatcher~.c */,
 				B8B0C54A1F3D0C7C006D8538 /* entrymatcher.c */,
+				B8998A5211CECE260028A17C /* entrymatcher~.c */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -280,10 +280,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B85C98EE1F3DDA96003F468F /* Matchers.cpp in Sources */,
-				B85C98EA1F3DB180003F468F /* EntryDatabase.cpp in Sources */,
-				B85C98F61F3DFAE7003F468F /* utilities.cpp in Sources */,
-				B85C98EB1F3DB183003F468F /* entrymatcher.cpp in Sources */,
+				B85C99061F3E392D003F468F /* EntryDatabase.cpp in Sources */,
+				B85C99071F3E3930003F468F /* Matchers.cpp in Sources */,
+				B85C99051F3E392B003F468F /* utilities.cpp in Sources */,
+				B8CB69D51F3E3B9800F6215A /* entrymatcher.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,10 +291,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B85C98EF1F3DDA96003F468F /* Matchers.cpp in Sources */,
-				B85C98F31F3DDE5F003F468F /* entrymatcher~.cpp in Sources */,
-				B85C98F71F3DFAE7003F468F /* utilities.cpp in Sources */,
-				B80770B91F3B9DAA006E6C0B /* EntryDatabase.cpp in Sources */,
+				B8CB69D21F3E3B7D00F6215A /* EntryDatabase.cpp in Sources */,
+				B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */,
+				B8CB69D11F3E3B7A00F6215A /* utilities.cpp in Sources */,
+				B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
