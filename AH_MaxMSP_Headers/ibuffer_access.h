@@ -336,7 +336,6 @@ static __inline void *ibuffer_offset (void *samps, AH_SIntPtr offset, long n_cha
 
 static __inline void ibuffer_preprocess_offsets (AH_SIntPtr *offsets, AH_SIntPtr n_samps, long n_chans, long format) FORCE_INLINE_DEFINITION
 {
-	AH_SIntPtr i;
 	long mul = n_chans;
 	
 	if (format == PCM_INT_24) 
@@ -344,7 +343,7 @@ static __inline void ibuffer_preprocess_offsets (AH_SIntPtr *offsets, AH_SIntPtr
 	
 	if (mul != 1)
 	{
-		for (i = 0; i < n_samps; i++)
+		for (AH_SIntPtr i = 0; i < n_samps; i++)
 			*offsets++ *= mul;
 	}
 }

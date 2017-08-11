@@ -16,7 +16,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Types.h>
 #include <dynamicdsp~.h>
 
 
@@ -31,7 +30,7 @@ typedef struct _dynamic_request
 	void **sig_ins;
 	
 	t_atom_long inlet_num;
-    AH_Boolean valid;
+    bool valid;
 	
 	double lastval;
 	

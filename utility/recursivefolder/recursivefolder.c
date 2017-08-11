@@ -14,7 +14,6 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include <AH_Types.h>
 
 t_class *this_class;
 
@@ -190,7 +189,7 @@ void recursive_folder_action(t_recursive_folder *x)
 
 short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_symbol *f_name, t_atom_long recursion)
 {
-	AH_Boolean match;
+	bool match;
 	t_fourcc type;
 	long i;
 	char fullname[2048];

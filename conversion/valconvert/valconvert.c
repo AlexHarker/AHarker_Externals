@@ -35,7 +35,7 @@ typedef enum {
 } t_conversion_mode;
 
 
-typedef struct valconvert{
+typedef struct valconvert {
     
 #ifdef MSP_VERSION
 	t_pxobject a_obj;
@@ -48,7 +48,7 @@ typedef struct valconvert{
 	double mult, subtract;
 	double min, max;
 	
-	void *theOutlet;
+	void *the_outlet;
 	
 } t_valconvert;
 
@@ -74,38 +74,38 @@ t_symbol *ps_ipitch;
 t_symbol *ps_list;
 
 
-void *valconvert_new (t_symbol *msg, long argc, t_atom *argv);
+void *valconvert_new(t_symbol *msg, long argc, t_atom *argv);
 void valconvert_free(t_valconvert *x);
 
 #ifdef MSP_VERSION
 
-t_int *valconvert_perform (t_int *w);
+t_int *valconvert_perform(t_int *w);
 #if (defined F32_VEC_EXP_OP || defined F32_VEC_EXP_ARRAY) && (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
-t_int *valconvert_perform_SIMD (t_int *w);
+t_int *valconvert_perform_SIMD(t_int *w);
 #endif
 void valconvert_dsp(t_valconvert *x, t_signal **sp, short *count);
 
-void valconvert_perform64 (t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 #if (defined VECTOR_F64_128BIT) && (defined F64_VEC_EXP_OP || defined F64_VEC_EXP_ARRAY) && (defined F64_VEC_LOG_OP || defined F64_VEC_LOG_ARRAY)
-void valconvert_perform_SIMD64 (t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 #endif
-void valconvert_dsp64 (t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 #else
 
-double valconvert_scale (t_valconvert *x, double input);
-void valconvert_int (t_valconvert *x, t_atom_long i_in);
-void valconvert_float (t_valconvert *x, double f_in);
-void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
+double valconvert_scale(t_valconvert *x, double input);
+void valconvert_int(t_valconvert *x, t_atom_long i_in);
+void valconvert_float(t_valconvert *x, double f_in);
+void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 
 #endif
 
-void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
+void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	
 #ifdef MSP_VERSION
@@ -179,7 +179,7 @@ void valconvert_free(t_valconvert *x)
 	
 }
 
-void *valconvert_new (t_symbol *msg, long argc, t_atom *argv)
+void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 {
     t_valconvert *x = (t_valconvert *) object_alloc (this_class);
 	
@@ -187,7 +187,7 @@ void *valconvert_new (t_symbol *msg, long argc, t_atom *argv)
 	dsp_setup((t_pxobject *)x, 1);
 	outlet_new((t_object *)x, "signal");
 #else
-	x->theOutlet = outlet_new (x, 0);
+	x->the_outlet = outlet_new(x, 0);
 #endif
 	
 	x->mode = CONVERT_NONE;
@@ -216,14 +216,14 @@ void *valconvert_new (t_symbol *msg, long argc, t_atom *argv)
 
 // 32 Bit MSP 
 
-t_int *valconvert_perform (t_int *w)
+t_int *valconvert_perform(t_int *w)
 {
 	float *in = (float *) w[1];
 	float *out = (float *) w[2];
 	long vec_size = w[3];
     t_valconvert *x = (t_valconvert *) w[4];
 	
-	double scaled = 0.;
+	double scaled = 0.0;
 	double mult = x->mult;
 	double subtract = x->subtract;
 	double max = x->max;
@@ -273,14 +273,14 @@ t_int *valconvert_perform (t_int *w)
 
 #if (defined F32_VEC_EXP_OP || defined F32_VEC_EXP_ARRAY) && (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
 
-t_int *valconvert_perform_SIMD (t_int *w)
+t_int *valconvert_perform_SIMD(t_int *w)
 {
 	vFloat *in = (vFloat *) w[1];
 	vFloat *out = (vFloat *) w[2];
 	long vec_size_over_4 = w[3] >> 2;	
 	t_valconvert *x = (t_valconvert *) w[4];
 			
-	vFloat scaled = float2vector(0.);
+	vFloat scaled = float2vector(0.f);
 	vFloat mult = float2vector((float) x->mult);
 	vFloat subtract = float2vector((float) x->subtract);
 	vFloat min = float2vector((float) x->min);
@@ -364,7 +364,7 @@ void valconvert_dsp(t_valconvert *x, t_signal **sp, short *count)
 
 // 64 bit MSP
 
-void valconvert_perform64 (t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in = ins[0];
 	double *out = outs[0];
@@ -414,7 +414,7 @@ void valconvert_perform64 (t_valconvert *x, t_object *dsp64, double **ins, long 
 
 #if (defined VECTOR_F64_128BIT) && (defined F64_VEC_EXP_OP || defined F64_VEC_EXP_ARRAY) && (defined F64_VEC_LOG_OP || defined F64_VEC_LOG_ARRAY)
 
-void valconvert_perform_SIMD64 (t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	vDouble *in = (vDouble *) ins[0];
 	vDouble *out = (vDouble *) outs[0];
@@ -486,7 +486,7 @@ void valconvert_perform_SIMD64 (t_valconvert *x, t_object *dsp64, double **ins, 
 #endif
 
 
-void valconvert_dsp64 (t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 #if (defined VECTOR_F64_128BIT) && (defined F64_VEC_EXP_OP || defined F64_VEC_EXP_ARRAY) && (defined F64_VEC_LOG_OP || defined F64_VEC_LOG_ARRAY)
 	if (maxvectorsize >= 8 && SSE2_check())
@@ -499,9 +499,9 @@ void valconvert_dsp64 (t_valconvert *x, t_object *dsp64, short *count, double sa
 
 #else
 
-double valconvert_scale (t_valconvert *x, double input)
+double valconvert_scale(t_valconvert *x, double input)
 {
-	double scaled = 0.;
+	double scaled = 0.0;
 	double mult = x->mult;
 	double subtract = x->subtract;
 	double max = x->max;
@@ -529,19 +529,19 @@ double valconvert_scale (t_valconvert *x, double input)
 }
 
 
-void valconvert_float (t_valconvert *x, double f_in)
+void valconvert_float(t_valconvert *x, double f_in)
 { 
-	outlet_float (x->theOutlet, valconvert_scale(x, f_in));
+	outlet_float(x->the_outlet, valconvert_scale(x, f_in));
 } 
 
 
-void valconvert_int (t_valconvert *x, t_atom_long l_in)
+void valconvert_int(t_valconvert *x, t_atom_long l_in)
 { 	
-	outlet_float (x->theOutlet, valconvert_scale(x, l_in));
+	outlet_float(x->the_outlet, valconvert_scale(x, l_in));
 } 
 
 
-void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
+void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
     
     t_atom *list = (t_atom *) malloc(argc * sizeof (t_atom));
@@ -557,7 +557,7 @@ void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 	while (i--) 
 		atom_setfloat(listptr++ ,valconvert_scale (x, atom_getfloat(argv++)));
 	
-	outlet_list(x->theOutlet, ps_list, argc, list);
+	outlet_list(x->the_outlet, ps_list, argc, list);
     
     free(list);
 }
@@ -566,7 +566,7 @@ void valconvert_list (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 #endif
 
 
-void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
+void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	t_conversion_mode mode = CONVERT_LINEAR;
 	
@@ -615,26 +615,26 @@ void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *arg
 	
 	if (msg == ps_amp)
 	{
-		min_out = pow (10, min_out / 20.);
-		max_out = pow (10, max_out / 20.);
+		min_out = pow (10.0, min_out / 20.0);
+		max_out = pow (10.0, max_out / 20.0);
 	}
 	
 	if (msg == ps_pitch)
 	{
-		min_out = pow(2, min_out / 12.);
-		max_out = pow(2, max_out / 12.);
+		min_out = pow(2.0, min_out / 12.0);
+		max_out = pow(2.0, max_out / 12.0);
 	}	
 	
 	if (msg == ps_iamp)
 	{
-		min_in = pow (10, min_in / 20.);
-		max_in = pow (10, max_in / 20.);
+		min_in = pow (10.0, min_in / 20.0);
+		max_in = pow (10.0, max_in / 20.0);
 	}
 	
 	if (msg == ps_ipitch)
 	{
-		min_in = pow (2, min_in / 12.);
-		max_in = pow (2, max_in / 12.);
+		min_in = pow (2.0, min_in / 12.0);
+		max_in = pow (2.0, max_in / 12.0);
 	}	
 	
 	min = min_out;
@@ -653,7 +653,7 @@ void valconvert_anything (t_valconvert *x, t_symbol *msg, long argc, t_atom *arg
 	}
 	
 	if (min_in == max_in)
-		mult = 0.;
+		mult = 0.0;
 	else
 		mult = (max_out - min_out) / (max_in - min_in);
 	

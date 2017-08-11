@@ -29,19 +29,19 @@ typedef struct _triggerlimit
 } t_triggerlimit;
 
 
-void *triggerlimit_new (t_atom_long limit);
+void *triggerlimit_new(t_atom_long limit);
 void triggerlimit_int(t_triggerlimit *x, t_atom_long limit);
-void triggerlimit_free (t_triggerlimit *x);
-void triggerlimit_assist (t_triggerlimit *x, void *b, long m, long a, char *s);
+void triggerlimit_free(t_triggerlimit *x);
+void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s);
 
-void triggerlimit_dsp (t_triggerlimit *x, t_signal **sp, short *count);
-t_int *triggerlimit_perform (t_int *w);
+void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count);
+t_int *triggerlimit_perform(t_int *w);
 
-void triggerlimit_perform64 (t_triggerlimit *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("triggerlimit~",
 				(method)triggerlimit_new,

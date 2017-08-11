@@ -30,22 +30,20 @@ typedef struct depack{
 } t_depack;
 
 
-void *depack_new (t_atom_long num_outlets);
-void depack_free (t_depack *x);
+void *depack_new(t_atom_long num_outlets);
+void depack_free(t_depack *x);
 
-void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset);
+void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset);
 
-//void depack_int (t_depack *x, t_atom_long value);
-//void depack_float (t_depack *x, double value);
-void depack_int (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
-void depack_float (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
-void depack_list (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
-void depack_anything (t_depack *x, t_symbol *msg, long argc, t_atom *argv);
+void depack_int(t_depack *x, t_atom_long value);
+void depack_float(t_depack *x, double value);
+void depack_list(t_depack *x, t_symbol *msg, long argc, t_atom *argv);
+void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv);
 
-void depack_assist (t_depack *x, void *b, long m, long a, char *s);
+void depack_assist(t_depack *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("depack", 
 							(method) depack_new, 
@@ -55,8 +53,8 @@ int C74_EXPORT main (void)
 							A_DEFLONG,
 							0);
 	
-    class_addmethod (this_class, (method)depack_int, "int", A_GIMME, 0);
-	class_addmethod (this_class, (method)depack_float, "float", A_GIMME, 0);
+    class_addmethod (this_class, (method)depack_int, "int", A_LONG, 0);
+	class_addmethod (this_class, (method)depack_float, "float", A_FLOAT, 0);
 	class_addmethod (this_class, (method)depack_list, "list", A_GIMME, 0);
 	class_addmethod (this_class, (method)depack_anything, "anything", A_GIMME, 0);
 	class_addmethod (this_class, (method)depack_assist, "assist", A_CANT, 0);
@@ -66,13 +64,13 @@ int C74_EXPORT main (void)
 	return 0;
 }
 
-void depack_free (t_depack *x)
+void depack_free(t_depack *x)
 {
 }
 
-void *depack_new (t_atom_long num_outlets)
+void *depack_new(t_atom_long num_outlets)
 {
-    t_depack *x = (t_depack *) object_alloc (this_class);
+    t_depack *x = (t_depack *) object_alloc(this_class);
 	void **outlet_array;
 	long i;
 	
@@ -98,7 +96,7 @@ void *depack_new (t_atom_long num_outlets)
     return (x);
 }
 
-void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
+void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset)
 {
 	long i;
 	long num_outlets = x->num_outlets;
@@ -123,16 +121,14 @@ void depack_do_args (t_depack *x, short argc, t_atom *argv, long offset)
 	}
 }
 
-void depack_float(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
-{ 
-	if (argc)
-		outlet_float(x->outlet_array[0], atom_getfloat(argv));
+void depack_float(t_depack *x, double value)
+{
+    outlet_float(x->outlet_array[0], value);
 } 
 
-void depack_int(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
+void depack_int(t_depack *x, t_atom_long value)
 { 	
-	if (argc)
-		outlet_int(x->outlet_array[0], atom_getlong(argv));
+    outlet_int(x->outlet_array[0], value);
 }
 
 void depack_list(t_depack *x, t_symbol *msg, long argc, t_atom *argv)

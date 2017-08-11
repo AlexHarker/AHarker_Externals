@@ -42,7 +42,7 @@
 
 // The current implementation in use is a complementary modulo with carry algorithm (proposed by George Marsaglia)
 // Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
-// See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm)
+// See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm
 
 // The memory requirement is currently 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
 // The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes

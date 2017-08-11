@@ -36,7 +36,7 @@ typedef short AH_SInt16;
 typedef unsigned char AH_UInt8;
 typedef char AH_SInt8;
 
-
+/*
 // Boolean
 
 typedef int AH_Boolean;
@@ -45,6 +45,6 @@ typedef int AH_Boolean;
 #define true 1
 #undef false
 #define false 0
-
+*/
 
 #endif  /* _AH_TYPES_ */

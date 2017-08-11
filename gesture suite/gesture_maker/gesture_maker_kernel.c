@@ -397,7 +397,7 @@ double gesture_maker_kernel_params_band_to_val(t_rand_gen *gen, int band_in, t_b
 
 // Return a time value from a specifier
 
-double gesture_maker_kernel_params_time(t_rand_gen *gen, t_atom *specifier, AH_Boolean reverse)
+double gesture_maker_kernel_params_time(t_rand_gen *gen, t_atom *specifier, bool reverse)
 {
 	double time_val = 0.0;
 	

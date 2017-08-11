@@ -13,8 +13,6 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include <AH_Types.h>
-
 //  Multipart structure
 
 #define MAX_NUM_KERNEL_PARAMS   16
@@ -35,7 +33,7 @@ typedef struct gesture_multipart
 	double range_recip;
 	double last_phase;
 	
-	AH_Boolean force_output;
+	bool force_output;
     
 } t_gesture_multipart;
 

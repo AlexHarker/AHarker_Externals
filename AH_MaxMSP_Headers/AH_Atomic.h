@@ -2,7 +2,7 @@
 #ifndef _AH_ATOMIC_
 #define _AH_ATOMIC_
 
-// In case we are compiing for Max 4, or outside of the Max SDK we have to check for an SDK number and provide the expected atomic macros if bit oresent or less than 5
+// In case we are compiing for Max 4, or outside of the Max SDK we have to check for an SDK number and provide the expected atomic macros if not present or less than 5
 
 #if (defined C74_MAX_SDK_VERSION && (C74_MAX_SDK_VERSION >= 0x0500))
 

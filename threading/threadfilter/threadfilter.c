@@ -28,11 +28,6 @@ typedef struct threadfilter{
 } t_threadfilter;
 
 
-t_symbol *ps_int;
-t_symbol *ps_float;
-t_symbol *ps_bang;
-
-
 void *threadfilter_new();
 void threadfilter_free(t_threadfilter *x);
 
@@ -62,11 +57,7 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)threadfilter_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
-	 
-	ps_int = gensym("int");
-	ps_float = gensym("float");
-	ps_bang = gensym("bang");
-	
+	 	
 	return 0;
 }
 

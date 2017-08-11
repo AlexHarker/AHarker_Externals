@@ -19,7 +19,7 @@
 #define DynamicIsValid(x) \
 (x && ((((t_symbol *) ob_sym (x)) == gensym("dynamicdsp~")) || (ob_sym (x)) == gensym("dynamicserial~")))
 
-//////////////////////////////////////////////// Object Queries ////////////////////////////////////////////////
+// Object Queries
 
 // These routines *must* be called these routines at loadbang - they are bogus at any other time
 
@@ -41,7 +41,7 @@ static __inline long Get_Dynamic_Patch_Index(void *obj)
 		return 0L;
 }
 
-//////////////////////////////////////////////// Signal IO Queries ////////////////////////////////////////////////
+// Signal IO Queries
 
 static __inline long Dynamic_Get_Num_Sig_Ins(void *obj)
 {
@@ -75,7 +75,7 @@ static __inline void ***Dynamic_Get_Sig_Out_Handle(void *obj, long index)
 		return NULL;
 }
 
-//////////////////////////////////////////////// State Queries ////////////////////////////////////////////////
+// State Queries
 
 static __inline t_atom_long Dynamic_Get_Patch_On(void *obj, long index)
 {
@@ -105,7 +105,7 @@ static __inline void Dynamic_Set_Patch_On (void *obj, long index, t_atom_long st
 		mess2((t_object *)obj, gensym("set_patch_on"), (void *)index, (void *)state);
 }
 
-//////////////////////////////////////////////// Temporary Memory Queries ////////////////////////////////////////////////
+// Temporary Memory Queries //
 
 static __inline void **Dynamic_Get_Temp_Mem(void *obj, long index, void **default_memory)
 {
