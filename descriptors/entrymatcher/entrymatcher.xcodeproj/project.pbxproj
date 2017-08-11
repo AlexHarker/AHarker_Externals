@@ -128,10 +128,10 @@
 				B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */,
 				B85C98ED1F3DDA96003F468F /* Matchers.h */,
 				B85C98EC1F3DDA96003F468F /* Matchers.cpp */,
-				B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */,
-				B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */,
 				B85C98F51F3DFAE7003F468F /* utilities.h */,
 				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
+				B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */,
+				B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */,
 				B8998A5211CECE260028A17C /* entrymatcher~.c */,
 				B8B0C54A1F3D0C7C006D8538 /* entrymatcher.c */,
 			);

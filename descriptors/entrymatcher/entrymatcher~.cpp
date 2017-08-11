@@ -232,7 +232,7 @@ void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 // Set the matching criteria
 
-void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
+void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
     long max_matchers = x->max_matchers;
     
@@ -346,7 +346,6 @@ void entrymatcher_top_n(std::vector<long>& matched_indices, std::vector<double>&
 // ========================================================================================================================================== //
 // Perform and DSP routines:
 // ========================================================================================================================================== //
-
 
 t_int *entrymatcher_perform (t_int *w)
 {
