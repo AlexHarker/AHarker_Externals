@@ -20,6 +20,9 @@
  *
  */
 
+#define SETSYM(ap, x) ((ap)->a_type = A_SYM, (ap)->a_w.w_sym = (x))
+#define SETLONG(ap, x) ((ap)->a_type = A_LONG, (ap)->a_w.w_long = (x))
+#define SETFLOAT(ap, x) ((ap)->a_type = A_FLOAT, (ap)->a_w.w_float = (x))
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -61,7 +64,7 @@ typedef struct entrymatcher{
 	t_atom *entry_identifiers;
 	long *chosen_indices;
 	
-	double *match_params;
+	double *matching_data;
 	double *distances;
 	
 	t_symbol **names;
@@ -108,7 +111,7 @@ t_symbol *ps_sym_scale_ratio;
 t_symbol *ps_sym_within_ratio;
 
 
-static __inline double atom_getdouble_translate (t_atom *arg);
+inline double atom_getdouble_translate (t_atom *arg);
 
 void *entrymatcher_new(long max_num_entries, long num_columns);
 void entrymatcher_free(t_entrymatcher *x);
@@ -123,7 +126,6 @@ char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2);
 long entrymatcher_test_types(t_atom *argv);
 long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg);
 
-void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
@@ -139,18 +141,18 @@ void entrymatcher_combsort(long *indices, double *distances, long num_points);
 // ========================================================================================================================================== //
 
 
-static __inline double atom_getdouble_translate (t_atom *arg)
+inline double atom_getdouble_translate (t_atom *arg)
 {
-	switch (atom_gettype(arg))
+	switch (arg->a_type)
 	{
 		case A_LONG:
-			return atom_getlong(arg);
+			return arg->a_w.w_long;
 			break;
 		case A_FLOAT:
-			return atom_getfloat(arg);
+			return arg->a_w.w_float;
 			break;
 		case A_SYM:
-			return (long) atom_getsym(arg);
+			return (long) arg->a_w.w_sym;
 			break;
 		default:
 			return 0.;
@@ -181,7 +183,6 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_match_user,"match", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_names,"names", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_dump, "dump", 0);
 	class_addmethod(this_class, (method)entrymatcher_lookup, "lookup", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_lookup, "index", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
@@ -230,7 +231,6 @@ void *entrymatcher_new(long max_num_entries, long num_columns)
 	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
 	
 	t_symbol **names;
-	void *allocated_mem;
 	char *label_modes;
 	long i;
 	
@@ -246,31 +246,31 @@ void *entrymatcher_new(long max_num_entries, long num_columns)
 	
 	// Allocate large memory block and then assign to various pointers
 	
-	allocated_mem = malloc (((((2 + num_columns) * max_num_entries) + 1024) * sizeof(double)) + (max_num_entries * (1 + num_columns) * sizeof(long)) + (max_num_entries * sizeof(t_atom)) + (num_columns * sizeof(char)) + (num_columns * sizeof(t_symbol *)));
+	void *allocated_mem = malloc (((((2 + num_columns) * max_num_entries) + 1024) * sizeof(double)) + (max_num_entries * (1 + num_columns) * sizeof(long)) + (max_num_entries * sizeof(t_atom)) + (num_columns * sizeof(char)) + (num_columns * sizeof(t_symbol *)));
 	
 	if (!allocated_mem) 
 		return 0;
 	
 	x->entry_identifiers = allocated_mem;
-	allocated_mem = (void *) ((t_atom *) allocated_mem + max_num_entries);	
+	allocated_mem += max_num_entries * sizeof(t_atom);
 	
 	x->chosen_indices = allocated_mem;
-	allocated_mem = (void *) ((long *) allocated_mem + max_num_entries);	
+	allocated_mem += max_num_entries * sizeof(long);
 	
-	x->match_params = allocated_mem;
-	allocated_mem = (void *) ((double *) allocated_mem + 1024);	
+	x->matching_data = allocated_mem;
+	allocated_mem += 1024 * sizeof(double);
 	
 	x->distances = allocated_mem;
-	allocated_mem = (void *) ((double *) allocated_mem + max_num_entries);	
+	allocated_mem += max_num_entries * sizeof(double);
 	
 	x->names = names = allocated_mem;
-	allocated_mem = (void *) ((t_symbol **) allocated_mem + num_columns);	
+	allocated_mem += num_columns * sizeof(t_symbol *);
 	
 	x->label_modes = label_modes = allocated_mem;
-	allocated_mem = (void *) ((char *) allocated_mem + num_columns);	
+	allocated_mem += num_columns * sizeof(char);
 	
 	x->the_data = allocated_mem;
-	allocated_mem = (void *) ((double *) allocated_mem + (num_columns * max_num_entries));	
+	allocated_mem += num_columns * max_num_entries * sizeof(double);
 	
 	x->data_types = allocated_mem;
 	
@@ -331,7 +331,7 @@ void entrymatcher_clear(t_entrymatcher *x)
 	// This is all we need to do to clear the data
 	
 	x->num_entries = 0;
-	x->match_params[0] = 0;
+	x->matching_data[0] = 0;
 }
 
 
@@ -411,9 +411,9 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 	
 	for (i = 0; i < argc; i++)
 	{
-		if (label_modes[i] == (atom_gettype(argv) == A_SYM))
+		if (label_modes[i] == (argv->a_type == A_SYM))
 		{
-			data_types[i] = atom_gettype(argv);
+			data_types[i] = argv->a_type;
 			the_data[i] = atom_getdouble_translate(argv);
 		}
 		else
@@ -444,22 +444,6 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 // ========================================================================================================================================== //
 
 
-void entrymatcher_dump(t_entrymatcher *x)
-{
-	t_symbol *ps_index = gensym("index");
-	long num_entries = x->num_entries;
-	long i;
-	
-	t_atom arg;
-	
-	for (i = 0; i < num_entries; i++)
-	{
-		atom_setlong(&arg, i + 1);
-		entrymatcher_lookup(x, ps_index, 1, &arg);
-	}
-}
-
-
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	double *the_data = x->the_data;
@@ -473,44 +457,41 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	long to_lookup;
 	long i = -1;
 	
-	t_atom output_data[4096];
-	
-	if (num_columns > 4096)
-	{
-		num_columns = 4096;
-		output_size = 4096;
-	}
-
-	// Decrement argument count (argv is incremented below)
+	t_atom output_data[output_size];
 	
 	if (!argc--)
 		return;
+	
+	// Limit number of items to lookup
+	
+	if (argc > num_columns) 
+		output_size = argc;
 	
 	// If called using the lookup message then attempt to find the relevant entry by identifier
 	// Otherwise, use the given number to lookup the entry in that numerical row
 	
 	if (msg == ps_lookup)
 	{
-		switch (atom_gettype(argv))
+		switch (argv->a_type)
 		{
 			case A_SYM:
 				
 				for (i = 0; i < num_entries; i++)
-					if (atom_gettype(entry_identifiers + i) == A_SYM && atom_getsym(entry_identifiers + i) == atom_getsym(argv))
+					if (entry_identifiers[i].a_type == A_SYM && entry_identifiers[i].a_w.w_sym == argv->a_w.w_sym) 
 						break;
 				break;
 				
 			case A_LONG:
 
 				for (i = 0; i < num_entries; i++)
-					if (atom_gettype(entry_identifiers + i) == A_LONG && atom_getlong(entry_identifiers + i) == atom_getlong(argv))
+					if (entry_identifiers[i].a_type == A_LONG && entry_identifiers[i].a_w.w_long == argv->a_w.w_long)
 						break;
 				break;
 				
 			case A_FLOAT:
 				
 				for (i = 0; i < num_entries; i++)
-					if (atom_gettype(entry_identifiers + i) == A_FLOAT && atom_getfloat(entry_identifiers + i) == atom_getfloat(argv)) break;
+					if (entry_identifiers[i].a_type == A_FLOAT && entry_identifiers[i].a_w.w_float == argv->a_w.w_float) break;
 				break;
 		}
 		to_lookup = i;
@@ -521,7 +502,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	
 	if (to_lookup < 0 || to_lookup >= num_entries) 
 	{
-		error("entrymatcher: entry does not exist");
+		error("entrymatcher: entry does not exist %s", (argv - 1)->a_w.w_sym->s_name);
 		return;
 	}
 	
@@ -529,11 +510,6 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	
 	the_data += to_lookup * num_columns;
 	data_types += to_lookup * num_columns;
-	
-	// Limit number of items to lookup (BTW - we can allow more items than columns if the user requires duplicates)
-	
-	if (argc > 4096) 
-		argc = 4096;
 	
 	if (!argc)
 	{
@@ -544,16 +520,16 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 			switch (data_types[i])
 			{
 				case A_SYM:
-					atom_setsym(output_data + i, (t_symbol *) (long) the_data[i]);
+					SETSYM (output_data + i, (t_symbol *) (long) the_data[i]);
 					break;
 				case A_LONG:
-					atom_setlong(output_data + i, (long) the_data[i]);
+					SETLONG (output_data + i, (long) the_data[i]);
 					break;
 				case A_FLOAT:
-					atom_setfloat(output_data + i, the_data[i]);
+					SETFLOAT (output_data + i, the_data[i]);
 					break;
 				default:
-					atom_setfloat(output_data + i, 0.);
+					SETFLOAT (output_data + i, 0.);
 			}
 		}
 	}
@@ -571,19 +547,19 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 
 			if (column_index == -1)
 			{
-				switch (atom_gettype(entry_identifiers + to_lookup))
+				switch (entry_identifiers[to_lookup].a_type)
 				{
 					case A_SYM:
-						atom_setsym(output_data + i, atom_getsym(entry_identifiers + to_lookup));
+						SETSYM (output_data + i, entry_identifiers[to_lookup].a_w.w_sym);
 						break;
 					case A_LONG:
-						atom_setlong(output_data + i, atom_getlong(entry_identifiers + to_lookup));
+						SETLONG (output_data + i, entry_identifiers[to_lookup].a_w.w_long);
 						break;
 					case A_FLOAT:
-						atom_setfloat(output_data + i, atom_getfloat(entry_identifiers + to_lookup));
+						SETFLOAT (output_data + i, entry_identifiers[to_lookup].a_w.w_float);
 						break;
 					default:
-						atom_setfloat(output_data + i, 0.);
+						SETFLOAT (output_data + i, 0.);
 				}
 			}
 			else 
@@ -591,16 +567,16 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 				switch (data_types[column_index])
 				{
 					case A_SYM:
-						atom_setsym(output_data + i, (t_symbol *) (long) the_data[column_index]);
+						SETSYM (output_data + i, (t_symbol *) (long) the_data[column_index]);
 						break;
 					case A_LONG:
-						atom_setlong(output_data + i, (long) the_data[column_index]);
+						SETLONG (output_data + i, (long) the_data[column_index]);
 						break;
 					case A_FLOAT:
-						atom_setfloat(output_data + i, the_data[column_index]);
+						SETFLOAT (output_data + i, the_data[column_index]);
 						break;
 					default:
-						atom_setfloat(output_data + i, 0.);
+						SETFLOAT (output_data + i, 0.);
 				}
 			}
 		}
@@ -625,7 +601,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 	enum TestType test_type;
 	enum TestType next_test_type = TEST_NONE;
 	
-	double *match_params = x->match_params;
+	double *matching_data = x->matching_data;
 	char *label_modes = x->label_modes;
 
 	double scale_ratio;
@@ -712,12 +688,12 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 			{
 				// Store details of a valid match test (other tests are not valid)
 			
-				match_params[j++] = TEST_MATCH;
-				match_params[j++] = length;
-				match_params[j++] = column_index;
+				matching_data[j++] = TEST_MATCH;
+				matching_data[j++] = length;
+				matching_data[j++] = column_index;
 		
 				for (k = from; k < to; k++)
-					match_params[j++] = (long) atom_getsym(argv + k);
+					matching_data[j++] = (long) atom_getsym(argv + k);
 			}
 			else
 			{
@@ -731,29 +707,29 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 			// If this column is for values
 			// Store the parameters for any valid test
 			
-			match_params[j++] = test_type;
-			match_params[j++] = length;
-			match_params[j++] = column_index;
+			matching_data[j++] = test_type;
+			matching_data[j++] = length;
+			matching_data[j++] = column_index;
 		
 			if (test_type == TEST_SCALE || test_type == TEST_WITHIN)
-				match_params[j++] = fabs(1. / atom_getfloat(argv + from++));
+				matching_data[j++] = fabs(1. / atom_getfloat(argv + from++));
 			
 			if (test_type == TEST_SCALE_RATIO || test_type == TEST_WITHIN_RATIO)
 			{
 				scale_ratio = fabs(atom_getfloat(argv + from++));
 				if (scale_ratio < 1.) 
 					scale_ratio = 1. / scale_ratio;
-				match_params[j++] = 1. / (scale_ratio - 1.);
+				matching_data[j++] = 1. / (scale_ratio - 1.);
 			}
 		
 			for (k = from; k < to; k++)
-				match_params[j++] = atom_getfloat(argv + k);
+				matching_data[j++] = atom_getfloat(argv + k);
 		}
 	}
 	
 	// Terminate with a zero to indicate the end of the parameter list
 
-	match_params[j] = 0;
+	matching_data[j] = 0;
 }
 
 
@@ -771,7 +747,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 	double distance_limit = HUGE_VAL;
 	long n_limit = 1024;
 	
-	if (argc > 0 && atom_gettype(argv) == A_LONG)
+	if (argc > 0 && argv->a_type == A_LONG)
 	{
 		// Limit by maximum specified number
 		// Limit by ratio
@@ -844,7 +820,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 		
 	// N.B. If there are no matchers ALWAYS match everything (up to max output size)...
 	
-	if (x->match_params[0])
+	if (x->matching_data[0])
 	{
 		// If there are matchers, then limit by ratio and maximum number
 		
@@ -875,9 +851,9 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 		if (distance > distance_limit) 
 			break;
 		
-		atom_setfloat(output_distances + i, distance);
+		SETFLOAT(output_distances + i, distance);
 		output_identifiers[i] = entry_identifiers[index];
-		atom_setlong(output_indices + i, index + 1);
+		SETLONG(output_indices + i, index + 1);
 	}
 		
 	num_chosen_indices = i;
@@ -889,9 +865,9 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Handle identifiers correctly whether the first identifier is numeric (output list), or symbol (output message)
 	
-	if (atom_gettype(output_identifiers) == A_SYM)
+	if (output_identifiers[0].a_type == A_SYM)
 	{
-        msg = atom_getsym(output_identifiers);
+		msg = output_identifiers[0].a_w.w_sym;
 		nudge = 1;
 		num_identifier_args = num_chosen_indices - 1;
 	}
@@ -912,7 +888,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 {
 	long *chosen_indices = x->chosen_indices;
 	
-	double *match_params = x->match_params;
+	double *matching_data = x->matching_data;
 	double *the_data = x->the_data;	
 	double *distances = x->distances;
 	
@@ -942,13 +918,13 @@ long entrymatcher_calculate(t_entrymatcher *x)
 		distance = 0.;
 		j = 0;
 		
-		while (match_params[j])
+		while (matching_data[j])
 		{
 			// Get details of the test to perform
 			
-			test_type = match_params[j++];
-			num_matchers = match_params[j++];
-			column_index = match_params[j++];
+			test_type = matching_data[j++];
+			num_matchers = matching_data[j++];
+			column_index = matching_data[j++];
 			new_distance = HUGE_VAL;
 			
 			from = j;
@@ -963,7 +939,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Match One of a Number of Values */
 					
 					for (j = from; j < to; j++)
-						if (match_params[j] == the_data[i * num_columns + column_index]) break;
+						if (matching_data[j] == the_data[i * num_columns + column_index]) break;
 					
 					if (j == to) 
 						chosen = 0;
@@ -975,7 +951,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 
 					for (j = from; j < to; j++)
 					{
-						test_distance = match_params[j] - the_data[i * num_columns + column_index];
+						test_distance = matching_data[j] - the_data[i * num_columns + column_index];
 						test_distance *= test_distance;
 						if (test_distance < new_distance) 
 							new_distance = test_distance;
@@ -989,7 +965,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Less Than One of a Number of Values */
 					
 					for (j = from; j < to; j++)
-						if (match_params[j] > the_data[i * num_columns + column_index]) break;
+						if (matching_data[j] > the_data[i * num_columns + column_index]) break;
 					
 					if (j == to) 
 						chosen = 0;
@@ -1000,7 +976,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Greater Than One of a Number of Values */
 					
 					for (j = from; j < to; j++)
-						if (match_params[j] < the_data[i * num_columns + column_index]) break;
+						if (matching_data[j] < the_data[i * num_columns + column_index]) break;
 					
 					if (j == to) 
 						chosen = 0;
@@ -1011,7 +987,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Less Than or Equal to One of a Number of Values */
 					
 					for (j = from; j < to; j++)
-						if (match_params[j] >= the_data[i * num_columns + column_index]) break;
+						if (matching_data[j] >= the_data[i * num_columns + column_index]) break;
 					
 					if (j == to) 
 						chosen = 0;
@@ -1022,7 +998,7 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Greater Than or Equal to One of a Number of Values */
 					
 					for (j = from; j < to; j++)
-						if (match_params[j] <= the_data[i * num_columns + column_index]) break;
+						if (matching_data[j] <= the_data[i * num_columns + column_index]) break;
 					
 					if (j == to) 
 						chosen = 0;
@@ -1034,13 +1010,13 @@ long entrymatcher_calculate(t_entrymatcher *x)
 					/* Find Minimum Scaled distance to One of a Number of Values */
 					/* If test_type is TEST_WITHIN Reject Values Over 1. */
 					
-					scale = match_params[j];
+					scale = matching_data[j];
 					from++;
 					to++;
 					
 					for (j = from; j < to; j++)
 					{
-						test_distance = (match_params[j] - the_data[i * num_columns + column_index]) * scale;
+						test_distance = (matching_data[j] - the_data[i * num_columns + column_index]) * scale;
 						test_distance *= test_distance;
 						if (test_distance < new_distance) 
 							new_distance = test_distance;
@@ -1063,14 +1039,14 @@ long entrymatcher_calculate(t_entrymatcher *x)
 						scale = 1.;
 					else 
 					{
-						scale = match_params[j];
+						scale = matching_data[j];
 						from++;
 						to++;
 					}
 					
 					for (j = from; j < to; j++)
 					{
-						compare_to = match_params[j]; 
+						compare_to = matching_data[j]; 
 						data_to_compare = the_data[i * num_columns + column_index];
 						if (compare_to > data_to_compare)
 							test_distance = compare_to / data_to_compare;
@@ -1117,23 +1093,23 @@ long entrymatcher_calculate(t_entrymatcher *x)
 
 char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2)
 {
-	if (atom_gettype(identifier1) != atom_gettype(identifier2))
+	if (identifier1->a_type != identifier2->a_type)
 		return 0;
 		
-	switch (atom_gettype(identifier1))
+	switch (identifier1->a_type)
 	{
 		case A_LONG:
-			if (atom_getlong(identifier1) != atom_getlong(identifier2))
+			if (identifier1->a_w.w_long != identifier2->a_w.w_long)
 				return 0;
 			break;
 		
 		case A_FLOAT:
-			if (atom_getfloat(identifier1) != atom_getfloat(identifier2))
+			if (identifier1->a_w.w_float != identifier2->a_w.w_float)
 				return 0;
 			break;
 			
 		case A_SYM:
-			if (atom_getsym(identifier1) != atom_getsym(identifier2))
+			if (identifier1->a_w.w_sym != identifier2->a_w.w_sym)
 				return 0;
 			break;
 			
@@ -1154,7 +1130,7 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 	t_symbol *named_column;
 	long i;
 	
-	if (atom_gettype(arg) != A_SYM) 
+	if (arg->a_type != A_SYM) 
 		return atom_getlong(arg) - 1;
 
 	named_column = atom_getsym(arg);
@@ -1176,20 +1152,19 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 
 long entrymatcher_test_types(t_atom *argv)
 {
-	if (atom_gettype(argv) != A_SYM)
-        return 0;
+	if (argv->a_type != A_SYM) return 0;
 	
-	if (atom_getsym(argv) == ps_match || atom_getsym(argv) == ps_sym_match) return TEST_MATCH;
-	if (atom_getsym(argv) == ps_distance || atom_getsym(argv) == ps_sym_distance) return TEST_DISTANCE;
-	if (atom_getsym(argv) == ps_less || atom_getsym(argv) == ps_sym_less) return TEST_LESS_THAN;
-	if (atom_getsym(argv) == ps_greater || atom_getsym(argv) == ps_sym_greater) return TEST_GREATER_THAN;
-	if (atom_getsym(argv) == ps_lesseq || atom_getsym(argv) == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
-	if (atom_getsym(argv) == ps_greatereq || atom_getsym(argv) == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
-	if (atom_getsym(argv) == ps_scale || atom_getsym(argv) == ps_sym_scale) return TEST_SCALE;
-	if (atom_getsym(argv) == ps_within || atom_getsym(argv) == ps_sym_within) return TEST_WITHIN;
-	if (atom_getsym(argv) == ps_distance_ratio || atom_getsym(argv) == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
-	if (atom_getsym(argv) == ps_scale_ratio || atom_getsym(argv) == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
-	if (atom_getsym(argv) == ps_within_ratio || atom_getsym(argv) == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
+	if (argv->a_w.w_sym == ps_match || argv->a_w.w_sym == ps_sym_match) return TEST_MATCH;
+	if (argv->a_w.w_sym == ps_distance || argv->a_w.w_sym == ps_sym_distance) return TEST_DISTANCE;
+	if (argv->a_w.w_sym == ps_less || argv->a_w.w_sym == ps_sym_less) return TEST_LESS_THAN;
+	if (argv->a_w.w_sym == ps_greater || argv->a_w.w_sym == ps_sym_greater) return TEST_GREATER_THAN;
+	if (argv->a_w.w_sym == ps_lesseq || argv->a_w.w_sym == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
+	if (argv->a_w.w_sym == ps_greatereq || argv->a_w.w_sym == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
+	if (argv->a_w.w_sym == ps_scale || argv->a_w.w_sym == ps_sym_scale) return TEST_SCALE;
+	if (argv->a_w.w_sym == ps_within || argv->a_w.w_sym == ps_sym_within) return TEST_WITHIN;
+	if (argv->a_w.w_sym == ps_distance_ratio || argv->a_w.w_sym == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
+	if (argv->a_w.w_sym == ps_scale_ratio || argv->a_w.w_sym == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
+	if (argv->a_w.w_sym == ps_within_ratio || argv->a_w.w_sym == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
 	
 	return 0;
 }

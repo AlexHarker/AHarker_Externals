@@ -55,35 +55,6 @@ typedef struct entrymatcher {
 } t_entrymatcher;
 
 
-t_symbol *ps_null;
-t_symbol *ps_list;
-t_symbol *ps_match_ratio;
-t_symbol *ps_lookup;
-
-t_symbol *ps_distance;
-t_symbol *ps_match;
-t_symbol *ps_scale;
-t_symbol *ps_within;
-t_symbol *ps_less;
-t_symbol *ps_greater;
-t_symbol *ps_lesseq;
-t_symbol *ps_greatereq;
-t_symbol *ps_distance_ratio;
-t_symbol *ps_scale_ratio;
-t_symbol *ps_within_ratio;
-
-t_symbol *ps_sym_distance;
-t_symbol *ps_sym_match;
-t_symbol *ps_sym_scale;
-t_symbol *ps_sym_within;
-t_symbol *ps_sym_less;
-t_symbol *ps_sym_greater;
-t_symbol *ps_sym_lesseq;
-t_symbol *ps_sym_greatereq;
-t_symbol *ps_sym_distance_ratio;
-t_symbol *ps_sym_scale_ratio;
-t_symbol *ps_sym_within_ratio;
-
 void *entrymatcher_new(long max_entries, long num_columns, long max_matchers);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
@@ -133,34 +104,7 @@ int C74_EXPORT main(void)
     
     class_register(CLASS_BOX, this_class);
     
-    ps_null = gensym("");
-    ps_list = gensym("list");
-    ps_match_ratio = gensym("match_ratio");
-    ps_lookup = gensym("lookup");
-    
-    ps_distance = gensym("distance");
-    ps_match = gensym("match");
-    ps_scale = gensym("scale");
-    ps_within = gensym("within");
-    ps_less = gensym("less");
-    ps_greater = gensym("greater");
-    ps_lesseq = gensym("lesseq");
-    ps_greatereq = gensym("greatereq");
-    ps_distance_ratio = gensym("distance_ratio");
-    ps_scale_ratio = gensym("scale_ratio");
-    ps_within_ratio = gensym("within_ratio");
-    
-    ps_sym_distance = gensym("-");
-    ps_sym_match = gensym("==");
-    ps_sym_scale = gensym("%");
-    ps_sym_within = gensym("<->");
-    ps_sym_less = gensym("<");
-    ps_sym_greater = gensym(">");
-    ps_sym_lesseq = gensym("<=");
-    ps_sym_greatereq = gensym(">=");
-    ps_sym_distance_ratio = gensym("/");
-    ps_sym_scale_ratio = gensym("%%");
-    ps_sym_within_ratio = gensym("</>");
+    init_test_symbols();
     
     return 0;
 }

@@ -24,9 +24,9 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "utilities.h"
 #include "EntryDatabase.h"
 #include "Matchers.h"
+#include "utilities.h"
 
 t_class *this_class;
 
@@ -50,35 +50,8 @@ typedef struct entrymatcher{
     
 } t_entrymatcher;
 
-
-t_symbol *ps_null;
 t_symbol *ps_list;
-
 t_symbol *ps_lookup;
-
-t_symbol *ps_distance;
-t_symbol *ps_match;
-t_symbol *ps_scale;
-t_symbol *ps_within;
-t_symbol *ps_less;
-t_symbol *ps_greater;
-t_symbol *ps_lesseq;
-t_symbol *ps_greatereq;
-t_symbol *ps_distance_ratio;
-t_symbol *ps_scale_ratio;
-t_symbol *ps_within_ratio;
-
-t_symbol *ps_sym_distance;
-t_symbol *ps_sym_match;
-t_symbol *ps_sym_scale;
-t_symbol *ps_sym_within;
-t_symbol *ps_sym_less;
-t_symbol *ps_sym_greater;
-t_symbol *ps_sym_lesseq;
-t_symbol *ps_sym_greatereq;
-t_symbol *ps_sym_distance_ratio;
-t_symbol *ps_sym_scale_ratio;
-t_symbol *ps_sym_within_ratio;
 
 void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns);
 void entrymatcher_free(t_entrymatcher *x);
@@ -134,34 +107,9 @@ int C74_EXPORT main(void)
 	class_register(CLASS_BOX, this_class);
 	
 	ps_list = gensym("list");
-	
-	ps_null = gensym("");
-	
 	ps_lookup = gensym("lookup");
 	
-	ps_distance = gensym("distance");
-	ps_match = gensym("match");
-	ps_scale = gensym("scale");
-	ps_within = gensym("within");
-	ps_less = gensym("less");
-	ps_greater = gensym("greater");
-	ps_lesseq = gensym("lesseq");
-	ps_greatereq = gensym("greatereq");
-	ps_distance_ratio = gensym("distance_ratio");
-	ps_scale_ratio = gensym("scale_ratio");
-	ps_within_ratio = gensym("within_ratio");
-	
-	ps_sym_distance = gensym("-");
-	ps_sym_match = gensym("==");
-	ps_sym_scale = gensym("%");
-	ps_sym_within = gensym("<->"); 
-	ps_sym_less = gensym("<");
-	ps_sym_greater = gensym(">");
-	ps_sym_lesseq = gensym("<=");
-	ps_sym_greatereq = gensym(">=");
-	ps_sym_distance_ratio = gensym("/");
-	ps_sym_scale_ratio = gensym("%%");
-	ps_sym_within_ratio = gensym("</>");
+    init_test_symbols();
 	
 	return 0;
 }
@@ -509,32 +457,6 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	outlet_list(x->the_distances_outlet, 0L, num_matches, output_distances);
 	outlet_anything(x->the_identifiers_outlet, msg, num_identifier_args, output_identifiers + nudge);
 	outlet_list(x->the_indices_outlet, 0L, num_matches, output_indices);
-}
-
-// ========================================================================================================================================== //
-// Utilities: for comparing identifiers, finding columns and matcher types, 
-// ========================================================================================================================================== //
-
-// Attempts to match an atom with any of the symbols representing a valid test type
-
-TestType entrymatcher_test_types(t_atom *argv)
-{
-	if (atom_gettype(argv) != A_SYM)
-        return TEST_NONE;
-	
-	if (atom_getsym(argv) == ps_match || atom_getsym(argv) == ps_sym_match) return TEST_MATCH;
-	if (atom_getsym(argv) == ps_distance || atom_getsym(argv) == ps_sym_distance) return TEST_DISTANCE;
-	if (atom_getsym(argv) == ps_less || atom_getsym(argv) == ps_sym_less) return TEST_LESS_THAN;
-	if (atom_getsym(argv) == ps_greater || atom_getsym(argv) == ps_sym_greater) return TEST_GREATER_THAN;
-	if (atom_getsym(argv) == ps_lesseq || atom_getsym(argv) == ps_sym_lesseq) return TEST_LESS_THAN_EQ;
-	if (atom_getsym(argv) == ps_greatereq || atom_getsym(argv) == ps_sym_greatereq) return TEST_GREATER_THAN_EQ;
-	if (atom_getsym(argv) == ps_scale || atom_getsym(argv) == ps_sym_scale) return TEST_SCALE;
-	if (atom_getsym(argv) == ps_within || atom_getsym(argv) == ps_sym_within) return TEST_WITHIN;
-	if (atom_getsym(argv) == ps_distance_ratio || atom_getsym(argv) == ps_sym_distance_ratio) return TEST_DISTANCE_RATIO; 
-	if (atom_getsym(argv) == ps_scale_ratio || atom_getsym(argv) == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
-	if (atom_getsym(argv) == ps_within_ratio || atom_getsym(argv) == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
-	
-	return TEST_NONE;
 }
 
 // ========================================================================================================================================== //
