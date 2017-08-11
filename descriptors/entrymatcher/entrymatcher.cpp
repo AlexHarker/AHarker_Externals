@@ -23,29 +23,12 @@
 
 #include <ext.h>
 #include <ext_obex.h>
-#include <math.h>
 
+#include "utilities.h"
 #include "EntryDatabase.h"
-
+#include "Matchers.h"
 
 t_class *this_class;
-
-
-enum TestType
-{
-	TEST_NONE,
-	TEST_MATCH,
-	TEST_LESS_THAN,
-	TEST_GREATER_THAN,
-	TEST_LESS_THAN_EQ,
-	TEST_GREATER_THAN_EQ,
-    TEST_DISTANCE,
-    TEST_SCALE,
-	TEST_WITHIN,
-	TEST_DISTANCE_RATIO,
-	TEST_SCALE_RATIO,
-	TEST_WITHIN_RATIO
-};
 
 
 typedef struct entrymatcher{
@@ -53,7 +36,7 @@ typedef struct entrymatcher{
     t_object a_obj;
     
     EntryDatabase *mDatabase;
-    std::vector<Matcher> *mMatchers;
+    Matchers *mMatchers;
     
     std::vector<long> *mIndices;
     std::vector<double> *mDistances;
@@ -196,7 +179,7 @@ void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns)
     x->the_indices_outlet = listout(x);
 		
     x->mDatabase = new EntryDatabase(num_columns);
-    x->mMatchers = new std::vector<Matcher>;
+    x->mMatchers = new Matchers;
     x->mIndices = new std::vector<long>;
     x->mDistances = new std::vector<double>;
     
@@ -296,7 +279,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
 }
 
 // ========================================================================================================================================== //
-// Matchers and Matching routines:
+// Matchers and Matching Routines:
 // ========================================================================================================================================== //
 
 // Set the matching criteria
@@ -349,13 +332,13 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 		{
 			// If this column is for labels store details of a valid match test (other tests are not valid)
 		
-            x->mMatchers->push_back(Matcher(Matcher::kTestMatch, column));
+            x->mMatchers->addMatcher(Matchers::kTestMatch, column);
 		
             for ( ; argc; argc--, argv++)
             {
                 if (entrymatcher_test_types(argv) != TEST_NONE)
                     break;
-                x->mMatchers->back().add(atom_getsym(argv));
+                x->mMatchers->addTarget(atom_getsym(argv));
                 hasTarget = true;
             }
         }
@@ -379,24 +362,24 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
             switch (type)
             {
                 case TEST_NONE:                 break;
-                case TEST_MATCH:                x->mMatchers->push_back(Matcher(Matcher::kTestMatch, column));                      break;
-                case TEST_LESS_THAN:            x->mMatchers->push_back(Matcher(Matcher::kTestLess, column));                       break;
-                case TEST_GREATER_THAN:         x->mMatchers->push_back(Matcher(Matcher::kTestGreater, column));                    break;
-                case TEST_LESS_THAN_EQ:         x->mMatchers->push_back(Matcher(Matcher::kTestLessEqual, column));                  break;
-                case TEST_GREATER_THAN_EQ:      x->mMatchers->push_back(Matcher(Matcher::kTestGreaterEqual, column));               break;
-                case TEST_DISTANCE:             x->mMatchers->push_back(Matcher(Matcher::kTestDistance, column));                   break;
-                case TEST_SCALE:                x->mMatchers->push_back(Matcher(Matcher::kTestDistance, column, scale));            break;
-                case TEST_WITHIN:               x->mMatchers->push_back(Matcher(Matcher::kTestDistance, column, scale, true));      break;
-                case TEST_DISTANCE_RATIO:       x->mMatchers->push_back(Matcher(Matcher::kTestRatio, column));                      break;
-                case TEST_SCALE_RATIO:          x->mMatchers->push_back(Matcher(Matcher::kTestRatio, column, scale));               break;
-                case TEST_WITHIN_RATIO:         x->mMatchers->push_back(Matcher(Matcher::kTestRatio, column, scale, true));         break;
+                case TEST_MATCH:                x->mMatchers->addMatcher(Matchers::kTestMatch, column);                      break;
+                case TEST_LESS_THAN:            x->mMatchers->addMatcher(Matchers::kTestLess, column);                       break;
+                case TEST_GREATER_THAN:         x->mMatchers->addMatcher(Matchers::kTestGreater, column);                    break;
+                case TEST_LESS_THAN_EQ:         x->mMatchers->addMatcher(Matchers::kTestLessEqual, column);                  break;
+                case TEST_GREATER_THAN_EQ:      x->mMatchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
+                case TEST_DISTANCE:             x->mMatchers->addMatcher(Matchers::kTestDistance, column);                   break;
+                case TEST_SCALE:                x->mMatchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
+                case TEST_WITHIN:               x->mMatchers->addMatcher(Matchers::kTestDistance, column, scale, true);      break;
+                case TEST_DISTANCE_RATIO:       x->mMatchers->addMatcher(Matchers::kTestRatio, column);                      break;
+                case TEST_SCALE_RATIO:          x->mMatchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
+                case TEST_WITHIN_RATIO:         x->mMatchers->addMatcher(Matchers::kTestRatio, column, scale, true);         break;
             }
             
             for ( ; argc; argc--, argv++)
             {
                 if (entrymatcher_test_types(argv) != TEST_NONE)
                     break;
-                x->mMatchers->back().add(atom_getfloat(argv));
+                x->mMatchers->addTarget(atom_getfloat(argv));
                 hasTarget = true;
             }
         }
@@ -466,7 +449,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Calculate potential matches and sort if there are matches
 	
-    long num_matches = x->mDatabase->calculate(*x->mMatchers, *x->mIndices, *x->mDistances);
+    long num_matches = x->mMatchers->match(x->mDatabase, *x->mIndices, *x->mDistances);
 	
 	if (!num_matches)
 		return;

@@ -37,42 +37,6 @@ struct FloatSym
     };
 };
 
-class Matcher
-{
-    
-public:
-
-    enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio };
-    
-    Matcher(TestType type, long column, double scale = 1.0, bool reject = false) : mType(type), mColumn(column), mScale(scale), mReject(reject)
-    {
-        mValues.reserve(5);
-    }
-    
-    inline bool match(const FloatSym& data, double& overallDistance) const;
-    
-    long getcolumn() const      { return mColumn; }
-    void add(double value)      { mValues.push_back(value); }
-    void add(t_symbol *value)   { mValues.push_back(value); }
-
-private:
-    
-    template <typename Op> bool comparison(double value, Op op) const
-    {
-        for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
-            if (op(value, (*it).mValue)) return true;
-        
-        return false;
-    }
-    
-    TestType mType;
-    long mColumn;
-    double mScale;
-    bool mReject;
-    std::vector<FloatSym> mValues;
-};
-
-
 class EntryDatabase
 {
     struct ColumnInfo
@@ -113,7 +77,6 @@ public:
     void lookup(std::vector<t_atom>& output, long idx, long argc, t_atom *argv) const;
     long itemFromIdentifier(t_atom& identifier) const;
     long columnFromSpecifier(const t_atom& specifier) const;
-    long calculate(std::vector<Matcher>& matchers, std::vector<long>& indices, std::vector<double>& distances) const;
 
     inline FloatSym getData(long idx, long column) const       { return mEntries[idx * numColumns() + column]; }
     inline t_atom getDataAtom(long idx, long column) const     { return getData(idx, column).getAtom(); }
@@ -137,5 +100,6 @@ private:
     std::vector<t_atom> mIdentifiers;
     std::vector<FloatSym> mEntries;
 };
+
 
 #endif
