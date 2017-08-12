@@ -20,7 +20,6 @@
  *
  */
 
-
 #include <ext.h>
 #include <ext_obex.h>
 
@@ -29,7 +28,6 @@
 #include "utilities.h"
 
 t_class *this_class;
-
 
 typedef struct entrymatcher{
 

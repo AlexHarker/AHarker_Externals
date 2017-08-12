@@ -19,7 +19,6 @@
  *
  */
 
-
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -54,8 +53,7 @@ typedef struct entrymatcher {
     
 } t_entrymatcher;
 
-
-void *entrymatcher_new(long max_entries, long num_columns, long max_matchers);
+void *entrymatcher_new(t_atom_long max_entries, t_atom_long num_columns, t_atom_long max_matchers);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
@@ -109,18 +107,13 @@ int C74_EXPORT main(void)
     return 0;
 }
 
-void *entrymatcher_new(long max_entries, long num_columns, long max_matchers)
+void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns, t_atom_long max_matchers)
 {
     t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
 
-    if (max_entries < 1)
-        max_entries = 1;
-    if (num_columns < 1)
-        num_columns = 1;
-    if (max_matchers < 1)
-        max_matchers = 1;
-    if (max_matchers > 256)
-        max_matchers = 256;
+    max_num_entries = std::max(max_num_entries, t_atom_long(1));
+    num_columns = std::max(num_columns, t_atom_long(1));
+    max_matchers = std::max(std::min(num_columns, t_atom_long(256)), t_atom_long(1));
     
     dsp_setup((t_pxobject *)x, 2 + max_matchers);
     outlet_new((t_object *)x, "signal");
@@ -130,8 +123,7 @@ void *entrymatcher_new(long max_entries, long num_columns, long max_matchers)
     x->mIndices = new std::vector<long>;
     x->mDistances = new std::vector<double>;
     
-    x->mDatabase->reserve(max_entries);
-    
+    x->mDatabase->reserve(max_num_entries);
     
     x->max_matchers = max_matchers;
     x->ratio_kept = 1.0;
@@ -227,7 +219,6 @@ void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
     
     x->n_limit = n_limit;
     x->ratio_kept = ratio_kept;
-    
 }
 
 // Set the matching criteria
