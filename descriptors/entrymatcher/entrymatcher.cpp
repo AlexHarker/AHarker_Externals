@@ -179,12 +179,12 @@ void entrymatcher_clear(t_entrymatcher *x)
 
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->labelModes(argc, argv);
+    x->mDatabase->setLabelModes(argc, argv);
 }
 
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->names(argc, argv);
+    x->mDatabase->setNames(argc, argv);
 }
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -222,7 +222,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
     long numItems = database->numItems();
     long numColumns = database->numColumns();
     
-    EntryDatabase::Accessor accessor(*x->mDatabase);
+    EntryDatabase::Accessor accessor = database->accessor();
     
     if (idx < 0 || idx >= numItems)
     {

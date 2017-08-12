@@ -15,7 +15,7 @@ void EntryDatabase::clear()
     mOrder.clear();
 }
 
-void EntryDatabase::labelModes(long argc, t_atom *argv)
+void EntryDatabase::setLabelModes(long argc, t_atom *argv)
 {
     argc = (argc > numColumns()) ? numColumns() : argc;
     
@@ -25,7 +25,7 @@ void EntryDatabase::labelModes(long argc, t_atom *argv)
         mColumns[i].mLabel = atom_getlong(argv++) ? true : false;
 }
 
-void EntryDatabase::names(long argc, t_atom *argv)
+void EntryDatabase::setNames(long argc, t_atom *argv)
 {
     argc = (argc > numColumns()) ? numColumns() : argc;
     

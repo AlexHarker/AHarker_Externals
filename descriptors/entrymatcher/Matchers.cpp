@@ -99,17 +99,13 @@ void Matchers::clear()
 void Matchers::addTarget(double value)
 {
     if (mMatchers.size())
-    {
         mMatchers.back().addTarget(value);
-    }
 }
 
 void Matchers::addTarget(t_symbol *value)
 {
     if (mMatchers.size())
-    {
         mMatchers.back().addTarget(value);
-    }
 }
 
 void Matchers::addMatcher(TestType type, long column, double scale)
