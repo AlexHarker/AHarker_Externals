@@ -7,6 +7,7 @@
 
 struct FloatSym
 {
+    enum CompareResult { kLess, kGreater, kEqual };
     enum Type { kSymbol, kDouble, kTranlatedInt, kInt  };
     
     FloatSym() :  mType(kDouble), mValue(0.0) {}
@@ -34,7 +35,7 @@ struct FloatSym
         }
     }
     
-    t_atom getAtom() const
+    t_atom inline getAtom() const
     {
         t_atom a;
         
@@ -49,8 +50,25 @@ struct FloatSym
         return a;
     }
     
+    friend inline CompareResult compare(const FloatSym& a, const FloatSym& b)
+    {
+        if (a.mType == b.mType)
+        {
+            switch (a.mType)
+            {
+                case FloatSym::kDouble:         return a.mValue < b.mValue ? kLess : a.mValue == b.mValue ? kEqual : kGreater;
+                case FloatSym::kTranlatedInt:   return a.mValue < b.mValue ? kLess : a.mValue == b.mValue ? kEqual : kGreater;
+                case FloatSym::kInt:            return a.mInt < b.mInt ? kLess : a.mInt == b.mInt ? kEqual : kGreater;
+                case FloatSym::kSymbol:         return a.mSymbol < b.mSymbol ? kLess : a.mSymbol == b.mSymbol ? kEqual : kGreater;
+            }
+        }
+        
+        return (a.mType < b.mType) ? kLess : kGreater;
+    }
+    
     Type mType;
-    union {
+    union
+    {
         double mValue;
         t_atom_long mInt;
         t_symbol *mSymbol;
@@ -139,6 +157,7 @@ private:
     std::vector<ColumnInfo> mColumns;
     std::vector<FloatSym> mIdentifiers;
     std::vector<FloatSym> mEntries;
+    std::vector<long> mOrder;
 };
 
 

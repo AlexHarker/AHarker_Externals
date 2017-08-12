@@ -100,25 +100,10 @@ void EntryDatabase::remove(long idx)
 long EntryDatabase::itemFromIdentifier(const FloatSym& identifier) const
 {
     for (long i = 0; i < numItems(); i++)
-        if (compareIdentifiers(identifier, getIdentifierInternal(i)))
+        if (compare(identifier, getIdentifierInternal(i)) == FloatSym::kEqual)
             return i;
 
     return -1;
-}
-
-bool EntryDatabase::compareIdentifiers(const FloatSym& identifier1, const FloatSym& identifier2) const
-{
-    if (identifier1.mType != identifier2.mType)
-        return false;
-    
-    switch (identifier1.mType)
-    {
-        case FloatSym::kInt:        return identifier1.mInt == identifier2.mInt;
-        case FloatSym::kDouble:     return identifier1.mValue == identifier2.mValue;
-        case FloatSym::kSymbol:     return identifier1.mSymbol == identifier2.mSymbol;
-        default:
-            return false;
-    }
 }
 
 long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
