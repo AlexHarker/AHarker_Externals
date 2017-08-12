@@ -88,42 +88,37 @@ void EntryDatabase::lookup(std::vector<t_atom>& output, long idx, long argc, t_a
     }
 }
 
+void EntryDatabase::remove(long idx)
+{
+    if (idx < 0 || idx >= numItems())
+        return;
+    
+    mIdentifiers.erase(mIdentifiers.begin() + idx);
+    mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
+}
+
 long EntryDatabase::itemFromIdentifier(t_atom& identifier) const
 {
     for (long i = 0; i < numItems(); i++)
-        if (compareIdentifiers(identifier, getIdentifier(i)))
+        if (compareIdentifiers(FloatSym(&identifier, false), getIdentifierInternal(i)))
             return i;
 
     return -1;
 }
 
-bool EntryDatabase::compareIdentifiers(const t_atom& identifier1, const t_atom& identifier2) const
+bool EntryDatabase::compareIdentifiers(const FloatSym& identifier1, const FloatSym& identifier2) const
 {
-    if (identifier1.a_type != identifier2.a_type)
+    if (identifier1.mType != identifier2.mType)
         return false;
     
-    switch (identifier1.a_type)
+    switch (identifier1.mType)
     {
-        case A_LONG:        return identifier1.a_w.w_long == identifier2.a_w.w_long;
-        case A_FLOAT:       return identifier1.a_w.w_float == identifier2.a_w.w_float;
-        case A_SYM:         return identifier1.a_w.w_sym == identifier2.a_w.w_sym;
+        case FloatSym::kInt:        return identifier1.mInt == identifier2.mInt;
+        case FloatSym::kDouble:     return identifier1.mValue == identifier2.mValue;
+        case FloatSym::kSymbol:     return identifier1.mSymbol == identifier2.mSymbol;
         default:
             return false;
     }
-    
-    /*
-    if (atom_gettype(&identifier1) != atom_gettype(&identifier2))
-        return false;
-    
-    switch (atom_gettype(&identifier1))
-    {
-        case A_LONG:    return atom_getlong(&identifier1) == atom_getlong(&identifier2);
-        case A_FLOAT:   return atom_getfloat(&identifier1) == atom_getfloat(&identifier2);
-        case A_SYM:     return atom_getsym(&identifier1) == atom_getsym(&identifier2);
-            
-        default:
-            return false;
-    }*/
 }
 
 long EntryDatabase::columnFromSpecifier(const t_atom& specifier) const

@@ -7,13 +7,32 @@
 
 struct FloatSym
 {
-    enum Type { kSymbol, kDouble, kInt };
+    enum Type { kSymbol, kDouble, kTranlatedInt, kInt  };
     
     FloatSym() :  mType(kDouble), mValue(0.0) {}
     FloatSym(double val) : mType(kDouble), mValue(val) {}
-    FloatSym(t_atom_long val) : mType(kInt), mValue(val) {}
     FloatSym(t_symbol *sym) : mType(kSymbol), mSymbol(sym) {}
-    FloatSym(const t_atom *a) { *this = atom_gettype(a) == A_SYM ? FloatSym(atom_getsym(a)) : FloatSym(atom_getfloat(a)); }
+    
+    FloatSym(t_atom_long val, bool translate = true) : mType(translate ? kInt : kTranlatedInt)
+    {
+        if (translate)
+            mValue = val;
+        else
+            mInt = val;
+    }
+    
+    FloatSym(const t_atom *a, bool translate = true)
+    {
+        switch (atom_gettype(a))
+        {
+            case A_SYM:     *this = FloatSym(atom_getsym(a));               break;
+            case A_FLOAT:   *this = FloatSym(atom_getfloat(a));             break;
+            case A_LONG:    *this = FloatSym(atom_getlong(a), translate);   break;
+
+            default:
+                *this = FloatSym();
+        }
+    }
     
     t_atom getAtom() const
     {
@@ -21,10 +40,10 @@ struct FloatSym
         
         switch (mType)
         {
-            case kSymbol:   atom_setsym(&a, mSymbol);   break;
-            case kDouble:   atom_setfloat(&a, mValue);  break;
-            case kInt:      atom_setlong(&a, mValue);   break;
-
+            case kSymbol:           atom_setsym(&a, mSymbol);   break;
+            case kDouble:           atom_setfloat(&a, mValue);  break;
+            case kInt:              atom_setlong(&a, mInt);     break;
+            case kTranlatedInt:     atom_setlong(&a, mValue);   break;
         }
         
         return a;
@@ -33,6 +52,7 @@ struct FloatSym
     Type mType;
     union {
         double mValue;
+        t_atom_long mInt;
         t_symbol *mSymbol;
     };
 };
@@ -86,10 +106,11 @@ public:
     void labelModes(long argc, t_atom *argv);
     void names(long argc, t_atom *argv);
     void entry(long argc, t_atom *argv);
+    void remove(long idx);
     
     t_symbol *getName(long idx) const       { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const       { return mColumns[idx].mLabel; }
-    t_atom getIdentifier(long idx) const    { return mIdentifiers[idx]; }
+    t_atom getIdentifier(long idx) const    { return getIdentifierInternal(idx).getAtom(); }
     
     void lookup(std::vector<t_atom>& output, long idx, long argc, t_atom *argv) const;
     long itemFromIdentifier(t_atom& identifier) const;
@@ -100,13 +121,14 @@ public:
     
 private:
 
-    bool compareIdentifiers(const t_atom& identifier1, const t_atom& identifier2) const;
+    FloatSym getIdentifierInternal(long idx) const { return mIdentifiers[idx];}
+    bool compareIdentifiers(const FloatSym& identifier1, const FloatSym& identifier2) const;
 
     inline void addItem(const t_atom& identifier)
     {
         long size = numItems();
         mEntries.resize((size + 1) * numColumns());
-        mIdentifiers.push_back(identifier);
+        mIdentifiers.push_back(FloatSym(&identifier, false));
     }
     
     inline void setData(long idx, long column, const FloatSym& data)   { mEntries[idx * numColumns() + column] = data; }
@@ -114,7 +136,7 @@ private:
     // Data
     
     std::vector<ColumnInfo> mColumns;
-    std::vector<t_atom> mIdentifiers;
+    std::vector<FloatSym> mIdentifiers;
     std::vector<FloatSym> mEntries;
 };
 
