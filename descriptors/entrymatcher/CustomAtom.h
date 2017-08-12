@@ -35,19 +35,15 @@ struct CustomAtom
         }
     }
     
-    t_atom inline getAtom() const
+    void inline getAtom( t_atom *a) const
     {
-        t_atom a;
-        
         switch (mType)
         {
-            case kSymbol:           atom_setsym(&a, mSymbol);   break;
-            case kDouble:           atom_setfloat(&a, mValue);  break;
-            case kInt:              atom_setlong(&a, mInt);     break;
-            case kTranlatedInt:     atom_setlong(&a, mValue);   break;
+            case kSymbol:           atom_setsym(a, mSymbol);    break;
+            case kDouble:           atom_setfloat(a, mValue);   break;
+            case kInt:              atom_setlong(a, mInt);      break;
+            case kTranlatedInt:     atom_setlong(a, mValue);    break;
         }
-        
-        return a;
     }
     
     friend inline CompareResult compare(const CustomAtom& a, const CustomAtom& b)

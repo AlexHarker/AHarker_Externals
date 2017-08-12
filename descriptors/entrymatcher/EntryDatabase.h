@@ -25,8 +25,8 @@ public:
         
     public:
         
-        inline t_atom getDataAtom(long idx, long column) const  { return getData(idx, column).getAtom(); }
-        inline CustomAtom getData(long idx, long column) const  { return mIterator[idx * mNumColumns + column]; }
+        inline CustomAtom getData(long idx, long column) const              { return mIterator[idx * mNumColumns + column]; }
+        inline void getDataAtom(t_atom *a, long idx, long column) const     { return getData(idx, column).getAtom(a); }
 
     private:
         
@@ -50,12 +50,12 @@ public:
     void addEntry(long argc, t_atom *argv);
     void removeEntry(long idx);
     
-    t_symbol *getName(long idx) const       { return mColumns[idx].mName; }
-    bool getLabelMode(long idx) const       { return mColumns[idx].mLabel; }
-    t_atom getIdentifier(long idx) const    { return getIdentifierInternal(idx).getAtom(); }
+    t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
+    bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
+    void getIdentifier(t_atom *a, long idx) const       { return getIdentifierInternal(idx).getAtom(a); }
     
-    inline CustomAtom getData(long idx, long column) const     { return mEntries[idx * numColumns() + column]; }
-    inline t_atom getDataAtom(long idx, long column) const     { return getData(idx, column).getAtom(); }
+    inline CustomAtom getData(long idx, long column) const              { return mEntries[idx * numColumns() + column]; }
+    inline void getDataAtom(t_atom *a, long idx, long column) const     { return getData(idx, column).getAtom(a); }
     
     long columnFromSpecifier(const t_atom *specifier) const;
     

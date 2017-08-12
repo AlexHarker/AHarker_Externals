@@ -236,7 +236,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
         // If no columns are specified construct a list of all colums for that entry
         
         for (long i = 0; i < numColumns; i++)
-            output[i] = accessor.getDataAtom(idx, i);
+            accessor.getDataAtom(&output[i], idx, i);
     }
     else
     {
@@ -251,7 +251,10 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
             long column = database->columnFromSpecifier(argv++);
             column = (column < -1 || column >= numColumns) ? 0 : column;
             
-            output[i] = (column == -1) ? database->getIdentifier(idx) : accessor.getDataAtom(idx, column);
+            if (column == -1)
+                database->getIdentifier(&output[i], idx);
+            else
+                accessor.getDataAtom(&output[i], idx, column);
         }
     }
     
@@ -462,7 +465,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         }
 		
 		atom_setfloat(output_distances + i, distance);
-		output_identifiers[i] = x->mDatabase->getIdentifier(index);
+		x->mDatabase->getIdentifier(output_identifiers + i, index);
 		atom_setlong(output_indices + i, index + 1);
 	}
     
