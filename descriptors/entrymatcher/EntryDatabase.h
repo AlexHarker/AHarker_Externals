@@ -113,22 +113,23 @@ public:
     t_atom getIdentifier(long idx) const    { return getIdentifierInternal(idx).getAtom(); }
     
     void lookup(std::vector<t_atom>& output, long idx, long argc, t_atom *argv) const;
-    long itemFromIdentifier(t_atom *identifier) const;
     long columnFromSpecifier(const t_atom *specifier) const;
+    long itemFromIdentifier(const t_atom *identifier) const   { return itemFromIdentifier(FloatSym(identifier, false)); }
 
     inline FloatSym getData(long idx, long column) const       { return mEntries[idx * numColumns() + column]; }
     inline t_atom getDataAtom(long idx, long column) const     { return getData(idx, column).getAtom(); }
     
 private:
 
+    long itemFromIdentifier(const FloatSym& identifier) const;
     FloatSym getIdentifierInternal(long idx) const { return mIdentifiers[idx];}
     bool compareIdentifiers(const FloatSym& identifier1, const FloatSym& identifier2) const;
 
-    inline void addItem(const t_atom *identifier)
+    inline void addItem(const FloatSym& identifier)
     {
         long size = numItems();
         mEntries.resize((size + 1) * numColumns());
-        mIdentifiers.push_back(FloatSym(identifier, false));
+        mIdentifiers.push_back(identifier);
     }
     
     inline void setData(long idx, long column, const FloatSym& data)   { mEntries[idx * numColumns() + column] = data; }

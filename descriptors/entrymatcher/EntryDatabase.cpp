@@ -26,7 +26,7 @@ void EntryDatabase::entry(long argc, t_atom *argv)
     
     // Get the identifier and find any prexisting entry with this identifier
     
-    t_atom *identifier = argv++;
+    FloatSym identifier = FloatSym(argv++, false);
     long idx = itemFromIdentifier(identifier);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
@@ -97,10 +97,10 @@ void EntryDatabase::remove(long idx)
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-long EntryDatabase::itemFromIdentifier(t_atom *identifier) const
+long EntryDatabase::itemFromIdentifier(const FloatSym& identifier) const
 {
     for (long i = 0; i < numItems(); i++)
-        if (compareIdentifiers(FloatSym(identifier, false), getIdentifierInternal(i)))
+        if (compareIdentifiers(identifier, getIdentifierInternal(i)))
             return i;
 
     return -1;
