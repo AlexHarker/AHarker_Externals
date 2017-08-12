@@ -189,7 +189,7 @@ void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {	
-    x->mDatabase->entry(argc, argv);
+    x->mDatabase->addEntry(argc, argv);
 }
 
 // ========================================================================================================================================== //
@@ -216,14 +216,46 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
 void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv)
 {
+    EntryDatabase *database = x->mDatabase;
     std::vector<t_atom> output;
     
-    x->mDatabase->lookup(output, idx, argc, argv);
+    long numItems = database->numItems();
+    long numColumns = database->numColumns();
     
-    if (!output.size())
+    EntryDatabase::Accessor accessor(*x->mDatabase);
+    
+    if (idx < 0 || idx >= numItems)
+    {
         object_error((t_object *)x, "entry does not exist");
+        return;
+    }
+    else if (!argc)
+    {
+        output.resize(numColumns);
+        
+        // If no columns are specified construct a list of all colums for that entry
+        
+        for (long i = 0; i < numColumns; i++)
+            output[i] = accessor.getDataAtom(idx, i);
+    }
     else
-        outlet_list(x->the_data_outlet, 0L, output.size(), &output[0]);
+    {
+        // Construct a list of the data in the specified columns (in the specified order)
+        
+        output.resize(argc);
+        
+        for (long i = 0; i < argc; i++)
+        {
+            // Get column - if not valid output from the first column
+            
+            long column = database->columnFromSpecifier(argv++);
+            column = (column < -1 || column >= numColumns) ? 0 : column;
+            
+            output[i] = (column == -1) ? database->getIdentifier(idx) : accessor.getDataAtom(idx, column);
+        }
+    }
+    
+    outlet_list(x->the_data_outlet, 0L, output.size(), &output[0]);
 }
 
 // ========================================================================================================================================== //

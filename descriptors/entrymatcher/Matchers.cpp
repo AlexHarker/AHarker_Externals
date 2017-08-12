@@ -5,17 +5,17 @@
 
 inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
 {
-    const FloatSym data = accessor.getData(idx, mColumn);
+    const CustomAtom data = accessor.getData(idx, mColumn);
     double distance = HUGE_VAL;
     
     switch (mType)
     {
         case kTestMatch:
-            if (data.mType == FloatSym::kSymbol)
+            if (data.mType == CustomAtom::kSymbol)
             {
                 t_symbol *sym = data.mSymbol;
                 
-                for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
+                for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
                     if (sym == (*it).mSymbol) return true;
                 
                 return false;
@@ -31,7 +31,7 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
         case kTestDistance:
         case kTestDistanceReject:
             
-            for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
             {
                 double currentDistance = ((*it).mValue - data.mValue) * mScale;
                 distance = std::min(distance, currentDistance * currentDistance);
@@ -45,7 +45,7 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
             
             // FIX - check this
             
-            for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
             {
                 double currentDistance = ((*it).mValue > data.mValue) ? (*it).mValue / data.mValue : data.mValue / (*it).mValue;
                 currentDistance = (currentDistance - 1.0) * mScale;

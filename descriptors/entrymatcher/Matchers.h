@@ -2,6 +2,7 @@
 #ifndef MATCHERS_H
 #define MATCHERS_H
 
+#include "CustomAtom.h"
 #include "EntryDatabase.h"
 
 class Matchers
@@ -37,7 +38,7 @@ private:
         
         template <typename Op> bool comparison(double value, Op op) const
         {
-            for (std::vector<const FloatSym>::iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
                 if (op(value, (*it).mValue)) return true;
             
             return false;
@@ -45,7 +46,7 @@ private:
         
         long mColumn;
         TestType mType;
-        std::vector<FloatSym> mValues;
+        std::vector<CustomAtom> mValues;
         double mScale;
     };
     

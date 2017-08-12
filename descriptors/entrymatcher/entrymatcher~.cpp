@@ -208,7 +208,7 @@ void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->entry(argc, argv);
+    x->mDatabase->addEntry(argc, argv);
 }
 
 // ========================================================================================================================================== //

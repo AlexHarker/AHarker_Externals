@@ -70,6 +70,7 @@
 		B8998A4811CECDFB0028A17C /* entrymatcher~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "entrymatcher~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8998A5211CECE260028A17C /* entrymatcher~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "entrymatcher~.c"; sourceTree = "<group>"; };
 		B8B0C54A1F3D0C7C006D8538 /* entrymatcher.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = entrymatcher.c; sourceTree = "<group>"; };
+		B8BACCD41F3F9923001589D8 /* CustomAtom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomAtom.h; sourceTree = "<group>"; };
 		B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher.cpp; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -124,6 +125,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				B8BACCD41F3F9923001589D8 /* CustomAtom.h */,
 				B80770B71F3B9DAA006E6C0B /* EntryDatabase.h */,
 				B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */,
 				B85C98ED1F3DDA96003F468F /* Matchers.h */,
