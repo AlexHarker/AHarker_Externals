@@ -29,7 +29,7 @@
 #include <math.h>
 
 
-void *this_class;
+t_class *this_class;
 
 
 enum TestType {
@@ -123,7 +123,7 @@ void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
 
 char entrymatcher_compare_identifiers(t_atom *identifier1, t_atom *identifier2);
-long entrymatcher_test_types(t_atom *argv);
+enum TestType entrymatcher_test_types(t_atom *argv);
 long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg);
 
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
@@ -251,28 +251,28 @@ void *entrymatcher_new(long max_num_entries, long num_columns)
 	if (!allocated_mem) 
 		return 0;
 	
-	x->entry_identifiers = allocated_mem;
-	allocated_mem += max_num_entries * sizeof(t_atom);
+	x->entry_identifiers = (t_atom *) allocated_mem;
+	allocated_mem = ((t_atom *)allocated_mem) + max_num_entries;
 	
-	x->chosen_indices = allocated_mem;
-	allocated_mem += max_num_entries * sizeof(long);
+	x->chosen_indices = (long *) allocated_mem;
+    allocated_mem = ((long *)allocated_mem) + max_num_entries;
 	
-	x->matching_data = allocated_mem;
-	allocated_mem += 1024 * sizeof(double);
-	
-	x->distances = allocated_mem;
-	allocated_mem += max_num_entries * sizeof(double);
-	
-	x->names = names = allocated_mem;
-	allocated_mem += num_columns * sizeof(t_symbol *);
-	
-	x->label_modes = label_modes = allocated_mem;
-	allocated_mem += num_columns * sizeof(char);
-	
-	x->the_data = allocated_mem;
-	allocated_mem += num_columns * max_num_entries * sizeof(double);
-	
-	x->data_types = allocated_mem;
+	x->matching_data = (double *) allocated_mem;
+    allocated_mem = ((double *)allocated_mem) + 1024;
+    
+	x->distances = (double *) allocated_mem;
+    allocated_mem = ((double *)allocated_mem) + max_num_entries;
+
+	x->names = names = (t_symbol **) allocated_mem;
+    allocated_mem = ((t_symbol **)allocated_mem) + num_columns;
+
+	x->label_modes = label_modes = (char *) allocated_mem;
+    allocated_mem = ((char *)allocated_mem) + num_columns;
+
+	x->the_data = (double *) allocated_mem;
+    allocated_mem = ((double *)allocated_mem) + (num_columns * max_num_entries);
+
+	x->data_types = (long *) allocated_mem;
 	
 	// Zero column label modes and names
 	
@@ -1150,9 +1150,9 @@ long entrymatcher_column_from_specifier(t_entrymatcher *x, t_atom *arg)
 
 // Attempts to match an atom with any of the symbols representing a valid test type
 
-long entrymatcher_test_types(t_atom *argv)
+enum TestType entrymatcher_test_types(t_atom *argv)
 {
-	if (argv->a_type != A_SYM) return 0;
+	if (argv->a_type != A_SYM) return TEST_NONE;
 	
 	if (argv->a_w.w_sym == ps_match || argv->a_w.w_sym == ps_sym_match) return TEST_MATCH;
 	if (argv->a_w.w_sym == ps_distance || argv->a_w.w_sym == ps_sym_distance) return TEST_DISTANCE;
@@ -1166,7 +1166,7 @@ long entrymatcher_test_types(t_atom *argv)
 	if (argv->a_w.w_sym == ps_scale_ratio || argv->a_w.w_sym == ps_sym_scale_ratio) return TEST_SCALE_RATIO;
 	if (argv->a_w.w_sym == ps_within_ratio || argv->a_w.w_sym == ps_sym_within_ratio) return TEST_WITHIN_RATIO;
 	
-	return 0;
+	return TEST_NONE;
 }
 
 // ========================================================================================================================================== //
