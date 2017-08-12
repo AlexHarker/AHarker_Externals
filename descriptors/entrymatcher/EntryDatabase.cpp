@@ -111,11 +111,10 @@ long EntryDatabase::itemFromIdentifier(const FloatSym& identifier, long& idx) co
 
     while (gap && idx < numItems())
     {
-        FloatSym::CompareResult result = compare(identifier, getIdentifierInternal(mOrder[idx]));
         gap /= 2;
         gap = gap < 1 ? 1 : gap;
     
-        switch (result)
+        switch (compare(identifier, getIdentifierInternal(mOrder[idx])))
         {
             case FloatSym::kEqual:
                 return mOrder[idx];

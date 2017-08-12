@@ -56,10 +56,10 @@ struct FloatSym
         {
             switch (a.mType)
             {
-                case FloatSym::kDouble:         return a.mValue < b.mValue ? kLess : a.mValue == b.mValue ? kEqual : kGreater;
-                case FloatSym::kTranlatedInt:   return a.mValue < b.mValue ? kLess : a.mValue == b.mValue ? kEqual : kGreater;
-                case FloatSym::kInt:            return a.mInt < b.mInt ? kLess : a.mInt == b.mInt ? kEqual : kGreater;
-                case FloatSym::kSymbol:         return a.mSymbol < b.mSymbol ? kLess : a.mSymbol == b.mSymbol ? kEqual : kGreater;
+                case FloatSym::kDouble:
+                case FloatSym::kTranlatedInt:   return a.mValue == b.mValue ? kEqual : a.mValue < b.mValue ? kLess : kGreater;
+                case FloatSym::kInt:            return a.mInt == b.mInt ? kEqual : a.mInt < b.mInt ? kLess : kGreater;
+                case FloatSym::kSymbol:         return a.mSymbol == b.mSymbol ? kEqual :a.mSymbol < b.mSymbol ? kLess : kGreater;
             }
         }
         
