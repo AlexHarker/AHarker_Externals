@@ -155,8 +155,8 @@ private:
     
     std::vector<ColumnInfo> mColumns;
     std::vector<FloatSym> mIdentifiers;
-    std::vector<FloatSym> mEntries;
     std::vector<long> mOrder;
+    std::vector<FloatSym> mEntries;
 };
 
 
