@@ -36,9 +36,6 @@ typedef struct entrymatcher{
     EntryDatabase *mDatabase;
     Matchers *mMatchers;
     
-    std::vector<long> *mIndices;
-    std::vector<double> *mDistances;
-    
     // Outlets
 	
 	void *the_indices_outlet;
@@ -126,8 +123,6 @@ void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns)
 		
     x->mDatabase = new EntryDatabase(num_columns);
     x->mMatchers = new Matchers;
-    x->mIndices = new std::vector<long>;
-    x->mDistances = new std::vector<double>;
     
     x->mDatabase->reserve(max_num_entries);
     
@@ -138,8 +133,6 @@ void entrymatcher_free(t_entrymatcher *x)
 {
     delete x->mDatabase;
     delete x->mMatchers;
-    delete x->mIndices;
-    delete x->mDistances;
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -419,23 +412,24 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 	entrymatcher_match(x, ratio_kept, distance_limit, n_limit);
 }
 
-
 // Handle matching of all types 
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-	t_atom output_identifiers[1024];
+    Matchers *matchers = x->mMatchers;
+    
+    t_atom output_identifiers[1024];
 	t_atom output_indices[1024];
 	t_atom output_distances[1024];
 	
 	// Calculate potential matches and sort if there are matches
 	
-    long num_matches = x->mMatchers->match(x->mDatabase, *x->mIndices, *x->mDistances);
+    long num_matches = matchers->match(x->mDatabase);
 	
 	if (!num_matches)
 		return;
 	
-	entrymatcher_combsort(x->mIndices, x->mDistances, num_matches);
+    matchers->sort();
 		
 	// N.B. If there are no matchers ALWAYS match everything (up to max output size)...
 	
@@ -453,8 +447,8 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	for (long i = 0; i < num_matches; i++)
 	{
-		long index = (*x->mIndices)[i];
-		double distance = (*x->mDistances)[index];
+		long index = matchers->getIndex(i);
+		double distance = matchers->getDistance(index);
 		
 		if (distance > distance_limit)
         {
@@ -490,41 +484,4 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	outlet_list(x->the_distances_outlet, 0L, num_matches, output_distances);
 	outlet_anything(x->the_identifiers_outlet, msg, num_identifier_args, output_identifiers + nudge);
 	outlet_list(x->the_indices_outlet, 0L, num_matches, output_indices);
-}
-
-// ========================================================================================================================================== //
-// Comb Sort routine
-// ========================================================================================================================================== //
-
-// An ascending order index sort (combsort11 algorithm)
-
-void entrymatcher_combsort(std::vector<long> *indices, std::vector<double> *distances, long num_points)
-{
-	long index;
-	long gap_index;
-	long gap = num_points;
-	long swaps = 1;
-	long i;
-	
-	while (gap > 1 || swaps)
-	{
-		if (gap > 1)
-		{
-			gap = (gap * 10) / 13;
-			if (gap == 9 || gap == 10) gap = 11;
-			if (gap < 1) gap = 1;
-		}
-
-		for (i = 0, swaps = 0; i + gap < num_points; i++)
-		{
-			index = (*indices)[i];
-			gap_index = (*indices)[i + gap];
-			if ((*distances)[index] > (*distances)[gap_index])
-			{
-				(*indices)[i] = gap_index;
-				(*indices)[i + gap] = index;
-				swaps = 1;	
-			}
-		}
-	}
 }

@@ -52,7 +52,11 @@ private:
     
 public:
     
-    long match(const EntryDatabase *database, std::vector<long>& indices, std::vector<double>& distances) const;
+    Matchers() : mNumMatches(0) {}
+    
+    long match(const EntryDatabase *database) const;
+    
+    size_t size() { return mMatchers.size(); }
     
     void clear();
     
@@ -62,13 +66,22 @@ public:
             mMatchers[idx].setTarget(value);
     }
     
+    long getIndex(long idx)         { return mIndices[idx]; }
+    double getDistance(long idx)    { return mDistances[idx]; }
+    
+    long getTopN(long N);
+    void sort();
+    
     void addTarget(double value);
     void addTarget(t_symbol *value);
     void addMatcher(TestType type, long column, double scale = 1.0);
     
-    size_t size() { return mMatchers.size(); }
-    
 private:
+    
+    mutable long mNumMatches;
+    
+    mutable std::vector<long> mIndices;
+    mutable std::vector<double> mDistances;
     
     std::vector<Matcher> mMatchers;
 };

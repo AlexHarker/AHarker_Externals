@@ -38,9 +38,6 @@ typedef struct entrymatcher {
     EntryDatabase *mDatabase;
     Matchers *mMatchers;
     
-    std::vector<long> *mIndices;
-    std::vector<double> *mDistances;
-    
     long max_matchers;
     long n_limit;
     double ratio_kept;
@@ -120,8 +117,6 @@ void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns, t_a
     
     x->mDatabase = new EntryDatabase(num_columns);
     x->mMatchers = new Matchers;
-    x->mIndices = new std::vector<long>;
-    x->mDistances = new std::vector<double>;
     
     x->mDatabase->reserve(max_num_entries);
     
@@ -140,8 +135,6 @@ void entrymatcher_free(t_entrymatcher *x)
     dsp_free(&x->x_obj);
     delete x->mDatabase;
     delete x->mMatchers;
-    delete x->mIndices;
-    delete x->mDistances;
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -335,7 +328,6 @@ void entrymatcher_top_n(std::vector<long>& matched_indices, std::vector<double>&
     }
 }
 
-
 // ========================================================================================================================================== //
 // Perform and DSP routines:
 // ========================================================================================================================================== //
@@ -356,6 +348,8 @@ t_int *entrymatcher_perform(t_int *w)
     long n_limit = x->n_limit;
     long num_matched_indices = x->num_matched_indices;
     
+    Matchers *matchers = x->mMatchers;
+    
     for (long i = 0; i < vec_size; i++)
     {
         // Assume no match
@@ -367,27 +361,21 @@ t_int *entrymatcher_perform(t_int *w)
             // Do matching (if requested)
             
             for (long j = 0; j < x->max_matchers; j++)
-                x->mMatchers->setTarget(j, matcher_ins[j][i]);
+                matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = x->mMatchers->match(x->mDatabase, *x->mIndices, *x->mDistances);
+            num_matched_indices = x->mMatchers->match(x->mDatabase);
             
-            if (num_matched_indices)
-            {
-                // N.B. If there are no matchers ALWAYS match everything...
-                // Else pick the top n matches when there are more than n matches
-                
-                if (n_limit && n_limit < num_matched_indices && x->mMatchers->size())
-                {
-                    entrymatcher_top_n(*x->mIndices, *x->mDistances, num_matched_indices, n_limit);
-                    num_matched_indices = n_limit;
-                }
-            }
+            // N.B. If there are no matchers ALWAYS match everything...
+            // Else pick the top n matches when there are more than n matches
+            
+            if (n_limit && x->mMatchers->size())
+                num_matched_indices = matchers->getTopN(n_limit);
         }
         
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = (*x->mIndices)[rand_int_n(gen, num_matched_indices - 1)];
+            index = matchers->getIndex(rand_int_n(gen, num_matched_indices - 1));
         
         *out++ = (float) index + 1;
     }
@@ -427,6 +415,8 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     long n_limit = x->n_limit;
     long num_matched_indices = x->num_matched_indices;
     
+    Matchers *matchers = x->mMatchers;
+
     for (long i = 0; i < vec_size; i++)
     {
         // Assume no match
@@ -438,27 +428,21 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             // Do matching (if requested)
             
             for (long j = 0; j < x->max_matchers; j++)
-                x->mMatchers->setTarget(j, matcher_ins[j][i]);
+                matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = x->mMatchers->match(x->mDatabase, *x->mIndices, *x->mDistances);
+            num_matched_indices = x->mMatchers->match(x->mDatabase);
             
-            if (num_matched_indices) 
-            {
-                // N.B. If there are no matchers ALWAYS match everything...
-                // Else pick the top n matches when there are more than n matches
-                
-                if (n_limit && n_limit < num_matched_indices && x->mMatchers->size())
-                {
-                    entrymatcher_top_n(*x->mIndices, *x->mDistances, num_matched_indices, n_limit);
-                    num_matched_indices = n_limit;
-                }
-            }
+            // N.B. If there are no matchers ALWAYS match everything...
+            // Else pick the top n matches when there are more than n matches
+            
+            if (n_limit && x->mMatchers->size())
+                num_matched_indices = matchers->getTopN(n_limit);
         }
         
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = (*x->mIndices)[rand_int_n(gen, num_matched_indices - 1)];
+            index = matchers->getIndex(rand_int_n(gen, num_matched_indices - 1));
         
         *out++ = (float) index + 1;
     }

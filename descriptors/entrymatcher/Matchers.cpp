@@ -58,13 +58,13 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
     }
 }
 
-long Matchers::match(const EntryDatabase *database, std::vector<long>& indices, std::vector<double>& distances) const
+long Matchers::match(const EntryDatabase *database) const
 {
     long numItems = database->numItems();
-    long numMatches = 0;
+    mNumMatches = 0;
     
-    indices.resize(numItems);
-    distances.resize(numItems);
+    mIndices.resize(numItems);
+    mDistances.resize(numItems);
     
     const EntryDatabase::Accessor accessor = database->accessor();
     
@@ -83,12 +83,66 @@ long Matchers::match(const EntryDatabase *database, std::vector<long>& indices, 
         
         if (matched)
         {
-            indices[numMatches++] = i;
-            distances[i] = sqrt(distance);
+            mIndices[mNumMatches++] = i;
+            mDistances[i] = sqrt(distance);
         }
     }
     
-    return numMatches;
+    return mNumMatches;
+}
+
+long Matchers::getTopN(long N)
+{
+    N = std::min(N, mNumMatches);
+    
+    // Partial insertion sort (faster sorting for small numbers of n)...
+    
+    for (long i = 0; i < N; i++)
+    {
+        double minDistance = mDistances[mIndices[i]];
+        long swap = i;
+        
+        for (long j = i + 1; j < mNumMatches; j++)
+        {
+            if (mDistances[mIndices[j]] < minDistance)
+            {
+                minDistance = mDistances[mIndices[j]];
+                swap = j;
+            }
+        }
+
+        std::swap(mIndices[swap], mIndices[i]);
+   }
+    
+    return N;
+}
+
+void Matchers::sort()
+{
+    // An ascending order index sort (combsort11 algorithm)
+    
+    long gap = mNumMatches;
+    bool swaps = 1;
+    long i;
+    
+    while (gap > 1 || swaps)
+    {
+        if (gap > 1)
+        {
+            gap = (gap * 10) / 13;
+            if (gap == 9 || gap == 10) gap = 11;
+            if (gap < 1) gap = 1;
+        }
+        
+        for (i = 0, swaps = 0; i + gap < mNumMatches; i++)
+        {
+            if (mDistances[mIndices[i]] > mDistances[mIndices[i + gap]])
+            {
+                std::swap(mIndices[i], mIndices[i + gap]);
+                swaps = true;
+            }
+        }
+    }
 }
 
 void Matchers::clear()
