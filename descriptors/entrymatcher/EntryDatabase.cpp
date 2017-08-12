@@ -15,8 +15,11 @@ void EntryDatabase::clear()
     mOrder.clear();
 }
 
-void EntryDatabase::setLabelModes(long argc, t_atom *argv)
+void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 {
+    if (argc > numColumns())
+        object_error((t_object *) x, "more label modes than columns");
+    
     argc = (argc > numColumns()) ? numColumns() : argc;
     
     clear();
@@ -25,20 +28,26 @@ void EntryDatabase::setLabelModes(long argc, t_atom *argv)
         mColumns[i].mLabel = atom_getlong(argv++) ? true : false;
 }
 
-void EntryDatabase::setNames(long argc, t_atom *argv)
+void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 {
+    if (argc > numColumns())
+        object_error((t_object *) x, "more names than columns");
+    
     argc = (argc > numColumns()) ? numColumns() : argc;
     
     for (long i = 0; i < argc; i++)
         mColumns[i].mName = atom_getsym(argv++);
 }
 
-void EntryDatabase::addEntry(long argc, t_atom *argv)
+void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
     long order;
     
     if (!argc--)
+    {
+        object_error((t_object *)x, "no arguments for entry");
         return;
+    }
     
     // Get the identifier, order position and find any prexisting entry with this identifier
     
@@ -66,19 +75,22 @@ void EntryDatabase::addEntry(long argc, t_atom *argv)
         else
         {
             if (i < argc)
-                error("entrymatcher: incorrect type in entry - column number %ld", i + 1);
+                object_error((t_object *)x, "incorrect type in entry - column number %ld", i + 1);
             
             setData(idx, i, mColumns[i].mLabel ? CustomAtom(gensym("")) : CustomAtom());
         }
     }
 }
 
-void EntryDatabase::removeEntry(long idx)
+void EntryDatabase::removeEntry(void *x, long idx)
 {
     long order;
     
     if (idx < 0 || idx >= numItems())
+    {
+        object_error((t_object *) x, "entry does not exist");
         return;
+    }
 
     mIdentifiers.erase(mIdentifiers.begin() + idx);
     searchIdentifiers(getIdentifierInternal(idx), order);

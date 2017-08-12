@@ -45,10 +45,10 @@ public:
     size_t numItems() const         { return mIdentifiers.size(); }
     size_t numColumns() const       { return mColumns.size(); }
     
-    void setLabelModes(long argc, t_atom *argv);
-    void setNames(long argc, t_atom *argv);
-    void addEntry(long argc, t_atom *argv);
-    void removeEntry(long idx);
+    void setLabelModes(void *x, long argc, t_atom *argv);
+    void setNames(void *x, long argc, t_atom *argv);
+    void addEntry(void *x, long argc, t_atom *argv);
+    void removeEntry(void *x, long idx);
     
     t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }

@@ -179,17 +179,17 @@ void entrymatcher_clear(t_entrymatcher *x)
 
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->setLabelModes(argc, argv);
+    x->mDatabase->setLabelModes(x, argc, argv);
 }
 
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->setNames(argc, argv);
+    x->mDatabase->setNames(x, argc, argv);
 }
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {	
-    x->mDatabase->addEntry(argc, argv);
+    x->mDatabase->addEntry(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
