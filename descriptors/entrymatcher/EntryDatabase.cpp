@@ -26,7 +26,7 @@ void EntryDatabase::entry(long argc, t_atom *argv)
     
     // Get the identifier and find any prexisting entry with this identifier
     
-    t_atom identifier = *argv++;
+    t_atom *identifier = argv++;
     long idx = itemFromIdentifier(identifier);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
@@ -80,7 +80,7 @@ void EntryDatabase::lookup(std::vector<t_atom>& output, long idx, long argc, t_a
         {
             // Get column - if not valid output from the first column
             
-            long columnIndex = columnFromSpecifier(*argv++);
+            long columnIndex = columnFromSpecifier(argv++);
             columnIndex = (columnIndex < -1 || columnIndex >= numColumns()) ? 0 : columnIndex;
             
             output[i] = (columnIndex == -1) ? getIdentifier(idx) : getDataAtom(idx, columnIndex);
@@ -97,10 +97,10 @@ void EntryDatabase::remove(long idx)
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-long EntryDatabase::itemFromIdentifier(t_atom& identifier) const
+long EntryDatabase::itemFromIdentifier(t_atom *identifier) const
 {
     for (long i = 0; i < numItems(); i++)
-        if (compareIdentifiers(FloatSym(&identifier, false), getIdentifierInternal(i)))
+        if (compareIdentifiers(FloatSym(identifier, false), getIdentifierInternal(i)))
             return i;
 
     return -1;
@@ -121,12 +121,12 @@ bool EntryDatabase::compareIdentifiers(const FloatSym& identifier1, const FloatS
     }
 }
 
-long EntryDatabase::columnFromSpecifier(const t_atom& specifier) const
+long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
 {
-    if (atom_gettype(&specifier) != A_SYM)
-        return atom_getlong(&specifier) - 1;
+    if (atom_gettype(specifier) != A_SYM)
+        return atom_getlong(specifier) - 1;
     
-    t_symbol *columnName = atom_getsym(&specifier);
+    t_symbol *columnName = atom_getsym(specifier);
     
     if (columnName == gensym("identifier"))
         return -1;

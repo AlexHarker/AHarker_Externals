@@ -209,7 +209,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 	
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? x->mDatabase->itemFromIdentifier(*argv) :atom_getlong(argv) - 1;
+    long idx = (msg == ps_lookup) ? x->mDatabase->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
 	
     entrymatcher_lookup_output(x, idx, --argc, ++argv);
 }
@@ -250,7 +250,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
         
         // Get the column and test type
 
-        long column = x->mDatabase->columnFromSpecifier(*argv++);
+        long column = x->mDatabase->columnFromSpecifier(argv++);
         TestType type = entrymatcher_test_types(argv++);
         argc -= 2;
         
