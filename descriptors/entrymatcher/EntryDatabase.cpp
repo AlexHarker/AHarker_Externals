@@ -29,7 +29,7 @@ void EntryDatabase::entry(long argc, t_atom *argv)
     // Get the identifier, order position and find any prexisting entry with this identifier
     
     FloatSym identifier = FloatSym(argv++, false);
-    long idx = itemFromIdentifier(identifier, order);
+    long idx = searchIdentifiers(identifier, order);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
     
@@ -99,13 +99,13 @@ void EntryDatabase::remove(long idx)
     if (idx < 0 || idx >= numItems())
         return;
     
-    itemFromIdentifier(getIdentifierInternal(idx), order);
+    searchIdentifiers(getIdentifierInternal(idx), order);
     mOrder.erase(mOrder.begin() + order);
     mIdentifiers.erase(mIdentifiers.begin() + idx);
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-long EntryDatabase::itemFromIdentifier(const FloatSym& identifier, long& idx) const
+long EntryDatabase::searchIdentifiers(const FloatSym& identifier, long& idx) const
 {
     long gap = idx = numItems() / 2;
 

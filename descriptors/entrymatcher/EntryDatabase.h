@@ -107,6 +107,7 @@ public:
     void reserve(long items)
     {
         mIdentifiers.reserve(items);
+        mOrder.reserve(items);
         mEntries.reserve(items * numColumns());
     }
     
@@ -137,7 +138,7 @@ public:
     long itemFromIdentifier(const t_atom *identifier) const
     {
         long order;
-        return itemFromIdentifier(FloatSym(identifier, false), order);
+        return searchIdentifiers(FloatSym(identifier, false), order);
     }
 
     inline FloatSym getData(long idx, long column) const       { return mEntries[idx * numColumns() + column]; }
@@ -145,11 +146,10 @@ public:
     
 private:
 
-    long itemFromIdentifier(const FloatSym& identifier, long& idx) const;
-    FloatSym getIdentifierInternal(long idx) const { return mIdentifiers[idx];}
-    bool compareIdentifiers(const FloatSym& identifier1, const FloatSym& identifier2) const;
-    
-    inline void setData(long idx, long column, const FloatSym& data)   { mEntries[idx * numColumns() + column] = data; }
+    long searchIdentifiers(const FloatSym& identifier, long& idx) const;
+
+    FloatSym getIdentifierInternal(long idx) const                      { return mIdentifiers[idx];}
+    inline void setData(long idx, long column, const FloatSym& data)    { mEntries[idx * numColumns() + column] = data; }
     
     // Data
     
