@@ -24,25 +24,25 @@ typedef struct _rdcblock
 {
     t_pxobject x_obj;
 	
-	double in_mem;
-	double y;
+	double x1;
+	double y1;
 	
 	t_atom_long mode;
 	
 } t_rdcblock;
 
 
-void *rdcblock_new (t_atom_long mode);
-void rdcblock_free (t_rdcblock *x);
-void rdcblock_assist (t_rdcblock *x, void *b, long m, long a, char *s);
+void *rdcblock_new(t_atom_long mode);
+void rdcblock_free(t_rdcblock *x);
+void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s);
 
-t_int *rdcblock_perform (t_int *w);
-t_int *rdcblock_perform_inval (t_int *w);
-void rdcblock_dsp (t_rdcblock *x, t_signal **sp, short *count);
+t_int *rdcblock_perform(t_int *w);
+t_int *rdcblock_perform_inval(t_int *w);
+void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count);
 
-void rdcblock_perform64 (t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void rdcblock_perform_inval64 (t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void rdcblock_dsp64 (t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
 int C74_EXPORT main (void)
@@ -73,7 +73,7 @@ void *rdcblock_new(t_atom_long mode)
     dsp_setup((t_pxobject *)x, 2);
 	outlet_new((t_object *)x, "signal");
 	
-	x->in_mem = x->y = 0.;
+	x->x1 = x->y1 = 0.0;
 	x->mode = mode;
 	
 	return (x);
@@ -94,41 +94,41 @@ t_int *rdcblock_perform (t_int *w)
 	long vec_size = w[5];
     t_rdcblock *x = (t_rdcblock *) w[6];
 	
-	double in;
-	
+	double x0, y;
+    
 	// Recall memory
 	
-	double in_mem = x->in_mem;
-	double y = x->y;
+	double x1 = x->x1;
+	double y1 = x->y1;
 	
-	float out_val;
+	float yf;
 	
 	while (vec_size--) 
 	{
-		in = *in1++;
+		x0 = *in1++;
 		
 		// Sample accurate reset
 		
 		if (*in2++)						
-			in_mem = y = 0.;
+			x1 = y1 = 0.0;
 		
-		// Filter and shift memory
+		// Filter 
 		
-		y = in - in_mem + (0.99 * y);
-		in_mem = in;
-		
-		out_val = (float) y;
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
-		
-#ifndef __APPLE__
-		y = AH_FIX_DENORM_DOUBLE(y);
-#endif
-	}
+		y = x0 - x1 + (0.99 * y1);
+        
+        // Shift memories
+
+		x1 = x0;
+		y1 = AH_FIX_DENORM_DOUBLE(y);
+        
+        yf = (float) y;
+        *out++ = AH_FIX_DENORM_FLOAT(yf);
+    }
 	
 	// Store memory
 	
-	x->in_mem = in_mem;
-	x->y = y;
+	x->x1 = x1;
+	x->y1 = y1;
 	
 	return w + 7;
 }
@@ -142,44 +142,44 @@ t_int *rdcblock_perform_inval (t_int *w)
 	long vec_size = w[5];
     t_rdcblock *x = (t_rdcblock *) w[6];
 	
-	double in;
+	double x0, y;
 	
 	// Recall memory
 
-	double in_mem = x->in_mem;
-	double y = x->y;
+	double x1 = x->x1;
+	double y1 = x->y1;
 	
-	float out_val;
+	float yf;
 	
 	while (vec_size--) 
 	{
-		in = *in1++;
+		x0 = *in1++;
 		
 		// Sample accurate reset
 		
 		if (*in2++)
 		{
-			in_mem = in;
-			y = 0.;
+			x1 = x0;
+			y1 = 0.0;
 		}
 		
-		// Filter and shift memory
+		// Filter
 
-		y = in - in_mem + (0.99 * y);
-		in_mem = in;
-		
-		out_val = (float) y;
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
-		
-#ifndef __APPLE__
-		y = AH_FIX_DENORM_DOUBLE(y);
-#endif		
+		y = x0 - x1 + (0.99 * y1);
+        
+        // Shift memories
+
+		x1 = x0;
+		y1 = AH_FIX_DENORM_DOUBLE(y);
+        
+		yf = (float) y;
+		*out++ = AH_FIX_DENORM_FLOAT(yf);
 	}
 
 	// Store memory
 
-	x->in_mem = in_mem;
-	x->y = y;
+	x->x1 = x1;
+	x->y1 = y1;
 	
 	return w + 7;
 }
@@ -202,33 +202,36 @@ void rdcblock_perform64 (t_rdcblock *x, t_object *dsp64, double **ins, long numi
 	
 	// Recall memory
 	
-	double in_mem = x->in_mem;
-	double y = x->y;
-	double in, out_val;
+	double x1 = x->x1;
+	double y1 = x->y1;
+	double x0, y;
 	
 	while (vec_size--) 
 	{
-		in = *in1++;
+		x0 = *in1++;
 		
 		// Sample accurate reset
 		
 		if (*in2++)						
-			in_mem = y = 0.;
+			x1 = y1 = 0.0;
 		
-		// Filter and shift memory
+		// Filter
 		
-		y = in - in_mem + (0.99 * y);
-		in_mem = in;
-		
-		out_val = AH_FIX_DENORM_DOUBLE(y);
-		*out++ = out_val;
-		y = out_val;
-	}
+		y = x0 - x1 + (0.99 * y1);
+        y = AH_FIX_DENORM_DOUBLE(y);
+
+        // Shift memories
+
+        x1 = x0;
+		y1 = y;
+        
+		*out++ = y;
+    }
 	
 	// Store memory
 	
-	x->in_mem = in_mem;
-	x->y = y;
+	x->x1 = x1;
+	x->y1 = y1;
 }
 
 
@@ -240,36 +243,39 @@ void rdcblock_perform_inval64 (t_rdcblock *x, t_object *dsp64, double **ins, lon
 		
 	// Recall memory
 	
-	double in_mem = x->in_mem;
-	double y = x->y;
-	double in, out_val;
+	double x1 = x->x1;
+	double y1 = x->y1;
+	double x0, y;
 	
 	while (vec_size--) 
 	{
-		in = *in1++;
+		x0 = *in1++;
 		
 		// Sample accurate reset
 		
 		if (*in2++)
 		{
-			in_mem = in;
-			y = 0.;
+			x1 = x0;
+			y1 = 0.0;
 		}
 		
 		// Filter and shift memory
 		
-		y = in - in_mem + (0.99 * y);
-		in_mem = in;
-		
-		out_val = AH_FIX_DENORM_DOUBLE(y);
-		*out++ = out_val;
-		y = out_val;
-	}
+		y = x0 - x1 + (0.99 * y1);
+		y = AH_FIX_DENORM_DOUBLE(y);
+        
+        // Shift memories
+        
+        x1 = x0;
+		y1 = y;
+        
+        *out++ = y;
+    }
 	
 	// Store memory
 	
-	x->in_mem = in_mem;
-	x->y = y;
+	x->x1 = x1;
+	x->y1 = y;
 }
 
 

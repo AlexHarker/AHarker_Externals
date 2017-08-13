@@ -22,23 +22,23 @@ typedef struct _rbiquad
 {
     t_pxobject x_obj;
 	
-	double in_mem1;
-	double in_mem2;
+	double x1;
+	double x2;
 	double y1;
 	double y2;
 	
 } t_rbiquad;
 
 
-void *rbiquad_new ();
-void rbiquad_free (t_rbiquad *x);
-void rbiquad_assist (t_rbiquad *x, void *b, long m, long a, char *s);
+void *rbiquad_new();
+void rbiquad_free(t_rbiquad *x);
+void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s);
 
-void rbiquad_dsp (t_rbiquad *x, t_signal **sp, short *count);
-t_int *rbiquad_perform (t_int *w);
+void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
+t_int *rbiquad_perform(t_int *w);
 
-void rbiquad_perform64 (t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void rbiquad_dsp64 (t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
 int C74_EXPORT main (void)
@@ -68,7 +68,7 @@ void *rbiquad_new()
     dsp_setup((t_pxobject *)x, 7);
 	outlet_new((t_object *)x, "signal");
 	
-	x->in_mem1 = x->in_mem2 = x->y1 = x->y2 = 0.;
+	x->x1 = x->x2 = x->y1 = x->y2 = 0.;
 	
 	return (x);
 }
@@ -80,7 +80,7 @@ void rbiquad_free(t_rbiquad *x)
 }
 
 
-t_int *rbiquad_perform (t_int *w)
+t_int *rbiquad_perform(t_int *w)
 {	
 	// set pointers
 	
@@ -99,8 +99,8 @@ t_int *rbiquad_perform (t_int *w)
 	
 	// Recall memory
 	
-	double in_mem1 = x->in_mem1;
-	double in_mem2 = x->in_mem2;
+	double x1 = x->x1;
+	double x2 = x->x2;
 	double y1 = x->y1;
 	double y2 = x->y2;
 	
@@ -120,11 +120,11 @@ t_int *rbiquad_perform (t_int *w)
 		// Sample accurate reset
 		
 		if (*in7++)						
-			in_mem1 = in_mem2 = y1 = y2 = 0.;
+			x1 = x2 = y1 = y2 = 0.;
 		
 		// Filter 
 		
-		y = (a0 * in) + (a1 * in_mem1) + (a2 * in_mem2) - (b1 * y1) - (b2 * y2);
+		y = (a0 * in) + (a1 * x1) + (a2 * x2) - (b1 * y1) - (b2 * y2);
 		
 		out_val = (float) y;
 		
@@ -134,14 +134,14 @@ t_int *rbiquad_perform (t_int *w)
 		
 		y2 = y1;
 		y1 = AH_FIX_DENORM_DOUBLE(y);
-		in_mem2 = in_mem1;
-		in_mem1 = in;
+		x2 = x1;
+		x1 = in;
 	}
 	
 	// Store memory
 	
-	x->in_mem1 = in_mem1;
-	x->in_mem2 = in_mem2;
+	x->x1 = x1;
+	x->x2 = x2;
 	x->y1 = y1;
 	x->y2 = y2;
 	
@@ -156,7 +156,7 @@ void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
 
 
 
-void rbiquad_perform64 (t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// set pointers
 	
@@ -173,8 +173,8 @@ void rbiquad_perform64 (t_rbiquad *x, t_object *dsp64, double **ins, long numins
 	
 	// Recall memory
 	
-	double in_mem1 = x->in_mem1;
-	double in_mem2 = x->in_mem2;
+	double x1 = x->x1;
+	double x2 = x->x2;
 	double y1 = x->y1;
 	double y2 = x->y2;
 	double out_val;
@@ -193,11 +193,11 @@ void rbiquad_perform64 (t_rbiquad *x, t_object *dsp64, double **ins, long numins
 		// Sample accurate reset
 		
 		if (*in7++)						
-			in_mem1 = in_mem2 = y1 = y2 = 0.;
+			x1 = x2 = y1 = y2 = 0.;
 		
 		// Filter 
 		
-		y = (a0 * in) + (a1 * in_mem1) + (a2 * in_mem2) - (b1 * y1) - (b2 * y2);
+		y = (a0 * in) + (a1 * x1) + (a2 * x2) - (b1 * y1) - (b2 * y2);
 
 		out_val = AH_FIX_DENORM_DOUBLE(y);
 		
@@ -207,20 +207,20 @@ void rbiquad_perform64 (t_rbiquad *x, t_object *dsp64, double **ins, long numins
 		
 		y2 = y1;
 		y1 = out_val;
-		in_mem2 = in_mem1;
-		in_mem1 = in;
+		x2 = x1;
+		x1 = in;
 	}
 	
 	// Store memory
 	
-	x->in_mem1 = in_mem1;
-	x->in_mem2 = in_mem2;
+	x->x1 = x1;
+	x->x2 = x2;
 	x->y1 = y1;
 	x->y2 = y2;
 }
 
 
-void rbiquad_dsp64 (t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, NULL);
 }

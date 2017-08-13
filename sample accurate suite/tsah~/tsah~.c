@@ -14,6 +14,9 @@
 #include <z_dsp.h>
 
 
+#define MAXIMUM_NUM_OUTLETS 64
+
+
 void *this_class;
 
 
@@ -21,31 +24,31 @@ typedef struct _tsah
 {
     t_pxobject x_obj;
 	
-	float *sig_ins[64];
-	float *sig_outs[64];
+	float *sig_ins[MAXIMUM_NUM_OUTLETS];
+	float *sig_outs[MAXIMUM_NUM_OUTLETS];
 	
-	double last_outputs[64];
+	double last_outputs[MAXIMUM_NUM_OUTLETS];
 	
 	long num_outlets;
 	
 } t_tsah;
 
 
-void *tsah_new (t_atom_long num_outlets);
-void tsah_free (t_tsah *x);
-void tsah_assist (t_tsah *x, void *b, long m, long a, char *s);
+void *tsah_new(t_atom_long num_outlets);
+void tsah_free(t_tsah *x);
+void tsah_assist(t_tsah *x, void *b, long m, long a, char *s);
 
-t_int *tsah_perform (t_int *w);
-t_int *tsah_perform_multiple (t_int *w);
-void tsah_dsp (t_tsah *x, t_signal **sp, short *count);
+t_int *tsah_perform(t_int *w);
+t_int *tsah_perform_multiple(t_int *w);
+void tsah_dsp(t_tsah *x, t_signal **sp, short *count);
 
-void tsah_perform64 (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void tsah_perform_multiple64 (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void tsah_perform_multiple64_unroll (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void tsah_dsp64 (t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main(void)
 {	
 	this_class = class_new("tsah~",
 				(method)tsah_new,
@@ -66,14 +69,19 @@ int C74_EXPORT main (void)
 }
 
 
-void *tsah_new (t_atom_long num_outlets)
+void *tsah_new(t_atom_long num_outlets)
 {	
 	long i;
 	
 	t_tsah *x = (t_tsah *)object_alloc(this_class);
     
 	num_outlets = num_outlets < 1 ? 1 : num_outlets;
-	num_outlets = num_outlets > 64 ? 64 : num_outlets;
+    
+    if (num_outlets > MAXIMUM_NUM_OUTLETS)
+    {
+        object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
+        num_outlets = MAXIMUM_NUM_OUTLETS;
+    }
 	
 	dsp_setup((t_pxobject *)x, num_outlets + 1);
 
@@ -96,7 +104,7 @@ void tsah_free(t_tsah *x)
 }
 	
 
-t_int *tsah_perform (t_int *w)
+t_int *tsah_perform(t_int *w)
 {		
 	float *in = (float *) w[1];
 	float *trigger = (float *) w[2];
@@ -118,28 +126,22 @@ t_int *tsah_perform (t_int *w)
 }
 
 
-t_int *tsah_perform_multiple (t_int *w)
+t_int *tsah_perform_multiple(t_int *w)
 {			
-	float *trigger_ptr = (float *) w[1];
 	long vec_size = (long) w[2];
 	t_tsah *x = (t_tsah *) w[3];
 	
-	long num_outlets = x->num_outlets;
-	long vec_size_temp;
-	long i;
-	
 	double *last_outputs = x->last_outputs;
-	float *out_ptr;
-	float *in_ptr;
-	float output_temp;
+    long num_outlets = x->num_outlets;
 	
-	for (i = 0; i < num_outlets; i++)
+	for (long i = 0; i < num_outlets; i++)
 	{
-		vec_size_temp = vec_size;
-		output_temp = last_outputs[i];
+		long vec_size_temp = vec_size;
+		float output_temp = last_outputs[i];
 		
-		out_ptr = x->sig_outs[i];
-		in_ptr = x->sig_ins[i];
+        float *trigger_ptr = (float *) w[1];
+		float *out_ptr = x->sig_outs[i];
+		float *in_ptr = x->sig_ins[i];
 		
 		while (vec_size_temp--) 
 		{
@@ -173,7 +175,7 @@ void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
 }
 
 
-void tsah_perform64 (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
 	double *in = ins[0];
 	double *trigger = ins[1];
@@ -191,26 +193,20 @@ void tsah_perform64 (t_tsah *x, t_object *dsp64, double **ins, long numins, doub
 }
 
 
-void tsah_perform_multiple64 (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
-	long num_outlets = x->num_outlets;
-	long vec_size_temp;
-	long i;
+    double *last_outputs = x->last_outputs;
+    long num_outlets = x->num_outlets;
 	
-	double output_temp;
-	double *last_outputs = x->last_outputs;
-	double *trigger_ptr;
-	double *out_ptr;
-	double *in_ptr;
 	
-	for (i = 0; i < num_outlets; i++)
+	for (long i = 0; i < num_outlets; i++)
 	{
-		vec_size_temp = vec_size;
-		output_temp = last_outputs[i];
+		long vec_size_temp = vec_size;
+		double output_temp = last_outputs[i];
 		
-		trigger_ptr = ins[num_outlets];
-		out_ptr = outs[i];
-		in_ptr = ins[i];
+		double *trigger_ptr = ins[num_outlets];
+		double *out_ptr = outs[i];
+		double *in_ptr = ins[i];
 		
 		while (vec_size_temp--) 
 		{
@@ -223,26 +219,19 @@ void tsah_perform_multiple64 (t_tsah *x, t_object *dsp64, double **ins, long num
 }
 
 
-void tsah_perform_multiple64_unroll (t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
-	long num_outlets = x->num_outlets;
-	long vec_size_temp;
-	long i;
-	
-	double output_temp;
 	double *last_outputs = x->last_outputs;
-	double *trigger_ptr;
-	double *out_ptr;
-	double *in_ptr;
+    long num_outlets = x->num_outlets;
 	
-	for (i = 0; i < num_outlets; i++)
+	for (long i = 0; i < num_outlets; i++)
 	{
-		vec_size_temp = vec_size >> 2;
-		output_temp = last_outputs[i];
+		long vec_size_temp = vec_size >> 2;
+		double output_temp = last_outputs[i];
 		
-		trigger_ptr = ins[num_outlets];
-		out_ptr = outs[i];
-		in_ptr = ins[i];
+		double *trigger_ptr = ins[num_outlets];
+		double *out_ptr = outs[i];
+		double *in_ptr = ins[i];
 		
 		while (vec_size_temp--) 
 		{
@@ -261,7 +250,7 @@ void tsah_perform_multiple64_unroll (t_tsah *x, t_object *dsp64, double **ins, l
 }
 
 
-void tsah_dsp64 (t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {		
 	if (x->num_outlets > 1)
 	{
@@ -293,6 +282,3 @@ void tsah_assist(t_tsah *x, void *b, long m, long a, char *s)
 	else
 		sprintf(s,"(signal) Held Values");
 }
-
-
-
