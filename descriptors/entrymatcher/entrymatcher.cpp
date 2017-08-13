@@ -54,6 +54,7 @@ void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
+void entrymatcher_refer(t_entrymatcher *x, t_symbol *name);
 void entrymatcher_clear(t_entrymatcher *x);
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
@@ -89,6 +90,7 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
 	class_addmethod(this_class, (method)entrymatcher_clear,"reset", 0);
 
+    class_addmethod(this_class, (method)entrymatcher_refer,"refer", A_SYM, 0);
 	class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_match_user,"match", A_GIMME, 0);
@@ -120,8 +122,7 @@ void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns
 	x->the_identifiers_outlet = outlet_new(x, 0);
     x->the_indices_outlet = listout(x);
 	
-    x->database_object = entry_database_get_database_object(symbol_unique(), num_reserved_entries, num_columns);
-    x->database = entry_database_get_database(x->database_object);
+    x->database_object = entry_database_get_database_object(&x->database, symbol_unique(), num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     return (x);
@@ -158,8 +159,14 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 }
 
 // ========================================================================================================================================== //
-// Entry routines: clear, labelmodes, names and entry
+// Entry routines: refer, clear, labelmodes, names and entry
 // ========================================================================================================================================== //
+
+
+void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
+{
+    x->database_object = entry_database_get_database_object(x->database_object, &x->database, name);
+}
 
 void entrymatcher_clear(t_entrymatcher *x)
 {

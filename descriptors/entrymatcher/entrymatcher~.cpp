@@ -54,7 +54,9 @@ void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
+void entrymatcher_refer(t_entrymatcher *x, t_symbol *name);
 void entrymatcher_clear(t_entrymatcher *x);
+void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -85,10 +87,12 @@ int C74_EXPORT main(void)
     
     class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
     class_addmethod(this_class, (method)entrymatcher_clear,"reset", 0);
-    
+
+    class_addmethod(this_class, (method)entrymatcher_refer,"refer", A_SYM, 0);
     class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_limit,"limit", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
+    class_addmethod(this_class, (method)entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_names,"names", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
     
@@ -111,8 +115,7 @@ void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns
     dsp_setup((t_pxobject *)x, 2 + max_matchers);
     outlet_new((t_object *)x, "signal");
     
-    x->database_object = entry_database_get_database_object(symbol_unique(), num_reserved_entries, num_columns);
-    x->database = entry_database_get_database(x->database_object);
+    x->database_object = entry_database_get_database_object(&x->database, symbol_unique(), num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     x->max_matchers = std::max(std::min(num_columns, t_atom_long(256)), t_atom_long(1));;
@@ -167,8 +170,13 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 }
 
 // ========================================================================================================================================== //
-// Entry routines: clear, names and entry
+// Entry routines: refer, clear, labelmodes, names and entry
 // ========================================================================================================================================== //
+
+void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
+{
+    x->database_object = entry_database_get_database_object(x->database_object, &x->database, name);
+}
 
 void entrymatcher_clear(t_entrymatcher *x)
 {
