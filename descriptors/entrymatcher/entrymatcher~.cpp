@@ -42,8 +42,6 @@ typedef struct entrymatcher {
     long n_limit;
     double ratio_kept;
     
-    long num_matched_indices;
-    
     t_rand_gen gen;
     
     float *matcher_ins[256];
@@ -123,7 +121,6 @@ void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns, t_a
     x->max_matchers = max_matchers;
     x->ratio_kept = 1.0;
     x->n_limit = 0;
-    x->num_matched_indices = 0;
     
     rand_seed(&x->gen);
     
@@ -203,15 +200,12 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
     long n_limit = argc > 0 ?  atom_getlong(argv + 0): 0;
-    double ratio_kept = argc > 1 ?  atom_getfloat(argv + 1) : 0.;
+    double ratio_kept = argc > 1 ?  atom_getfloat(argv + 1) : 1.0;
     
-    if (n_limit < 1)
-        n_limit = 0;
-    if (ratio_kept <= 0.0 || ratio_kept > 1.0)
-        ratio_kept = 1.0;
+    // Clip values
     
-    x->n_limit = n_limit;
-    x->ratio_kept = ratio_kept;
+    x->ratio_kept = std::min(std::max(ratio_kept, 0.0), 1.0);
+    x->n_limit = std::max(n_limit, 0L);
 }
 
 // Set the matching criteria
@@ -295,39 +289,6 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     }
 }
 
-// Find the top n matches (those with the smallest distance values)
-
-void entrymatcher_top_n(std::vector<long>& matched_indices, std::vector<double>& distances, long num_matched_indices, long n_limit)
-{
-    long temp_index;
-    long swap;
-    long i, j;
-    
-    double min_dist;
-    
-    // Partial insertion sort (faster sorting for small numbers of n)...
-    
-    for (i = 0; i < n_limit; i++)
-    {
-        min_dist = distances[matched_indices[i]];
-        swap = i;
-        
-        for (j = i + 1; j < num_matched_indices; j++)
-        {
-            if (distances[matched_indices[j]] < min_dist)
-            {
-                min_dist = distances[matched_indices[j]];
-                swap = j;
-            }
-        }
-        
-        temp_index = matched_indices[swap];
-        
-        matched_indices[swap] = matched_indices[i];
-        matched_indices[i] = temp_index;
-    }
-}
-
 // ========================================================================================================================================== //
 // Perform and DSP routines:
 // ========================================================================================================================================== //
@@ -345,10 +306,10 @@ t_int *entrymatcher_perform(t_int *w)
     
     t_rand_gen *gen = &x->gen;
     
-    long n_limit = x->n_limit;
-    long num_matched_indices = x->num_matched_indices;
-    
     Matchers *matchers = x->mMatchers;
+    
+    long n_limit = x->n_limit;
+    long num_matched_indices = matchers->getNumMatches();
     
     for (long i = 0; i < vec_size; i++)
     {
@@ -380,8 +341,6 @@ t_int *entrymatcher_perform(t_int *w)
         *out++ = (float) index + 1;
     }
     
-    x->num_matched_indices = num_matched_indices;
-    
     return w + 7;
 }
 
@@ -412,11 +371,11 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     
     t_rand_gen *gen = &x->gen;
     
-    long n_limit = x->n_limit;
-    long num_matched_indices = x->num_matched_indices;
-    
     Matchers *matchers = x->mMatchers;
-
+    
+    long n_limit = x->n_limit;
+    long num_matched_indices = matchers->getNumMatches();
+    
     for (long i = 0; i < vec_size; i++)
     {
         // Assume no match
@@ -446,8 +405,6 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
         
         *out++ = (float) index + 1;
     }
-    
-    x->num_matched_indices = num_matched_indices;
 }
 
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)

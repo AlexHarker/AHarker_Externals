@@ -66,8 +66,9 @@ public:
             mMatchers[idx].setTarget(value);
     }
     
-    long getIndex(long idx)         { return mIndices[idx]; }
-    double getDistance(long idx)    { return mDistances[idx]; }
+    long getNumMatches() const          { return mNumMatches; }
+    long getIndex(long idx) const       { return mIndices[idx]; }
+    double getDistance(long idx) const  { return mDistances[idx]; }
     
     long getTopN(long N);
     void sort();

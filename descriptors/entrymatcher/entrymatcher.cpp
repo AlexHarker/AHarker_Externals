@@ -372,37 +372,28 @@ void entrymatcher_match_all(t_entrymatcher *x)
 
 void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
 {
-	double ratio_kept = 1.0;
-	double distance_limit = HUGE_VAL;
-	long n_limit = 1024;
+	double ratio_kept;
+	double distance_limit;
+	long n_limit;
 	
+    // Accept maximum specified number and limit by ratio in either order
+
 	if (argc > 0 && atom_gettype(argv) == A_LONG)
 	{
-		// Limit by maximum specified number
-		// Limit by ratio
-		
-		n_limit = atom_getlong(argv++);
-		argc--;
-		if (argc-- > 0) 
-			ratio_kept = atom_getfloat(argv++);
+        n_limit = (argc-- > 0) ? atom_getlong(argv++) : 1024;
+		ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
 	}
 	else
 	{
-		// Limit by a ratio
-		// Then limit by maximum specified number
-		
-		if (argc-- > 0)
-			ratio_kept = atom_getfloat(argv++);
-		if (argc-- > 0) 
-			n_limit = atom_getlong(argv++);
+	    ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
+        n_limit = (argc-- > 0) ? atom_getlong(argv++) : 1024;
 	}
 
 	// Limit by a maximum distance value
 
-	if (argc-- > 0) 
-		distance_limit = atom_getfloat(argv++);
+    distance_limit = (argc-- > 0) ? atom_getfloat(argv++) : HUGE_VAL;
 	
-	// Clip ratio values
+	// Clip values
 	
     ratio_kept = std::min(std::max(ratio_kept, 0.0), 1.0);
     n_limit = std::min(std::max(n_limit, 0L), 1024L);
