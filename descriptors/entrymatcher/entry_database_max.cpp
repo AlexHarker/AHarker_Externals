@@ -5,7 +5,7 @@
 t_class *the_database_class;
 
 int entry_database_init();
-void *entry_database_new(t_atom_long reserved_entries, t_atom_long num_columns);
+void *entry_database_new(t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
 
 int entry_database_init()
@@ -24,15 +24,15 @@ int entry_database_init()
     return 0;
 }
 
-void *entry_database_new(t_atom_long reserved_entries, t_atom_long num_columns)
+void *entry_database_new(t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_entry_database *x = (t_entry_database *)object_alloc(the_database_class);
     
-    reserved_entries = std::max(reserved_entries, t_atom_long(1));
+    num_reserved_entries = std::max(num_reserved_entries, t_atom_long(1));
     num_columns = std::max(num_columns, t_atom_long(1));
     
     x->mDatabase = new EntryDatabase(num_columns);
-    x->mDatabase->reserve(reserved_entries);
+    x->mDatabase->reserve(num_reserved_entries);
     x->count = 1;
     
     return (x);
@@ -52,10 +52,10 @@ void entry_database_release(t_entry_database *x)
     }
 }
 
-t_entry_database *entry_database_get_database(t_symbol *name, t_atom_long reserved_entries, t_atom_long num_columns)
+t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_atom argv[2];
-    atom_setlong(argv + 0, reserved_entries);
+    atom_setlong(argv + 0, num_reserved_entries);
     atom_setlong(argv + 1, num_columns);
     
     const char database_class[] = "__entry_database";
@@ -78,7 +78,7 @@ t_entry_database *entry_database_get_database(t_symbol *name, t_atom_long reserv
     return x;
 }
 
-EntryDatabase *entry_database_get_pointer(t_entry_database *x)
+EntryDatabase *entry_database_get_database(t_entry_database *x)
 {
     return x->mDatabase;
 }

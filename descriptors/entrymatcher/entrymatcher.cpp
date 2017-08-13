@@ -26,6 +26,7 @@
 #include "EntryDatabase.h"
 #include "Matchers.h"
 #include "utilities.h"
+#include "entry_database_max.h"
 
 t_class *this_class;
 
@@ -33,8 +34,9 @@ typedef struct entrymatcher{
 
     t_object a_obj;
     
-    EntryDatabase *mDatabase;
-    Matchers *mMatchers;
+    t_entry_database *database_object;
+    EntryDatabase *database;
+    Matchers *matchers;
     
     // Outlets
 	
@@ -109,30 +111,26 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns)
+void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
 	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
-
-    max_num_entries = std::max(max_num_entries, t_atom_long(1));
-    num_columns = std::max(num_columns, t_atom_long(1));
 	
 	x->the_data_outlet = listout(x);
 	x->the_distances_outlet = listout(x);
 	x->the_identifiers_outlet = outlet_new(x, 0);
     x->the_indices_outlet = listout(x);
-		
-    x->mDatabase = new EntryDatabase(num_columns);
-    x->mMatchers = new Matchers;
-    
-    x->mDatabase->reserve(max_num_entries);
+	
+    x->database_object = entry_database_get_database_object(symbol_unique(), num_reserved_entries, num_columns);
+    x->database = entry_database_get_database(x->database_object);
+    x->matchers = new Matchers;
     
     return (x);
 }
 
 void entrymatcher_free(t_entrymatcher *x)
 {
-    delete x->mDatabase;
-    delete x->mMatchers;
+    entry_database_release(x->database_object);
+    delete x->matchers;
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -165,22 +163,22 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 
 void entrymatcher_clear(t_entrymatcher *x)
 {
-    x->mDatabase->clear();
+    x->database->clear();
 }
 
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->setLabelModes(x, argc, argv);
+    x->database->setLabelModes(x, argc, argv);
 }
 
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->mDatabase->setNames(x, argc, argv);
+    x->database->setNames(x, argc, argv);
 }
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {	
-    x->mDatabase->addEntry(x, argc, argv);
+    x->database->addEntry(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
@@ -189,7 +187,7 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_dump(t_entrymatcher *x)
 {
-	for (long i = 0; i < x->mDatabase->numItems(); i++)
+	for (long i = 0; i < x->database->numItems(); i++)
         entrymatcher_lookup_output(x, i, 0, NULL);
 }
 
@@ -200,14 +198,14 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 	
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? x->mDatabase->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
+    long idx = (msg == ps_lookup) ? x->database->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
 	
     entrymatcher_lookup_output(x, idx, --argc, ++argv);
 }
 
 void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv)
 {
-    EntryDatabase *database = x->mDatabase;
+    EntryDatabase *database = x->database;
     std::vector<t_atom> output;
     
     long numItems = database->numItems();
@@ -262,7 +260,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 {
     // Empty the matchers
     
-    x->mMatchers->clear();
+    x->matchers->clear();
     
     // Loop over arguments
     
@@ -276,7 +274,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
         
         // Get the column and test type
 
-        long column = x->mDatabase->columnFromSpecifier(argv++);
+        long column = x->database->columnFromSpecifier(argv++);
         TestType type = entrymatcher_test_types(argv++);
         argc -= 2;
         
@@ -287,12 +285,12 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
             object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
             break;
         }
-		else if (column < 0 || column >= x->mDatabase->numColumns())
+		else if (column < 0 || column >= x->database->numColumns())
 		{
 			object_error((t_object *) x, "specified column in matchers message does not exist");
 			continue;
 		}
-		else if (x->mDatabase->getLabelMode(column) && type != TEST_MATCH)
+		else if (x->database->getLabelMode(column) && type != TEST_MATCH)
         {
             object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
             continue;
@@ -302,17 +300,17 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
         
         // Parse values
         
-        if (x->mDatabase->getLabelMode(column))
+        if (x->database->getLabelMode(column))
 		{
 			// If this column is for labels store details of a valid match test (other tests are not valid)
 		
-            x->mMatchers->addMatcher(Matchers::kTestMatch, column);
+            x->matchers->addMatcher(Matchers::kTestMatch, column);
 		
             for ( ; argc; argc--, argv++)
             {
                 if (entrymatcher_test_types(argv) != TEST_NONE)
                     break;
-                x->mMatchers->addTarget(atom_getsym(argv));
+                x->matchers->addTarget(atom_getsym(argv));
                 hasTarget = true;
             }
         }
@@ -338,24 +336,24 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
             switch (type)
             {
                 case TEST_NONE:                 break;
-                case TEST_MATCH:                x->mMatchers->addMatcher(Matchers::kTestMatch, column);                      break;
-                case TEST_LESS_THAN:            x->mMatchers->addMatcher(Matchers::kTestLess, column);                       break;
-                case TEST_GREATER_THAN:         x->mMatchers->addMatcher(Matchers::kTestGreater, column);                    break;
-                case TEST_LESS_THAN_EQ:         x->mMatchers->addMatcher(Matchers::kTestLessEqual, column);                  break;
-                case TEST_GREATER_THAN_EQ:      x->mMatchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
-                case TEST_DISTANCE:             x->mMatchers->addMatcher(Matchers::kTestDistance, column);                   break;
-                case TEST_SCALE:                x->mMatchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
-                case TEST_WITHIN:               x->mMatchers->addMatcher(Matchers::kTestDistanceReject, column, scale);      break;
-                case TEST_DISTANCE_RATIO:       x->mMatchers->addMatcher(Matchers::kTestRatio, column);                      break;
-                case TEST_SCALE_RATIO:          x->mMatchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
-                case TEST_WITHIN_RATIO:         x->mMatchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
+                case TEST_MATCH:                x->matchers->addMatcher(Matchers::kTestMatch, column);                      break;
+                case TEST_LESS_THAN:            x->matchers->addMatcher(Matchers::kTestLess, column);                       break;
+                case TEST_GREATER_THAN:         x->matchers->addMatcher(Matchers::kTestGreater, column);                    break;
+                case TEST_LESS_THAN_EQ:         x->matchers->addMatcher(Matchers::kTestLessEqual, column);                  break;
+                case TEST_GREATER_THAN_EQ:      x->matchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
+                case TEST_DISTANCE:             x->matchers->addMatcher(Matchers::kTestDistance, column);                   break;
+                case TEST_SCALE:                x->matchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
+                case TEST_WITHIN:               x->matchers->addMatcher(Matchers::kTestDistanceReject, column, scale);      break;
+                case TEST_DISTANCE_RATIO:       x->matchers->addMatcher(Matchers::kTestRatio, column);                      break;
+                case TEST_SCALE_RATIO:          x->matchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
+                case TEST_WITHIN_RATIO:         x->matchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
             }
             
             for ( ; argc; argc--, argv++)
             {
                 if (entrymatcher_test_types(argv) != TEST_NONE)
                     break;
-                x->mMatchers->addTarget(atom_getfloat(argv));
+                x->matchers->addTarget(atom_getfloat(argv));
                 hasTarget = true;
             }
         }
@@ -409,7 +407,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-    Matchers *matchers = x->mMatchers;
+    Matchers *matchers = x->matchers;
     
     t_atom output_identifiers[1024];
 	t_atom output_indices[1024];
@@ -417,7 +415,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Calculate potential matches and sort if there are matches
 	
-    long num_matches = matchers->match(x->mDatabase);
+    long num_matches = matchers->match(x->database);
 	
 	if (!num_matches)
 		return;
@@ -426,7 +424,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 		
 	// N.B. If there are no matchers ALWAYS match everything (up to max output size)...
 	
-	if (x->mMatchers->size())
+	if (x->matchers->size())
 	{
 		// If there are matchers, then limit by ratio and maximum number
 		
@@ -450,7 +448,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         }
 		
 		atom_setfloat(output_distances + i, distance);
-		x->mDatabase->getIdentifier(output_identifiers + i, index);
+		x->database->getIdentifier(output_identifiers + i, index);
 		atom_setlong(output_indices + i, index + 1);
 	}
     
