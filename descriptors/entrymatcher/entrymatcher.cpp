@@ -50,7 +50,7 @@ typedef struct entrymatcher{
 t_symbol *ps_list;
 t_symbol *ps_lookup;
 
-void *entrymatcher_new(t_atom_long max_num_entries, t_atom_long num_columns);
+void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
@@ -84,8 +84,7 @@ int C74_EXPORT main(void)
 				(method)entrymatcher_free, 
 				(short)sizeof(t_entrymatcher), 
 				NULL, 
-				A_DEFLONG, 
-				A_DEFLONG, 
+				A_GIMME,
 				0);
 	
 	class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
@@ -115,8 +114,21 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns)
+void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 {
+    t_symbol *name = NULL;
+    
+    if (argc && atom_gettype(argv) == A_SYM)
+    {
+        name = atom_getsym(argv++);
+        argc--;
+    }
+    else
+        name = symbol_unique();
+    
+    t_atom_long num_reserved_entries = (argc > 1) ? atom_getlong(argv++) : 0;
+    t_atom_long num_columns = argc  ? atom_getlong(argv++) : 0;
+    
 	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
 	
 	x->the_data_outlet = listout(x);
@@ -124,7 +136,7 @@ void *entrymatcher_new(t_atom_long num_reserved_entries, t_atom_long num_columns
 	x->the_identifiers_outlet = outlet_new(x, 0);
     x->the_indices_outlet = listout(x);
 	
-    x->database_object = entry_database_get_database_object(&x->database, symbol_unique(), num_reserved_entries, num_columns);
+    x->database_object = entry_database_get_database_object(&x->database, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     return (x);
