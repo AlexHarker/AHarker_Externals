@@ -82,20 +82,28 @@ void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
     }
 }
 
-void EntryDatabase::removeEntry(void *x, long idx)
+void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 {
     long order;
+    long idx = searchIdentifiers(identifier, order);
     
     if (idx < 0 || idx >= numItems())
     {
         object_error((t_object *) x, "entry does not exist");
         return;
     }
-
+    
     mIdentifiers.erase(mIdentifiers.begin() + idx);
-    searchIdentifiers(getIdentifierInternal(idx), order);
     mOrder.erase(mOrder.begin() + order);
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
+}
+
+void EntryDatabase::removeEntry(void *x, long idx)
+{
+    t_atom identifier;
+    
+    getIdentifier(&identifier, idx);
+    removeEntry(x, &identifier);
 }
 
 long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
