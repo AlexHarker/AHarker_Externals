@@ -89,29 +89,20 @@ t_entry_database *entry_database_get_database_object(EntryDatabase **database_pt
 
 t_entry_database *entry_database_get_database_object(t_entry_database *old_object, EntryDatabase **database_ptr, t_symbol *name)
 {
-    bool free_unused_old_object = false;
-    
-    // See if an object is registered (otherwise make object and register it...)
-    
-    if (old_object && --old_object->count == 0)
-    {
-        object_unregister(old_object);
-        free_unused_old_object = true;
-    }
-    
     // See if an object is registered with this name
     
     t_entry_database *x = entry_database_get_database_object(name);
     
-    // Register the old object with the new name
+    // If the object registered is different
     
-    if (!x)
-        x = (t_entry_database *) object_register(name_space_name, name, old_object);
-    else if (free_unused_old_object)
-        object_free(old_object);
-    
-    x->count++;
-    *database_ptr = x->database;
+    if (x && x != old_object)
+    {
+        entry_database_release(old_object);
+        x->count++;
+        *database_ptr = x->database;
+    }
+    else
+        x = old_object;
     
     return x;
 }
