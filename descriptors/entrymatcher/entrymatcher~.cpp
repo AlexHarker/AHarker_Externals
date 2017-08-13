@@ -348,9 +348,8 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
 {
     float **matcher_ins = x->matcher_ins;
     long max_matchers = x->max_matchers;
-    long i;
     
-    for (i = 0; i < max_matchers; i++)
+    for (long i = 0; i < max_matchers; i++)
         matcher_ins[i] = (float *) sp[i + 2]->s_vec;
     
     dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);

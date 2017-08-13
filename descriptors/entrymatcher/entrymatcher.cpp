@@ -325,12 +325,14 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 			if (argc && (type == TEST_SCALE || type == TEST_WITHIN))
             {
                 scale = fabs(1.0 / atom_getfloat(argv++));
+                argc--;
             }
 			else if (argc && (type == TEST_SCALE_RATIO || type == TEST_WITHIN_RATIO))
 			{
 				scale = fabs(atom_getfloat(argv++));
                 scale = (scale < 1.0) ? 1.0 / scale : scale;
 				scale = 1.0 / (scale - 1.0);
+                argc--;
 			}
 		
             switch (type)
