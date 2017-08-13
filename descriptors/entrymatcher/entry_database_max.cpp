@@ -61,7 +61,7 @@ t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long
     const char database_class[] = "__entry_database";
     t_symbol *name_space = gensym("__entry_database_private");
     
-    // Make sure the max globals class exists
+    // Make sure the max database class exists
     
     if (!class_findbyname(CLASS_NOBOX, gensym(database_class)))
         entry_database_init();
