@@ -49,7 +49,6 @@ public:
     void setNames(void *x, long argc, t_atom *argv);
     void addEntry(void *x, long argc, t_atom *argv);
     void removeEntry(void *x, t_atom *identifier);
-    void removeEntry(void *x, long idx);
     
     t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }

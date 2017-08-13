@@ -59,6 +59,7 @@ void entrymatcher_clear(t_entrymatcher *x);
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
+void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
@@ -90,6 +91,7 @@ int C74_EXPORT main(void)
 
     class_addmethod(this_class, (method)entrymatcher_refer,"refer", A_SYM, 0);
     class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
+    class_addmethod(this_class, (method)entrymatcher_remove,"remove", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_limit,"limit", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
@@ -170,7 +172,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 }
 
 // ========================================================================================================================================== //
-// Entry routines: refer, clear, labelmodes, names and entry
+// Entry routines: refer, clear, labelmodes, names, entry and removal
 // ========================================================================================================================================== //
 
 void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
@@ -196,6 +198,17 @@ void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
     x->database->addEntry(x, argc, argv);
+}
+
+void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    if (!argc)
+        object_error((t_object *)x, "no identifier given for remove message");
+    else
+    {
+        while(argc--)
+            x->database->removeEntry(x, argv++);
+    }
 }
 
 // ========================================================================================================================================== //

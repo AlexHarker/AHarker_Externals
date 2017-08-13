@@ -98,14 +98,6 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-void EntryDatabase::removeEntry(void *x, long idx)
-{
-    t_atom identifier;
-    
-    getIdentifier(&identifier, idx);
-    removeEntry(x, &identifier);
-}
-
 long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
 {
     long gap = idx = numItems() / 2;
