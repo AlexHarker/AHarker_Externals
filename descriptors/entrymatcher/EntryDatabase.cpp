@@ -101,7 +101,8 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
 {
     long gap = idx = numItems() / 2;
-
+    gap = gap < 1 ? 1 : gap;
+    
     while (gap && idx < numItems())
     {
         gap /= 2;

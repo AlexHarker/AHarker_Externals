@@ -8,13 +8,13 @@
 struct CustomAtom
 {
     enum CompareResult { kLess, kGreater, kEqual };
-    enum Type { kSymbol, kDouble, kTranlatedInt, kInt  };
+    enum Type { kSymbol, kDouble, kTranslatedInt, kInt  };
     
     CustomAtom() :  mType(kDouble), mValue(0.0) {}
     CustomAtom(double val) : mType(kDouble), mValue(val) {}
     CustomAtom(t_symbol *sym) : mType(kSymbol), mSymbol(sym) {}
     
-    CustomAtom(t_atom_long val, bool translate = true) : mType(translate ? kInt : kTranlatedInt)
+    CustomAtom(t_atom_long val, bool translate = true) : mType(translate ? kTranslatedInt : kInt)
     {
         if (translate)
             mValue = val;
@@ -42,7 +42,7 @@ struct CustomAtom
             case kSymbol:           atom_setsym(a, mSymbol);    break;
             case kDouble:           atom_setfloat(a, mValue);   break;
             case kInt:              atom_setlong(a, mInt);      break;
-            case kTranlatedInt:     atom_setlong(a, mValue);    break;
+            case kTranslatedInt:    atom_setlong(a, mValue);    break;
         }
     }
     
@@ -53,7 +53,7 @@ struct CustomAtom
             switch (a.mType)
             {
                 case kDouble:
-                case kTranlatedInt:   return a.mValue == b.mValue ? kEqual : a.mValue < b.mValue ? kLess : kGreater;
+                case kTranslatedInt:  return a.mValue == b.mValue ? kEqual : a.mValue < b.mValue ? kLess : kGreater;
                 case kInt:            return a.mInt == b.mInt ? kEqual : a.mInt < b.mInt ? kLess : kGreater;
                 case kSymbol:         return a.mSymbol == b.mSymbol ? kEqual :a.mSymbol < b.mSymbol ? kLess : kGreater;
             }

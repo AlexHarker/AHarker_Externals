@@ -383,7 +383,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
             
             for ( ; argc; argc--, argv++)
             {
-                if (entrymatcher_test_types(argv) != TEST_NONE)
+                if (argc > 1 && entrymatcher_test_types(argv + 1) != TEST_NONE)
                     break;
                 x->matchers->addTarget(atom_getfloat(argv));
                 hasTarget = true;
