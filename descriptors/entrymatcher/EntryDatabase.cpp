@@ -211,3 +211,79 @@ void EntryDatabase::view() const
     object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
     object_attr_setsym(editor, gensym("title"), gensym("cool"));
 }
+
+
+void EntryDatabase::save() const
+{
+    std::vector<t_atom> args(numColumns() + 1);
+    t_dictionary *dict = dictionary_new();
+    
+    dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
+
+    for (long i = 0; i < numColumns(); i++)
+        atom_setsym(&args[i], mColumns[i].mName);
+        
+    dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
+    
+    for (long i = 0; i < numColumns(); i++)
+        atom_setlong(&args[i], mColumns[i].mLabel);
+    
+    dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
+    
+    for (long i = 0; i < numItems(); i++)
+    {
+        std::string str("entry_" + std::to_string(i + 1));
+        
+        getIdentifier(&args[0], i);
+        
+        for (long j = 0; j < numColumns(); j++)
+            getDataAtom(&args[j + 1], i, j);
+        
+        dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
+    }
+
+    char filename[MAX_FILENAME_CHARS];
+    short path;
+    
+    strcpy(filename, "database");
+    
+    if (!saveas_dialog(filename, &path, NULL))
+        dictionary_write(dict, filename, path);
+    
+    object_free(dict);
+}
+
+void EntryDatabase::load(t_object *x)
+{
+    char filename[MAX_FILENAME_CHARS];
+    short path;
+    t_max_err err = MAX_ERR_NONE;
+
+    t_fourcc type = 'JSON';
+    
+    open_dialog(filename, &path, &type, NULL, 0);
+    t_dictionary *dict;
+    dictionary_read(filename, path, &dict);
+    
+    clear();
+    
+    //dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
+    
+    t_atom *argv;
+    long argc;
+    
+    dictionary_getatoms(dict, gensym("names"), &argc, &argv);
+    setNames(x, argc, argv);
+    
+    dictionary_getatoms(dict, gensym("labelmodes"), &argc, &argv);
+    setLabelModes(x, argc, argv);
+    
+    for (long i = 0; err == MAX_ERR_NONE; i++)
+    {
+        std::string str("entry_" + std::to_string(i + 1));
+        if ((err = dictionary_getatoms(dict, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
+            addEntry(x, argc, argv);
+    }
+    
+    object_free(dict);
+}

@@ -64,7 +64,9 @@ public:
     double columnMean(const t_atom *specifier) const;
     
     void view() const;
-    
+    void save() const;
+    void load(t_object *x);
+
     long itemFromIdentifier(const t_atom *identifier) const
     {
         long order;
