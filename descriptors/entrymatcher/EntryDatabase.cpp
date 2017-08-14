@@ -192,30 +192,25 @@ double EntryDatabase::columnMean(const t_atom *specifier) const
 void EntryDatabase::view() const
 {
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"));
-    std::vector<t_atom> database_atoms;
+    std::string str;
     
     long nItems = numItems();
     long nColumns = numColumns();
     
-    database_atoms.resize((nColumns + 2) * nItems);
-    
     for (long i = 0; i < nItems; i++)
     {
-        getIdentifier(&database_atoms[i * (nColumns + 2)], i);
+        str.insert(str.size(), getIdentifierInternal(i).getString());
         
         for (long j = 0; j < nColumns; j++)
-            getDataAtom(&database_atoms[i * (nColumns + 2) + 1 + j], i, j);
+        {
+            str.insert(str.size(), " ");
+            str.insert(str.size(), getData(i, j).getString());
+        }
         
-        atom_setsym(&database_atoms[i * (nColumns + 2) + nColumns + 1], gensym("\n"));
+        if (i != (nItems - 1))
+            str.insert(str.size(), "\n");
     }
     
-    long textsize = 0;
-    char *text = NULL;
-    
-    atom_gettext(database_atoms.size(), &database_atoms[0], &textsize, &text, 0);
-    
-    object_method(editor, gensym("settext"), text, gensym("utf-8"));
+    object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
     object_attr_setsym(editor, gensym("title"), gensym("cool"));
-    
-    free(text);
 }

@@ -4,6 +4,7 @@
 
 #include "ext.h"
 #include <vector>
+#include <string>
 
 struct CustomAtom
 {
@@ -43,6 +44,17 @@ struct CustomAtom
             case kDouble:           atom_setfloat(a, mValue);   break;
             case kInt:              atom_setlong(a, mInt);      break;
             case kTranslatedInt:    atom_setlong(a, mValue);    break;
+        }
+    }
+    
+    std::string inline getString() const
+    {
+        switch (mType)
+        {
+            case kSymbol:           return mSymbol->s_name;
+            case kDouble:           return std::to_string(mValue);
+            case kInt:              return std::to_string(mInt);
+            case kTranslatedInt:    return std::to_string((t_atom_long) mValue);
         }
     }
     
