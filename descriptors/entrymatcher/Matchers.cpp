@@ -1,7 +1,9 @@
 
 #include "Matchers.h"
+#include "Sort.h"
 #include <algorithm>
 #include <functional>
+
 
 inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
 {
@@ -119,30 +121,7 @@ long Matchers::getTopN(long N)
 
 void Matchers::sort()
 {
-    // An ascending order index sort (combsort11 algorithm)
-    
-    long gap = mNumMatches;
-    bool swaps = 1;
-    long i;
-    
-    while (gap > 1 || swaps)
-    {
-        if (gap > 1)
-        {
-            gap = (gap * 10) / 13;
-            if (gap == 9 || gap == 10) gap = 11;
-            if (gap < 1) gap = 1;
-        }
-        
-        for (i = 0, swaps = 0; i + gap < mNumMatches; i++)
-        {
-            if (mDistances[mIndices[i]] > mDistances[mIndices[i + gap]])
-            {
-                std::swap(mIndices[i], mIndices[i + gap]);
-                swaps = true;
-            }
-        }
-    }
+    ::sort(mIndices, mDistances, mNumMatches);
 }
 
 void Matchers::clear()
