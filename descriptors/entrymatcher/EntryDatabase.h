@@ -59,6 +59,12 @@ public:
     
     long columnFromSpecifier(const t_atom *specifier) const;
     
+    double columnMin(const t_atom *specifier) const;
+    double columnMax(const t_atom *specifier) const;
+    double columnMean(const t_atom *specifier) const;
+    
+    void view() const;
+    
     long itemFromIdentifier(const t_atom *identifier) const
     {
         long order;

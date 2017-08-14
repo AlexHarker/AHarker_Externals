@@ -35,7 +35,7 @@ struct CustomAtom
         }
     }
     
-    void inline getAtom( t_atom *a) const
+    void inline getAtom(t_atom *a) const
     {
         switch (mType)
         {

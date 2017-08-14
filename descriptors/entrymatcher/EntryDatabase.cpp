@@ -1,5 +1,6 @@
 
 #include "EntryDatabase.h"
+#include <algorithm>
 
 void EntryDatabase::reserve(long items)
 {
@@ -144,4 +145,77 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
             return i;
     
     return -2;
+}
+
+double EntryDatabase::columnMin(const t_atom *specifier) const
+{
+    double minVal = HUGE_VAL;
+    long column = columnFromSpecifier(specifier);
+    
+    if (column >= 0 && !mColumns[column].mLabel)
+    {
+        for (long i = 0; i < numItems(); i++)
+            minVal = std::min(minVal, getData(i, column).mValue);
+    }
+    
+    return minVal;
+}
+
+double EntryDatabase::columnMax(const t_atom *specifier) const
+{
+    double maxVal = -HUGE_VAL;
+    long column = columnFromSpecifier(specifier);
+    
+    if (column >= 0 && !mColumns[column].mLabel)
+    {
+        for (long i = 0; i < numItems(); i++)
+            maxVal = std::max(maxVal, getData(i, column).mValue);
+    }
+    
+    return maxVal;
+}
+
+double EntryDatabase::columnMean(const t_atom *specifier) const
+{
+    double meanVal = 0.0;
+    long column = columnFromSpecifier(specifier);
+    
+    if (column >= 0 && !mColumns[column].mLabel)
+    {
+        for (long i = 0; i < numItems(); i++)
+            meanVal += getData(i, column).mValue;
+    }
+    
+    return meanVal / numItems();
+}
+
+void EntryDatabase::view() const
+{
+    t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"));
+    std::vector<t_atom> database_atoms;
+    
+    long nItems = numItems();
+    long nColumns = numColumns();
+    
+    database_atoms.resize((nColumns + 2) * nItems);
+    
+    for (long i = 0; i < nItems; i++)
+    {
+        getIdentifier(&database_atoms[i * (nColumns + 2)], i);
+        
+        for (long j = 0; j < nColumns; j++)
+            getDataAtom(&database_atoms[i * (nColumns + 2) + 1 + j], i, j);
+        
+        atom_setsym(&database_atoms[i * (nColumns + 2) + nColumns + 1], gensym("\n"));
+    }
+    
+    long textsize = 0;
+    char *text = NULL;
+    
+    atom_gettext(database_atoms.size(), &database_atoms[0], &textsize, &text, 0);
+    
+    object_method(editor, gensym("settext"), text, gensym("utf-8"));
+    object_attr_setsym(editor, gensym("title"), gensym("cool"));
+    
+    free(text);
 }

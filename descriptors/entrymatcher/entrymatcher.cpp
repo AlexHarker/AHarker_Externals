@@ -60,6 +60,7 @@ void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
+void entrymatcher_view(t_entrymatcher *x);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
@@ -101,6 +102,8 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_lookup, "lookup", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_lookup, "index", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
+    
+    class_addmethod(this_class, (method)entrymatcher_view, "view", 0);
 	
 	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
 	
@@ -507,4 +510,9 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	outlet_list(x->the_distances_outlet, 0L, num_matches, output_distances);
 	outlet_anything(x->the_identifiers_outlet, msg, num_identifier_args, output_identifiers + nudge);
 	outlet_list(x->the_indices_outlet, 0L, num_matches, output_indices);
+}
+
+void entrymatcher_view(t_entrymatcher *x)
+{
+    x->database->view();
 }
