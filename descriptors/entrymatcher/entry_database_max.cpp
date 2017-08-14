@@ -106,7 +106,4 @@ t_entry_database *entry_database_get_database_object(t_entry_database *old_objec
     
     return x;
 }
-
-
-
     

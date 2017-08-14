@@ -179,7 +179,6 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 // Entry routines: refer, clear, labelmodes, names, entry and removal
 // ========================================================================================================================================== //
 
-
 void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
 {
     x->database_object = entry_database_get_database_object(x->database_object, &x->database, name);

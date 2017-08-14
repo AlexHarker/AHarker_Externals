@@ -193,21 +193,18 @@ void EntryDatabase::view() const
 {
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"));
     std::string str;
-    
-    long nItems = numItems();
-    long nColumns = numColumns();
-    
-    for (long i = 0; i < nItems; i++)
+
+    for (long i = 0; i < numItems(); i++)
     {
         str.insert(str.size(), getIdentifierInternal(i).getString());
         
-        for (long j = 0; j < nColumns; j++)
+        for (long j = 0; j < numColumns(); j++)
         {
             str.insert(str.size(), " ");
             str.insert(str.size(), getData(i, j).getString());
         }
         
-        if (i != (nItems - 1))
+        if (i != (numItems() - 1))
             str.insert(str.size(), "\n");
     }
     
