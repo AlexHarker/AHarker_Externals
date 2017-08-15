@@ -1,5 +1,6 @@
 
 #include "EntryDatabase.h"
+#include "Sort.h"
 #include <algorithm>
 
 void EntryDatabase::reserve(long items)
@@ -189,6 +190,21 @@ double EntryDatabase::columnMean(const t_atom *specifier) const
     return meanVal / numItems();
 }
 
+double EntryDatabase::columnMedian(const t_atom *specifier) const
+{
+    std::vector<long> indices;
+    std::vector<double> values;
+    
+    long column = columnFromSpecifier(specifier);
+    
+    for (long i = 0; i < numItems(); i++)
+        values[i] = getData(i, column).mValue;
+
+    sort(indices, values, numItems());
+    
+    return values[indices[numItems() / 2]];
+}
+
 void EntryDatabase::view() const
 {
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"));
@@ -211,7 +227,6 @@ void EntryDatabase::view() const
     object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
     object_attr_setsym(editor, gensym("title"), gensym("cool"));
 }
-
 
 void EntryDatabase::save() const
 {
@@ -267,7 +282,11 @@ void EntryDatabase::load(t_object *x)
     
     clear();
     
-    //dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
+    t_atom_long newNumColumns;
+    dictionary_getlong(dict, gensym("numcolumns"), &newNumColumns);
+    
+    if (newNumColumns != numColumns())
+        *this = EntryDatabase(newNumColumns);
     
     t_atom *argv;
     long argc;

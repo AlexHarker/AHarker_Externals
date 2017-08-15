@@ -106,8 +106,8 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
     
     class_addmethod(this_class, (method)entrymatcher_view, "view", 0);
-    class_addmethod(this_class, (method)entrymatcher_save, "save", 0);
-    class_addmethod(this_class, (method)entrymatcher_load, "load", 0);
+    class_addmethod(this_class, (method)entrymatcher_save, "write", 0);
+    class_addmethod(this_class, (method)entrymatcher_load, "read", 0);
 	
 	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
 	

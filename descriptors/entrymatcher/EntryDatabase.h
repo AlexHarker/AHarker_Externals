@@ -62,6 +62,7 @@ public:
     double columnMin(const t_atom *specifier) const;
     double columnMax(const t_atom *specifier) const;
     double columnMean(const t_atom *specifier) const;
+    double columnMedian(const t_atom *specifier) const;
     
     void view() const;
     void save() const;
