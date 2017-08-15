@@ -4,6 +4,7 @@
 
 #include "CustomAtom.h"
 #include "EntryDatabase.h"
+#include "utilities.h"
 
 class Matchers
 {
@@ -76,6 +77,8 @@ public:
     void addTarget(double value);
     void addTarget(t_symbol *value);
     void addMatcher(TestType type, long column, double scale = 1.0);
+    
+    void setMatchers(void *x, long argc, t_atom *argv, EntryDatabase *database);
     
 private:
     

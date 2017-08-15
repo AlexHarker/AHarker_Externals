@@ -68,8 +68,9 @@ void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv);
 
-void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
-void entrymatcher_match_all(t_entrymatcher *x);void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
+void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
+void entrymatcher_match_all(t_entrymatcher *x);
+void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
 
 void entrymatcher_combsort(std::vector<long> *indices, std::vector<double> *distances, long num_points);
@@ -220,7 +221,7 @@ void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 }
 
 // ========================================================================================================================================== //
-// Lookup Routine
+// Lookup Routines
 // ========================================================================================================================================== //
 
 void entrymatcher_dump(t_entrymatcher *x)
@@ -294,111 +295,9 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
 
 // Set the matching criteria
 
-void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
+void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    // Empty the matchers
-    
-    x->matchers->clear();
-    
-    // Loop over arguments
-    
-    while (argc)
-	{
-        if (argc < 2)
-        {
-            object_error((t_object *) x, "insufficient items in matchers message for unparsed test");
-            break;
-        }
-        
-        // Get the column and test type
-
-        long column = x->database->columnFromSpecifier(argv++);
-        TestType type = entrymatcher_test_types(argv++);
-        argc -= 2;
-        
-        // Test for issues
-
-        if (type == TEST_NONE)
-        {
-            object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
-            break;
-        }
-		else if (column < 0 || column >= x->database->numColumns())
-		{
-			object_error((t_object *) x, "specified column in matchers message does not exist");
-			continue;
-		}
-		else if (x->database->getLabelMode(column) && type != TEST_MATCH)
-        {
-            object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
-            continue;
-        }
-        
-        bool hasTarget = false;
-        
-        // Parse values
-        
-        if (x->database->getLabelMode(column))
-		{
-			// If this column is for labels store details of a valid match test (other tests are not valid)
-		
-            x->matchers->addMatcher(Matchers::kTestMatch, column);
-		
-            for ( ; argc; argc--, argv++)
-            {
-                if (entrymatcher_test_types(argv) != TEST_NONE)
-                    break;
-                x->matchers->addTarget(atom_getsym(argv));
-                hasTarget = true;
-            }
-        }
-		else
-		{
-			// If this column is for values store the parameters for any valid test
-			
-            double scale = 1.0;
-            
-			if (argc && (type == TEST_SCALE || type == TEST_WITHIN))
-            {
-                scale = fabs(1.0 / atom_getfloat(argv++));
-                argc--;
-            }
-			else if (argc && (type == TEST_SCALE_RATIO || type == TEST_WITHIN_RATIO))
-			{
-				scale = fabs(atom_getfloat(argv++));
-                scale = (scale < 1.0) ? 1.0 / scale : scale;
-				scale = 1.0 / (scale - 1.0);
-                argc--;
-			}
-		
-            switch (type)
-            {
-                case TEST_NONE:                 break;
-                case TEST_MATCH:                x->matchers->addMatcher(Matchers::kTestMatch, column);                      break;
-                case TEST_LESS_THAN:            x->matchers->addMatcher(Matchers::kTestLess, column);                       break;
-                case TEST_GREATER_THAN:         x->matchers->addMatcher(Matchers::kTestGreater, column);                    break;
-                case TEST_LESS_THAN_EQ:         x->matchers->addMatcher(Matchers::kTestLessEqual, column);                  break;
-                case TEST_GREATER_THAN_EQ:      x->matchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
-                case TEST_DISTANCE:             x->matchers->addMatcher(Matchers::kTestDistance, column);                   break;
-                case TEST_SCALE:                x->matchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
-                case TEST_WITHIN:               x->matchers->addMatcher(Matchers::kTestDistanceReject, column, scale);      break;
-                case TEST_DISTANCE_RATIO:       x->matchers->addMatcher(Matchers::kTestRatio, column);                      break;
-                case TEST_SCALE_RATIO:          x->matchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
-                case TEST_WITHIN_RATIO:         x->matchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
-            }
-            
-            for ( ; argc; argc--, argv++)
-            {
-                if (argc > 1 && entrymatcher_test_types(argv + 1) != TEST_NONE)
-                    break;
-                x->matchers->addTarget(atom_getfloat(argv));
-                hasTarget = true;
-            }
-        }
-        
-        if (!hasTarget)
-            object_error((t_object *) x, "no target values given for specified test in matchers message");
-	}
+    x->matchers->setMatchers(x, argc, argv, x->database);
 }
 
 void entrymatcher_match_all(t_entrymatcher *x)
