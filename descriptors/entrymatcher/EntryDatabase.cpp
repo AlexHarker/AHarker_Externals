@@ -190,19 +190,48 @@ double EntryDatabase::columnMean(const t_atom *specifier) const
     return meanVal / numItems();
 }
 
-double EntryDatabase::columnMedian(const t_atom *specifier) const
+double EntryDatabase::columnStandardDeviation(const t_atom *specifier) const
 {
-    std::vector<long> indices;
-    std::vector<double> values;
+    double sum = 0.0;
     
+    double mean = columnMean(specifier);
+    long column = columnFromSpecifier(specifier);
+    
+    if (column >= 0 && !mColumns[column].mLabel)
+    {
+        for (long i = 0; i < numItems(); i++)
+        {
+            double delta = getData(i, column).mValue - mean;
+            sum += delta * delta;
+        }
+    }
+    
+    return sqrt(sum / numItems());
+}
+
+double EntryDatabase::columnPercentile(const t_atom *specifier, double percentile) const
+{
+    long nItems = numItems();
+    std::vector<long> indices(nItems);
+    std::vector<double> values(nItems);
+    
+    long idx = std::max(0L, std::min((long) round(nItems * (percentile / 100.0)), nItems - 1));
     long column = columnFromSpecifier(specifier);
     
     for (long i = 0; i < numItems(); i++)
+    {
+        indices[i] = i;
         values[i] = getData(i, column).mValue;
+    }
 
-    sort(indices, values, numItems());
+    sort(indices, values, nItems);
     
-    return values[indices[numItems() / 2]];
+    return values[indices[idx]];
+}
+
+double EntryDatabase::columnMedian(const t_atom *specifier) const
+{
+    return columnPercentile(specifier, 50.0);
 }
 
 void EntryDatabase::view() const

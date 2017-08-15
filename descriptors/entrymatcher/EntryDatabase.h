@@ -62,6 +62,8 @@ public:
     double columnMin(const t_atom *specifier) const;
     double columnMax(const t_atom *specifier) const;
     double columnMean(const t_atom *specifier) const;
+    double columnStandardDeviation(const t_atom *specifier) const;
+    double columnPercentile(const t_atom *specifier, double percentile) const;
     double columnMedian(const t_atom *specifier) const;
     
     void view() const;
