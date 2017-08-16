@@ -259,42 +259,43 @@ void EntryDatabase::view() const
 
 void EntryDatabase::save() const
 {
-    std::vector<t_atom> args(numColumns() + 1);
-    t_dictionary *dict = dictionary_new();
-    
-    dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
-
-    for (long i = 0; i < numColumns(); i++)
-        atom_setsym(&args[i], mColumns[i].mName);
-        
-    dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
-    
-    for (long i = 0; i < numColumns(); i++)
-        atom_setlong(&args[i], mColumns[i].mLabel);
-    
-    dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
-    
-    for (long i = 0; i < numItems(); i++)
-    {
-        std::string str("entry_" + std::to_string(i + 1));
-        
-        getIdentifier(&args[0], i);
-        
-        for (long j = 0; j < numColumns(); j++)
-            getDataAtom(&args[j + 1], i, j);
-        
-        dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
-    }
-
     char filename[MAX_FILENAME_CHARS];
     short path;
     
     strcpy(filename, "database");
     
     if (!saveas_dialog(filename, &path, NULL))
-        dictionary_write(dict, filename, path);
+    {
+        std::vector<t_atom> args(numColumns() + 1);
+        t_dictionary *dict = dictionary_new();
     
-    object_free(dict);
+        dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
+
+        for (long i = 0; i < numColumns(); i++)
+            atom_setsym(&args[i], mColumns[i].mName);
+        
+        dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
+    
+        for (long i = 0; i < numColumns(); i++)
+            atom_setlong(&args[i], mColumns[i].mLabel);
+    
+        dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
+    
+        for (long i = 0; i < numItems(); i++)
+        {
+            std::string str("entry_" + std::to_string(i + 1));
+            
+            getIdentifier(&args[0], i);
+            
+            for (long j = 0; j < numColumns(); j++)
+                getDataAtom(&args[j + 1], i, j);
+            
+            dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
+        }
+        
+        dictionary_write(dict, filename, path);
+        object_free(dict);
+    }
 }
 
 void EntryDatabase::load(t_object *x)
