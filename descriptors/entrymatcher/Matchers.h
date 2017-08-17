@@ -55,7 +55,7 @@ public:
     
     Matchers() : mNumMatches(0) {}
     
-    long match(const EntryDatabase *database) const;
+    long match(const EntryDatabase::ReadPointer database) const;
     
     size_t size() { return mMatchers.size(); }
     
@@ -78,7 +78,7 @@ public:
     void addTarget(t_symbol *value);
     void addMatcher(TestType type, long column, double scale = 1.0);
     
-    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase *database);
+    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database);
     
 private:
     

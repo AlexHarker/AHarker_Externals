@@ -60,7 +60,7 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
     }
 }
 
-long Matchers::match(const EntryDatabase *database) const
+long Matchers::match(const EntryDatabase::ReadPointer database) const
 {
     long numItems = database->numItems();
     mNumMatches = 0;
@@ -93,7 +93,7 @@ long Matchers::match(const EntryDatabase *database) const
     return mNumMatches;
 }
 
-void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase *database)
+void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)
 {
     // Empty the matchers
     

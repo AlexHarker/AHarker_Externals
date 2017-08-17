@@ -243,7 +243,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 {
     long max_matchers = x->max_matchers;
     
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     
     x->matchers->clear();
     
@@ -337,7 +337,7 @@ t_int *entrymatcher_perform(t_int *w)
     
     t_rand_gen *gen = &x->gen;
     
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     long n_limit = x->n_limit;
@@ -356,7 +356,7 @@ t_int *entrymatcher_perform(t_int *w)
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = matchers->match(database.get());
+            num_matched_indices = matchers->match(database);
             
             // N.B. If there are no matchers ALWAYS match everything...
             // Else pick the top n matches when there are more than n matches
@@ -402,7 +402,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     
     t_rand_gen *gen = &x->gen;
     
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     long n_limit = x->n_limit;
@@ -421,7 +421,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = matchers->match(database.get());
+            num_matched_indices = matchers->match(database);
             
             // N.B. If there are no matchers ALWAYS match everything...
             // Else pick the top n matches when there are more than n matches

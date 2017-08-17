@@ -133,16 +133,16 @@ t_object *database_change(t_symbol *name, t_object *old_object)
     return (t_object *) entry_database_get_database_object(name, (t_entry_database *) old_object);
 }
 
-ReadableDatabasePtr database_getptr_read(t_object *x)
+EntryDatabase::ReadPointer database_getptr_read(t_object *x)
 {
     t_entry_database *obj = (t_entry_database *) x;
-    return ReadableDatabasePtr(obj->database);
+    return EntryDatabase::ReadPointer(obj->database);
 }
 
-WritableDatabasePtr database_getptr_write(t_object *x)
+EntryDatabase *database_getptr_write(t_object *x)
 {
     t_entry_database *obj = (t_entry_database *) x;
-    return WritableDatabasePtr(obj->database);
+    return obj->database;
 }
 
     

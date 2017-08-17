@@ -36,6 +36,18 @@ public:
         const std::vector<const CustomAtom>::iterator mIterator;
     };
     
+    struct ReadPointer
+    {
+        
+        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr) {}
+        
+        const EntryDatabase *operator->() const { return mPtr; }
+        
+    private:
+        
+        const EntryDatabase *mPtr;
+    };
+    
     EntryDatabase(long numCols)     { mColumns.resize(numCols); }
     Accessor accessor() const       { return Accessor(*this); }
 

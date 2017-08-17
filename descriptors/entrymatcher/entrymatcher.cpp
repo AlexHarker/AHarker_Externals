@@ -65,7 +65,7 @@ void entrymatcher_load(t_entrymatcher *x, t_symbol *file);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv);
+void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, long idx, long argc, t_atom *argv);
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_match_all(t_entrymatcher *x);
@@ -225,10 +225,10 @@ void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
 void entrymatcher_dump(t_entrymatcher *x)
 {
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
 
 	for (long i = 0; i < database->numItems(); i++)
-        entrymatcher_lookup_output(x, i, 0, NULL);
+        entrymatcher_lookup_output(x, database, i, 0, NULL);
 }
 
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -236,18 +236,17 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 	if (!argc)
 		return;
 
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
 
 	// Use identifier or index depending on the message received
 	
     long idx = (msg == ps_lookup) ? database->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
 	
-    entrymatcher_lookup_output(x, idx, --argc, ++argv);
+    entrymatcher_lookup_output(x, database, idx, --argc, ++argv);
 }
 
-void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv)
+void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, long idx, long argc, t_atom *argv)
 {
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
     std::vector<t_atom> output;
     
     long numItems = database->numItems();
@@ -300,7 +299,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->matchers->setMatchers(x, argc, argv, database_getptr_read(x->database_object).get());
+    x->matchers->setMatchers(x, argc, argv, database_getptr_read(x->database_object));
 }
 
 void entrymatcher_match_all(t_entrymatcher *x)
@@ -347,7 +346,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-    ReadableDatabasePtr database = database_getptr_read(x->database_object);
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     t_atom output_identifiers[1024];
@@ -356,7 +355,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Calculate potential matches and sort if there are matches
 	
-    long num_matches = matchers->match(database.get());
+    long num_matches = matchers->match(database);
 	
 	if (!num_matches)
 		return;
