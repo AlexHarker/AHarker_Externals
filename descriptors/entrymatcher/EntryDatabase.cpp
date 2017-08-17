@@ -262,9 +262,12 @@ void EntryDatabase::save() const
     char filename[MAX_FILENAME_CHARS];
     short path;
     
-    strcpy(filename, "database");
+    t_fourcc type;
+    t_fourcc types = 'JSON';
     
-    if (!saveas_dialog(filename, &path, NULL))
+    strcpy(filename, "database");
+
+    if (!saveasdialog_extended(filename, &path, &type, &types, 1))
     {
         std::vector<t_atom> args(numColumns() + 1);
         t_dictionary *dict = dictionary_new();
@@ -304,9 +307,10 @@ void EntryDatabase::load(t_object *x)
     short path;
     t_max_err err = MAX_ERR_NONE;
 
-    t_fourcc type = 'JSON';
+    t_fourcc type;
+    t_fourcc types = 'JSON';
     
-    open_dialog(filename, &path, &type, NULL, 0);
+    open_dialog(filename, &path, &type, &types, 1);
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
     
