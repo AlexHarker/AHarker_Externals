@@ -17,6 +17,17 @@ class EntryDatabase
         bool mLabel;
     };
     
+    struct Lock
+    {
+        Lock() : mAtomicLock(NULL) {}
+        Lock(t_int32_atomic *lock) : mAtomicLock(lock)      { while(!ATOMIC_COMPARE_SWAP32(0, 1, mAtomicLock)); }
+        ~Lock()                                             { if (mAtomicLock) ATOMIC_COMPARE_SWAP32(1, 0, mAtomicLock); }
+                
+    private:
+        
+        t_int32_atomic *mAtomicLock;
+    };
+
 public:
     
     class Accessor
@@ -38,18 +49,23 @@ public:
     
     struct ReadPointer
     {
-        
-        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr) {}
+        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)
+        {
+            Lock lock(&mPtr->mReadLock);
+            mLock = (mPtr->mReadCount++ == 0) ? Lock(&mPtr->mWriteLock) : Lock();
+        }
         
         const EntryDatabase *operator->() const { return mPtr; }
         
     private:
         
         const EntryDatabase *mPtr;
+        Lock mLock;
     };
     
-    EntryDatabase(long numCols)     { mColumns.resize(numCols); }
-    Accessor accessor() const       { return Accessor(*this); }
+    EntryDatabase(long numCols) : mWriteLock(0), mReadLock(0) { mColumns.resize(numCols); }
+    
+    Accessor accessor() const { return Accessor(*this); }
 
     void reserve(long items);
     void clear();
@@ -90,6 +106,8 @@ public:
 
 private:
 
+    void clear(Lock &lock);
+
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
     {
@@ -122,6 +140,10 @@ private:
     std::vector<CustomAtom> mIdentifiers;
     std::vector<long> mOrder;
     std::vector<CustomAtom> mEntries;
+
+    mutable t_int32_atomic mWriteLock;
+    mutable t_int32_atomic mReadLock;
+    mutable long mReadCount;
 };
 
 

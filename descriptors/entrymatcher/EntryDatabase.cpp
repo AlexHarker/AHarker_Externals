@@ -6,12 +6,20 @@
 
 void EntryDatabase::reserve(long items)
 {
+    Lock lock(&mWriteLock);
+    
     mIdentifiers.reserve(items);
     mOrder.reserve(items);
     mEntries.reserve(items * numColumns());
 }
 
 void EntryDatabase::clear()
+{
+    Lock lock(&mWriteLock);
+    clear(lock);
+}
+
+void EntryDatabase::clear(Lock &lock)
 {
     mEntries.clear();
     mIdentifiers.clear();
@@ -20,12 +28,14 @@ void EntryDatabase::clear()
 
 void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 {
+    Lock lock(&mWriteLock);
+
     if (argc > numColumns())
         object_error((t_object *) x, "more label modes than columns");
     
     argc = (argc > numColumns()) ? numColumns() : argc;
     
-    clear();
+    clear(lock);
     
     for (long i = 0; i < argc; i++)
         mColumns[i].mLabel = atom_getlong(argv++) ? true : false;
@@ -33,6 +43,8 @@ void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 {
+    Lock lock(&mWriteLock);
+
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
     
@@ -44,6 +56,8 @@ void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
+    Lock lock(&mWriteLock);
+
     long order;
     
     if (!argc--)
@@ -87,6 +101,8 @@ void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 {
+    Lock lock(&mWriteLock);
+
     long order;
     long idx = searchIdentifiers(identifier, order);
     
@@ -279,6 +295,8 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 
 void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
+    Lock lock(&mWriteLock);
+
     char filename[MAX_PATH_CHARS];
     short path;
     t_max_err err = MAX_ERR_NONE;
