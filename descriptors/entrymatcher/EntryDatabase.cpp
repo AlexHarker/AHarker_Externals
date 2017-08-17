@@ -268,8 +268,8 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     
     if (fileSpecifier && fileSpecifier != gensym(""))
     {
-        strcpy(filepath, fileSpecifier->s_name);
-        if (path_frompathname(filepath, &path, filename))
+        strncpy_zero(filepath, fileSpecifier->s_name, MAX_PATH_CHARS);
+        if (path_frompotentialpathname(filepath, &path, filename))
             return;
     }
     else
@@ -312,7 +312,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 
 void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
-    char filename[MAX_FILENAME_CHARS];
+    char filename[MAX_PATH_CHARS];
     short path;
     t_max_err err = MAX_ERR_NONE;
 
@@ -321,7 +321,7 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     
     if (fileSpecifier && fileSpecifier != gensym(""))
     {
-        strcpy(filename, fileSpecifier->s_name);
+        strncpy_zero(filename, fileSpecifier->s_name, MAX_PATH_CHARS);
         if (locatefile_extended(filename, &path, &type, &types, 1))
             return;
     }
