@@ -2,6 +2,7 @@
 #include "EntryDatabase.h"
 #include "Sort.h"
 #include <algorithm>
+#include <functional>
 
 void EntryDatabase::reserve(long items)
 {
@@ -150,63 +151,29 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
 
 double EntryDatabase::columnMin(const t_atom *specifier) const
 {
-    double minVal = HUGE_VAL;
-    long column = columnFromSpecifier(specifier);
-    
-    if (column >= 0 && !mColumns[column].mLabel)
-    {
-        for (long i = 0; i < numItems(); i++)
-            minVal = std::min(minVal, getData(i, column).mValue);
-    }
-    
-    return minVal;
+    return columnCalculate(specifier, HUGE_VAL, BinaryFunctor<std::min<double> >()) / numItems();
 }
 
 double EntryDatabase::columnMax(const t_atom *specifier) const
 {
-    double maxVal = -HUGE_VAL;
-    long column = columnFromSpecifier(specifier);
-    
-    if (column >= 0 && !mColumns[column].mLabel)
-    {
-        for (long i = 0; i < numItems(); i++)
-            maxVal = std::max(maxVal, getData(i, column).mValue);
-    }
-    
-    return maxVal;
+    return columnCalculate(specifier, -HUGE_VAL, BinaryFunctor<std::max<double> >()) / numItems();
 }
 
 double EntryDatabase::columnMean(const t_atom *specifier) const
 {
-    double meanVal = 0.0;
-    long column = columnFromSpecifier(specifier);
-    
-    if (column >= 0 && !mColumns[column].mLabel)
-    {
-        for (long i = 0; i < numItems(); i++)
-            meanVal += getData(i, column).mValue;
-    }
-    
-    return meanVal / numItems();
+    return columnCalculate(specifier, 0.0, std::plus<double>()) / numItems();
 }
 
 double EntryDatabase::columnStandardDeviation(const t_atom *specifier) const
 {
-    double sum = 0.0;
-    
-    double mean = columnMean(specifier);
-    long column = columnFromSpecifier(specifier);
-    
-    if (column >= 0 && !mColumns[column].mLabel)
+    struct Variance
     {
-        for (long i = 0; i < numItems(); i++)
-        {
-            double delta = getData(i, column).mValue - mean;
-            sum += delta * delta;
-        }
-    }
-    
-    return sqrt(sum / numItems());
+        Variance(double mean) : mMean(mean) {}
+        double operator()(double sum, double data) { return sum + ((data - mMean) * (data - mMean)); }
+        double mMean;
+    };
+
+    return sqrt(columnCalculate(specifier, 0.0, Variance(columnMean(specifier))) / numItems());
 }
 
 double EntryDatabase::columnPercentile(const t_atom *specifier, double percentile) const

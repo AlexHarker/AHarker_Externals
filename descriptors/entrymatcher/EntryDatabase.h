@@ -78,6 +78,26 @@ public:
 
 private:
 
+    template <const double& func(const double&, const double&)>
+    struct BinaryFunctor
+    {
+        const double operator()(const double a, const double b) { return func(a, b); }
+    };
+    
+    template <class Op> double columnCalculate(const t_atom *specifier, const double startValue, Op op) const
+    {
+        double value = startValue;
+        long column = columnFromSpecifier(specifier);
+    
+        if (column >= 0 && !mColumns[column].mLabel)
+        {
+            for (long i = 0; i < numItems(); i++)
+                op(value, getData(i, column).mValue);
+        }
+        
+        return value;
+    }
+
     long searchIdentifiers(const CustomAtom& identifier, long& idx) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
