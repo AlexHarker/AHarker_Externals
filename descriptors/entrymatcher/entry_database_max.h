@@ -7,39 +7,28 @@
 
 #include "EntryDatabase.h"
 
-template <class T> class DatabasePtr
+template <class T> class ManagedPtr
 {
 public:
     
-    DatabasePtr(T *database) : mDatabase(database) {}
+    ManagedPtr(T *ptr) : mPtr(ptr) {}
     
-    T *operator->() { return mDatabase; }
-    T *operator*()  { return mDatabase; }
+    T *operator->() { return mPtr; }
+    T *get()  { return mPtr; }
     
 private:
     
-    T *mDatabase;
+    T *mPtr;
 };
 
-typedef DatabasePtr<EntryDatabase> WritableDatabase;
-typedef DatabasePtr<const EntryDatabase> ReadableDatabase;
+typedef ManagedPtr<EntryDatabase> WritableDatabasePtr;
+typedef ManagedPtr<const EntryDatabase> ReadableDatabasePtr;
 
+t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
+t_object *database_change(t_symbol *name, t_object *old_object);
+void database_release(t_object *x);
 
-typedef struct entry_database{
-    
-    t_object a_obj;
-    
-    EntryDatabase *database;
-    
-    long count;
-    
-} t_entry_database;
-
-t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
-t_entry_database *entry_database_get_database_object(t_entry_database *old_object, t_symbol *name);
-void entry_database_release(t_entry_database *x);
-
-ReadableDatabase entry_database_get_database_read(t_entry_database *x);
-WritableDatabase entry_database_get_database_write(t_entry_database *x);
+ReadableDatabasePtr database_getptr_read(t_object *x);
+WritableDatabasePtr database_getptr_write(t_object *x);
 
 #endif

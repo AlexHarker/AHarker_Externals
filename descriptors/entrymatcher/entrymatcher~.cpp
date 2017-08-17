@@ -36,7 +36,7 @@ typedef struct entrymatcher {
     
     t_pxobject x_obj;
     
-    t_entry_database *database_object;
+    t_object *database_object;
     Matchers *matchers;
     
     long max_matchers;
@@ -128,7 +128,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     dsp_setup((t_pxobject *)x, 2 + max_matchers);
     outlet_new((t_object *)x, "signal");
     
-    x->database_object = entry_database_get_database_object(name, num_reserved_entries, num_columns);
+    x->database_object = database_create(name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));;
@@ -143,7 +143,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 void entrymatcher_free(t_entrymatcher *x)
 {
     dsp_free(&x->x_obj);
-    entry_database_release(x->database_object);
+    database_release(x->database_object);
     delete x->matchers;
 }
 
@@ -188,27 +188,27 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 
 void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
 {
-    x->database_object = entry_database_get_database_object(x->database_object, name);
+    x->database_object = database_change(name, x->database_object);
 }
 
 void entrymatcher_clear(t_entrymatcher *x)
 {
-    entry_database_get_database_write(x->database_object)->clear();
+    database_getptr_write(x->database_object)->clear();
 }
 
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    entry_database_get_database_write(x->database_object)->setLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object)->setLabelModes(x, argc, argv);
 }
 
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    entry_database_get_database_write(x->database_object)->setNames(x, argc, argv);
+    database_getptr_write(x->database_object)->setNames(x, argc, argv);
 }
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    entry_database_get_database_write(x->database_object)->addEntry(x, argc, argv);
+    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
 }
 
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -218,7 +218,7 @@ void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
     else
     {
         while(argc--)
-            entry_database_get_database_write(x->database_object)->removeEntry(x, argv++);
+            database_getptr_write(x->database_object)->removeEntry(x, argv++);
     }
 }
 
@@ -243,7 +243,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 {
     long max_matchers = x->max_matchers;
     
-    ReadableDatabase database = entry_database_get_database_read(x->database_object);
+    ReadableDatabasePtr database = database_getptr_read(x->database_object);
     
     x->matchers->clear();
     
@@ -337,7 +337,7 @@ t_int *entrymatcher_perform(t_int *w)
     
     t_rand_gen *gen = &x->gen;
     
-    ReadableDatabase database = entry_database_get_database_read(x->database_object);
+    ReadableDatabasePtr database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     long n_limit = x->n_limit;
@@ -356,7 +356,7 @@ t_int *entrymatcher_perform(t_int *w)
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = matchers->match(*database);
+            num_matched_indices = matchers->match(database.get());
             
             // N.B. If there are no matchers ALWAYS match everything...
             // Else pick the top n matches when there are more than n matches
@@ -402,7 +402,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     
     t_rand_gen *gen = &x->gen;
     
-    ReadableDatabase database = entry_database_get_database_read(x->database_object);
+    ReadableDatabasePtr database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     long n_limit = x->n_limit;
@@ -421,7 +421,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            num_matched_indices = matchers->match(*database);
+            num_matched_indices = matchers->match(database.get());
             
             // N.B. If there are no matchers ALWAYS match everything...
             // Else pick the top n matches when there are more than n matches

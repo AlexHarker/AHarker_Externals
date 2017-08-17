@@ -2,6 +2,16 @@
 #include "entry_database_max.h"
 #include <algorithm>
 
+typedef struct entry_database{
+    
+    t_object a_obj;
+    
+    EntryDatabase *database;
+    
+    long count;
+    
+} t_entry_database;
+
 t_class *database_class;
 const char database_class_name[] = "__entry_database";
 t_symbol *name_space_name = gensym("__entry_database_private");
@@ -10,7 +20,10 @@ int entry_database_init();
 void *entry_database_new(t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
 
+void entry_database_release(t_entry_database *x);
 t_entry_database *entry_database_get_database_object(t_symbol *name);
+t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
+t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_database *old_object);
 
 int entry_database_init()
 {
@@ -86,7 +99,7 @@ t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long
     return x;
 }
 
-t_entry_database *entry_database_get_database_object(t_entry_database *old_object, t_symbol *name)
+t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_database *old_object)
 {
     // See if an object is registered with this name
     
@@ -105,14 +118,31 @@ t_entry_database *entry_database_get_database_object(t_entry_database *old_objec
     return x;
 }
 
-ReadableDatabase entry_database_get_database_read(t_entry_database *x)
+void database_release(t_object *x)
 {
-    return ReadableDatabase(x->database);
+    entry_database_release((t_entry_database *) x);
 }
 
-WritableDatabase entry_database_get_database_write(t_entry_database *x)
+t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return WritableDatabase(x->database);
+    return (t_object *) entry_database_get_database_object(name, num_reserved_entries, num_columns);
+}
+
+t_object *database_change(t_symbol *name, t_object *old_object)
+{
+    return (t_object *) entry_database_get_database_object(name, (t_entry_database *) old_object);
+}
+
+ReadableDatabasePtr database_getptr_read(t_object *x)
+{
+    t_entry_database *obj = (t_entry_database *) x;
+    return ReadableDatabasePtr(obj->database);
+}
+
+WritableDatabasePtr database_getptr_write(t_object *x)
+{
+    t_entry_database *obj = (t_entry_database *) x;
+    return WritableDatabasePtr(obj->database);
 }
 
     
