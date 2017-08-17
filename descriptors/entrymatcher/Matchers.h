@@ -78,7 +78,7 @@ public:
     void addTarget(t_symbol *value);
     void addMatcher(TestType type, long column, double scale = 1.0);
     
-    void setMatchers(void *x, long argc, t_atom *argv, EntryDatabase *database);
+    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase *database);
     
 private:
     

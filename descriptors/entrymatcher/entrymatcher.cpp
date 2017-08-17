@@ -35,7 +35,6 @@ typedef struct entrymatcher{
     t_object a_obj;
     
     t_entry_database *database_object;
-    EntryDatabase *database;
     Matchers *matchers;
     
     // Outlets
@@ -144,7 +143,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 	x->the_identifiers_outlet = outlet_new(x, 0);
     x->the_indices_outlet = listout(x);
 	
-    x->database_object = entry_database_get_database_object(&x->database, name, num_reserved_entries, num_columns);
+    x->database_object = entry_database_get_database_object(name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     return (x);
@@ -186,27 +185,27 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 
 void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
 {
-    x->database_object = entry_database_get_database_object(x->database_object, &x->database, name);
+    x->database_object = entry_database_get_database_object(x->database_object, name);
 }
 
 void entrymatcher_clear(t_entrymatcher *x)
 {
-    x->database->clear();
+    entry_database_get_database_write(x->database_object)->clear();
 }
 
 void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->database->setLabelModes(x, argc, argv);
+    entry_database_get_database_write(x->database_object)->setLabelModes(x, argc, argv);
 }
 
 void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->database->setNames(x, argc, argv);
+    entry_database_get_database_write(x->database_object)->setNames(x, argc, argv);
 }
 
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {	
-    x->database->addEntry(x, argc, argv);
+    entry_database_get_database_write(x->database_object)->addEntry(x, argc, argv);
 }
 
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -216,7 +215,7 @@ void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
     else
     {
         while(argc--)
-            x->database->removeEntry(x, argv++);
+            entry_database_get_database_write(x->database_object)->removeEntry(x, argv++);
     }
 }
 
@@ -226,7 +225,9 @@ void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
 void entrymatcher_dump(t_entrymatcher *x)
 {
-	for (long i = 0; i < x->database->numItems(); i++)
+    ReadableDatabase database = entry_database_get_database_read(x->database_object);
+
+	for (long i = 0; i < database->numItems(); i++)
         entrymatcher_lookup_output(x, i, 0, NULL);
 }
 
@@ -234,17 +235,19 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 {
 	if (!argc)
 		return;
-	
+
+    ReadableDatabase database = entry_database_get_database_read(x->database_object);
+
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? x->database->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
+    long idx = (msg == ps_lookup) ? database->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
 	
     entrymatcher_lookup_output(x, idx, --argc, ++argv);
 }
 
 void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *argv)
 {
-    EntryDatabase *database = x->database;
+    ReadableDatabase database = entry_database_get_database_read(x->database_object);
     std::vector<t_atom> output;
     
     long numItems = database->numItems();
@@ -297,7 +300,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, long idx, long argc, t_atom *
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->matchers->setMatchers(x, argc, argv, x->database);
+    x->matchers->setMatchers(x, argc, argv, *entry_database_get_database_read(x->database_object));
 }
 
 void entrymatcher_match_all(t_entrymatcher *x)
@@ -344,6 +347,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
+    ReadableDatabase database = entry_database_get_database_read(x->database_object);
     Matchers *matchers = x->matchers;
     
     t_atom output_identifiers[1024];
@@ -352,7 +356,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 	
 	// Calculate potential matches and sort if there are matches
 	
-    long num_matches = matchers->match(x->database);
+    long num_matches = matchers->match(*database);
 	
 	if (!num_matches)
 		return;
@@ -385,7 +389,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         }
 		
 		atom_setfloat(output_distances + i, distance);
-		x->database->getIdentifier(output_identifiers + i, index);
+		database->getIdentifier(output_identifiers + i, index);
 		atom_setlong(output_indices + i, index + 1);
 	}
     
@@ -416,15 +420,15 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 
 void entrymatcher_view(t_entrymatcher *x)
 {
-    x->database->view();
+    entry_database_get_database_read(x->database_object)->view();
 }
 
 void entrymatcher_save(t_entrymatcher *x, t_symbol *file)
 {
-    x->database->save((t_object *)x, file);
+    entry_database_get_database_read(x->database_object)->save((t_object *)x, file);
 }
 
 void entrymatcher_load(t_entrymatcher *x, t_symbol *file)
 {
-    x->database->load((t_object *)x, file);
+    entry_database_get_database_write(x->database_object)->load((t_object *)x, file);
 }

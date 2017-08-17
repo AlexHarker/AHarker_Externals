@@ -68,7 +68,7 @@ t_entry_database *entry_database_get_database_object(t_symbol *name)
     return (t_entry_database *) object_findregistered(name_space_name, name);
 }
 
-t_entry_database *entry_database_get_database_object(EntryDatabase **database_ptr, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_atom argv[2];
     atom_setlong(argv + 0, num_reserved_entries);
@@ -82,12 +82,11 @@ t_entry_database *entry_database_get_database_object(EntryDatabase **database_pt
         x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 2, argv));
     
     x->count++;
-    *database_ptr = x->database;
     
     return x;
 }
 
-t_entry_database *entry_database_get_database_object(t_entry_database *old_object, EntryDatabase **database_ptr, t_symbol *name)
+t_entry_database *entry_database_get_database_object(t_entry_database *old_object, t_symbol *name)
 {
     // See if an object is registered with this name
     
@@ -99,11 +98,21 @@ t_entry_database *entry_database_get_database_object(t_entry_database *old_objec
     {
         entry_database_release(old_object);
         x->count++;
-        *database_ptr = x->database;
     }
     else
         x = old_object;
     
     return x;
 }
+
+ReadableDatabase entry_database_get_database_read(t_entry_database *x)
+{
+    return ReadableDatabase(x->database);
+}
+
+WritableDatabase entry_database_get_database_write(t_entry_database *x)
+{
+    return WritableDatabase(x->database);
+}
+
     
