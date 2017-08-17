@@ -61,8 +61,8 @@ void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_view(t_entrymatcher *x);
-void entrymatcher_save(t_entrymatcher *x);
-void entrymatcher_load(t_entrymatcher *x);
+void entrymatcher_save(t_entrymatcher *x, t_symbol *file);
+void entrymatcher_load(t_entrymatcher *x, t_symbol *file);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
@@ -107,8 +107,8 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
     
     class_addmethod(this_class, (method)entrymatcher_view, "view", 0);
-    class_addmethod(this_class, (method)entrymatcher_save, "write", 0);
-    class_addmethod(this_class, (method)entrymatcher_load, "read", 0);
+    class_addmethod(this_class, (method)entrymatcher_save, "write", A_DEFSYM, 0);
+    class_addmethod(this_class, (method)entrymatcher_load, "read", A_DEFSYM, 0);
 	
 	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
 	
@@ -419,12 +419,12 @@ void entrymatcher_view(t_entrymatcher *x)
     x->database->view();
 }
 
-void entrymatcher_save(t_entrymatcher *x)
+void entrymatcher_save(t_entrymatcher *x, t_symbol *file)
 {
-    x->database->save();
+    x->database->save((t_object *)x, file);
 }
 
-void entrymatcher_load(t_entrymatcher *x)
+void entrymatcher_load(t_entrymatcher *x, t_symbol *file)
 {
-    x->database->load((t_object *)x);
+    x->database->load((t_object *)x, file);
 }

@@ -67,8 +67,8 @@ public:
     double columnMedian(const t_atom *specifier) const;
     
     void view() const;
-    void save() const;
-    void load(t_object *x);
+    void save(t_object *x, t_symbol *fileSpecifier) const;
+    void load(t_object *x, t_symbol *fileSpecifier);
 
     long itemFromIdentifier(const t_atom *identifier) const
     {

@@ -257,51 +257,60 @@ void EntryDatabase::view() const
     object_attr_setsym(editor, gensym("title"), gensym("cool"));
 }
 
-void EntryDatabase::save() const
+void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 {
+    char filepath[MAX_PATH_CHARS];
     char filename[MAX_FILENAME_CHARS];
     short path;
     
     t_fourcc type;
     t_fourcc types = 'JSON';
     
-    strcpy(filename, "database");
-
-    if (!saveasdialog_extended(filename, &path, &type, &types, 1))
+    if (fileSpecifier && fileSpecifier != gensym(""))
     {
-        std::vector<t_atom> args(numColumns() + 1);
-        t_dictionary *dict = dictionary_new();
-    
-        dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
-
-        for (long i = 0; i < numColumns(); i++)
-            atom_setsym(&args[i], mColumns[i].mName);
-        
-        dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
-    
-        for (long i = 0; i < numColumns(); i++)
-            atom_setlong(&args[i], mColumns[i].mLabel);
-    
-        dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
-    
-        for (long i = 0; i < numItems(); i++)
-        {
-            std::string str("entry_" + std::to_string(i + 1));
-            
-            getIdentifier(&args[0], i);
-            
-            for (long j = 0; j < numColumns(); j++)
-                getDataAtom(&args[j + 1], i, j);
-            
-            dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
-        }
-        
-        dictionary_write(dict, filename, path);
-        object_free(dict);
+        strcpy(filepath, fileSpecifier->s_name);
+        if (path_frompathname(filepath, &path, filename))
+            return;
     }
+    else
+    {
+        strcpy(filename, "");
+        if (saveasdialog_extended(filename, &path, &type, &types, 1))
+            return;
+    }
+    
+    std::vector<t_atom> args(numColumns() + 1);
+    t_dictionary *dict = dictionary_new();
+
+    dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
+
+    for (long i = 0; i < numColumns(); i++)
+        atom_setsym(&args[i], mColumns[i].mName);
+    
+    dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
+
+    for (long i = 0; i < numColumns(); i++)
+        atom_setlong(&args[i], mColumns[i].mLabel);
+
+    dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
+
+    for (long i = 0; i < numItems(); i++)
+    {
+        std::string str("entry_" + std::to_string(i + 1));
+        
+        getIdentifier(&args[0], i);
+        
+        for (long j = 0; j < numColumns(); j++)
+            getDataAtom(&args[j + 1], i, j);
+        
+        dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
+    }
+    
+    dictionary_write(dict, filename, path);
+    object_free(dict);
 }
 
-void EntryDatabase::load(t_object *x)
+void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
     char filename[MAX_FILENAME_CHARS];
     short path;
@@ -310,7 +319,19 @@ void EntryDatabase::load(t_object *x)
     t_fourcc type;
     t_fourcc types = 'JSON';
     
-    open_dialog(filename, &path, &type, &types, 1);
+    if (fileSpecifier && fileSpecifier != gensym(""))
+    {
+        strcpy(filename, fileSpecifier->s_name);
+        if (locatefile_extended(filename, &path, &type, &types, 1))
+            return;
+    }
+    else
+    {
+        strcpy(filename, "");
+        if (open_dialog(filename, &path, &type, &types, 1))
+            return;
+    }
+    
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
     
