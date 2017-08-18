@@ -30,6 +30,8 @@
 #include "entrymatcher_common.h"
 
 t_class *this_class;
+t_symbol *ps_list;
+t_symbol *ps_lookup;
 
 typedef struct entrymatcher{
 
@@ -47,36 +49,20 @@ typedef struct entrymatcher{
     
 } t_entrymatcher;
 
-
-t_symbol *ps_list;
-t_symbol *ps_lookup;
-
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
-
-void entrymatcher_refer(t_entrymatcher *x, t_symbol *name);
-void entrymatcher_clear(t_entrymatcher *x);
-void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_view(t_entrymatcher *x);
-void entrymatcher_save(t_entrymatcher *x, t_symbol *file);
-void entrymatcher_load(t_entrymatcher *x, t_symbol *file);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, long idx, long argc, t_atom *argv);
 
+void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
+
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_match_all(t_entrymatcher *x);
 void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
-
-void entrymatcher_combsort(std::vector<long> *indices, std::vector<double> *distances, long num_points);
-
-TestType entrymatcher_test_types(t_atom *argv);
 
 // ========================================================================================================================================== //
 // Basic object routines: main, new, free and assist
@@ -99,7 +85,9 @@ int C74_EXPORT main(void)
 	class_addmethod(this_class, (method)entrymatcher_lookup, "lookup", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_lookup, "index", A_GIMME, 0);
 	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
-    
+
+    class_addmethod(this_class, (method)entrymatcher_stats, "stats", A_GIMME, 0);
+
 	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
 	
     entrymatcher_add_common<t_entrymatcher>(this_class);
@@ -241,6 +229,39 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
     }
     
     outlet_list(x->the_data_outlet, 0L, output.size(), &output[0]);
+}
+
+// ========================================================================================================================================== //
+// Stats Routines
+// ========================================================================================================================================== //
+
+void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    if (argc < 2)
+        return;
+    
+    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+
+    t_atom *column = argv++;
+    argc--;
+
+    // FIX - make this some kind of loop
+    
+    t_symbol *test = atom_getsym(argv++);
+    argc--;
+
+    if (test == gensym("mean"))
+        outlet_float(x->the_data_outlet, database->columnMean(column));
+    else if (test == gensym("min"))
+        outlet_float(x->the_data_outlet, database->columnMin(column));
+    else if (test == gensym("max"))
+        outlet_float(x->the_data_outlet, database->columnMax(column));
+    else if (test == gensym("median"))
+        outlet_float(x->the_data_outlet, database->columnMedian(column));
+    else if (test == gensym("stddev"))
+        outlet_float(x->the_data_outlet, database->columnStandardDeviation(column));
+    else
+        object_error((t_object *) x, "unknown stat type");
 }
 
 // ========================================================================================================================================== //
