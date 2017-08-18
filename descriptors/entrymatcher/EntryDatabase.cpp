@@ -197,12 +197,12 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
 
 double EntryDatabase::columnMin(const t_atom *specifier) const
 {
-    return columnCalculate(specifier, HUGE_VAL, BinaryFunctor<std::min<double> >()) / numItems();
+    return columnCalculate(specifier, HUGE_VAL, BinaryFunctor<std::min<double> >());
 }
 
 double EntryDatabase::columnMax(const t_atom *specifier) const
 {
-    return columnCalculate(specifier, -HUGE_VAL, BinaryFunctor<std::max<double> >()) / numItems();
+    return columnCalculate(specifier, -HUGE_VAL, BinaryFunctor<std::max<double> >());
 }
 
 double EntryDatabase::columnMean(const t_atom *specifier) const

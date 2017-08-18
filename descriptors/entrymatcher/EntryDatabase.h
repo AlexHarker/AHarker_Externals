@@ -146,7 +146,7 @@ private:
         if (column >= 0 && !mColumns[column].mLabel)
         {
             for (long i = 0; i < numItems(); i++)
-                op(value, getData(i, column).mValue);
+                value = op(value, getData(i, column).mValue);
         }
         
         return value;

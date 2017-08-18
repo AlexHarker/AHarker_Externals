@@ -30,8 +30,21 @@
 #include "entrymatcher_common.h"
 
 t_class *this_class;
+
 t_symbol *ps_list;
 t_symbol *ps_lookup;
+t_symbol *ps_mean;
+t_symbol *ps_min;
+t_symbol *ps_minimum;
+t_symbol *ps_max;
+t_symbol *ps_maximum;
+t_symbol *ps_median;
+t_symbol *ps_stddev;
+t_symbol *ps_deviation;
+t_symbol *ps_standard_dev;
+t_symbol *ps_standard_deviation;
+t_symbol *ps_centile;
+t_symbol *ps_percentile;
 
 typedef struct entrymatcher{
 
@@ -96,7 +109,19 @@ int C74_EXPORT main(void)
 	
 	ps_list = gensym("list");
 	ps_lookup = gensym("lookup");
-	
+    ps_mean = gensym("mean");
+    ps_min = gensym("min");
+    ps_minimum = gensym("minimum");
+    ps_max = gensym("max");
+    ps_maximum = gensym("maximum");
+    ps_median = gensym("median");
+    ps_stddev = gensym("stddev");
+    ps_deviation = gensym("deviation");
+    ps_standard_dev = gensym("standard_dev");
+    ps_standard_deviation= gensym("standard_deviation");
+    ps_centile = gensym("centile");
+    ps_percentile = gensym("percentile");
+    
     init_test_symbols();
 	
 	return 0;
@@ -232,7 +257,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
 }
 
 // ========================================================================================================================================== //
-// Stats Routines
+// Stats Routine
 // ========================================================================================================================================== //
 
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -242,26 +267,42 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
     
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
 
+    std::vector<t_atom> output(argc);
     t_atom *column = argv++;
     argc--;
 
-    // FIX - make this some kind of loop
+    long i;
     
-    t_symbol *test = atom_getsym(argv++);
-    argc--;
+    for (i = 0; argc; i++)
+    {
+        t_symbol *test = atom_getsym(argv++);
+        argc--;
 
-    if (test == gensym("mean"))
-        outlet_float(x->the_data_outlet, database->columnMean(column));
-    else if (test == gensym("min"))
-        outlet_float(x->the_data_outlet, database->columnMin(column));
-    else if (test == gensym("max"))
-        outlet_float(x->the_data_outlet, database->columnMax(column));
-    else if (test == gensym("median"))
-        outlet_float(x->the_data_outlet, database->columnMedian(column));
-    else if (test == gensym("stddev"))
-        outlet_float(x->the_data_outlet, database->columnStandardDeviation(column));
-    else
-        object_error((t_object *) x, "unknown stat type");
+        if (test == ps_mean)
+            atom_setfloat(&output[i], database->columnMean(column));
+        else if (test == ps_min || test == ps_minimum)
+            atom_setfloat(&output[i], database->columnMin(column));
+        else if (test == ps_max || test == ps_maximum)
+            atom_setfloat(&output[i], database->columnMax(column));
+        else if (test == ps_median)
+            atom_setfloat(&output[i], database->columnMedian(column));
+        else if (test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
+            atom_setfloat(&output[i], database->columnStandardDeviation(column));
+        else if (test == ps_centile || test == ps_percentile)
+        {
+            if (argc)
+            {
+                atom_setfloat(&output[i], database->columnPercentile(column, atom_getfloat(argv)));
+                argc--;
+            }
+            else
+                object_error((t_object *) x, "no percentile given for percentile stat");
+        }
+        else
+            object_error((t_object *) x, "unknown stat type");
+    }
+    
+    outlet_list(x->the_data_outlet, ps_list, i, &output[0]);
 }
 
 // ========================================================================================================================================== //
