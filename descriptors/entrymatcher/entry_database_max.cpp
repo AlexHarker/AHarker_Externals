@@ -46,7 +46,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     x->database = new EntryDatabase(name, num_columns);
     x->database->reserve(num_reserved_entries);
-    x->count = 0;
+    x->count = 1;
     
     return (x);
 }
@@ -65,48 +65,23 @@ void entry_database_release(t_entry_database *x)
     }
 }
 
-t_entry_database *entry_database_get_database_object(t_symbol *name)
+t_entry_database *entry_database_find(t_symbol *name, t_entry_database *old_object)
 {
     // Make sure the max database class exists
     
     if (!class_findbyname(CLASS_NOBOX, gensym(database_class_name)))
         entry_database_init();
     
-    // See if an object is registered
-    
-    return (t_entry_database *) object_findregistered(name_space_name, name);
-}
-
-t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
-{
-    t_atom argv[3];
-    atom_setsym(argv + 0, name);
-    atom_setlong(argv + 1, num_reserved_entries);
-    atom_setlong(argv + 2, num_columns);
-    
-    // See if an object is registered (otherwise make object and register it...)
-    
-    t_entry_database *x = entry_database_get_database_object(name);
-    
-    if (!x)
-        x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 3, argv));
-    
-    x->count++;
-    
-    return x;
-}
-
-t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_database *old_object)
-{
     // See if an object is registered with this name
     
-    t_entry_database *x = entry_database_get_database_object(name);
+    t_entry_database *x = (t_entry_database *) object_findregistered(name_space_name, name);
     
     // If the object registered is different
     
     if (x && x != old_object)
     {
-        entry_database_release(old_object);
+        if (old_object)
+            entry_database_release(old_object);
         x->count++;
     }
     else
@@ -115,14 +90,31 @@ t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_dat
     return x;
 }
 
+t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+{
+    t_atom argv[3];
+    atom_setsym(argv + 0, name);
+    atom_setlong(argv + 1, num_reserved_entries);
+    atom_setlong(argv + 2, num_columns);
+    
+    // See if an object is registered (otherwise make object and register it...)
+    
+    t_entry_database *x = entry_database_find(name, NULL);
+    
+    if (!x)
+        x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 3, argv));
+    
+    return x;
+}
+
 t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return (t_object *) entry_database_get_database_object(name, num_reserved_entries, num_columns);
+    return (t_object *) entry_database_create(name, num_reserved_entries, num_columns);
 }
 
 t_object *database_change(t_symbol *name, t_object *old_object)
 {
-    return (t_object *) entry_database_get_database_object(name, (t_entry_database *) old_object);
+    return (t_object *) entry_database_find(name, (t_entry_database *) old_object);
 }
 
 void database_release(t_object *x)
