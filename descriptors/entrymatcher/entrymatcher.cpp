@@ -210,13 +210,7 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    if (!argc)
-        object_error((t_object *)x, "no identifier given for remove message");
-    else
-    {
-        while(argc--)
-            database_getptr_write(x->database_object)->removeEntry(x, argv++);
-    }
+    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
@@ -346,53 +340,59 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
-    Matchers *matchers = x->matchers;
+    long num_matches;
     
     t_atom output_identifiers[1024];
 	t_atom output_indices[1024];
 	t_atom output_distances[1024];
 	
-	// Calculate potential matches and sort if there are matches
-	
-    long num_matches = matchers->match(database);
-	
-	if (!num_matches)
-		return;
-	
-    matchers->sort();
-		
-	// N.B. If there are no matchers ALWAYS match everything (up to max output size)...
-	
-	if (x->matchers->size())
-	{
-		// If there are matchers, then limit by ratio and maximum number
-		
-		num_matches *= ratio_kept;
-        num_matches = std::min(std::max(num_matches, 1L), n_limit);
-	}
+    // Don't keep the lock when outputing...
     
-    num_matches = std::min(num_matches, 1024L);
-    
-	// Limit matches by maximum distance if specified
-	
-	for (long i = 0; i < num_matches; i++)
-	{
-		long index = matchers->getIndex(i);
-		double distance = matchers->getDistance(index);
-		
-		if (distance > distance_limit)
+    {
+        EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+        Matchers *matchers = x->matchers;
+        
+        // Calculate potential matches and sort if there are matches
+        
+        num_matches = matchers->match(database);
+        
+        if (!num_matches)
+            return;
+        
+        matchers->sort();
+        
+        // N.B. If there are no matchers ALWAYS match everything (up to max output size)...
+        
+        if (x->matchers->size())
         {
-            num_matches = i;
-			break;
+            // If there are matchers, then limit by ratio and maximum number
+            
+            num_matches *= ratio_kept;
+            num_matches = std::min(std::max(num_matches, 1L), n_limit);
         }
-		
-		atom_setfloat(output_distances + i, distance);
-		database->getIdentifier(output_identifiers + i, index);
-		atom_setlong(output_indices + i, index + 1);
-	}
-    
-	// Return if nothing has been matched
+        
+        num_matches = std::min(num_matches, 1024L);
+        
+        // Limit matches by maximum distance if specified
+        
+        for (long i = 0; i < num_matches; i++)
+        {
+            long index = matchers->getIndex(i);
+            double distance = matchers->getDistance(index);
+            
+            if (distance > distance_limit)
+            {
+                num_matches = i;
+                break;
+            }
+            
+            atom_setfloat(output_distances + i, distance);
+            database->getIdentifier(output_identifiers + i, index);
+            atom_setlong(output_indices + i, index + 1);
+        }
+    }
+
+    // Return if nothing has been matched
 	
 	if (!num_matches)
 		return;

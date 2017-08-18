@@ -29,7 +29,11 @@ void EntryDatabase::clear(Lock &lock)
 void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 {
     Lock lock(&mWriteLock);
+    setLabelModes(lock, x, argc, argv);
+}
 
+void EntryDatabase::setLabelModes(Lock &lock, void *x, long argc, t_atom *argv)
+{
     if (argc > numColumns())
         object_error((t_object *) x, "more label modes than columns");
     
@@ -44,7 +48,11 @@ void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 {
     Lock lock(&mWriteLock);
+    setNames(lock, x, argc, argv);
+}
 
+void EntryDatabase::setNames(Lock &lock, void *x, long argc, t_atom *argv)
+{
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
     
@@ -57,7 +65,11 @@ void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
     Lock lock(&mWriteLock);
+    addEntry(lock, x, argc, argv);
+}
 
+void EntryDatabase::addEntry(Lock &lock, void *x, long argc, t_atom *argv)
+{
     long order;
     
     if (!argc--)
@@ -99,10 +111,21 @@ void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
     }
 }
 
-void EntryDatabase::removeEntry(void *x, t_atom *identifier)
+void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 {
-    Lock lock(&mWriteLock);
+    if (!argc)
+        object_error((t_object *)x, "no identifier given for remove message");
+    else
+    {
+        Lock lock(&mWriteLock);
+        
+        while (argc--)
+             removeEntry(lock, x, argv++);
+    }
+}
 
+void EntryDatabase::removeEntry(Lock &lock, void *x, t_atom *identifier)
+{
     long order;
     long idx = searchIdentifiers(identifier, order);
     
@@ -295,8 +318,6 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 
 void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
-    Lock lock(&mWriteLock);
-
     char filename[MAX_PATH_CHARS];
     short path;
     t_max_err err = MAX_ERR_NONE;
@@ -319,11 +340,14 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
-    
-    clear();
+ 
+    Lock lock(&mWriteLock);
+    clear(lock);
     
     t_atom_long newNumColumns;
     dictionary_getlong(dict, gensym("numcolumns"), &newNumColumns);
+    
+    // FIX - lock here!
     
     if (newNumColumns != numColumns())
         *this = EntryDatabase(newNumColumns);
@@ -332,16 +356,16 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     long argc;
     
     dictionary_getatoms(dict, gensym("names"), &argc, &argv);
-    setNames(x, argc, argv);
+    setNames(lock, x, argc, argv);
     
     dictionary_getatoms(dict, gensym("labelmodes"), &argc, &argv);
-    setLabelModes(x, argc, argv);
+    setLabelModes(lock, x, argc, argv);
     
     for (long i = 0; err == MAX_ERR_NONE; i++)
     {
         std::string str("entry_" + std::to_string(i + 1));
         if ((err = dictionary_getatoms(dict, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-            addEntry(x, argc, argv);
+            addEntry(lock, x, argc, argv);
     }
     
     object_free(dict);

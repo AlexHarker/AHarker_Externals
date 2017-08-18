@@ -213,13 +213,7 @@ void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    if (!argc)
-        object_error((t_object *)x, "no identifier given for remove message");
-    else
-    {
-        while(argc--)
-            database_getptr_write(x->database_object)->removeEntry(x, argv++);
-    }
+    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
 }
 
 // ========================================================================================================================================== //

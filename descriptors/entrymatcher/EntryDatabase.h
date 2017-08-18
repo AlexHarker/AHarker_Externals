@@ -76,7 +76,7 @@ public:
     void setLabelModes(void *x, long argc, t_atom *argv);
     void setNames(void *x, long argc, t_atom *argv);
     void addEntry(void *x, long argc, t_atom *argv);
-    void removeEntry(void *x, t_atom *identifier);
+    void removeEntries(void *x, long argc, t_atom *argv);
     
     t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
@@ -107,7 +107,11 @@ public:
 private:
 
     void clear(Lock &lock);
-
+    void setLabelModes(Lock &lock, void *x, long argc, t_atom *argv);
+    void setNames(Lock &lock, void *x, long argc, t_atom *argv);
+    void addEntry(Lock &lock, void *x, long argc, t_atom *argv);
+    void removeEntry(Lock &lock, void *x, t_atom *identifier);
+    
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
     {
