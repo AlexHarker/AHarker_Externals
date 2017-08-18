@@ -19,13 +19,27 @@ class EntryDatabase
     
     struct Lock
     {
-        Lock() : mAtomicLock(NULL) {}
-        Lock(t_int32_atomic *lock) : mAtomicLock(lock)      { while(!ATOMIC_COMPARE_SWAP32(0, 1, mAtomicLock)); }
-        ~Lock()                                             { if (mAtomicLock) ATOMIC_COMPARE_SWAP32(1, 0, mAtomicLock); }
+        Lock() : mAtomicLock(0) {}
+        ~Lock() { acquire(); }
+        
+        void acquire() { while(!attempt()); }
+        bool attempt() { return ATOMIC_COMPARE_SWAP32(0, 1, &mAtomicLock); }
+        void release() { ATOMIC_COMPARE_SWAP32(1, 0, &mAtomicLock); }
+        
+    private:
+        
+        t_int32_atomic mAtomicLock;
+    };
+    
+    struct HoldLock
+    {
+        HoldLock() : mLock(NULL) {}
+        HoldLock(Lock *lock) : mLock(lock)  { mLock->acquire(); }
+        ~HoldLock()                         { if (mLock) mLock->release(); }
                 
     private:
         
-        t_int32_atomic *mAtomicLock;
+        Lock *mLock;
     };
 
 public:
@@ -51,8 +65,15 @@ public:
     {
         ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)
         {
-            Lock lock(&mPtr->mReadLock);
-            mLock = (mPtr->mReadCount++ == 0) ? Lock(&mPtr->mWriteLock) : Lock();
+            HoldLock lock(&mPtr->mReadLock);
+            if (mPtr->mReadCount++ == 0)
+                mPtr->mWriteLock.acquire();
+        }
+        
+        ~ReadPointer()
+        {
+            if (--mPtr->mReadCount == 0)
+                mPtr->mWriteLock.release();
         }
         
         const EntryDatabase *operator->() const { return mPtr; }
@@ -60,10 +81,9 @@ public:
     private:
         
         const EntryDatabase *mPtr;
-        Lock mLock;
     };
     
-    EntryDatabase(long numCols) : mWriteLock(0), mReadLock(0) { mColumns.resize(numCols); }
+    EntryDatabase(long numCols) { mColumns.resize(numCols); }
     
     Accessor accessor() const { return Accessor(*this); }
 
@@ -106,11 +126,11 @@ public:
 
 private:
 
-    void clear(Lock &lock);
-    void setLabelModes(Lock &lock, void *x, long argc, t_atom *argv);
-    void setNames(Lock &lock, void *x, long argc, t_atom *argv);
-    void addEntry(Lock &lock, void *x, long argc, t_atom *argv);
-    void removeEntry(Lock &lock, void *x, t_atom *identifier);
+    void clear(HoldLock &lock);
+    void setLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
+    void setNames(HoldLock &lock, void *x, long argc, t_atom *argv);
+    void addEntry(HoldLock &lock, void *x, long argc, t_atom *argv);
+    void removeEntry(HoldLock &lock, void *x, t_atom *identifier);
     
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
@@ -145,8 +165,8 @@ private:
     std::vector<long> mOrder;
     std::vector<CustomAtom> mEntries;
 
-    mutable t_int32_atomic mWriteLock;
-    mutable t_int32_atomic mReadLock;
+    mutable Lock mWriteLock;
+    mutable Lock mReadLock;
     mutable long mReadCount;
 };
 

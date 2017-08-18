@@ -6,7 +6,7 @@
 
 void EntryDatabase::reserve(long items)
 {
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     
     mIdentifiers.reserve(items);
     mOrder.reserve(items);
@@ -15,11 +15,11 @@ void EntryDatabase::reserve(long items)
 
 void EntryDatabase::clear()
 {
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     clear(lock);
 }
 
-void EntryDatabase::clear(Lock &lock)
+void EntryDatabase::clear(HoldLock &lock)
 {
     mEntries.clear();
     mIdentifiers.clear();
@@ -28,11 +28,11 @@ void EntryDatabase::clear(Lock &lock)
 
 void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 {
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     setLabelModes(lock, x, argc, argv);
 }
 
-void EntryDatabase::setLabelModes(Lock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
     if (argc > numColumns())
         object_error((t_object *) x, "more label modes than columns");
@@ -47,11 +47,11 @@ void EntryDatabase::setLabelModes(Lock &lock, void *x, long argc, t_atom *argv)
 
 void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
 {
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     setNames(lock, x, argc, argv);
 }
 
-void EntryDatabase::setNames(Lock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setNames(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
@@ -64,11 +64,11 @@ void EntryDatabase::setNames(Lock &lock, void *x, long argc, t_atom *argv)
 
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     addEntry(lock, x, argc, argv);
 }
 
-void EntryDatabase::addEntry(Lock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
     long order;
     
@@ -117,14 +117,14 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
         object_error((t_object *)x, "no identifier given for remove message");
     else
     {
-        Lock lock(&mWriteLock);
+        HoldLock lock(&mWriteLock);
         
         while (argc--)
              removeEntry(lock, x, argv++);
     }
 }
 
-void EntryDatabase::removeEntry(Lock &lock, void *x, t_atom *identifier)
+void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
 {
     long order;
     long idx = searchIdentifiers(identifier, order);
@@ -341,16 +341,17 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
  
-    Lock lock(&mWriteLock);
+    HoldLock lock(&mWriteLock);
     clear(lock);
     
     t_atom_long newNumColumns;
     dictionary_getlong(dict, gensym("numcolumns"), &newNumColumns);
-    
-    // FIX - lock here!
-    
+        
     if (newNumColumns != numColumns())
-        *this = EntryDatabase(newNumColumns);
+    {
+        mColumns.clear();
+        mColumns.resize(newNumColumns);
+    }
     
     t_atom *argv;
     long argc;
