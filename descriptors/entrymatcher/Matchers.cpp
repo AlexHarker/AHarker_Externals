@@ -60,7 +60,7 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
     }
 }
 
-long Matchers::match(const EntryDatabase::ReadPointer database) const
+long Matchers::match(const EntryDatabase::ReadPointer database, bool sortOnlyIfLimited) const
 {
     long numItems = database->numItems();
     mNumMatches = 0;
@@ -95,14 +95,17 @@ long Matchers::match(const EntryDatabase::ReadPointer database) const
     if (size())
     {
         numMatches = round(mNumMatches * mRatioMatched);
-        numMatches = (mMaxMatches && mNumMatches < mMaxMatches) ? mNumMatches : mMaxMatches;
+        numMatches = (mMaxMatches && mNumMatches > mMaxMatches) ? mMaxMatches : mNumMatches;
 
-        // FIX - better heuristics...
+        // FIX - better heuristics and more info on what has been sorted...
         
-        if (numMatches < (database->numItems() / 4))
-            numMatches = sortTopN(numMatches);
-        else
-            sort(mIndices, mDistances, mNumMatches);
+        if (numMatches != mNumMatches && !sortOnlyIfLimited)
+        {
+            if (numMatches < (database->numItems() / 8))
+                numMatches = sortTopN(numMatches);
+            else
+                sort(mIndices, mDistances, mNumMatches);
+        }
     }
     
     return numMatches;

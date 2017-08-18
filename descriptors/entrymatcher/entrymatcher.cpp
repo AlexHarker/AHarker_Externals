@@ -407,7 +407,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         if (atom_gettype(output_identifiers) == A_SYM)
             outlet_anything(x->the_identifiers_outlet, atom_getsym(output_identifiers), num_matches - 1, output_identifiers + 1);
         else
-            outlet_list(x->the_identifiers_outlet, NULL, num_matches, output_distances);
+            outlet_list(x->the_identifiers_outlet, NULL, num_matches, output_identifiers);
         outlet_list(x->the_indices_outlet, NULL, num_matches, output_indices);
     }
 }

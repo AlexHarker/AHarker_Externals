@@ -55,7 +55,7 @@ public:
     
     Matchers() : mNumMatches(0), mRatioMatched(1.0), mMaxMatches(0) {}
     
-    long match(const EntryDatabase::ReadPointer database) const;
+    long match(const EntryDatabase::ReadPointer database, bool sortOnlyIfLimited = false) const;
     
     size_t size() const { return mMatchers.size(); }
     
