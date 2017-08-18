@@ -419,7 +419,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 
 void entrymatcher_view(t_entrymatcher *x)
 {
-    database_getptr_read(x->database_object)->view();
+    database_getptr_read(x->database_object)->view(x->database_object);
 }
 
 void entrymatcher_save(t_entrymatcher *x, t_symbol *file)

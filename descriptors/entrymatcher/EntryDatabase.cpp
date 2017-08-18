@@ -247,9 +247,9 @@ double EntryDatabase::columnMedian(const t_atom *specifier) const
     return columnPercentile(specifier, 50.0);
 }
 
-void EntryDatabase::view() const
+void EntryDatabase::view(t_object *database_object) const
 {
-    t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"));
+    t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
     std::string str;
 
     for (long i = 0; i < numItems(); i++)

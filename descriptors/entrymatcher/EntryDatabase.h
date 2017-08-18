@@ -114,7 +114,7 @@ public:
     double columnPercentile(const t_atom *specifier, double percentile) const;
     double columnMedian(const t_atom *specifier) const;
     
-    void view() const;
+    void view(t_object *database_object) const;
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
