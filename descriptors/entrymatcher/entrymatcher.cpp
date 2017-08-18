@@ -31,7 +31,6 @@
 
 t_class *this_class;
 
-t_symbol *ps_list;
 t_symbol *ps_lookup;
 t_symbol *ps_mean;
 t_symbol *ps_min;
@@ -107,7 +106,6 @@ int C74_EXPORT main(void)
     
 	class_register(CLASS_BOX, this_class);
 	
-	ps_list = gensym("list");
 	ps_lookup = gensym("lookup");
     ps_mean = gensym("mean");
     ps_min = gensym("min");
@@ -253,7 +251,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
         }
     }
     
-    outlet_list(x->the_data_outlet, 0L, output.size(), &output[0]);
+    outlet_list(x->the_data_outlet, NULL, output.size(), &output[0]);
 }
 
 // ========================================================================================================================================== //
@@ -302,7 +300,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
             object_error((t_object *) x, "unknown stat type");
     }
     
-    outlet_list(x->the_data_outlet, ps_list, i, &output[0]);
+    outlet_list(x->the_data_outlet, NULL, i, &output[0]);
 }
 
 // ========================================================================================================================================== //
@@ -374,22 +372,11 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
         // Calculate potential matches and sort if there are matches
         
+        matchers->setMaxMatches(ratio_kept, n_limit);
         num_matches = matchers->match(database);
         
         if (!num_matches)
             return;
-        
-        matchers->sort();
-        
-        // N.B. If there are no matchers ALWAYS match everything (up to max output size)...
-        
-        if (x->matchers->size())
-        {
-            // If there are matchers, then limit by ratio and maximum number
-            
-            num_matches *= ratio_kept;
-            num_matches = std::min(std::max(num_matches, 1L), n_limit);
-        }
         
         num_matches = std::min(num_matches, 1024L);
         
@@ -412,27 +399,15 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         }
     }
 
-    // Return if nothing has been matched
+    // Output if something has been matched, handling identifiers correctly whether the first identifier is numeric, or symbol
 	
-	if (!num_matches)
-		return;
-	
-	// Handle identifiers correctly whether the first identifier is numeric (output list), or symbol (output message)
-	
-    t_symbol *msg = ps_list;
-    long nudge = 0;
-    long num_identifier_args = num_matches;
-
-    if (atom_gettype(output_identifiers) == A_SYM)
-	{
-        msg = atom_getsym(output_identifiers);
-		nudge = 1;
-		num_identifier_args = num_matches - 1;
-	}
-	
-	// Output
-	
-	outlet_list(x->the_distances_outlet, 0L, num_matches, output_distances);
-	outlet_anything(x->the_identifiers_outlet, msg, num_identifier_args, output_identifiers + nudge);
-	outlet_list(x->the_indices_outlet, 0L, num_matches, output_indices);
+	if (num_matches)
+    {	
+        outlet_list(x->the_distances_outlet, NULL, num_matches, output_distances);
+        if (atom_gettype(output_identifiers) == A_SYM)
+            outlet_anything(x->the_identifiers_outlet, atom_getsym(output_identifiers), num_matches - 1, output_identifiers + 1);
+        else
+            outlet_list(x->the_identifiers_outlet, NULL, num_matches, output_distances);
+        outlet_list(x->the_indices_outlet, NULL, num_matches, output_indices);
+    }
 }

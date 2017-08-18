@@ -90,7 +90,22 @@ long Matchers::match(const EntryDatabase::ReadPointer database) const
         }
     }
     
-    return mNumMatches;
+    long numMatches = mNumMatches;
+    
+    if (size())
+    {
+        numMatches = round(mNumMatches * mRatioMatched);
+        numMatches = (mMaxMatches && mNumMatches < mMaxMatches) ? mNumMatches : mMaxMatches;
+
+        // FIX - better heuristics...
+        
+        if (numMatches < (database->numItems() / 4))
+            numMatches = sortTopN(numMatches);
+        else
+            sort(mIndices, mDistances, mNumMatches);
+    }
+    
+    return numMatches;
 }
 
 void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)
@@ -200,7 +215,7 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
     }
 }
 
-long Matchers::getTopN(long N)
+long Matchers::sortTopN(long N) const
 {
     N = std::min(N, mNumMatches);
     
@@ -224,11 +239,6 @@ long Matchers::getTopN(long N)
    }
     
     return N;
-}
-
-void Matchers::sort()
-{
-    ::sort(mIndices, mDistances, mNumMatches);
 }
 
 void Matchers::clear()

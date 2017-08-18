@@ -304,13 +304,8 @@ t_int *entrymatcher_perform(t_int *w)
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
+            matchers->setMaxMatches(1.0, n_limit);
             num_matched_indices = matchers->match(database);
-            
-            // N.B. If there are no matchers ALWAYS match everything...
-            // Else pick the top n matches when there are more than n matches
-            
-            if (n_limit && matchers->size())
-                num_matched_indices = matchers->getTopN(n_limit);
         }
         
         // Choose a random entry from the valid list (if requested)
@@ -369,13 +364,8 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
+            matchers->setMaxMatches(1.0, n_limit);
             num_matched_indices = matchers->match(database);
-            
-            // N.B. If there are no matchers ALWAYS match everything...
-            // Else pick the top n matches when there are more than n matches
-            
-            if (n_limit && matchers->size())
-                num_matched_indices = matchers->getTopN(n_limit);
         }
         
         // Choose a random entry from the valid list (if requested)

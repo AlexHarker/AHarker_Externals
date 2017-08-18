@@ -53,11 +53,11 @@ private:
     
 public:
     
-    Matchers() : mNumMatches(0) {}
+    Matchers() : mNumMatches(0), mRatioMatched(1.0), mMaxMatches(0) {}
     
     long match(const EntryDatabase::ReadPointer database) const;
     
-    size_t size() { return mMatchers.size(); }
+    size_t size() const { return mMatchers.size(); }
     
     void clear();
     
@@ -67,12 +67,15 @@ public:
             mMatchers[idx].setTarget(value);
     }
     
-    long getNumMatches() const          { return mNumMatches; }
-    long getIndex(long idx) const       { return mIndices[idx]; }
-    double getDistance(long idx) const  { return mDistances[idx]; }
+    void setMaxMatches(double ratio, long maxMatches)
+    {
+        mRatioMatched = std::min(std::max(ratio, 0.0), 1.0);
+        mMaxMatches = std::max(maxMatches, 0L);
+    }
     
-    long getTopN(long N);
-    void sort();
+    long getNumMatches() const              { return mNumMatches; }
+    long getIndex(long idx) const           { return mIndices[idx]; }
+    double getDistance(long idx) const      { return mDistances[idx]; }
     
     void addTarget(double value);
     void addTarget(t_symbol *value);
@@ -82,11 +85,15 @@ public:
     
 private:
     
+    long sortTopN(long N) const;
+    
     mutable long mNumMatches;
     
     mutable std::vector<long> mIndices;
     mutable std::vector<double> mDistances;
     
+    double mRatioMatched;
+    long mMaxMatches;
     std::vector<Matcher> mMatchers;
 };
 
