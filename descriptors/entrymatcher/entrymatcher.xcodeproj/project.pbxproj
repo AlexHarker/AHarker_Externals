@@ -78,6 +78,7 @@
 		B8BACCD81F3FD879001589D8 /* entry_database_max.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database_max.cpp; sourceTree = "<group>"; };
 		B8BACCD91F3FD879001589D8 /* entry_database_max.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entry_database_max.h; sourceTree = "<group>"; };
 		B8C536E11F42459A00B7978B /* Sort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sort.h; sourceTree = "<group>"; };
+		B8E3186B1F471F2200BE449B /* entrymatcher_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = entrymatcher_common.h; sourceTree = "<group>"; };
 		B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher.cpp; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -142,6 +143,7 @@
 				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
 				B8BACCD91F3FD879001589D8 /* entry_database_max.h */,
 				B8BACCD81F3FD879001589D8 /* entry_database_max.cpp */,
+				B8E3186B1F471F2200BE449B /* entrymatcher_common.h */,
 				B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */,
 				B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */,
 				B8B0C54A1F3D0C7C006D8538 /* entrymatcher.c */,

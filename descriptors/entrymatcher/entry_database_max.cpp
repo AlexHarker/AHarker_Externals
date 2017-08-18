@@ -20,11 +20,6 @@ int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
 
-void entry_database_release(t_entry_database *x);
-t_entry_database *entry_database_get_database_object(t_symbol *name);
-t_entry_database *entry_database_get_database_object(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
-t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_database *old_object);
-
 int entry_database_init()
 {
     database_class = class_new ("__entry_database",
@@ -59,6 +54,15 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x)
 {
     delete x->database;
+}
+
+void entry_database_release(t_entry_database *x)
+{
+    if (x && --x->count == 0)
+    {
+        object_unregister(x);
+        object_free(x);
+    }
 }
 
 t_entry_database *entry_database_get_database_object(t_symbol *name)
@@ -109,15 +113,6 @@ t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_dat
         x = old_object;
     
     return x;
-}
-
-void entry_database_release(t_entry_database *x)
-{
-    if (x && --x->count == 0)
-    {
-        object_unregister(x);
-        object_free(x);
-    }
 }
 
 t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)

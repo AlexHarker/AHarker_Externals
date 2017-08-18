@@ -29,6 +29,7 @@
 #include "Matchers.h"
 #include "utilities.h"
 #include "entry_database_max.h"
+#include "entrymatcher_common.h"
 
 t_class *this_class;
 
@@ -53,13 +54,6 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
-void entrymatcher_refer(t_entrymatcher *x, t_symbol *name);
-void entrymatcher_clear(t_entrymatcher *x);
-void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -83,23 +77,17 @@ int C74_EXPORT main(void)
                              A_GIMME,
                              0);
     
-    class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
-    class_addmethod(this_class, (method)entrymatcher_clear,"reset", 0);
-
-    class_addmethod(this_class, (method)entrymatcher_refer,"refer", A_SYM, 0);
-    class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
-    class_addmethod(this_class, (method)entrymatcher_remove,"remove", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_limit,"limit", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
-    class_addmethod(this_class, (method)entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
-    class_addmethod(this_class, (method)entrymatcher_names,"names", A_GIMME, 0);
     class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
     
     class_addmethod(this_class, (method)entrymatcher_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method)entrymatcher_dsp64, "dsp64", A_CANT, 0);
+
+    entrymatcher_add_common<t_entrymatcher>(this_class);
     
     class_dspinit(this_class);
-    
+
     class_register(CLASS_BOX, this_class);
     
     init_test_symbols();
@@ -180,40 +168,6 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
                 break;
         }
     }
-}
-
-// ========================================================================================================================================== //
-// Entry routines: refer, clear, labelmodes, names, entry and removal
-// ========================================================================================================================================== //
-
-void entrymatcher_refer(t_entrymatcher *x, t_symbol *name)
-{
-    x->database_object = database_change(name, x->database_object);
-}
-
-void entrymatcher_clear(t_entrymatcher *x)
-{
-    database_getptr_write(x->database_object)->clear();
-}
-
-void entrymatcher_labelmodes(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    database_getptr_write(x->database_object)->setLabelModes(x, argc, argv);
-}
-
-void entrymatcher_names(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    database_getptr_write(x->database_object)->setNames(x, argc, argv);
-}
-
-void entrymatcher_entry(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
-}
-
-void entrymatcher_remove(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
