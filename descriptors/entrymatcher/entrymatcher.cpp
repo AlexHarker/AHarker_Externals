@@ -127,7 +127,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
         name = symbol_unique();
     
     t_atom_long num_reserved_entries = (argc > 1) ? atom_getlong(argv++) : 0;
-    t_atom_long num_columns = argc  ? atom_getlong(argv++) : 0;
+    t_atom_long num_columns = argc ? atom_getlong(argv++) : 0;
     
 	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
 	
@@ -193,8 +193,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? database->itemFromIdentifier(argv) :atom_getlong(argv) - 1;
-	
+    long idx = (msg == ps_lookup) ? database->itemFromIdentifier(argv) : atom_getlong(argv) - 1;
     entrymatcher_lookup_output(x, database, idx, --argc, ++argv);
 }
 
