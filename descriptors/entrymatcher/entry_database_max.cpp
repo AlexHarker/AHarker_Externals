@@ -60,15 +60,6 @@ void entry_database_free(t_entry_database *x)
     delete x->database;
 }
 
-void entry_database_release(t_entry_database *x)
-{
-    if (x && --x->count == 0)
-    {
-        object_unregister(x);
-        object_free(x);
-    }
-}
-
 t_entry_database *entry_database_get_database_object(t_symbol *name)
 {
     // Make sure the max database class exists
@@ -118,9 +109,13 @@ t_entry_database *entry_database_get_database_object(t_symbol *name, t_entry_dat
     return x;
 }
 
-void database_release(t_object *x)
+void entry_database_release(t_entry_database *x)
 {
-    entry_database_release((t_entry_database *) x);
+    if (x && --x->count == 0)
+    {
+        object_unregister(x);
+        object_free(x);
+    }
 }
 
 t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
@@ -131,6 +126,11 @@ t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_at
 t_object *database_change(t_symbol *name, t_object *old_object)
 {
     return (t_object *) entry_database_get_database_object(name, (t_entry_database *) old_object);
+}
+
+void database_release(t_object *x)
+{
+    entry_database_release((t_entry_database *) x);
 }
 
 EntryDatabase::ReadPointer database_getptr_read(t_object *x)
