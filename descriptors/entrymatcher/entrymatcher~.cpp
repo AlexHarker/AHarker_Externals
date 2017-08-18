@@ -288,6 +288,8 @@ t_int *entrymatcher_perform(t_int *w)
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
+    double ratio_kept = x->ratio_kept;
+    
     long n_limit = x->n_limit;
     long num_matched_indices = matchers->getNumMatches();
     
@@ -304,7 +306,7 @@ t_int *entrymatcher_perform(t_int *w)
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            matchers->setMaxMatches(1.0, n_limit);
+            matchers->setMaxMatches(ratio_kept, n_limit);
             num_matched_indices = matchers->match(database);
         }
         
@@ -348,6 +350,8 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
+    double ratio_kept = x->ratio_kept;
+
     long n_limit = x->n_limit;
     long num_matched_indices = matchers->getNumMatches();
     
@@ -364,7 +368,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            matchers->setMaxMatches(1.0, n_limit);
+            matchers->setMaxMatches(ratio_kept, n_limit);
             num_matched_indices = matchers->match(database);
         }
         
