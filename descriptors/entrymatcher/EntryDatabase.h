@@ -83,7 +83,7 @@ public:
         const EntryDatabase *mPtr;
     };
     
-    EntryDatabase(long numCols) { mColumns.resize(numCols); }
+    EntryDatabase(t_symbol *name, long numCols) : mName(name) { mColumns.resize(numCols); }
     
     Accessor accessor() const { return Accessor(*this); }
 
@@ -160,6 +160,7 @@ private:
     
     // Data
     
+    t_symbol *mName;
     std::vector<ColumnInfo> mColumns;
     std::vector<CustomAtom> mIdentifiers;
     std::vector<long> mOrder;

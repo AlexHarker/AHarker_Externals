@@ -34,15 +34,22 @@ void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::setLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
+    bool labelsModesChanged = false;
+    
     if (argc > numColumns())
         object_error((t_object *) x, "more label modes than columns");
     
     argc = (argc > numColumns()) ? numColumns() : argc;
     
-    clear(lock);
-    
     for (long i = 0; i < argc; i++)
-        mColumns[i].mLabel = atom_getlong(argv++) ? true : false;
+    {
+        bool label = atom_getlong(argv++) ? true : false;
+        labelsModesChanged |= label != mColumns[i].mLabel;
+        mColumns[i].mLabel = label;
+    }
+    
+    if (labelsModesChanged)
+        clear(lock);
 }
 
 void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
@@ -114,7 +121,7 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
 void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
-        object_error((t_object *)x, "no identifier given for remove message");
+        object_error((t_object *)x, "no identifiers given for remove message");
     else
     {
         HoldLock lock(&mWriteLock);
@@ -260,7 +267,7 @@ void EntryDatabase::view() const
     }
     
     object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
-    object_attr_setsym(editor, gensym("title"), gensym("cool"));
+    object_attr_setsym(editor, gensym("title"), mName);
 }
 
 void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
@@ -280,7 +287,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     }
     else
     {
-        strcpy(filename, "");
+        strcpy(filename, mName->s_name);
         if (saveasdialog_extended(filename, &path, &type, &types, 1))
             return;
     }
