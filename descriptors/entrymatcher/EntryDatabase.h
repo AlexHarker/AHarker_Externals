@@ -153,7 +153,7 @@ private:
         return value;
     }
 
-    long searchIdentifiers(const CustomAtom& identifier) const;
+    long searchIdentifiers(const CustomAtom& identifier, long& idx) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     

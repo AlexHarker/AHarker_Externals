@@ -11,6 +11,7 @@ void EntryDatabase::reserve(long items)
     HoldLock lock(&mWriteLock);
     
     mIdentifiers.reserve(items);
+    mOrder.reserve(items);
     mEntries.reserve(items * numColumns());
 }
 
@@ -161,22 +162,23 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
 {
-    long idx = searchIdentifiers(CustomAtom(identifier, false));
+    long order;
+    long idx = searchIdentifiers(identifier, order);
     
-    if (idx < 0)
+    if (idx < 0 || idx >= numItems())
     {
         object_error((t_object *) x, "entry does not exist");
         return;
     }
     
     mIdentifiers.erase(mIdentifiers.begin() + idx);
+    mOrder.erase(mOrder.begin() + order);
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-long EntryDatabase::searchIdentifiers(const CustomAtom& identifier) const
+long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
 {
-    long idx = numItems() / 2;
-    long gap = idx;
+    long gap = idx = numItems() / 2;
     gap = gap < 1 ? 1 : gap;
     
     while (gap && idx < numItems())
