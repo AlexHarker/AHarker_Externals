@@ -68,7 +68,7 @@ public:
     
     long getNumMatches() const              { return mNumMatches; }
     long getIndex(long idx) const           { return mIndices[idx]; }
-    double getDistance(long idx) const      { return mDistances[idx]; }
+    double getDistance(long idx) const      { return sqrt(mDistancesSquared[idx]); }
     
     void addTarget(double value);
     void addTarget(t_symbol *value);
@@ -83,7 +83,7 @@ private:
     mutable long mNumMatches;
     
     mutable std::vector<long> mIndices;
-    mutable std::vector<double> mDistances;
+    mutable std::vector<double> mDistancesSquared;
     
     std::vector<Matcher> mMatchers;
 };

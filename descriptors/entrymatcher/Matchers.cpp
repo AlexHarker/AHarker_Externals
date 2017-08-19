@@ -69,19 +69,30 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     mNumMatches = 0;
     
     mIndices.resize(numItems);
-    mDistances.resize(numItems);
+    mDistancesSquared.resize(numItems);
     
     const EntryDatabase::Accessor accessor = database->accessor();
     
+    if (!size())
+    {
+        for (long i = 0; i < numItems; i++)
+        {
+            mIndices[i] = i;
+            mDistancesSquared[i] = 0.0;
+        }
+        
+        return mNumMatches = numItems;
+    }
+
     for (long i = 0; i < numItems; i++)
     {
         // Assume a match for each entry (for the case of no matchers)
         
         bool matched = true;
-        double distance = 0.0;
+        double DistanceSquared = 0.0;
         
         for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(accessor, i, distance)))
+            if (!(matched = it->match(accessor, i, DistanceSquared)))
                 break;
         
         // Store the entry if it is a valid match
@@ -89,28 +100,23 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         if (matched)
         {
             mIndices[mNumMatches++] = i;
-            mDistances[i] = sqrt(distance);
+            mDistancesSquared[i] = DistanceSquared;
         }
     }
     
-    long numMatches = mNumMatches;
-    
-    if (size())
-    {
-        ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
-        maxMatches = std::max(maxMatches, 0L);
-        numMatches = round(mNumMatches * ratioMatched);
-        numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
+    ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
+    maxMatches = std::max(maxMatches, 0L);
+    long numMatches = round(mNumMatches * ratioMatched);
+    numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
 
-        // FIX - better heuristics and more info on what has been sorted...
-        
-        if (numMatches != mNumMatches && !sortOnlyIfLimited)
-        {
-            if (numMatches < (database->numItems() / 8))
-                numMatches = sortTopN(numMatches, mNumMatches);
-            else
-                sort(mIndices, mDistances, mNumMatches);
-        }
+    // FIX - better heuristics and more info on what has been sorted...
+    
+    if (numMatches != mNumMatches && !sortOnlyIfLimited)
+    {
+        if (numMatches < (database->numItems() / 8))
+            numMatches = sortTopN(numMatches, mNumMatches);
+        else
+            sort(mIndices, mDistancesSquared, mNumMatches);
     }
     
     return mNumMatches = numMatches;
@@ -231,14 +237,14 @@ long Matchers::sortTopN(long N, long size) const
     
     for (long i = 0; i < N; i++)
     {
-        double minDistance = mDistances[mIndices[i]];
+        double minDistance = mDistancesSquared[mIndices[i]];
         long swap = i;
         
         for (long j = i + 1; j < size; j++)
         {
-            if (mDistances[mIndices[j]] < minDistance)
+            if (mDistancesSquared[mIndices[j]] < minDistance)
             {
-                minDistance = mDistances[mIndices[j]];
+                minDistance = mDistancesSquared[mIndices[j]];
                 swap = j;
             }
         }
