@@ -23,7 +23,6 @@ private:
         Matcher(TestType type, long column, double scale = 1.0)
         : mColumn(column), mType(type), mScale(scale) {}
         
-        long getColumn() const                  { return mColumn; }
         void addTarget(double value)            { mValues.push_back(value); }
         void addTarget(t_symbol *value)         { mValues.push_back(value); }
         
