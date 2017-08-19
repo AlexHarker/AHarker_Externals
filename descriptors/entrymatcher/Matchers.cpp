@@ -5,58 +5,63 @@
 #include <functional>
 
 
-inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
+inline bool Matchers::match(std::vector<const CustomAtom>::iterator& params, const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
 {
-    const CustomAtom data = accessor.getData(idx, mColumn);
+    TestType type = (TestType) (*params++).mInt;
+    long column = (*params++).mInt;
+    double scale = (*params++).mValue;
+    std::vector<const CustomAtom>::iterator to = params + (*params++).mInt;
+    
+    const CustomAtom data = accessor.getData(idx, column);
     double distance = HUGE_VAL;
     
-    switch (mType)
+    switch (type)
     {
         case kTestMatch:
             if (data.mType == CustomAtom::kSymbol)
             {
                 t_symbol *sym = data.mSymbol;
                 
-                for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
-                    if (sym == (*it).mSymbol) return true;
+                for ( ; params != to; params++)
+                    if (sym == (*params).mSymbol) return true;
                 
                 return false;
             }
             else
-                return comparison(data.mValue, std::equal_to<double>());
+                return comparison(params, to, data.mValue, std::equal_to<double>());
             
-        case kTestLess:             return comparison(data.mValue, std::less<double>());
-        case kTestGreater:          return comparison(data.mValue, std::greater<double>());
-        case kTestLessEqual:        return comparison(data.mValue, std::less_equal<double>());
-        case kTestGreaterEqual:     return comparison(data.mValue, std::greater_equal<double>());
+        case kTestLess:             return comparison(params, to, data.mValue, std::less<double>());
+        case kTestGreater:          return comparison(params, to, data.mValue, std::greater<double>());
+        case kTestLessEqual:        return comparison(params, to, data.mValue, std::less_equal<double>());
+        case kTestGreaterEqual:     return comparison(params, to, data.mValue, std::greater_equal<double>());
             
         case kTestDistance:
         case kTestDistanceReject:
             
-            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+            for ( ; params != to; params++)
             {
-                double currentDistance = ((*it).mValue - data.mValue) * mScale;
+                double currentDistance = ((*params).mValue - data.mValue) * scale;
                 distance = std::min(distance, currentDistance * currentDistance);
             }
             
             overallDistance += distance;
-            return mType == kTestDistance || distance <= 1.0;
+            return type == kTestDistance || distance <= 1.0;
             
         case kTestRatio:
         case kTestRatioReject:
             
             // FIX - check this
             
-            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+            for ( ; params != to; params++)
             {
-                double currentDistance = ((*it).mValue > data.mValue) ? (*it).mValue / data.mValue : data.mValue / (*it).mValue;
-                currentDistance = (currentDistance - 1.0) * mScale;
+                double currentDistance = ((*params).mValue > data.mValue) ? (*params).mValue / data.mValue : data.mValue / (*params).mValue;
+                currentDistance = (currentDistance - 1.0) * scale;
                 distance = std::min(distance, currentDistance * currentDistance);
                 
             }
             
             overallDistance += distance;
-            return mType == kTestRatio || distance <= 1.0;
+            return type == kTestRatio || distance <= 1.0;
     }
 }
 
@@ -76,9 +81,10 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         
         bool matched = true;
         double distance = 0.0;
+        std::vector<const CustomAtom>::iterator it = mMatchingParams.begin();
         
-        for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(accessor, i, distance)))
+        while (it != mMatchingParams.end())
+            if (!(matched = match(it, accessor, i, distance)))
                 break;
         
         // Store the entry if it is a valid match
@@ -248,22 +254,34 @@ long Matchers::sortTopN(long N, long size) const
 
 void Matchers::clear()
 {
-    mMatchers.clear();
+    mMatchingParams.clear();
+    mOffsets.clear();
 }
 
 void Matchers::addTarget(double value)
 {
-    if (mMatchers.size())
-        mMatchers.back().addTarget(value);
+    if (mOffsets.size())
+    {
+        mMatchingParams[mOffsets.back()].mInt++;
+        mMatchingParams.push_back(value);
+    }
 }
 
 void Matchers::addTarget(t_symbol *value)
 {
-    if (mMatchers.size())
-        mMatchers.back().addTarget(value);
+    if (mOffsets.size())
+    {
+        mMatchingParams[mOffsets.back()].mInt++;
+        mMatchingParams.push_back(value);
+    }
 }
 
 void Matchers::addMatcher(TestType type, long column, double scale)
 {
-    mMatchers.push_back(Matcher(type, column, scale));
+    mMatchingParams.push_back(CustomAtom((long) type, false));
+    mMatchingParams.push_back(CustomAtom(column, false));
+    mMatchingParams.push_back(scale);
+    mMatchingParams.push_back(CustomAtom((long) 0, false));
+    
+    mOffsets.push_back(mMatchingParams.size() - 1);
 }

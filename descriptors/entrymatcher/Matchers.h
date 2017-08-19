@@ -14,7 +14,7 @@ public:
     enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
     
 private:
-    
+    /*
     class Matcher
     {
         
@@ -49,21 +49,22 @@ private:
         std::vector<CustomAtom> mValues;
         double mScale;
     };
-    
+    */
 public:
     
     Matchers() : mNumMatches(0) {}
     
+    inline bool match(std::vector<const CustomAtom>::iterator& params, const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const;
     long match(const EntryDatabase::ReadPointer database, double ratioMatched = 1.0, long maxMatches = 0, bool sortOnlyIfLimited = false) const;
     
-    size_t size() const { return mMatchers.size(); }
+    size_t size() const { return mOffsets.size(); }
     
     void clear();
     
     void setTarget(long idx, double value)
     {
         if (idx >= 0 && idx < size())
-            mMatchers[idx].setTarget(value);
+            mMatchingParams[mOffsets[idx] + 1].mValue = value;
     }
     
     long getNumMatches() const              { return mNumMatches; }
@@ -78,6 +79,14 @@ public:
     
 private:
     
+    template <typename Op> bool comparison(std::vector<const CustomAtom>::iterator& params, std::vector<const CustomAtom>::iterator& to, const double& value, Op op) const
+    {
+        for ( ; params != to; params++)
+            if (op(value, (*params).mValue)) return true;
+        
+        return false;
+    }
+    
     long sortTopN(long N, long size) const;
     
     mutable long mNumMatches;
@@ -85,7 +94,9 @@ private:
     mutable std::vector<long> mIndices;
     mutable std::vector<double> mDistances;
     
-    std::vector<Matcher> mMatchers;
+    std::vector<long> mOffsets;
+    std::vector<CustomAtom> mMatchingParams;
+    //std::vector<Matcher> mMatchers;
 };
 
 
