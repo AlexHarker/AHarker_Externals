@@ -104,13 +104,13 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         if (numMatches != mNumMatches && !sortOnlyIfLimited)
         {
             if (numMatches < (database->numItems() / 8))
-                numMatches = sortTopN(numMatches);
+                numMatches = sortTopN(numMatches, mNumMatches);
             else
                 sort(mIndices, mDistances, mNumMatches);
         }
     }
     
-    return numMatches;
+    return mNumMatches = numMatches;
 }
 
 void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)
@@ -220,9 +220,9 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
     }
 }
 
-long Matchers::sortTopN(long N) const
+long Matchers::sortTopN(long N, long size) const
 {
-    N = std::min(N, mNumMatches);
+    N = std::min(N, size);
     
     // Partial insertion sort (faster sorting for small numbers of n)...
     
@@ -231,7 +231,7 @@ long Matchers::sortTopN(long N) const
         double minDistance = mDistances[mIndices[i]];
         long swap = i;
         
-        for (long j = i + 1; j < mNumMatches; j++)
+        for (long j = i + 1; j < size; j++)
         {
             if (mDistances[mIndices[j]] < minDistance)
             {
@@ -239,9 +239,9 @@ long Matchers::sortTopN(long N) const
                 swap = j;
             }
         }
-
+        
         std::swap(mIndices[swap], mIndices[i]);
-   }
+    }
     
     return N;
 }

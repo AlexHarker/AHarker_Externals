@@ -78,7 +78,7 @@ public:
     
 private:
     
-    long sortTopN(long N) const;
+    long sortTopN(long N, long size) const;
     
     mutable long mNumMatches;
     
