@@ -101,12 +101,11 @@ public:
     
     t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
     bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
-    void getEntryIdentifier(t_atom *a, long idx) const       { return getIdentifierInternal(idx).getAtom(a); }
-
+    void getEntryIdentifier(t_atom *a, long idx) const        { return getIdentifierInternal(idx).getAtom(a); }
     long getEntryIndex(const t_atom *identifier) const
     {
         long order;
-        return searchIdentifiers(CustomAtom(identifier, false), order);
+        return searchIdentifiers(identifier, order);
     }
     
     inline CustomAtom getData(long idx, long column) const              { return mEntries[idx * numColumns() + column]; }
@@ -153,7 +152,7 @@ private:
         return value;
     }
 
-    long searchIdentifiers(const CustomAtom& identifier, long& idx) const;
+    long searchIdentifiers(const t_atom *identifierAtom, long& idx) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     

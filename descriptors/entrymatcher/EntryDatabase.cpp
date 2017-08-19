@@ -79,8 +79,6 @@ void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 
 void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
-    long order;
-    
     if (!argc--)
     {
         object_error((t_object *)x, "no arguments for entry");
@@ -89,7 +87,8 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
     
     // Get the identifier, order position and find any prexisting entry with this identifier
     
-    CustomAtom identifier = CustomAtom(argv++, false);
+    t_atom *identifier = argv++;
+    long order;
     long idx = searchIdentifiers(identifier, order);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
@@ -99,7 +98,7 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
         idx = numItems();
         mEntries.resize((idx + 1) * numColumns());
         mOrder.insert(mOrder.begin() + order, idx);
-        mIdentifiers.push_back(identifier);
+        mIdentifiers.push_back(CustomAtom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
@@ -163,7 +162,7 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
 {
     long order;
-    long idx = searchIdentifiers(CustomAtom(identifier, false), order);
+    long idx = searchIdentifiers(identifier, order);
     
     if (idx < 0 || idx >= numItems())
     {
@@ -180,8 +179,10 @@ void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
             (*it)--;
 }
 
-long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
+long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
 {
+    CustomAtom identifier(identifierAtom, false);
+    
     long gap = idx = numItems() / 2;
     gap = gap < 1 ? 1 : gap;
     
