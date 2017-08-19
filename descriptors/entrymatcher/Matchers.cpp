@@ -5,30 +5,27 @@
 #include <functional>
 
 
-inline long Matchers::Matcher::match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::Accessor& accessor) const
+inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
     
-    if (!numMatches)
-        return 0;
-    
     switch (mType)
     {
         case kTestMatch:
-            if (accessor.getData(indices[0], mColumn).mType == CustomAtom::kSymbol)
-                return comparisonTest<t_symbol *>(indices, numMatches, accessor, std::equal_to<t_symbol *>());
+            if (accessor.getData(idx, mColumn).mType == CustomAtom::kSymbol)
+                return comparisonTest(accessor.getData(idx, mColumn).mSymbol, std::equal_to<t_symbol *>());
             else
-                return comparisonTest<double>(indices, numMatches, accessor, std::equal_to<double>());
+                return comparisonTest(accessor.getData(idx, mColumn).mValue, std::equal_to<double>());
             
-        case kTestLess:             return comparisonTest<double>(indices, numMatches, accessor, std::less<double>());
-        case kTestGreater:          return comparisonTest<double>(indices, numMatches, accessor, std::greater<double>());
-        case kTestLessEqual:        return comparisonTest<double>(indices, numMatches, accessor, std::less_equal<double>());
-        case kTestGreaterEqual:     return comparisonTest<double>(indices, numMatches, accessor, std::greater_equal<double>());
-        case kTestDistance:         return distanceTest(false, indices, distancesSquared, numMatches, accessor, Distance());
-        case kTestDistanceReject:   return distanceTest(true, indices, distancesSquared, numMatches, accessor, Distance());
-        case kTestRatio:            return distanceTest(false, indices, distancesSquared, numMatches, accessor, Ratio());
-        case kTestRatioReject:      return distanceTest(true, indices, distancesSquared, numMatches, accessor, Ratio());
+        case kTestLess:             return comparisonTest(accessor.getData(idx, mColumn).mValue, std::less<double>());
+        case kTestGreater:          return comparisonTest(accessor.getData(idx, mColumn).mValue, std::greater<double>());
+        case kTestLessEqual:        return comparisonTest(accessor.getData(idx, mColumn).mValue, std::less_equal<double>());
+        case kTestGreaterEqual:     return comparisonTest(accessor.getData(idx, mColumn).mValue, std::greater_equal<double>());
+        case kTestDistance:         return distanceTest(false, accessor.getData(idx, mColumn).mValue, overallDistance, Distance());
+        case kTestDistanceReject:   return distanceTest(true, accessor.getData(idx, mColumn).mValue, overallDistance, Distance());
+        case kTestRatio:            return distanceTest(false, accessor.getData(idx, mColumn).mValue, overallDistance, Ratio());
+        case kTestRatioReject:      return distanceTest(true, accessor.getData(idx, mColumn).mValue, overallDistance, Ratio());
     }
 }
 
@@ -42,38 +39,53 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     
     const EntryDatabase::Accessor accessor = database->accessor();
     
-    for (long i = 0; i < numItems; i++)
+    if (!size())
     {
-        mIndices[i] = i;
-        mDistancesSquared[i] = 0.0;
-    }
-    
-    mNumMatches = numItems;
-    
-    for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-        mNumMatches = it->match(mIndices, mDistancesSquared, mNumMatches, accessor);
-    
-    if (size())
-    {
-        ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
-        maxMatches = std::max(maxMatches, 0L);
-        long numMatches = round(mNumMatches * ratioMatched);
-        numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
-        
-        // FIX - better heuristics and more info on what has been sorted...
-        
-        if (numMatches != mNumMatches && !sortOnlyIfLimited)
+        for (long i = 0; i < numItems; i++)
         {
-            if (numMatches < (database->numItems() / 8))
-                numMatches = sortTopN(numMatches, mNumMatches);
-            else
-                sort(mIndices, mDistancesSquared, mNumMatches);
+            mIndices[i] = i;
+            mDistancesSquared[i] = 0.0;
         }
         
-        mNumMatches = numMatches;
+        return mNumMatches = numItems;
+    }
+
+    for (long i = 0; i < numItems; i++)
+    {
+        // Assume a match for each entry (for the case of no matchers)
+        
+        bool matched = true;
+        double distanceSquared = 0.0;
+        
+        for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
+            if (!(matched = it->match(accessor, i, distanceSquared)))
+                break;
+        
+        // Store the entry if it is a valid match
+        
+        if (matched)
+        {
+            mIndices[mNumMatches++] = i;
+            mDistancesSquared[i] = distanceSquared;
+        }
     }
     
-    return mNumMatches;
+    ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
+    maxMatches = std::max(maxMatches, 0L);
+    long numMatches = round(mNumMatches * ratioMatched);
+    numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
+
+    // FIX - better heuristics and more info on what has been sorted...
+    
+    if (numMatches != mNumMatches && !sortOnlyIfLimited)
+    {
+        if (numMatches < (database->numItems() / 8))
+            numMatches = sortTopN(numMatches, mNumMatches);
+        else
+            sort(mIndices, mDistancesSquared, mNumMatches);
+    }
+    
+    return mNumMatches = numMatches;
 }
 
 void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)
