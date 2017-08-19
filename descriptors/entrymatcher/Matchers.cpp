@@ -5,61 +5,29 @@
 #include <functional>
 
 
-inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
+inline long Matchers::Matcher::match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::Accessor& accessor) const
 {
-    const CustomAtom data = accessor.getData(idx, mColumn);
-    double distance = HUGE_VAL;
+    struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
+    struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
+    
+    if (!numMatches)
+        return 0;
     
     switch (mType)
     {
         case kTestMatch:
-            if (data.mType == CustomAtom::kSymbol)
-            {
-                t_symbol *sym = data.mSymbol;
-                
-                for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
-                    if (sym == (*it).mSymbol) return true;
-                
-                return false;
-            }
+            if (accessor.getData(indices[0], mColumn).mType == CustomAtom::kSymbol)
+                return comparison<t_symbol *>(indices, numMatches, accessor, std::equal_to<t_symbol *>());
             else
-                return comparison(data.mValue, std::equal_to<double>());
-            
-        case kTestLess:             return comparison(data.mValue, std::less<double>());
-        case kTestGreater:          return comparison(data.mValue, std::greater<double>());
-        case kTestLessEqual:        return comparison(data.mValue, std::less_equal<double>());
-        case kTestGreaterEqual:     return comparison(data.mValue, std::greater_equal<double>());
-            
-        case kTestDistance:
-        case kTestDistanceReject:
-            
-            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
-            {
-                double currentDistance = ((*it).mValue - data.mValue) * mScale;
-                currentDistance *= currentDistance;
-                if (currentDistance < distance)
-                    distance = currentDistance;
-            }
-            
-            overallDistance += distance;
-            return mType == kTestDistance || distance <= 1.0;
-            
-        case kTestRatio:
-        case kTestRatioReject:
-            
-            // FIX - check this
-            
-            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
-            {
-                double currentDistance = ((*it).mValue > data.mValue) ? (*it).mValue / data.mValue : data.mValue / (*it).mValue;
-                currentDistance = (currentDistance - 1.0) * mScale;
-                currentDistance *= currentDistance;
-                if (currentDistance < distance)
-                    distance = currentDistance;
-            }
-            
-            overallDistance += distance;
-            return mType == kTestRatio || distance <= 1.0;
+                return comparison<double>(indices, numMatches, accessor, std::equal_to<double>());
+        case kTestLess:             return comparison<double>(indices, numMatches, accessor, std::less<double>());
+        case kTestGreater:          return comparison<double>(indices, numMatches, accessor, std::greater<double>());
+        case kTestLessEqual:        return comparison<double>(indices, numMatches, accessor, std::less_equal<double>());
+        case kTestGreaterEqual:     return comparison<double>(indices, numMatches, accessor, std::greater_equal<double>());
+        case kTestDistance:         return distance(false, indices, distancesSquared, numMatches, accessor, Distance());
+        case kTestDistanceReject:   return distance(true, indices, distancesSquared, numMatches, accessor, Distance());
+        case kTestRatio:            return distance(false, indices, distancesSquared, numMatches, accessor, Ratio());
+        case kTestRatioReject:      return distance(true, indices, distancesSquared, numMatches, accessor, Ratio());
     }
 }
 
@@ -73,53 +41,38 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     
     const EntryDatabase::Accessor accessor = database->accessor();
     
-    if (!size())
-    {
-        for (long i = 0; i < numItems; i++)
-        {
-            mIndices[i] = i;
-            mDistancesSquared[i] = 0.0;
-        }
-        
-        return mNumMatches = numItems;
-    }
-
     for (long i = 0; i < numItems; i++)
     {
-        // Assume a match for each entry (for the case of no matchers)
-        
-        bool matched = true;
-        double distanceSquared = 0.0;
-        
-        for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(accessor, i, distanceSquared)))
-                break;
-        
-        // Store the entry if it is a valid match
-        
-        if (matched)
-        {
-            mIndices[mNumMatches++] = i;
-            mDistancesSquared[i] = distanceSquared;
-        }
+        mIndices[i] = i;
+        mDistancesSquared[i] = 0.0;
     }
     
-    ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
-    maxMatches = std::max(maxMatches, 0L);
-    long numMatches = round(mNumMatches * ratioMatched);
-    numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
-
-    // FIX - better heuristics and more info on what has been sorted...
+    mNumMatches = numItems;
     
-    if (numMatches != mNumMatches && !sortOnlyIfLimited)
+    for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
+        mNumMatches = it->match(mIndices, mDistancesSquared, mNumMatches, accessor);
+    
+    if (size())
     {
-        if (numMatches < (database->numItems() / 8))
-            numMatches = sortTopN(numMatches, mNumMatches);
-        else
-            sort(mIndices, mDistancesSquared, mNumMatches);
+        ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
+        maxMatches = std::max(maxMatches, 0L);
+        long numMatches = round(mNumMatches * ratioMatched);
+        numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
+        
+        // FIX - better heuristics and more info on what has been sorted...
+        
+        if (numMatches != mNumMatches && !sortOnlyIfLimited)
+        {
+            if (numMatches < (database->numItems() / 8))
+                numMatches = sortTopN(numMatches, mNumMatches);
+            else
+                sort(mIndices, mDistancesSquared, mNumMatches);
+        }
+        
+        mNumMatches = numMatches;
     }
     
-    return mNumMatches = numMatches;
+    return mNumMatches;
 }
 
 void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)

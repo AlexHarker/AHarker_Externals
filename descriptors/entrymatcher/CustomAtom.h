@@ -74,6 +74,10 @@ struct CustomAtom
         return (a.mType < b.mType) ? kLess : kGreater;
     }
     
+    operator double() const         { return mValue; }
+    operator t_atom_long() const    { return mInt; }
+    operator t_symbol *() const     { return mSymbol; }
+    
     Type mType;
     union
     {

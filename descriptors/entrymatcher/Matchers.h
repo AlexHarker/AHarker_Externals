@@ -32,23 +32,101 @@ private:
             mValues[0] = value;
         }
 
-        inline bool match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const;
+        inline long match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::Accessor& accessor) const;
         
     private:
         
-        template <typename Op> bool comparison(double value, Op op) const
+        template <typename type, typename Op> inline long comparison(std::vector<long>& indices, long numMatches, const EntryDatabase::Accessor& accessor, Op op) const
         {
-            for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
-                if (op(value, (*it).mValue)) return true;
+            long matched = 0;
             
-            return false;
+            if (mValues.size() == 1)
+            {
+                type comparisonValue = mValues[0];
+                
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+        
+                    if (op(accessor.getData(idx, mColumn), comparisonValue))
+                        indices[matched++] = idx;
+                }
+            }
+            else
+            {
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    type value = accessor.getData(idx, mColumn);
+                    
+                    for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+                    {
+                        if (op(value, (*it)))
+                        {
+                            indices[matched++] = idx;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return matched;
         }
+        
+        template <typename Op> inline long distance(bool reject, std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::Accessor& accessor, Op op) const
+        {
+            long matched = 0;
+            
+            if (mValues.size() == 1)
+            {
+                double comparisonValue = mValues[0].mValue;
+                
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    double distance = op(comparisonValue, accessor.getData(idx, mColumn).mValue, mScale);
+                    distance *= distance;
+                    distancesSquared[idx] += distance;
+                    
+                    if (!reject || distance <= 1.0)
+                        indices[matched++] = idx;
+                }
+            }
+            else
+            {
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    double value = accessor.getData(idx, mColumn).mValue;
+                    double distance = HUGE_VAL;
+                    
+                    for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+                    {
+                        double currentDistance = op((*it).mValue, value, mScale);
+                        currentDistance *= currentDistance;
+                        if (currentDistance < distance)
+                            distance = currentDistance;
+                    }
+                    
+                    if (!reject || distance <= 1.0)
+                    {
+                        distancesSquared[idx] += distance;
+                        indices[matched++] = idx;
+                    }
+                }
+            }
+        
+            return matched;
+        }
+        
+        // Data
         
         long mColumn;
         TestType mType;
         std::vector<CustomAtom> mValues;
         double mScale;
     };
+
     
 public:
     
