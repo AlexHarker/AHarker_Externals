@@ -251,8 +251,6 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                     case TEST_SCALE_RATIO:          x->matchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
                     case TEST_WITHIN_RATIO:         x->matchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
                 }
-                
-                x->matchers->addTarget(0.0);
             }
         }
         else
