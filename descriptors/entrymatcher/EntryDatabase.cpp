@@ -1,15 +1,16 @@
 
 #include "EntryDatabase.h"
+#include "Matchers.h"
 #include "Sort.h"
 #include <algorithm>
 #include <functional>
+#include <cmath>
 
 void EntryDatabase::reserve(long items)
 {
     HoldLock lock(&mWriteLock);
     
     mIdentifiers.reserve(items);
-    mOrder.reserve(items);
     mEntries.reserve(items * numColumns());
 }
 
@@ -131,25 +132,51 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
     }
 }
 
+void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
+{
+    Matchers matchers;
+    std::vector<t_atom> identifiers;
+    long numMatches = 0;
+    
+    if (argc)
+    {
+        ReadPointer database(this);
+    
+        matchers.setMatchers(x, argc, argv, database);
+        numMatches = matchers.match(database, true);
+        identifiers.resize(numMatches);
+        
+        for (long i = 0; i < numMatches; i++)
+            getIdentifier(&identifiers[i], matchers.getIndex(i));
+    }
+    
+    if (numMatches && matchers.size())
+    {
+        HoldLock lock(&mWriteLock);
+        
+        for (long i = numMatches - 1; i >= 0; i--)
+            removeEntry(lock, x, &identifiers[i]);
+    }
+}
+
 void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
 {
-    long order;
-    long idx = searchIdentifiers(identifier, order);
+    long idx = searchIdentifiers(CustomAtom(identifier, false));
     
-    if (idx < 0 || idx >= numItems())
+    if (idx < 0)
     {
         object_error((t_object *) x, "entry does not exist");
         return;
     }
     
     mIdentifiers.erase(mIdentifiers.begin() + idx);
-    mOrder.erase(mOrder.begin() + order);
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
 }
 
-long EntryDatabase::searchIdentifiers(const CustomAtom& identifier, long& idx) const
+long EntryDatabase::searchIdentifiers(const CustomAtom& identifier) const
 {
-    long gap = idx = numItems() / 2;
+    long idx = numItems() / 2;
+    long gap = idx;
     gap = gap < 1 ? 1 : gap;
     
     while (gap && idx < numItems())
@@ -228,6 +255,9 @@ double EntryDatabase::columnPercentile(const t_atom *specifier, double percentil
     std::vector<long> indices(nItems);
     std::vector<double> values(nItems);
     
+    if (!nItems)
+        return std::numeric_limits<double>::quiet_NaN();
+        
     long idx = std::max(0L, std::min((long) round(nItems * (percentile / 100.0)), nItems - 1));
     long column = columnFromSpecifier(specifier);
     

@@ -97,6 +97,7 @@ public:
     void setNames(void *x, long argc, t_atom *argv);
     void addEntry(void *x, long argc, t_atom *argv);
     void removeEntries(void *x, long argc, t_atom *argv);
+    void removeMatchedEntries(void *x, long argc, t_atom *argv);
     
     t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
     bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
@@ -143,16 +144,16 @@ private:
         double value = startValue;
         long column = columnFromSpecifier(specifier);
     
-        if (column >= 0 && !mColumns[column].mLabel)
-        {
-            for (long i = 0; i < numItems(); i++)
-                value = op(value, getData(i, column).mValue);
-        }
+        if (column < 0 || mColumns[column].mLabel || !numItems())
+            return std::numeric_limits<double>::quiet_NaN();
+        
+        for (long i = 0; i < numItems(); i++)
+            value = op(value, getData(i, column).mValue);
         
         return value;
     }
 
-    long searchIdentifiers(const CustomAtom& identifier, long& idx) const;
+    long searchIdentifiers(const CustomAtom& identifier) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     

@@ -36,6 +36,11 @@ template <class T> void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_at
     database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
 }
 
+template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
+}
+
 // ========================================================================================================================================== //
 // View, Save and Load Routines
 // ========================================================================================================================================== //
@@ -68,6 +73,7 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
  
     class_addmethod(class_pointer, (method)entrymatcher_entry<T>,"entry", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_remove<T>,"remove", A_GIMME, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_removeif<T>,"removeif", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_labelmodes<T>,"labelmodes", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_names<T>,"names", A_GIMME, 0);
     
