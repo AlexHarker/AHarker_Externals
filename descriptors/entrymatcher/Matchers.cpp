@@ -89,10 +89,10 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         // Assume a match for each entry (for the case of no matchers)
         
         bool matched = true;
-        double DistanceSquared = 0.0;
+        double distanceSquared = 0.0;
         
         for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(accessor, i, DistanceSquared)))
+            if (!(matched = it->match(accessor, i, distanceSquared)))
                 break;
         
         // Store the entry if it is a valid match
@@ -100,7 +100,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         if (matched)
         {
             mIndices[mNumMatches++] = i;
-            mDistancesSquared[i] = DistanceSquared;
+            mDistancesSquared[i] = distanceSquared;
         }
     }
     
