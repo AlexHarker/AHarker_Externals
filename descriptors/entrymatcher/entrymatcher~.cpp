@@ -306,8 +306,7 @@ t_int *entrymatcher_perform(t_int *w)
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            matchers->setMaxMatches(ratio_kept, n_limit);
-            num_matched_indices = matchers->match(database, true);
+            num_matched_indices = matchers->match(database, ratio_kept, n_limit, true);
         }
         
         // Choose a random entry from the valid list (if requested)
@@ -368,8 +367,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             for (long j = 0; j < x->max_matchers; j++)
                 matchers->setTarget(j, matcher_ins[j][i]);
             
-            matchers->setMaxMatches(ratio_kept, n_limit);
-            num_matched_indices = matchers->match(database, true);
+            num_matched_indices = matchers->match(database, ratio_kept, n_limit, true);
         }
         
         // Choose a random entry from the valid list (if requested)

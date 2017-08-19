@@ -28,13 +28,13 @@ void EntryDatabase::clear(HoldLock &lock)
     mOrder.clear();
 }
 
-void EntryDatabase::setLabelModes(void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
 {
     HoldLock lock(&mWriteLock);
-    setLabelModes(lock, x, argc, argv);
+    setColumnLabelModes(lock, x, argc, argv);
 }
 
-void EntryDatabase::setLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
     bool labelsModesChanged = false;
     
@@ -54,13 +54,13 @@ void EntryDatabase::setLabelModes(HoldLock &lock, void *x, long argc, t_atom *ar
         clear(lock);
 }
 
-void EntryDatabase::setNames(void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
 {
     HoldLock lock(&mWriteLock);
-    setNames(lock, x, argc, argv);
+    setColumnNames(lock, x, argc, argv);
 }
 
-void EntryDatabase::setNames(HoldLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv)
 {
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
@@ -148,7 +148,7 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
         identifiers.resize(numMatches);
         
         for (long i = 0; i < numMatches; i++)
-            getIdentifier(&identifiers[i], matchers.getIndex(i));
+            getEntryIdentifier(&identifiers[i], matchers.getIndex(i));
     }
     
     if (numMatches && matchers.size())
@@ -347,7 +347,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     {
         std::string str("entry_" + std::to_string(i + 1));
         
-        getIdentifier(&args[0], i);
+        getEntryIdentifier(&args[0], i);
         
         for (long j = 0; j < numColumns(); j++)
             getDataAtom(&args[j + 1], i, j);
@@ -400,10 +400,10 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     long argc;
     
     dictionary_getatoms(dict, gensym("names"), &argc, &argv);
-    setNames(lock, x, argc, argv);
+    setColumnNames(lock, x, argc, argv);
     
     dictionary_getatoms(dict, gensym("labelmodes"), &argc, &argv);
-    setLabelModes(lock, x, argc, argv);
+    setColumnLabelModes(lock, x, argc, argv);
     
     for (long i = 0; err == MAX_ERR_NONE; i++)
     {

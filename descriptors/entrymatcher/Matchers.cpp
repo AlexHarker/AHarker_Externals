@@ -60,7 +60,7 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
     }
 }
 
-long Matchers::match(const EntryDatabase::ReadPointer database, bool sortOnlyIfLimited) const
+long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {
     long numItems = database->numItems();
     mNumMatches = 0;
@@ -94,8 +94,10 @@ long Matchers::match(const EntryDatabase::ReadPointer database, bool sortOnlyIfL
     
     if (size())
     {
-        numMatches = round(mNumMatches * mRatioMatched);
-        numMatches = (mMaxMatches && mNumMatches > mMaxMatches) ? mMaxMatches : mNumMatches;
+        ratioMatched = std::min(std::max(ratioMatched, 0.0), 1.0);
+        maxMatches = std::max(maxMatches, 0L);
+        numMatches = round(mNumMatches * ratioMatched);
+        numMatches = (maxMatches && mNumMatches > maxMatches) ? maxMatches : mNumMatches;
 
         // FIX - better heuristics and more info on what has been sorted...
         
@@ -145,7 +147,7 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
             object_error((t_object *) x, "specified column in matchers message does not exist");
             continue;
         }
-        else if (database->getLabelMode(column) && type != TEST_MATCH)
+        else if (database->getColumnLabelMode(column) && type != TEST_MATCH)
         {
             object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
             continue;
@@ -155,7 +157,7 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
         
         // Parse values
         
-        if (database->getLabelMode(column))
+        if (database->getColumnLabelMode(column))
         {
             // If this column is for labels store details of a valid match test (other tests are not valid)
             

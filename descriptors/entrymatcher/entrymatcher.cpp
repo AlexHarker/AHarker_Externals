@@ -204,7 +204,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? database->itemFromIdentifier(argv) : atom_getlong(argv) - 1;
+    long idx = (msg == ps_lookup) ? database->getEntryIndex(argv) : atom_getlong(argv) - 1;
     entrymatcher_lookup_output(x, database, idx, --argc, ++argv);
 }
 
@@ -245,7 +245,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
             column = (column < -1 || column >= numColumns) ? 0 : column;
             
             if (column == -1)
-                database->getIdentifier(&output[i], idx);
+                database->getEntryIdentifier(&output[i], idx);
             else
                 accessor.getDataAtom(&output[i], idx, column);
         }
@@ -372,8 +372,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
         // Calculate potential matches and sort if there are matches
         
-        matchers->setMaxMatches(ratio_kept, n_limit);
-        num_matches = matchers->match(database);
+        num_matches = matchers->match(database, ratio_kept, n_limit);
         
         if (!num_matches)
             return;
@@ -394,7 +393,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
             }
             
             atom_setfloat(output_distances + i, distance);
-            database->getIdentifier(output_identifiers + i, index);
+            database->getEntryIdentifier(output_identifiers + i, index);
             atom_setlong(output_indices + i, index + 1);
         }
     }

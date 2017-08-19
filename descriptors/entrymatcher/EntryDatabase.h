@@ -93,15 +93,21 @@ public:
     size_t numItems() const         { return mIdentifiers.size(); }
     size_t numColumns() const       { return mColumns.size(); }
     
-    void setLabelModes(void *x, long argc, t_atom *argv);
-    void setNames(void *x, long argc, t_atom *argv);
+    void setColumnLabelModes(void *x, long argc, t_atom *argv);
+    void setColumnNames(void *x, long argc, t_atom *argv);
     void addEntry(void *x, long argc, t_atom *argv);
     void removeEntries(void *x, long argc, t_atom *argv);
     void removeMatchedEntries(void *x, long argc, t_atom *argv);
     
-    t_symbol *getName(long idx) const                   { return mColumns[idx].mName; }
-    bool getLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
-    void getIdentifier(t_atom *a, long idx) const       { return getIdentifierInternal(idx).getAtom(a); }
+    t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
+    bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
+    void getEntryIdentifier(t_atom *a, long idx) const       { return getIdentifierInternal(idx).getAtom(a); }
+
+    long getEntryIndex(const t_atom *identifier) const
+    {
+        long order;
+        return searchIdentifiers(CustomAtom(identifier, false), order);
+    }
     
     inline CustomAtom getData(long idx, long column) const              { return mEntries[idx * numColumns() + column]; }
     inline void getDataAtom(t_atom *a, long idx, long column) const     { return getData(idx, column).getAtom(a); }
@@ -119,17 +125,11 @@ public:
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
-    long itemFromIdentifier(const t_atom *identifier) const
-    {
-        long order;
-        return searchIdentifiers(CustomAtom(identifier, false), order);
-    }
-
 private:
 
     void clear(HoldLock &lock);
-    void setLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
-    void setNames(HoldLock &lock, void *x, long argc, t_atom *argv);
+    void setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
+    void setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv);
     void addEntry(HoldLock &lock, void *x, long argc, t_atom *argv);
     void removeEntry(HoldLock &lock, void *x, t_atom *identifier);
     

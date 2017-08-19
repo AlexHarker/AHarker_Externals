@@ -18,12 +18,12 @@ template <class T> void entrymatcher_clear(T *x)
 
 template <class T> void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object)->setColumnLabelModes(x, argc, argv);
 }
 
 template <class T> void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setNames(x, argc, argv);
+    database_getptr_write(x->database_object)->setColumnNames(x, argc, argv);
 }
 
 template <class T> void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
