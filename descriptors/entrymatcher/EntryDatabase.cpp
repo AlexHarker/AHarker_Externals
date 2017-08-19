@@ -164,7 +164,7 @@ void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
     long order;
     long idx = searchIdentifiers(identifier, order);
     
-    if (idx < 0 || idx >= numItems())
+    if (idx < 0)
     {
         object_error((t_object *) x, "entry does not exist");
         return;
