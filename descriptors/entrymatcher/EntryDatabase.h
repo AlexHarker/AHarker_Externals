@@ -119,11 +119,7 @@ public:
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
-    long itemFromIdentifier(const t_atom *identifier) const
-    {
-        long order;
-        return searchIdentifiers(CustomAtom(identifier, false), order);
-    }
+    long itemFromIdentifier(const t_atom *identifier) const { return searchIdentifiers(CustomAtom(identifier, false)); }
 
 private:
 
@@ -153,7 +149,7 @@ private:
         return value;
     }
 
-    long searchIdentifiers(const CustomAtom& identifier, long& idx) const;
+    long searchIdentifiers(const CustomAtom& identifier) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     
@@ -164,7 +160,6 @@ private:
     t_symbol *mName;
     std::vector<ColumnInfo> mColumns;
     std::vector<CustomAtom> mIdentifiers;
-    std::vector<long> mOrder;
     std::vector<CustomAtom> mEntries;
 
     mutable Lock mWriteLock;
