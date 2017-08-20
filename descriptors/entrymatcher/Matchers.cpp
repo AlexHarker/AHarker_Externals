@@ -5,59 +5,11 @@
 #include <functional>
 
 
-inline bool Matchers::Matcher::match(const EntryDatabase::RawAccessor& accessor, long idx, double& overallDistance) const
-{
-    struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
-    struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
-    
-    switch (mType)
-    {
-        case kTestMatch:
-            if (mValues[0].mType == CustomAtom::kSymbol)
-                return comparisonTest(accessor.getData(idx, mColumn), std::equal_to<t_symbol *>());
-            else
-                return comparisonTest(accessor.getData(idx, mColumn), std::equal_to<double>());
-            
-        case kTestLess:             return comparisonTest(accessor.getData(idx, mColumn), std::less<double>());
-        case kTestGreater:          return comparisonTest(accessor.getData(idx, mColumn), std::greater<double>());
-        case kTestLessEqual:        return comparisonTest(accessor.getData(idx, mColumn), std::less_equal<double>());
-        case kTestGreaterEqual:     return comparisonTest(accessor.getData(idx, mColumn), std::greater_equal<double>());
-        case kTestDistance:         return distanceTest(false, accessor.getData(idx, mColumn), overallDistance, Distance());
-        case kTestDistanceReject:   return distanceTest(true, accessor.getData(idx, mColumn), overallDistance, Distance());
-        case kTestRatio:            return distanceTest(false, accessor.getData(idx, mColumn), overallDistance, Ratio());
-        case kTestRatioReject:      return distanceTest(true, accessor.getData(idx, mColumn), overallDistance, Ratio());
-    }
-}
-
-long Matchers::Matcher::match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor) const
-{
-    struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
-    struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
-    
-    if (!numMatches)
-        return 0;
-    
-    switch (mType)
-    {
-        case kTestMatch:
-            if (mValues[0].mType == CustomAtom::kSymbol)
-                return comparisonTest<t_symbol *>(indices, numMatches, accessor, std::equal_to<t_symbol *>());
-            else
-                return comparisonTest<double>(indices, numMatches, accessor, std::equal_to<double>());
-            
-        case kTestLess:             return comparisonTest<double>(indices, numMatches, accessor, std::less<double>());
-        case kTestGreater:          return comparisonTest<double>(indices, numMatches, accessor, std::greater<double>());
-        case kTestLessEqual:        return comparisonTest<double>(indices, numMatches, accessor, std::less_equal<double>());
-        case kTestGreaterEqual:     return comparisonTest<double>(indices, numMatches, accessor, std::greater_equal<double>());
-        case kTestDistance:         return distanceTest(false, indices, distancesSquared, numMatches, accessor, Distance());
-        case kTestDistanceReject:   return distanceTest(true, indices, distancesSquared, numMatches, accessor, Distance());
-        case kTestRatio:            return distanceTest(false, indices, distancesSquared, numMatches, accessor, Ratio());
-        case kTestRatioReject:      return distanceTest(true, indices, distancesSquared, numMatches, accessor, Ratio());
-    }
-}
-
 long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {
+    struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
+    struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
+    
     long numItems = database->numItems();
     mNumMatches = 0;
     
@@ -83,7 +35,29 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     if (mAudioStyle)
     {
         for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            mNumMatches = it->match(mIndices, mDistancesSquared, mNumMatches, accessor);
+        {
+           if (!mNumMatches)
+               break;
+            
+            switch (it->mType)
+            {
+                case kTestMatch:
+                    if (database->getColumnLabelMode(it->mColumn))
+                        mNumMatches = it->comparisonTest<t_symbol *>(mIndices, mNumMatches, accessor, std::equal_to<t_symbol *>());
+                    else
+                        mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::equal_to<double>());
+                    break;
+                    
+                case kTestLess:             mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::less<double>()); break;
+                case kTestGreater:          mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::greater<double>()); break;
+                case kTestLessEqual:        mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::less_equal<double>()); break;
+                case kTestGreaterEqual:     mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::greater_equal<double>()); break;
+                case kTestDistance:         mNumMatches = it->distanceTest(false, mIndices, mDistancesSquared, mNumMatches, accessor, Distance()); break;
+                case kTestDistanceReject:   mNumMatches = it->distanceTest(true, mIndices, mDistancesSquared, mNumMatches, accessor, Distance()); break;
+                case kTestRatio:            mNumMatches = it->distanceTest(false, mIndices, mDistancesSquared, mNumMatches, accessor, Ratio()); break;
+                case kTestRatioReject:      mNumMatches = it->distanceTest(true, mIndices, mDistancesSquared, mNumMatches, accessor, Ratio()); break;
+            }
+        }
     }
     else
     {
@@ -95,8 +69,29 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             double distanceSquared = 0.0;
             
             for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-                if (!(matched = it->match(accessor, i, distanceSquared)))
+            {
+                switch (it->mType)
+                {
+                    case kTestMatch:
+                        if (database->getColumnLabelMode(it->mColumn))
+                            matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::equal_to<t_symbol *>());
+                        else
+                            matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::equal_to<double>());
+                        break;
+                        
+                    case kTestLess:             matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::less<double>()); break;
+                    case kTestGreater:          matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::greater<double>()); break;
+                    case kTestLessEqual:        matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::less_equal<double>()); break;
+                    case kTestGreaterEqual:     matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::greater_equal<double>()); break;
+                    case kTestDistance:         matched = it->distanceTest(false, accessor.getData(i, it->mColumn), distanceSquared, Distance()); break;
+                    case kTestDistanceReject:   matched = it->distanceTest(true, accessor.getData(i, it->mColumn), distanceSquared, Distance()); break;
+                    case kTestRatio:            matched = it->distanceTest(false, accessor.getData(i, it->mColumn), distanceSquared, Ratio()); break;
+                    case kTestRatioReject:      matched = it->distanceTest(true, accessor.getData(i, it->mColumn), distanceSquared, Ratio()); break;
+                }
+
+                if (!matched)
                     break;
+            }
             
             // Store the entry if it is a valid match
             

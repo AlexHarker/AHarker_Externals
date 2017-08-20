@@ -15,13 +15,9 @@ public:
     
 private:
     
-    class Matcher
+    struct Matcher
     {
-        
-    public:
-        
-        Matcher(TestType type, long column, double scale = 1.0)
-        : mType(type), mColumn(column), mScale(scale) {}
+        Matcher(TestType type, long column, double scale = 1.0) : mType(type), mColumn(column), mScale(scale) {}
         
         void addTarget(double value)            { mValues.push_back(value); }
         void addTarget(t_symbol *value)         { mValues.push_back(value); }
@@ -32,11 +28,6 @@ private:
             mValues[0] = value;
         }
 
-        inline bool match(const EntryDatabase::RawAccessor& accessor, long idx, double& overallDistance) const;
-        long match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor) const;
-        
-    private:
-        
         template <typename T, typename Op> inline bool comparisonTest(const T value, Op op) const
         {
             for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
