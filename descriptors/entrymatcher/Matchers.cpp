@@ -73,10 +73,12 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             mIndices[i] = i;
             mDistancesSquared[i] = 0.0;
         }
+        
+        mNumMatches = numItems;
     }
 
     if (!size())
-        return mNumMatches = numItems;
+        return numItems;
     
     if (mAudioStyle)
     {

@@ -60,6 +60,11 @@ template <class T> void entrymatcher_load(T *x, t_symbol *file)
     database_getptr_write(x->database_object)->load((t_object *)x, file);
 }
 
+template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
+{
+    x->matchers->setAudioStyle(style ? true : false);
+}
+
 // ========================================================================================================================================== //
 // Add Common Routines
 // ========================================================================================================================================== //
@@ -80,6 +85,8 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
     class_addmethod(class_pointer, (method)entrymatcher_load<T>, "read", A_DEFSYM, 0);
+
+    class_addmethod(class_pointer, (method)entrymatcher_audiostyle<T>, "audiostyle", A_DEFLONG, 0);
 }
 
 #endif
