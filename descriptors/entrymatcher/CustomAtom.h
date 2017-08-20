@@ -6,21 +6,37 @@
 #include <vector>
 #include <string>
 
+union UntypedAtom
+{
+    UntypedAtom() : mInt(0) {}
+    UntypedAtom(double val) : mValue(val) {}
+    UntypedAtom(t_atom_long val) : mInt(val) {}
+    UntypedAtom(t_symbol *val) : mSymbol(val) {}
+    
+    operator double() const         { return mValue; }
+    operator t_atom_long() const    { return mInt; }
+    operator t_symbol *() const     { return mSymbol; }
+    
+    double mValue;
+    t_atom_long mInt;
+    t_symbol *mSymbol;
+};
+
 struct CustomAtom
 {
     enum CompareResult { kLess, kGreater, kEqual };
     enum Type { kSymbol, kDouble, kTranslatedInt, kInt  };
     
-    CustomAtom() :  mType(kDouble), mValue(0.0) {}
-    CustomAtom(double val) : mType(kDouble), mValue(val) {}
-    CustomAtom(t_symbol *sym) : mType(kSymbol), mSymbol(sym) {}
+    CustomAtom() : mData(0.0), mType(kDouble) {}
+    CustomAtom(double val) : mData(val), mType(kDouble) {}
+    CustomAtom(t_symbol *sym) : mData(sym), mType(kSymbol) {}
     
     CustomAtom(t_atom_long val, bool translate = true) : mType(translate ? kTranslatedInt : kInt)
     {
         if (translate)
-            mValue = val;
+            mData.mValue = val;
         else
-            mInt = val;
+            mData.mInt = val;
     }
     
     CustomAtom(const t_atom *a, bool translate = true)
@@ -36,14 +52,16 @@ struct CustomAtom
         }
     }
     
+    CustomAtom(const UntypedAtom& a, const Type type) : mData(a), mType(type) {}
+    
     void inline getAtom(t_atom *a) const
     {
         switch (mType)
         {
-            case kSymbol:           atom_setsym(a, mSymbol);    break;
-            case kDouble:           atom_setfloat(a, mValue);   break;
-            case kInt:              atom_setlong(a, mInt);      break;
-            case kTranslatedInt:    atom_setlong(a, mValue);    break;
+            case kSymbol:           atom_setsym(a, mData.mSymbol);    break;
+            case kDouble:           atom_setfloat(a, mData.mValue);   break;
+            case kInt:              atom_setlong(a, mData.mInt);      break;
+            case kTranslatedInt:    atom_setlong(a, mData.mValue);    break;
         }
     }
     
@@ -51,10 +69,10 @@ struct CustomAtom
     {
         switch (mType)
         {
-            case kSymbol:           return mSymbol->s_name;
-            case kDouble:           return std::to_string(mValue);
-            case kInt:              return std::to_string(mInt);
-            case kTranslatedInt:    return std::to_string((t_atom_long) mValue);
+            case kSymbol:           return mData.mSymbol->s_name;
+            case kDouble:           return std::to_string(mData.mValue);
+            case kInt:              return std::to_string(mData.mInt);
+            case kTranslatedInt:    return std::to_string((t_atom_long) mData.mValue);
         }
     }
     
@@ -65,26 +83,21 @@ struct CustomAtom
             switch (a.mType)
             {
                 case kDouble:
-                case kTranslatedInt:  return a.mValue == b.mValue ? kEqual : a.mValue < b.mValue ? kLess : kGreater;
-                case kInt:            return a.mInt == b.mInt ? kEqual : a.mInt < b.mInt ? kLess : kGreater;
-                case kSymbol:         return a.mSymbol == b.mSymbol ? kEqual :a.mSymbol < b.mSymbol ? kLess : kGreater;
+                case kTranslatedInt:  return a.mData.mValue == b.mData.mValue ? kEqual : a.mData.mValue < b.mData.mValue ? kLess : kGreater;
+                case kInt:            return a.mData.mInt == b.mData.mInt ? kEqual : a.mData.mInt < b.mData.mInt ? kLess : kGreater;
+                case kSymbol:         return a.mData.mSymbol == b.mData.mSymbol ? kEqual :a.mData.mSymbol < b.mData.mSymbol ? kLess : kGreater;
             }
         }
         
         return (a.mType < b.mType) ? kLess : kGreater;
     }
     
-    operator double() const         { return mValue; }
-    operator t_atom_long() const    { return mInt; }
-    operator t_symbol *() const     { return mSymbol; }
+    operator double() const         { return mData.mValue; }
+    operator t_atom_long() const    { return mData.mInt; }
+    operator t_symbol *() const     { return mData.mSymbol; }
     
+    UntypedAtom mData;
     Type mType;
-    union
-    {
-        double mValue;
-        t_atom_long mInt;
-        t_symbol *mSymbol;
-    };
 };
 
 #endif

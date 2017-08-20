@@ -21,7 +21,7 @@ private:
     public:
         
         Matcher(TestType type, long column, double scale = 1.0)
-        : mColumn(column), mType(type), mScale(scale) {}
+        : mType(type), mColumn(column), mScale(scale) {}
         
         void addTarget(double value)            { mValues.push_back(value); }
         void addTarget(t_symbol *value)         { mValues.push_back(value); }
@@ -32,7 +32,7 @@ private:
             mValues[0] = value;
         }
 
-        inline bool match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const;
+        inline bool match(const EntryDatabase::RawAccessor& accessor, long idx, double& overallDistance) const;
         
     private:
         
@@ -60,8 +60,8 @@ private:
             return !reject || distance <= 1.0;
         }
         
-        long mColumn;
         TestType mType;
+        long mColumn;
         std::vector<CustomAtom> mValues;
         double mScale;
     };

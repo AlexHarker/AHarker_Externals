@@ -44,21 +44,35 @@ class EntryDatabase
 
 public:
     
-    class Accessor
+    class RawAccessor
     {
         friend EntryDatabase;
         
     public:
         
-        inline CustomAtom getData(long idx, long column) const              { return mIterator[idx * mNumColumns + column]; }
-        inline void getDataAtom(t_atom *a, long idx, long column) const     { return getData(idx, column).getAtom(a); }
+        inline UntypedAtom getData(long idx, long column) const                  { return mIterator[idx * mNumColumns + column]; }
 
+    protected:
+        
+        RawAccessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
+        
+        const long mNumColumns;
+        const std::vector<const UntypedAtom>::iterator mIterator;
+    };
+    
+    class AtomAccessor : private RawAccessor
+    {
+        friend EntryDatabase;
+        
+    public:
+        
+        inline void getDataAtom(t_atom *a, long idx, long column) const       { CustomAtom(getData(idx, column), mTypes[idx * mNumColumns + column]).getAtom(a); }
+        
     private:
         
-        Accessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
-
-        const long mNumColumns;
-        const std::vector<const CustomAtom>::iterator mIterator;
+        AtomAccessor(const EntryDatabase& database) : RawAccessor(database), mTypes(database.mTypes.begin()) {}
+        
+        const std::vector<const CustomAtom::Type>::iterator mTypes;
     };
     
     struct ReadPointer
@@ -85,7 +99,8 @@ public:
     
     EntryDatabase(t_symbol *name, long numCols) : mName(name) { mColumns.resize(numCols); }
     
-    Accessor accessor() const { return Accessor(*this); }
+    RawAccessor rawAccessor() const { return RawAccessor(*this); }
+    AtomAccessor atomAccessor() const { return AtomAccessor(*this); }
 
     void reserve(long items);
     void clear();
@@ -108,9 +123,6 @@ public:
         return searchIdentifiers(identifier, order);
     }
     
-    inline CustomAtom getData(long idx, long column) const              { return mEntries[idx * numColumns() + column]; }
-    inline void getDataAtom(t_atom *a, long idx, long column) const     { return getData(idx, column).getAtom(a); }
-    
     long columnFromSpecifier(const t_atom *specifier) const;
     
     double columnMin(const t_atom *specifier) const;
@@ -126,6 +138,10 @@ public:
 
 private:
 
+    inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
+    inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
+    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
+    
     void clear(HoldLock &lock);
     void setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
     void setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv);
@@ -147,7 +163,7 @@ private:
             return std::numeric_limits<double>::quiet_NaN();
         
         for (long i = 0; i < numItems(); i++)
-            value = op(value, getData(i, column).mValue);
+            value = op(value, getData(i, column));
         
         return value;
     }
@@ -156,7 +172,11 @@ private:
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     
-    inline void setData(long idx, long column, const CustomAtom& data)  { mEntries[idx * numColumns() + column] = data; }
+    inline void setData(long idx, long column, const CustomAtom& data)
+    {
+        mEntries[idx * numColumns() + column] = data.mData;
+        mTypes[idx * numColumns() + column] = data.mType;
+    }
     
     // Data
     
@@ -164,7 +184,8 @@ private:
     std::vector<ColumnInfo> mColumns;
     std::vector<CustomAtom> mIdentifiers;
     std::vector<long> mOrder;
-    std::vector<CustomAtom> mEntries;
+    std::vector<UntypedAtom> mEntries;
+    std::vector<CustomAtom::Type> mTypes;
 
     mutable Lock mWriteLock;
     mutable Lock mReadLock;

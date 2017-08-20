@@ -13,6 +13,7 @@ void EntryDatabase::reserve(long items)
     mIdentifiers.reserve(items);
     mOrder.reserve(items);
     mEntries.reserve(items * numColumns());
+    mTypes.reserve(items * numColumns());
 }
 
 void EntryDatabase::clear()
@@ -26,6 +27,7 @@ void EntryDatabase::clear(HoldLock &lock)
     mEntries.clear();
     mIdentifiers.clear();
     mOrder.clear();
+    mTypes.clear();
 }
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
@@ -97,6 +99,7 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
     {
         idx = numItems();
         mEntries.resize((idx + 1) * numColumns());
+        mTypes.resize((idx + 1) * numColumns());
         mOrder.insert(mOrder.begin() + order, idx);
         mIdentifiers.push_back(CustomAtom(identifier, false));
     }
@@ -173,6 +176,7 @@ void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
     mIdentifiers.erase(mIdentifiers.begin() + idx);
     mOrder.erase(mOrder.begin() + order);
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
+    mTypes.erase(mTypes.begin() + (idx * numColumns()), mTypes.begin() + ((idx + 1) * numColumns()));
  
     for (std::vector<long>::iterator it = mOrder.begin(); it != mOrder.end(); it++)
         if (*it > idx)
@@ -271,7 +275,7 @@ double EntryDatabase::columnPercentile(const t_atom *specifier, double percentil
     for (long i = 0; i < numItems(); i++)
     {
         indices[i] = i;
-        values[i] = getData(i, column).mValue;
+        values[i] = getData(i, column);
     }
 
     sort(indices, values, nItems);
@@ -296,7 +300,7 @@ void EntryDatabase::view(t_object *database_object) const
         for (long j = 0; j < numColumns(); j++)
         {
             str.insert(str.size(), " ");
-            str.insert(str.size(), getData(i, j).getString());
+            str.insert(str.size(), getTypedData(i, j).getString());
         }
         
         if (i != (numItems() - 1))

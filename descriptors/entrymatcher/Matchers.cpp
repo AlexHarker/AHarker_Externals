@@ -5,7 +5,7 @@
 #include <functional>
 
 
-inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, long idx, double& overallDistance) const
+inline bool Matchers::Matcher::match(const EntryDatabase::RawAccessor& accessor, long idx, double& overallDistance) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
@@ -13,19 +13,19 @@ inline bool Matchers::Matcher::match(const EntryDatabase::Accessor& accessor, lo
     switch (mType)
     {
         case kTestMatch:
-            if (accessor.getData(idx, mColumn).mType == CustomAtom::kSymbol)
-                return comparisonTest(accessor.getData(idx, mColumn).mSymbol, std::equal_to<t_symbol *>());
+            if (mValues[0].mType == CustomAtom::kSymbol)
+                return comparisonTest(accessor.getData(idx, mColumn), std::equal_to<t_symbol *>());
             else
-                return comparisonTest(accessor.getData(idx, mColumn).mValue, std::equal_to<double>());
+                return comparisonTest(accessor.getData(idx, mColumn), std::equal_to<double>());
             
-        case kTestLess:             return comparisonTest(accessor.getData(idx, mColumn).mValue, std::less<double>());
-        case kTestGreater:          return comparisonTest(accessor.getData(idx, mColumn).mValue, std::greater<double>());
-        case kTestLessEqual:        return comparisonTest(accessor.getData(idx, mColumn).mValue, std::less_equal<double>());
-        case kTestGreaterEqual:     return comparisonTest(accessor.getData(idx, mColumn).mValue, std::greater_equal<double>());
-        case kTestDistance:         return distanceTest(false, accessor.getData(idx, mColumn).mValue, overallDistance, Distance());
-        case kTestDistanceReject:   return distanceTest(true, accessor.getData(idx, mColumn).mValue, overallDistance, Distance());
-        case kTestRatio:            return distanceTest(false, accessor.getData(idx, mColumn).mValue, overallDistance, Ratio());
-        case kTestRatioReject:      return distanceTest(true, accessor.getData(idx, mColumn).mValue, overallDistance, Ratio());
+        case kTestLess:             return comparisonTest(accessor.getData(idx, mColumn), std::less<double>());
+        case kTestGreater:          return comparisonTest(accessor.getData(idx, mColumn), std::greater<double>());
+        case kTestLessEqual:        return comparisonTest(accessor.getData(idx, mColumn), std::less_equal<double>());
+        case kTestGreaterEqual:     return comparisonTest(accessor.getData(idx, mColumn), std::greater_equal<double>());
+        case kTestDistance:         return distanceTest(false, accessor.getData(idx, mColumn), overallDistance, Distance());
+        case kTestDistanceReject:   return distanceTest(true, accessor.getData(idx, mColumn), overallDistance, Distance());
+        case kTestRatio:            return distanceTest(false, accessor.getData(idx, mColumn), overallDistance, Ratio());
+        case kTestRatioReject:      return distanceTest(true, accessor.getData(idx, mColumn), overallDistance, Ratio());
     }
 }
 
@@ -37,7 +37,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     mIndices.resize(numItems);
     mDistancesSquared.resize(numItems);
     
-    const EntryDatabase::Accessor accessor = database->accessor();
+    const EntryDatabase::RawAccessor accessor = database->rawAccessor();
     
     if (!size())
     {

@@ -215,7 +215,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
     long numItems = database->numItems();
     long numColumns = database->numColumns();
     
-    EntryDatabase::Accessor accessor = database->accessor();
+    EntryDatabase::AtomAccessor accessor = database->atomAccessor();
     
     if (idx < 0 || idx >= numItems)
     {
