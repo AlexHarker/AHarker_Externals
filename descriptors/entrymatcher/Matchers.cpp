@@ -29,6 +29,33 @@ inline bool Matchers::Matcher::match(const EntryDatabase::RawAccessor& accessor,
     }
 }
 
+long Matchers::Matcher::match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor) const
+{
+    struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
+    struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
+    
+    if (!numMatches)
+        return 0;
+    
+    switch (mType)
+    {
+        case kTestMatch:
+            if (mValues[0].mType == CustomAtom::kSymbol)
+                return comparisonTest<t_symbol *>(indices, numMatches, accessor, std::equal_to<t_symbol *>());
+            else
+                return comparisonTest<double>(indices, numMatches, accessor, std::equal_to<double>());
+            
+        case kTestLess:             return comparisonTest<double>(indices, numMatches, accessor, std::less<double>());
+        case kTestGreater:          return comparisonTest<double>(indices, numMatches, accessor, std::greater<double>());
+        case kTestLessEqual:        return comparisonTest<double>(indices, numMatches, accessor, std::less_equal<double>());
+        case kTestGreaterEqual:     return comparisonTest<double>(indices, numMatches, accessor, std::greater_equal<double>());
+        case kTestDistance:         return distanceTest(false, indices, distancesSquared, numMatches, accessor, Distance());
+        case kTestDistanceReject:   return distanceTest(true, indices, distancesSquared, numMatches, accessor, Distance());
+        case kTestRatio:            return distanceTest(false, indices, distancesSquared, numMatches, accessor, Ratio());
+        case kTestRatioReject:      return distanceTest(true, indices, distancesSquared, numMatches, accessor, Ratio());
+    }
+}
+
 long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {
     long numItems = database->numItems();
@@ -39,34 +66,43 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     
     const EntryDatabase::RawAccessor accessor = database->rawAccessor();
     
-    if (!size())
+    if (!size() || mAudioStyle)
     {
         for (long i = 0; i < numItems; i++)
         {
             mIndices[i] = i;
             mDistancesSquared[i] = 0.0;
         }
-        
-        return mNumMatches = numItems;
     }
 
-    for (long i = 0; i < numItems; i++)
+    if (!size())
+        return mNumMatches = numItems;
+    
+    if (mAudioStyle)
     {
-        // Assume a match for each entry (for the case of no matchers)
-        
-        bool matched = true;
-        double distanceSquared = 0.0;
-        
         for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
-            if (!(matched = it->match(accessor, i, distanceSquared)))
-                break;
-        
-        // Store the entry if it is a valid match
-        
-        if (matched)
+            mNumMatches = it->match(mIndices, mDistancesSquared, mNumMatches, accessor);
+    }
+    else
+    {
+        for (long i = 0; i < numItems; i++)
         {
-            mIndices[mNumMatches++] = i;
-            mDistancesSquared[i] = distanceSquared;
+            // Assume a match for each entry (for the case of no matchers)
+            
+            bool matched = true;
+            double distanceSquared = 0.0;
+            
+            for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
+                if (!(matched = it->match(accessor, i, distanceSquared)))
+                    break;
+            
+            // Store the entry if it is a valid match
+            
+            if (matched)
+            {
+                mIndices[mNumMatches++] = i;
+                mDistancesSquared[i] = distanceSquared;
+            }
         }
     }
     

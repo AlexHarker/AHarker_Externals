@@ -33,6 +33,7 @@ private:
         }
 
         inline bool match(const EntryDatabase::RawAccessor& accessor, long idx, double& overallDistance) const;
+        long match(std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor) const;
         
     private:
         
@@ -60,6 +61,89 @@ private:
             return !reject || distance <= 1.0;
         }
         
+        template <typename T, typename Op> inline long comparisonTest(std::vector<long>& indices, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        {
+            long matched = 0;
+            
+            if (mValues.size() == 1)
+            {
+                T comparisonValue = mValues[0];
+                
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    
+                    if (op(accessor.getData(idx, mColumn), comparisonValue))
+                        indices[matched++] = idx;
+                }
+            }
+            else
+            {
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    UntypedAtom value = accessor.getData(idx, mColumn);
+                    
+                    for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+                    {
+                        if (op(value, (*it)))
+                        {
+                            indices[matched++] = idx;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return matched;
+        }
+        
+        template <typename Op> inline long distanceTest(bool reject, std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        {
+            long matched = 0;
+            
+            if (mValues.size() == 1)
+            {
+                double comparisonValue = mValues[0];
+                
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    double distance = op(comparisonValue, accessor.getData(idx, mColumn).mValue, mScale);
+                    distance *= distance;
+                    distancesSquared[idx] += distance;
+                    
+                    if (!reject || distance <= 1.0)
+                        indices[matched++] = idx;
+                }
+            }
+            else
+            {
+                for (long i = 0; i < numMatches; i++)
+                {
+                    long idx = indices[i];
+                    double value = accessor.getData(idx, mColumn).mValue;
+                    double distance = HUGE_VAL;
+                    
+                    for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
+                    {
+                        double currentDistance = op((*it), value, mScale);
+                        currentDistance *= currentDistance;
+                        if (currentDistance < distance)
+                            distance = currentDistance;
+                    }
+                    
+                    if (!reject || distance <= 1.0)
+                    {
+                        distancesSquared[idx] += distance;
+                        indices[matched++] = idx;
+                    }
+                }
+            }
+            
+            return matched;
+        }
+
         TestType mType;
         long mColumn;
         std::vector<CustomAtom> mValues;
@@ -68,7 +152,7 @@ private:
     
 public:
     
-    Matchers() : mNumMatches(0) {}
+    Matchers() : mNumMatches(0), mAudioStyle(false) {}
     
     long match(const EntryDatabase::ReadPointer database, double ratioMatched = 1.0, long maxMatches = 0, bool sortOnlyIfLimited = false) const;
     
@@ -91,7 +175,7 @@ public:
     void addMatcher(TestType type, long column, double scale = 1.0);
     
     void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database);
-    
+    void setAudioStyle(bool style) { mAudioStyle = style; }
 private:
     
     long sortTopN(long N, long size) const;
@@ -102,6 +186,7 @@ private:
     mutable std::vector<double> mDistancesSquared;
     
     std::vector<Matcher> mMatchers;
+    bool mAudioStyle;
 };
 
 
