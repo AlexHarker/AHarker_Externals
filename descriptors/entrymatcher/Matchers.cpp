@@ -13,18 +13,14 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     long numItems = database->numItems();
     mNumMatches = 0;
     
-    mIndices.resize(numItems);
-    mDistancesSquared.resize(numItems);
+    mResults.resize(numItems);
     
     const EntryDatabase::RawAccessor accessor = database->rawAccessor();
     
     if (!size() || mAudioStyle)
     {
         for (long i = 0; i < numItems; i++)
-        {
-            mIndices[i] = i;
-            mDistancesSquared[i] = 0.0;
-        }
+            mResults[i] = Result(i, 0.0);
         
         mNumMatches = numItems;
     }
@@ -43,19 +39,19 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             {
                 case kTestMatch:
                     if (database->getColumnLabelMode(it->mColumn))
-                        mNumMatches = it->comparisonTest<t_symbol *>(mIndices, mNumMatches, accessor, std::equal_to<t_symbol *>());
+                        mNumMatches = it->comparisonTest<t_symbol *>(mResults, mNumMatches, accessor, std::equal_to<t_symbol *>());
                     else
-                        mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::equal_to<double>());
+                        mNumMatches = it->comparisonTest<double>(mResults, mNumMatches, accessor, std::equal_to<double>());
                     break;
                     
-                case kTestLess:             mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::less<double>()); break;
-                case kTestGreater:          mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::greater<double>()); break;
-                case kTestLessEqual:        mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::less_equal<double>()); break;
-                case kTestGreaterEqual:     mNumMatches = it->comparisonTest<double>(mIndices, mNumMatches, accessor, std::greater_equal<double>()); break;
-                case kTestDistance:         mNumMatches = it->distanceTest(false, mIndices, mDistancesSquared, mNumMatches, accessor, Distance()); break;
-                case kTestDistanceReject:   mNumMatches = it->distanceTest(true, mIndices, mDistancesSquared, mNumMatches, accessor, Distance()); break;
-                case kTestRatio:            mNumMatches = it->distanceTest(false, mIndices, mDistancesSquared, mNumMatches, accessor, Ratio()); break;
-                case kTestRatioReject:      mNumMatches = it->distanceTest(true, mIndices, mDistancesSquared, mNumMatches, accessor, Ratio()); break;
+                case kTestLess:             mNumMatches = it->comparisonTest<double>(mResults, mNumMatches, accessor, std::less<double>()); break;
+                case kTestGreater:          mNumMatches = it->comparisonTest<double>(mResults, mNumMatches, accessor, std::greater<double>()); break;
+                case kTestLessEqual:        mNumMatches = it->comparisonTest<double>(mResults, mNumMatches, accessor, std::less_equal<double>()); break;
+                case kTestGreaterEqual:     mNumMatches = it->comparisonTest<double>(mResults, mNumMatches, accessor, std::greater_equal<double>()); break;
+                case kTestDistance:         mNumMatches = it->distanceTest(false, mResults, mNumMatches, accessor, Distance()); break;
+                case kTestDistanceReject:   mNumMatches = it->distanceTest(true, mResults, mNumMatches, accessor, Distance()); break;
+                case kTestRatio:            mNumMatches = it->distanceTest(false, mResults, mNumMatches, accessor, Ratio()); break;
+                case kTestRatioReject:      mNumMatches = it->distanceTest(true, mResults, mNumMatches, accessor, Ratio()); break;
             }
         }
     }
@@ -96,10 +92,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             // Store the entry if it is a valid match
             
             if (matched)
-            {
-                mIndices[mNumMatches++] = i;
-                mDistancesSquared[i] = distanceSquared;
-            }
+                mResults[mNumMatches++] = Result(i, distanceSquared);
         }
     }
     
@@ -115,7 +108,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
         if (numMatches < (database->numItems() / 8))
             numMatches = sortTopN(numMatches, mNumMatches);
         else
-            sort(mIndices, mDistancesSquared, mNumMatches);
+            sort(mResults, mNumMatches);
     }
     
     return mNumMatches = numMatches;
@@ -236,19 +229,19 @@ long Matchers::sortTopN(long N, long size) const
     
     for (long i = 0; i < N; i++)
     {
-        double minDistance = mDistancesSquared[mIndices[i]];
+        double minDistance = mResults[i].mDistance;
         long swap = i;
         
         for (long j = i + 1; j < size; j++)
         {
-            if (mDistancesSquared[mIndices[j]] < minDistance)
+            if (mResults[j].mDistance < minDistance)
             {
-                minDistance = mDistancesSquared[mIndices[j]];
+                minDistance = mResults[j].mDistance;
                 swap = j;
             }
         }
         
-        std::swap(mIndices[swap], mIndices[i]);
+        std::swap(mResults[swap], mResults[i]);
     }
     
     return N;

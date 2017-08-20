@@ -14,6 +14,17 @@ public:
     enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
     
 private:
+ 
+    struct Result
+    {
+        Result() {}
+        Result(long index, double distance) : mIndex(index), mDistance(distance) {}
+        
+        friend bool operator > (const Result& a, const Result& b) { return a.mDistance > b.mDistance; }
+        
+        long mIndex;
+        double mDistance;
+    };
     
     struct Matcher
     {
@@ -52,7 +63,7 @@ private:
             return !reject || distance <= 1.0;
         }
         
-        template <typename T, typename Op> inline long comparisonTest(std::vector<long>& indices, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        template <typename T, typename Op> inline long comparisonTest(std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -62,24 +73,24 @@ private:
                 
                 for (long i = 0; i < numMatches; i++)
                 {
-                    long idx = indices[i];
+                    long idx = results[i].mIndex;
                     
                     if (op(accessor.getData(idx, mColumn), comparisonValue))
-                        indices[matched++] = idx;
+                        results[matched++] = Result(idx, results[i].mDistance);
                 }
             }
             else
             {
                 for (long i = 0; i < numMatches; i++)
                 {
-                    long idx = indices[i];
+                    long idx = results[i].mIndex;
                     UntypedAtom value = accessor.getData(idx, mColumn);
                     
                     for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
                     {
                         if (op(value, (*it)))
                         {
-                            indices[matched++] = idx;
+                            results[matched++] = Result(idx, results[i].mDistance);
                             break;
                         }
                     }
@@ -89,7 +100,7 @@ private:
             return matched;
         }
         
-        template <typename Op> inline long distanceTest(bool reject, std::vector<long>& indices, std::vector<double>& distancesSquared, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        template <typename Op> inline long distanceTest(bool reject, std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -99,20 +110,19 @@ private:
                 
                 for (long i = 0; i < numMatches; i++)
                 {
-                    long idx = indices[i];
+                    long idx = results[i].mIndex;
                     double distance = op(comparisonValue, accessor.getData(idx, mColumn).mValue, mScale);
                     distance *= distance;
-                    distancesSquared[idx] += distance;
                     
                     if (!reject || distance <= 1.0)
-                        indices[matched++] = idx;
+                        results[matched++] = Result(idx, results[i].mDistance + distance);
                 }
             }
             else
             {
                 for (long i = 0; i < numMatches; i++)
                 {
-                    long idx = indices[i];
+                    long idx = results[i].mIndex;
                     double value = accessor.getData(idx, mColumn).mValue;
                     double distance = HUGE_VAL;
                     
@@ -125,10 +135,7 @@ private:
                     }
                     
                     if (!reject || distance <= 1.0)
-                    {
-                        distancesSquared[idx] += distance;
-                        indices[matched++] = idx;
-                    }
+                        results[matched++] = Result(idx, results[i].mDistance + distance);
                 }
             }
             
@@ -158,8 +165,8 @@ public:
     }
     
     long getNumMatches() const              { return mNumMatches; }
-    long getIndex(long idx) const           { return mIndices[idx]; }
-    double getDistance(long idx) const      { return sqrt(mDistancesSquared[idx]); }
+    long getIndex(long idx) const           { return mResults[idx].mIndex; }
+    double getDistance(long idx) const      { return sqrt(mResults[idx].mDistance); }
     
     void addTarget(double value);
     void addTarget(t_symbol *value);
@@ -173,8 +180,7 @@ private:
     
     mutable long mNumMatches;
     
-    mutable std::vector<long> mIndices;
-    mutable std::vector<double> mDistancesSquared;
+    mutable std::vector<Result> mResults;
     
     std::vector<Matcher> mMatchers;
     bool mAudioStyle;
