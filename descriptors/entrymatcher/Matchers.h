@@ -30,7 +30,7 @@ private:
     {
         Matcher(TestType type, long column, double scale = 1.0) : mType(type), mColumn(column), mScale(scale) {}
 
-        template <typename T, typename Op> inline bool comparisonTest(const T value, Op op) const
+        template <typename Op> inline bool comparisonTest(const UntypedAtom value, Op op) const
         {
             for (std::vector<const CustomAtom>::iterator it = mValues.begin(); it != mValues.end(); it++)
                 if (op(value, (*it))) return true;
