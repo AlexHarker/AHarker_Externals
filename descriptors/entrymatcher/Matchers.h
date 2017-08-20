@@ -29,15 +29,6 @@ private:
     struct Matcher
     {
         Matcher(TestType type, long column, double scale = 1.0) : mType(type), mColumn(column), mScale(scale) {}
-        
-        void addTarget(double value)            { mValues.push_back(value); }
-        void addTarget(t_symbol *value)         { mValues.push_back(value); }
-        
-        void setTarget(double value)
-        {
-            mValues.resize(1);
-            mValues[0] = value;
-        }
 
         template <typename T, typename Op> inline bool comparisonTest(const T value, Op op) const
         {
@@ -161,7 +152,10 @@ public:
     void setTarget(long idx, double value)
     {
         if (idx >= 0 && idx < size())
-            mMatchers[idx].setTarget(value);
+        {
+            mMatchers[idx].mValues.resize(1);
+            mMatchers[idx].mValues[0] = value;
+        }
     }
     
     long getNumMatches() const              { return mNumMatches; }
@@ -174,6 +168,7 @@ public:
     
     void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database);
     void setAudioStyle(bool style) { mAudioStyle = style; }
+    
 private:
     
     long sortTopN(long N, long size) const;

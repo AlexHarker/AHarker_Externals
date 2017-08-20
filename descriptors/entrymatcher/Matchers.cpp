@@ -255,13 +255,13 @@ void Matchers::clear()
 void Matchers::addTarget(double value)
 {
     if (mMatchers.size())
-        mMatchers.back().addTarget(value);
+        mMatchers.back().mValues.push_back(value);
 }
 
 void Matchers::addTarget(t_symbol *value)
 {
     if (mMatchers.size())
-        mMatchers.back().addTarget(value);
+        mMatchers.back().mValues.push_back(value);;
 }
 
 void Matchers::addMatcher(TestType type, long column, double scale)
