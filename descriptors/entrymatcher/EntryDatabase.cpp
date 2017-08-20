@@ -178,9 +178,22 @@ void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
     mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
     mTypes.erase(mTypes.begin() + (idx * numColumns()), mTypes.begin() + ((idx + 1) * numColumns()));
  
-    for (std::vector<long>::iterator it = mOrder.begin(); it != mOrder.end(); it++)
+    std::vector<long>::iterator it = mOrder.begin();
+    
+    // Unrolled order updating for speed
+    
+    for ( ; it < (mOrder.end() - 3); it += 4)
+    {
+        if (it[0] > idx) it[0]--;
+        if (it[1] > idx) it[1]--;
+        if (it[2] > idx) it[2]--;
+        if (it[3] > idx) it[3]--;
+    }
+    
+    for ( ; it != mOrder.end(); it++)
         if (*it > idx)
             (*it)--;
+
 }
 
 long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const

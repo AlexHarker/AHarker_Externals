@@ -25,7 +25,7 @@ union UntypedAtom
 struct CustomAtom
 {
     enum CompareResult { kLess, kGreater, kEqual };
-    enum Type { kSymbol, kDouble, kTranslatedInt, kInt  };
+    enum Type : unsigned char { kSymbol, kDouble, kTranslatedInt, kInt  };
     
     CustomAtom() : mData(0.0), mType(kDouble) {}
     CustomAtom(double val) : mData(val), mType(kDouble) {}
