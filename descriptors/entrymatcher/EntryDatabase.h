@@ -147,6 +147,7 @@ private:
     void setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv);
     void addEntry(HoldLock &lock, void *x, long argc, t_atom *argv);
     void removeEntry(HoldLock &lock, void *x, t_atom *identifier);
+    void removeEntries(HoldLock &lock, const std::vector<long>& indices);
     
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
@@ -168,6 +169,7 @@ private:
         return value;
     }
 
+    long getOrder(long idx);
     long searchIdentifiers(const t_atom *identifierAtom, long& idx) const;
 
     CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}

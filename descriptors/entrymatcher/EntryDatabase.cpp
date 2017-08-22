@@ -138,7 +138,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 {
     Matchers matchers;
-    std::vector<t_atom> identifiers;
+    std::vector<long> indices;
     long numMatches = 0;
     
     if (argc)
@@ -147,19 +147,116 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
     
         matchers.setMatchers(x, argc, argv, database);
         numMatches = matchers.match(database, true);
-        identifiers.resize(numMatches);
+        indices.resize(numMatches);
         
         for (long i = 0; i < numMatches; i++)
-            getEntryIdentifier(&identifiers[i], matchers.getIndex(i));
+            indices[i] = matchers.getIndex(i);
     }
     
     if (numMatches && matchers.size())
     {
         HoldLock lock(&mWriteLock);
         
-        for (long i = numMatches - 1; i >= 0; i--)
-            removeEntry(lock, x, &identifiers[i]);
+        removeEntries(lock, indices);
     }
+}
+
+template <class T> void copyRange(std::vector<T>& data, long from, long to, long size, long itemSize = 1)
+{
+    std::copy(data.begin() + (from * itemSize), data.begin() + (from + size) * itemSize, data.begin() + to * itemSize);
+}
+
+long EntryDatabase::getOrder(long idx)
+{
+    t_atom identifier;
+    long order;
+    mIdentifiers[idx].getAtom(&identifier);
+    searchIdentifiers(&identifier, order);
+    
+    return order;
+}
+
+void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indices)
+{
+    long orderStart = getOrder(indices[0]);
+    long offset = indices[0];
+    long next = indices[0];
+    long size;
+    long end;
+    
+    // Setup new order vector
+    
+    std::vector<long> newOrder(numItems());
+    std::copy(mOrder.begin(), mOrder.begin() + offset, newOrder.begin());
+    
+    for (long i = 0; i < indices.size(); offset += (next - end))
+    {
+        long start = next;
+        
+        for (++i; i < indices.size(); i++)
+            if (indices[i] > indices[i - 1] + 1)
+                break;
+        
+        end = indices[i - 1] + 1;
+        next = i < indices.size() ? indices[i] : numItems();
+        
+        // Mark new order array for deletion
+        
+        for (long j = start; j < end; j++)
+            newOrder[getOrder(j)] = -1;
+        
+        // Alter order indices
+        
+        for (long j = end; j < next; j++)
+                newOrder[getOrder(j)] = (j - end) + offset;
+    }
+    
+    // Remove data
+
+    offset = indices[0];
+    
+    for (long i = 0; i < indices.size(); offset += size)
+    {
+        for (++i; i < indices.size(); i++)
+            if (indices[i] > indices[i - 1] + 1)
+                break;
+        
+        end = indices[i - 1] + 1;
+        size = (i < indices.size() ? indices[i] : numItems()) - end;
+        
+        // Move data
+        
+        copyRange(mIdentifiers, end, offset, size);
+        copyRange(mTypes, end, offset, size, numColumns());
+        copyRange(mEntries, end, offset, size, numColumns());
+    }
+
+    // Swap order vectors and do deletion
+    
+    std::swap(mOrder, newOrder);
+    offset = orderStart;
+    
+    for (long i = orderStart; i < mOrder.size(); offset += size)
+    {
+        for (end = ++i; end < mOrder.size(); end++)
+            if (mOrder[end] >= 0)
+                break;
+        
+        for (i = end, size = 0; i < mOrder.size(); i++, size++)
+            if (mOrder[i] < 0)
+                break;
+        
+        copyRange(mOrder, end, offset, size);
+    }
+    
+    // Resize storage
+    
+    long newSize = numItems() - indices.size();
+    
+    mIdentifiers.resize(newSize);
+    mEntries.resize(newSize * numColumns());
+    mTypes.resize(newSize * numColumns());
+    mOrder.resize(newSize);
 }
 
 void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
@@ -193,7 +290,6 @@ void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
     for ( ; it != mOrder.end(); it++)
         if (*it > idx)
             (*it)--;
-
 }
 
 long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
