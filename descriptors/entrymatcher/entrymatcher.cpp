@@ -384,7 +384,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         for (long i = 0; i < num_matches; i++)
         {
             long index = matchers->getIndex(i);
-            double distance = matchers->getDistance(index);
+            double distance = matchers->getDistance(i);
             
             if (distance > distance_limit)
             {
