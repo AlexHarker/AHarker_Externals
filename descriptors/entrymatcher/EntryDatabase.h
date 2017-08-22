@@ -136,6 +136,9 @@ public:
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
+    t_dictionary *saveDictionary() const;
+    void loadDictionary(t_object *x, t_dictionary *dict);
+
 private:
 
     inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }

@@ -442,33 +442,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
             return;
     }
     
-    std::vector<t_atom> args(numColumns() + 1);
-    t_dictionary *dict = dictionary_new();
-
-    dictionary_appendlong(dict, gensym("numcolumns"), numColumns());
-
-    for (long i = 0; i < numColumns(); i++)
-        atom_setsym(&args[i], mColumns[i].mName);
-    
-    dictionary_appendatoms(dict, gensym("names"), numColumns(), &args[0]);
-
-    for (long i = 0; i < numColumns(); i++)
-        atom_setlong(&args[i], mColumns[i].mLabel);
-
-    dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
-
-    for (long i = 0; i < numItems(); i++)
-    {
-        std::string str("entry_" + std::to_string(i + 1));
-        
-        getEntryIdentifier(&args[0], i);
-        
-        for (long j = 0; j < numColumns(); j++)
-            getDataAtom(&args[j + 1], i, j);
-        
-        dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
-    }
-    
+    t_dictionary *dict = saveDictionary();
     dictionary_write(dict, filename, path);
     object_free(dict);
 }
@@ -477,7 +451,6 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
     char filename[MAX_PATH_CHARS];
     short path;
-    t_max_err err = MAX_ERR_NONE;
 
     t_fourcc type;
     t_fourcc types = 'JSON';
@@ -497,34 +470,87 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
- 
-    HoldLock lock(&mWriteLock);
-    clear(lock);
+    loadDictionary(x, dict);
+    object_free(dict);
+}
+
+t_dictionary *EntryDatabase::saveDictionary() const
+{
+    std::vector<t_atom> args(numColumns() + 1);
+    t_dictionary *dict = dictionary_new();
+    t_dictionary *dictMeta = dictionary_new();
+    t_dictionary *dictData = dictionary_new();
     
-    t_atom_long newNumColumns;
-    dictionary_getlong(dict, gensym("numcolumns"), &newNumColumns);
-        
-    if (newNumColumns != numColumns())
-    {
-        mColumns.clear();
-        mColumns.resize(newNumColumns);
-    }
+    // Metadata
     
-    t_atom *argv;
-    long argc;
+    dictionary_appendlong(dictMeta, gensym("numcolumns"), numColumns());
     
-    dictionary_getatoms(dict, gensym("names"), &argc, &argv);
-    setColumnNames(lock, x, argc, argv);
+    for (long i = 0; i < numColumns(); i++)
+        atom_setsym(&args[i], mColumns[i].mName);
     
-    dictionary_getatoms(dict, gensym("labelmodes"), &argc, &argv);
-    setColumnLabelModes(lock, x, argc, argv);
+    dictionary_appendatoms(dictMeta, gensym("names"), numColumns(), &args[0]);
     
-    for (long i = 0; err == MAX_ERR_NONE; i++)
+    for (long i = 0; i < numColumns(); i++)
+        atom_setlong(&args[i], mColumns[i].mLabel);
+    
+    dictionary_appendatoms(dictMeta, gensym("labelmodes"), numColumns(), &args[0]);
+    dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dictMeta);
+    
+    // Data
+    
+    for (long i = 0; i < numItems(); i++)
     {
         std::string str("entry_" + std::to_string(i + 1));
-        if ((err = dictionary_getatoms(dict, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-            addEntry(lock, x, argc, argv);
+        
+        getEntryIdentifier(&args[0], i);
+        
+        for (long j = 0; j < numColumns(); j++)
+            getDataAtom(&args[j + 1], i, j);
+        
+        dictionary_appendatoms(dictData, gensym(str.c_str()), numColumns() + 1, &args[0]);
     }
+    dictionary_appenddictionary(dict, gensym("data"), (t_object *) dictData);
     
-    object_free(dict);
+    return dict;
+}
+
+void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
+{
+    t_max_err err = MAX_ERR_NONE;
+    t_dictionary *dictMeta = NULL;
+    t_dictionary *dictData = NULL;
+    
+    dictionary_getdictionary(dict, gensym("metadata"), (t_object **) &dictMeta);
+    dictionary_getdictionary(dict, gensym("data"), (t_object **) &dictData);
+    
+    if (dictMeta && dictData)
+    {
+        HoldLock lock(&mWriteLock);
+        clear(lock);
+        
+        t_atom_long newNumColumns;
+        dictionary_getlong(dictMeta, gensym("numcolumns"), &newNumColumns);
+        
+        if (newNumColumns != numColumns())
+        {
+            mColumns.clear();
+            mColumns.resize(newNumColumns);
+        }
+        
+        t_atom *argv;
+        long argc;
+        
+        dictionary_getatoms(dictMeta, gensym("names"), &argc, &argv);
+        setColumnNames(lock, x, argc, argv);
+        
+        dictionary_getatoms(dictMeta, gensym("labelmodes"), &argc, &argv);
+        setColumnLabelModes(lock, x, argc, argv);
+        
+        for (long i = 0; err == MAX_ERR_NONE; i++)
+        {
+            std::string str("entry_" + std::to_string(i + 1));
+            if ((err = dictionary_getatoms(dictData, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
+                addEntry(lock, x, argc, argv);
+        }
+    }
 }
