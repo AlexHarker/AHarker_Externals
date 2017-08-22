@@ -5,7 +5,7 @@
 #include <functional>
 
 
-long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited)
+long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
@@ -15,13 +15,12 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     
     mResults.resize(numItems);
     
-    const EntryDatabase::Accessor accessor = database->accessor();
+    const EntryDatabase::RawAccessor accessor = database->rawAccessor();
     
     if (!size() || mAudioStyle)
     {
-        long i = 0;
-        for (std::list<EntryDatabase::Entry>::const_iterator item = accessor.begin(); item != accessor.end(); item++, i++)
-            mResults[i] = Result(item, 0.0);
+        for (long i = 0; i < numItems; i++)
+            mResults[i] = Result(i, 0.0);
         
         mNumMatches = numItems;
     }
@@ -58,7 +57,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     }
     else
     {
-        for (std::list<EntryDatabase::Entry>::const_iterator item = accessor.begin(); item != accessor.end(); item++)
+        for (long i = 0; i < numItems; i++)
         {
             // Assume a match for each entry (for the case of no matchers)
             
@@ -71,19 +70,19 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
                 {
                     case kTestMatch:
                         if (database->getColumnLabelMode(it->mColumn))
-                            matched = it->comparisonTest(item->getData(it->mColumn), std::equal_to<t_symbol *>());
+                            matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::equal_to<t_symbol *>());
                         else
-                            matched = it->comparisonTest(item->getData(it->mColumn), std::equal_to<double>());
+                            matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::equal_to<double>());
                         break;
                         
-                    case kTestLess:             matched = it->comparisonTest(item->getData(it->mColumn), std::less<double>()); break;
-                    case kTestGreater:          matched = it->comparisonTest(item->getData(it->mColumn), std::greater<double>()); break;
-                    case kTestLessEqual:        matched = it->comparisonTest(item->getData(it->mColumn), std::less_equal<double>()); break;
-                    case kTestGreaterEqual:     matched = it->comparisonTest(item->getData(it->mColumn), std::greater_equal<double>()); break;
-                    case kTestDistance:         matched = it->distanceTest(false, item->getData(it->mColumn), distanceSquared, Distance()); break;
-                    case kTestDistanceReject:   matched = it->distanceTest(true, item->getData(it->mColumn), distanceSquared, Distance()); break;
-                    case kTestRatio:            matched = it->distanceTest(false, item->getData(it->mColumn), distanceSquared, Ratio()); break;
-                    case kTestRatioReject:      matched = it->distanceTest(true, item->getData(it->mColumn), distanceSquared, Ratio()); break;
+                    case kTestLess:             matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::less<double>()); break;
+                    case kTestGreater:          matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::greater<double>()); break;
+                    case kTestLessEqual:        matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::less_equal<double>()); break;
+                    case kTestGreaterEqual:     matched = it->comparisonTest(accessor.getData(i, it->mColumn), std::greater_equal<double>()); break;
+                    case kTestDistance:         matched = it->distanceTest(false, accessor.getData(i, it->mColumn), distanceSquared, Distance()); break;
+                    case kTestDistanceReject:   matched = it->distanceTest(true, accessor.getData(i, it->mColumn), distanceSquared, Distance()); break;
+                    case kTestRatio:            matched = it->distanceTest(false, accessor.getData(i, it->mColumn), distanceSquared, Ratio()); break;
+                    case kTestRatioReject:      matched = it->distanceTest(true, accessor.getData(i, it->mColumn), distanceSquared, Ratio()); break;
                 }
 
                 if (!matched)
@@ -93,7 +92,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             // Store the entry if it is a valid match
             
             if (matched)
-                mResults[mNumMatches++] = Result(item, distanceSquared);
+                mResults[mNumMatches++] = Result(i, distanceSquared);
         }
     }
     

@@ -92,22 +92,6 @@ struct CustomAtom
         return (a.mType < b.mType) ? kLess : kGreater;
     }
     
-    friend inline bool operator < (const CustomAtom& a, const CustomAtom& b)
-    {
-        if (a.mType == b.mType)
-        {
-            switch (a.mType)
-            {
-                case kDouble:
-                case kTranslatedInt:  return a.mData.mValue < b.mData.mValue;
-                case kInt:            return a.mData.mInt < b.mData.mInt;
-                case kSymbol:         return a.mData.mSymbol < b.mData.mSymbol;
-            }
-        }
-        
-        return (a.mType < b.mType);
-    }
-    
     operator double() const         { return mData.mValue; }
     operator t_atom_long() const    { return mData.mInt; }
     operator t_symbol *() const     { return mData.mSymbol; }

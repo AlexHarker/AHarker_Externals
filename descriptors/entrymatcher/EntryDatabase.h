@@ -4,8 +4,6 @@
 
 #include "ext.h"
 #include <vector>
-#include <list>
-#include <map>
 
 #include "CustomAtom.h"
 
@@ -46,48 +44,35 @@ class EntryDatabase
 
 public:
     
-    struct Entry
-    {
-        Entry(CustomAtom identifier, long numColumns) : mIdentifier(identifier)
-        {
-            mData.resize(numColumns);
-            mTypes.resize(numColumns);
-        };
-        
-        inline UntypedAtom getData(long column) const                   { return mData[column]; }
-        inline CustomAtom getTypedData(long column) const               { return CustomAtom(getData(column), mTypes[column]); }
-        inline void getDataAtom(t_atom *a, long column) const           { return getTypedData(column).getAtom(a); }
-        inline void getIdentifierAtom(t_atom *a) const                  { return mIdentifier.getAtom(a); }
-        
-        
-        inline void setData(long column, const CustomAtom& data)
-        {
-            mData[column] = data.mData;
-            mTypes[column] = data.mType;
-        }
-        
-        // Data
-        
-        CustomAtom mIdentifier;
-        std::vector<UntypedAtom> mData;
-        std::vector<CustomAtom::Type> mTypes;
-    };
-
-    class Accessor
+    class RawAccessor
     {
         friend EntryDatabase;
         
     public:
         
-        const std::list<Entry>::const_iterator begin() const    { return mBegin; }
-        const std::list<Entry>::const_iterator end() const      { return mEnd; }
-        
+        inline UntypedAtom getData(long idx, long column) const                  { return mIterator[idx * mNumColumns + column]; }
+
     protected:
         
-        Accessor(const EntryDatabase& database) : mBegin(database.mEntryList.cbegin()), mEnd(database.mEntryList.cend()) {}
+        RawAccessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
         
-        const std::list<Entry>::const_iterator mBegin;
-        const std::list<Entry>::const_iterator mEnd;
+        const long mNumColumns;
+        const std::vector<const UntypedAtom>::iterator mIterator;
+    };
+    
+    class AtomAccessor : private RawAccessor
+    {
+        friend EntryDatabase;
+        
+    public:
+        
+        inline void getDataAtom(t_atom *a, long idx, long column) const       { CustomAtom(getData(idx, column), mTypes[idx * mNumColumns + column]).getAtom(a); }
+        
+    private:
+        
+        AtomAccessor(const EntryDatabase& database) : RawAccessor(database), mTypes(database.mTypes.begin()) {}
+        
+        const std::vector<const CustomAtom::Type>::iterator mTypes;
     };
     
     struct ReadPointer
@@ -114,12 +99,13 @@ public:
     
     EntryDatabase(t_symbol *name, long numCols) : mName(name) { mColumns.resize(numCols); }
     
-    Accessor accessor() const { return Accessor(*this); }
+    RawAccessor rawAccessor() const { return RawAccessor(*this); }
+    AtomAccessor atomAccessor() const { return AtomAccessor(*this); }
 
     void reserve(long items);
     void clear();
     
-    size_t numItems() const         { return mEntryList.size(); }
+    size_t numItems() const         { return mIdentifiers.size(); }
     size_t numColumns() const       { return mColumns.size(); }
     
     void setColumnLabelModes(void *x, long argc, t_atom *argv);
@@ -130,6 +116,12 @@ public:
     
     t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
     bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
+    void getEntryIdentifier(t_atom *a, long idx) const        { return getIdentifierInternal(idx).getAtom(a); }
+    long getEntryIndex(const t_atom *identifier) const
+    {
+        long order;
+        return searchIdentifiers(identifier, order);
+    }
     
     long columnFromSpecifier(const t_atom *specifier) const;
     
@@ -144,17 +136,18 @@ public:
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
-    std::list<Entry>::const_iterator findItem(const t_atom *identifierAtom) const;
-
 private:
 
-    std::list<Entry>::iterator searchIdentifiers(const t_atom *identifierAtom);
-
+    inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
+    inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
+    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
+    
     void clear(HoldLock &lock);
     void setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
     void setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv);
     void addEntry(HoldLock &lock, void *x, long argc, t_atom *argv);
     void removeEntry(HoldLock &lock, void *x, t_atom *identifier);
+    void removeEntries(HoldLock &lock, const std::vector<long>& indices);
     
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
@@ -170,18 +163,31 @@ private:
         if (column < 0 || mColumns[column].mLabel || !numItems())
             return std::numeric_limits<double>::quiet_NaN();
         
-        for (std::list<Entry>::const_iterator it = mEntryList.cbegin(); it != mEntryList.cend(); it++)
-            value = op(value, it->getData(column));
+        for (long i = 0; i < numItems(); i++)
+            value = op(value, getData(i, column));
         
         return value;
+    }
+
+    long getOrder(long idx);
+    long searchIdentifiers(const t_atom *identifierAtom, long& idx) const;
+
+    CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
+    
+    inline void setData(long idx, long column, const CustomAtom& data)
+    {
+        mEntries[idx * numColumns() + column] = data.mData;
+        mTypes[idx * numColumns() + column] = data.mType;
     }
     
     // Data
     
     t_symbol *mName;
     std::vector<ColumnInfo> mColumns;
-    std::list<Entry> mEntryList;
-    std::map<CustomAtom, std::list<Entry>::iterator> mMap;
+    std::vector<CustomAtom> mIdentifiers;
+    std::vector<long> mOrder;
+    std::vector<UntypedAtom> mEntries;
+    std::vector<CustomAtom::Type> mTypes;
 
     mutable Lock mWriteLock;
     mutable Lock mReadLock;
