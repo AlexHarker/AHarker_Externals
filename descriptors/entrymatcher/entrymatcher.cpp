@@ -67,7 +67,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, long idx, long argc, t_atom *argv);
+void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, std::list<EntryDatabase::Entry>::const_iterator it, long argc, t_atom *argv);
 
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -191,8 +191,10 @@ void entrymatcher_dump(t_entrymatcher *x)
 {
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
 
-	for (long i = 0; i < database->numItems(); i++)
-        entrymatcher_lookup_output(x, database, i, 0, NULL);
+    EntryDatabase::Accessor accessor = database->accessor();
+
+    for (std::list<EntryDatabase::Entry>::const_iterator item = accessor.begin(); item != accessor.end(); item++)
+        entrymatcher_lookup_output(x, database, item, 0, NULL);
 }
 
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
@@ -201,23 +203,34 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 		return;
 
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+    EntryDatabase::Accessor accessor = database->accessor();
 
 	// Use identifier or index depending on the message received
 	
-    long idx = (msg == ps_lookup) ? database->getEntryIndex(argv) : atom_getlong(argv) - 1;
-    entrymatcher_lookup_output(x, database, idx, --argc, ++argv);
+    std::list<EntryDatabase::Entry>::const_iterator it = accessor.begin();
+    
+    if (msg == ps_lookup)
+    {
+        it = database->findItem(argv);
+    }
+    else
+    {
+        long index = atom_getlong(argv) - 1;
+        for (long i = 0; it != accessor.end() && i < index; it++, i++);
+    }
+    
+    entrymatcher_lookup_output(x, database, it, --argc, ++argv);
 }
 
-void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, long idx, long argc, t_atom *argv)
+void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPointer& database, std::list<EntryDatabase::Entry>::const_iterator it, long argc, t_atom *argv)
 {
     std::vector<t_atom> output;
     
-    long numItems = database->numItems();
     long numColumns = database->numColumns();
     
-    EntryDatabase::AtomAccessor accessor = database->atomAccessor();
+    EntryDatabase::Accessor accessor = database->accessor();
     
-    if (idx < 0 || idx >= numItems)
+    if (it == accessor.end())
     {
         object_error((t_object *)x, "entry does not exist");
         return;
@@ -229,7 +242,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
         // If no columns are specified construct a list of all colums for that entry
         
         for (long i = 0; i < numColumns; i++)
-            accessor.getDataAtom(&output[i], idx, i);
+            it->getDataAtom(&output[i], i);
     }
     else
     {
@@ -245,9 +258,9 @@ void entrymatcher_lookup_output(t_entrymatcher *x, const EntryDatabase::ReadPoin
             column = (column < -1 || column >= numColumns) ? 0 : column;
             
             if (column == -1)
-                database->getEntryIdentifier(&output[i], idx);
+                it->mIdentifier.getAtom(&output[i]);
             else
-                accessor.getDataAtom(&output[i], idx, column);
+                it->getDataAtom(&output[i], column);
         }
     }
     
@@ -383,8 +396,8 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
         for (long i = 0; i < num_matches; i++)
         {
-            long index = matchers->getIndex(i);
-            double distance = matchers->getDistance(index);
+            std::list<EntryDatabase::Entry>::const_iterator it = matchers->getIterator(i);
+            double distance = matchers->getDistance(i);
             
             if (distance > distance_limit)
             {
@@ -393,8 +406,8 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
             }
             
             atom_setfloat(output_distances + i, distance);
-            database->getEntryIdentifier(output_identifiers + i, index);
-            atom_setlong(output_indices + i, index + 1);
+            it->getIdentifierAtom(output_identifiers + i);
+            atom_setlong(output_indices + i,  matchers->getIndex(i));
         }
     }
 

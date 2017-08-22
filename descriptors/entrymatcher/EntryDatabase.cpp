@@ -8,12 +8,7 @@
 
 void EntryDatabase::reserve(long items)
 {
-    HoldLock lock(&mWriteLock);
-    
-    mIdentifiers.reserve(items);
-    mOrder.reserve(items);
-    mEntries.reserve(items * numColumns());
-    mTypes.reserve(items * numColumns());
+    // FIX - do nothing....
 }
 
 void EntryDatabase::clear()
@@ -24,10 +19,8 @@ void EntryDatabase::clear()
 
 void EntryDatabase::clear(HoldLock &lock)
 {
-    mEntries.clear();
-    mIdentifiers.clear();
-    mOrder.clear();
-    mTypes.clear();
+    mEntryList.clear();
+    mMap.clear();
 }
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
@@ -90,18 +83,16 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
     // Get the identifier, order position and find any prexisting entry with this identifier
     
     t_atom *identifier = argv++;
-    long order;
-    long idx = searchIdentifiers(identifier, order);
+    std::list<Entry>::iterator it = searchIdentifiers(identifier);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
     
-    if (idx < 0)
+    if (it == mEntryList.end())
     {
-        idx = numItems();
-        mEntries.resize((idx + 1) * numColumns());
-        mTypes.resize((idx + 1) * numColumns());
-        mOrder.insert(mOrder.begin() + order, idx);
-        mIdentifiers.push_back(CustomAtom(identifier, false));
+        CustomAtom id = CustomAtom(identifier, false);
+        mEntryList.push_back(Entry(id, numColumns()));
+        it = --mEntryList.end();
+        mMap.insert(std::pair<CustomAtom, std::list<Entry>::iterator>(id, it));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
@@ -111,13 +102,13 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
         CustomAtom data = argv;
         
         if (i < argc && mColumns[i].mLabel == (data.mType == CustomAtom::kSymbol))
-            setData(idx, i, data);
+            it->setData(i, data);
         else
         {
             if (i < argc)
                 object_error((t_object *)x, "incorrect type in entry - column number %ld", i + 1);
             
-            setData(idx, i, mColumns[i].mLabel ? CustomAtom(gensym("")) : CustomAtom());
+            it->setData(i, mColumns[i].mLabel ? CustomAtom(gensym("")) : CustomAtom());
         }
     }
 }
@@ -138,7 +129,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 {
     Matchers matchers;
-    std::vector<long> indices;
+    std::vector<std::list<Entry>::const_iterator> iterators;
     long numMatches = 0;
     
     if (argc)
@@ -147,182 +138,54 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
     
         matchers.setMatchers(x, argc, argv, database);
         numMatches = matchers.match(database, true);
-        indices.resize(numMatches);
+        iterators.resize(numMatches);
         
         for (long i = 0; i < numMatches; i++)
-            indices[i] = matchers.getIndex(i);
+            iterators[i] = matchers.getIterator(i);
     }
     
     if (numMatches && matchers.size())
     {
         HoldLock lock(&mWriteLock);
         
-        removeEntries(lock, indices);
+        for (long i = 0; i < numMatches; i++)
+        {
+            CustomAtom id = iterators[i]->mIdentifier;
+            mEntryList.erase(iterators[i]);
+            mMap.erase(mMap.find(id));
+        }
     }
-}
-
-template <class T> void copyRange(std::vector<T>& data, long from, long to, long size, long itemSize = 1)
-{
-    std::copy(data.begin() + (from * itemSize), data.begin() + (from + size) * itemSize, data.begin() + to * itemSize);
-}
-
-long EntryDatabase::getOrder(long idx)
-{
-    t_atom identifier;
-    long order;
-    mIdentifiers[idx].getAtom(&identifier);
-    searchIdentifiers(&identifier, order);
-    
-    return order;
-}
-
-void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indices)
-{
-    long orderStart = getOrder(indices[0]);
-    long offset = indices[0];
-    long next = indices[0];
-    long size;
-    long end;
-    
-    // Setup new order vector
-    
-    std::vector<long> newOrder(numItems());
-    std::copy(mOrder.begin(), mOrder.begin() + offset, newOrder.begin());
-    
-    for (long i = 0; i < indices.size(); offset += (next - end))
-    {
-        long start = next;
-        
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
-                break;
-        
-        end = indices[i - 1] + 1;
-        next = i < indices.size() ? indices[i] : numItems();
-        
-        // Mark new order array for deletion
-        
-        for (long j = start; j < end; j++)
-            newOrder[getOrder(j)] = -1;
-        
-        // Alter order indices
-        
-        for (long j = end; j < next; j++)
-                newOrder[getOrder(j)] = (j - end) + offset;
-    }
-    
-    // Remove data
-
-    offset = indices[0];
-    
-    for (long i = 0; i < indices.size(); offset += size)
-    {
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
-                break;
-        
-        end = indices[i - 1] + 1;
-        size = (i < indices.size() ? indices[i] : numItems()) - end;
-        
-        // Move data
-        
-        copyRange(mIdentifiers, end, offset, size);
-        copyRange(mTypes, end, offset, size, numColumns());
-        copyRange(mEntries, end, offset, size, numColumns());
-    }
-
-    // Swap order vectors and do deletion
-    
-    std::swap(mOrder, newOrder);
-    offset = orderStart;
-    
-    for (long i = orderStart; i < mOrder.size(); offset += size)
-    {
-        for (end = ++i; end < mOrder.size(); end++)
-            if (mOrder[end] >= 0)
-                break;
-        
-        for (i = end, size = 0; i < mOrder.size(); i++, size++)
-            if (mOrder[i] < 0)
-                break;
-        
-        copyRange(mOrder, end, offset, size);
-    }
-    
-    // Resize storage
-    
-    long newSize = numItems() - indices.size();
-    
-    mIdentifiers.resize(newSize);
-    mEntries.resize(newSize * numColumns());
-    mTypes.resize(newSize * numColumns());
-    mOrder.resize(newSize);
 }
 
 void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
 {
-    long order;
-    long idx = searchIdentifiers(identifier, order);
+    std::list<Entry>::iterator it = searchIdentifiers(identifier);
     
-    if (idx < 0)
+    if (it == mEntryList.end())
     {
         object_error((t_object *) x, "entry does not exist");
         return;
     }
     
-    mIdentifiers.erase(mIdentifiers.begin() + idx);
-    mOrder.erase(mOrder.begin() + order);
-    mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
-    mTypes.erase(mTypes.begin() + (idx * numColumns()), mTypes.begin() + ((idx + 1) * numColumns()));
- 
-    std::vector<long>::iterator it = mOrder.begin();
-    
-    // Unrolled order updating for speed
-    
-    for ( ; it < (mOrder.end() - 3); it += 4)
-    {
-        if (it[0] > idx) it[0]--;
-        if (it[1] > idx) it[1]--;
-        if (it[2] > idx) it[2]--;
-        if (it[3] > idx) it[3]--;
-    }
-    
-    for ( ; it != mOrder.end(); it++)
-        if (*it > idx)
-            (*it)--;
+    CustomAtom id = it->mIdentifier;
+    mEntryList.erase(it);
+    mMap.erase(mMap.find(id));
 }
 
-long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
+std::list<EntryDatabase::Entry>::const_iterator EntryDatabase::findItem(const t_atom *identifierAtom) const
 {
     CustomAtom identifier(identifierAtom, false);
+    std::map<CustomAtom, std::list<Entry>::iterator>::const_iterator it = mMap.find(identifier);
     
-    long gap = idx = numItems() / 2;
-    gap = gap < 1 ? 1 : gap;
+    return it == mMap.cend() ? mEntryList.end() : it->second;
+}
+
+std::list<EntryDatabase::Entry>::iterator EntryDatabase::searchIdentifiers(const t_atom *identifierAtom)
+{
+    CustomAtom identifier(identifierAtom, false);
+    std::map<CustomAtom, std::list<Entry>::iterator>::const_iterator it = mMap.find(identifier);
     
-    while (gap && idx < numItems())
-    {
-        gap /= 2;
-        gap = gap < 1 ? 1 : gap;
-    
-        switch (compare(identifier, getIdentifierInternal(mOrder[idx])))
-        {
-            case CustomAtom::kEqual:
-                return mOrder[idx];
-                
-            case CustomAtom::kGreater:
-                idx += gap;
-                break;
-                
-            case CustomAtom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getIdentifierInternal(mOrder[idx - 1])) == CustomAtom::kGreater))
-                    gap = 0;
-                else
-                    idx -= gap;
-                break;
-        }
-    }
-  
-    return -1;
+    return it == mMap.cend() ? mEntryList.end() : it->second;
 }
 
 long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
@@ -380,11 +243,12 @@ double EntryDatabase::columnPercentile(const t_atom *specifier, double percentil
         
     long idx = std::max(0L, std::min((long) round(nItems * (percentile / 100.0)), nItems - 1));
     long column = columnFromSpecifier(specifier);
+    long i = 0;
     
-    for (long i = 0; i < numItems(); i++)
+    for (std::list<Entry>::const_iterator it = mEntryList.cbegin(); it != mEntryList.cend(); it++)
     {
         indices[i] = i;
-        values[i] = getData(i, column);
+        values[i] = it->getData(column);
     }
 
     sort(indices, values, nItems);
@@ -402,17 +266,17 @@ void EntryDatabase::view(t_object *database_object) const
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
     std::string str;
 
-    for (long i = 0; i < numItems(); i++)
+    for (std::list<Entry>::const_iterator it = mEntryList.cbegin(); it != mEntryList.cend(); it++)
     {
-        str.insert(str.size(), getIdentifierInternal(i).getString());
+        str.insert(str.size(), it->mIdentifier.getString());
         
         for (long j = 0; j < numColumns(); j++)
         {
             str.insert(str.size(), " ");
-            str.insert(str.size(), getTypedData(i, j).getString());
+            str.insert(str.size(), it->getTypedData(j).getString());
         }
         
-        if (i != (numItems() - 1))
+        if (it != --mEntryList.end())
             str.insert(str.size(), "\n");
     }
     
@@ -457,14 +321,15 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 
     dictionary_appendatoms(dict, gensym("labelmodes"), numColumns(), &args[0]);
 
-    for (long i = 0; i < numItems(); i++)
+    long i = 0;
+    for (std::list<Entry>::iterator it; it != mEntryList.end(); it++, i++)
     {
         std::string str("entry_" + std::to_string(i + 1));
         
-        getEntryIdentifier(&args[0], i);
+        it->mIdentifier.getAtom(&args[0]);
         
         for (long j = 0; j < numColumns(); j++)
-            getDataAtom(&args[j + 1], i, j);
+            it->getDataAtom(&args[j + 1], j);
         
         dictionary_appendatoms(dict, gensym(str.c_str()), numColumns() + 1, &args[0]);
     }
