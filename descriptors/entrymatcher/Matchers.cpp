@@ -30,7 +30,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     
     if (mAudioStyle)
     {
-        for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
+        for (std::vector<Matcher>::const_iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
         {
            if (!mNumMatches)
                break;
@@ -64,7 +64,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
             bool matched = true;
             double distanceSquared = 0.0;
             
-            for (std::vector<const Matcher>::iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
+            for (std::vector<Matcher>::const_iterator it = mMatchers.begin(); it != mMatchers.end(); it++)
             {
                 switch (it->mType)
                 {

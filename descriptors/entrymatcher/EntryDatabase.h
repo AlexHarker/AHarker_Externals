@@ -57,7 +57,7 @@ public:
         RawAccessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
         
         const long mNumColumns;
-        const std::vector<const UntypedAtom>::iterator mIterator;
+        const std::vector<UntypedAtom>::const_iterator mIterator;
     };
     
     class AtomAccessor : private RawAccessor
@@ -72,7 +72,7 @@ public:
         
         AtomAccessor(const EntryDatabase& database) : RawAccessor(database), mTypes(database.mTypes.begin()) {}
         
-        const std::vector<const CustomAtom::Type>::iterator mTypes;
+        const std::vector<CustomAtom::Type>::const_iterator mTypes;
     };
     
     struct ReadPointer
