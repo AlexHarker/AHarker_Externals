@@ -17,7 +17,7 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings
 
-MACOSX_DEPLOYMENT_TARGET = 10.5
+MACOSX_DEPLOYMENT_TARGET = 10.6
 
 ARCHS = i386 x86_64 
 
