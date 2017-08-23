@@ -136,7 +136,7 @@ public:
     void save(t_object *x, t_symbol *fileSpecifier) const;
     void load(t_object *x, t_symbol *fileSpecifier);
 
-    t_dictionary *saveDictionary() const;
+    t_dictionary *saveDictionary(bool entriesAsOneKey) const;
     void loadDictionary(t_object *x, t_dictionary *dict);
 
 private:

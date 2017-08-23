@@ -2,6 +2,9 @@
 #ifndef ENTRYMATCHER_COMMON_H
 #define ENTRYMATCHER_COMMON_H
 
+#include <ext.h>
+#include <ext_obex.h>
+
 // ========================================================================================================================================== //
 // Entry routines: refer, clear, labelmodes, names, entry and removal
 // ========================================================================================================================================== //
@@ -65,6 +68,30 @@ template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
     x->matchers->setAudioStyle(style ? true : false);
 }
 
+template <class T> t_max_err entrymatcher_save_dict_attr(T *x, long *argc, t_atom **argv)
+{
+    char alloc;
+    
+    atom_alloc(argc, argv, &alloc);
+    t_dictionary *dict = database_getptr_read(x->database_object)->saveDictionary(true);
+    atom_setobj(*argv, dict);
+    
+    return MAX_ERR_NONE;
+}
+
+template <class T> t_max_err entrymatcher_load_dict_attr(T *x, long argc, t_atom *argv)
+{
+    t_dictionary *dict = NULL;
+    
+    if (argc)
+        dict = (t_dictionary *) atom_getobj(argv);
+    
+    if (dict)
+        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+    
+    return MAX_ERR_NONE;
+}
+
 // ========================================================================================================================================== //
 // Add Common Routines
 // ========================================================================================================================================== //
@@ -82,11 +109,22 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_labelmodes<T>,"labelmodes", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_names<T>,"names", A_GIMME, 0);
     
+    class_addmethod(class_pointer, (method)entrymatcher_save_dict_attr<T>, "getvalueof", A_CANT, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_load_dict_attr<T>, "setvalueof", A_CANT, 0);
+    
     class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
     class_addmethod(class_pointer, (method)entrymatcher_load<T>, "read", A_DEFSYM, 0);
 
+
     class_addmethod(class_pointer, (method)entrymatcher_audiostyle<T>, "audiostyle", A_DEFLONG, 0);
+/*
+    CLASS_STICKY_CATEGORY(class_pointer, 0, "Value");
+    //ATTR_SET_OPAQUE_USER | ATTR_GET_OPAQUE_USER
+    CLASS_ATTR_OBJ(class_pointer, "value", 0, T, x_obj);
+    CLASS_ATTR_SAVE(class_pointer, "value", 0);
+    CLASS_ATTR_ACCESSORS(class_pointer, "value", (method) entrymatcher_save_dict_attr<T>, (method) entrymatcher_load_dict_attr<T>);
+    //CLASS_ATTR_INVISIBLE(class_pointer, "database", 0);*/
 }
 
 #endif

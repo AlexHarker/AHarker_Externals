@@ -442,7 +442,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
             return;
     }
     
-    t_dictionary *dict = saveDictionary();
+    t_dictionary *dict = saveDictionary(true);
     dictionary_write(dict, filename, path);
     object_free(dict);
 }
@@ -474,7 +474,7 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     object_free(dict);
 }
 
-t_dictionary *EntryDatabase::saveDictionary() const
+t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
 {
     std::vector<t_atom> args(numColumns() + 1);
     t_dictionary *dict = dictionary_new();
@@ -498,16 +498,38 @@ t_dictionary *EntryDatabase::saveDictionary() const
     
     // Data
     
-    for (long i = 0; i < numItems(); i++)
+    if (entriesAsOneKey)
     {
-        std::string str("entry_" + std::to_string(i + 1));
+        std::vector<t_atom> entries(numItems());
+
+        for (long i = 0; i < numItems(); i++)
+        {
+            t_dictionary *entryDict = dictionary_new();
+            
+            getEntryIdentifier(&args[0], i);
+            
+            for (long j = 0; j < numColumns(); j++)
+                getDataAtom(&args[j + 1], i, j);
+            
+            dictionary_appendatoms(entryDict, gensym("entry"), numColumns() + 1, &args[0]);
+            atom_setobj(&entries[i], entryDict);
+        }
         
-        getEntryIdentifier(&args[0], i);
-        
-        for (long j = 0; j < numColumns(); j++)
-            getDataAtom(&args[j + 1], i, j);
-        
-        dictionary_appendatoms(dictData, gensym(str.c_str()), numColumns() + 1, &args[0]);
+        dictionary_appendatoms(dictData, gensym("all_entries"), numItems(), &entries[0]);
+    }
+    else
+    {
+        for (long i = 0; i < numItems(); i++)
+        {
+            std::string str("entry_" + std::to_string(i + 1));
+            
+            getEntryIdentifier(&args[0], i);
+            
+            for (long j = 0; j < numColumns(); j++)
+                getDataAtom(&args[j + 1], i, j);
+            
+            dictionary_appendatoms(dictData, gensym(str.c_str()), numColumns() + 1, &args[0]);
+        }
     }
     dictionary_appenddictionary(dict, gensym("data"), (t_object *) dictData);
     
@@ -546,11 +568,28 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
         dictionary_getatoms(dictMeta, gensym("labelmodes"), &argc, &argv);
         setColumnLabelModes(lock, x, argc, argv);
         
-        for (long i = 0; err == MAX_ERR_NONE; i++)
+        // Data
+        
+        if (dictionary_getatoms(dictData, gensym("all_entries"), &argc, &argv) == MAX_ERR_NONE)
         {
-            std::string str("entry_" + std::to_string(i + 1));
-            if ((err = dictionary_getatoms(dictData, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-                addEntry(lock, x, argc, argv);
+            for (long i = 0; i < argc; i++)
+            {
+                t_atom *entryArgv;
+                long entryArgc;
+                
+                t_dictionary *entryDict = (t_dictionary *) atom_getobj(argv + i);
+                if ((err = dictionary_getatoms(entryDict, gensym("entry"), &entryArgc, &entryArgv)) == MAX_ERR_NONE)
+                    addEntry(lock, x, entryArgc, entryArgv);
+            }
+        }
+        else
+        {
+            for (long i = 0; err == MAX_ERR_NONE; i++)
+            {
+                std::string str("entry_" + std::to_string(i + 1));
+                if ((err = dictionary_getatoms(dictData, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
+                    addEntry(lock, x, argc, argv);
+            }
         }
     }
 }

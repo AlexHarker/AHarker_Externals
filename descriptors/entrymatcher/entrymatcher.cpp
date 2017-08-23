@@ -47,7 +47,7 @@ t_symbol *ps_percentile;
 
 typedef struct entrymatcher{
 
-    t_object a_obj;
+    t_object x_obj;
     
     t_object *database_object;
     Matchers *matchers;
