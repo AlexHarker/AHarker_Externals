@@ -73,7 +73,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B80B91D7183BD1A10014C9C4 /* PBXTargetDependency */,
 				B80B91D9183BD1AE0014C9C4 /* PBXTargetDependency */,
 			);
 			name = miscellaneous;
@@ -601,13 +600,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = B8BEAA8F0CD67F7700F906C8;
 			remoteInfo = meandev;
-		};
-		B80B91D6183BD1A10014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0ED51465F455007FAC6A /* ajh.wiiremote.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = ajh.wiiremote;
 		};
 		B80B91D8183BD1AE0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2529,11 +2521,6 @@
 			isa = PBXTargetDependency;
 			name = "randomvals msp + max";
 			targetProxy = B80B91BE183BD1520014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B91D7183BD1A10014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ajh.wiiremote;
-			targetProxy = B80B91D6183BD1A10014C9C4 /* PBXContainerItemProxy */;
 		};
 		B80B91D9183BD1AE0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

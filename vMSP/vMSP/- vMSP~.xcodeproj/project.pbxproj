@@ -63,37 +63,26 @@
 		B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.c */; };
 		B8BFF9D410AED239008EB5B2 /* vminimum~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.c */; };
-		B8BFFA8A10AEEE18008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFA9C10AEEE1C008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAAE10AEEE1F008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAC010AEEE21008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAD210AEEE62008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB0210AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB1410AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB2610AEEE71008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB3810AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB4A10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB5C10AEEE77008EB5B2 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.c */; };
@@ -112,21 +101,16 @@
 		B8E3937E1095B8990081D095 /* vnotequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3937D1095B8990081D095 /* vnotequals~.c */; };
 		B8E393861095B8C10081D095 /* vequals~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492EE1095A30E00A88A63 /* vequals~.c */; };
 		B8E393921095B8E10081D095 /* vplus~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E81095A2FA00A88A63 /* vplus~.c */; };
-		B8E395611096138D0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395661096138D0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39573109613900081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39578109613900081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395A6109614350081D095 /* vabs~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E39595109613C90081D095 /* vabs~.c */; };
 		B8E395A71096143B0081D095 /* vcosx~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3959A109613F40081D095 /* vcosx~.c */; };
-		B8E395ED109616AB0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E395FF109616B20081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E39604109616B20081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39616109616ED0081D095 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39655109617FB0081D095 /* vlog~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.c */; };
@@ -137,7 +121,6 @@
 		B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E493A91095A68400A88A63 /* Template_BInary.h in Headers */ = {isa = PBXBuildFile; fileRef = B8E493A81095A68400A88A63 /* Template_BInary.h */; };
 		B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
@@ -947,7 +930,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E493A91095A68400A88A63 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -969,7 +951,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFA8A10AEEE18008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -977,7 +958,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFA9C10AEEE1C008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -985,7 +965,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAAE10AEEE1F008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -993,7 +972,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAC010AEEE21008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1001,7 +979,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAD210AEEE62008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1009,7 +986,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB0210AEEE71008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,7 +993,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB1410AEEE71008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1025,7 +1000,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB2610AEEE71008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,7 +1007,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB3810AEEE77008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1041,7 +1014,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB4A10AEEE77008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1049,7 +1021,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB5C10AEEE77008EB5B2 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,7 +1035,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395611096138D0081D095 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1072,7 +1042,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39573109613900081D095 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1080,7 +1049,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395ED109616AB0081D095 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1088,7 +1056,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395FF109616B20081D095 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1096,7 +1063,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39616109616ED0081D095 /* Template_BInary.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
