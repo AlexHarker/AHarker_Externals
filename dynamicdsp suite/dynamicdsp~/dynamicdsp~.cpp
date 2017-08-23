@@ -4,7 +4,7 @@
  *
  *	dynamicdsp~ is a multithreaded audio processing object for dynamically loading and managing audio (or non-audio) patches in realtime, without affecting other patches that are processing.
  *	
- *	It can be thought of as a poly~ alternative, with more extensive multithreading features than the Max 5 version (although dynamicdsp~ also runs in Max 4).
+ *	It can be thought of as a poly~ alternative, with more extensive multithreading features than the Max version.
  *	There is an associated set of objects for audio input / output and querying and setting patch state (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
  *	The voice allocation system is somewhat different to poly~.
  *
@@ -22,7 +22,6 @@
 
 #include <AH_Atomic.h>
 #include <AH_Memory_Swap.h>
-#include <AH_Types.h>
 #include <AH_VectorOps.h>
 
 #include <dynamicdsp~.h>
@@ -177,7 +176,7 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -842,9 +841,9 @@ void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long 
 // ========================================================================================================================================== //
 
 
-AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 {	
-    AH_Boolean mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
+    bool mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	

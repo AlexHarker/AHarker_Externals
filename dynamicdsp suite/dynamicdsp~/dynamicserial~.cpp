@@ -22,7 +22,6 @@
 
 #include <AH_Atomic.h>
 #include <AH_Memory_Swap.h>
-#include <AH_Types.h>
 #include <AH_VectorOps.h>
 
 #include "PatchSlot.h"
@@ -111,7 +110,7 @@ void dynamicserial_perform_denormal_handled(t_dynamicserial *x);
 t_int *dynamicserial_perform(t_int *w);
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-AH_Boolean dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate);
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate);
 void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -521,7 +520,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
     long num_temp_buffers = x->num_temp_buffers;
     long vec_size = x->last_vec_size;
     
-	AH_Boolean flip = false;
+	bool flip = false;
 	
 	// Zero Outputs
 	
@@ -608,9 +607,9 @@ void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, 
 // ========================================================================================================================================== //
 
 
-AH_Boolean dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 {
-	AH_Boolean mem_fail = false;
+	bool mem_fail = false;
 			
 	// Do internal dsp compile
 	
