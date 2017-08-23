@@ -177,7 +177,7 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -842,9 +842,9 @@ void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long 
 // ========================================================================================================================================== //
 
 
-AH_Boolean dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 {	
-    AH_Boolean mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
+    bool mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	

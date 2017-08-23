@@ -30,7 +30,7 @@ typedef struct _dynamic_in
 	void **sig_ins;
 	
 	t_atom_long inlet_num;
-    AH_Boolean valid;
+    bool valid;
     
 } t_dynamic_in;
 
