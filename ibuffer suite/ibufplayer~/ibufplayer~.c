@@ -149,9 +149,9 @@ void *ibufplayer_new(t_atom_long obj_n_chans)
 	
 	x->pos = 0;
 	x->speed = 1;
-	x->sig_control = FALSE;
-	x->playing = FALSE;
-	x->input_connected = FALSE;
+	x->sig_control = false;
+	x->playing = false;
+	x->input_connected = false;
     x->transport_flag = FLAG_NONE;
 	x->obj_n_chans = obj_n_chans;
 	
@@ -359,7 +359,7 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
 		x->max_samp = start_samp;
 	}
 	
-    x->sig_control = sig_control ? TRUE : FALSE;
+    x->sig_control = sig_control ? true : false;
 	x->transport_flag = FLAG_PLAY;
 }
 
@@ -608,7 +608,7 @@ t_int *ibufplayer_perform(t_int *w)
 	long interp_mode = x->interp_mode;
 	bool sig_control = x->sig_control;
 	bool input_connected = x->input_connected;
-	bool on = FALSE;
+	bool on = false;
     long ispeed = speed;
 	long todo = 0;
 	long i;
@@ -636,7 +636,7 @@ t_int *ibufplayer_perform(t_int *w)
 	// Zero outputs and set default position output
 	
 	for (i = 0; i < obj_n_chans; i++)									
-		memset (outs[i], 0, vec_size * sizeof(float));
+		memset(outs[i], 0, vec_size * sizeof(float));
 	
 	for (i = 0; i < vec_size; i++)									
 		outs[4][i] = 1.f;
@@ -664,8 +664,8 @@ t_int *ibufplayer_perform(t_int *w)
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = TRUE;
-			x->playing = TRUE;
+			on = true;
+			x->playing = true;
 		}
 	}
 	
@@ -785,7 +785,7 @@ t_int *ibufplayer_perform_small (t_int *w)
 	long interp_mode = x->interp_mode;
 	bool sig_control = x->sig_control;
 	bool input_connected = x->input_connected;
-    bool on = FALSE;
+    bool on = false;
     long ispeed = speed;
 	long todo = 0;
 	long i, j;
@@ -836,8 +836,8 @@ t_int *ibufplayer_perform_small (t_int *w)
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = TRUE;
-			x->playing = TRUE;
+			on = true;
+			x->playing = true;
 		}
 	}
 	
@@ -1291,7 +1291,7 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
 	long interp_mode = x->interp_mode;
 	bool sig_control = x->sig_control;
 	bool input_connected = x->input_connected;
-    bool on = FALSE;
+    bool on = false;
     long ispeed = speed;
 	long todo = 0;
 	long i;
@@ -1313,7 +1313,7 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
 	// Zero outputs and set default position output
 	
 	for (i = 0; i < obj_n_chans; i++)									
-		memset (outs[i], 0, vec_size * sizeof(double));
+		memset(outs[i], 0, vec_size * sizeof(double));
 	
 	for (i = 0; i < vec_size; i++)									
 		phase_out[i] = 1.0;
@@ -1341,8 +1341,8 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = TRUE;
-			x->playing = TRUE;
+			on = true;
+			x->playing = true;
 		}
 	}
 	
@@ -1461,7 +1461,7 @@ void ibufplayer_perform_small64(t_ibufplayer *x, t_object *dsp64, double **ins, 
 	long interp_mode = x->interp_mode;
 	bool sig_control = x->sig_control;
 	bool input_connected = x->input_connected;
-    bool on = FALSE;
+    bool on = false;
     long ispeed = speed;
 	long todo = 0;
 	long i, j;
@@ -1478,7 +1478,7 @@ void ibufplayer_perform_small64(t_ibufplayer *x, t_object *dsp64, double **ins, 
 	// Zero outputs and set default position output
 	
 	for (i = 0; i < obj_n_chans; i++)									
-		memset (outs[i], 0, vec_size * sizeof(double));
+		memset(outs[i], 0, vec_size * sizeof(double));
 	
 	for (i = 0; i < vec_size; i++)									
 		phase_out[i] = 1.0;
@@ -1506,8 +1506,8 @@ void ibufplayer_perform_small64(t_ibufplayer *x, t_object *dsp64, double **ins, 
 		
 		if (pos <= max_samp && pos >= min_samp)
 		{
-			on = TRUE;
-			x->playing = TRUE;
+			on = true;
+			x->playing = true;
 		}
 	}
 	

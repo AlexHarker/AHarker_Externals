@@ -105,6 +105,7 @@ void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_lo
     t_ibufmultitable *x = (t_ibufmultitable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 2);
+    x->x_obj.z_misc = Z_NO_INPLACE;	
 	outlet_new((t_object *)x, "signal");
 	
 	// Default variables
@@ -306,7 +307,7 @@ t_int *ibufmultitable_perform(t_int *w)
 	vFloat offset_limit;
 	vFloat vec_f;
 	vSInt32 vec_i;
-	bool on = FALSE;
+	bool on = false;
 	long i;
 		
 	temp[0] = (void *) out;
@@ -335,7 +336,7 @@ t_int *ibufmultitable_perform(t_int *w)
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = float2vector((float) (length - (start_samp + 1)));
-			on = TRUE;
+			on = true;
 		}
 	}
 	
@@ -431,7 +432,7 @@ t_int *ibufmultitable_perform_small(t_int *w)
 	float length_mult, f_temp;
 	float offset_limit = 0;
 	AH_SIntPtr o_temp;
-	bool on = FALSE;
+	bool on = false;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -455,7 +456,7 @@ t_int *ibufmultitable_perform_small(t_int *w)
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = (float) (length - (start_samp + 1));
-			on = TRUE;
+			on = true;
 		}
 	}
 	
@@ -601,7 +602,7 @@ void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins
     vSInt32 vec_i1;
     vSInt32 vec_i2;
 #endif
-	bool on = FALSE;
+	bool on = false;
 	long i;
 		
 	temp[0] = (void *) (out + (vec_size >> 2));
@@ -630,7 +631,7 @@ void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = double2vector((double) (length - (start_samp + 1)));
-			on = TRUE;
+			on = true;
 		}
 	}
 	
@@ -735,7 +736,7 @@ void ibufmultitable_perform_small64(t_ibufmultitable *x, t_object *dsp64, double
 	double offset_limit = 0;
 	double length_mult, f_temp;
 	AH_SIntPtr o_temp;
-	bool on = FALSE;
+	bool on = false;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -759,7 +760,7 @@ void ibufmultitable_perform_small64(t_ibufmultitable *x, t_object *dsp64, double
 		if ((length - start_samp) >= 1)
 		{
 			offset_limit = (double) (length - (start_samp + 1));
-			on = TRUE;
+			on = true;
 		}
 	}
 	

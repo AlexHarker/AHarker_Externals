@@ -103,6 +103,7 @@ void *ibuftable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long en
     t_ibuftable *x = (t_ibuftable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 1);
+    x->x_obj.z_misc = Z_NO_INPLACE;
 	outlet_new((t_object *)x, "signal");
 	
 	// Default variables
@@ -289,7 +290,7 @@ t_int *ibuftable_perform(t_int *w)
 	vFloat length_mult;
 	vFloat vec_f;
 	vSInt32 vec_i;
-	bool on = FALSE;
+	bool on = false;
 	long i;
 		
 	temp[0] = (void *) out;
@@ -316,7 +317,7 @@ t_int *ibuftable_perform(t_int *w)
 			chan = 0;		
 		
 		if (length >= 1)
-			on = TRUE;
+			on = true;
 	}
 	
 	// Calculate output
@@ -408,7 +409,7 @@ t_int *ibuftable_perform_small(t_int *w)
 	
 	float length_mult, f_temp;
 	AH_SIntPtr o_temp;
-	bool on = FALSE;	
+	bool on = false;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -430,7 +431,7 @@ t_int *ibuftable_perform_small(t_int *w)
 			chan = 0;		
 		
 		if (length >= 1)
-			on = TRUE;;
+			on = true;
 	}
 	
 	// Calculate output
@@ -542,7 +543,6 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
 	vDouble *out = (vDouble *) outs[0];
 	
 	vDouble *fracts = *x->temp_mem;
-	vDouble *temp_fracts = fracts;
 
     vOffsetType *offsets = (vOffsetType *) (fracts + (vec_size >> 1));
 	AH_SIntPtr *l_offsets = (AH_SIntPtr *) offsets;
@@ -574,13 +574,13 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
     vSInt32 vec_i1;
     vSInt32 vec_i2;
 #endif
-	bool on = FALSE;
+	bool on = false;
 	long i;
 		
 	temp[0] = (void *) (out + (vec_size >> 2));
-	temp[1] = (void *) (l_offsets + (1 * vec_size));
-	temp[2] = (void *) (l_offsets + (2 * vec_size));
-	temp[3] = (void *) (l_offsets + (3 * vec_size));
+	temp[1] = (void *) (l_offsets + vec_size);
+    temp[2] = (void *) ((float *) temp[1] + vec_size);
+	temp[3] = (void *) ((float *) temp[2] + vec_size);
 	
 	if (x->x_obj.z_disabled) 
 		return;
@@ -601,18 +601,20 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
 			chan = 0;		
 		
 		if (length >= 1)
-			on = TRUE;;
+			on = true;
 	}
 	
 	// Calculate output
 	
 	if (on)
 	{
+        vDouble *temp_fracts = fracts;
 		ibuffer_increment_inuse(buffer_pointer);
 		
 		// Calculate the sample position block, clipping first 0 to 1
 		
 #ifdef AH_64BIT
+        
         for (i = 0; i < vec_size >> 1; i++)
         {
             vec_f1 = F64_VEC_MUL_OP(length_mult, F64_VEC_MIN_OP(One, F64_VEC_MAX_OP(Zero, *in++)));
@@ -703,7 +705,7 @@ void ibuftable_perform_small64(t_ibuftable *x, t_object *dsp64, double **ins, lo
 	
 	double length_mult, f_temp;
 	AH_SIntPtr o_temp;
-	bool on = FALSE;
+	bool on = false;
 	long i;
 	
 	if (x->x_obj.z_disabled) 
@@ -725,7 +727,7 @@ void ibuftable_perform_small64(t_ibuftable *x, t_object *dsp64, double **ins, lo
 			chan = 0;		
 		
 		if (length >= 1)
-			on = TRUE;;
+			on = true;
 	}
 	
 	// Calculate output
@@ -776,7 +778,7 @@ void ibuftable_perform_small64(t_ibuftable *x, t_object *dsp64, double **ins, lo
 }
 
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
-{	
+{
 	t_ptr_uint mem_size = maxvectorsize * (3 * sizeof(float) + sizeof(double) + sizeof(AH_SIntPtr));
 	
 	// Try to access dynamicdsp~ host tempory memory
