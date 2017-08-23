@@ -14,6 +14,5 @@
  */
 
 #include <Carbon/Carbon.h>
-#include <QuickTime/QuickTime.h>
 
 #define MSP_VERSION
