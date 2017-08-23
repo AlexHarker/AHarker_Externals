@@ -460,7 +460,7 @@
 		B8E492EE1095A30E00A88A63 /* vequals~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vequals~.c"; sourceTree = "<group>"; };
 		B8E493021095A32500A88A63 /* vplus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vplus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E493131095A32800A88A63 /* vequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E493A81095A68400A88A63 /* Template_BInary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template_BInary.h; sourceTree = "<group>"; };
+		B8E493A81095A68400A88A63 /* Template_Binary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template_Binary.h; sourceTree = "<group>"; };
 		B8E493BF1095A73900A88A63 /* vdiv~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vdiv~.c"; sourceTree = "<group>"; };
 		B8E493C41095A74D00A88A63 /* vgreaterthan~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vgreaterthan~.c"; sourceTree = "<group>"; };
 		B8E493CA1095A76A00A88A63 /* vlessthan~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vlessthan~.c"; sourceTree = "<group>"; };
@@ -841,7 +841,7 @@
 			children = (
 				B887FAFA1838D67200C83570 /* Helpers.h */,
 				B8E3954C1096121C0081D095 /* Template_Unary.h */,
-				B8E493A81095A68400A88A63 /* Template_BInary.h */,
+				B8E493A81095A68400A88A63 /* Template_Binary.h */,
 				B8E39595109613C90081D095 /* vabs~.c */,
 				B8BFFB9C10AEF053008EB5B2 /* vacos~.c */,
 				B8BFFB9D10AEF053008EB5B2 /* vacosh~.c */,
