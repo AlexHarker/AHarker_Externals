@@ -13,7 +13,7 @@
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
+		B8589F2619A7D501003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8DE14DC0EB46B030050BDFE /* randfloats.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = randfloats.c; sourceTree = "<group>"; };
 		B8E15A1711E33C5500FA3CFA /* randfloats.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randfloats.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */

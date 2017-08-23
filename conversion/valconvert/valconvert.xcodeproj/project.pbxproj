@@ -51,7 +51,7 @@
 		B11F57FF0A65139E0000A79B /* valconvert.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = valconvert.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A2C25D0A4C272200236386 /* valconvert.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = valconvert.c; sourceTree = "<group>"; };
 		B893F7DF11F8600E004F6BC0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
-		B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8C2E6AA11C397E100A7E297 /* valconvert~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "valconvert~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 

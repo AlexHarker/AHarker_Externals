@@ -14,7 +14,7 @@
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* rbiquad~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rbiquad~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8C1837A19A804A000304236 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
+		B8C1837A19A804A000304236 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8DE14DC0EB46B030050BDFE /* rbiquad~.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = "rbiquad~.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

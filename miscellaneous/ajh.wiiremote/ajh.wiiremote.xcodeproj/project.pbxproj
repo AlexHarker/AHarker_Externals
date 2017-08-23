@@ -189,7 +189,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.5;
 			};
 			name = Development;
 		};
@@ -206,8 +206,8 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = macosx10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				SDKROOT = macosx10.5;
 			};
 			name = Deployment;
 		};
@@ -221,7 +221,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				GENERATE_PKGINFO_FILE = YES;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.5;
 			};
 			name = Default;
 		};

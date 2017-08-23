@@ -15,7 +15,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1A2C27A0A4C295800236386 /* recursivefolder.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = recursivefolder.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88F34B21694A8DE000900C3 /* recursivefolder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = recursivefolder.c; sourceTree = "<group>"; };
-		B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = "/Users/alexharker/Documents/Max Externals/- AHarker Externals/threading/schedulemessage/../../Config_AHarker_Externals.xcconfig"; sourceTree = "<absolute>"; };
+		B8ABBF6219A787EB00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

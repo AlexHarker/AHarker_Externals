@@ -17,7 +17,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* kernelmaker~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kernelmaker~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B89EF5DA10EB78D100D86409 /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
 		B8DEE4C00EE2B38800803D2F /* kernelmaker~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "kernelmaker~.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */

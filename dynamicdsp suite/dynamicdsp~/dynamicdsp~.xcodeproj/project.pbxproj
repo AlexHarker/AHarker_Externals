@@ -121,7 +121,7 @@
 		B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicserial~.cpp"; sourceTree = "<group>"; };
 		B87283961CC38D2D00A1C38E /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "dynamicdsp~.h"; path = "../../AH_MaxMSP_Headers/dynamicdsp~.h"; sourceTree = "<group>"; };
 		B87283981CC39A5100A1C38E /* PatchSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchSet.h; sourceTree = "<group>"; };
-		B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchSlot.cpp; sourceTree = "<group>"; };
 		B8CD5C0D1CC2989200CE262E /* PatchSlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchSlot.h; sourceTree = "<group>"; };
 		B8D6A6830ED6379E007C648E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };

@@ -17,9 +17,7 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings
 
-GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 MACOSX_DEPLOYMENT_TARGET = 10.5
-SDKROOT = macosx10.5
 
 ARCHS = i386 x86_64 
 
