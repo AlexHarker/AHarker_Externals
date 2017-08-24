@@ -152,6 +152,8 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->database_object = database_create(name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
+    entrymatcher_load_patcher(x);
+
     return (x);
 }
 

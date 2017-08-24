@@ -63,48 +63,44 @@ template <class T> void entrymatcher_load(T *x, t_symbol *file)
     database_getptr_write(x->database_object)->load((t_object *)x, file);
 }
 
+// ========================================================================================================================================== //
+// Load and Save
+// ========================================================================================================================================== //
+
+template <class T> t_dictionary *entrymatcher_save_dict(T *x)
+{
+    return database_getptr_read(x->database_object)->saveDictionary(true);
+}
+
+template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
+{
+    if (dict)
+        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+}
+
+template <class T> t_max_err entrymatcher_save_patcher(T *x, t_dictionary *dict)
+{
+    if (x->embed)
+        return dictionary_appenddictionary(dict, gensym("database"), (t_object *) entrymatcher_save_dict(x));
+   
+    return MAX_ERR_NONE;
+}
+
+template <class T> void entrymatcher_load_patcher(T *x)
+{
+    t_dictionary *dict = NULL;
+    
+    if ((dict = (t_dictionary *) gensym("#D")->s_thing))
+    {
+        dictionary_getdictionary(dict, gensym("database"), (t_object**) &dict);
+        entrymatcher_load_dict(x, dict);
+    }
+}
+
 template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
     x->matchers->setAudioStyle(style ? true : false);
 }
-
-template <class T> t_max_err entrymatcher_save_dict(T *x, long *argc, t_atom **argv)
-{
-    char alloc;
-    
-    atom_alloc(argc, argv, &alloc);
-    t_dictionary *dict = database_getptr_read(x->database_object)->saveDictionary(true);
-    atom_setobj(*argv, dict);
-    
-    return MAX_ERR_NONE;
-}
-
-template <class T> t_max_err entrymatcher_load_dict(T *x, long argc, t_atom *argv)
-{
-    t_dictionary *dict = NULL;
-    
-    if (argc)
-        dict = (t_dictionary *) atom_getobj(argv);
-    
-    if (dict)
-        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
-    
-    return MAX_ERR_NONE;
-}
-
-template <class T> t_max_err entrymatcher_save_dict_attr(T *x, t_object *attr, long *argc, t_atom **argv)
-{
-    if (x->embed)
-        return entrymatcher_save_dict<T>(x, argc, argv);
-    else
-        return MAX_ERR_GENERIC;
-}
-
-template <class T> t_max_err entrymatcher_load_dict_attr(T *x, t_object *attr, long argc, t_atom *argv)
-{
-    return entrymatcher_load_dict<T>(x, argc, argv);
-}
-
 
 // ========================================================================================================================================== //
 // Add Common Routines
@@ -123,13 +119,12 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_labelmodes<T>,"labelmodes", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_names<T>,"names", A_GIMME, 0);
     
-    class_addmethod(class_pointer, (method)entrymatcher_save_dict_attr<T>, "getvalueof", A_CANT, 0);
-    class_addmethod(class_pointer, (method)entrymatcher_load_dict_attr<T>, "setvalueof", A_CANT, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_save_patcher<T>, "appendtodictionary", A_CANT, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_load_patcher<T>, "pstate", A_CANT, 0);
     
     class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
     class_addmethod(class_pointer, (method)entrymatcher_load<T>, "read", A_DEFSYM, 0);
-
 
     class_addmethod(class_pointer, (method)entrymatcher_audiostyle<T>, "audiostyle", A_DEFLONG, 0);
     
@@ -138,11 +133,6 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     CLASS_ATTR_LONG(class_pointer, "embed", 0, T, embed);
     CLASS_ATTR_STYLE(class_pointer, "embed", 0, "onoff");
     CLASS_ATTR_SAVE(class_pointer, "embed", 0);
-
-    CLASS_ATTR_OBJ(class_pointer, "database", ATTR_SET_OPAQUE_USER | ATTR_GET_OPAQUE_USER, T, x_obj);
-    CLASS_ATTR_ACCESSORS(class_pointer, "database", (method) entrymatcher_save_dict_attr<T>, (method) entrymatcher_load_dict_attr<T>); 
-    // this should be set based on the embed value, but for now...
-    CLASS_ATTR_SELFSAVE(class_pointer, "database", 0);
 }
 
 #endif

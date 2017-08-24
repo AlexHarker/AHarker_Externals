@@ -125,6 +125,8 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->ratio_kept = 1.0;
     x->n_limit = 0;
     
+    entrymatcher_load_patcher(x);
+
     rand_seed(&x->gen);
     
     return (x);
