@@ -97,6 +97,25 @@ template <class T> void entrymatcher_load_patcher(T *x)
     }
 }
 
+template <class T> t_max_err entrymatcher_getvalueof(T *x, t_object *attr, long *argc, t_atom **argv)
+{
+    char alloc;
+    
+    atom_alloc(argc, argv, &alloc);
+    t_dictionary *dict = entrymatcher_save_dict<T>(x);
+    atom_setobj(*argv, dict);
+    
+    return MAX_ERR_GENERIC;
+}
+
+template <class T> t_max_err entrymatcher_setvalueof(T *x, t_object *attr, long argc, t_atom *argv)
+{
+    if (argc)
+        entrymatcher_load_dict<T>(x, (t_dictionary *) atom_getobj(argv));
+    
+    return MAX_ERR_NONE;}
+
+
 template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
     x->matchers->setAudioStyle(style ? true : false);
@@ -120,7 +139,9 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_names<T>,"names", A_GIMME, 0);
     
     class_addmethod(class_pointer, (method)entrymatcher_save_patcher<T>, "appendtodictionary", A_CANT, 0);
-    class_addmethod(class_pointer, (method)entrymatcher_load_patcher<T>, "pstate", A_CANT, 0);
+
+    class_addmethod(class_pointer, (method)entrymatcher_getvalueof<T>, "getvalueof", A_CANT, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_setvalueof<T>, "setvalueof", A_CANT, 0);
     
     class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
