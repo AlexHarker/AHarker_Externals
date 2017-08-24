@@ -52,6 +52,8 @@ typedef struct entrymatcher{
     t_object *database_object;
     Matchers *matchers;
     
+    long embed;
+    
     // Outlets
 	
 	void *the_indices_outlet;

@@ -40,6 +40,8 @@ typedef struct entrymatcher {
     t_object *database_object;
     Matchers *matchers;
     
+    long embed;
+
     long max_matchers;
     long n_limit;
     double ratio_kept;
