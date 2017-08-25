@@ -324,8 +324,10 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
         // Alter order indices
         
         for (long j = end; j < next; j++)
-                newOrder[getOrder(j)] = (j - end) + offset;
+            newOrder[getOrder(j)] = (j - end) + offset;
     }
+    
+    long newSize = offset;
     
     // Remove data
 
@@ -366,8 +368,6 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
     }
     
     // Resize storage
-    
-    long newSize = numItems() - sortedIndices.size();
     
     mIdentifiers.resize(newSize);
     mEntries.resize(newSize * numColumns());
