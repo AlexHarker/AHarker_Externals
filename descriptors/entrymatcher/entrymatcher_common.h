@@ -45,7 +45,7 @@ template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_
 }
 
 // ========================================================================================================================================== //
-// View, Save and Load Routines
+// View, User Save and USer Load Routines
 // ========================================================================================================================================== //
 
 template <class T> void entrymatcher_view(T *x)
@@ -118,12 +118,13 @@ template <class T> t_max_err entrymatcher_setvalueof(T *x, long argc, t_atom *ar
 
 template <class T> void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
-    static t_symbol *database_modified = gensym("database_modified");
+    static t_symbol *database_modified = gensym("__database_modified");
 
-    if (s == database_modified)
+    if (msg == database_modified)
     {
         object_notify(x, _sym_modified, NULL);
-        jpatcher_set_dirty(x->patcher, 1);
+        if (x->embed)
+            jpatcher_set_dirty(x->patcher, 1);
     }
 }
 

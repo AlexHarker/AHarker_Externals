@@ -16,7 +16,7 @@ typedef struct entry_database{
 
 void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    static t_symbol *database_modified = gensym("database_modified");
+    static t_symbol *database_modified = gensym("__database_modified");
     x->notify = true;
     object_notify(x, database_modified, NULL);
 }
