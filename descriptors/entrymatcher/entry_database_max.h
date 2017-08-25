@@ -19,9 +19,9 @@ private:
     t_object *mClient;
 };
 
-t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
-t_object *database_change(t_symbol *name, t_object *old_object);
-void database_release(t_object *x);
+t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
+t_object *database_change(void *x, t_symbol *name, t_object *old_object);
+void database_release(void *x, t_object *database_object);
 
 EntryDatabase::ReadPointer database_getptr_read(t_object *x);
 NotifyPointer database_getptr_write(t_object *x, t_object *client);

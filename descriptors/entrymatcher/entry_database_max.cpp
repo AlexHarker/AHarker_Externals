@@ -81,8 +81,10 @@ void entry_database_free(t_entry_database *x)
     delete x->database;
 }
 
-void entry_database_release(t_entry_database *x)
+void entry_database_release(void *client, t_entry_database *x)
 {
+    object_detach(name_space_name, gensym(""), client);
+    
     if (x && --x->count == 0)
     {
         object_unregister(x);
@@ -90,7 +92,7 @@ void entry_database_release(t_entry_database *x)
     }
 }
 
-t_entry_database *entry_database_find(t_symbol *name, t_entry_database *old_object)
+t_entry_database *entry_database_find(void *client, t_symbol *name, t_entry_database *old_object)
 {
     // Make sure the max database class exists
     
@@ -99,14 +101,14 @@ t_entry_database *entry_database_find(t_symbol *name, t_entry_database *old_obje
     
     // See if an object is registered with this name
     
-    t_entry_database *x = (t_entry_database *) object_findregistered(name_space_name, name);
+    t_entry_database *x = (t_entry_database *) object_attach(name_space_name, name, client);
     
     // If the object registered is different
     
     if (x && x != old_object)
     {
         if (old_object)
-            entry_database_release(old_object);
+            entry_database_release(client, old_object);
         x->count++;
     }
     else
@@ -115,7 +117,7 @@ t_entry_database *entry_database_find(t_symbol *name, t_entry_database *old_obje
     return x;
 }
 
-t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_atom argv[3];
     atom_setsym(argv + 0, name);
@@ -124,7 +126,7 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_reserved
     
     // See if an object is registered (otherwise make object and register it...)
     
-    t_entry_database *x = entry_database_find(name, NULL);
+    t_entry_database *x = entry_database_find(client, name, NULL);
     
     if (!x)
         x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 3, argv));
@@ -132,19 +134,19 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_reserved
     return x;
 }
 
-t_object *database_create(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return (t_object *) entry_database_create(name, num_reserved_entries, num_columns);
+    return (t_object *) entry_database_create(x, name, num_reserved_entries, num_columns);
 }
 
-t_object *database_change(t_symbol *name, t_object *old_object)
+t_object *database_change(void *x, t_symbol *name, t_object *old_object)
 {
-    return (t_object *) entry_database_find(name, (t_entry_database *) old_object);
+    return (t_object *) entry_database_find(x, name, (t_entry_database *) old_object);
 }
 
-void database_release(t_object *x)
+void database_release(void *x, t_object *database_object)
 {
-    entry_database_release((t_entry_database *) x);
+    entry_database_release(x, (t_entry_database *) database_object);
 }
 
 EntryDatabase::ReadPointer database_getptr_read(t_object *x)

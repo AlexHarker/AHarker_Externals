@@ -149,7 +149,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 	x->the_identifiers_outlet = outlet_new(x, 0);
     x->the_indices_outlet = listout(x);
 	
-    x->database_object = database_create(name, num_reserved_entries, num_columns);
+    x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     entrymatcher_load_patcher(x);
@@ -159,7 +159,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 
 void entrymatcher_free(t_entrymatcher *x)
 {
-    database_release(x->database_object);
+    database_release(x, x->database_object);
     delete x->matchers;
 }
 

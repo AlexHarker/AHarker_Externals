@@ -11,7 +11,7 @@
 
 template <class T> void entrymatcher_refer(T *x, t_symbol *name)
 {
-    x->database_object = database_change(name, x->database_object);
+    x->database_object = database_change(x, name, x->database_object);
 }
 
 template <class T> void entrymatcher_clear(T *x)
