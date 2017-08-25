@@ -125,6 +125,7 @@ public:
     void removeEntries(void *x, long argc, t_atom *argv);
     void removeMatchedEntries(void *x, long argc, t_atom *argv);
     
+    t_symbol *getName() const                                 { return mName; }
     t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
     bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
     void getEntryIdentifier(t_atom *a, long idx) const        { return getIdentifierInternal(idx).getAtom(a); }

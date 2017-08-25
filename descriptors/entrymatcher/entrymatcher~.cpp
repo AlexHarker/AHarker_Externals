@@ -40,6 +40,7 @@ typedef struct entrymatcher {
     t_object *database_object;
     Matchers *matchers;
     
+    t_patcher *patcher;
     long embed;
 
     long max_matchers;
@@ -125,7 +126,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->ratio_kept = 1.0;
     x->n_limit = 0;
     
-    entrymatcher_load_patcher(x);
+    entrymatcher_new_common(x);
 
     rand_seed(&x->gen);
     

@@ -13,25 +13,22 @@ typedef struct entry_database{
     
 } t_entry_database;
 
-// FIX - this needs to use notification... also needs to make the patcher dirty - best done in the max object part...
 
-void modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
+void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
+    static t_symbol *database_modified = gensym("database_modified");
     x->notify = true;
-    object_notify(atom_getobj(argv), _sym_modified, NULL);
+    object_notify(x, database_modified, NULL);
 }
 
 NotifyPointer::~NotifyPointer()
 {
-    atom a;
-    atom_setobj(&a, mClient);
-    
     t_entry_database *database = (t_entry_database *) mMaxDatabase;
     
     if (database->notify)
     {
         database->notify = false;
-        defer_low(mMaxDatabase, (method) modified, NULL, 1, &a);
+        defer_low(mMaxDatabase, (method)entry_database_modified, NULL, 0, NULL);
     }
 }
 
@@ -83,7 +80,7 @@ void entry_database_free(t_entry_database *x)
 
 void entry_database_release(void *client, t_entry_database *x)
 {
-    object_detach(name_space_name, gensym(""), client);
+    object_detach(name_space_name, x->database->getName(), client);
     
     if (x && --x->count == 0)
     {
@@ -92,7 +89,7 @@ void entry_database_release(void *client, t_entry_database *x)
     }
 }
 
-t_entry_database *entry_database_find(void *client, t_symbol *name, t_entry_database *old_object)
+t_entry_database *entry_database_find(void *client, t_symbol *name, t_entry_database *old_database_object)
 {
     // Make sure the max database class exists
     
@@ -101,18 +98,19 @@ t_entry_database *entry_database_find(void *client, t_symbol *name, t_entry_data
     
     // See if an object is registered with this name
     
-    t_entry_database *x = (t_entry_database *) object_attach(name_space_name, name, client);
+    t_entry_database *x = (t_entry_database *) object_findregistered(name_space_name, name);
     
     // If the object registered is different
     
-    if (x && x != old_object)
+    if (x && x != old_database_object)
     {
-        if (old_object)
-            entry_database_release(client, old_object);
+        if (old_database_object)
+            entry_database_release(client, old_database_object);
+        object_attach(name_space_name, name, client);
         x->count++;
     }
     else
-        x = old_object;
+        x = old_database_object;
     
     return x;
 }
@@ -129,7 +127,10 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     t_entry_database *x = entry_database_find(client, name, NULL);
     
     if (!x)
+    {
         x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 3, argv));
+        object_attach(name_space_name, name, client);
+    }
     
     return x;
 }
@@ -149,16 +150,16 @@ void database_release(void *x, t_object *database_object)
     entry_database_release(x, (t_entry_database *) database_object);
 }
 
-EntryDatabase::ReadPointer database_getptr_read(t_object *x)
+EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
 {
-    t_entry_database *obj = (t_entry_database *) x;
+    t_entry_database *obj = (t_entry_database *) database_object;
     return EntryDatabase::ReadPointer(obj->database);
 }
 
-NotifyPointer database_getptr_write(t_object *x, t_object *client)
+NotifyPointer database_getptr_write(t_object *database_object)
 {
-    t_entry_database *obj = (t_entry_database *) x;
-    return NotifyPointer(obj->database, (t_object *)obj, client);
+    t_entry_database *obj = (t_entry_database *) database_object;
+    return NotifyPointer(obj->database, (t_object *) obj);
 
 }
 

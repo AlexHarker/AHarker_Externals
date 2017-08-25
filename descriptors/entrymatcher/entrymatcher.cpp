@@ -53,6 +53,7 @@ typedef struct entrymatcher{
     Matchers *matchers;
     
     long embed;
+    t_patcher *patcher;
     
     // Outlets
 	
@@ -152,7 +153,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
-    entrymatcher_load_patcher(x);
+    entrymatcher_new_common(x);
 
     return (x);
 }

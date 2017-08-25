@@ -16,32 +16,32 @@ template <class T> void entrymatcher_refer(T *x, t_symbol *name)
 
 template <class T> void entrymatcher_clear(T *x)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->clear();
+    database_getptr_write(x->database_object)->clear();
 }
 
 template <class T> void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->setColumnLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object)->setColumnLabelModes(x, argc, argv);
 }
 
 template <class T> void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->setColumnNames(x, argc, argv);
+    database_getptr_write(x->database_object)->setColumnNames(x, argc, argv);
 }
 
 template <class T> void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->addEntry(x, argc, argv);
+    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
 }
 
 template <class T> void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->removeEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
 }
 
 template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->removeMatchedEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
@@ -60,7 +60,7 @@ template <class T> void entrymatcher_save(T *x, t_symbol *file)
 
 template <class T> void entrymatcher_load(T *x, t_symbol *file)
 {
-    database_getptr_write(x->database_object, (t_object *)x)->load((t_object *)x, file);
+    database_getptr_write(x->database_object)->load((t_object *)x, file);
 }
 
 // ========================================================================================================================================== //
@@ -75,7 +75,7 @@ template <class T> t_dictionary *entrymatcher_save_dict(T *x)
 template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
     if (dict)
-        database_getptr_write(x->database_object, (t_object *)x)->loadDictionary((t_object*) x, dict);
+        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
 }
 
 template <class T> t_max_err entrymatcher_save_patcher(T *x, t_dictionary *dict)
@@ -113,8 +113,19 @@ template <class T> t_max_err entrymatcher_setvalueof(T *x, long argc, t_atom *ar
     if (argc)
         entrymatcher_load_dict<T>(x, (t_dictionary *) atom_getobj(argv));
     
-    return MAX_ERR_NONE;}
+    return MAX_ERR_NONE;
+}
 
+template <class T> void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+{
+    static t_symbol *database_modified = gensym("database_modified");
+
+    if (s == database_modified)
+    {
+        object_notify(x, _sym_modified, NULL);
+        jpatcher_set_dirty(x->patcher, 1);
+    }
+}
 
 template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
@@ -142,7 +153,8 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
 
     class_addmethod(class_pointer, (method)entrymatcher_getvalueof<T>, "getvalueof", A_CANT, 0);
     class_addmethod(class_pointer, (method)entrymatcher_setvalueof<T>, "setvalueof", A_CANT, 0);
-    
+    class_addmethod(class_pointer, (method)entrymatcher_notify<T>,"notify", A_CANT, 0);
+
     class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
     class_addmethod(class_pointer, (method)entrymatcher_load<T>, "read", A_DEFSYM, 0);
@@ -154,6 +166,16 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     CLASS_ATTR_LONG(class_pointer, "embed", 0, T, embed);
     CLASS_ATTR_STYLE(class_pointer, "embed", 0, "onoff");
     CLASS_ATTR_SAVE(class_pointer, "embed", 0);
+}
+
+// ========================================================================================================================================== //
+// New Common Routine
+// ========================================================================================================================================== //
+
+template <class T> void entrymatcher_new_common(T *x)
+{
+    entrymatcher_load_patcher(x);
+    x->patcher = gensym("#P")->s_thing;
 }
 
 #endif
