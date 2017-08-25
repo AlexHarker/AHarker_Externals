@@ -142,6 +142,10 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     return x;
 }
 
+// ========================================================================================================================================== //
+// Client routines
+// ========================================================================================================================================== //
+
 t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     return (t_object *) entry_database_create(x, name, num_reserved_entries, num_columns);

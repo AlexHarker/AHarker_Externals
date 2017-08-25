@@ -7,10 +7,13 @@
 
 #include "EntryDatabase.h"
 
+// ========================================================================================================================================== //
+// Client routines and structures ONLY
+// ========================================================================================================================================== //
+
 struct NotifyPointer : public EntryDatabase::WritePointer
 {
     NotifyPointer(EntryDatabase *ptr, t_object *maxDatabase) : EntryDatabase::WritePointer(ptr), mMaxDatabase(maxDatabase) {}
-    
     ~NotifyPointer();
     
 private:
