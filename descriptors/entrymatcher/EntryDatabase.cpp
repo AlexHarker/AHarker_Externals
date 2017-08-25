@@ -8,7 +8,7 @@
 
 void EntryDatabase::reserve(long items)
 {
-    HoldLock lock(&mWriteLock);
+    HoldWriteLock lock(&mLock);
     
     mIdentifiers.reserve(items);
     mOrder.reserve(items);
@@ -18,11 +18,11 @@ void EntryDatabase::reserve(long items)
 
 void EntryDatabase::clear()
 {
-    HoldLock lock(&mWriteLock);
+    HoldWriteLock lock(&mLock);
     clear(lock);
 }
 
-void EntryDatabase::clear(HoldLock &lock)
+void EntryDatabase::clear(HoldWriteLock &lock)
 {
     mEntries.clear();
     mIdentifiers.clear();
@@ -32,11 +32,11 @@ void EntryDatabase::clear(HoldLock &lock)
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
 {
-    HoldLock lock(&mWriteLock);
+    HoldWriteLock lock(&mLock);
     setColumnLabelModes(lock, x, argc, argv);
 }
 
-void EntryDatabase::setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
     bool labelsModesChanged = false;
     
@@ -58,11 +58,11 @@ void EntryDatabase::setColumnLabelModes(HoldLock &lock, void *x, long argc, t_at
 
 void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
 {
-    HoldLock lock(&mWriteLock);
+    HoldWriteLock lock(&mLock);
     setColumnNames(lock, x, argc, argv);
 }
 
-void EntryDatabase::setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnNames(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
@@ -75,11 +75,11 @@ void EntryDatabase::setColumnNames(HoldLock &lock, void *x, long argc, t_atom *a
 
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
-    HoldLock lock(&mWriteLock);
+    HoldWriteLock lock(&mLock);
     addEntry(lock, x, argc, argv);
 }
 
-void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
     if (!argc--)
     {
@@ -125,40 +125,58 @@ void EntryDatabase::addEntry(HoldLock &lock, void *x, long argc, t_atom *argv)
 void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
+    {
         object_error((t_object *)x, "no identifiers given for remove message");
+        return;
+    }
+    
+    if (argc == 1)
+    {
+        removeEntry(x, argv);
+    }
     else
     {
-        HoldLock lock(&mWriteLock);
+        ReadWritePointer database(this);
+    
+        std::vector<long> indices(argc);
+        long size = 0;
         
-        while (argc--)
-             removeEntry(lock, x, argv++);
+        for (long i = 0; i < argc; i++)
+        {
+            long idx;
+            long index = searchIdentifiers(argv +i, idx);
+            
+            if (index > -1)
+                indices[size++] = index;
+        }
+        
+        indices.resize(size);
+        sort(indices, size);
+        
+        if (size)
+            removeEntries(database, indices);
     }
 }
 
 void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 {
+    if (!argc)
+        return;
+    
+    ReadWritePointer database(this);
     Matchers matchers;
     std::vector<long> indices;
     long numMatches = 0;
     
-    if (argc)
-    {
-        ReadPointer database(this);
-    
-        matchers.setMatchers(x, argc, argv, database);
-        numMatches = matchers.match(database, true);
-        indices.resize(numMatches);
+    matchers.setMatchers(x, argc, argv, database);
+    numMatches = matchers.match(database, true);
+    indices.resize(numMatches);
         
-        for (long i = 0; i < numMatches; i++)
-            indices[i] = matchers.getIndex(i);
-    }
-    
+    for (long i = 0; i < numMatches; i++)
+        indices[i] = matchers.getIndex(i);
+        
     if (numMatches && matchers.size())
-    {
-        HoldLock lock(&mWriteLock);
-        
-        removeEntries(lock, indices);
-    }
+        removeEntries(database, indices);
 }
 
 template <class T> void copyRange(std::vector<T>& data, long from, long to, long size, long itemSize = 1)
@@ -176,11 +194,13 @@ long EntryDatabase::getOrder(long idx)
     return order;
 }
 
-void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indices)
+void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const std::vector<long>& sortedIndices)
 {
-    long orderStart = getOrder(indices[0]);
-    long offset = indices[0];
-    long next = indices[0];
+    readLockedDatabase.promoteToWrite();
+    
+    long orderStart = getOrder(sortedIndices[0]);
+    long offset = sortedIndices[0];
+    long next = sortedIndices[0];
     long size;
     long end;
     
@@ -189,16 +209,16 @@ void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indic
     std::vector<long> newOrder(numItems());
     std::copy(mOrder.begin(), mOrder.begin() + offset, newOrder.begin());
     
-    for (long i = 0; i < indices.size(); offset += (next - end))
+    for (long i = 0; i < sortedIndices.size(); offset += (next - end))
     {
         long start = next;
         
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
+        for (++i; i < sortedIndices.size(); i++)
+            if (sortedIndices[i] > sortedIndices[i - 1] + 1)
                 break;
         
-        end = indices[i - 1] + 1;
-        next = i < indices.size() ? indices[i] : numItems();
+        end = sortedIndices[i - 1] + 1;
+        next = i < sortedIndices.size() ? sortedIndices[i] : numItems();
         
         // Mark new order array for deletion
         
@@ -213,16 +233,16 @@ void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indic
     
     // Remove data
 
-    offset = indices[0];
+    offset = sortedIndices[0];
     
-    for (long i = 0; i < indices.size(); offset += size)
+    for (long i = 0; i < sortedIndices.size(); offset += size)
     {
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
+        for (++i; i < sortedIndices.size(); i++)
+            if (sortedIndices[i] > sortedIndices[i - 1] + 1)
                 break;
         
-        end = indices[i - 1] + 1;
-        size = (i < indices.size() ? indices[i] : numItems()) - end;
+        end = sortedIndices[i - 1] + 1;
+        size = (i < sortedIndices.size() ? sortedIndices[i] : numItems()) - end;
         
         // Move data
         
@@ -251,7 +271,7 @@ void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indic
     
     // Resize storage
     
-    long newSize = numItems() - indices.size();
+    long newSize = numItems() - sortedIndices.size();
     
     mIdentifiers.resize(newSize);
     mEntries.resize(newSize * numColumns());
@@ -259,8 +279,10 @@ void EntryDatabase::removeEntries(HoldLock &lock, const std::vector<long>& indic
     mOrder.resize(newSize);
 }
 
-void EntryDatabase::removeEntry(HoldLock &lock, void *x, t_atom *identifier)
+void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 {
+    HoldWriteLock lock(&mLock);
+    
     long order;
     long idx = searchIdentifiers(identifier, order);
     
@@ -550,7 +572,7 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
     
     if (dictMeta && dictData)
     {
-        HoldLock lock(&mWriteLock);
+        HoldWriteLock lock(&mLock);
         clear(lock);
         
         t_atom_long newNumColumns;

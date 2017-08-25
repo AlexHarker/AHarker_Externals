@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "CustomAtom.h"
+#include "ReadWriteLock.h"
 
 class EntryDatabase
 {
@@ -17,31 +18,6 @@ class EntryDatabase
         bool mLabel;
     };
     
-    struct Lock
-    {
-        Lock() : mAtomicLock(0) {}
-        ~Lock() { acquire(); }
-        
-        void acquire() { while(!attempt()); }
-        bool attempt() { return ATOMIC_COMPARE_SWAP32(0, 1, &mAtomicLock); }
-        void release() { ATOMIC_COMPARE_SWAP32(1, 0, &mAtomicLock); }
-        
-    private:
-        
-        t_int32_atomic mAtomicLock;
-    };
-    
-    struct HoldLock
-    {
-        HoldLock() : mLock(NULL) {}
-        HoldLock(Lock *lock) : mLock(lock)  { mLock->acquire(); }
-        ~HoldLock()                         { if (mLock) mLock->release(); }
-                
-    private:
-        
-        Lock *mLock;
-    };
-
 public:
     
     class RawAccessor
@@ -77,19 +53,9 @@ public:
     
     struct ReadPointer
     {
-        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)
-        {
-            HoldLock lock(&mPtr->mReadLock);
-            if (mPtr->mReadCount++ == 0)
-                mPtr->mWriteLock.acquire();
-        }
-        
-        ~ReadPointer()
-        {
-            if (--mPtr->mReadCount == 0)
-                mPtr->mWriteLock.release();
-        }
-        
+        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)   { mPtr->mLock.acquireRead(); }
+        ~ReadPointer()                                      { mPtr->mLock.release(); }
+            
         const EntryDatabase *operator->() const { return mPtr; }
         
     private:
@@ -100,14 +66,13 @@ public:
     struct WritePointer
     {
         WritePointer(EntryDatabase *ptr) : mPtr(ptr) {}
-        
         EntryDatabase *operator->() const { return mPtr; }
         
     private:
         
         EntryDatabase *mPtr;
     };
-    
+
     EntryDatabase(t_symbol *name, long numCols) : mName(name) { mColumns.resize(numCols); }
     
     RawAccessor rawAccessor() const { return RawAccessor(*this); }
@@ -153,16 +118,27 @@ public:
 
 private:
 
+    struct ReadWritePointer : public ReadPointer
+    {
+        ReadWritePointer(const EntryDatabase *ptr) : ReadPointer(ptr)   {}
+        
+        void promoteToWrite() { mPtr->mLock.promoteReadToWrite(); }
+        
+    private:
+        
+        const EntryDatabase *mPtr;
+    };
+    
     inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
     inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
     inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
     
-    void clear(HoldLock &lock);
-    void setColumnLabelModes(HoldLock &lock, void *x, long argc, t_atom *argv);
-    void setColumnNames(HoldLock &lock, void *x, long argc, t_atom *argv);
-    void addEntry(HoldLock &lock, void *x, long argc, t_atom *argv);
-    void removeEntry(HoldLock &lock, void *x, t_atom *identifier);
-    void removeEntries(HoldLock &lock, const std::vector<long>& indices);
+    void clear(HoldWriteLock &lock);
+    void setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
+    void setColumnNames(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
+    void addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
+    void removeEntry(void *x, t_atom *identifier);
+    void removeEntries(ReadWritePointer& readLockedDatabase, const std::vector<long>& indices);
     
     template <const double& func(const double&, const double&)>
     struct BinaryFunctor
@@ -194,7 +170,7 @@ private:
         mEntries[idx * numColumns() + column] = data.mData;
         mTypes[idx * numColumns() + column] = data.mType;
     }
-    
+   
     // Data
     
     t_symbol *mName;
@@ -204,9 +180,7 @@ private:
     std::vector<UntypedAtom> mEntries;
     std::vector<CustomAtom::Type> mTypes;
 
-    mutable Lock mWriteLock;
-    mutable Lock mReadLock;
-    mutable long mReadCount;
+    mutable ReadWriteLock mLock;
 };
 
 
