@@ -9,8 +9,31 @@ typedef struct entry_database{
     EntryDatabase *database;
     
     long count;
+    bool notify;
     
 } t_entry_database;
+
+// FIX - this needs to use notification... also needs to make the patcher dirty - best done in the max object part...
+
+void modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    x->notify = true;
+    object_notify(atom_getobj(argv), _sym_modified, NULL);
+}
+
+NotifyPointer::~NotifyPointer()
+{
+    atom a;
+    atom_setobj(&a, mClient);
+    
+    t_entry_database *database = (t_entry_database *) mMaxDatabase;
+    
+    if (database->notify)
+    {
+        database->notify = false;
+        defer_low(mMaxDatabase, (method) modified, NULL, 1, &a);
+    }
+}
 
 t_class *database_class;
 const char database_class_name[] = "__entry_database";
@@ -47,6 +70,8 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->database = new EntryDatabase(name, num_columns);
     x->database->reserve(num_reserved_entries);
     x->count = 1;
+    
+    x->notify = true;
     
     return (x);
 }
@@ -128,10 +153,11 @@ EntryDatabase::ReadPointer database_getptr_read(t_object *x)
     return EntryDatabase::ReadPointer(obj->database);
 }
 
-EntryDatabase *database_getptr_write(t_object *x)
+NotifyPointer database_getptr_write(t_object *x, t_object *client)
 {
     t_entry_database *obj = (t_entry_database *) x;
-    return obj->database;
+    return NotifyPointer(obj->database, (t_object *)obj, client);
+
 }
 
     

@@ -97,6 +97,17 @@ public:
         const EntryDatabase *mPtr;
     };
     
+    struct WritePointer
+    {
+        WritePointer(EntryDatabase *ptr) : mPtr(ptr) {}
+        
+        EntryDatabase *operator->() const { return mPtr; }
+        
+    private:
+        
+        EntryDatabase *mPtr;
+    };
+    
     EntryDatabase(t_symbol *name, long numCols) : mName(name) { mColumns.resize(numCols); }
     
     RawAccessor rawAccessor() const { return RawAccessor(*this); }

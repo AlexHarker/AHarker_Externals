@@ -16,32 +16,32 @@ template <class T> void entrymatcher_refer(T *x, t_symbol *name)
 
 template <class T> void entrymatcher_clear(T *x)
 {
-    database_getptr_write(x->database_object)->clear();
+    database_getptr_write(x->database_object, (t_object *)x)->clear();
 }
 
 template <class T> void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object, (t_object *)x)->setColumnLabelModes(x, argc, argv);
 }
 
 template <class T> void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnNames(x, argc, argv);
+    database_getptr_write(x->database_object, (t_object *)x)->setColumnNames(x, argc, argv);
 }
 
 template <class T> void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
+    database_getptr_write(x->database_object, (t_object *)x)->addEntry(x, argc, argv);
 }
 
 template <class T> void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
+    database_getptr_write(x->database_object, (t_object *)x)->removeEntries(x, argc, argv);
 }
 
 template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
+    database_getptr_write(x->database_object, (t_object *)x)->removeMatchedEntries(x, argc, argv);
 }
 
 // ========================================================================================================================================== //
@@ -60,7 +60,7 @@ template <class T> void entrymatcher_save(T *x, t_symbol *file)
 
 template <class T> void entrymatcher_load(T *x, t_symbol *file)
 {
-    database_getptr_write(x->database_object)->load((t_object *)x, file);
+    database_getptr_write(x->database_object, (t_object *)x)->load((t_object *)x, file);
 }
 
 // ========================================================================================================================================== //
@@ -75,7 +75,7 @@ template <class T> t_dictionary *entrymatcher_save_dict(T *x)
 template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
     if (dict)
-        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+        database_getptr_write(x->database_object, (t_object *)x)->loadDictionary((t_object*) x, dict);
 }
 
 template <class T> t_max_err entrymatcher_save_patcher(T *x, t_dictionary *dict)
@@ -97,7 +97,7 @@ template <class T> void entrymatcher_load_patcher(T *x)
     }
 }
 
-template <class T> t_max_err entrymatcher_getvalueof(T *x, t_object *attr, long *argc, t_atom **argv)
+template <class T> t_max_err entrymatcher_getvalueof(T *x, long *argc, t_atom **argv)
 {
     char alloc;
     
@@ -108,7 +108,7 @@ template <class T> t_max_err entrymatcher_getvalueof(T *x, t_object *attr, long 
     return MAX_ERR_GENERIC;
 }
 
-template <class T> t_max_err entrymatcher_setvalueof(T *x, t_object *attr, long argc, t_atom *argv)
+template <class T> t_max_err entrymatcher_setvalueof(T *x, long argc, t_atom *argv)
 {
     if (argc)
         entrymatcher_load_dict<T>(x, (t_dictionary *) atom_getobj(argv));
