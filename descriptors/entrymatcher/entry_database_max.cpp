@@ -17,8 +17,12 @@ typedef struct entry_database{
 void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
     static t_symbol *database_modified = gensym("__database_modified");
-    x->notify = true;
-    object_notify(x, database_modified, NULL);
+    
+    if (!x->notify)
+    {
+        object_notify(x, database_modified, NULL);
+        x->notify = true;
+    }
 }
 
 NotifyPointer::~NotifyPointer()
@@ -80,6 +84,9 @@ void entry_database_free(t_entry_database *x)
 
 void entry_database_release(void *client, t_entry_database *x)
 {
+    // Complete notifications before the object is released
+    
+    entry_database_modified(x, NULL, 0, NULL);
     object_detach(name_space_name, x->database->getName(), client);
     
     if (x && --x->count == 0)
@@ -89,7 +96,7 @@ void entry_database_release(void *client, t_entry_database *x)
     }
 }
 
-t_entry_database *entry_database_find(void *client, t_symbol *name, t_entry_database *old_database_object)
+t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *old_database_object)
 {
     // Make sure the max database class exists
     
@@ -124,7 +131,7 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     
     // See if an object is registered (otherwise make object and register it...)
     
-    t_entry_database *x = entry_database_find(client, name, NULL);
+    t_entry_database *x = entry_database_findattach(client, name, NULL);
     
     if (!x)
     {
@@ -142,7 +149,7 @@ t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entr
 
 t_object *database_change(void *x, t_symbol *name, t_object *old_object)
 {
-    return (t_object *) entry_database_find(x, name, (t_entry_database *) old_object);
+    return (t_object *) entry_database_findattach(x, name, (t_entry_database *) old_object);
 }
 
 void database_release(void *x, t_object *database_object)
@@ -162,5 +169,3 @@ NotifyPointer database_getptr_write(t_object *database_object)
     return NotifyPointer(obj->database, (t_object *) obj);
 
 }
-
-    

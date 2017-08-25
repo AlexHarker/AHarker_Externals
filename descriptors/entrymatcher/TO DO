@@ -1,6 +1,12 @@
-Threading and locking
-Notification of dirty for embedding
+Notification of dirty for embedding -DONE (edge closing case?)
+Dict passing
+
+
 Finalise stats
 Dataview/edit
-Clean up
+Remove should be sorted to make fast
+Threading and locking (including read promote to write…
+
 Check all speeds
+Clean up
+

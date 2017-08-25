@@ -74,16 +74,13 @@ template <class T> t_dictionary *entrymatcher_save_dict(T *x)
 
 template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
-    if (dict)
-        database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+    database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
 }
 
-template <class T> t_max_err entrymatcher_save_patcher(T *x, t_dictionary *dict)
+template <class T> void entrymatcher_save_patcher(T *x, t_dictionary *dict)
 {
     if (x->embed)
-        return dictionary_appenddictionary(dict, gensym("database"), (t_object *) entrymatcher_save_dict(x));
-   
-    return MAX_ERR_NONE;
+        dictionary_appenddictionary(dict, gensym("database"), (t_object *) entrymatcher_save_dict(x));
 }
 
 template <class T> void entrymatcher_load_patcher(T *x)

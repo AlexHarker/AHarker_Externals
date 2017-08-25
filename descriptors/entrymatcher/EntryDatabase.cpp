@@ -542,6 +542,9 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
     t_dictionary *dictMeta = NULL;
     t_dictionary *dictData = NULL;
     
+    if (!dict)
+        return;
+    
     dictionary_getdictionary(dict, gensym("metadata"), (t_object **) &dictMeta);
     dictionary_getdictionary(dict, gensym("data"), (t_object **) &dictData);
     
