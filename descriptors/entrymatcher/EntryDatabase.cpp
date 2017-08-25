@@ -6,35 +6,19 @@
 #include <functional>
 #include <cmath>
 
-void EntryDatabase::reserve(long items)
-{
-    HoldWriteLock lock(&mLock);
-    
-    mIdentifiers.reserve(items);
-    mOrder.reserve(items);
-    mEntries.reserve(items * numColumns());
-    mTypes.reserve(items * numColumns());
-}
+// ========================================================================================================================================== //
+// Column Setup
+// ========================================================================================================================================== //
 
-void EntryDatabase::clear()
-{
-    HoldWriteLock lock(&mLock);
-    clear(lock);
-}
-
-void EntryDatabase::clear(HoldWriteLock &lock)
-{
-    mEntries.clear();
-    mIdentifiers.clear();
-    mOrder.clear();
-    mTypes.clear();
-}
+// Set Column Labels (with lock)
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
 {
     HoldWriteLock lock(&mLock);
     setColumnLabelModes(lock, x, argc, argv);
 }
+
+// Set Column Labels (with pre-held lock)
 
 void EntryDatabase::setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
@@ -56,11 +40,15 @@ void EntryDatabase::setColumnLabelModes(HoldWriteLock &lock, void *x, long argc,
         clear(lock);
 }
 
+// Set Column Names (with lock)
+
 void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
 {
     HoldWriteLock lock(&mLock);
     setColumnNames(lock, x, argc, argv);
 }
+
+// Set Column Names (with pre-held lock)
 
 void EntryDatabase::setColumnNames(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
@@ -73,11 +61,111 @@ void EntryDatabase::setColumnNames(HoldWriteLock &lock, void *x, long argc, t_at
         mColumns[i].mName = atom_getsym(argv++);
 }
 
+// ========================================================================================================================================== //
+// Find Entries / Columns
+// ========================================================================================================================================== //
+
+// Search Identifiers
+
+long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
+{
+    CustomAtom identifier(identifierAtom, false);
+    
+    long gap = idx = numItems() / 2;
+    gap = gap < 1 ? 1 : gap;
+    
+    while (gap && idx < numItems())
+    {
+        gap /= 2;
+        gap = gap < 1 ? 1 : gap;
+        
+        switch (compare(identifier, getIdentifierInternal(mOrder[idx])))
+        {
+            case CustomAtom::kEqual:
+                return mOrder[idx];
+                
+            case CustomAtom::kGreater:
+                idx += gap;
+                break;
+                
+            case CustomAtom::kLess:
+                if (gap == 1 && (!idx || compare(identifier, getIdentifierInternal(mOrder[idx - 1])) == CustomAtom::kGreater))
+                    gap = 0;
+                else
+                    idx -= gap;
+                break;
+        }
+    }
+    
+    return -1;
+}
+
+// Find a Column from Specifier
+
+long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
+{
+    if (atom_gettype(specifier) != A_SYM)
+        return atom_getlong(specifier) - 1;
+    
+    t_symbol *columnName = atom_getsym(specifier);
+    
+    if (columnName == gensym("identifier"))
+        return -1;
+    
+    for (long i = 0; i < numColumns(); i++)
+        if (columnName == mColumns[i].mName)
+            return i;
+    
+    return -2;
+}
+
+// ========================================================================================================================================== //
+// Saving and Loading
+// ========================================================================================================================================== //
+
+// Reserve (with lock)
+
+void EntryDatabase::reserve(long items)
+{
+    HoldWriteLock lock(&mLock);
+    
+    mIdentifiers.reserve(items);
+    mOrder.reserve(items);
+    mEntries.reserve(items * numColumns());
+    mTypes.reserve(items * numColumns());
+}
+
+// Clear (with lock)
+
+void EntryDatabase::clear()
+{
+    HoldWriteLock lock(&mLock);
+    clear(lock);
+}
+
+// Clear (with pre-held lock)
+
+void EntryDatabase::clear(HoldWriteLock &lock)
+{
+    mEntries.clear();
+    mIdentifiers.clear();
+    mOrder.clear();
+    mTypes.clear();
+}
+
+// ========================================================================================================================================== //
+// Adding / Removing Entries
+// ========================================================================================================================================== //
+
+// Add (with lock)
+
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
     HoldWriteLock lock(&mLock);
     addEntry(lock, x, argc, argv);
 }
+
+// Add (with pre-held lock)
 
 void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
 {
@@ -122,6 +210,8 @@ void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *ar
     }
 }
 
+// Remove entries from identifiers (with read pointer - ugraded on next method call to write)
+
 void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
@@ -158,6 +248,8 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
     }
 }
 
+// Remove entries from matching (with read pointer - ugraded on next method call to write)
+
 void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
@@ -179,6 +271,8 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
         removeEntries(database, indices);
 }
 
+// Helpers for mass removal
+
 template <class T> void copyRange(std::vector<T>& data, long from, long to, long size, long itemSize = 1)
 {
     std::copy(data.begin() + (from * itemSize), data.begin() + (from + size) * itemSize, data.begin() + to * itemSize);
@@ -193,6 +287,8 @@ long EntryDatabase::getOrder(long idx)
     
     return order;
 }
+
+// Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
 
 void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const std::vector<long>& sortedIndices)
 {
@@ -228,8 +324,10 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
         // Alter order indices
         
         for (long j = end; j < next; j++)
-                newOrder[getOrder(j)] = (j - end) + offset;
+            newOrder[getOrder(j)] = (j - end) + offset;
     }
+    
+    long newSize = offset;
     
     // Remove data
 
@@ -271,13 +369,13 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
     
     // Resize storage
     
-    long newSize = numItems() - sortedIndices.size();
-    
     mIdentifiers.resize(newSize);
     mEntries.resize(newSize * numColumns());
     mTypes.resize(newSize * numColumns());
     mOrder.resize(newSize);
 }
+
+// Remove a single entry (with lock)
 
 void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 {
@@ -314,55 +412,9 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
             (*it)--;
 }
 
-long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
-{
-    CustomAtom identifier(identifierAtom, false);
-    
-    long gap = idx = numItems() / 2;
-    gap = gap < 1 ? 1 : gap;
-    
-    while (gap && idx < numItems())
-    {
-        gap /= 2;
-        gap = gap < 1 ? 1 : gap;
-    
-        switch (compare(identifier, getIdentifierInternal(mOrder[idx])))
-        {
-            case CustomAtom::kEqual:
-                return mOrder[idx];
-                
-            case CustomAtom::kGreater:
-                idx += gap;
-                break;
-                
-            case CustomAtom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getIdentifierInternal(mOrder[idx - 1])) == CustomAtom::kGreater))
-                    gap = 0;
-                else
-                    idx -= gap;
-                break;
-        }
-    }
-  
-    return -1;
-}
-
-long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
-{
-    if (atom_gettype(specifier) != A_SYM)
-        return atom_getlong(specifier) - 1;
-    
-    t_symbol *columnName = atom_getsym(specifier);
-    
-    if (columnName == gensym("identifier"))
-        return -1;
-    
-    for (long i = 0; i < numColumns(); i++)
-        if (columnName == mColumns[i].mName)
-            return i;
-    
-    return -2;
-}
+// ========================================================================================================================================== //
+// Stats Calculations
+// ========================================================================================================================================== //
 
 double EntryDatabase::columnMin(const t_atom *specifier) const
 {
@@ -419,6 +471,10 @@ double EntryDatabase::columnMedian(const t_atom *specifier) const
     return columnPercentile(specifier, 50.0);
 }
 
+// ========================================================================================================================================== //
+// View
+// ========================================================================================================================================== //
+
 void EntryDatabase::view(t_object *database_object) const
 {
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
@@ -441,6 +497,12 @@ void EntryDatabase::view(t_object *database_object) const
     object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
     object_attr_setsym(editor, gensym("title"), mName);
 }
+
+// ========================================================================================================================================== //
+// Saving and Loading
+// ========================================================================================================================================== //
+
+// File Save
 
 void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
 {
@@ -469,6 +531,8 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     object_free(dict);
 }
 
+// File Load
+
 void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
 {
     char filename[MAX_PATH_CHARS];
@@ -495,6 +559,8 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     loadDictionary(x, dict);
     object_free(dict);
 }
+
+// Dictionary Save
 
 t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
 {
@@ -557,6 +623,8 @@ t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
     
     return dict;
 }
+
+// Dictionary Load (with lock)
 
 void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
 {

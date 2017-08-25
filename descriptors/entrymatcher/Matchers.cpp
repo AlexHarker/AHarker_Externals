@@ -5,7 +5,7 @@
 #include <functional>
 
 
-long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
+long Matchers::match(const EntryDatabase::ReadPointer& database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
@@ -114,7 +114,7 @@ long Matchers::match(const EntryDatabase::ReadPointer database, double ratioMatc
     return mNumMatches = numMatches;
 }
 
-void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database)
+void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database)
 {
     // Empty the matchers
     

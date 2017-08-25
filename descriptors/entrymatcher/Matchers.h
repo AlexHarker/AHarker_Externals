@@ -143,7 +143,7 @@ public:
     
     Matchers() : mNumMatches(0), mAudioStyle(false) {}
     
-    long match(const EntryDatabase::ReadPointer database, double ratioMatched = 1.0, long maxMatches = 0, bool sortOnlyIfLimited = false) const;
+    long match(const EntryDatabase::ReadPointer& database, double ratioMatched = 1.0, long maxMatches = 0, bool sortOnlyIfLimited = false) const;
     
     size_t size() const { return mMatchers.size(); }
     
@@ -166,7 +166,7 @@ public:
     void addTarget(t_symbol *value);
     void addMatcher(TestType type, long column, double scale = 1.0);
     
-    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer database);
+    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database);
     void setAudioStyle(bool style) { mAudioStyle = style; }
     
 private:
