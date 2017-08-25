@@ -10,11 +10,13 @@
 struct NotifyPointer : public EntryDatabase::WritePointer
 {
     NotifyPointer(EntryDatabase *ptr, t_object *maxDatabase) : EntryDatabase::WritePointer(ptr), mMaxDatabase(maxDatabase) {}
-    
+    NotifyPointer(const NotifyPointer&) = delete;
+    NotifyPointer& operator=(const NotifyPointer&) = delete;
+    NotifyPointer(NotifyPointer&&) = default;
     ~NotifyPointer();
     
-private:
-    
+protected:
+
     t_object *mMaxDatabase;
 };
 

@@ -54,11 +54,14 @@ public:
     struct ReadPointer
     {
         ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)   { mPtr->mLock.acquireRead(); }
+        ReadPointer(const ReadPointer&) = delete;
+        ReadPointer& operator=(const ReadPointer&) = delete;
+        ReadPointer( ReadPointer&&) = default;
         ~ReadPointer()                                      { mPtr->mLock.release(); }
             
         const EntryDatabase *operator->() const { return mPtr; }
         
-    private:
+    protected:
         
         const EntryDatabase *mPtr;
     };
@@ -66,9 +69,12 @@ public:
     struct WritePointer
     {
         WritePointer(EntryDatabase *ptr) : mPtr(ptr) {}
+        WritePointer(const WritePointer&) = delete;
+        WritePointer& operator=(const WritePointer&) = delete;
+        WritePointer(WritePointer&&) = default;
         EntryDatabase *operator->() const { return mPtr; }
         
-    private:
+    protected:
         
         EntryDatabase *mPtr;
     };
@@ -122,11 +128,10 @@ private:
     {
         ReadWritePointer(const EntryDatabase *ptr) : ReadPointer(ptr)   {}
         
-        void promoteToWrite() { mPtr->mLock.promoteReadToWrite(); }
+        void promoteToWrite() const { mPtr->mLock.promoteReadToWrite(); }
         
-    private:
-        
-        const EntryDatabase *mPtr;
+        ReadWritePointer(const ReadWritePointer&) = delete;
+        ReadWritePointer& operator=(const ReadWritePointer&) = delete;
     };
     
     inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
