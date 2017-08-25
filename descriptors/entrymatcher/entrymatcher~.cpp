@@ -118,7 +118,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     dsp_setup((t_pxobject *)x, 2 + max_matchers);
     outlet_new((t_object *)x, "signal");
     
-    x->database_object = database_create(name, num_reserved_entries, num_columns);
+    x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
     x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));;
@@ -135,7 +135,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 void entrymatcher_free(t_entrymatcher *x)
 {
     dsp_free(&x->x_obj);
-    database_release(x->database_object);
+    database_release(x, x->database_object);
     delete x->matchers;
 }
 
