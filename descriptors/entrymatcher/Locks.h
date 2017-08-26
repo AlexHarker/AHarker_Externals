@@ -5,10 +5,12 @@
 #include <algorithm>
 #include <thread>
 
-// Basic Spin Lock
+// Basic Lock (With Spin and Periodic Sleep Variants)
 
 struct Lock
 {
+    const static int maxIterationsBeforeSleep = 5;
+
     Lock() : mAtomicLock(0) {}
     Lock(const Lock&) = delete;
     Lock& operator=(const Lock&) = delete;
@@ -19,6 +21,21 @@ struct Lock
     void acquire() { while(!attempt()); }
     bool attempt() { return ATOMIC_COMPARE_SWAP32(0, 1, &mAtomicLock); }
     void release() { ATOMIC_COMPARE_SWAP32(1, 0, &mAtomicLock); }
+    
+    void acquirePeriodicSleep()
+    {
+        using namespace std::chrono_literals;
+        bool notAcquired = true;
+        
+        for (long i = 0; notAcquired; i = std::min(i++, (long) maxIterationsBeforeSleep))
+        {
+            if (attempt())
+                notAcquired = false;
+            
+            if (i == maxIterationsBeforeSleep)
+                std::this_thread::sleep_for(0.1ms);
+        }
+    }
     
 private:
     
@@ -50,8 +67,6 @@ private:
 
 struct ReadWriteLock
 {
-    const static int maxIterationsBeforeSleep = 5;
-
     ReadWriteLock() : mReadCount(0) {}
     ReadWriteLock(const ReadWriteLock&) = delete;
     ReadWriteLock& operator=(const ReadWriteLock&) = delete;
@@ -62,7 +77,7 @@ struct ReadWriteLock
     {
         mReadLock.acquire();
         if (mReadCount++ == 0)
-            mWriteLock.acquire();
+            mWriteLock.acquirePeriodicSleep();
         mReadLock.release();
     }
     
@@ -70,17 +85,7 @@ struct ReadWriteLock
 
     void acquireWrite()
     {
-        using namespace std::chrono_literals;
-        bool notAcquired = true;
-        
-        for (long i = 0; notAcquired; i = std::min(i++, (long) maxIterationsBeforeSleep))
-        {
-            if (mWriteLock.attempt())
-                notAcquired = false;
-            
-            if (i == maxIterationsBeforeSleep)
-                std::this_thread::sleep_for(0.1ms);
-        }
+        mWriteLock.acquirePeriodicSleep();
     }
     
     // Acquires the Write Lock *Once* the Read Lock is Held
@@ -90,7 +95,7 @@ struct ReadWriteLock
         using namespace std::chrono_literals;
         bool notAcquired = true;
         
-        for (long i = 0; notAcquired; i = std::min(i++, (long) maxIterationsBeforeSleep))
+        for (long i = 0; notAcquired; i = std::min(i++, (long) Lock::maxIterationsBeforeSleep))
         {
             mReadLock.acquire();
             if (mReadCount == 1)
@@ -100,19 +105,24 @@ struct ReadWriteLock
             }
             mReadLock.release();
             
-            if (i == maxIterationsBeforeSleep)
+            if (i == Lock::maxIterationsBeforeSleep)
                 std::this_thread::sleep_for(0.1ms);
         }
     }
     
     // Releases Write or Read Locks
     
-    void release()
+    void releaseRead()
     {
         mReadLock.acquire();
         if (mReadCount < 1 || --mReadCount == 0)
             mWriteLock.release();
         mReadLock.release();
+    }
+    
+    void releaseWrite()
+    {
+        mWriteLock.release();
     }
     
 private:
@@ -130,7 +140,7 @@ struct HoldWriteLock
 {
     HoldWriteLock() : mLock(NULL) {}
     HoldWriteLock(ReadWriteLock *lock) : mLock(lock)    { mLock->acquireWrite(); }
-    ~HoldWriteLock()                                    { if (mLock) mLock->release(); }
+    ~HoldWriteLock()                                    { if (mLock) mLock->releaseWrite(); }
     
     HoldWriteLock(const HoldWriteLock&) = delete;
     HoldWriteLock& operator=(const HoldWriteLock&) = delete;
