@@ -117,6 +117,7 @@ public:
     
     long columnFromSpecifier(const t_atom *specifier) const;
     
+    void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
     double columnMin(const t_atom *specifier) const;
     double columnMax(const t_atom *specifier) const;
     double columnMean(const t_atom *specifier) const;

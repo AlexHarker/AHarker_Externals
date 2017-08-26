@@ -6,6 +6,19 @@
 #include <functional>
 #include <cmath>
 
+t_symbol *ps_mean = gensym("mean");
+t_symbol *ps_min = gensym("min");
+t_symbol *ps_minimum = gensym("minimum");
+t_symbol *ps_max = gensym("max");
+t_symbol *ps_maximum = gensym("maximum");
+t_symbol *ps_median = gensym("median");
+t_symbol *ps_stddev = gensym("stddev");
+t_symbol *ps_deviation = gensym("deviation");
+t_symbol *ps_standard_dev = gensym("standard_dev");
+t_symbol *ps_standard_deviation= gensym("standard_deviation");
+t_symbol *ps_centile = gensym("centile");
+t_symbol *ps_percentile = gensym("percentile");
+
 // ========================================================================================================================================== //
 // Column Setup
 // ========================================================================================================================================== //
@@ -415,6 +428,49 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 // ========================================================================================================================================== //
 // Stats Calculations
 // ========================================================================================================================================== //
+
+void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const
+{
+    if (argc < 2)
+        return;
+    
+    t_atom *column = argv++;
+    argc--;
+    output.resize(argc);
+    
+    long i;
+    
+    for (i = 0; argc; i++)
+    {
+        t_symbol *test = atom_getsym(argv++);
+        argc--;
+        
+        if (test == ps_mean)
+            atom_setfloat(&output[i], columnMean(column));
+        else if (test == ps_min || test == ps_minimum)
+            atom_setfloat(&output[i], columnMin(column));
+        else if (test == ps_max || test == ps_maximum)
+            atom_setfloat(&output[i], columnMax(column));
+        else if (test == ps_median)
+            atom_setfloat(&output[i], columnMedian(column));
+        else if (test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
+            atom_setfloat(&output[i], columnStandardDeviation(column));
+        else if (test == ps_centile || test == ps_percentile)
+        {
+            if (argc)
+            {
+                atom_setfloat(&output[i], database_ptr->columnPercentile(column, atom_getfloat(argv)));
+                argc--;
+            }
+            else
+                object_error((t_object *) x, "no percentile given for percentile stat");
+        }
+        else
+            object_error((t_object *) x, "unknown stat type");
+    }
+    
+    output.resize(i);
+}
 
 double EntryDatabase::columnMin(const t_atom *specifier) const
 {
