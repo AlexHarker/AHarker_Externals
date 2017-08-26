@@ -1,11 +1,15 @@
-Notification of dirty for embedding -DONE (edge closing case?)
+Edge Closing Case for Notification
+
+
 Dict passing
 
 
 Finalise stats
 Dataview/edit
 Remove should be sorted to make fast
-Threading and locking (including read promote to write…
+
+DONE	Notification of dirty for embedding  
+DONE	Threading and locking (including read promote to write
 
 Check all speeds
 Clean up

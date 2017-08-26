@@ -6,27 +6,41 @@
 #include <vector>
 #include <string>
 
+// Atom Without Type Information
+
 union UntypedAtom
 {
+    // Constructors from Different Types
+    
     UntypedAtom() : mInt(0) {}
     UntypedAtom(double val) : mValue(val) {}
     UntypedAtom(t_atom_long val) : mInt(val) {}
     UntypedAtom(t_symbol *val) : mSymbol(val) {}
     
+    // Casts To Possible Types
+    
     operator double() const         { return mValue; }
     operator t_atom_long() const    { return mInt; }
     operator t_symbol *() const     { return mSymbol; }
+    
+    // Data
     
     double mValue;
     t_atom_long mInt;
     t_symbol *mSymbol;
 };
 
+// An Atom with Type Information
+
 struct CustomAtom
 {
+    // Definitions
+    
     enum CompareResult { kLess, kGreater, kEqual };
     enum Type : unsigned char { kSymbol, kDouble, kTranslatedInt, kInt  };
     
+    // Constructors from Different Types
+
     CustomAtom() : mData(0.0), mType(kDouble) {}
     CustomAtom(double val) : mData(val), mType(kDouble) {}
     CustomAtom(t_symbol *sym) : mData(sym), mType(kSymbol) {}
@@ -54,6 +68,8 @@ struct CustomAtom
     
     CustomAtom(const UntypedAtom& a, const Type type) : mData(a), mType(type) {}
     
+    // Get as Standard Atom
+    
     void inline getAtom(t_atom *a) const
     {
         switch (mType)
@@ -65,6 +81,8 @@ struct CustomAtom
         }
     }
     
+    // Get As a String
+    
     std::string inline getString() const
     {
         switch (mType)
@@ -75,6 +93,8 @@ struct CustomAtom
             case kTranslatedInt:    return std::to_string((t_atom_long) mData.mValue);
         }
     }
+    
+    // Compare CustomAtoms
     
     friend inline CompareResult compare(const CustomAtom& a, const CustomAtom& b)
     {
@@ -92,9 +112,13 @@ struct CustomAtom
         return (a.mType < b.mType) ? kLess : kGreater;
     }
     
+    // Casts To Possible Types
+
     operator double() const         { return mData.mValue; }
     operator t_atom_long() const    { return mData.mInt; }
     operator t_symbol *() const     { return mData.mSymbol; }
+    
+    // Data
     
     UntypedAtom mData;
     Type mType;
