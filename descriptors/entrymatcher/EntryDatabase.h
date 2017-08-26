@@ -118,12 +118,12 @@ public:
     long columnFromSpecifier(const t_atom *specifier) const;
     
     void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
-    double columnMin(const t_atom *specifier) const;
-    double columnMax(const t_atom *specifier) const;
-    double columnMean(const t_atom *specifier) const;
-    double columnStandardDeviation(const t_atom *specifier) const;
-    double columnPercentile(const t_atom *specifier, double percentile) const;
-    double columnMedian(const t_atom *specifier) const;
+    double columnMin(long column) const;
+    double columnMax(long column) const;
+    double columnMean(long column) const;
+    double columnStandardDeviation(long column) const;
+    double columnPercentile(long column, double percentile) const;
+    double columnMedian(long column) const;
     
     void view(t_object *database_object) const;
     void save(t_object *x, t_symbol *fileSpecifier) const;
@@ -178,10 +178,13 @@ private:
         const double operator()(const double a, const double b) { return func(a, b); }
     };
     
-    template <class Op> double columnCalculate(const t_atom *specifier, const double startValue, Op op) const
+    double columnStandardDeviation(long column, double mean) const;
+    void columnSortValues(long column, std::vector<double>& sortedValues) const;
+    double findPercentile(std::vector<double>& sortedValues, double percentile) const;
+
+    template <class Op> double columnCalculate(long column, const double startValue, Op op) const
     {
         double value = startValue;
-        long column = columnFromSpecifier(specifier);
     
         if (column < 0 || mColumns[column].mLabel || !numItems())
             return std::numeric_limits<double>::quiet_NaN();

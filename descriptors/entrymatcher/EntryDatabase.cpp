@@ -436,37 +436,52 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
     if (argc < 2)
         return;
     
-    t_atom *column = argv++;
-    argc--;
-    output.resize(argc);
-    
+    std::vector<double> values;
+    double mean = 0.0;
+    bool meanCalculated = false;
+    bool valuesSorted = false;
     long i;
-    
-    for (i = 0; argc; i++)
+
+    long column = columnFromSpecifier(argv++);
+    argc--;
+
+    output.resize(argc);
+
+    for (i = 0; argc > 0; i++)
     {
         t_symbol *test = atom_getsym(argv++);
         argc--;
         
-        if (test == ps_mean)
-            atom_setfloat(&output[i], columnMean(column));
+        if (test == ps_mean || test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
+        {
+            if (!meanCalculated)
+                mean = columnMean(column);
+            if (test == ps_mean)
+                atom_setfloat(&output[i], mean);
+            else
+                atom_setfloat(&output[i], columnStandardDeviation(column, mean));
+            meanCalculated = true;
+        }
+        else if (test == ps_median || test == ps_centile || test == ps_percentile)
+        {
+            double percentile = 50.0;
+            
+            if (!valuesSorted)
+                columnSortValues(column, values);
+            if (test != ps_median)
+            {
+                if (argc--)
+                    percentile = atom_getfloat(argv++);
+                else
+                    object_error((t_object *) x, "no percentile given for percentile stat");
+            }
+            atom_setfloat(&output[i], findPercentile(values, percentile));
+            valuesSorted = true;
+        }
         else if (test == ps_min || test == ps_minimum)
             atom_setfloat(&output[i], columnMin(column));
         else if (test == ps_max || test == ps_maximum)
             atom_setfloat(&output[i], columnMax(column));
-        else if (test == ps_median)
-            atom_setfloat(&output[i], columnMedian(column));
-        else if (test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
-            atom_setfloat(&output[i], columnStandardDeviation(column));
-        else if (test == ps_centile || test == ps_percentile)
-        {
-            if (argc)
-            {
-                atom_setfloat(&output[i], columnPercentile(column, atom_getfloat(argv)));
-                argc--;
-            }
-            else
-                object_error((t_object *) x, "no percentile given for percentile stat");
-        }
         else
             object_error((t_object *) x, "unknown stat type");
     }
@@ -474,22 +489,22 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
     output.resize(i);
 }
 
-double EntryDatabase::columnMin(const t_atom *specifier) const
+double EntryDatabase::columnMin(long column) const
 {
-    return columnCalculate(specifier, HUGE_VAL, BinaryFunctor<std::min<double> >());
+    return columnCalculate(column, HUGE_VAL, BinaryFunctor<std::min<double> >());
 }
 
-double EntryDatabase::columnMax(const t_atom *specifier) const
+double EntryDatabase::columnMax(long column) const
 {
-    return columnCalculate(specifier, -HUGE_VAL, BinaryFunctor<std::max<double> >());
+    return columnCalculate(column, -HUGE_VAL, BinaryFunctor<std::max<double> >());
 }
 
-double EntryDatabase::columnMean(const t_atom *specifier) const
+double EntryDatabase::columnMean(long column) const
 {
-    return columnCalculate(specifier, 0.0, std::plus<double>()) / numItems();
+    return columnCalculate(column, 0.0, std::plus<double>()) / numItems();
 }
 
-double EntryDatabase::columnStandardDeviation(const t_atom *specifier) const
+double EntryDatabase::columnStandardDeviation(long column, double mean) const
 {
     struct Variance
     {
@@ -497,36 +512,48 @@ double EntryDatabase::columnStandardDeviation(const t_atom *specifier) const
         double operator()(double sum, double data) { return sum + ((data - mMean) * (data - mMean)); }
         double mMean;
     };
-
-    return sqrt(columnCalculate(specifier, 0.0, Variance(columnMean(specifier))) / numItems());
+    
+    return sqrt(columnCalculate(column, 0.0, Variance(mean)) / numItems());
 }
 
-double EntryDatabase::columnPercentile(const t_atom *specifier, double percentile) const
+double EntryDatabase::columnStandardDeviation(long column) const
 {
-    long nItems = numItems();
-    std::vector<long> indices(nItems);
-    std::vector<double> values(nItems);
+    return columnStandardDeviation(column, columnMean(column));
+}
+
+double EntryDatabase::columnPercentile(long column, double percentile) const
+{
+    std::vector<double> values;
+    
+    columnSortValues(column, values);
+    return findPercentile(values, percentile);
+}
+
+double EntryDatabase::columnMedian(long column) const
+{
+    return columnPercentile(column, 50.0);
+}
+
+void EntryDatabase::columnSortValues(long column, std::vector<double>& sortedValues) const
+{
+    sortedValues.resize(numItems());
+
+    for (long i = 0; i < numItems(); i++)
+        sortedValues[i] = getData(i, column);
+    
+    sort(sortedValues, numItems());
+}
+
+double EntryDatabase::findPercentile(std::vector<double>& sortedValues, double percentile) const
+{
+    long nItems = sortedValues.size();
     
     if (!nItems)
         return std::numeric_limits<double>::quiet_NaN();
-        
+    
     long idx = std::max(0L, std::min((long) round(nItems * (percentile / 100.0)), nItems - 1));
-    long column = columnFromSpecifier(specifier);
     
-    for (long i = 0; i < numItems(); i++)
-    {
-        indices[i] = i;
-        values[i] = getData(i, column);
-    }
-
-    sort(indices, values, nItems);
-    
-    return values[indices[idx]];
-}
-
-double EntryDatabase::columnMedian(const t_atom *specifier) const
-{
-    return columnPercentile(specifier, 50.0);
+    return sortedValues[idx];
 }
 
 // ========================================================================================================================================== //
