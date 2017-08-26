@@ -2,11 +2,11 @@
 #ifndef SORT_H
 #define SORT_H
 
+// An ascending order index sort (combsort11 algorithm)
+
 template <class T, class U>
 void sort(T& indices, U& values, long numValues)
 {
-    // An ascending order index sort (combsort11 algorithm)
-    
     long gap = numValues;
     bool swaps = 1;
     long i;
@@ -31,11 +31,11 @@ void sort(T& indices, U& values, long numValues)
     }
 }
 
+// An ascending order index sort (combsort11 algorithm)
+
 template <class T>
 void sort(T& values, long numValues)
 {
-    // An ascending order index sort (combsort11 algorithm)
-    
     long gap = numValues;
     bool swaps = 1;
     long i;
@@ -59,6 +59,5 @@ void sort(T& values, long numValues)
         }
     }
 }
-
 
 #endif

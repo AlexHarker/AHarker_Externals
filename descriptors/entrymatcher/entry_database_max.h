@@ -8,7 +8,7 @@
 #include "EntryDatabase.h"
 
 // ========================================================================================================================================== //
-// Client routines and structures ONLY
+// Client routines and structures ONLY (other items are private)
 // ========================================================================================================================================== //
 
 struct NotifyPointer : public EntryDatabase::WritePointer

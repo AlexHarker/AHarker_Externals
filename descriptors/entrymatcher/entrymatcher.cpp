@@ -80,7 +80,7 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
 
 // ========================================================================================================================================== //
-// Basic object routines: main, new, free and assist
+// Basic Object Routines: main, new, free and assist
 // ========================================================================================================================================== //
 
 int C74_EXPORT main(void)
@@ -309,7 +309,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 }
 
 // ========================================================================================================================================== //
-// Matchers and Matching Routines:
+// Matchers and Matching Routines
 // ========================================================================================================================================== //
 
 // Set the matching criteria

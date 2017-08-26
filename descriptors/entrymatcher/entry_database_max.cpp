@@ -2,8 +2,12 @@
 #include "entry_database_max.h"
 #include <algorithm>
 
-typedef struct entry_database{
-    
+// ========================================================================================================================================== //
+// Max Database Object Struture
+// ========================================================================================================================================== //
+
+typedef struct entry_database
+{
     t_object a_obj;
     
     EntryDatabase *database;
@@ -13,28 +17,9 @@ typedef struct entry_database{
     
 } t_entry_database;
 
-
-void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    static t_symbol *database_modified = gensym("__database_modified");
-    
-    if (!x->notify)
-    {
-        object_notify(x, database_modified, NULL);
-        x->notify = true;
-    }
-}
-
-NotifyPointer::~NotifyPointer()
-{
-    t_entry_database *database = (t_entry_database *) mMaxDatabase;
-    
-    if (database->notify)
-    {
-        database->notify = false;
-        defer_low(mMaxDatabase, (method)entry_database_modified, NULL, 0, NULL);
-    }
-}
+// ========================================================================================================================================== //
+// Max Database Object Defintions
+// ========================================================================================================================================== //
 
 t_class *database_class;
 const char database_class_name[] = "__entry_database";
@@ -43,6 +28,10 @@ t_symbol *name_space_name = gensym("__entry_database_private");
 int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
+
+// ========================================================================================================================================== //
+// Max Database Object Routines
+// ========================================================================================================================================== //
 
 int entry_database_init()
 {
@@ -80,6 +69,17 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x)
 {
     delete x->database;
+}
+
+void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    static t_symbol *database_modified = gensym("__database_modified");
+    
+    if (!x->notify)
+    {
+        object_notify(x, database_modified, NULL);
+        x->notify = true;
+    }
 }
 
 void entry_database_release(void *client, t_entry_database *x)
@@ -140,6 +140,21 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     }
     
     return x;
+}
+
+// ========================================================================================================================================== //
+// Notify Pointer (notifies clients after write operation)
+// ========================================================================================================================================== //
+
+NotifyPointer::~NotifyPointer()
+{
+    t_entry_database *database = (t_entry_database *) mMaxDatabase;
+    
+    if (database->notify)
+    {
+        database->notify = false;
+        defer_low(mMaxDatabase, (method)entry_database_modified, NULL, 0, NULL);
+    }
 }
 
 // ========================================================================================================================================== //
