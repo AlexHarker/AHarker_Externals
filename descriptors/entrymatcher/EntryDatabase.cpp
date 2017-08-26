@@ -459,7 +459,7 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
         {
             if (argc)
             {
-                atom_setfloat(&output[i], database_ptr->columnPercentile(column, atom_getfloat(argv)));
+                atom_setfloat(&output[i], columnPercentile(column, atom_getfloat(argv)));
                 argc--;
             }
             else
