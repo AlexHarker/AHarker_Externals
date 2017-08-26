@@ -1,17 +1,18 @@
 
-#include "entry_database_max.h"
 #include <algorithm>
+
+#include "entry_database_max.h"
 #include "Locks.h"
 
 // ========================================================================================================================================== //
-// Max Database Object Struture
+// Entry Database Max Object Struture
 // ========================================================================================================================================== //
 
 typedef struct entry_database
 {
     t_object a_obj;
     
-    EntryDatabase *database;
+    EntryDatabase database;
     Lock lock;
     
     long count;
@@ -20,7 +21,7 @@ typedef struct entry_database
 } t_entry_database;
 
 // ========================================================================================================================================== //
-// Max Database Object Defintions
+// Entry Database Max Object Defintions
 // ========================================================================================================================================== //
 
 t_class *database_class;
@@ -32,8 +33,10 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x);
 
 // ========================================================================================================================================== //
-// Max Database Object Routines
+// Entry Database Max Object Routines
 // ========================================================================================================================================== //
+
+// Init (like main)
 
 int entry_database_init()
 {
@@ -52,29 +55,40 @@ int entry_database_init()
     return 0;
 }
 
+// New
+
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_entry_database *x = (t_entry_database *)object_alloc(database_class);
     
-    new(&x->lock) Lock();
-    
     num_reserved_entries = std::max(num_reserved_entries, t_atom_long(1));
     num_columns = std::max(num_columns, t_atom_long(1));
     
-    x->database = new EntryDatabase(name, num_columns);
-    x->database->reserve(num_reserved_entries);
-    x->count = 1;
+    // Construct the database and lock
     
+    new(&x->lock) Lock();
+    new(&x->database) EntryDatabase(name, num_columns);
+    
+    // Reserve entries, set count to one and set to notify
+    
+    x->database.reserve(num_reserved_entries);
+    x->count = 1;
     x->notify = true;
     
     return (x);
 }
 
+// Free
+
 void entry_database_free(t_entry_database *x)
 {
-    delete x->database;
+    // Destruct C++ objects
+    
+    x->database.~EntryDatabase();
     x->lock.~Lock();
 }
+
+// Modification Notification (in the low-priority thread)
 
 void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -87,10 +101,14 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     }
 }
 
+// Delete (in the low-priority thread)
+
 void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
     object_free(x);
 }
+
+// Release a Database Safely (deleting if necessary)
 
 void entry_database_release(void *client, t_entry_database *x)
 {
@@ -102,7 +120,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
         entry_database_modified(x, NULL, 0, NULL);
         
-        object_detach(name_space_name, x->database->getName(), client);
+        object_detach(name_space_name, x->database.getName(), client);
         
         HoldLock(&x->lock);
         last_client = (--x->count <= 0);
@@ -116,6 +134,8 @@ void entry_database_release(void *client, t_entry_database *x)
         defer_low(x, (method)entry_database_deferred_deletion, NULL, 0, NULL);
     }
 }
+
+// Find a Entry Database Max Object and Attach (if it already exists)
 
 t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *old_database_object)
 {
@@ -152,6 +172,8 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     return x;
 }
 
+// Create a Max Database Object (or attach if it already exists)
+
 t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
     t_atom argv[3];
@@ -159,7 +181,7 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     atom_setlong(argv + 1, num_reserved_entries);
     atom_setlong(argv + 2, num_columns);
     
-    // See if an object is registered (otherwise make object and register it...)
+    // See if an object is registered (otherwise make object and register it)
     
     t_entry_database *x = entry_database_findattach(client, name, NULL);
     
@@ -188,8 +210,10 @@ NotifyPointer::~NotifyPointer()
 }
 
 // ========================================================================================================================================== //
-// Client routines
+// Client Routines
 // ========================================================================================================================================== //
+
+// Get / Change / Release Named Database
 
 t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
@@ -206,15 +230,17 @@ void database_release(void *x, t_object *database_object)
     entry_database_release(x, (t_entry_database *) database_object);
 }
 
+// Retrieve Pointers for Reading or Writing
+
 EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return EntryDatabase::ReadPointer(obj->database);
+    return EntryDatabase::ReadPointer(&obj->database);
 }
 
 NotifyPointer database_getptr_write(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return NotifyPointer(obj->database, (t_object *) obj);
+    return NotifyPointer(&obj->database, (t_object *) obj);
 
 }

@@ -50,7 +50,7 @@ private:
 
 struct ReadWriteLock
 {
-    static const long maxIterationsBeforeSleep = 5;
+    const static int maxIterationsBeforeSleep = 5;
 
     ReadWriteLock() : mReadCount(0) {}
     ReadWriteLock(const ReadWriteLock&) = delete;
@@ -73,7 +73,7 @@ struct ReadWriteLock
         using namespace std::chrono_literals;
         bool notAcquired = true;
         
-        for (long i = 0; notAcquired; i = std::min(i++, maxIterationsBeforeSleep))
+        for (long i = 0; notAcquired; i = std::min(i++, (long) maxIterationsBeforeSleep))
         {
             if (mWriteLock.attempt())
                 notAcquired = false;
@@ -90,7 +90,7 @@ struct ReadWriteLock
         using namespace std::chrono_literals;
         bool notAcquired = true;
         
-        for (long i = 0; notAcquired; i = std::min(i++, maxIterationsBeforeSleep))
+        for (long i = 0; notAcquired; i = std::min(i++, (long) maxIterationsBeforeSleep))
         {
             mReadLock.acquire();
             if (mReadCount == 1)

@@ -8,8 +8,10 @@
 #include "EntryDatabase.h"
 
 // ========================================================================================================================================== //
-// Client routines and structures ONLY (other items are private)
+// Client Routines and Structures ONLY (other items are private)
 // ========================================================================================================================================== //
+
+// Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
 
 struct NotifyPointer : public EntryDatabase::WritePointer
 {
@@ -24,9 +26,13 @@ protected:
     t_object *mMaxDatabase;
 };
 
+// Get / Change / Release Named Database
+
 t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 t_object *database_change(void *x, t_symbol *name, t_object *old_database_object);
 void database_release(void *x, t_object *database_object);
+
+// Retrieve Pointers for Reading or Writing
 
 EntryDatabase::ReadPointer database_getptr_read(t_object *database_object);
 NotifyPointer database_getptr_write(t_object *database_object);
