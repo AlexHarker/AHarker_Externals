@@ -6,7 +6,7 @@
 #include <ext_obex.h>
 
 // ========================================================================================================================================== //
-// Entry routines: refer, clear, labelmodes, names, entry and removal
+// Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
 // ========================================================================================================================================== //
 
 template <class T> void entrymatcher_refer(T *x, t_symbol *name)
@@ -45,7 +45,7 @@ template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_
 }
 
 // ========================================================================================================================================== //
-// View, User Save and USer Load Routines
+// View, User Save and User Load Routines
 // ========================================================================================================================================== //
 
 template <class T> void entrymatcher_view(T *x)
@@ -64,8 +64,10 @@ template <class T> void entrymatcher_load(T *x, t_symbol *file)
 }
 
 // ========================================================================================================================================== //
-// Load and Save
+// Load and Save (pattr/embedding/parameters etc.)
 // ========================================================================================================================================== //
+
+// Save and Load Dictionary
 
 template <class T> t_dictionary *entrymatcher_save_dict(T *x)
 {
@@ -76,6 +78,8 @@ template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
     database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
 }
+
+// Save and Load Patcher
 
 template <class T> void entrymatcher_save_patcher(T *x, t_dictionary *dict)
 {
@@ -93,6 +97,8 @@ template <class T> void entrymatcher_load_patcher(T *x)
         entrymatcher_load_dict(x, dict);
     }
 }
+
+// Parameter and pattr Support
 
 template <class T> t_max_err entrymatcher_getvalueof(T *x, long *argc, t_atom **argv)
 {
@@ -124,6 +130,10 @@ template <class T> void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, vo
             jpatcher_set_dirty(x->patcher, 1);
     }
 }
+
+// ========================================================================================================================================== //
+// Audiostyle Temporary Routine
+// ========================================================================================================================================== //
 
 template <class T> void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
