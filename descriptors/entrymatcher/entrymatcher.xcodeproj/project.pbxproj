@@ -78,7 +78,7 @@
 		B8BACCD81F3FD879001589D8 /* entry_database_max.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database_max.cpp; sourceTree = "<group>"; };
 		B8BACCD91F3FD879001589D8 /* entry_database_max.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entry_database_max.h; sourceTree = "<group>"; };
 		B8C536E11F42459A00B7978B /* Sort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sort.h; sourceTree = "<group>"; };
-		B8DB87CF1F507567005ED6C6 /* ReadWriteLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReadWriteLock.h; sourceTree = "<group>"; };
+		B8DB87CF1F507567005ED6C6 /* Locks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Locks.h; sourceTree = "<group>"; };
 		B8E3186B1F471F2200BE449B /* entrymatcher_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = entrymatcher_common.h; sourceTree = "<group>"; };
 		B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher.cpp; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -135,7 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				B8C536E11F42459A00B7978B /* Sort.h */,
-				B8DB87CF1F507567005ED6C6 /* ReadWriteLock.h */,
+				B8DB87CF1F507567005ED6C6 /* Locks.h */,
 				B8BACCD41F3F9923001589D8 /* CustomAtom.h */,
 				B80770B71F3B9DAA006E6C0B /* EntryDatabase.h */,
 				B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */,

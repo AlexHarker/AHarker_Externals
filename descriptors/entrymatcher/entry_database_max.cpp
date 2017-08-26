@@ -1,6 +1,7 @@
 
 #include "entry_database_max.h"
 #include <algorithm>
+#include "Locks.h"
 
 // ========================================================================================================================================== //
 // Max Database Object Struture
@@ -11,6 +12,7 @@ typedef struct entry_database
     t_object a_obj;
     
     EntryDatabase *database;
+    Lock lock;
     
     long count;
     bool notify;
@@ -54,6 +56,8 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 {
     t_entry_database *x = (t_entry_database *)object_alloc(database_class);
     
+    new(&x->lock) Lock();
+    
     num_reserved_entries = std::max(num_reserved_entries, t_atom_long(1));
     num_columns = std::max(num_columns, t_atom_long(1));
     
@@ -69,6 +73,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x)
 {
     delete x->database;
+    x->lock.~Lock();
 }
 
 void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
@@ -82,42 +87,67 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     }
 }
 
+void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
+{
+    object_free(x);
+}
+
 void entry_database_release(void *client, t_entry_database *x)
 {
-    // Complete notifications before the object is released
+    bool last_client = false;
     
-    entry_database_modified(x, NULL, 0, NULL);
-    object_detach(name_space_name, x->database->getName(), client);
+    if (x)
+    {
+        // Complete notifications before the object is released
+
+        entry_database_modified(x, NULL, 0, NULL);
+        
+        object_detach(name_space_name, x->database->getName(), client);
+        
+        HoldLock(&x->lock);
+        last_client = (--x->count <= 0);
+    }
     
-    if (x && --x->count == 0)
+    // If this is the last client then free the object (deferlow in case the pointer is hanging around)
+    
+    if (last_client)
     {
         object_unregister(x);
-        object_free(x);
+        defer_low(x, (method)entry_database_deferred_deletion, NULL, 0, NULL);
     }
 }
 
 t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *old_database_object)
 {
+    bool found_new = false;
+    
     // Make sure the max database class exists
     
     if (!class_findbyname(CLASS_NOBOX, gensym(database_class_name)))
         entry_database_init();
     
-    // See if an object is registered with this name
+    // See if an object is registered with this name that is still active nad if so increase the count
     
     t_entry_database *x = (t_entry_database *) object_findregistered(name_space_name, name);
     
-    // If the object registered is different
-    
     if (x && x != old_database_object)
     {
-        if (old_database_object)
-            entry_database_release(client, old_database_object);
-        object_attach(name_space_name, name, client);
-        x->count++;
+        HoldLock(&x->lock);
+
+        if ((found_new = x->count > 0))
+            x->count++;
     }
-    else
-        x = old_database_object;
+    
+    // Otherwise return the old object
+    
+    if (!found_new)
+        return old_database_object;
+    
+    // Release the old object and attach to the new
+    
+    if (old_database_object)
+        entry_database_release(client, old_database_object);
+    object_attach(name_space_name, name, client);
     
     return x;
 }

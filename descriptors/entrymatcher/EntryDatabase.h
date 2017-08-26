@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "CustomAtom.h"
-#include "ReadWriteLock.h"
+#include "Locks.h"
 
 class EntryDatabase
 {
