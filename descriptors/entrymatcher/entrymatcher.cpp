@@ -305,8 +305,6 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-    long num_matches;
-    
     t_atom output_identifiers[1024];
 	t_atom output_indices[1024];
 	t_atom output_distances[1024];
@@ -316,13 +314,8 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
     // Calculate potential matches and sort if there are matches
         
-    num_matches = matchers->match(database_ptr, ratio_kept, n_limit);
-        
-    if (!num_matches)
-        return;
-        
-    num_matches = std::min(num_matches, 1024L);
-        
+    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit), 1024L);
+
     // Limit matches by maximum distance if specified
     
     for (long i = 0; i < num_matches; i++)
