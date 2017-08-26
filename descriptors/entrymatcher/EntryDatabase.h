@@ -57,8 +57,17 @@ public:
         ReadPointer(const ReadPointer&) = delete;
         ReadPointer& operator=(const ReadPointer&) = delete;
         ReadPointer( ReadPointer&&) = default;
-        ~ReadPointer()                                      { mPtr->mLock.release(); }
-            
+        ~ReadPointer()                                      { destroy(); }
+        
+        void destroy()
+        {
+            if (mPtr)
+            {
+                mPtr->mLock.release();
+                mPtr = NULL;
+            }
+        }
+        
         const EntryDatabase *operator->() const { return mPtr; }
         
     protected:
