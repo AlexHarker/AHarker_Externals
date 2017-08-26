@@ -3,58 +3,29 @@
 
 // Test Symbols
 
-t_symbol *ps_distance;
-t_symbol *ps_match;
-t_symbol *ps_scale;
-t_symbol *ps_within;
-t_symbol *ps_less;
-t_symbol *ps_greater;
-t_symbol *ps_lesseq;
-t_symbol *ps_greatereq;
-t_symbol *ps_distance_ratio;
-t_symbol *ps_scale_ratio;
-t_symbol *ps_within_ratio;
+t_symbol *ps_distance = gensym("distance");
+t_symbol *ps_match = gensym("match");
+t_symbol *ps_scale = gensym("scale");
+t_symbol *ps_within = gensym("within");
+t_symbol *ps_less = gensym("less");
+t_symbol *ps_greater = gensym("greater");
+t_symbol *ps_lesseq = gensym("lesseq");
+t_symbol *ps_greatereq = gensym("greatereq");
+t_symbol *ps_distance_ratio = gensym("distance_ratio");
+t_symbol *ps_scale_ratio = gensym("scale_ratio");
+t_symbol *ps_within_ratio = gensym("within_ratio");
 
-t_symbol *ps_sym_distance;
-t_symbol *ps_sym_match;
-t_symbol *ps_sym_scale;
-t_symbol *ps_sym_within;
-t_symbol *ps_sym_less;
-t_symbol *ps_sym_greater;
-t_symbol *ps_sym_lesseq;
-t_symbol *ps_sym_greatereq;
-t_symbol *ps_sym_distance_ratio;
-t_symbol *ps_sym_scale_ratio;
-t_symbol *ps_sym_within_ratio;
-
-// Init Symbols
-
-void init_test_symbols()
-{
-    ps_distance = gensym("distance");
-    ps_match = gensym("match");
-    ps_scale = gensym("scale");
-    ps_within = gensym("within");
-    ps_less = gensym("less");
-    ps_greater = gensym("greater");
-    ps_lesseq = gensym("lesseq");
-    ps_greatereq = gensym("greatereq");
-    ps_distance_ratio = gensym("distance_ratio");
-    ps_scale_ratio = gensym("scale_ratio");
-    ps_within_ratio = gensym("within_ratio");
-    
-    ps_sym_distance = gensym("-");
-    ps_sym_match = gensym("==");
-    ps_sym_scale = gensym("%");
-    ps_sym_within = gensym("<->");
-    ps_sym_less = gensym("<");
-    ps_sym_greater = gensym(">");
-    ps_sym_lesseq = gensym("<=");
-    ps_sym_greatereq = gensym(">=");
-    ps_sym_distance_ratio = gensym("/");
-    ps_sym_scale_ratio = gensym("%%");
-    ps_sym_within_ratio = gensym("</>");
-}
+t_symbol *ps_sym_distance = gensym("-");
+t_symbol *ps_sym_match = gensym("==");
+t_symbol *ps_sym_scale = gensym("%");
+t_symbol *ps_sym_within = gensym("<->");
+t_symbol *ps_sym_less = gensym("<");
+t_symbol *ps_sym_greater = gensym(">");
+t_symbol *ps_sym_lesseq = gensym("<=");
+t_symbol *ps_sym_greatereq = gensym(">=");
+t_symbol *ps_sym_distance_ratio = gensym("/");
+t_symbol *ps_sym_scale_ratio = gensym("%%");
+t_symbol *ps_sym_within_ratio = gensym("</>");
 
 // Attempts to match an atom with any of the symbols representing a valid test type
 

@@ -21,7 +21,6 @@ enum TestType
     TEST_WITHIN_RATIO
 };
 
-void init_test_symbols();
 TestType entrymatcher_test_types(t_atom *argv);
 
 #endif

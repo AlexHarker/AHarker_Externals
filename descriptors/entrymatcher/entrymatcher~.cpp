@@ -92,9 +92,7 @@ int C74_EXPORT main(void)
     class_dspinit(this_class);
 
     class_register(CLASS_BOX, this_class);
-    
-    init_test_symbols();
-    
+        
     return 0;
 }
 
