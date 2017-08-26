@@ -2,7 +2,7 @@
 #ifndef ENTRYDATABASE_H
 #define ENTRYDATABASE_H
 
-#include "ext.h"
+#include <ext.h>
 #include <vector>
 
 #include "CustomAtom.h"

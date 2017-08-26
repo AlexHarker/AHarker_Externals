@@ -1,9 +1,9 @@
 
-#include "Matchers.h"
-#include "Sort.h"
 #include <algorithm>
 #include <functional>
 
+#include "Matchers.h"
+#include "Sort.h"
 
 long Matchers::match(const EntryDatabase::ReadPointer& database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
 {

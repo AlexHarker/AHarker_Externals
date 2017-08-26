@@ -1,10 +1,11 @@
 
-#include "EntryDatabase.h"
-#include "Matchers.h"
-#include "Sort.h"
 #include <algorithm>
 #include <functional>
 #include <cmath>
+
+#include "EntryDatabase.h"
+#include "Matchers.h"
+#include "Sort.h"
 
 t_symbol *ps_mean = gensym("mean");
 t_symbol *ps_min = gensym("min");
