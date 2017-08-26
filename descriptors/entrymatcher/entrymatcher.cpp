@@ -31,7 +31,7 @@
 
 t_class *this_class;
 
-t_symbol *ps_lookup;
+t_symbol *ps_lookup = gensym("lookup");
 
 typedef struct entrymatcher{
 
@@ -96,11 +96,7 @@ int C74_EXPORT main(void)
     entrymatcher_add_common<t_entrymatcher>(this_class);
     
 	class_register(CLASS_BOX, this_class);
-	
-	ps_lookup = gensym("lookup");
     
-    init_test_symbols();
-	
 	return 0;
 }
 

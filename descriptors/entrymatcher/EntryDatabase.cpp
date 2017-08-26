@@ -19,6 +19,8 @@ t_symbol *ps_standard_deviation= gensym("standard_deviation");
 t_symbol *ps_centile = gensym("centile");
 t_symbol *ps_percentile = gensym("percentile");
 
+t_symbol *ps_identfier = gensym("identifier");
+
 // ========================================================================================================================================== //
 // Column Setup
 // ========================================================================================================================================== //
@@ -122,7 +124,7 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
     
     t_symbol *columnName = atom_getsym(specifier);
     
-    if (columnName == gensym("identifier"))
+    if (columnName == ps_identfier)
         return -1;
     
     for (long i = 0; i < numColumns(); i++)

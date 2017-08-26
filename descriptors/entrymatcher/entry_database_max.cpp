@@ -26,7 +26,8 @@ typedef struct entry_database
 
 t_class *database_class;
 const char database_class_name[] = "__entry_database";
-t_symbol *name_space_name = gensym("__entry_database_private");
+t_symbol *ps_database_class_name = gensym("__entry_database_private");
+t_symbol *ps_name_space_name = gensym("__entry_database_private");
 
 int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
@@ -120,7 +121,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
         entry_database_modified(x, NULL, 0, NULL);
         
-        object_detach(name_space_name, x->database.getName(), client);
+        object_detach(ps_name_space_name, x->database.getName(), client);
         
         HoldLock(&x->lock);
         last_client = (--x->count <= 0);
@@ -143,12 +144,12 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     // Make sure the max database class exists
     
-    if (!class_findbyname(CLASS_NOBOX, gensym(database_class_name)))
+    if (!class_findbyname(CLASS_NOBOX, ps_database_class_name))
         entry_database_init();
     
     // See if an object is registered with this name that is still active nad if so increase the count
     
-    t_entry_database *x = (t_entry_database *) object_findregistered(name_space_name, name);
+    t_entry_database *x = (t_entry_database *) object_findregistered(ps_name_space_name, name);
     
     if (x && x != old_database_object)
     {
@@ -167,7 +168,7 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     if (old_database_object)
         entry_database_release(client, old_database_object);
-    object_attach(name_space_name, name, client);
+    object_attach(ps_name_space_name, name, client);
     
     return x;
 }
@@ -187,8 +188,8 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     
     if (!x)
     {
-        x = (t_entry_database *) object_register(name_space_name, name, object_new_typed(CLASS_NOBOX, gensym(database_class_name), 3, argv));
-        object_attach(name_space_name, name, client);
+        x = (t_entry_database *) object_register(ps_name_space_name, name, object_new_typed(CLASS_NOBOX, ps_database_class_name, 3, argv));
+        object_attach(ps_name_space_name, name, client);
     }
     
     return x;
