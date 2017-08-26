@@ -25,8 +25,7 @@ typedef struct entry_database
 // ========================================================================================================================================== //
 
 t_class *database_class;
-const char database_class_name[] = "__entry_database";
-t_symbol *ps_database_class_name = gensym("__entry_database_private");
+t_symbol *ps_database_class_name = gensym("__entry_database");
 t_symbol *ps_name_space_name = gensym("__entry_database_private");
 
 int entry_database_init();
