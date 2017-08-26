@@ -4,6 +4,7 @@
 
 #include <ext.h>
 #include <ext_obex.h>
+#include <ext_dictobj.h>
 
 // ========================================================================================================================================== //
 // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
@@ -77,6 +78,16 @@ template <class T> t_dictionary *entrymatcher_save_dict(T *x)
 template <class T> void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
     database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+}
+
+template <class T> void entrymatcher_dictionary(T *x, t_symbol *dictname)
+{
+    t_dictionary *dict = dictobj_findregistered_retain(dictname);
+    
+    entrymatcher_load_dict<T>(x, dict);
+    
+    if (dict)
+        dictobj_release(dict);
 }
 
 // Save and Load Patcher
@@ -156,7 +167,9 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_removeif<T>,"removeif", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_labelmodes<T>,"labelmodes", A_GIMME, 0);
     class_addmethod(class_pointer, (method)entrymatcher_names<T>,"names", A_GIMME, 0);
-    
+
+    class_addmethod(class_pointer, (method)entrymatcher_dictionary<T>,"dictionary", A_SYM, 0);
+
     class_addmethod(class_pointer, (method)entrymatcher_save_patcher<T>, "appendtodictionary", A_CANT, 0);
 
     class_addmethod(class_pointer, (method)entrymatcher_getvalueof<T>, "getvalueof", A_CANT, 0);
