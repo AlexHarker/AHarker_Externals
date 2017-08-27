@@ -108,7 +108,8 @@ public:
     t_symbol *getName() const                                 { return mName; }
     t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
     bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
-    void getEntryIdentifier(t_atom *a, long idx) const        { return getIdentifierInternal(idx).getAtom(a); }
+    void getEntryIdentifier(t_atom *a, long idx) const        { return getEntryIdentifier(idx).getAtom(a); }
+    CustomAtom getEntryIdentifier(long idx) const             { return mIdentifiers[idx];}
     long getEntryIndex(const t_atom *identifier) const
     {
         long order;
@@ -131,6 +132,8 @@ public:
 
     t_dictionary *saveDictionary(bool entriesAsOneKey) const;
     void loadDictionary(t_object *x, t_dictionary *dict);
+
+    inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
 
 private:
 
@@ -162,7 +165,6 @@ private:
     };
     
     inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
-    inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
     inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
     
     void clear(HoldWriteLock &lock);
@@ -197,8 +199,6 @@ private:
 
     long getOrder(long idx);
     long searchIdentifiers(const t_atom *identifierAtom, long& idx) const;
-
-    CustomAtom getIdentifierInternal(long idx) const                    { return mIdentifiers[idx];}
     
     inline void setData(long idx, long column, const CustomAtom& data)
     {

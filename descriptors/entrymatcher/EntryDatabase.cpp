@@ -95,7 +95,7 @@ long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) c
         gap /= 2;
         gap = gap < 1 ? 1 : gap;
         
-        switch (compare(identifier, getIdentifierInternal(mOrder[idx])))
+        switch (compare(identifier, getEntryIdentifier(mOrder[idx])))
         {
             case CustomAtom::kEqual:
                 return mOrder[idx];
@@ -105,7 +105,7 @@ long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) c
                 break;
                 
             case CustomAtom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getIdentifierInternal(mOrder[idx - 1])) == CustomAtom::kGreater))
+                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(mOrder[idx - 1])) == CustomAtom::kGreater))
                     gap = 0;
                 else
                     idx -= gap;
@@ -568,7 +568,7 @@ void EntryDatabase::view(t_object *database_object) const
 
     for (long i = 0; i < numItems(); i++)
     {
-        str.insert(str.size(), getIdentifierInternal(i).getString());
+        str.insert(str.size(), getEntryIdentifier(i).getString());
         
         for (long j = 0; j < numColumns(); j++)
         {

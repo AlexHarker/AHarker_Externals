@@ -1,50 +1,35 @@
 
 #include "entry_database_viewer.h"
-
-/**
-	@file
-	dbviewer - demonstrate use of database views for sqlite and jdataview
- 
-	@ingroup	examples
- 
-	Copyright 2009 - Cycling '74
-	Timothy Place, tim@cycling74.com
- */
+#include "EntryDatabase.h"
 
 #include <jpatcher_api.h>
 #include <jgraphics.h>
 #include <jdataview.h>
 
-
 typedef struct _entry_database_viewer
 {
     t_jbox		d_box;
-    t_object	*d_dataview;	///< The dataview object
-    //t_hashtab	*d_columns;		///< The dataview columns:  column name -> column index
-    //t_object	*d_view;		///< The dbview object that we need to display in a dataview
+    t_object	*d_dataview;
+    t_object    *patcher;
+    EntryDatabase *database;
 
 } t_entry_database_viewer;
 
+void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv);
+void entry_database_viewer_free(t_entry_database_viewer *x);
 
+void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview);
+void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview);
+void entry_database_viewer_resize(t_entry_database_viewer *x);
 
-// general prototypes
-void		*entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv);
-void		entry_database_viewer_free(t_entry_database_viewer *x);
-
-void		entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview);
-void		entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview);
+void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database);
+void entry_database_viewer_buildview(t_entry_database_viewer *x);
+void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen);
 
 //t_max_err	dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-//void		dbviewer_getcelltext(t_dbviewer *x, t_symbol *colname, long index, char *text, long maxlen);
-//t_max_err	dbviewer_set_query(t_dbviewer *x, void *attr, long argc, t_atom *argv);
-//t_max_err	dbviewer_set_database(t_dbviewer *x, void *attr, long argc, t_atom *argv);
-
 static t_class	*s_dbviewer_class = NULL;
-static t_symbol	*ps_dbview_update = NULL;
 static t_symbol	*ps_dbview_query_changed = NULL;
-
-/************************************************************************************/
 
 void entry_database_viewer_init()
 {
@@ -57,21 +42,21 @@ void entry_database_viewer_init()
     flags = JBOX_COLOR;
     jbox_initclass(c, flags);
     
- //   class_addmethod(c, (method)dbviewer_getcelltext,		"getcelltext",		A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_newpatcherview,		"newpatcherview",	A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_freepatcherview,	"freepatcherview",	A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_getcelltext, "getcelltext", A_CANT, 0);
+    
+    class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
+    
+    class_addmethod(c, (method)entry_database_viewer_set_database, "__set_database", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_buildview, "__build_view", A_CANT, 0);
+    
     //class_addmethod(c, (method)dbviewer_notify,				"notify",			A_CANT,	0);
   
     class_register(CLASS_BOX, c);
     s_dbviewer_class = c;
     
-    ps_dbview_update = gensym("dbview_update");
     ps_dbview_query_changed = gensym("dbview_query_changed");
 }
-
-
-/************************************************************************************/
-// Object Creation Method
 
 void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
 {
@@ -90,18 +75,15 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jbox_new(&x->d_box, flags, argc, argv);
         x->d_box.b_firstin = (t_object *)x;
         
-        //x->d_columns = hashtab_new(13);
-        //hashtab_flags(x->d_columns, OBJ_FLAG_DATA);
-        
-        x->d_dataview = (t_object *)jdataview_new();
-        jdataview_setclient(x->d_dataview, (t_object *)x);
-        jdataview_setcolumnheaderheight(x->d_dataview, 40);
-        jdataview_setheight(x->d_dataview, 16.0);
+        x->d_dataview = NULL;
+        x->database = NULL;
+        x->patcher = gensym("#P")->s_thing;
         
         attr_dictionary_process(x, d);
         
         jbox_ready(&x->d_box);
-        //		object_notify(x->d_view, ps_dbview_update, NULL);
+        
+        entry_database_viewer_resize(x);
     }
     return(x);
 }
@@ -121,6 +103,59 @@ void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object 
     jdataview_patcherinvis(x->d_dataview, patcherview);
 }
 
+void entry_database_viewer_resize(t_entry_database_viewer *x)
+{
+    t_rect rect;
+    
+    jpatcher_get_rect(x->patcher, &rect);
+    rect.x = 0;
+    rect.y = 0;
+    jbox_set_rect((t_object *) &x->d_box, &rect);
+}
+
+void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database)
+{
+    x->database = database;
+    entry_database_viewer_buildview(x);
+}
+
+void entry_database_viewer_buildview(t_entry_database_viewer *x)
+{
+    if (x->database)
+    {
+        EntryDatabase::ReadPointer database(x->database);
+        
+        if (x->d_dataview)
+            object_free(x->d_dataview);
+    
+        x->d_dataview = (t_object *)jdataview_new();
+        jdataview_setclient(x->d_dataview, (t_object *)x);
+        jdataview_setcolumnheaderheight(x->d_dataview, 40);
+        jdataview_setheight(x->d_dataview, 16.0);
+        
+        t_object *column = jdataview_addcolumn(x->d_dataview, gensym("__identifier"), NULL, true);
+        jcolumn_setlabel(column, gensym("identifier"));
+        jcolumn_setwidth(column, 110);
+        jcolumn_setmaxwidth(column, 300);
+        //jcolumn_setcelltextstylemsg(column, gensym("justifyhcenter"));
+        
+        for (long i = 0; i < database->numColumns(); i++)
+        {
+            t_object *column = jdataview_addcolumn(x->d_dataview, database->getColumnName(i), NULL, true);
+            jcolumn_setlabel(column, database->getColumnName(i));
+            jcolumn_setwidth(column, 110);
+            jcolumn_setmaxwidth(column, 300);
+        }
+        
+        long numItems = database->numItems();
+        
+        t_rowref *rowrefs = (t_rowref *)malloc(sizeof(t_rowref) * numItems);
+        for (long i = 0; i < numItems; i++)
+            rowrefs[i] = (t_rowref *)(i+1);
+        jdataview_addrows(x->d_dataview, numItems, rowrefs);
+        free(rowrefs);
+    }
+}
 /*
 t_max_err dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
@@ -153,66 +188,21 @@ t_max_err dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sende
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }*/
 
-
-/************************************************************************************/
-/*
-
-void dbviewer_getcelltext(t_dbviewer *x, t_symbol *colname, long index, char *text, long maxlen)
+void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen)
 {
-    t_object	*result = (t_object *)object_method(x->d_view, gensym("getresult"));
-    char		*itemtext;
-    t_atom_long	column_index;
-    t_max_err	err;
-    
-    if (!result)
-        return;
-    
-    err = hashtab_lookuplong(x->d_columns, colname, &column_index);
-    if (!err) {
-        itemtext = (char *)object_method(result, _sym_valuebyindex, index-1, column_index);
+    if (x->database)
+    {
+        EntryDatabase::ReadPointer database(x->database);
+        std::string str;
         
-        if (itemtext && itemtext[0]) {
-            if (strstr(colname->s_name, "date")) {
-                t_datetime td;
-                sysdateformat_strftimetodatetime(itemtext, &td);
-                sysdateformat_formatdatetime(&td, SYSDATEFORMAT_RELATIVE, 0, text, maxlen-1);
-            }
-            else
-                strncpy_zero(text, itemtext, maxlen-1);
-        }
+        t_atom a;
+        atom_setsym(&a, colname);
+        
+        if (colname == gensym("__identifier"))
+            str = database->getEntryIdentifier(index - 1).getString();
+        else
+            str = database->getTypedData(index - 1, database->columnFromSpecifier(&a)).getString();
+
+        strncpy_zero(text, str.c_str(), maxlen-1);
     }
 }
-
-
-t_max_err dbviewer_set_query(t_dbviewer *x, void *attr, long argc, t_atom *argv)
-{
-    if (argc && argv) {
-        x->d_query = atom_getsym(argv);
-        object_attr_setsym(x->d_view, _sym_query, x->d_query);
-        if (x->d_db && x->d_query) {
-            db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
-            object_attach_byptr_register(x, x->d_view, _sym_nobox);
-        }
-    }
-    return MAX_ERR_NONE;
-}
-
-
-t_max_err dbviewer_set_database(t_dbviewer *x, void *attr, long argc, t_atom *argv)
-{
-    t_max_err err;
-    
-    if (argc && argv) {
-        db_view_remove(x->d_db, &x->d_view);
-        db_close(&x->d_db);
-        
-        x->d_database = atom_getsym(argv);
-        err = db_open(x->d_database, NULL, &x->d_db);
-        if (!err && x->d_db && x->d_query) {
-            db_view_create(x->d_db, x->d_query->s_name, &x->d_view);
-            object_attach_byptr_register(x, x->d_view, _sym_nobox);
-        }
-    }
-    return MAX_ERR_NONE;
-}*/
-

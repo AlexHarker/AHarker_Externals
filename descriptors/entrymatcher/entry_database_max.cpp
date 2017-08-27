@@ -15,7 +15,9 @@ typedef struct entry_database
     
     EntryDatabase database;
     Lock lock;
+    
     t_object *patch;
+    t_object *viewer;
     
     long count;
     bool notify;
@@ -88,14 +90,16 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     t_atom *av = NULL;
     long ac = 0;
     
-    atom_setparse(&ac, &av, "@defrect 0 0 300 300");
+    atom_setparse(&ac, &av, "@defrect 0 0 600 600");
     attr_args_dictionary(d, ac, av);
     atom_setobj(&a, d);
     x->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
     
-    // Make internal object
+    // Make internal object (and set database)
     
-    newobject_sprintf(x->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
+    x->viewer = newobject_sprintf(x->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
+    
+    object_method(x->viewer, gensym("__set_database"), &x->database);
     
     return (x);
 }
@@ -108,6 +112,10 @@ void entry_database_free(t_entry_database *x)
     
     x->database.~EntryDatabase();
     x->lock.~Lock();
+    
+    // Destroy patch (which destroys viewer)
+    
+    object_free(x->patch);
 }
 
 // Modification Notification (in the low-priority thread)
@@ -118,6 +126,7 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     
     if (!x->notify)
     {
+        object_method(x->viewer, gensym("__build_view"));
         object_notify(x, database_modified, NULL);
         x->notify = true;
     }
