@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "entry_database_max.h"
+#include "entry_database_viewer.h"
 #include "Locks.h"
 
 // ========================================================================================================================================== //
@@ -14,6 +15,7 @@ typedef struct entry_database
     
     EntryDatabase database;
     Lock lock;
+    t_object *patch;
     
     long count;
     bool notify;
@@ -52,6 +54,8 @@ int entry_database_init()
     
     class_register(CLASS_NOBOX, database_class);
     
+    entry_database_viewer_init();
+    
     return 0;
 }
 
@@ -74,6 +78,24 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->database.reserve(num_reserved_entries);
     x->count = 1;
     x->notify = true;
+    
+    // Create viewer patch
+    
+    // Create patcher (you must report this as a subpatcher to get audio working)
+    
+    t_dictionary *d = dictionary_new();
+    t_atom a;
+    t_atom *av = NULL;
+    long ac = 0;
+    
+    atom_setparse(&ac, &av, "@defrect 0 0 300 300");
+    attr_args_dictionary(d, ac, av);
+    atom_setobj(&a, d);
+    x->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+    
+    // Make internal object
+    
+    newobject_sprintf(x->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
     
     return (x);
 }
@@ -194,6 +216,15 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     return x;
 }
 
+// View
+
+void entry_database_view(void *x, t_entry_database *database_object)
+{
+    // Bring to front
+    
+    object_method(database_object->patch, gensym("front"));
+}
+
 // ========================================================================================================================================== //
 // Notify Pointer (notifies clients after write operation)
 // ========================================================================================================================================== //
@@ -230,6 +261,13 @@ void database_release(void *x, t_object *database_object)
     entry_database_release(x, (t_entry_database *) database_object);
 }
 
+// View
+
+void database_view(void *x, t_object *database_object)
+{
+    entry_database_view(x, (t_entry_database *) database_object);
+}
+
 // Retrieve Pointers for Reading or Writing
 
 EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
@@ -242,5 +280,7 @@ NotifyPointer database_getptr_write(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
     return NotifyPointer(&obj->database, (t_object *) obj);
-
 }
+
+
+

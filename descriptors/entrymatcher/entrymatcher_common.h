@@ -51,7 +51,7 @@ template <class T> void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_
 
 template <class T> void entrymatcher_view(T *x)
 {
-    database_getptr_read(x->database_object)->view(x->database_object);
+    database_view(x, x->database_object);
 }
 
 template <class T> void entrymatcher_save(T *x, t_symbol *file)

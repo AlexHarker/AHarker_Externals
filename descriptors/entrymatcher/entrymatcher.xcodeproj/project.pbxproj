@@ -42,6 +42,10 @@
 		B8CB69D21F3E3B7D00F6215A /* EntryDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* EntryDatabase.cpp */; };
 		B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
 		B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */; };
+		B8F18CE61F52D76F000E59CA /* entry_database_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */; };
+		B8F18CE71F52D76F000E59CA /* entry_database_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */; };
+		B8F18CE81F52D76F000E59CA /* entry_database_viewer.h in Headers */ = {isa = PBXBuildFile; fileRef = B8F18CE51F52D76F000E59CA /* entry_database_viewer.h */; };
+		B8F18CE91F52D76F000E59CA /* entry_database_viewer.h in Headers */ = {isa = PBXBuildFile; fileRef = B8F18CE51F52D76F000E59CA /* entry_database_viewer.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +85,8 @@
 		B8DB87CF1F507567005ED6C6 /* Locks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Locks.h; sourceTree = "<group>"; };
 		B8E3186B1F471F2200BE449B /* entrymatcher_common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = entrymatcher_common.h; sourceTree = "<group>"; };
 		B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher.cpp; sourceTree = "<group>"; };
+		B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database_viewer.cpp; sourceTree = "<group>"; };
+		B8F18CE51F52D76F000E59CA /* entry_database_viewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = entry_database_viewer.h; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -143,6 +149,8 @@
 				B85C98EC1F3DDA96003F468F /* Matchers.cpp */,
 				B85C98F51F3DFAE7003F468F /* utilities.h */,
 				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
+				B8F18CE51F52D76F000E59CA /* entry_database_viewer.h */,
+				B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */,
 				B8BACCD91F3FD879001589D8 /* entry_database_max.h */,
 				B8BACCD81F3FD879001589D8 /* entry_database_max.cpp */,
 				B8E3186B1F471F2200BE449B /* entrymatcher_common.h */,
@@ -170,6 +178,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8F18CE81F52D76F000E59CA /* entry_database_viewer.h in Headers */,
 				B85C98F81F3DFAE7003F468F /* utilities.h in Headers */,
 				B80770BA1F3B9DAA006E6C0B /* EntryDatabase.h in Headers */,
 				B85C98F01F3DDA96003F468F /* Matchers.h in Headers */,
@@ -181,6 +190,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8F18CE91F52D76F000E59CA /* entry_database_viewer.h in Headers */,
 				B85C98F91F3DFAE7003F468F /* utilities.h in Headers */,
 				B80770BB1F3B9DAA006E6C0B /* EntryDatabase.h in Headers */,
 				B85C98F11F3DDA96003F468F /* Matchers.h in Headers */,
@@ -301,6 +311,7 @@
 				B85C99061F3E392D003F468F /* EntryDatabase.cpp in Sources */,
 				B85C99071F3E3930003F468F /* Matchers.cpp in Sources */,
 				B8BACCD31F3F1096001589D8 /* utilities.cpp in Sources */,
+				B8F18CE61F52D76F000E59CA /* entry_database_viewer.cpp in Sources */,
 				B8BACCDA1F3FD879001589D8 /* entry_database_max.cpp in Sources */,
 				B8BACCD21F3F1092001589D8 /* entrymatcher.cpp in Sources */,
 			);
@@ -313,6 +324,7 @@
 				B8CB69D21F3E3B7D00F6215A /* EntryDatabase.cpp in Sources */,
 				B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */,
 				B8CB69D11F3E3B7A00F6215A /* utilities.cpp in Sources */,
+				B8F18CE71F52D76F000E59CA /* entry_database_viewer.cpp in Sources */,
 				B8BACCDB1F3FD879001589D8 /* entry_database_max.cpp in Sources */,
 				B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */,
 			);

@@ -31,6 +31,7 @@ protected:
 t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 t_object *database_change(void *x, t_symbol *name, t_object *old_database_object);
 void database_release(void *x, t_object *database_object);
+void database_view(void *x, t_object *database_object);
 
 // Retrieve Pointers for Reading or Writing
 
