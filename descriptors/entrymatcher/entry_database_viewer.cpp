@@ -20,7 +20,6 @@ void entry_database_viewer_free(t_entry_database_viewer *x);
 
 void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview);
 void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview);
-void entry_database_viewer_resize(t_entry_database_viewer *x);
 
 void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database);
 void entry_database_viewer_buildview(t_entry_database_viewer *x);
@@ -86,8 +85,6 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         attr_dictionary_process(x, d);
         
         jbox_ready(&x->d_box);
-        
-        entry_database_viewer_resize(x);
     }
     return(x);
 }
@@ -99,22 +96,14 @@ void entry_database_viewer_free(t_entry_database_viewer *x)
 
 void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview)
 {
+    object_attach_byptr(x, patcherview);
     jdataview_patchervis(x->d_dataview, patcherview, (t_object *)x);
 }
 
 void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview)
 {
+    object_detach_byptr(x, patcherview);
     jdataview_patcherinvis(x->d_dataview, patcherview);
-}
-
-void entry_database_viewer_resize(t_entry_database_viewer *x)
-{
-    t_rect rect;
-    
-    jpatcher_get_rect(x->patcher, &rect);
-    rect.x = 0;
-    rect.y = 0;
-    jbox_set_rect((t_object *) &x->d_box, &rect);
 }
 
 void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database)
@@ -199,32 +188,16 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
 
 t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
-    /*if (sender == x->d_view) {
-        if (msg == ps_dbview_update) {
-            dbviewer_bang(x);
-        }
-        else if (msg == ps_dbview_query_changed) {	// dump all of the columns
-            t_object	*column = NULL;
-            t_symbol	**column_names = NULL;
-            long		numcolumns = 0;
-            long		i;
-            
-            hashtab_getkeys(x->d_columns, &numcolumns, &column_names);
-            if (column_names) {
-                for (i=0; i<numcolumns; i++) {
-                    column = jdataview_getnamedcolumn(x->d_dataview, column_names[i]);
-                    if (column)
-                        jdataview_deletecolumn(x->d_dataview, column);
-                }
-                sysmem_freeptr(column_names);
-            }
-            hashtab_clear(x->d_columns);
-        }
-        else if (msg == _sym_free) {
-            object_detach_byptr((t_object *)x, x->d_view);
-            x->d_view = NULL;
-        }
-    }*/
+    if (msg == gensym("attr_modified") && object_classname(sender) == gensym("patcherview"))
+    {
+        t_rect rect;
+        
+        patcherview_get_rect( (t_object *) sender, &rect);
+        rect.x = 0;
+        rect.y = 0;
+        jbox_set_rect_for_view((t_object *) &x->d_box, (t_object *) sender, &rect);
+    }
+    
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }
 
