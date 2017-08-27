@@ -8,10 +8,11 @@
 
 typedef struct _entry_database_viewer
 {
-    t_jbox		d_box;
-    t_object	*d_dataview;
-    t_object    *patcher;
-    EntryDatabase *database;
+    t_jbox          d_box;
+    t_object        *d_dataview;
+    t_object        *patcher;
+    EntryDatabase   *database;
+    bool            visible;
 
 } t_entry_database_viewer;
 
@@ -79,6 +80,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setcolumnheaderheight(x->d_dataview, 40);
         jdataview_setheight(x->d_dataview, 16.0);
         
+        x->visible = false;
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
         
@@ -114,7 +116,7 @@ void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabas
 
 void entry_database_viewer_buildview(t_entry_database_viewer *x)
 {
-    if (x->database)
+    if (x->database && x->visible)
     {
         EntryDatabase::ReadPointer database(x->database);
         
@@ -190,12 +192,29 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
 {
     if (msg == gensym("attr_modified") && object_classname(sender) == gensym("patcherview"))
     {
-        t_rect rect;
+        // Get attibute name
         
-        patcherview_get_rect( (t_object *) sender, &rect);
-        rect.x = 0;
-        rect.y = 0;
-        jbox_set_rect_for_view((t_object *) &x->d_box, (t_object *) sender, &rect);
+        t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));	// ask attribute object for name
+        
+        if (attrname == gensym("rect"))
+        {
+            t_rect rect;
+        
+            patcherview_get_rect( (t_object *) sender, &rect);
+            rect.x = 0;
+            rect.y = 0;
+            jbox_set_rect_for_view((t_object *) &x->d_box, (t_object *) sender, &rect);
+        }
+        else if (attrname == gensym("visible"))
+        {
+            if (patcherview_get_visible((t_object *) sender))
+            {
+                x->visible = true;
+                entry_database_viewer_buildview(x);
+            }
+            else
+                x->visible = false;
+        }
     }
     
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
