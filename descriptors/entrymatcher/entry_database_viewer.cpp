@@ -26,7 +26,7 @@ void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabas
 void entry_database_viewer_buildview(t_entry_database_viewer *x);
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen);
 
-//t_max_err	dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
 static t_class	*s_dbviewer_class = NULL;
 static t_symbol	*ps_dbview_query_changed = NULL;
@@ -50,7 +50,7 @@ void entry_database_viewer_init()
     class_addmethod(c, (method)entry_database_viewer_set_database, "__set_database", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_buildview, "__build_view", A_CANT, 0);
     
-    //class_addmethod(c, (method)dbviewer_notify,				"notify",			A_CANT,	0);
+    class_addmethod(c, (method)entry_database_viewer_notify, "notify", A_CANT, 0);
   
     class_register(CLASS_BOX, c);
     s_dbviewer_class = c;
@@ -75,7 +75,11 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jbox_new(&x->d_box, flags, argc, argv);
         x->d_box.b_firstin = (t_object *)x;
         
-        x->d_dataview = NULL;
+        x->d_dataview = (t_object *)jdataview_new();
+        jdataview_setclient(x->d_dataview, (t_object *)x);
+        jdataview_setcolumnheaderheight(x->d_dataview, 40);
+        jdataview_setheight(x->d_dataview, 16.0);
+        
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
         
@@ -125,15 +129,30 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
     {
         EntryDatabase::ReadPointer database(x->database);
         
-        if (x->d_dataview)
-            object_free(x->d_dataview);
-    
-        x->d_dataview = (t_object *)jdataview_new();
-        jdataview_setclient(x->d_dataview, (t_object *)x);
-        jdataview_setcolumnheaderheight(x->d_dataview, 40);
-        jdataview_setheight(x->d_dataview, 16.0);
+        // Update columns
         
-        t_object *column = jdataview_addcolumn(x->d_dataview, gensym("__identifier"), NULL, true);
+        long num_database_columns = database->numColumns() + 1;
+        long num_columns = jdataview_getnumcolumns(x->d_dataview);
+        
+        if (num_database_columns != num_columns)
+        {
+            if (num_columns < num_database_columns)
+            {
+                long column_difference = num_database_columns - num_columns;
+                for (long i = 0; i < column_difference; i++)
+                    jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), NULL, true);
+            }
+            else
+            {
+                long column_difference = num_columns - num_database_columns;
+                for (long i = 0; i < column_difference; i++)
+                    jdataview_deletecolumn(x->d_dataview, jdataview_getnthcolumn(x->d_dataview, i + num_database_columns));
+            }
+        }
+
+        // Update columns labels etc.
+
+        t_object *column = jdataview_getnthcolumn(x->d_dataview, 0);
         jcolumn_setlabel(column, gensym("identifier"));
         jcolumn_setwidth(column, 110);
         jcolumn_setmaxwidth(column, 300);
@@ -141,25 +160,46 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
         
         for (long i = 0; i < database->numColumns(); i++)
         {
-            t_object *column = jdataview_addcolumn(x->d_dataview, database->getColumnName(i), NULL, true);
+            t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 1);
             jcolumn_setlabel(column, database->getColumnName(i));
             jcolumn_setwidth(column, 110);
             jcolumn_setmaxwidth(column, 300);
         }
         
-        long numItems = database->numItems();
+        // Update rows
         
-        t_rowref *rowrefs = (t_rowref *)malloc(sizeof(t_rowref) * numItems);
-        for (long i = 0; i < numItems; i++)
-            rowrefs[i] = (t_rowref *)(i+1);
-        jdataview_addrows(x->d_dataview, numItems, rowrefs);
-        free(rowrefs);
+        long num_items = database->numItems();
+        long num_rows = jdataview_getnumrows(x->d_dataview);
+        
+        if (num_rows != num_items)
+        {
+            if (num_items == 0)
+            {
+                jdataview_clear(x->d_dataview);
+            }
+            else if (num_rows < num_items)
+            {
+                long row_difference = num_items - num_rows;
+                std::vector<t_rowref> rowrefs(row_difference);
+                for (long i = 0; i < row_difference; i++)
+                    rowrefs[i] = (t_rowref)(i+1 + num_rows);
+                jdataview_addrows(x->d_dataview, row_difference, &rowrefs[0]);
+            }
+            else
+            {
+                long row_difference = num_rows - num_items;
+                t_rowref *rowrefs = (t_rowref *)malloc(sizeof(t_rowref) * row_difference);
+                for (long i = 0; i < row_difference; i++)
+                    rowrefs[i] = (t_rowref *)(i+1 + num_items);
+                jdataview_deleterows(x->d_dataview, row_difference, &rowrefs[0]);
+            }
+        }
     }
 }
-/*
-t_max_err dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
+
+t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
-    if (sender == x->d_view) {
+    /*if (sender == x->d_view) {
         if (msg == ps_dbview_update) {
             dbviewer_bang(x);
         }
@@ -184,9 +224,9 @@ t_max_err dbviewer_notify(t_dbviewer *x, t_symbol *s, t_symbol *msg, void *sende
             object_detach_byptr((t_object *)x, x->d_view);
             x->d_view = NULL;
         }
-    }
+    }*/
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
-}*/
+}
 
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen)
 {
@@ -195,13 +235,12 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
         EntryDatabase::ReadPointer database(x->database);
         std::string str;
         
-        t_atom a;
-        atom_setsym(&a, colname);
+        long column = std::stol(colname->s_name);
         
-        if (colname == gensym("__identifier"))
+        if (colname == gensym("0"))
             str = database->getEntryIdentifier(index - 1).getString();
         else
-            str = database->getTypedData(index - 1, database->columnFromSpecifier(&a)).getString();
+            str = database->getTypedData(index - 1, column - 1).getString();
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }

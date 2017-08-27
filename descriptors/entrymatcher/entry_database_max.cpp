@@ -90,7 +90,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     t_atom *av = NULL;
     long ac = 0;
     
-    atom_setparse(&ac, &av, "@defrect 0 0 600 600");
+    atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
     attr_args_dictionary(d, ac, av);
     atom_setobj(&a, d);
     x->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
