@@ -25,11 +25,11 @@ void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object 
 void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database);
 void entry_database_viewer_buildview(t_entry_database_viewer *x);
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen);
+void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, long index, long *style, long *align);
 
 t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-static t_class	*s_dbviewer_class = NULL;
-static t_symbol	*ps_dbview_query_changed = NULL;
+static t_class	*entry_database_viewer_class = NULL;
 
 void entry_database_viewer_init()
 {
@@ -43,6 +43,7 @@ void entry_database_viewer_init()
     jbox_initclass(c, flags);
     
     class_addmethod(c, (method)entry_database_viewer_getcelltext, "getcelltext", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_getcellstyle, "getcellstyle", A_CANT, 0);
     
     class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
@@ -53,9 +54,7 @@ void entry_database_viewer_init()
     class_addmethod(c, (method)entry_database_viewer_notify, "notify", A_CANT, 0);
   
     class_register(CLASS_BOX, c);
-    s_dbviewer_class = c;
-    
-    ps_dbview_query_changed = gensym("dbview_query_changed");
+    entry_database_viewer_class = c;
 }
 
 void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
@@ -66,7 +65,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
     if (!(d=object_dictionaryarg(argc, argv)))
         return NULL;
     
-    x = (t_entry_database_viewer *)object_alloc(s_dbviewer_class);
+    x = (t_entry_database_viewer *)object_alloc(entry_database_viewer_class);
     
     if (x)
     {
@@ -77,8 +76,11 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         
         x->d_dataview = (t_object *)jdataview_new();
         jdataview_setclient(x->d_dataview, (t_object *)x);
-        jdataview_setcolumnheaderheight(x->d_dataview, 40);
+        jdataview_setcolumnheaderheight(x->d_dataview, 30);
         jdataview_setheight(x->d_dataview, 16.0);
+        jdataview_setautosizeright(x->d_dataview, 1);
+        jdataview_setautosizerightcolumn(x->d_dataview, 1);
+        jdataview_setdragenabled(x->d_dataview, 0);
         
         x->visible = false;
         x->database = NULL;
@@ -122,7 +124,7 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
         
         // Update columns
         
-        long num_database_columns = database->numColumns() + 1;
+        long num_database_columns = database->numColumns() + 2;
         long num_columns = jdataview_getnumcolumns(x->d_dataview);
         
         if (num_database_columns != num_columns)
@@ -131,7 +133,14 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
             {
                 long column_difference = num_database_columns - num_columns;
                 for (long i = 0; i < column_difference; i++)
-                    jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), NULL, true);
+                {
+                    t_object *column = jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), NULL, true);
+                    jcolumn_setwidth(column, 110);
+                    jcolumn_setmaxwidth(column, 300);
+                    jcolumn_setdraggable(column, 0);
+                    jcolumn_setsortable(column, 0);
+                    jcolumn_setcelltextstylemsg(column, gensym("getcellstyle"));
+                }
             }
             else
             {
@@ -141,20 +150,20 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
             }
         }
 
-        // Update columns labels etc.
+        // Update columns labels
 
         t_object *column = jdataview_getnthcolumn(x->d_dataview, 0);
+        jcolumn_setlabel(column, gensym("#"));
+        //jcolumn_setnumeric(column, true);
+
+        column = jdataview_getnthcolumn(x->d_dataview, 1);
         jcolumn_setlabel(column, gensym("identifier"));
-        jcolumn_setwidth(column, 110);
-        jcolumn_setmaxwidth(column, 300);
-        //jcolumn_setcelltextstylemsg(column, gensym("justifyhcenter"));
         
         for (long i = 0; i < database->numColumns(); i++)
         {
-            t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 1);
+            t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 2);
             jcolumn_setlabel(column, database->getColumnName(i));
-            jcolumn_setwidth(column, 110);
-            jcolumn_setmaxwidth(column, 300);
+            //jcolumn_setnumeric(column, database->getColumnLabelMode(i));
         }
         
         // Update rows
@@ -229,11 +238,20 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
         
         long column = std::stol(colname->s_name);
         
-        if (colname == gensym("0"))
+        if (column == 0)
+            str = std::to_string(index);
+        else if (column == 1)
             str = database->getEntryIdentifier(index - 1).getString();
         else
-            str = database->getTypedData(index - 1, column - 1).getString();
+            str = database->getTypedData(index - 1, column - 2).getString();
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }
 }
+
+void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, long index, long *style, long *align)
+{
+    *style = (colname == gensym("0")) ? JCOLUMN_STYLE_ITALIC : JCOLUMN_STYLE_PLAIN;
+    *align = JCOLUMN_ALIGN_CENTER;
+}
+

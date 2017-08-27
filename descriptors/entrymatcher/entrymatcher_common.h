@@ -176,7 +176,8 @@ template <class T> void entrymatcher_add_common(t_class *class_pointer)
     class_addmethod(class_pointer, (method)entrymatcher_setvalueof<T>, "setvalueof", A_CANT, 0);
     class_addmethod(class_pointer, (method)entrymatcher_notify<T>,"notify", A_CANT, 0);
 
-    class_addmethod(class_pointer, (method)entrymatcher_view<T>, "view", 0);
+    class_addmethod(class_pointer, (method)entrymatcher_view<T>, "dblclick", A_CANT, 0);
+    class_addmethod(class_pointer, (method)entrymatcher_view<T>, "open", 0);
     class_addmethod(class_pointer, (method)entrymatcher_save<T>, "write", A_DEFSYM, 0);
     class_addmethod(class_pointer, (method)entrymatcher_load<T>, "read", A_DEFSYM, 0);
 
