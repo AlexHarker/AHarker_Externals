@@ -8,13 +8,13 @@
 
 typedef struct _entry_database_viewer
 {
-    t_jbox          d_box;
-    t_object        *d_dataview;
-    t_object        *patcher;
-    EntryDatabase   *database;
-    bool            visible;
-
+    t_jbox              d_box;
+    t_object            *d_dataview;
+    t_object            *patcher;
+    EntryDatabase       *database;
+    bool                visible;
 } t_entry_database_viewer;
+
 
 void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv);
 void entry_database_viewer_free(t_entry_database_viewer *x);
@@ -26,6 +26,12 @@ void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabas
 void entry_database_viewer_buildview(t_entry_database_viewer *x);
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen);
 void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, long index, long *style, long *align);
+
+void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record2);
+
+long entry_database_viewer_idxsort(t_rowref a, t_rowref b);
+long entry_database_viewer_identifiersort(t_rowref a, t_rowref b);
+long entry_database_viewer_datasort(t_rowref a, t_rowref b);
 
 t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -44,6 +50,11 @@ void entry_database_viewer_init()
     
     class_addmethod(c, (method)entry_database_viewer_getcelltext, "getcelltext", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_getcellstyle, "getcellstyle", A_CANT, 0);
+
+    class_addmethod(c, (method)entry_database_viewer_sortdata, "sortdata", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_idxsort, "idxsort", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_identifiersort, "identifiersort", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_datasort, "datasort", A_CANT, 0);
     
     class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
@@ -138,8 +149,15 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
                     jcolumn_setwidth(column, 110);
                     jcolumn_setmaxwidth(column, 300);
                     jcolumn_setdraggable(column, 0);
-                    jcolumn_setsortable(column, 0);
+                    jcolumn_setsortable(column, 1);
                     jcolumn_setcelltextstylemsg(column, gensym("getcellstyle"));
+                    
+                    if (num_columns == 0 && i == 0)
+                        jcolumn_setcustomsort(column, gensym("idxsort"));
+                    else if (num_columns == 0 && i == 1)
+                        jcolumn_setcustomsort(column, gensym("identifiersort"));
+                    else
+                        jcolumn_setcustomsort(column, gensym("datasort"));
                 }
             }
             else
@@ -154,7 +172,6 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
 
         t_object *column = jdataview_getnthcolumn(x->d_dataview, 0);
         jcolumn_setlabel(column, gensym("#"));
-        //jcolumn_setnumeric(column, true);
 
         column = jdataview_getnthcolumn(x->d_dataview, 1);
         jcolumn_setlabel(column, gensym("identifier"));
@@ -163,7 +180,6 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
         {
             t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 2);
             jcolumn_setlabel(column, database->getColumnName(i));
-            //jcolumn_setnumeric(column, database->getColumnLabelMode(i));
         }
         
         // Update rows
@@ -255,3 +271,61 @@ void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *co
     *align = JCOLUMN_ALIGN_CENTER;
 }
 
+// Custom Sorting
+
+EntryDatabase *sort_database;
+static bool sort_direction;
+static bool sort_symbols;
+static long sort_column;
+
+long entry_database_viewer_idxsort(t_rowref a, t_rowref b)
+{
+    if (sort_direction)
+        return a > b;
+    else
+        return b > a;
+}
+
+long entry_database_viewer_identifiersort(t_rowref a, t_rowref b)
+{
+    EntryDatabase::ReadPointer database(sort_database);
+
+    long item1 = (long) a - 1;
+    long item2 = (long) b - 1;
+        
+    if (sort_direction)
+        return database->getEntryIdentifier(item1) > database->getEntryIdentifier(item2);
+    else
+        return database->getEntryIdentifier(item2) > database->getEntryIdentifier(item1);
+}
+
+long entry_database_viewer_datasort(t_rowref a, t_rowref b)
+{
+    EntryDatabase::ReadPointer database(sort_database);
+    
+    long item1 = (long) a - 1;
+    long item2 = (long) b - 1;
+    
+    if (sort_symbols)
+    {
+        if (sort_direction)
+            return strcmp(database->getData(item1, sort_column).mSymbol->s_name, database->getData(item2, sort_column).mSymbol->s_name) > 0;
+        else
+            return strcmp(database->getData(item1, sort_column).mSymbol->s_name, database->getData(item2, sort_column).mSymbol->s_name) < 0;
+    }
+    else
+    {
+        if (sort_direction)
+            return (database->getData(item1, sort_column).mValue > database->getData(item2, sort_column).mValue);
+        else
+            return database->getData(item2, sort_column).mValue > database->getData(item1, sort_column).mValue;
+    }
+}
+
+void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record)
+{
+    sort_column = std::stol(colname->s_name) - 2;
+    sort_database = x->database;
+    sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
+    sort_symbols = sort_column >= 0 ? sort_database->getColumnLabelMode(sort_column) : false;
+}

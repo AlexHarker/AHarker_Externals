@@ -112,6 +112,56 @@ struct CustomAtom
         return (a.mType < b.mType) ? kLess : kGreater;
     }
     
+    bool operator < (const CustomAtom& a)
+    {
+        Type type1 = mType == kTranslatedInt ? kDouble : mType;
+        Type type2 = a.mType == kTranslatedInt ? kDouble : a.mType;
+
+        if (type1 == type2)
+        {
+            switch (mType)
+            {
+                case kDouble:
+                case kTranslatedInt:  return mData.mValue < a.mData.mValue;
+                case kInt:            return mData.mInt < a.mData.mInt;
+                case kSymbol:         return strcmp(mData.mSymbol->s_name, a.mData.mSymbol->s_name) < 0;
+            }
+        }
+        
+        if (type1 == kSymbol) return true;
+        if (type2 == kSymbol) return false;
+        
+        if (type1 == kInt)
+            return mData.mInt < a.mData.mValue;
+        else
+            return mData.mValue < a.mData.mInt;
+    }
+    
+    bool operator > (const CustomAtom& a)
+    {
+        Type type1 = mType == kTranslatedInt ? kDouble : mType;
+        Type type2 = a.mType == kTranslatedInt ? kDouble : a.mType;
+        
+        if (type1 == type2)
+        {
+            switch (mType)
+            {
+                case kDouble:
+                case kTranslatedInt:  return mData.mValue > a.mData.mValue;
+                case kInt:            return mData.mInt > a.mData.mInt;
+                case kSymbol:         return strcmp(mData.mSymbol->s_name, a.mData.mSymbol->s_name) > 0;
+            }
+        }
+        
+        if (type1 == kSymbol) return false;
+        if (type2 == kSymbol) return true;
+        
+        if (type1 == kInt)
+            return mData.mInt > a.mData.mValue;
+        else
+            return mData.mValue > a.mData.mInt;
+    }
+    
     // Casts To Possible Types
 
     operator double() const         { return mData.mValue; }

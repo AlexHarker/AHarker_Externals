@@ -133,7 +133,9 @@ public:
     t_dictionary *saveDictionary(bool entriesAsOneKey) const;
     void loadDictionary(t_object *x, t_dictionary *dict);
 
+    inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
     inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
+    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
 
 private:
 
@@ -163,9 +165,6 @@ private:
         
         bool mPromoted;
     };
-    
-    inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
-    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
     
     void clear(HoldWriteLock &lock);
     void setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
