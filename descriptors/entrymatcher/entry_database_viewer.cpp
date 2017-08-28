@@ -27,7 +27,10 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x);
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, long index, char *text, long maxlen);
 void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, long index, long *style, long *align);
 
-void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record2);
+void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record);
+void entry_database_viewer_editstart(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr);
+void entry_database_viewer_editenter(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *newtext, char *newtext2);
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component);
 
 long entry_database_viewer_idxsort(t_rowref a, t_rowref b);
 long entry_database_viewer_identifiersort(t_rowref a, t_rowref b);
@@ -55,6 +58,10 @@ void entry_database_viewer_init()
     class_addmethod(c, (method)entry_database_viewer_idxsort, "idxsort", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_identifiersort, "identifiersort", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_datasort, "datasort", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_component, "component", A_CANT, 0);
+    
+    class_addmethod(c, (method)entry_database_viewer_editstart, "editstarted", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_editenter, "editentered", A_CANT, 0);
     
     class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
@@ -88,7 +95,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         x->d_dataview = (t_object *)jdataview_new();
         jdataview_setclient(x->d_dataview, (t_object *)x);
         jdataview_setcolumnheaderheight(x->d_dataview, 30);
-        jdataview_setheight(x->d_dataview, 16.0);
+        jdataview_setheight(x->d_dataview, 22.0);
         jdataview_setautosizeright(x->d_dataview, 1);
         jdataview_setautosizerightcolumn(x->d_dataview, 1);
         jdataview_setdragenabled(x->d_dataview, 0);
@@ -146,7 +153,8 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
                 for (long i = 0; i < column_difference; i++)
                 {
                     t_object *column = jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), NULL, true);
-                    jcolumn_setwidth(column, 110);
+                    jcolumn_setminwidth(column, 50);
+                    jcolumn_setwidth(column, 90);
                     jcolumn_setmaxwidth(column, 300);
                     jcolumn_setdraggable(column, 0);
                     jcolumn_setsortable(column, 1);
@@ -158,6 +166,15 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
                         jcolumn_setcustomsort(column, gensym("identifiersort"));
                     else
                         jcolumn_setcustomsort(column, gensym("datasort"));
+                    
+                    if ((num_columns + i) != 0)
+                    {
+                        jcolumn_setrowcomponentmsg(column, gensym("component"));
+                        t_jcolumn *col = (t_jcolumn*)column;
+                        //col->c_endmsg = gensym("editentered");
+                        col->c_editable = 1;
+                        col->c_endmsg = gensym("editentered");
+                    }
                 }
             }
             else
@@ -328,4 +345,19 @@ void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colnam
     sort_database = x->database;
     sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
     sort_symbols = sort_column >= 0 ? sort_database->getColumnLabelMode(sort_column) : false;
+}
+
+void entry_database_viewer_editstart(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr)
+{
+    jdataview_selectcell(x->d_dataview, colname, rr);
+}
+
+void entry_database_viewer_editenter(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *newtext, char *newtext2)
+{
+    
+}
+
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component)
+{
+    *component = JCOLUMN_COMPONENT_TEXTEDITOR;
 }
