@@ -28,9 +28,9 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
 void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, long index, long *style, long *align);
 
 void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record);
-void entry_database_viewer_editstart(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr);
-void entry_database_viewer_editenter(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *newtext, char *newtext2);
-void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component);
+
+void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv);
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component, long *options);
 
 long entry_database_viewer_idxsort(t_rowref a, t_rowref b);
 long entry_database_viewer_identifiersort(t_rowref a, t_rowref b);
@@ -60,8 +60,7 @@ void entry_database_viewer_init()
     class_addmethod(c, (method)entry_database_viewer_datasort, "datasort", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_component, "component", A_CANT, 0);
     
-    class_addmethod(c, (method)entry_database_viewer_editstart, "editstarted", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_editenter, "editentered", A_CANT, 0);
+    class_addmethod(c, (method)entry_database_viewer_celledited, "editvalue", A_CANT, 0);
     
     class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
@@ -167,13 +166,10 @@ void entry_database_viewer_buildview(t_entry_database_viewer *x)
                     else
                         jcolumn_setcustomsort(column, gensym("datasort"));
                     
-                    if ((num_columns + i) != 0)
+                    if ((num_columns + i) > 1)
                     {
                         jcolumn_setrowcomponentmsg(column, gensym("component"));
-                        t_jcolumn *col = (t_jcolumn*)column;
-                        //col->c_endmsg = gensym("editentered");
-                        col->c_editable = 1;
-                        col->c_endmsg = gensym("editentered");
+                        jcolumn_setvaluemsg(column, gensym("editvalue"), NULL, NULL);
                     }
                 }
             }
@@ -347,17 +343,27 @@ void entry_database_viewer_sortdata(t_entry_database_viewer *x, t_symbol *colnam
     sort_symbols = sort_column >= 0 ? sort_database->getColumnLabelMode(sort_column) : false;
 }
 
-void entry_database_viewer_editstart(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr)
+void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
 {
-    jdataview_selectcell(x->d_dataview, colname, rr);
-}
-
-void entry_database_viewer_editenter(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *newtext, char *newtext2)
-{
+    EntryDatabase::ReadPointer database(x->database);
+    long column = std::stol(colname->s_name) - 2;
+    long item = (long) rr - 1;
+    t_atom identifier;
     
+    database->getEntryIdentifier(&identifier, item);
+    database.destroy();
+    
+    x->database->replaceItem(&identifier, column, argv);
+    jdataview_redrawcell(x->d_dataview, colname, rr);
 }
 
-void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component)
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component, long *options)
 {
+    EntryDatabase::ReadPointer database(x->database);
+    
+    long column = std::stol(colname->s_name) - 2;
+    bool label = database->getColumnLabelMode(column);
+    
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
+    *options = label ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }

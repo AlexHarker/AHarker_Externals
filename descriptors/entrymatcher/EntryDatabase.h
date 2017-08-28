@@ -102,6 +102,7 @@ public:
     void setColumnLabelModes(void *x, long argc, t_atom *argv);
     void setColumnNames(void *x, long argc, t_atom *argv);
     void addEntry(void *x, long argc, t_atom *argv);
+    void replaceItem(t_atom *identifier, long column, t_atom *item);
     void removeEntries(void *x, long argc, t_atom *argv);
     void removeMatchedEntries(void *x, long argc, t_atom *argv);
     

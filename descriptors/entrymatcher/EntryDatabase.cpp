@@ -226,6 +226,26 @@ void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *ar
     }
 }
 
+// Replace one item
+
+void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
+{
+    HoldWriteLock lock(&mLock);
+
+    long order;
+    long idx = searchIdentifiers(identifier, order);
+    
+    if (idx < 0)
+        return;
+    
+    CustomAtom data = item;
+    
+    if (mColumns[column].mLabel == (data.mType == CustomAtom::kSymbol))
+        setData(idx, column, data);
+    else
+        return;
+}
+
 // Remove entries from identifiers (with read pointer - ugraded on next method call to write)
 
 void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
