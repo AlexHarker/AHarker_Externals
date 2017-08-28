@@ -1,10 +1,12 @@
 
-Dict passing
+Matchers for audio rate object
+Pick matching algorithm?
 Finalise stats
-Dataview/edit
 
-DONE	Notification of dirty for embedding  
-DONE	Threading and locking (including read promote to write
+PARTIAL		Dict passing
+DONE		Dataview/edit
+DONE		Notification of dirty for embedding  
+DONE		Threading and locking (including read promote to write
 
 Check all speeds (including remove/stats/lookup etc.)
 Clean up
