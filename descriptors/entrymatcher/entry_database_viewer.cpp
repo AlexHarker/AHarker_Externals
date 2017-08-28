@@ -99,6 +99,8 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setautosizeright(x->d_dataview, 1);
         jdataview_setautosizerightcolumn(x->d_dataview, 1);
         jdataview_setdragenabled(x->d_dataview, 0);
+        jdataview_setscrollvisible(x->d_dataview, 1, 1);
+
         x->visible = false;
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
@@ -173,6 +175,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                     
                     if ((num_columns + i) > 1)
                     {
+                        jcolumn_sethideable(column, 1);
                         jcolumn_setrowcomponentmsg(column, gensym("component"));
                         jcolumn_setvaluemsg(column, gensym("editvalue"), NULL, NULL);
                     }
