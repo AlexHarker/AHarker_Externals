@@ -14,6 +14,7 @@ typedef struct _entry_database_viewer
     t_object            *patcher;
     EntryDatabase       *database;
     bool                visible;
+    bool                in_edit;
     t_atom              edit_identifier;
     
     bool sort_direction;
@@ -30,14 +31,14 @@ void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object 
 
 void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database);
 void entry_database_viewer_update(t_entry_database_viewer *x);
-void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int index, char *text, long maxlen);
-void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int index, long *style, long *align);
+void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr);
+void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
+void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *style, long *align);
 
 void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record);
 
-void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr);
-void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long argc, t_atom *argv);
-void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long *component, long *options);
+void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv);
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component, long *options);
 
 t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -102,9 +103,12 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setautosizeright(x->d_dataview, 1);
         jdataview_setautosizerightcolumn(x->d_dataview, 1);
         jdataview_setdragenabled(x->d_dataview, 0);
+        jdataview_setscrollvisible(x->d_dataview, 1, 1);
+
         x->visible = false;
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
+        x->in_edit = false;
         atom_setobj(&x->edit_identifier, NULL);
         
         attr_dictionary_process(x, d);
@@ -143,7 +147,7 @@ void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabas
 
 void entry_database_viewer_update(t_entry_database_viewer *x)
 {
-    if (x->database && x->visible)
+    if (x->database && x->visible && !x->in_edit)
     {
         EntryDatabase::ReadPointer database(x->database);
         
@@ -174,6 +178,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                     
                     if ((num_columns + i) > 1)
                     {
+                        jcolumn_sethideable(column, 1);
                         jcolumn_setrowcomponentmsg(column, gensym("component"));
                         jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), NULL);
                     }
@@ -217,7 +222,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                 long row_difference = num_items - num_rows;
                 std::vector<t_rowref> rowrefs(row_difference);
                 for (long i = 0; i < row_difference; i++)
-                    rowrefs[i] = (t_rowref)(i+1 + num_rows);
+                    rowrefs[i] = (t_rowref)(1 + i + num_rows);
                 jdataview_addrows(x->d_dataview, row_difference, &rowrefs[0]);
             }
             else
@@ -225,7 +230,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                 long row_difference = num_rows - num_items;
                 t_rowref *rowrefs = (t_rowref *)malloc(sizeof(t_rowref) * row_difference);
                 for (long i = 0; i < row_difference; i++)
-                    rowrefs[i] = (t_rowref *)(i+1 + num_items);
+                    rowrefs[i] = (t_rowref *)(1 + i + num_items);
                 jdataview_deleterows(x->d_dataview, row_difference, &rowrefs[0]);
             }
         }
@@ -270,86 +275,91 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
     
     return jbox_notify((t_jbox *)x, s, msg, sender, data);
 }
+// Convenience Mappers
+
+t_ptr_int map_rowref(t_entry_database_viewer *x, t_rowref rr)
+{
+    t_ptr_int index = (t_ptr_int) rr - 1;
+    
+    if (index >= x->indices.size())
+        return index;
+    else if (x->sort_direction)
+        return x->indices[index];
+    else
+        return x->indices[x->indices.size() - index - 1];
+}
+
+long map_colname(t_symbol *colname)
+{
+    return std::stol(colname->s_name) - 2;
+}
 
 // Cell behaviours
 
-t_ptr_int mapIndex(t_entry_database_viewer *x, t_ptr_int index)
-{
-    index -= 1;
-    if (index < x->indices.size())
-    {
-        if (x->sort_direction)
-            index = x->indices[index];
-        else
-            index = x->indices[x->indices.size() - index - 1];
-    }
-    return index;
-}
-
-void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int index, char *text, long maxlen)
+void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *text, long maxlen)
 {
     if (x->database)
     {
         EntryDatabase::ReadPointer database(x->database);
+        long column = map_colname(colname);
+        t_ptr_int index = map_rowref(x, rr);
         std::string str;
-        
-        long column = std::stol(colname->s_name);
-        index = mapIndex(x, index);
-        
-        if (column == 0)
+
+        if (column == -2)
             str = std::to_string(index + 1);
-        else if (column == 1)
+        else if (column == -1)
             str = database->getEntryIdentifier(index).getString();
         else
-            str = database->getTypedData(index, column - 2).getString();
+            str = database->getTypedData(index, column).getString();
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }
 }
 
-void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int index, long *style, long *align)
+void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *style, long *align)
 {
     *style = (colname == gensym("0")) ? JCOLUMN_STYLE_ITALIC : JCOLUMN_STYLE_PLAIN;
     *align = JCOLUMN_ALIGN_CENTER;
 }
 
-void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr)
+void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr)
 {
     EntryDatabase::ReadPointer database(x->database);
-    t_ptr_int index = mapIndex(x, rr);
+    t_ptr_int index = map_rowref(x, rr);
     
+    x->in_edit = true;
     database->getEntryIdentifier(&x->edit_identifier, index);
 }
 
-void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long argc, t_atom *argv)
+void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
 {
-    long column = std::stol(colname->s_name) - 2;
+    long column = map_colname(colname);
     
     if (argc)
         x->database->replaceItem(&x->edit_identifier, column, argv);
-    jdataview_redrawcell(x->d_dataview, colname, (t_rowref) rr);
+    jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, NULL);
+    x->in_edit = false;
+    
+    entry_database_viewer_update(x);
 }
 
-void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long *component, long *options)
+void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component, long *options)
 {
     EntryDatabase::ReadPointer database(x->database);
     
-    long column = std::stol(colname->s_name) - 2;
-    bool label = database->getColumnLabelMode(column);
-    
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
-    *options = label ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
+    *options = database->getColumnLabelMode(map_colname(colname)) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }
 
 void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record)
 {
-    long sort_column = std::stol(colname->s_name) - 2;
     x->sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
+    long column = map_colname(colname);
     
     EntryDatabase::ReadPointer database = EntryDatabase::ReadPointer(x->database);
     
-    if (x->indices.size() != database->numItems() || sort_column == -2)
+    if (x->indices.size() != database->numItems() || column == -2)
     {
         x->indices.resize(database->numItems());
     
@@ -357,7 +367,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
             x->indices[i] = i;
     }
     
-    if (sort_column == -1)
+    if (column == -1)
     {
         struct Getter
         {
@@ -369,9 +379,9 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         Getter getter(x->database);
         sort(x->indices, database->numItems(), getter);
     }
-    else if (sort_column >= 0)
+    else if (column >= 0)
     {
-        if (database->getColumnLabelMode(sort_column) )
+        if (database->getColumnLabelMode(column))
         {
             struct Getter : public EntryDatabase::RawAccessor
             {
@@ -380,7 +390,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
                 long mColumn;
             };
             
-            Getter getter(sort_column, *x->database);
+            Getter getter(column, *x->database);
             sort(x->indices, database->numItems(), getter);
         }
         else
@@ -392,7 +402,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
                 long mColumn;
             };
             
-            Getter getter(sort_column, *x->database);
+            Getter getter(column, *x->database);
             sort(x->indices, database->numItems(), getter);
         }
     }
