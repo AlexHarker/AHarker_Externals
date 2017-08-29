@@ -312,6 +312,3 @@ NotifyPointer database_getptr_write(t_object *database_object)
     t_entry_database *obj = (t_entry_database *) database_object;
     return NotifyPointer(&obj->database, (t_object *) obj);
 }
-
-
-

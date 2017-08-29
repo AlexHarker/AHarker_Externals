@@ -91,6 +91,8 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
     
     if (x)
     {
+        new(x) t_entry_database_viewer;
+        
         long flags =  JBOX_NODRAWBOX | JBOX_GROWBOTH | JBOX_NOFLOATINSPECTOR;
         
         jbox_new(&x->d_box, flags, argc, argv);
@@ -104,7 +106,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setautosizerightcolumn(x->d_dataview, 1);
         jdataview_setdragenabled(x->d_dataview, 0);
         jdataview_setscrollvisible(x->d_dataview, 1, 1);
-
+     
         x->visible = false;
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
@@ -112,8 +114,6 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         atom_setobj(&x->edit_identifier, NULL);
         
         attr_dictionary_process(x, d);
-
-        new(&x->indices)std::vector<long>;
 
         jbox_ready(&x->d_box);
         
@@ -123,8 +123,8 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
 
 void entry_database_viewer_free(t_entry_database_viewer *x)
 {
-    x->indices.~vector<long>();
     jbox_free(&x->d_box);
+    x->~t_entry_database_viewer();
 }
 
 void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview)
