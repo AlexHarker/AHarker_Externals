@@ -5,6 +5,7 @@ Finalise stats
 
 PARTIAL		Dict passing
 DONE		Dataview/edit
+		- edit whilst data is being added/changing…
 DONE		Notification of dirty for embedding  
 DONE		Threading and locking (including read promote to write
 

@@ -14,6 +14,7 @@ typedef struct _entry_database_viewer
     t_object            *patcher;
     EntryDatabase       *database;
     bool                visible;
+    t_atom              edit_identifier;
     
     bool sort_direction;
     std::vector<long> indices;
@@ -34,6 +35,7 @@ void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *co
 
 void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record);
 
+void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr);
 void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long argc, t_atom *argv);
 void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long *component, long *options);
 
@@ -61,6 +63,7 @@ void entry_database_viewer_init()
     class_addmethod(c, (method)entry_database_viewer_dummycompare, "nevercalled", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_component, "component", A_CANT, 0);
     
+    class_addmethod(c, (method)entry_database_viewer_editstarted, "editstarted", A_CANT, 0);
     class_addmethod(c, (method)entry_database_viewer_celledited, "editvalue", A_CANT, 0);
     
     class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
@@ -102,6 +105,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         x->visible = false;
         x->database = NULL;
         x->patcher = gensym("#P")->s_thing;
+        atom_setobj(&x->edit_identifier, NULL);
         
         attr_dictionary_process(x, d);
 
@@ -161,20 +165,17 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                     jcolumn_setmaxwidth(column, 300);
                     jcolumn_setdraggable(column, 0);
                     jcolumn_setsortable(column, 1);
-                    jcolumn_setoverridesort(column, 1);
                     jcolumn_setcelltextstylemsg(column, gensym("getcellstyle"));
                     
+                    // N.B. - custom sort must be set in order to override...
+                    
                     jcolumn_setcustomsort(column, gensym("nevercalled"));
-                    if (num_columns == 0 && i == 0)
-                    {
-                        // FIX - doesn't seem to work...
-                        jcolumn_setinitiallysorted(column, JCOLUMN_INITIALLYSORTED_FORWARDS);
-                    }
+                    jcolumn_setoverridesort(column, 1);
                     
                     if ((num_columns + i) > 1)
                     {
                         jcolumn_setrowcomponentmsg(column, gensym("component"));
-                        jcolumn_setvaluemsg(column, gensym("editvalue"), NULL, NULL);
+                        jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), NULL);
                     }
                 }
             }
@@ -229,7 +230,12 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
             }
         }
         
-        jdataview_resort(x->d_dataview);
+        // FIX - doesn't work - why not?
+        
+        if (num_columns == 0)
+            jdataview_sort(x->d_dataview, gensym("0"), 1);
+        else
+            jdataview_resort(x->d_dataview);
     }
 }
 
@@ -307,20 +313,22 @@ void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *co
     *align = JCOLUMN_ALIGN_CENTER;
 }
 
-void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long argc, t_atom *argv)
+void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr)
 {
     EntryDatabase::ReadPointer database(x->database);
-    long column = std::stol(colname->s_name) - 2;
-    t_atom identifier;
     t_ptr_int index = mapIndex(x, rr);
     
-    // FIX - it's non ideal to do this this way - maybe I should pick the edit identifier up when the edit starts?
-    database->getEntryIdentifier(&identifier, index);
-    database.destroy();
+    database->getEntryIdentifier(&x->edit_identifier, index);
+}
+
+void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long argc, t_atom *argv)
+{
+    long column = std::stol(colname->s_name) - 2;
     
     if (argc)
-        x->database->replaceItem(&identifier, column, argv);
+        x->database->replaceItem(&x->edit_identifier, column, argv);
     jdataview_redrawcell(x->d_dataview, colname, (t_rowref) rr);
+    atom_setobj(&x->edit_identifier, NULL);
 }
 
 void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_ptr_int rr, long *component, long *options)
