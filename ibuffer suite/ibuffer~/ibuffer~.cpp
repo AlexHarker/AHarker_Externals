@@ -73,8 +73,9 @@ void *ibuffer_new (t_symbol *name, t_symbol *path_sym)
 	dsp_setup((t_pxobject *)x, 0);
 	
 	x->name = 0;
-	x->valid = 0;
-	x->thebuffer = 0;
+	x->valid = 1;
+	x->thebuffer = NULL;
+    x->samples = NULL;
 	x->frames = 0;
 	x->channels = 0;
 	x->format = 0;
@@ -158,13 +159,46 @@ void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		defer(x, (method) ibuffer_doload, s, argc, argv);
 }
 
+struct ibuffer_lock
+{
+    ibuffer_lock(t_ibuffer *x, HISSTools::Utility::IAudioFile *file) : m_ibuffer(x), m_file(file)
+    {
+        // Set invalid and wait till we can become the only user
+
+        while (!ATOMIC_COMPARE_SWAP32(1, 0, &x->valid));
+        while (!ATOMIC_COMPARE_SWAP32(0, 1, &x->inuse));
+    }
+    
+    ~ibuffer_lock()
+    {
+        destroy();
+    }
+    
+    void destroy()
+    {
+        // Set the buffer as valid and decrement the usage count
+        
+        if (m_ibuffer)
+        {
+            while (!ATOMIC_COMPARE_SWAP32(0, 1, &m_ibuffer->valid));
+            ATOMIC_DECREMENT_BARRIER(&m_ibuffer->inuse);
+        }
+        
+        if (m_file)
+            m_file->close();
+        
+        m_ibuffer = NULL;
+        m_file = NULL;
+    }
+    
+    t_ibuffer *m_ibuffer;
+    HISSTools::Utility::IAudioFile *m_file;
+};
 
 void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
 	double sr;
 	
-	char prev_valid = x->valid;
-	char endianness_swap = 0;
 	char null_char = 0;
 	
 	char filename[2048];
@@ -188,8 +222,6 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	short path = 0;
 	short err;
 	
-	UInt8 swap;
-	UInt8 *data;
 	UInt8 *load_temp;
 	UInt8 *channels_swap;
 	
@@ -199,19 +231,6 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	
 	t_symbol *path_sym = atom_getsym(argv++);
 	argc--;
-	
-	// Set the ibuffer as invalid
-	
-	x->valid = 0;
-
-	// Check if in use (can't replace when in use)
-
-	if (ATOMIC_INCREMENT_BARRIER(&x->inuse) > 1) 
-	{
-		object_error((t_object *) x, "ibuffer~: in use - cannot replace contents");
-		x->valid = prev_valid;
-		return;
-	}
 	
 	if (path_sym)
 	{
@@ -258,14 +277,18 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 			strcpy(fullname + i, filename);
 
-			// Try to open the file using libsndfile
-			
+			// Try to open the file
+            
             file.open(fullname);
         }
 	}
-		
-	// Load the format data and if we have a valid format load the sample
-	
+    
+    // Lock the ibuffer (automatically releases on return)
+    
+    // Load the format data and if we have a valid format load the sample
+
+    ibuffer_lock lock(x, &file);
+    
 	if (file.isOpen())
 	{		
 		// Get sample info 
@@ -297,20 +320,10 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
                 break;
                 
             default:
-				sample_size = 0;
-				break;
+                object_error((t_object *) x, "ibuffer~: incorrect sample format");
+                return;
 		}
 
-        // Bail if incorrect format
-        
-        if (!sample_size)
-        {
-            object_error((t_object *) x, "ibuffer~: incorrect sample format");
-            ATOMIC_DECREMENT_BARRIER(&x->inuse);
-            file.close();
-            return;
-        }
-        
 		// Sort channels to load (assume all)
 		// Only allow 4 channels max
 		
@@ -328,15 +341,13 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		free (x->thebuffer);
 		x->thebuffer = calloc(sample_size, (frames * channels_to_load + 64));
 		x->samples = (void *)((char *) x->thebuffer + (16 * sample_size));
-		data = (UInt8 *)x->samples;
+        UInt8 *data = (UInt8 *)x->samples;
 		
 		// Bail if no memory
 		
 		if (!x->thebuffer)
 		{
 			object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
-			ATOMIC_DECREMENT_BARRIER(&x->inuse);
-            file.close();
             return;
 		}
 		
@@ -348,13 +359,11 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		{
 			// Here we load in chunks to some temporary memory and then copy out ony the relevant channels
 			
-			load_temp = (UInt8 *)malloc(DEFAULT_WORK_CHUNK * sample_size * channels);
+			load_temp = (UInt8 *) malloc(DEFAULT_WORK_CHUNK * sample_size * channels);
 			
 			if (!load_temp) 
 			{
 				object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
-				ATOMIC_DECREMENT_BARRIER(&x->inuse);
-                file.close();
                 return;
 			}
 			
@@ -381,57 +390,37 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 			
 			free(load_temp);
 			channels = channels_to_load;
-			data = (UInt8 *)x->samples;
 		}
 		
 		// If the samples are in the wrong endianness then reverse the byte order for each sample 
 		
 #if (TARGET_RT_LITTLE_ENDIAN || defined (WIN_VERSION))	
-        if (file.getHeaderEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileBigEndian)
-			endianness_swap = 1;
+        if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileBigEndian)
 #else
-        if (file.getHeaderEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileLittleEndian)
-			endianness_swap = 1;
+        if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileLittleEndian)
 #endif
-		
-		if (endianness_swap)
 		{
 			switch (format)
 			{
 				case PCM_INT_16:
 					
-					for (i = 0; i < frames * channels; i++)
-					{
-						swap = data[1];
-						data[1] = data[0];
-						data[0] = swap;
-						data += 2;
-					}
+					for (i = 0; i < frames * channels; i++, data += 2)
+                        std::swap(data[0], data[1]);
 					break;
 					
 				case PCM_INT_24:
 					
-					for (i = 0; i < frames * channels; i++)
-					{
-						swap = data[2];
-						data[2] = data[0];
-						data[0] = swap;
-						data += 3;
-					}
+					for (i = 0; i < frames * channels; i++, data += 3)
+                        std::swap(data[0], data[2]);
 					break;
 					
 				case PCM_INT_32:
 				case PCM_FLOAT:
 					
-					for (i = 0; i < frames * channels; i++)
+					for (i = 0; i < frames * channels; i++, data += 4)
 					{
-						swap = data[3];
-						data[3] = data[0];
-						data[0] = swap; 
-						swap = data[2];
-						data[2] = data[1];
-						data[1] = swap;
-						data += 4;
+                        std::swap(data[0], data[3]);
+                        std::swap(data[1], data[2]);
 					}
 					break;
 			}
@@ -444,17 +433,14 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		x->channels = channels;
 		x->format = format;
 		
-		// File is now loaded - set the buffer to valid and bang (must be in this order!)
+		// File is now loaded - destroy the lock and bang (must be in this order!)
 		
-		x->valid = 1;
+        lock.destroy();
 		outlet_bang(x->bang_out);		
 	}
 	else 
 	{
 		object_error((t_object *) x, "ibuffer~: could not find / open named file");
 	}
-	
-	ATOMIC_DECREMENT_BARRIER(&x->inuse);
-    file.close();
 }
 
