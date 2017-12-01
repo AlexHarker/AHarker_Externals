@@ -31,7 +31,7 @@ void FFT_FUNC_NAME(fft_fill_table) (FFT_SPLIT_TYPE *table, HstFFT_UInt length)
 
 FFT_SETUP_TYPE *FFT_FUNC_NAME(create_setup) (HstFFT_UInt max_fft_log2) 
 {
-	FFT_SETUP_TYPE *setup = ALIGNED_MALLOC(sizeof(FFT_SETUP_TYPE));
+	FFT_SETUP_TYPE *setup = (FFT_SETUP_TYPE *) ALIGNED_MALLOC(sizeof(FFT_SETUP_TYPE));
 	HstFFT_UInt i;
 		
 	// Check for SSE here (this must be called anyway before doing an FFT)
@@ -44,7 +44,7 @@ FFT_SETUP_TYPE *FFT_FUNC_NAME(create_setup) (HstFFT_UInt max_fft_log2)
 	{
 		HstFFT_UInt length = (HstFFT_UInt) 1 << (i - 1);
 		
-		setup->tables[i - FFTLOG2_TRIG_OFFSET].realp = ALIGNED_MALLOC(sizeof(double) * 2 * length);
+		setup->tables[i - FFTLOG2_TRIG_OFFSET].realp = (FFT_TYPE *) ALIGNED_MALLOC(sizeof(FFT_TYPE) * 2 * length);
 		setup->tables[i - FFTLOG2_TRIG_OFFSET].imagp = setup->tables[i - FFTLOG2_TRIG_OFFSET].realp + length;
 		
 		FFT_FUNC_NAME(fft_fill_table) (&setup->tables[i - FFTLOG2_TRIG_OFFSET], length);
