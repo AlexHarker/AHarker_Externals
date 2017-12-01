@@ -300,16 +300,16 @@ void ibuffer_fetch_samps (void *out, void *samps, AH_SIntPtr *offsets, AH_SIntPt
 	switch (format)
 	{
 		case PCM_INT_16:
-			ibuffer_fetch_samps_16 (out, ((AH_SInt16 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) out, ((AH_SInt16 *) samps) + chan, offsets, n_samps);
 			break;
 		case PCM_INT_24:
-			ibuffer_fetch_samps_24 (out, (AH_SInt8 *) samps + (3 * chan), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) out, (AH_SInt8 *) samps + (3 * chan), offsets, n_samps);
 			break;
 		case PCM_INT_32:
-			ibuffer_fetch_samps_32 (out, ((AH_SInt32 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) out, ((AH_SInt32 *) samps) + chan, offsets, n_samps);
 			break;
 		case PCM_FLOAT:
-			ibuffer_fetch_samps_float (out, (float *) samps + chan, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) out, (float *) samps + chan, offsets, n_samps);
 			break;
 	}
 }
@@ -319,20 +319,20 @@ void ibuffer_fetch_samps_2 (void **temp, void *samps, AH_SIntPtr *offsets, AH_SI
 	switch (format)
 	{
 		case PCM_INT_16:
-			ibuffer_fetch_samps_16 (temp[0], ((AH_SInt16 *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_16 (temp[1], ((AH_SInt16 *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[0], ((AH_SInt16 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[1], ((AH_SInt16 *) samps) + chan + n_chans, offsets, n_samps);
 			break;
 		case PCM_INT_24:
-			ibuffer_fetch_samps_24 (temp[0], ((AH_SInt8 *) samps) + (3 * chan), offsets, n_samps);
-			ibuffer_fetch_samps_24 (temp[1], ((AH_SInt8 *) samps) + (3 * (chan + n_chans)), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[0], ((AH_SInt8 *) samps) + (3 * chan), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[1], ((AH_SInt8 *) samps) + (3 * (chan + n_chans)), offsets, n_samps);
 			break;
 		case PCM_INT_32:
-			ibuffer_fetch_samps_32 (temp[0], ((AH_SInt32 *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_32 (temp[1], ((AH_SInt32 *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[0], ((AH_SInt32 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[1], ((AH_SInt32 *) samps) + chan + n_chans, offsets, n_samps);
 			break;
 		case PCM_FLOAT:
-			ibuffer_fetch_samps_float (temp[0], ((float *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_float (temp[1], ((float *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[0], ((float *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[1], ((float *) samps) + chan + n_chans, offsets, n_samps);
 			break;
 	}
 }
@@ -342,28 +342,28 @@ void ibuffer_fetch_samps_4 (void **temp, void *samps, AH_SIntPtr *offsets, AH_SI
 	switch (format)
 	{
 		case PCM_INT_16:
-			ibuffer_fetch_samps_16 (temp[0], ((AH_SInt16 *) samps) + chan - n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_16 (temp[1], ((AH_SInt16 *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_16 (temp[2], ((AH_SInt16 *) samps) + chan + n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_16 (temp[3], ((AH_SInt16 *) samps) + chan + (n_chans << 1), offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[0], ((AH_SInt16 *) samps) + chan - n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[1], ((AH_SInt16 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[2], ((AH_SInt16 *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_16 ((AH_SInt32 *) temp[3], ((AH_SInt16 *) samps) + chan + (n_chans << 1), offsets, n_samps);
 			break;
 		case PCM_INT_24:
-			ibuffer_fetch_samps_24 (temp[0], ((AH_SInt8 *) samps) + (3 * (chan - n_chans)), offsets, n_samps);
-			ibuffer_fetch_samps_24 (temp[1], ((AH_SInt8 *) samps) + (3 * chan), offsets, n_samps);
-			ibuffer_fetch_samps_24 (temp[2], ((AH_SInt8 *) samps) + (3 * (chan + n_chans)), offsets, n_samps);
-			ibuffer_fetch_samps_24 (temp[3], ((AH_SInt8 *) samps) + (3 * (chan + (n_chans << 1))), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[0], ((AH_SInt8 *) samps) + (3 * (chan - n_chans)), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[1], ((AH_SInt8 *) samps) + (3 * chan), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[2], ((AH_SInt8 *) samps) + (3 * (chan + n_chans)), offsets, n_samps);
+			ibuffer_fetch_samps_24 ((AH_SInt32 *) temp[3], ((AH_SInt8 *) samps) + (3 * (chan + (n_chans << 1))), offsets, n_samps);
 			break;
 		case PCM_INT_32:
-			ibuffer_fetch_samps_32 (temp[0], ((AH_SInt32 *) samps) + chan - n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_32 (temp[1], ((AH_SInt32 *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_32 (temp[2], ((AH_SInt32 *) samps) + chan + n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_32 (temp[3], ((AH_SInt32 *) samps) + chan + (n_chans << 1), offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[0], ((AH_SInt32 *) samps) + chan - n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[1], ((AH_SInt32 *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[2], ((AH_SInt32 *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_32 ((AH_SInt32 *) temp[3], ((AH_SInt32 *) samps) + chan + (n_chans << 1), offsets, n_samps);
 			break;
 		case PCM_FLOAT:
-			ibuffer_fetch_samps_float (temp[0], ((float *) samps) + chan - n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_float (temp[1], ((float *) samps) + chan, offsets, n_samps);
-			ibuffer_fetch_samps_float (temp[2], ((float *) samps) + chan + n_chans, offsets, n_samps);
-			ibuffer_fetch_samps_float (temp[3], ((float *) samps) + chan + (n_chans << 1), offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[0], ((float *) samps) + chan - n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[1], ((float *) samps) + chan, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[2], ((float *) samps) + chan + n_chans, offsets, n_samps);
+			ibuffer_fetch_samps_float ((float *) temp[3], ((float *) samps) + chan + (n_chans << 1), offsets, n_samps);
 			break;
 	}
 }
@@ -427,8 +427,8 @@ void ibuffer_lin_interp_float (vFloat *out,  void **inbuffers, vFloat *fracts, A
 
 void ibuffer_lin_interp_int_to_float(vFloat *out, void **inbuffers, vFloat *fracts, AH_SIntPtr n_samps_over_4, float mul)
 {		
-    vSInt32 *in1 = inbuffers[0];
-	vSInt32 *in2 = inbuffers[1];
+    vSInt32 *in1 = (vSInt32 *) inbuffers[0];
+	vSInt32 *in2 = (vSInt32 *) inbuffers[1];
 	
 	vFloat scale = float2vector (TWO_POW_31_RECIP * mul);
 	vFloat y0, y1;	

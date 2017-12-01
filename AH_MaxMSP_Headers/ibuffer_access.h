@@ -87,6 +87,24 @@ enum {
 	
 };
 
+
+#define MASK_16_BIT             0xFFFF0000
+#define MASK_24_BIT             0xFFFFFF00
+
+#ifdef _APPLE_
+#define TWO_POW_31_RECIP            0x1.0fp-31f
+#define TWO_POW_31_RECIP_DOUBLE     0x1.0fp-31
+#else
+#define TWO_POW_31_RECIP            0.000000000465661287f
+#define TWO_POW_31_RECIP_DOUBLE     0.00000000046566128730773925
+#endif
+
+
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+    
 // Call in main routine to initialise buffer symbols
 
 void ibuffer_init ();
@@ -160,6 +178,10 @@ void ibuffer_double_samps_scalar_cubic_bspline (void *samps, double *out, AH_SIn
 void ibuffer_double_samps_scalar_cubic_hermite (void *samps, double *out, AH_SIntPtr *offsets, double *fracts, AH_SIntPtr n_samps, long n_chans, long chan, long format, double mul);
 void ibuffer_double_samps_scalar_cubic_lagrange (void *samps, double *out, AH_SIntPtr *offsets, double *fracts, AH_SIntPtr n_samps, long n_chans, long chan, long format, double mul);
 
+#if defined(__cplusplus)
+}
+#endif
+        
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////// Get ibuffer and related info //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +210,7 @@ static __inline long ibuffer_info (void *thebuffer, void **samples, AH_SIntPtr *
 	
 	if (ob_sym(thebuffer) == ps_buffer)
 	{
-		t_buffer *buffer = thebuffer;
+		t_buffer *buffer = (t_buffer *) thebuffer;
 		if (buffer->b_valid)
 		{
 			*samples = (void *) buffer->b_samples;
@@ -200,7 +222,7 @@ static __inline long ibuffer_info (void *thebuffer, void **samples, AH_SIntPtr *
 	}
 	else
 	{
-		t_ibuffer *buffer = thebuffer;
+		t_ibuffer *buffer = (t_ibuffer *) thebuffer;
 		if (buffer->valid)
 		{
 			*samples = buffer->samples;
@@ -308,7 +330,7 @@ static __inline double ibuffer_double_get_samp (void *samps, AH_SIntPtr offset, 
 
 static __inline void *ibuffer_offset (void *samps, AH_SIntPtr offset, long n_chans, long format) FORCE_INLINE_DEFINITION
 {
-	AH_SInt8 *samps_temp = samps;
+	AH_SInt8 *samps_temp = (AH_SInt8 *) samps;
 	
 	switch (format)
 	{		
