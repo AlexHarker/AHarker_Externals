@@ -350,7 +350,7 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 }
 
 
-void ibufconcatenate_entry (t_ibufconcatenate *x, double start, double end)
+void ibufconcatenate_entry(t_ibufconcatenate *x, double start, double end)
 {
 	void *target;
 
@@ -604,9 +604,9 @@ void ibufconcatenate_perform64 (t_ibufconcatenate *x, t_object *dsp64, double **
 			start = starts[item - 1];
 			end = ends[item - 1];
 			*start_lo_res++ = start;
-			*start_hi_res++ = 0.;
+			*start_hi_res++ = 0.0;
 			*end_lo_res++ = end;
-			*end_hi_res++ = 0.;
+			*end_hi_res++ = 0.0;
 		}	
 	}
 }

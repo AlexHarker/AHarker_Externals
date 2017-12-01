@@ -50,7 +50,7 @@ namespace HISSTools
             BaseAudioFile::close();
             if (mBuffer)
             {
-                delete mBuffer;
+                delete[] mBuffer;
                 mBuffer = NULL;
             }
         }
@@ -549,7 +549,7 @@ namespace HISSTools
             
             // Check that all relevant chunks were found
             
-            if (formatCheck != formatValid)
+            if ((~formatCheck) & formatValid)
             {
                 setErrorBit(ERR_FILE_BAD_FORMAT);
                 return;

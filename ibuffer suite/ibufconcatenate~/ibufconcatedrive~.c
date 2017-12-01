@@ -29,9 +29,8 @@ typedef struct _ibufconcatedrive
 {
     t_pxobject x_obj;
 	
+    double sr_const;
 	double accum;
-	double sr_const;
-	
 	double lo;
 	double hi;
 	
@@ -256,7 +255,7 @@ void ibufconcatedrive_perform64 (t_ibufconcatedrive *x, t_object *dsp64, double 
 			if (item < 1 || item > num_items)
 			{
 				lo = 0.;
-				hi = FLT_MAX;
+				hi = DBL_MAX;
 			}
 			else 
 			{
@@ -344,6 +343,3 @@ void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, cha
 		}
 	}
 }
-
-
-

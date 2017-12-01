@@ -1,5 +1,5 @@
-#ifndef IAudioFile_hpp
-#define IAudioFile_hpp
+#ifndef _HISSTOOLS_IAUDIOFILE_
+#define _HISSTOOLS_IAUDIOFILE_
 
 #include "BaseAudioFile.h"
 #include <fstream>
