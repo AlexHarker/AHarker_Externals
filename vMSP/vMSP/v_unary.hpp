@@ -165,9 +165,7 @@ public:
     template <class T>
     static void perform_array(t_int *w)
     {
-        T *x = reinterpret_cast<T *>(w[5]);
-
-        x->m_functor(reinterpret_cast<float *>(w[3]), reinterpret_cast<float *>(w[2]), static_cast<long>(w[4]));
+        Functor()(reinterpret_cast<float *>(w[3]), reinterpret_cast<float *>(w[2]), static_cast<long>(w[4]));
     }
     
     // 32 bit perform routine (SIMD - op)
@@ -238,15 +236,13 @@ public:
     template <class T, int N>
     static void perform64_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        Functor &functor = x->m_functor;
-
         SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
         vec_size /= SIMDType<double, N>::size;
             
         while (vec_size--)
-            *out1++ = functor(*in1++);
+            *out1++ = Functor()(*in1++);
     }
     
     // Assist routine

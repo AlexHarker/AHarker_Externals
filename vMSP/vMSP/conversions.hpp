@@ -34,3 +34,40 @@ static __inline void f64_mul_const_array(double *io, long length, double constan
 {
     f64_mul_const_array(io, io, length, constant);
 }
+
+
+static __inline void f32_mul_const_array(float *o, float *i, long length, float mul, float add)
+{
+    SIMDType<float, 8> *v_o = reinterpret_cast<SIMDType<float, 8> *>(o);
+    SIMDType<float, 8> *v_i = reinterpret_cast<SIMDType<float, 8> *>(i);
+    SIMDType<float, 8>  v_mul(mul);
+    SIMDType<float, 8>  v_add(add);
+    
+    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
+    
+    for (; length > 0; length -= 8)
+        *v_o++ =  *v_i++ * v_mul + v_add;
+}
+
+static __inline void f64_mul_const_array(double *o, double *i, long length, double mul, double add)
+{
+    SIMDType<double, 4> *v_o = reinterpret_cast<SIMDType<double, 4> *>(o);
+    SIMDType<double, 4> *v_i = reinterpret_cast<SIMDType<double, 4> *>(i);
+    SIMDType<double, 4>  v_mul(mul);
+    SIMDType<double, 4>  v_add(add);
+    
+    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
+    
+    for (; length > 0; length -= 4)
+        *v_o++ =  *v_i++ * v_mul + v_add;
+}
+
+static __inline void f32_mul_const_array(float *io, long length, float mul, float add)
+{
+    f32_mul_const_array(io, io, length, mul, add);
+}
+
+static __inline void f64_mul_const_array(double *io, long length, double mul, double add)
+{
+    f64_mul_const_array(io, io, length, mul, add);
+}

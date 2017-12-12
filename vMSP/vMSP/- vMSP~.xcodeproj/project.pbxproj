@@ -145,7 +145,7 @@
 		B8E4954F1095AD7900A88A63 /* vlessthaneq~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493F31095AA4F00A88A63 /* vlessthaneq~.cpp */; };
 		B8E495501095AD8400A88A63 /* vgreaterthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */; };
 		B8E495511095AD8D00A88A63 /* vlessthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */; };
-		B8E8E6401098B8EA00C566B2 /* vmtof~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.c */; };
+		B8E8E6401098B8EA00C566B2 /* vmtof~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.cpp */; };
 		B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE3FA1109875BE00780AF9 /* vpow~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE3FA0109875BE00780AF9 /* vpow~.cpp */; };
@@ -159,7 +159,7 @@
 		B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE412010987B2000780AF9 /* vatodb~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40681098790500780AF9 /* vatodb~.cpp */; };
 		B8FE412110987B2900780AF9 /* vdbtoa~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40691098791600780AF9 /* vdbtoa~.cpp */; };
-		B8FE42E91098A7B300780AF9 /* vftom~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406E1098793200780AF9 /* vftom~.c */; };
+		B8FE42E91098A7B300780AF9 /* vftom~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406E1098793200780AF9 /* vftom~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,8 +487,8 @@
 		B8FE3FA0109875BE00780AF9 /* vpow~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vpow~.cpp"; sourceTree = "<group>"; };
 		B8FE40681098790500780AF9 /* vatodb~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatodb~.cpp"; sourceTree = "<group>"; };
 		B8FE40691098791600780AF9 /* vdbtoa~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vdbtoa~.cpp"; sourceTree = "<group>"; };
-		B8FE406A1098792000780AF9 /* vmtof~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "vmtof~.c"; sourceTree = "<group>"; };
-		B8FE406E1098793200780AF9 /* vftom~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "vftom~.c"; sourceTree = "<group>"; };
+		B8FE406A1098792000780AF9 /* vmtof~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vmtof~.cpp"; sourceTree = "<group>"; };
+		B8FE406E1098793200780AF9 /* vftom~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vftom~.cpp"; sourceTree = "<group>"; };
 		B8FE40881098795600780AF9 /* vftom~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vftom~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE40991098795A00780AF9 /* vmtof~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmtof~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE40AA1098795D00780AF9 /* vatodb~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatodb~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -875,8 +875,8 @@
 				B8E493F31095AA4F00A88A63 /* vlessthaneq~.cpp */,
 				B8FE40681098790500780AF9 /* vatodb~.cpp */,
 				B8FE40691098791600780AF9 /* vdbtoa~.cpp */,
-				B8FE406A1098792000780AF9 /* vmtof~.c */,
-				B8FE406E1098793200780AF9 /* vftom~.c */,
+				B8FE406E1098793200780AF9 /* vftom~.cpp */,
+				B8FE406A1098792000780AF9 /* vmtof~.cpp */,
 				B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */,
 				B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */,
 				B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */,
@@ -2696,7 +2696,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE42E91098A7B300780AF9 /* vftom~.c in Sources */,
+				B8FE42E91098A7B300780AF9 /* vftom~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2704,7 +2704,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E8E6401098B8EA00C566B2 /* vmtof~.c in Sources */,
+				B8E8E6401098B8EA00C566B2 /* vmtof~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
