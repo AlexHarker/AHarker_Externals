@@ -22,8 +22,8 @@ struct div_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i1, double *i2, long size) {}
     void operator()(float *o, float *i1, float *i2, long size) {}
+    void operator()(double *o, double *i1, double *i2, long size) {}
 };
 
 typedef v_binary<div_functor, kVectorOp, kVectorOp, true> vrdiv;

@@ -12,11 +12,11 @@
 
 struct abs_functor
 {
-    const static t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     const static t_uint32 bit_mask_32 = 0x7FFFFFFFU;
+    const static t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     
-    const double bit_mask_64_d = *(reinterpret_cast<const double *>(&bit_mask_64));
     const float bit_mask_64_f = *(reinterpret_cast<const float *>(&bit_mask_32));
+    const double bit_mask_64_d = *(reinterpret_cast<const double *>(&bit_mask_64));
     
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
@@ -38,8 +38,8 @@ struct abs_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i, long size) {}
     void operator()(float *o, float *i, long size) {}
+    void operator()(double *o, double *i, long size) {}
 };
 
 typedef v_unary<abs_functor, kVectorOp, kVectorOp> vabs;
