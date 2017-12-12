@@ -30,9 +30,7 @@
 // This routine is only called once, after which the main perform routine is called directly
 
 t_int *denormals_perform (t_int *w)
-{
-	method the_method;
-	
+{	
 	// Replace the old MXCSR setting with the same, except set DAZ and FZ bits
 	
 #ifdef TARGET_INTEL
@@ -41,10 +39,9 @@ t_int *denormals_perform (t_int *w)
 	
 	// Swap this routine for the correct one, and then call the correct perform routine
 	
-	the_method = (method) w[1]; 
 	w[0] = w[1];										
 	
-	return the_method(w);
+ 	return w + 1;
 }
 
 

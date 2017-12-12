@@ -8,18 +8,42 @@
  *
  */
 
-
-#include <AH_VectorOpsExtended.h>
+#include <v_unary.hpp>
+#include <SIMDExtended.hpp>
 #include <AH_Win_Math.h>
 #include "Helpers.h"
 
+struct acos_functor
+{
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return F32_SCALAR_NAN_FIX_OP(acosf(a.mVal)); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return F64_SCALAR_NAN_FIX_OP(acos(a.mVal)); }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_acos_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    void operator()(float *o, float *i, long size)
+    {
+        f32_acos_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    // Empty Implementations
 
-// Object and function naming
+    template <class T>
+    T operator()(const T a) { return a; }
+};
 
-#define OBJNAME_STR "vacos~"
-#define OBJNAME_FIRST(a) vacos ## a
-#define OBJNAME_SECOND(a) a ## vacos
+typedef v_unary<acos_functor, kVectorArray, kVectorArray> vacos;
 
+int C74_EXPORT main()
+{
+    vacos::setup<vacos>("vacos~");
+}
+
+/*
 // Constants
 
 #define SET_CONSTANTS NAN_CONSTANTS
@@ -105,4 +129,4 @@ static __inline double acos_scalar_64 (float a)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Unary.h"
-
+*/

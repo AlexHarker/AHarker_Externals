@@ -8,6 +8,42 @@
  *
  */
 
+#include <v_unary.hpp>
+#include <SIMDExtended.hpp>
+#include <AH_Win_Math.h>
+#include "Helpers.h"
+
+struct tanx_functor
+{
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return F32_SCALAR_NAN_FIX_OP(tanf(a.mVal)); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return F64_SCALAR_NAN_FIX_OP(tan(a.mVal)); }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_tan_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    void operator()(float *o, float *i, long size)
+    {
+        f32_tan_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    // Empty Implementations
+    
+    template <class T>
+    T operator()(const T a) { return a; }
+};
+
+typedef v_unary<tanx_functor, kVectorArray, kVectorArray> vtanx;
+
+int C74_EXPORT main()
+{
+    vtanx::setup<vtanx>("vtanx~");
+}
+
+/*
 
 #include <AH_VectorOpsExtended.h>
 #include <AH_Win_Math.h>
@@ -104,4 +140,4 @@ static __inline double tan_scalar_64 (float a)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Unary.h"
-
+*/

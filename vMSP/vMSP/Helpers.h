@@ -24,8 +24,8 @@ vDouble v_inf_mask_64;
 #define NAN_CONSTANTS										\
 v_inf_mask_64 = double2vector(*(double *)&inf_mask_64);		\
 v_inf_mask_32 = float2vector(*(float *)&inf_mask_32);		\
-v_nan_mask_64 = double2vector(*(double *)&nan_mask_64);		\
-v_nan_mask_32 = float2vector(*(float *)&nan_mask_32);						
+v_nan_mask_64 = double2vector(*(double *)&nan_mask_64);        \
+v_nan_mask_32 = float2vector(*(float *)&nan_mask_32);    
 #else
 #define NAN_CONSTANTS										\
 v_inf_mask_32 = float2vector(*(float *)&inf_mask_32);		\

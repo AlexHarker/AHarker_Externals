@@ -275,7 +275,7 @@ void OBJNAME_FIRST(_dsp)(OBJNAME_SECOND(t_) *x, t_signal **sp, short *count)
 		case 7:	// Vector mis-aligned single 1 (first operand is at signal rate)
 			current_perform_routine = (method) OBJNAME_FIRST(_perform_single1_misaligned);
 			break;
-		case 8: // Vector aligned single 2 (second operand is at signal rate)
+		case 8: // Vector mis-aligned single 2 (second operand is at signal rate)
 			current_perform_routine = (method) OBJNAME_FIRST(_perform_single2_misaligned);
 			break;
 #endif

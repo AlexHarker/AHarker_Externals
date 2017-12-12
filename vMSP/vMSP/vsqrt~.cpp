@@ -8,6 +8,28 @@
  *
  */
 
+#include <v_unary.hpp>
+#include <AH_Win_Math.h>
+#include "Helpers.h"
+
+struct sqrt_functor
+{    
+    template <class T>
+    T operator()(const T a) { return sqrt(a); }
+    
+    // Empty Implementations
+
+    void operator()(double *o, double *i, long size) {}
+    void operator()(float *o, float *i, long size) {}
+};
+
+typedef v_unary<sqrt_functor, kVectorOp, kVectorOp> vsqrt;
+
+int C74_EXPORT main()
+{
+    vsqrt::setup<vsqrt>("vsqrt~");
+}
+/*
 
 #include <AH_VectorOpsExtended.h>
 #include <AH_Win_Math.h>
@@ -64,4 +86,4 @@ static __inline double sqrt_scalar_64 (float a)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Unary.h"
-
+*/

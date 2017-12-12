@@ -8,11 +8,28 @@
  *
  */
 
+#include <v_binary.hpp>
 
-#include <AH_VectorOps.h>
-#include "Helpers.h"
+struct times_functor
+{
+    template <class T>
+    T operator()(const T a, const T b) { return a * b; }
+    
+    // Empty Implementations
+
+    void operator()(float *o, float *i1, float *i2, long size) {}
+    void operator()(double *o, double *i1, double *i2, long size) {}
+};
+
+typedef v_binary<times_functor, kVectorOp, kVectorOp> vtimes;
+
+int C74_EXPORT main()
+{
+    vtimes::setup<vtimes>("vtimes~");
+}
 
 
+/*
 // Object and function naming
 
 #define OBJNAME_STR "vtimes~"
@@ -36,7 +53,7 @@ static __inline float scalar_times_32 (float a, float b)
 	float temp = a * b;
 	return F32_SCALAR_NAN_FIX_OP(temp);
 }
-/*
+
 #ifdef VECTOR_F64_128BIT
 static __inline vDouble vec_times_64 (vDouble a, vDouble b)
 {
@@ -50,7 +67,7 @@ static __inline double scalar_times_64 (double a, double b)
 	double temp = a * b;
 	return F64_SCALAR_NAN_FIX_OP(temp);
 }
-*/
+
 
 // Define operations (all intrinsic-based)
 
@@ -68,3 +85,4 @@ static __inline double scalar_times_64 (double a, double b)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Binary.h"
+*/

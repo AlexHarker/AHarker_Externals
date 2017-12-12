@@ -8,6 +8,42 @@
  *
  */
 
+#include <v_unary.hpp>
+#include <SIMDExtended.hpp>
+#include <AH_Win_Math.h>
+#include "Helpers.h"
+
+struct asin_functor
+{
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return F32_SCALAR_NAN_FIX_OP(asinf(a.mVal)); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return F64_SCALAR_NAN_FIX_OP(asin(a.mVal)); }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_asin_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    void operator()(float *o, float *i, long size)
+    {
+        f32_asin_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    // Empty Implementations
+    
+    template <class T>
+    T operator()(const T a) { return a; }
+};
+
+typedef v_unary<asin_functor, kVectorArray, kVectorArray> vasin;
+
+int C74_EXPORT main()
+{
+    vasin::setup<vasin>("vasin~");
+}
+
+/*
 
 #include <AH_VectorOpsExtended.h>
 #include <AH_Win_Math.h>
@@ -105,4 +141,4 @@ static __inline double asin_scalar_64 (float a)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Unary.h"
-
+*/

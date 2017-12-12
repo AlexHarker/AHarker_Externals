@@ -1,22 +1,46 @@
 
 /*
- *  vdiv~
+ *  vrdiv~
  *
- *	vdiv~ is a vectorised version of div~.
+ *	vrdiv~ is a vectorised version of rdiv~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
  */
 
+#include <v_binary.hpp>
 
+struct div_functor
+{
+    template <class T>
+    T operator()(const T a, const T b) { return a / b; }
+    
+    // Empty Implementations
+    
+    void operator()(double *o, double *i1, double *i2, long size) {}
+    void operator()(float *o, float *i1, float *i2, long size) {}
+};
+
+typedef v_binary<div_functor, kVectorOp, kVectorOp, true> vrdiv;
+
+int C74_EXPORT main()
+{
+    vrdiv::setup<vrdiv>("vrdiv~");
+}
+
+/*
 #include <AH_VectorOps.h>
 
 
 // Object and function naming
 
-#define OBJNAME_STR "vdiv~"
-#define OBJNAME_FIRST(a) vdiv ## a
-#define OBJNAME_SECOND(a) a ## vdiv
+#define OBJNAME_STR "vrdiv~"
+#define OBJNAME_FIRST(a) vrdiv ## a
+#define OBJNAME_SECOND(a) a ## vrdiv
+
+// [The reverse of divide]
+
+#define REVERSE
 
 // Constants
 
@@ -61,4 +85,4 @@ static __inline float divide_scalar_64 (float a, float b)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Binary.h"
-
+*/

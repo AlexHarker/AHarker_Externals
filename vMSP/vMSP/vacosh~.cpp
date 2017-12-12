@@ -8,6 +8,42 @@
  *
  */
 
+#include <v_unary.hpp>
+#include <SIMDExtended.hpp>
+#include <AH_Win_Math.h>
+#include "Helpers.h"
+
+struct acosh_functor
+{
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return F32_SCALAR_NAN_FIX_OP(acoshf(a.mVal)); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return F64_SCALAR_NAN_FIX_OP(acosh(a.mVal)); }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_acosh_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    void operator()(float *o, float *i, long size)
+    {
+        f32_acosh_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    // Empty Implementations
+    
+    template <class T>
+    T operator()(const T a) { return a; }
+};
+
+typedef v_unary<acosh_functor, kVectorArray, kVectorArray> vacosh;
+
+int C74_EXPORT main()
+{
+    vacosh::setup<vacosh>("vacosh~");
+}
+
+/*
 
 #include <AH_VectorOpsExtended.h>
 #include <AH_Win_Math.h>
@@ -96,7 +132,7 @@ static __inline double acosh_scalar_64 (double a)
 
 #include "Template_Unary.h"
 
-
+*/
 
 
 
