@@ -17,14 +17,14 @@ struct sinh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return sinhf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return sinh(a.mVal); }
     
-    void operator()(double *o, double *i, long size)
-    {
-        f64_sinh_array(o, i, size);
-    }
-    
     void operator()(float *o, float *i, long size)
     {
         f32_sinh_array(o, i, size);
+    }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_sinh_array(o, i, size);
     }
     
     // Empty Implementations

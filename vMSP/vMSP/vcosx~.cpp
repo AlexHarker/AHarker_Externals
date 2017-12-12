@@ -17,14 +17,14 @@ struct cosx_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return cosf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return cos(a.mVal); }
     
-    void operator()(double *o, double *i, long size)
-    {
-        f64_cos_array(o, i, size);
-    }
-    
     void operator()(float *o, float *i, long size)
     {
         f32_cos_array(o, i, size);
+    }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_cos_array(o, i, size);
     }
     
     // Empty Implementations

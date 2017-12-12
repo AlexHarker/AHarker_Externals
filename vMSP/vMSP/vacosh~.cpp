@@ -18,15 +18,15 @@ struct acosh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return F32_SCALAR_NAN_FIX_OP(acoshf(a.mVal)); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return F64_SCALAR_NAN_FIX_OP(acosh(a.mVal)); }
     
-    void operator()(double *o, double *i, long size)
-    {
-        f64_acosh_array(o, i, size);
-        //nan_fix_array_64(out, out, length);
-    }
-    
     void operator()(float *o, float *i, long size)
     {
         f32_acosh_array(o, i, size);
+        //nan_fix_array_64(out, out, length);
+    }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_acosh_array(o, i, size);
         //nan_fix_array_64(out, out, length);
     }
     

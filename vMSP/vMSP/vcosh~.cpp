@@ -17,14 +17,14 @@ struct cosh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return coshf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return cosh(a.mVal); }
     
-    void operator()(double *o, double *i, long size)
-    {
-        f64_cosh_array(o, i, size);
-    }
-    
     void operator()(float *o, float *i, long size)
     {
         f32_cosh_array(o, i, size);
+    }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_cosh_array(o, i, size);
     }
     
     // Empty Implementations
