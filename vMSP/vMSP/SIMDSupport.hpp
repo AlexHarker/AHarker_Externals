@@ -258,12 +258,11 @@ struct SIMDType<float, 1>
     friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return a.mVal >= b.mVal; }
     friend SIMDType operator <= (const SIMDType& a, const SIMDType& b) { return a.mVal <= b.mVal; }
     
-
     float mVal;
 };
 
 template<>
-struct SIMDType<double, 1> : public Scalar<double>
+struct SIMDType<double, 1>
 {
     static const int size = 1;
     typedef float scalar_type;

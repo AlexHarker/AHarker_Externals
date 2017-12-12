@@ -13,8 +13,8 @@
 
 struct pow_functor
 {
-    float operator()(const float a, const float b) { return powf(a, b); }
-    double operator()(const double a, const double b) { return pow(a, b); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b) { return powf(b.mVal, a.mVal); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b) { return pow(b.mVal, a.mVal); }
  
     void operator()(double *o, double *i1, double *i2, long size)
     {

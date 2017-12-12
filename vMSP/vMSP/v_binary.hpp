@@ -107,7 +107,7 @@ public:
     {
         dsp_free(&x->m_obj);
         
-        if (x->m_temp_memory != NULL)
+        if (x->m_temp_memory)
             deallocate_aligned(x->m_temp_memory);
     }
     
@@ -158,8 +158,11 @@ public:
         
         method perform_routine = (method) perform<perform_op<T, 1> >;
         
-        if (x->m_temp_memory != NULL)
+        if (x->m_temp_memory)
+        {
             deallocate_aligned(x->m_temp_memory);
+            x->m_temp_memory = NULL;
+        }
         
         // If nothing is connected then don't do anything here....
         
@@ -411,12 +414,15 @@ public:
     static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
     {
         long routine = 0;
-        long userparam = 0;
+        long userparam = Reverse ? 1 : 0;
         
         method perform_routine = (method) perform64_op<T, 1>;
         
-        if (x->m_temp_memory != NULL)
+        if (x->m_temp_memory)
+        {
             deallocate_aligned(x->m_temp_memory);
+            x->m_temp_memory = NULL;
+        }
             
         // If nothing is connected then don't do anything here....
             
@@ -427,13 +433,13 @@ public:
         
         if (!count[0])
         {
-            userparam = 1;
+            userparam = Reverse ? 0 : 1;
             routine = Reverse ? 1 : 2;
         }
         
         if (!count[1])
         {
-            userparam = 0;
+            userparam = Reverse ? 1 : 0;
             routine = Reverse ? 2 : 1;
         }
         
@@ -558,7 +564,7 @@ public:
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size);
+        x->m_functor(outs[0], ins[userparam ? 1 : 0], ins[userparam ? 0 : 1], vec_size);
     }
     
     // Assist routine
