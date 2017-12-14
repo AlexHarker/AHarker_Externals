@@ -8,19 +8,15 @@
  *
  */
 
-
 // FIX - threadsafety for resizing
 
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-
 void *this_class;
 
-
 #define BUFFER_GROW_SIZE 512
-
 
 typedef struct _ibuffermulti
 {
@@ -70,7 +66,7 @@ int C74_EXPORT main (void)
 }
 
 
-void *ibuffermulti_new ()
+void *ibuffermulti_new()
 {	
     t_ibuffermulti *x = (t_ibuffermulti *) object_alloc (this_class);
 	
@@ -86,14 +82,14 @@ void *ibuffermulti_new ()
 }
 
 
-void ibuffermulti_free (t_ibuffermulti *x)
+void ibuffermulti_free(t_ibuffermulti *x)
 {
 	ibuffermulti_clear(x);
 	dsp_free(&x->x_obj);
 }
 
 
-void ibuffermulti_assist (t_ibuffermulti *x, void *b, long m, long a, char *s)
+void ibuffermulti_assist(t_ibuffermulti *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET) 
 	{
@@ -106,13 +102,13 @@ void ibuffermulti_assist (t_ibuffermulti *x, void *b, long m, long a, char *s)
 }
 
 
-void ibuffermulti_clear (t_ibuffermulti *x)
+void ibuffermulti_clear(t_ibuffermulti *x)
 {
 	defer(x, (method) ibuffermulti_doclear, 0, 0, 0);
 }
 
 
-void ibuffermulti_doclear (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffermulti_doclear(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {
 	for (long i = 0; i < x->num_items; i++)
 		object_free(x->buffers[i]);
@@ -122,14 +118,14 @@ void ibuffermulti_doclear (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *a
 }
 
 
-void ibuffermulti_load (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {
 	if (argc)
 		defer(x, (method) ibuffermulti_doload, s, argc, argv);
 }
 
 
-void ibuffermulti_doload (t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
+void ibuffermulti_doload(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {	
 	t_object *current_buffer;
 	t_atom return_val;

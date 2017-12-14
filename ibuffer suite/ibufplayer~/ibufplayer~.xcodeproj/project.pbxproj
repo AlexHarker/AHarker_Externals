@@ -9,19 +9,19 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B8193BA310E83CA300D06D14 /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B8193BA210E83CA300D06D14 /* ibuffer_access.c */; };
-		B868A313181C29AE00E41777 /* ibuffer_access.h in Headers */ = {isa = PBXBuildFile; fileRef = B868A312181C29AE00E41777 /* ibuffer_access.h */; };
-		B8DBD5060EDEB1DC00049F0E /* ibufplayer~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* ibufplayer~.c */; };
+		B8193BA310E83CA300D06D14 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8193BA210E83CA300D06D14 /* ibuffer_access.cpp */; };
+		B868A313181C29AE00E41777 /* ibuffer_access.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B868A312181C29AE00E41777 /* ibuffer_access.hpp */; };
+		B8DBD5060EDEB1DC00049F0E /* ibufplayer~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* ibufplayer~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B8141A7010EB522900CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8193BA210E83CA300D06D14 /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
+		B8193BA210E83CA300D06D14 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B81F571D0D2422E0000D5E50 /* ibufplayer~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufplayer~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B868A312181C29AE00E41777 /* ibuffer_access.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ibuffer_access.h; path = ../../AH_MaxMSP_Headers/ibuffer_access.h; sourceTree = SOURCE_ROOT; };
-		B8DE14DC0EB46B030050BDFE /* ibufplayer~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufplayer~.c"; sourceTree = "<group>"; };
+		B868A312181C29AE00E41777 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
+		B8DE14DC0EB46B030050BDFE /* ibufplayer~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ibufplayer~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,9 +68,9 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DE14DC0EB46B030050BDFE /* ibufplayer~.c */,
-				B8193BA210E83CA300D06D14 /* ibuffer_access.c */,
-				B868A312181C29AE00E41777 /* ibuffer_access.h */,
+				B8DE14DC0EB46B030050BDFE /* ibufplayer~.cpp */,
+				B8193BA210E83CA300D06D14 /* ibuffer_access.cpp */,
+				B868A312181C29AE00E41777 /* ibuffer_access.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -90,7 +90,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B868A313181C29AE00E41777 /* ibuffer_access.h in Headers */,
+				B868A313181C29AE00E41777 /* ibuffer_access.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,8 +168,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8DBD5060EDEB1DC00049F0E /* ibufplayer~.c in Sources */,
-				B8193BA310E83CA300D06D14 /* ibuffer_access.c in Sources */,
+				B8DBD5060EDEB1DC00049F0E /* ibufplayer~.cpp in Sources */,
+				B8193BA310E83CA300D06D14 /* ibuffer_access.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,18 +207,21 @@
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Development;
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Deployment;
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Default;
 		};
