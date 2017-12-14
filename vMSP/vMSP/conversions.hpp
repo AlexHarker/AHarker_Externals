@@ -36,7 +36,7 @@ static __inline void f64_mul_const_array(double *io, long length, double constan
 }
 
 
-static __inline void f32_mul_const_array(float *o, float *i, long length, float mul, float add)
+static __inline void f32_mul_add_const_array(float *o, float *i, long length, float mul, float add)
 {
     SIMDType<float, 8> *v_o = reinterpret_cast<SIMDType<float, 8> *>(o);
     SIMDType<float, 8> *v_i = reinterpret_cast<SIMDType<float, 8> *>(i);
@@ -49,7 +49,7 @@ static __inline void f32_mul_const_array(float *o, float *i, long length, float 
         *v_o++ =  *v_i++ * v_mul + v_add;
 }
 
-static __inline void f64_mul_const_array(double *o, double *i, long length, double mul, double add)
+static __inline void f64_mul_add_const_array(double *o, double *i, long length, double mul, double add)
 {
     SIMDType<double, 4> *v_o = reinterpret_cast<SIMDType<double, 4> *>(o);
     SIMDType<double, 4> *v_i = reinterpret_cast<SIMDType<double, 4> *>(i);
@@ -62,12 +62,12 @@ static __inline void f64_mul_const_array(double *o, double *i, long length, doub
         *v_o++ =  *v_i++ * v_mul + v_add;
 }
 
-static __inline void f32_mul_const_array(float *io, long length, float mul, float add)
+static __inline void f32_mul_add_const_array(float *io, long length, float mul, float add)
 {
-    f32_mul_const_array(io, io, length, mul, add);
+    f32_mul_add_const_array(io, io, length, mul, add);
 }
 
-static __inline void f64_mul_const_array(double *io, long length, double mul, double add)
+static __inline void f64_mul_add_const_array(double *io, long length, double mul, double add)
 {
-    f64_mul_const_array(io, io, length, mul, add);
+    f64_mul_add_const_array(io, io, length, mul, add);
 }

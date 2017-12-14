@@ -21,8 +21,8 @@ struct ftom_functor
     const static float ftom_add_constant_32;
     const static double ftom_add_constant_64;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(ftom_mul_constant_64 * log(a.mVal)) + ftom_add_constant_64;) }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return ftom_mul_constant_64 * log(a.mVal)) + ftom_add_constant_64; }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64; }
     
     void operator()(float *o, float *i, long size)
     {

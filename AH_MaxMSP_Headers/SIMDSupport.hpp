@@ -229,39 +229,6 @@ typedef SIMDType<float, 4> SSEFloat;
 typedef SIMDType<int32_t, 4> SSEInt32;
 
 template<>
-struct SIMDType<float, 1>
-{
-    static const int size = 1;
-    typedef float scalar_type;
-    
-    SIMDType() {}
-    SIMDType(float a) : mVal(a) {}
-    SIMDType(const float* a) { mVal = *a; }
-    
-    void store(float *a) { *a = mVal; }
-
-    friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return a.mVal + b.mVal; }
-    friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return a.mVal - b.mVal; }
-    friend SIMDType operator * (const SIMDType& a, const SIMDType& b) { return a.mVal * b.mVal; }
-    friend SIMDType operator / (const SIMDType& a, const SIMDType& b) { return a.mVal / b.mVal; }
-    
-    friend SIMDType sqrt(const SIMDType& a) { return sqrtf(a.mVal); }
-    
-    friend SIMDType min(const SIMDType& a, const SIMDType& b) { return std::min(a.mVal, b.mVal); }
-    friend SIMDType max(const SIMDType& a, const SIMDType& b) { return std::max(a.mVal, b.mVal); }
-    friend SIMDType sel(const SIMDType& a, const SIMDType& b, const SIMDType& c) { return c.mVal ? b.mVal : a.mVal; }
-
-    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return a.mVal == b.mVal; }
-    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return a.mVal != b.mVal; }
-    friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return a.mVal > b.mVal; }
-    friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return a.mVal < b.mVal; }
-    friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return a.mVal >= b.mVal; }
-    friend SIMDType operator <= (const SIMDType& a, const SIMDType& b) { return a.mVal <= b.mVal; }
-    
-    float mVal;
-};
-
-template<>
 struct SIMDType<double, 1>
 {
     static const int size = 1;
@@ -292,6 +259,41 @@ struct SIMDType<double, 1>
     friend SIMDType operator <= (const SIMDType& a, const SIMDType& b) { return a.mVal <= b.mVal; }
     
     double mVal;
+};
+
+template<>
+struct SIMDType<float, 1>
+{
+    static const int size = 1;
+    typedef float scalar_type;
+    
+    SIMDType() {}
+    SIMDType(float a) : mVal(a) {}
+    SIMDType(const float* a) { mVal = *a; }
+    
+    void store(float *a) { *a = mVal; }
+    
+    friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return a.mVal + b.mVal; }
+    friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return a.mVal - b.mVal; }
+    friend SIMDType operator * (const SIMDType& a, const SIMDType& b) { return a.mVal * b.mVal; }
+    friend SIMDType operator / (const SIMDType& a, const SIMDType& b) { return a.mVal / b.mVal; }
+    
+    friend SIMDType sqrt(const SIMDType& a) { return sqrtf(a.mVal); }
+    
+    friend SIMDType min(const SIMDType& a, const SIMDType& b) { return std::min(a.mVal, b.mVal); }
+    friend SIMDType max(const SIMDType& a, const SIMDType& b) { return std::max(a.mVal, b.mVal); }
+    friend SIMDType sel(const SIMDType& a, const SIMDType& b, const SIMDType& c) { return c.mVal ? b.mVal : a.mVal; }
+    
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return a.mVal == b.mVal; }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return a.mVal != b.mVal; }
+    friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return a.mVal > b.mVal; }
+    friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return a.mVal < b.mVal; }
+    friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return a.mVal >= b.mVal; }
+    friend SIMDType operator <= (const SIMDType& a, const SIMDType& b) { return a.mVal <= b.mVal; }
+    
+    operator SIMDType<double, 1>() { return static_cast<double>(mVal); }
+    
+    float mVal;
 };
 
 template<>

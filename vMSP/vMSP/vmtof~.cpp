@@ -21,8 +21,8 @@ struct mtof_functor
     const static float mtof_add_constant_32;
     const static double mtof_add_constant_64;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * dbtoa_constant_32); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * dbtoa_constant_64); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * mtof_mul_constant_32 + mtof_add_constant_32); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * mtof_mul_constant_64 + mtof_add_constant_32); }
     
     void operator()(float *o, float *i, long size)
     {

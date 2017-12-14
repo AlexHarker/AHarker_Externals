@@ -92,9 +92,7 @@ public:
         
         class_dspinit(*C);
         class_register(CLASS_BOX, *C);
-        
-        // Constants are set here (if they cannot be set in global code
-        
+                
         post ("%s - using vector version by Alex Harker", object_name);
         
         return 0;

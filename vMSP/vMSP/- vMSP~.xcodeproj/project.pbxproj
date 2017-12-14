@@ -113,7 +113,7 @@
 		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39655109617FB0081D095 /* vlog~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.c */; };
+		B8E39655109617FB0081D095 /* vlog~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.cpp */; };
 		B8E39656109618040081D095 /* vsqrt~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962D1096173F0081D095 /* vsqrt~.cpp */; };
 		B8E396571096180E0081D095 /* vtrunc~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E39627109617180081D095 /* vtrunc~.c */; };
 		B8E492E31095A2EA00A88A63 /* vtimes~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E21095A2EA00A88A63 /* vtimes~.cpp */; };
@@ -458,7 +458,7 @@
 		B8E3960D109616B20081D095 /* vsqrt~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsqrt~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39624109616ED0081D095 /* vtrunc~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtrunc~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39627109617180081D095 /* vtrunc~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vtrunc~.c"; sourceTree = "<group>"; };
-		B8E3962A1096172C0081D095 /* vlog~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vlog~.c"; sourceTree = "<group>"; };
+		B8E3962A1096172C0081D095 /* vlog~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlog~.cpp"; sourceTree = "<group>"; };
 		B8E3962D1096173F0081D095 /* vsqrt~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vsqrt~.cpp"; sourceTree = "<group>"; };
 		B8E492E21095A2EA00A88A63 /* vtimes~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vtimes~.cpp"; sourceTree = "<group>"; };
 		B8E492E81095A2FA00A88A63 /* vplus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vplus~.cpp"; sourceTree = "<group>"; };
@@ -855,7 +855,7 @@
 				B8DA7B631FDDBC520037D848 /* v_unary.hpp */,
 				B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */,
 				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,
-				B8E3962A1096172C0081D095 /* vlog~.c */,
+				B8E3962A1096172C0081D095 /* vlog~.cpp */,
 				B8E493CF1095A79000A88A63 /* vminus~.cpp */,
 				B8E492E81095A2FA00A88A63 /* vplus~.cpp */,
 				B8FE3FA0109875BE00780AF9 /* vpow~.cpp */,
@@ -2584,7 +2584,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39655109617FB0081D095 /* vlog~.c in Sources */,
+				B8E39655109617FB0081D095 /* vlog~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

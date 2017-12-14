@@ -4,13 +4,86 @@
  *
  *	vlog~ is a vectorised version of log~.
  *
- *	This code is heavily based on Tempory_Unary.h which is slightly more commented in the case that anything here is unclear.
- *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
  */
 
+#include <v_unary.hpp>
+#include <conversions.hpp>
+#include <SIMDExtended.hpp>
+#include <AH_Win_Math.h>
 
+// FIX - binary operation, clipping and initial base...
+
+struct log_functor
+{
+    log_functor() : m_base_mul(1.0) {}
+    
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(logf(a.mVal) * m_base_mul); }
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return log(a.mVal) * m_base_mul; }
+    
+    void operator()(float *o, float *i, long size)
+    {
+        f32_log_array(o, i, size);
+        f32_mul_const_array(o, i, size, static_cast<float>(m_base_mul));
+    }
+    
+    void operator()(double *o, double *i, long size)
+    {
+        f64_log_array(o, i, size);
+        f64_mul_const_array(o, i, size, m_base_mul);
+    }
+    
+    // Empty Implementations
+    
+    template <class T>
+    T operator()(const T a) { return a; }
+    
+    double m_base_mul;
+    //const static double in_min = 0.0000000001;
+};
+
+typedef v_unary<log_functor, kVectorArray, kVectorArray> vlog;
+
+void vlog_float(vlog *x, double value);
+void vlog_int(vlog *x, t_atom_long value);
+
+template<>
+template <typename T>
+int vlog::setup(const char *object_name)
+{
+    t_class **C = getClassPointer<T>();
+    *accessClassName<T>() = object_name;
+    
+    *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), NULL, 0);
+    
+    class_addmethod(*C, (method)vlog_float, "float", A_FLOAT, 0);
+    class_addmethod(*C, (method)vlog_int, "int", A_LONG, 0);
+    class_addmethod(*C, (method)dsp<T>, "dsp", A_CANT, 0);
+    class_addmethod(*C, (method)dsp64<T>, "dsp64", A_CANT, 0);
+    class_addmethod(*C, (method)assist, "assist", A_CANT, 0);
+    
+    class_dspinit(*C);
+    class_register(CLASS_BOX, *C);
+    
+    post ("%s - using vector version by Alex Harker", object_name);
+    
+    return 0;
+}
+
+void vlog_float(vlog *x, double value)
+{
+    x->m_functor.m_base_mul = 1.0 / log(value);
+}
+
+
+void vlog_int(vlog *x, t_atom_long value)
+{
+    vlog_float(x, static_cast<double>(value));
+}
+
+
+/*
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -305,3 +378,4 @@ void vlog_assist(t_vlog *x, void *b, long m, long a, char *s)
 		sprintf(s,"(signal) Out");
 	}
 }
+*/
