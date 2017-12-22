@@ -67,19 +67,19 @@ typedef struct _meandev
 	
     char num_dur;
 	char mode;
+    
+    // Flags
+    
 	char weights_mode;
-	char log_vals_in;
 	char standard_var;
 	char mean_mode;
+    char mem_alloc;
 	
     long last_post_time;
 	long last_mean_post_time;
-   
-	char mem_alloc;
 	
     void *f_proxy;
     long f_inletNumber;
-
     
 } t_meandev;
 
@@ -88,8 +88,8 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv);
 void meandev_free(t_meandev *x);
 void meandev_assist(t_meandev *x, void *b, long m, long a, char *s);
 
-void meandev_bang (t_meandev  *x);
-void meandev_int(t_meandev *x, long data);
+void meandev_bang(t_meandev  *x);
+void meandev_int(t_meandev *x, t_atom_long data);
 void meandev_float(t_meandev *x, double data);
 void meandev_add_data(t_meandev *x, double data, float weight);
 
@@ -104,14 +104,20 @@ void meandev_tick1s(t_meandev *x);
 void meandev_tick2s(t_meandev *x);
 void meandev_tick3s(t_meandev *x);
 
-void meandev_timed_add_remove(t_meandev *x, char dur_num, t_dur_data *duration_pointer, char add_remove);
-void meandev_remove_mean(t_meandev *x, char dur_num, t_dur_data *duration_pointer);
+void meandev_timed_add_remove(t_meandev *x, long dur_num);
+void meandev_remove_mean(t_meandev *x, long dur_num);
 
 void meandev_output(t_meandev *x, char dur);
 void meandev_output_weights_mode(t_meandev *x, char dur);
 void meandev_output_mean_removed (t_meandev *x, char dur);
 void meandev_new_mean(t_meandev *x, double mean, char dur, t_dur_data *duration_pointer);
-double meandev_calc_variance (t_dur_data *duration_pointer);
+double meandev_calc_variance(t_dur_data *duration_pointer);
+
+double square_difference(double data, double mean)
+{
+    double difference = data - mean;
+    return difference * difference;
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -468,11 +474,8 @@ void meandev_assist(t_meandev *x, void *b, long m, long a, char *s)
 ///////////////////////////////////////////////////////////////////// User routines /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void meandev_bang (t_meandev  *x)		
+void meandev_bang(t_meandev  *x)
 {
-	  short i;
-	  
 	  // Reset routine
 	
     if (proxy_getinlet((t_object *) x) == 1 && x->mem_alloc)
@@ -485,7 +488,7 @@ void meandev_bang (t_meandev  *x)
         x->oldest_data = 0;
         x->last_weight_in = 0;
 
-        for (i = x->num_dur - 1; i >=  0; i--)
+        for (long i = x->num_dur - 1; i >=  0; i--)
         {
             duration_pointer = x->duration_pointer + i;
             if (x->mode == 1)
@@ -511,39 +514,28 @@ void meandev_bang (t_meandev  *x)
     }
 }
 
-
-void meandev_int(t_meandev *x, long data)		
+void meandev_int(t_meandev *x, t_atom_long data)
 {
-	// Gives int compatibility
-	
-    float datafloat = (float) data;	
-    meandev_float(x, datafloat);
+    meandev_float(x, (double) data);
 }
-
 
 void meandev_float(t_meandev *x, double data)
-{	
-	char weights_mode = x->weights_mode;
-	
-    long got_inlet = proxy_getinlet((t_object *) x);
-
+{
+    if (!x->mem_alloc)
+        return;
+        
 	// Accept weights and data in, storing weights and add data as appropriate
 
-	if (x->mem_alloc)
-	{
-		if (weights_mode)
-		{
-			if (got_inlet)
-				x->last_weight_in = data;
-			else 
-				meandev_add_data (x, data, x->last_weight_in);
-		}
-		
-		if (got_inlet == 0 && weights_mode == 0)
-			meandev_add_data(x, data, 1);
-	}
+    if (proxy_getinlet((t_object *) x))
+    {
+        x->last_weight_in = data;
+    }
+    else
+    {
+        double weight = x->weights_mode ? x->last_weight_in : 1.0;
+        meandev_add_data(x, data, weight);
+    }
 }
-
 
 void meandev_add_data(t_meandev *x, double data, float weight)
 {
@@ -800,7 +792,6 @@ void meandev_add_data(t_meandev *x, double data, float weight)
     }
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////// Tick routines /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -808,74 +799,58 @@ void meandev_add_data(t_meandev *x, double data, float weight)
 
 void meandev_tick0(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer;
-    meandev_timed_add_remove (x, (char) 0, duration_pointer, duration_pointer->add_remove);		
+    meandev_timed_add_remove(x, 0);
 }
-
 
 void meandev_tick1(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 1;
-    meandev_timed_add_remove (x, (char) 1, duration_pointer, duration_pointer->add_remove);
+    meandev_timed_add_remove(x, 1);
 }
-
 
 void meandev_tick2(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 2;
-    meandev_timed_add_remove (x, (char) 2, duration_pointer, duration_pointer->add_remove);
+    meandev_timed_add_remove(x, 2);
 }
-
 
 void meandev_tick3(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 3;
-    meandev_timed_add_remove (x, (char) 3, duration_pointer, duration_pointer->add_remove);
+    meandev_timed_add_remove(x, 3);
 }
-
 
 void meandev_tick4(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 4;
-    meandev_timed_add_remove (x, (char) 4, duration_pointer, duration_pointer->add_remove);					
+    meandev_timed_add_remove(x, 4);
 }
-
 
 void meandev_tick0s(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer;
-    meandev_remove_mean (x, (char) 0, duration_pointer);		
+    meandev_remove_mean(x, 0);
 }
-
 
 void meandev_tick1s(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 1;
-    meandev_remove_mean (x, (char) 1, duration_pointer);
+    meandev_remove_mean(x, 1);
 }
-
 
 void meandev_tick2s(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 2;
-    meandev_remove_mean (x, (char) 2, duration_pointer);
+    meandev_remove_mean(x, 2);
 }
-
 
 void meandev_tick3s(t_meandev *x)
 {
-    t_dur_data *duration_pointer = x->duration_pointer + 3;
-    meandev_remove_mean (x, (char) 3, duration_pointer);
+    meandev_remove_mean(x, 3);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////// Timed routines ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void meandev_timed_add_remove(t_meandev *x, char dur_num, t_dur_data *duration_pointer, char add_remove)
+void meandev_timed_add_remove(t_meandev *x, long dur_num)
 {
+    t_dur_data *duration_pointer = x->duration_pointer + dur_num;
+    bool add_remove = duration_pointer->add_remove;
     long time = gettime();
     long min_time;
 	long test_time;
@@ -992,8 +967,9 @@ void meandev_timed_add_remove(t_meandev *x, char dur_num, t_dur_data *duration_p
 }
 
 
-void meandev_remove_mean(t_meandev *x, char dur_num, t_dur_data *duration_pointer)
+void meandev_remove_mean(t_meandev *x, long dur_num)
 {
+    t_dur_data *duration_pointer = x->duration_pointer + dur_num;
     long time = gettime();
 	long min_time;
     long mean_data_size = duration_pointer->mean_data_size;
@@ -1027,7 +1003,7 @@ void meandev_remove_mean(t_meandev *x, char dur_num, t_dur_data *duration_pointe
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void meandev_output (t_meandev *x, char dur)
+void meandev_output(t_meandev *x, char dur)
 {
     t_dur_data *duration_pointer = x->duration_pointer + dur;
     
@@ -1044,7 +1020,6 @@ void meandev_output (t_meandev *x, char dur)
     double sum = 0;
     double mean = 0;
     double variance = 0;
-	double difference;
 	
 	if (dur == x->num_dur - 1)
         short_durtest = 1;
@@ -1085,12 +1060,8 @@ void meandev_output (t_meandev *x, char dur)
 		// Sum data from newest to oldest data
 		
         for (i = newest_data; i >= 0 && i >= oldest_data; i--)
-        {
-            difference = the_data[i] - mean;
-            difference = difference * difference;
-            variance += difference;
-        }
-		
+            variance += square_difference(the_data[i], mean);
+        
 		// If the data wraps - nothing has been done yet
 		
         if (newest_data < oldest_data)
@@ -1098,20 +1069,13 @@ void meandev_output (t_meandev *x, char dur)
 			// Sum data from newest to 0
 			
             for (i = newest_data; i >= 0; i--)
-            {
-                difference = the_data[i] - mean;
-                difference = difference * difference;
-                variance += difference;
-            }
+                variance += square_difference(the_data[i], mean);
 			
 			// Sum data from end of buffer to oldest data
 			
             for (i = data_size - 1; i >= 0 && i >= oldest_data; i--)
-            {
-                difference = the_data[i] - mean;
-                difference = difference * difference;
-                variance += difference;
-            }
+                variance += square_difference(the_data[i], mean);
+
         }
         variance = variance / total_count;
     }
@@ -1134,7 +1098,7 @@ void meandev_output (t_meandev *x, char dur)
 }
 
 
-void meandev_output_weights_mode (t_meandev *x, char dur)
+void meandev_output_weights_mode(t_meandev *x, char dur)
 {
     t_dur_data *duration_pointer = x->duration_pointer + dur;
     
@@ -1153,7 +1117,6 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 	double sum = 0;
     double mean = 0;
     double variance = 0;
-	double difference;
 
 	if (dur == x->num_dur - 1)
         short_durtest = 1;
@@ -1203,12 +1166,8 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 		// Sum data from newest to oldest data
 		
         for (i = newest_data; i >= 0 && i >= oldest_data; i--)
-        {
-            difference = the_data[i] - mean;
-            difference = difference * difference;
-            variance += (difference * the_weights[i]);
-        }
-		
+            variance += square_difference(the_data[i], mean) * the_weights[i];
+        
 		// If the data wraps - nothing has been done yet
 		
         if (newest_data < oldest_data)
@@ -1216,20 +1175,12 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 			// Sum data from newest to 0
 			
             for (i = newest_data; i >= 0; i--)							
-            {
-                difference = the_data[i] - mean;
-                difference = difference * difference;
-                variance += (difference * the_weights[i]);
-            }
+                variance += square_difference(the_data[i], mean) * the_weights[i];
 			
 			// Sum data from end of buffer to oldest data
 			
             for (i = data_size - 1; i >= 0 && i >= oldest_data; i--)		
-            {
-                difference = the_data[i] - mean;
-                difference = difference * difference;
-                variance += (difference * the_weights[i]);
-            }
+                variance += square_difference(the_data[i], mean) * the_weights[i];
         }
         variance = variance / total_count;
     }
@@ -1238,7 +1189,7 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 		if (x->mean_mode && duration_pointer->total_count != 0)				
 		{
 			meandev_new_mean (x, mean, dur, duration_pointer);
-            variance = meandev_calc_variance (duration_pointer);
+            variance = meandev_calc_variance(duration_pointer);
 		}
         if (x->mean_mode == 2 && duration_pointer->total_count != 0)			
             mean = duration_pointer->last_mean;
@@ -1246,7 +1197,7 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 	
 	// Sqrt if standard deviation is requested
     
-    if(x->standard_var && variance != 0)
+    if (x->standard_var && variance != 0)
 		variance = sqrt(variance);
         
     outlet_float(duration_pointer->f_out2, variance);
@@ -1254,7 +1205,7 @@ void meandev_output_weights_mode (t_meandev *x, char dur)
 }
 
 
-void meandev_output_mean_removed (t_meandev *x, char dur)
+void meandev_output_mean_removed(t_meandev *x, char dur)
 {
     t_dur_data *duration_pointer = x->duration_pointer + dur;
     
@@ -1274,32 +1225,27 @@ void meandev_output_mean_removed (t_meandev *x, char dur)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double meandev_calc_variance (t_dur_data *duration_pointer)
+
+double meandev_calc_variance(t_dur_data *duration_pointer)
 {
     float *the_means = duration_pointer->the_means;
 
     double mean_count = duration_pointer->mean_count;
-    double sum = 0;
-    double mean = 0;
-    double variance = 0;
-	double difference;
-	
-	long mean_data_size;
-	long oldest_mean;
-	long newest_mean;
-	long i;
+    double sum = 0.0;
+    double mean = 0.0;
+    double variance = 0.0;
 
     if (mean_count != 0)
     {
         // First Find Mean
 		
-		mean_data_size = duration_pointer->mean_data_size;
-        oldest_mean = duration_pointer->oldest_mean;
-        newest_mean =  duration_pointer->newest_mean;
+		long mean_data_size = duration_pointer->mean_data_size;
+        long oldest_mean = duration_pointer->oldest_mean;
+        long newest_mean =  duration_pointer->newest_mean;
         
 		// Sum data from newest to oldest data
 		
-        for (i = newest_mean; i >= 0 && i >= oldest_mean; i--)
+        for (long i = newest_mean; i >= 0 && i >= oldest_mean; i--)
             sum += the_means[i];
 		
 		// If the data wraps - nothing has been done yet
@@ -1308,12 +1254,12 @@ double meandev_calc_variance (t_dur_data *duration_pointer)
         {
 			// Sum data from newest to 0
 			
-            for (i = newest_mean; i >= 0; i--)
+            for (long i = newest_mean; i >= 0; i--)
                 sum += the_means[i];
 			
 			// Sum data from end of buffer to oldest data
 			
-            for (i = mean_data_size - 1; i >= 0 && i >= oldest_mean; i--)
+            for (long i = mean_data_size - 1; i >= 0 && i >= oldest_mean; i--)
                 sum += the_means[i];
         }
         
@@ -1323,12 +1269,8 @@ double meandev_calc_variance (t_dur_data *duration_pointer)
 		
 		// Sum data from newest to oldest data
 		
-        for (i = newest_mean; i >= 0 && i >= oldest_mean; i--)				
-        {
-            difference = the_means[i] - mean;
-            difference = difference * difference;
-            variance += difference;
-        }
+        for (long i = newest_mean; i >= 0 && i >= oldest_mean; i--)
+            variance += square_difference(the_means[i], mean);
 		
 		// If the data wraps - nothing has been done yet
 		
@@ -1336,21 +1278,13 @@ double meandev_calc_variance (t_dur_data *duration_pointer)
         {
 			// Sum data from newest to 0
 			
-            for (i = newest_mean; i >= 0; i--)								
-            {
-                difference = the_means[i] - mean;
-                difference = difference * difference;
-                variance += difference;
-            }
-			
+            for (long i = newest_mean; i >= 0; i--)
+                variance += square_difference(the_means[i], mean);
+            
 			// Sum data from end of buffer to oldest data
 			
-            for (i = mean_data_size - 1; i >= 0 && i >= oldest_mean; i--)		
-            {
-                difference = the_means[i] - mean;
-                difference = difference * difference;
-                variance += difference;
-            }
+            for (long i = mean_data_size - 1; i >= 0 && i >= oldest_mean; i--)
+                variance += square_difference(the_means[i], mean);
         }
         
         variance = variance / mean_count;
@@ -1358,7 +1292,7 @@ double meandev_calc_variance (t_dur_data *duration_pointer)
     
     duration_pointer->last_mean = mean;
 	
-    return (variance);
+    return variance;
 }
 
 

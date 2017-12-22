@@ -38,8 +38,7 @@ t_symbol *ps_failed;
 
 void *macaddress_new();
 void macaddress_free(t_macaddress *x);
-void macaddress_tick(t_macaddress *x);
-void macaddress_bang (t_macaddress *x);
+void macaddress_bang(t_macaddress *x);
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
@@ -79,10 +78,11 @@ void macaddress_free(t_macaddress *x)
 
 #ifdef __APPLE__
 
-void macaddress_bang (t_macaddress *x)
+void macaddress_bang(t_macaddress *x)
 {
 	CFStringRef mac_address = NULL;
-	CFStringRef interface_type;
+    
+    CFStringRef interface_type;
 	CFArrayRef interface_array;
 	SCNetworkInterfaceRef next_interface, found_interface;
 	
@@ -97,10 +97,21 @@ void macaddress_bang (t_macaddress *x)
 	{
 		next_interface = CFArrayGetValueAtIndex(interface_array, i);
 		interface_type = SCNetworkInterfaceGetInterfaceType(next_interface);
-		
-		mac_address = SCNetworkInterfaceGetHardwareAddressString (next_interface);
-		
-		if(!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0)) 
+        /*
+        CFStringRef interface_bsd_name = SCNetworkInterfaceGetBSDName(next_interface);
+        
+        if (interface_bsd_name != NULL)
+            object_post((t_object *)x, "BSD Name %s", CFStringGetCStringPtr(interface_bsd_name, CFStringGetFastestEncoding(interface_bsd_name)));
+        else
+            object_post((t_object *)x, "NULL BSD Name");
+        
+        if (interface_type != NULL)
+            object_post((t_object *)x, "Interface Type %s", CFStringGetCStringPtr(interface_type, CFStringGetFastestEncoding(interface_type)));
+        else
+            object_post((t_object *)x, "NULL Interface type");
+        */
+        
+		if(!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0))
 		{
 			found = 1; 
 			found_interface = next_interface;
@@ -109,7 +120,7 @@ void macaddress_bang (t_macaddress *x)
 	}
 	
 	if (found)
-		mac_address = SCNetworkInterfaceGetHardwareAddressString (found_interface);	
+		mac_address = SCNetworkInterfaceGetHardwareAddressString(found_interface);
 	
 	if (mac_address)
 	{
@@ -118,11 +129,15 @@ void macaddress_bang (t_macaddress *x)
 	}
 	else
 		outlet_anything(x->output, ps_failed, 0, NIL);
+    
+    // We need to release anything that is created via copy...
+    
+    CFRelease(interface_array);
 }
 
 #else
 
-void macaddress_bang (t_macaddress *x)
+void macaddress_bang(t_macaddress *x)
 {			
 	char mac_address[32];
 	char temp_string[32];
@@ -130,8 +145,8 @@ void macaddress_bang (t_macaddress *x)
 	unsigned int found = 0;
 	unsigned int i = 0;
 		
-	PIP_ADAPTER_ADDRESSES addresses = NULL;
-	PIP_ADAPTER_ADDRESSES current_address = NULL;
+	IP_ADAPTER_ADDRESSES addresses = NULL;
+	IP_ADAPTER_ADDRESSES current_address = NULL;
 	ULONG outBufLen = 15000;
 	
 	mac_address[0] = 0;

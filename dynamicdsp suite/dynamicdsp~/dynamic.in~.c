@@ -106,7 +106,7 @@ void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count)
 
 void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-	object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, NULL);		// scalar routine
+	object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, NULL);
 }
 
 void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
@@ -115,48 +115,29 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 	
 	if (inlet_num >= 1 && inlet_num <= x->num_sig_ins)
     {
-		x->valid = true;
-        x->inlet_num = inlet_num;
+		x->inlet_num = inlet_num;
+        x->valid = true;
     }
 }
 
 t_int *dynamic_in_perform(t_int *w)
 {	
-    float *source;
     float *out = (float *)(w[1]);
     long vec_size = w[2];
     t_dynamic_in *x = (t_dynamic_in *)(w[3]);
 
 	if (x->valid)
-	{
-		source = x->sig_ins[x->inlet_num - 1];
-		for (long i = 0; i < vec_size; i++)
-			*out++ = *source++;
-	}
+        memcpy(out, x->sig_ins[x->inlet_num - 1], vec_size * sizeof(float));
 	else
-	{
-		for (long i = 0; i < vec_size; i++)
-			*out++ = 0.f;
-	}
+        memset(out, 0, vec_size * sizeof(float));
 	
 	return w + 4;
 }
 
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
-    double *source, *out;
-	
-    out = outs[0];
-	
 	if (x->valid)
-	{
-		source = x->sig_ins[x->inlet_num - 1];
-		for (long i = 0; i < vec_size; i++)
-			*out++ = *source++;
-	}
+        memcpy(outs[0], x->sig_ins[x->inlet_num - 1], vec_size * sizeof(double));
 	else
-	{
-		for (long i = 0; i < vec_size; i++)
-			*out++ = 0.0;
-	}
+        memset(outs[0], 0, vec_size * sizeof(double));
 }
