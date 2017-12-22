@@ -222,12 +222,6 @@ template <class T, class U, int vec_size> struct SIMDVector
 
 template <class T, int vec_size> struct SIMDType {};
 
-#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_SSE)
-
-typedef SIMDType<double, 2> SSEDouble;
-typedef SIMDType<float, 4> SSEFloat;
-typedef SIMDType<int32_t, 4> SSEInt32;
-
 template<>
 struct SIMDType<double, 1>
 {
@@ -297,12 +291,80 @@ struct SIMDType<float, 1>
 };
 
 template<>
+struct SIMDType<float, 2>
+{
+    static const int size = 1;
+    typedef float scalar_type;
+    
+    SIMDType() {}
+    
+    SIMDType(float a)
+    {
+        mVals[0] = a;
+        mVals[1] = a;
+    }
+    
+    SIMDType(const float* a)
+    {
+        mVals[0] = a[0];
+        mVals[1] = a[1];
+    }
+    
+    void store(float *a)
+    {
+        a[0] = mVals[0];
+        a[1] = mVals[1];
+    }
+    
+    // No Ops for now..
+    
+    /*
+    friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return a.mVal + b.mVal; }
+    friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return a.mVal - b.mVal; }
+    friend SIMDType operator * (const SIMDType& a, const SIMDType& b) { return a.mVal * b.mVal; }
+    friend SIMDType operator / (const SIMDType& a, const SIMDType& b) { return a.mVal / b.mVal; }
+    
+    friend SIMDType sqrt(const SIMDType& a) { return sqrt(a.mVal); }
+    
+    friend SIMDType min(const SIMDType& a, const SIMDType& b) { return std::min(a.mVal, b.mVal); }
+    friend SIMDType max(const SIMDType& a, const SIMDType& b) { return std::max(a.mVal, b.mVal); }
+    friend SIMDType sel(const SIMDType& a, const SIMDType& b, const SIMDType& c) { return c.mVal ? b.mVal : a.mVal; }
+    
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return a.mVal == b.mVal; }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return a.mVal != b.mVal; }
+    friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return a.mVal > b.mVal; }
+    friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return a.mVal < b.mVal; }
+    friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return a.mVal >= b.mVal; }
+    friend SIMDType operator <= (const SIMDType& a, const SIMDType& b) { return a.mVal <= b.mVal; }
+    */
+    float mVals[2];
+};
+
+#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_SSE)
+
+typedef SIMDType<double, 2> SSEDouble;
+typedef SIMDType<float, 4> SSEFloat;
+typedef SIMDType<int32_t, 4> SSEInt32;
+
+template<>
 struct SIMDType<double, 2> : public SIMDVector<double, __m128d, 2>
 {
     SIMDType() {}
     SIMDType(const double& a) { mVal = _mm_set1_pd(a); }
     SIMDType(const double* a) { mVal = _mm_loadu_pd(a); }
     SIMDType(__m128d a) : SIMDVector(a) {}
+    
+    SIMDType(const SIMDType<float, 2> a)
+    {
+        // FIX - this might be able to be made nicer...
+        
+        double vals[2];
+        
+        vals[0] = a.mVals[0];
+        vals[1] = a.mVals[1];
+        
+        _mm_loadu_pd(vals);
+    }
     
     void store(double *a) { _mm_storeu_pd(a, mVal); }
 

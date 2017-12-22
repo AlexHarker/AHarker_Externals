@@ -33,7 +33,7 @@ typedef struct _ibuffer
 	
 	double sr;				// sample rate of ibuffer~
 	
-	intptr_t frames;		// number of frames (N.B. - could be very large under 64bit platforms - hence the pointer sized integer - signed for backwards compatibility)
+	t_ptr_int frames;		// number of frames (N.B. - could be very large under 64bit platforms - hence the pointer sized integer - signed for backwards compatibility)
 	long channels;			// number of channels
 	long format;			// sample format
 	

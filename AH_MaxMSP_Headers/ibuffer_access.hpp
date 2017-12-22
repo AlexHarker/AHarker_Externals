@@ -103,8 +103,8 @@ static inline double ibuffer_get_samp(const ibuffer_data& data, intptr_t offset,
 
 // Get consecutive samples (and in reverse)
 
-void ibuffer_get_samps(const ibuffer_data& data, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse);
-void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse);
+void ibuffer_get_samps(const ibuffer_data& data, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
+void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
 
 // Read with various forms of interpolation
 
