@@ -224,7 +224,7 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 		
 	t_atom last_added_list[3];
 
-	if (target.max_buffer && source.max_buffer)
+	if (target.buffer_type == kBufferMaxBuffer)
 	{
 		// Check we have a mono buffer and that there is space for another item
 		
@@ -326,10 +326,10 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 
 double ibuffer_sample_rate(t_symbol *name)
 {
-    ibuffer_data data(name);
+    ibuffer_data buffer(name);
     
-    if (data.length)
-        return data.sample_rate;
+    if (buffer.sample_rate)
+        return buffer.sample_rate;
     else
         return 44100.0;
 }
@@ -384,10 +384,10 @@ static __inline long mstosamps (double ms, double sr)
 
 double ibuffer_full_length(t_symbol *name)
 {
-    ibuffer_data data(name);
+    ibuffer_data buffer(name);
     
-    if (data.length)
-        return (data.length / data.sample_rate) * 1000.0;
+    if (buffer.length)
+        return (buffer.length / buffer.sample_rate) * 1000.0;
     else
         return 0.0;
 }

@@ -136,7 +136,7 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 	double current_samp, length_recip, amp_recip;
 	double peak_amp = 0.;
 	
-    if (target.max_buffer && target.length && source.length && window.length)
+    if (target.buffer_type == kBufferMaxBuffer && target.length && source.length && window.length)
 	{
         out_samps = (float *)target.samples;
 
@@ -228,7 +228,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 	slide_up_recip = 1.0 / (double) slide;		// slideup;
 	slide_down_recip = 1.0 / (double) slide;		// slidedown;
 
-	if (target.max_buffer && target.length && source.length && window.length)
+	if (target.buffer_type == kBufferMaxBuffer && target.length && source.length && window.length)
     {
     	out_samps = (float *)target.samples;
 		
@@ -316,7 +316,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
 	double current_samp;
 	double peak_amp = 0.;
 	
-    if (target.max_buffer && target.length && source.length && window.length)
+    if (target.buffer_type == kBufferMaxBuffer && target.length && source.length && window.length)
 	{
 		out_samps = (float *)target.samples;
 		
@@ -395,7 +395,7 @@ void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double e
 	
 	float *out_samps;	
 	
-	if (target.max_buffer)
+	if (target.buffer_type == kBufferMaxBuffer)
 	{
 		if (target.length < length)
 			length = target.length;

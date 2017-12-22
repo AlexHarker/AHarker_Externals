@@ -180,7 +180,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	
 	t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
     
-    ibuffer_data data(buffer_name);
+    ibuffer_data buffer(buffer_name);
 	
 	// Attributes
 	
@@ -195,14 +195,14 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	if (!x->memory_flag)
 		return;
 	
-	if (data.length)
+	if (buffer.length)
 	{
-		if (data.num_chans < chan + 1)
-			chan = chan % data.num_chans;
+		if (buffer.num_chans < chan + 1)
+			chan = chan % buffer.num_chans;
 		
 		// Calculate impulse length
 		
-        impulse_length = data.length - offset;
+        impulse_length = buffer.length - offset;
 		if (length && length < impulse_length)
 			impulse_length = length;
 		if (length && impulse_length < length)
@@ -216,14 +216,14 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
         if (impulse_length)
         {
 #ifdef __APPLE__
-            ibuffer_get_samps(data, impulse_buffer, offset, impulse_length, chan - 1, true);
+            ibuffer_get_samps(buffer, impulse_buffer, offset, impulse_length, chan - 1, true);
 #else
             t_ptr_int impulse_offset = pad_length(impulse_length) - impulse_length;
 
             for (long i = 0; i < impulse_offset; i++)
                  impulse_buffer[i] = 0.f;
 
-            ibuffer_get_samps(data, impulse_buffer + impulse_offset, offset, impulse_length, chan - 1, true);
+            ibuffer_get_samps(buffer, impulse_buffer + impulse_offset, offset, impulse_length, chan - 1, true);
 #endif
         }
 		
@@ -231,7 +231,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	}
 	else
 	{
-		if (buffer_name)
+		if (buffer.buffer_type == kBufferNone && buffer_name)
 		{
 			object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
 			x->impulse_length = 0;

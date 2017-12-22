@@ -47,9 +47,11 @@ extern t_symbol *ps_lagrange;
 extern t_symbol *ps_buffer;
 extern t_symbol *ps_ibuffer;
 
-struct ibuffer_data {
-    
-    ibuffer_data(t_symbol *name) : samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0), max_buffer(false)
+enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
+
+struct ibuffer_data
+{    
+    ibuffer_data(t_symbol *name) : samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0), buffer_type(kBufferNone)
     {
         buffer_object = name ? name->s_thing : NULL;
         
@@ -68,7 +70,7 @@ struct ibuffer_data {
                     num_chans = buffer->b_nchans;
                     format = PCM_FLOAT;
                     sample_rate = buffer->b_sr;
-                    max_buffer = true;
+                    buffer_type = kBufferMaxBuffer;
                 }
             }
             
@@ -85,7 +87,7 @@ struct ibuffer_data {
                     num_chans = buffer->channels;
                     format = buffer->format;
                     sample_rate = buffer->sr;
-                    max_buffer = false;
+                    buffer_type = kBufferIBuffer;
                 }
             }
         }
@@ -100,7 +102,7 @@ struct ibuffer_data {
     
     void set_dirty()
     {
-        if (max_buffer)
+        if (buffer_type == kBufferMaxBuffer)
             object_method(buffer_object, gensym("dirty"));
     }
     
@@ -110,7 +112,7 @@ struct ibuffer_data {
 
         atom_setlong(temp_atom, size);
 
-        if (max_buffer)
+        if (buffer_type == kBufferMaxBuffer)
         {
             t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
 
@@ -131,7 +133,7 @@ struct ibuffer_data {
         num_chans = 0;
         format = 0,
         sample_rate = 0.0;
-        max_buffer = false;
+        buffer_type = kBufferNone;
         buffer_object = NULL;
     }
     
@@ -143,7 +145,7 @@ struct ibuffer_data {
     
     double sample_rate;
 
-    bool max_buffer;
+    BufferType buffer_type;
     
 private:
     
@@ -202,103 +204,31 @@ void ibuffer_init();
 
 // Get the value of an individual sample
 
-static inline double ibuffer_get_samp(const ibuffer_data& data, intptr_t offset, long chan);
+static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan);
 
 // Get consecutive samples (and in reverse)
 
-void ibuffer_get_samps(const ibuffer_data& data, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
-void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
+void ibuffer_get_samps(const ibuffer_data& buffer, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
+void ibuffer_get_samps(const ibuffer_data& buffer, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
 
 // Read with various forms of interpolation
 
-void ibuffer_read(const ibuffer_data& data, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
-void ibuffer_read(const ibuffer_data& data, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
+void ibuffer_read(const ibuffer_data& buffer, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
+void ibuffer_read(const ibuffer_data& buffer, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
 
-   /*
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////// Get ibuffer and related info //////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static inline void *ibuffer_get_ptr(t_symbol *s)
-{
-    if (s)
-    {
-        t_object *b = s->s_thing;
-	
-        if (b && (ob_sym(b) == ps_ibuffer || ob_sym(b) == ps_buffer))
-        {
-            if (ob_sym(b) == ps_buffer)
-                ATOMIC_INCREMENT(&((t_buffer *)b)->b_inuse);
-            else
-                ATOMIC_INCREMENT(&((t_ibuffer *)b)->inuse);
-    
-            return b;
-        }
-    }
-    
-    return NULL;
-}
-
-static inline void ibuffer_release_ptr(void *thebuffer)
-{
-    if (!thebuffer)
-        return;
-    
-    if (ob_sym(thebuffer) == ps_buffer)
-        ATOMIC_DECREMENT(&((t_buffer *)thebuffer)->b_inuse);
-    else
-        ATOMIC_DECREMENT(&((t_ibuffer *)thebuffer)->inuse);
-}
-
-static inline const ibuffer_data ibuffer_info(void *thebuffer)
-{
-    ibuffer_data data;
-                 
-	if (thebuffer)
-    {
-        if (ob_sym(thebuffer) == ps_buffer)
-        {
-            t_buffer *buffer = (t_buffer *) thebuffer;
-            if (buffer->b_valid)
-            {
-                data.samples = (void *) buffer->b_samples;
-                data.length = buffer->b_frames;
-                data.num_chans = buffer->b_nchans;
-                data.format = PCM_FLOAT;
-                data.sample_rate = buffer->b_sr;
-                data.max_buffer = true;
-            }
-        }
-        else
-        {
-            t_ibuffer *buffer = (t_ibuffer *) thebuffer;
-            if (buffer->valid)
-            {
-                data.samples =  buffer->samples;
-                data.length = buffer->frames;
-                data.num_chans = buffer->channels;
-                data.format = buffer->format;
-                data.sample_rate = buffer->sr;
-                data.max_buffer = false;
-            }
-        }
-    }
-
-	return data;
-}
-*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Get individual samples /////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static inline double ibuffer_get_samp(const ibuffer_data& data, intptr_t offset, long chan)
+static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan)
 {
-    switch (data.format)
+    switch (buffer.format)
     {
-        case PCM_INT_16:    return fetch_float(data, chan)(offset);
-        case PCM_INT_24:    return fetch_24bit(data, chan)(offset);
-        case PCM_INT_32:    return fetch_32bit(data, chan)(offset);
-        case PCM_FLOAT:     return fetch_float(data, chan)(offset);
+        case PCM_INT_16:    return fetch_float(buffer, chan)(offset);
+        case PCM_INT_24:    return fetch_24bit(buffer, chan)(offset);
+        case PCM_INT_32:    return fetch_32bit(buffer, chan)(offset);
+        case PCM_FLOAT:     return fetch_float(buffer, chan)(offset);
     }
 
     return 0.0;

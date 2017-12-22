@@ -34,25 +34,25 @@ void ibuffer_init()
 }
 
 template <class T>
-void ibuffer_read_format(const ibuffer_data& data, T *out, double *positions, intptr_t n_samps, long chan, T mul, InterpType interp)
+void ibuffer_read_format(const ibuffer_data& buffer, T *out, double *positions, intptr_t n_samps, long chan, T mul, InterpType interp)
 {
-    switch(data.format)
+    switch(buffer.format)
     {
-        case PCM_FLOAT:     table_read(fetch_float(data, chan), out, positions, n_samps, mul, interp);    break;
-        case PCM_INT_16:    table_read(fetch_16bit(data, chan), out, positions, n_samps, mul, interp);    break;
-        case PCM_INT_24:    table_read(fetch_24bit(data, chan), out, positions, n_samps, mul, interp);    break;
-        case PCM_INT_32:    table_read(fetch_32bit(data, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_FLOAT:     table_read(fetch_float(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_16:    table_read(fetch_16bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_24:    table_read(fetch_24bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_32:    table_read(fetch_32bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
     }
 }
 
-void ibuffer_read(const ibuffer_data& data, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp)
+void ibuffer_read(const ibuffer_data& buffer, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp)
 {
-    ibuffer_read_format<double>(data, out, positions, n_samps, chan, mul, interp);
+    ibuffer_read_format<double>(buffer, out, positions, n_samps, chan, mul, interp);
 }
 
-void ibuffer_read(const ibuffer_data& data, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp)
+void ibuffer_read(const ibuffer_data& buffer, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp)
 {
-    ibuffer_read_format<float>(data, out, positions, n_samps, chan, mul, interp);
+    ibuffer_read_format<float>(buffer, out, positions, n_samps, chan, mul, interp);
 }
 
 template <class T, class Ft> void ibuffer_get_samps_loop(Ft fetch, T *out, intptr_t offset, intptr_t n_samps, bool reverse)
@@ -69,23 +69,23 @@ template <class T, class Ft> void ibuffer_get_samps_loop(Ft fetch, T *out, intpt
     }
 }
 
-template <class T> void ibuffer_get_samps(const ibuffer_data& data, T *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
+template <class T> void ibuffer_get_samps(const ibuffer_data& buffer, T *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
 {
-    switch(data.format)
+    switch(buffer.format)
     {
-        case PCM_FLOAT:     ibuffer_get_samps_loop(fetch_float(data, chan), out, offset, n_samps, reverse);     break;
-        case PCM_INT_16:    ibuffer_get_samps_loop(fetch_16bit(data, chan), out, offset, n_samps, reverse);     break;
-        case PCM_INT_24:    ibuffer_get_samps_loop(fetch_24bit(data, chan), out, offset, n_samps, reverse);     break;
-        case PCM_INT_32:    ibuffer_get_samps_loop(fetch_32bit(data, chan), out, offset, n_samps, reverse);     break;
+        case PCM_FLOAT:     ibuffer_get_samps_loop(fetch_float(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_16:    ibuffer_get_samps_loop(fetch_16bit(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_24:    ibuffer_get_samps_loop(fetch_24bit(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_32:    ibuffer_get_samps_loop(fetch_32bit(buffer, chan), out, offset, n_samps, reverse);     break;
     }
 }
 
-void ibuffer_get_samps(const ibuffer_data& data, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
+void ibuffer_get_samps(const ibuffer_data& buffer, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
 {
-    ibuffer_get_samps<float>(data, out, offset, n_samps, chan, reverse);
+    ibuffer_get_samps<float>(buffer, out, offset, n_samps, chan, reverse);
 }
 
-void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
+void ibuffer_get_samps(const ibuffer_data& buffer, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse)
 {
-    ibuffer_get_samps<double>(data, out, offset, n_samps, chan, reverse);
+    ibuffer_get_samps<double>(buffer, out, offset, n_samps, chan, reverse);
 }

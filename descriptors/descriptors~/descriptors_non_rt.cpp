@@ -205,7 +205,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 	
 	ibuffer_data buffer(buffer_name);
 	
-	if (!buffer.length)
+    if (buffer.buffer_type == kBufferNone)
 	{
 		error ("descriptors~: buffer not found");
 		return;
@@ -395,7 +395,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	// Access buffer and increment pointer
     
-	if (!buffer.length)
+	if (buffer.buffer_type == kBufferNone)
 	{
 		error ("descriptors~: could not access buffer");
 		return;

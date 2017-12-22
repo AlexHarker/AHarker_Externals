@@ -186,12 +186,12 @@ void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
 
 void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 {
-    ibuffer_data data(s);
+    ibuffer_data buffer(s);
 	
-	if (data.length)
+	if (buffer.buffer_type != kBufferNone)
 	{
-        // FIX!
-		//if (b != x->buffer_pointer)
+        // FIX! - check this!
+		if (s != x->buffer_name)
 			x->pos = -1.0;
 		x->buffer_name = s;
 		
@@ -388,19 +388,19 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     for (long i = 0; i < vec_size; i++)
         phase_out[i] = 1.0;
     
-    ibuffer_data data(x->buffer_name);
+    ibuffer_data buffer(x->buffer_name);
     
     // Check on playback state / new play instruction and decide whether to output
     
-    if (data.length)
+    if (buffer.length)
     {
-        double speed = x->speed * data.sample_rate * x->sr_div;
+        double speed = x->speed * buffer.sample_rate * x->sr_div;
         double start_samp = x->start_samp;
         double min_samp = x->min_samp;
         double max_samp = x->max_samp;
         
-        if (max_samp > data.length)
-            max_samp = data.length;
+        if (max_samp > buffer.length)
+            max_samp = buffer.length;
         
         double length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
         
@@ -426,10 +426,10 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
             // Now get samples interpolating as relevant
             
             for (long i = 0; i < obj_n_chans; i++)
-                if (vols[i] && data.num_chans > i)
-                    ibuffer_read(data, outs[i], positions, todo, i, vols[i], interp_type);
+                if (vols[i] && buffer.num_chans > i)
+                    ibuffer_read(buffer, outs[i], positions, todo, i, vols[i], interp_type);
             
-            if (positions == reinterpret_cast<double *>(outs[obj_n_chans - 1]) && obj_n_chans > data.num_chans)
+            if (positions == reinterpret_cast<double *>(outs[obj_n_chans - 1]) && obj_n_chans > buffer.num_chans)
                 memset(positions, 0, todo * sizeof(double));
         }
     }

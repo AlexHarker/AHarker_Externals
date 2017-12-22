@@ -504,7 +504,7 @@ void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 
 void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
 {
-    ibuffer_data data(s);
+    ibuffer_data buffer(s);
 	
     // We store the buffer_name, as it may become valid later
 
@@ -513,7 +513,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
 	if (!eq_flag || !x->eq_flag) 
 		x->num_partitions = 0;
 	
-	if (data.length)
+	if (buffer.length)
 	{
 		x->direct_flag = direct_flag;
 		x->eq_flag = eq_flag;
@@ -525,7 +525,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
         x->num_partitions = 0;
         x->reset_flag = 1;
         
-		if (s)
+		if (buffer.buffer_type == kBufferNone && s)
 			object_error( (t_object *) x, "%s is not a valid buffer", s->s_name);
 	}
 }
@@ -535,7 +535,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 {
 	// Standard ibuffer variables
 	
-    ibuffer_data data(x->buffer_name);
+    ibuffer_data buffer(x->buffer_name);
 	
 	// FFT variables / attributes
 	
@@ -563,18 +563,18 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	
 	// Access buffer
 	
-	if (!x->memory_flag || !data.length)
+	if (!x->memory_flag || !buffer.length)
 	{
         x->num_partitions = 0;
 		return;
 	}
 			
-	if (data.num_chans < chan + 1)
-		chan = chan % data.num_chans;
+	if (buffer.num_chans < chan + 1)
+		chan = chan % buffer.num_chans;
 	
 	// Calculate how much of the buffer to load
 	
-	impulse_length = data.length - offset;
+	impulse_length = buffer.length - offset;
 	if (length && length < impulse_length)
 		impulse_length = length;
 	if (impulse_length < 0)
@@ -598,7 +598,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			// Get real values (zero pad if not enough data)
 			
 			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
-            ibuffer_get_samps(data, buffer_temp2.realp, buffer_pos, n_samps, chan);
+            ibuffer_get_samps(buffer, buffer_temp2.realp, buffer_pos, n_samps, chan);
 			for (i = n_samps; i < fft_size_halved; i++)
 				buffer_temp2.realp[i] = 0;
 			
@@ -606,7 +606,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			
 			impulse_length -= fft_size_halved;
 			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
-            ibuffer_get_samps(data, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
+            ibuffer_get_samps(buffer, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
 
 			for (i = n_samps; i < fft_size_halved; i++)
 				buffer_temp2.imagp[i] = 0;
@@ -622,7 +622,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			 // Get samples up to half the fft size
 			
 			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
-            ibuffer_get_samps(data, buffer_temp1, buffer_pos, n_samps, chan);
+            ibuffer_get_samps(buffer, buffer_temp1, buffer_pos, n_samps, chan);
 			
 			// Zero pad
 			

@@ -108,15 +108,15 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 {
     x->name = name;
     
-	ibuffer_data data(name);
+	ibuffer_data buffer(name);
 	
-	if (data.length)
+	if (buffer.buffer_type != kBufferNone)
 	{
-		if (data.sample_rate)
+		if (buffer.sample_rate)
 		{
-			outlet_int(x->chans_outlet, data.num_chans);
-			outlet_float(x->sr_outlet, data.sample_rate);
-			outlet_float(x->length_outlet, (data.length / data.sample_rate) * 1000);
+			outlet_int(x->chans_outlet, buffer.num_chans);
+			outlet_float(x->sr_outlet, buffer.sample_rate);
+			outlet_float(x->length_outlet, (buffer.length / buffer.sample_rate) * 1000);
 		}
 		else 
 		{
