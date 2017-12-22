@@ -327,7 +327,11 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DENORM_WANT_FIX=1",
+					"NO_TRANSLATION_SUPPORT=1",
+					"MSP_VERSION=1",
+				);
 			};
 			name = Development;
 		};
@@ -336,7 +340,11 @@
 			buildSettings = {
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DENORM_WANT_FIX=1",
+					"NO_TRANSLATION_SUPPORT=1",
+					"MSP_VERSION=1",
+				);
 			};
 			name = Deployment;
 		};
@@ -344,7 +352,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PREFIX_HEADER = "$(SRCROOT)/../../AH_MaxMSP_Headers/AH_MSP_Version.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DENORM_WANT_FIX=1",
+					"NO_TRANSLATION_SUPPORT=1",
+					"MSP_VERSION=1",
+				);
 			};
 			name = Default;
 		};

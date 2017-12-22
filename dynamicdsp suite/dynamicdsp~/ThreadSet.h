@@ -7,8 +7,8 @@
 #include <ext.h>
 
 #include <AH_Atomic.h>
-#include <AH_Types.h>
 #include <AH_VectorOps.h>
+#include <stdint.h>
 
 #ifdef __APPLE__
 #include <pthread.h>
