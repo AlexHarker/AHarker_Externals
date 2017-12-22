@@ -144,7 +144,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
 void partconvolve_partition(t_partconvolve *x, long direct_flag);
 
 void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
-void partconvolve_perform_eq(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
+void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
 void partconvolve_perform_internal(t_partconvolve *x, vFloat *in, vFloat *out, long vec_size);
 
 t_int *partconvolve_perform(t_int *w);
@@ -203,7 +203,7 @@ int C74_EXPORT main(void)
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
 	
-	ibuffer_init ();
+	ibuffer_init();
 	
 	// Seed the random fft offset generator
 
@@ -319,17 +319,17 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Set attributes from arguments
 	
-	attr_args_process (x, argc, argv);
+	attr_args_process(x, argc, argv);
 	
 	// Check whether the fftsize attribute has been set (if not set it)
 	
 	if (x->fft_size == 0) 
-		object_attr_setlong (x, gensym("fftsize"), x->max_fft_size);
+		object_attr_setlong(x, gensym("fftsize"), x->max_fft_size);
 	
 	if (!x->memory_flag)
-		object_error( (t_object *) x, "couldn't allocate enough memory.....");
+		object_error((t_object *) x, "couldn't allocate enough memory.....");
 	
-	return (x);
+	return x;
 }
 
 
@@ -506,12 +506,14 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
 {
     ibuffer_data data(s);
 	
+    // We store the buffer_name, as it may become valid later
+
     x->buffer_name = s;
     
 	if (!eq_flag || !x->eq_flag) 
 		x->num_partitions = 0;
 	
-	if (b)
+	if (data.length)
 	{
 		x->direct_flag = direct_flag;
 		x->eq_flag = eq_flag;
@@ -520,18 +522,11 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
 	}
 	else 
 	{
+        x->num_partitions = 0;
+        x->reset_flag = 1;
+        
 		if (s)
-		{
 			object_error( (t_object *) x, "%s is not a valid buffer", s->s_name);
-			x->num_partitions = 0;
-			
-			// We still store the buffer_name, as it may become valid later
-		}
-		else
-		{
-			x->num_partitions = 0;
-			x->reset_flag = 1;
-		}
 	}
 }
 
@@ -568,10 +563,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	
 	// Access buffer
 	
-	if (!x->memory_flag)
-		return;
-	
-	if (!data.length)
+	if (!x->memory_flag || !data.length)
 	{
         x->num_partitions = 0;
 		return;
@@ -590,11 +582,11 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	if (x->eq_flag && impulse_length > fft_size_halved)
 		impulse_length = fft_size_halved;
 	if (length && impulse_length < length)
-		object_error( (t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
+		object_error((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
 	if (impulse_length > x->max_impulse_length) 
 	{
 		impulse_length = x->max_impulse_length;
-		object_error( (t_object *) x, "internal buffer is not large enough to load entire buffer~ into memory");
+		object_error((t_object *) x, "internal buffer is not large enough to load entire buffer~ into memory");
 	}
     
 	// Partition / load the impulse
@@ -619,7 +611,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			for (i = n_samps; i < fft_size_halved; i++)
 				buffer_temp2.imagp[i] = 0;
 			
-			DSP_SPLIT_COMPLEX_POINTER_CALC (buffer_temp2, buffer_temp2, fft_size_halved);
+			DSP_SPLIT_COMPLEX_POINTER_CALC(buffer_temp2, buffer_temp2, fft_size_halved);
 		}
 		
 	}
@@ -639,9 +631,9 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			
 			// Do fft straight into position
 			
-			hisstools_unzip_f (buffer_temp1, &buffer_temp2, fft_size_log2);
-			hisstools_rfft_f (fft_setup_real, &buffer_temp2, fft_size_log2);
-			DSP_SPLIT_COMPLEX_POINTER_CALC (buffer_temp2, buffer_temp2, fft_size_halved);
+			hisstools_unzip_f(buffer_temp1, &buffer_temp2, fft_size_log2);
+			hisstools_rfft_f(fft_setup_real, &buffer_temp2, fft_size_log2);
+			DSP_SPLIT_COMPLEX_POINTER_CALC(buffer_temp2, buffer_temp2, fft_size_halved);
 		}
 	}
 	
@@ -687,7 +679,7 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 }
 
 
-void partconvolve_perform_eq(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
 {
     vFloat *in_real1 = (vFloat *) in1.realp;
     vFloat *in_imag1 = (vFloat *) in1.imagp;
@@ -866,14 +858,14 @@ void partconvolve_perform_internal(t_partconvolve *x, vFloat *in, vFloat *out, l
 			// Process first partition here and accumulate the output (we need it now!)
 			
 			if (eq_flag) 
-				partconvolve_perform_eq(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved_over_4); 
+				partconvolve_perform_equaliser(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved_over_4);
 			else 
 				partconvolve_perform_partition(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved_over_4);
 			
 			// Processing done - do inverse fft on the accumulation buffer
 			
-			hisstools_rifft_f (fft_setup_real, &accum_buffer, fft_size_log2);
-			hisstools_zip_f (&accum_buffer, (float *) fft_buffers[2], fft_size_log2);
+			hisstools_rifft_f(fft_setup_real, &accum_buffer, fft_size_log2);
+			hisstools_zip_f(&accum_buffer, (float *) fft_buffers[2], fft_size_log2);
 			
 			// Calculate temporary output pointers
 			
@@ -989,7 +981,7 @@ void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
     if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
 	{
 		free (x->safe_signal);
-		x->safe_signal = (float *) ALIGNED_MALLOC (sp[0]->s_n * sizeof(float));
+		x->safe_signal = (float *) ALIGNED_MALLOC(sp[0]->s_n * sizeof(float));
 		
 		dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, x->safe_signal, sp[0]->s_n * sizeof(float));
 		dsp_add(denormals_perform, 5, partconvolve_perform, x->safe_signal, x->safe_signal, sp[0]->s_n, x);
@@ -1000,7 +992,7 @@ void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
 }
 
 
-void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void partconvolve_perform64(t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in = ins[0];
 	double *out = outs[0];
@@ -1023,7 +1015,7 @@ void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, l
 }
 
 
-void partconvolve_dsp64 (t_partconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {	
 	object_method(dsp64, gensym("dsp_add64"), x, partconvolve_perform64);
 }
@@ -1034,9 +1026,9 @@ void partconvolve_memoryusage(t_partconvolve *x)
 	long memory_size = ((x->max_impulse_length * 4 * sizeof(float)) + ((x->max_fft_size >> 2) * 7 * sizeof(vFloat)));
 	
 	if (memory_size > 1024)
-		object_post ((t_object *)x, "using %.2lf MB", memory_size / 1048576.0);
+		object_post((t_object *)x, "using %.2lf MB", memory_size / 1048576.0);
 	else
-		object_post ((t_object *)x, "using %.2lf KB", memory_size / 1024.0);
+		object_post((t_object *)x, "using %.2lf KB", memory_size / 1024.0);
 }
 
 

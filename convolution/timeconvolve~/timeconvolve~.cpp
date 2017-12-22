@@ -127,8 +127,8 @@ int C74_EXPORT main(void)
 void timeconvolve_free(t_timeconvolve *x)
 {
 	dsp_free(&x->x_obj);
-	ALIGNED_FREE (x->impulse_buffer);
-	ALIGNED_FREE (x->input_buffer);
+	ALIGNED_FREE(x->impulse_buffer);
+	ALIGNED_FREE(x->input_buffer);
 }
 
 
@@ -138,8 +138,6 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
     t_timeconvolve *x = (t_timeconvolve *) object_alloc(this_class);
     
-	long i;
-
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
 	
@@ -154,17 +152,17 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Set attributes from arguments
 	
-	attr_args_process (x, argc, argv);
+	attr_args_process(x, argc, argv);
 	
 	// Allocate impulse buffer and input buffer
 	
 	x->impulse_buffer = (float *) ALIGNED_MALLOC(sizeof(float) * 2048);
 	x->input_buffer = (float *) ALIGNED_MALLOC(sizeof(float) *  8192);
 	
-	for (i = 0; i < 2048; i++)
+	for (long i = 0; i < 2048; i++)
 		x->impulse_buffer[i] = 0.f;
 
-	for (i = 0; i < 8192; i++)
+	for (long i = 0; i < 8192; i++)
 		x->input_buffer[i] = 0.f;
 
 	x->memory_flag = (x->impulse_buffer && x->input_buffer);
@@ -172,7 +170,7 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	if (!x->memory_flag)
 		object_error ((t_object *) x, "couldn't allocate enough memory.....");
 	
-	return (x);
+	return x;
 }
 
 
@@ -217,7 +215,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
         
         if (impulse_length)
         {
-#ifdef __APPLE__1
+#ifdef __APPLE__
             ibuffer_get_samps(data, impulse_buffer, offset, impulse_length, chan - 1, true);
 #else
             t_ptr_int impulse_offset = pad_length(impulse_length) - impulse_length;
@@ -453,7 +451,7 @@ void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, l
 }
 
 
-void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
 #ifndef __APPLE__
 	if (SSE2_check())
