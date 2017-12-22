@@ -22,7 +22,7 @@
 #define FLT_MAX 3.402823466e+38f
 #endif
 
-void *this_class;
+t_class *this_class;
 
 
 typedef struct _ibufconcatedrive
