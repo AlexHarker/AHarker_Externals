@@ -19,7 +19,7 @@
 #include <dynamicdsp~.h>
 
 
-void *this_class;
+t_class *this_class;
 
 
 typedef struct _dynamic_out
@@ -229,7 +229,7 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
         {
             for (long i = 0; i < vec_size >> 1; i++)
             {
-                *io_pointer = F64_VEC_ADD_OP (*io_pointer, *in1++);
+                *io_pointer = F64_VEC_ADD_OP(*io_pointer, *in1++);
                 io_pointer++;
             }
         }

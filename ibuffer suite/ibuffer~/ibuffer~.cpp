@@ -64,7 +64,7 @@ int C74_EXPORT main (void)
 }
 
 
-void *ibuffer_new (t_symbol *name, t_symbol *path_sym)
+void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
 {
 	t_atom temp_atom;
 	

@@ -49,14 +49,117 @@ extern t_symbol *ps_ibuffer;
 
 struct ibuffer_data {
     
-    ibuffer_data() : samples(NULL), length(0), num_chans(0), format(0) {}
+    ibuffer_data(t_symbol *name) : samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0), max_buffer(false)
+    {
+        buffer_object = name ? name->s_thing : NULL;
+        
+        if (buffer_object)
+        {
+            if (ob_sym(buffer_object) == ps_buffer)
+            {
+                t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
+                
+                if (buffer->b_valid)
+                {
+                    ATOMIC_INCREMENT(&buffer->b_inuse);
+                    
+                    samples = (void *) buffer->b_samples;
+                    length = buffer->b_frames;
+                    num_chans = buffer->b_nchans;
+                    format = PCM_FLOAT;
+                    sample_rate = buffer->b_sr;
+                    max_buffer = true;
+                }
+            }
+            
+            if (ob_sym(buffer_object) == ps_ibuffer)
+            {
+                t_ibuffer *buffer = reinterpret_cast<t_ibuffer *>(buffer_object);
+                
+                if (buffer->valid)
+                {
+                    ATOMIC_INCREMENT(&buffer->inuse);
+
+                    samples =  buffer->samples;
+                    length = buffer->frames;
+                    num_chans = buffer->channels;
+                    format = buffer->format;
+                    sample_rate = buffer->sr;
+                    max_buffer = false;
+                }
+            }
+        }
+    }
+    
+    //ibuffer_data() {}
+    
+    ~ibuffer_data()
+    {
+        release_buffer();
+    }
+    
+    void set_dirty()
+    {
+        if (max_buffer)
+            object_method(buffer_object, gensym("dirty"));
+    }
+    
+    void set_size_in_samples(t_atom_long size)
+    {
+        t_atom temp_atom[2];
+
+        atom_setlong(temp_atom, size);
+
+        if (max_buffer)
+        {
+            t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
+
+            ATOMIC_INCREMENT(&(buffer)->b_inuse);
+            object_method_typed(buffer_object, gensym("sizeinsamps"), 1, temp_atom, temp_atom + 1);
+            ATOMIC_DECREMENT(&(buffer)->b_inuse);
+            
+            samples = (void *) buffer->b_samples;
+            length = buffer->b_frames;
+        }
+    }
+    
+    void release()
+    {
+        release_buffer();
+        samples = NULL;
+        length = 0;
+        num_chans = 0;
+        format = 0,
+        sample_rate = 0.0;
+        max_buffer = false;
+        buffer_object = NULL;
+    }
     
     void *samples;
+    
     long length;
     long num_chans;
     long format;
     
     double sample_rate;
+
+    bool max_buffer;
+    
+private:
+    
+    void release_buffer()
+    {
+        if (buffer_object)
+        {
+            if (ob_sym(buffer_object) == ps_buffer)
+                ATOMIC_DECREMENT(&((t_buffer *)buffer_object)->b_inuse);
+            
+            if (ob_sym(buffer_object) == ps_ibuffer)
+                ATOMIC_DECREMENT(&((t_ibuffer *)buffer_object)->inuse);
+        }
+    }
+    
+    t_object *buffer_object;
 };
 
 // Reading different formats
@@ -111,7 +214,7 @@ void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, i
 void ibuffer_read(const ibuffer_data& data, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
 void ibuffer_read(const ibuffer_data& data, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
 
-        
+   /*
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////// Get ibuffer and related info //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +266,7 @@ static inline const ibuffer_data ibuffer_info(void *thebuffer)
                 data.num_chans = buffer->b_nchans;
                 data.format = PCM_FLOAT;
                 data.sample_rate = buffer->b_sr;
+                data.max_buffer = true;
             }
         }
         else
@@ -175,13 +279,14 @@ static inline const ibuffer_data ibuffer_info(void *thebuffer)
                 data.num_chans = buffer->channels;
                 data.format = buffer->format;
                 data.sample_rate = buffer->sr;
+                data.max_buffer = false;
             }
         }
     }
 
 	return data;
 }
-
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Get individual samples /////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

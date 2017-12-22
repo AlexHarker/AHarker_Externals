@@ -148,14 +148,12 @@ void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
 
 void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
 {
-	void *b = ibuffer_get_ptr(s);
-	
-	x->buffer_name = b ? s : NULL;
+    ibuffer_data data(s);
     
-    if (!b && s)
+    x->buffer_name = s;
+    
+    if (!data.length && s)
         object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
-    
-    ibuffer_release_ptr(b);
 }
 
 void ibuftable_startsamp(t_ibuftable *x, t_atom_long start_samp)
@@ -207,8 +205,7 @@ void perform_core(t_ibuftable *x, T *in, T *out, double *positions, long vec_siz
 {
     // Check if the buffer is set / valid and get the length information
     
-    void *buffer_pointer = ibuffer_get_ptr(x->buffer_name);
-    const ibuffer_data data = ibuffer_info(buffer_pointer);
+    ibuffer_data data(x->buffer_name);
     
     long start_samp = clip(x->start_samp, data.length - 1);
     long end_samp = clip(x->end_samp, data.length - 1);
@@ -216,7 +213,7 @@ void perform_core(t_ibuftable *x, T *in, T *out, double *positions, long vec_siz
     
     // Calculate output
 
-    if (buffer_pointer && data.length >= 1)
+    if (data.length >= 1)
     {
         perform_positions(positions, in, vec_size, start_samp, end_samp);
         ibuffer_read(data, out, positions, vec_size, chan, 1.f, x->interp_type);
@@ -226,8 +223,6 @@ void perform_core(t_ibuftable *x, T *in, T *out, double *positions, long vec_siz
         for (long i = 0; i < vec_size; i++)
             *out++ = 0.f;
     }
-    
-    ibuffer_release_ptr(buffer_pointer);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -108,12 +108,10 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 {
     x->name = name;
     
-	void *b = ibuffer_get_ptr(name);
+	ibuffer_data data(name);
 	
-	if (b) 
+	if (data.length)
 	{
-        const ibuffer_data data = ibuffer_info(b);
-		
 		if (data.sample_rate)
 		{
 			outlet_int(x->chans_outlet, data.num_chans);
@@ -129,8 +127,6 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 	}
 	else
 		error("ibufinfo~: named (i)buffer~ does not exist");
-    
-    ibuffer_release_ptr(b);
 }
 
 

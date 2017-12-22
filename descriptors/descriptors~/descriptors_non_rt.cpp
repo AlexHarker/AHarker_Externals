@@ -19,7 +19,7 @@
 
 #include "descriptors_object.h"
 
-#include <ibuffer_access.h>
+#include <ibuffer_access.hpp>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,10 +169,9 @@ void descriptors_free(t_descriptors *x)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	t_symbol *buffer_name = 0;
-	void *b;
 	
 	double sr;
 	double mstosamps_val;
@@ -204,21 +203,20 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 	
 	// Check the buffer
 	
-	b = ibuffer_get_ptr (buffer_name);
+	ibuffer_data buffer(buffer_name);
 	
-	if (!b)
+	if (!buffer.length)
 	{
-		error ("descriptors(rt)~: buffer not found");
+		error ("descriptors~: buffer not found");
 		return;
 	}
 	
-	x->buffer_pointer = b;
 	x->buffer_name = buffer_name;
 	
 	// Calculate lengths
 	
-	sr = x->sr = ibuffer_sample_rate (b);
-	mstosamps_val = sr / 1000.;
+	sr = x->sr = buffer.sample_rate;
+	mstosamps_val = sr / 1000.0;
 	
 	if (start_point_ms < 0) 
 		start_point_ms = 0;
@@ -234,7 +232,7 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 	x->end_point = end_point_ms * mstosamps_val;
 	x->buffer_chan = buffer_chan - 1;
 	
-	calc_descriptors_non_rt (x);
+	calc_descriptors_non_rt(x);
 }
 
 
@@ -243,7 +241,7 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void calc_descriptors_non_rt (t_descriptors *x)
+void calc_descriptors_non_rt(t_descriptors *x)
 {
 	t_atom *output_list = x->output_list;
 	
@@ -274,7 +272,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	vFloat *imag_data;
 
 #if (defined F32_VEC_LOG_OP)
-	vFloat v_half = {0.5, 0.5, 0.5, 0.5};
+	vFloat v_half = {0.5f, 0.5f, 0.5f, 0.5f};
 #endif
 #if (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
 	vFloat v_pow_min = {POW_MIN, POW_MIN, POW_MIN, POW_MIN};
@@ -337,13 +335,8 @@ void calc_descriptors_non_rt (t_descriptors *x)
 
 	// Buffer variables
 	
-	void *b = x->buffer_pointer;
-	void *buffer_samples_ptr;
-	
-	AH_SIntPtr file_length;
-	long num_of_chans;
-	long int_size;
-	
+    ibuffer_data buffer(x->buffer_name);
+		
 	// Buffer access variables
 	
 	double num_frames_recip;
@@ -354,6 +347,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	long end_point = x->end_point;
 	long num_frames;
 	long num_samps;
+    t_ptr_int file_length;
 	
 	// Loop iterators
 	
@@ -400,16 +394,14 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	}
 	
 	// Access buffer and increment pointer
-	
-	if (!ibuffer_info (b, &buffer_samples_ptr, &file_length, &num_of_chans, &int_size))
+    
+	if (!buffer.length)
 	{
-		error ("descriptors(rt)~: could not access buffer");
+		error ("descriptors~: could not access buffer");
 		return;
 	}
-	
-	ibuffer_increment_inuse(b);		
-	
-	sr = ibuffer_sample_rate (b);
+		
+	sr = buffer.sample_rate;
 	samps_to_ms_val = 1000. / sr;
 	frame_to_ms_val = hop_size * 1000. / sr;
 	ms_to_frame_val = sr / (hop_size * 1000.);
@@ -423,19 +415,19 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	// Range check buffer access variables and calculate numer of frames
 	
-	if (num_of_chans < buffer_chan + 1)
-		buffer_chan = buffer_chan % num_of_chans;
-				
+	if (buffer.num_chans < buffer_chan + 1)
+		buffer_chan = buffer_chan % buffer.num_chans;
+    
+    file_length = buffer.length;
 	if (end_point && end_point < file_length)
 		file_length = end_point;
 	file_length -= start_point;
 	
-	num_frames = (long) ceil ((double) file_length / (double) hop_size);
+	num_frames = (long) ceil((double) file_length / (double) hop_size);
 	
 	if (num_frames < 1)
 	{
-		error("descriptors(rt)~: zero length file or segment");
-		ibuffer_decrement_inuse(b);
+		error("descriptors~: zero length file or segment");
 		return;
 	}
 	
@@ -447,8 +439,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	if (!num_pf_descriptors_per_loop)
 	{
-		error("descriptors(rt)~: not enough memory - file is too long!");
-		ibuffer_decrement_inuse(b);
+		error("descriptors~: not enough memory - file is too long!");
 		return;
 	}	
 
@@ -510,7 +501,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			if (file_length >= (buffer_pos + window_size)) num_samps = window_size;
 			else num_samps = file_length - buffer_pos;
 			
-			ibuffer_get_samps (buffer_samples_ptr, raw_frame, start_point + buffer_pos, num_samps, num_of_chans, buffer_chan, int_size);
+			ibuffer_get_samps(buffer, raw_frame, start_point + buffer_pos, num_samps, buffer_chan);
 			
 			// Zero pad to fft size
 			
@@ -921,9 +912,9 @@ void calc_descriptors_non_rt (t_descriptors *x)
 		}
 	}
 	
-	// Decrement buffer pointer
+	// Release buffer
 	
-	ibuffer_decrement_inuse(b);
+    buffer.release();
 
 	// Output
 	

@@ -26,8 +26,8 @@
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
 		B815E6C61F5B2B2200ADF1CA /* descriptors_constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */; };
 		B815E6C71F5B2B2200ADF1CA /* descriptors_constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */; };
-		B84BD78C10E81358002288DB /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B84BD78B10E81358002288DB /* ibuffer_access.c */; };
-		B84BD78D10E81358002288DB /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B84BD78B10E81358002288DB /* ibuffer_access.c */; };
+		B84BD78C10E81358002288DB /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B84BD78B10E81358002288DB /* ibuffer_access.cpp */; };
+		B84BD78D10E81358002288DB /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B84BD78B10E81358002288DB /* ibuffer_access.cpp */; };
 		B862CA9A145F03FA00EC9070 /* HISSTools_FFT.c in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.c */; };
 		B862CA9B145F03FA00EC9070 /* HISSTools_FFT.c in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.c */; };
 		B8A49AB4110C6EF000738FDC /* descriptors_non_rt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */; };
@@ -73,7 +73,7 @@
 		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
 		B815E6C81F5B5B1100ADF1CA /* Statistics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Statistics.hpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B84BD78B10E81358002288DB /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
+		B84BD78B10E81358002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HISSTools_FFT.c; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.c; sourceTree = SOURCE_ROOT; };
 		B89327980F23C48E002D6F23 /* descriptors_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_object.h; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -173,7 +173,7 @@
 				B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */,
 				B8F382F20F23BD5300B7D3E0 /* descriptors_statistics.h */,
 				B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */,
-				B84BD78B10E81358002288DB /* ibuffer_access.c */,
+				B84BD78B10E81358002288DB /* ibuffer_access.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -322,7 +322,7 @@
 				B8F3825B0F23B80000B7D3E0 /* descriptors_combsort.cpp in Sources */,
 				B8F382F50F23BD5300B7D3E0 /* descriptors_statistics.cpp in Sources */,
 				B8F3829C0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp in Sources */,
-				B84BD78C10E81358002288DB /* ibuffer_access.c in Sources */,
+				B84BD78C10E81358002288DB /* ibuffer_access.cpp in Sources */,
 				B8A49AB4110C6EF000738FDC /* descriptors_non_rt.cpp in Sources */,
 				B862CA9A145F03FA00EC9070 /* HISSTools_FFT.c in Sources */,
 			);
@@ -341,7 +341,7 @@
 				B8FE3F2210986C1000780AF9 /* descriptors_combsort.cpp in Sources */,
 				B8FE3F2310986C1000780AF9 /* descriptors_statistics.cpp in Sources */,
 				B8FE3F2410986C1000780AF9 /* descriptors_set_descriptors.cpp in Sources */,
-				B84BD78D10E81358002288DB /* ibuffer_access.c in Sources */,
+				B84BD78D10E81358002288DB /* ibuffer_access.cpp in Sources */,
 				B862CA9B145F03FA00EC9070 /* HISSTools_FFT.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

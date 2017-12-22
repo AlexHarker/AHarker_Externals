@@ -44,8 +44,6 @@ typedef struct _descriptors
 	
 	t_symbol *buffer_name;
 
-	void *buffer_pointer;
-	
 	long buffer_chan;
 	long start_point;
 	long end_point;

@@ -166,14 +166,12 @@ void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *a
 
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 {
-    void *b = ibuffer_get_ptr(s);
+    ibuffer_data data(s);
     
-    x->buffer_name = b ? s : NULL;
+    x->buffer_name = s;
     
-    if (!b && s)
-        object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
-    
-    ibuffer_release_ptr(b);
+    if (!data.length && s)
+        object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
 }
 
 void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long start_samp)
@@ -230,8 +228,7 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, double *posi
 {
     // Check if the buffer is set / valid and get the length information
     
-    void *buffer_pointer = ibuffer_get_ptr(x->buffer_name);
-    const ibuffer_data data = ibuffer_info(buffer_pointer);
+    ibuffer_data data(x->buffer_name);
     
     long start_samp = clip(x->start_samp, data.length - 1);
     long end_samp = clip(x->end_samp, data.length - 1);
@@ -239,7 +236,7 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, double *posi
     
     // Calculate output
     
-    if (buffer_pointer && ((data.length - start_samp) >= 1))
+    if ((data.length - start_samp) >= 1)
     {
         perform_positions(positions, in, offset_in, vec_size, start_samp, end_samp);
         ibuffer_read(data, out, positions, vec_size, chan, 1.f, x->interp_type);
@@ -249,8 +246,6 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, double *posi
         for (long i = 0; i < vec_size; i++)
             *out++ = 0.f;
     }
-    
-    ibuffer_release_ptr(buffer_pointer);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -152,7 +152,6 @@ void descriptors_new_common (t_descriptors *x, long max_fft_size_log2, long desc
 	x->start_point = 0;
 	x->end_point = 0; 
 	
-	x->buffer_pointer = 0;
 	x->buffer_name = 0;
 	
 	x->sr = 44100.0;

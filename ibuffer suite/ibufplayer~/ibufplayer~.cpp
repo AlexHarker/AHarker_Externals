@@ -186,9 +186,9 @@ void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
 
 void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 {
-	void *b = ibuffer_get_ptr(s);
+    ibuffer_data data(s);
 	
-	if (b) 
+	if (data.length)
 	{
         // FIX!
 		//if (b != x->buffer_pointer)
@@ -202,8 +202,6 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 		if (s)
 			error("ibufplayer~: no buffer %s", s->s_name);
 	}
-    
-    ibuffer_release_ptr(b);
 }
 
 void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
@@ -243,16 +241,10 @@ void ibufplayer_stop(t_ibufplayer *x)
 // FIX - temp
 
 double ibuffer_sample_rate(t_symbol *name)
-{
-    void *buffer_pointer = ibuffer_get_ptr(name);
-    const ibuffer_data data = ibuffer_info(buffer_pointer);
-    
-    double sample_rate = data.sample_rate;
-    
-    ibuffer_release_ptr(buffer_pointer);
-    
-    return sample_rate;
+{    
+    return ibuffer_data(name).sample_rate;
 }
+
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
 {
 	double sr_ms = 44.1;
@@ -396,12 +388,11 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     for (long i = 0; i < vec_size; i++)
         phase_out[i] = 1.0;
     
-    void *buffer_pointer = ibuffer_get_ptr(x->buffer_name);
-    const ibuffer_data data = ibuffer_info(buffer_pointer);
+    ibuffer_data data(x->buffer_name);
     
     // Check on playback state / new play instruction and decide whether to output
     
-    if (buffer_pointer)
+    if (data.length)
     {
         double speed = x->speed * data.sample_rate * x->sr_div;
         double start_samp = x->start_samp;
@@ -442,8 +433,6 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
                 memset(positions, 0, todo * sizeof(double));
         }
     }
-    
-    ibuffer_release_ptr(buffer_pointer);
     
     bool playing = !(todo < vec_size);
     if (!playing && x->playing)

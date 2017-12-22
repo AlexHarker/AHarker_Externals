@@ -20,7 +20,7 @@
 #include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <AH_Random.h>
-#include <ibuffer_access.h>
+#include <ibuffer_access.hpp>
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
 
@@ -37,18 +37,13 @@ complex1.realp = complex2.realp + offset;							\
 complex1.imagp = complex2.imagp + offset;
 
 
-void *this_class;
+t_class *this_class;
 
 
 typedef struct _partconvolve
 {
     t_pxobject x_obj;
 	void *obex;
-	
-	// Buffer variables
-	
-	void *buffer_pointer;
-	t_symbol *buffer_name;
 	
 	// FFT variables
 	
@@ -84,6 +79,10 @@ typedef struct _partconvolve
 	
 	long max_impulse_length;
 	
+    // Buffer name
+    
+    t_symbol *buffer_name;
+    
 	// Attributes
 	
 	t_atom_long chan;
@@ -239,14 +238,14 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     outlet_new((t_object *)x,"signal");
 	
 	// Set default initial attributes and variables
-	
-	x->buffer_pointer = 0;
-	x->buffer_name = 0;
+
 	x->num_partitions = 0;
 	
 	x->max_fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
 	x->max_fft_size = 1 << x->max_fft_size_log2;
 	
+    x->buffer_name = NULL;
+    
 	x->fft_size_log2 = 0;
 	x->fft_size = 0;
 	x->length = 0;
@@ -420,7 +419,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 		
 		// Reload the impulse buffer if appropriate
 		
-		partconvolve_partition (x, x->direct_flag);
+		partconvolve_partition(x, x->direct_flag);
 	}
 	
 	return MAX_ERR_NONE;
@@ -505,36 +504,31 @@ void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 
 void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
 {
-	void *b = ibuffer_get_ptr (s);
+    ibuffer_data data(s);
 	
+    x->buffer_name = s;
+    
 	if (!eq_flag || !x->eq_flag) 
 		x->num_partitions = 0;
 	
 	if (b)
 	{
-		x->buffer_pointer = b;
-		x->buffer_name = s;
-		
 		x->direct_flag = direct_flag;
 		x->eq_flag = eq_flag;
 		
-		partconvolve_partition (x, direct_flag);
+		partconvolve_partition(x, direct_flag);
 	}
 	else 
 	{
 		if (s)
 		{
 			object_error( (t_object *) x, "%s is not a valid buffer", s->s_name);
-			x->buffer_pointer = 0;
-			x->buffer_name = s; 
 			x->num_partitions = 0;
 			
 			// We still store the buffer_name, as it may become valid later
 		}
 		else
 		{
-			x->buffer_pointer = 0;
-			x->buffer_name = 0;
 			x->num_partitions = 0;
 			x->reset_flag = 1;
 		}
@@ -546,11 +540,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 {
 	// Standard ibuffer variables
 	
-	t_symbol *buffer_name = x->buffer_name;
-	void *b = ibuffer_get_ptr (buffer_name);
-	void *buffer_samples_ptr;
-	long n_chans;
-	long format;
+    ibuffer_data data(x->buffer_name);
 	
 	// FFT variables / attributes
 	
@@ -572,29 +562,27 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	FFT_SPLIT_COMPLEX_F impulse_buffer = x->impulse_buffer;
 	FFT_SPLIT_COMPLEX_F buffer_temp2;
 	
-    AH_SIntPtr impulse_length;
-    AH_SIntPtr buffer_pos;
+    t_ptr_int impulse_length;
+    t_ptr_int buffer_pos;
     long num_partitions, n_samps, i;
 	
 	// Access buffer
 	
-	if (!x->memory_flag || !b)
+	if (!x->memory_flag)
 		return;
 	
-	if (!ibuffer_info (b, &buffer_samples_ptr, &impulse_length, &n_chans, &format))
+	if (!data.length)
 	{
-		x->num_partitions = 0;
+        x->num_partitions = 0;
 		return;
 	}
-		
-	ibuffer_increment_inuse (b);
-	
-	if (n_chans < chan + 1)
-		chan = chan % n_chans;
+			
+	if (data.num_chans < chan + 1)
+		chan = chan % data.num_chans;
 	
 	// Calculate how much of the buffer to load
 	
-	impulse_length -= offset;
+	impulse_length = data.length - offset;
 	if (length && length < impulse_length)
 		impulse_length = length;
 	if (impulse_length < 0)
@@ -608,7 +596,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 		impulse_length = x->max_impulse_length;
 		object_error( (t_object *) x, "internal buffer is not large enough to load entire buffer~ into memory");
 	}
-	
+    
 	// Partition / load the impulse
 	
 	if (direct_flag)
@@ -617,16 +605,17 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 		{
 			// Get real values (zero pad if not enough data)
 			
-			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;			
-			ibuffer_get_samps (buffer_samples_ptr, buffer_temp2.realp, buffer_pos, n_samps, n_chans, chan, format);
+			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
+            ibuffer_get_samps(data, buffer_temp2.realp, buffer_pos, n_samps, chan);
 			for (i = n_samps; i < fft_size_halved; i++)
 				buffer_temp2.realp[i] = 0;
 			
 			// Get imag values (zero pad if not enough data)
 			
 			impulse_length -= fft_size_halved;
-			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;			
-			ibuffer_get_samps (buffer_samples_ptr, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, n_chans, chan, format);			
+			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
+            ibuffer_get_samps(data, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
+
 			for (i = n_samps; i < fft_size_halved; i++)
 				buffer_temp2.imagp[i] = 0;
 			
@@ -640,8 +629,8 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 		{
 			 // Get samples up to half the fft size
 			
-			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;			
-			ibuffer_get_samps (buffer_samples_ptr, buffer_temp1, buffer_pos, n_samps, n_chans, chan, format);
+			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
+            ibuffer_get_samps(data, buffer_temp1, buffer_pos, n_samps, chan);
 			
 			// Zero pad
 			
@@ -657,9 +646,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	}
 	
 	// Set flags
-	
-	ibuffer_decrement_inuse (b);
-	
+		
 	if (!x->num_partitions) 
 		x->reset_flag = 1;
 	x->num_partitions = num_partitions;

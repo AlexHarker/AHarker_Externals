@@ -20,7 +20,7 @@
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
 #include <AH_Win_Math.h>
-#include <AH_VectorOpsExtended.h>
+//#include <AH_VectorOpsExtended.h>
 
 #include "descriptors_object_structure.h"
 #include "descriptors_conversion_helpers.h"

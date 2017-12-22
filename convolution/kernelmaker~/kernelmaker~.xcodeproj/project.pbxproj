@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B89EF5DB10EB78D100D86409 /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B89EF5DA10EB78D100D86409 /* ibuffer_access.c */; };
-		B8DEE55A0EE2D2C000803D2F /* kernelmaker~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DEE4C00EE2B38800803D2F /* kernelmaker~.c */; };
+		B89EF5DB10EB78D100D86409 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */; };
+		B8DEE55A0EE2D2C000803D2F /* kernelmaker~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DEE4C00EE2B38800803D2F /* kernelmaker~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,8 +18,8 @@
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* kernelmaker~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kernelmaker~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B89EF5DA10EB78D100D86409 /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
-		B8DEE4C00EE2B38800803D2F /* kernelmaker~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "kernelmaker~.c"; sourceTree = "<group>"; };
+		B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
+		B8DEE4C00EE2B38800803D2F /* kernelmaker~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "kernelmaker~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +66,8 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DEE4C00EE2B38800803D2F /* kernelmaker~.c */,
-				B89EF5DA10EB78D100D86409 /* ibuffer_access.c */,
+				B8DEE4C00EE2B38800803D2F /* kernelmaker~.cpp */,
+				B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -164,8 +164,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8DEE55A0EE2D2C000803D2F /* kernelmaker~.c in Sources */,
-				B89EF5DB10EB78D100D86409 /* ibuffer_access.c in Sources */,
+				B8DEE55A0EE2D2C000803D2F /* kernelmaker~.cpp in Sources */,
+				B89EF5DB10EB78D100D86409 /* ibuffer_access.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

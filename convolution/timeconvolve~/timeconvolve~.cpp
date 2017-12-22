@@ -23,27 +23,22 @@
 
 #include <AH_VectorOps.h>
 #include <AH_Denormals.h>
-#include <ibuffer_access.h>
+#include <ibuffer_access.hpp>
 
 
-AH_SIntPtr pad_length(AH_SIntPtr length)
+t_ptr_int pad_length(t_ptr_int length)
 {
 	return ((length + 15) >> 4) << 4;
 }
 
 
-void *this_class;
+t_class *this_class;
 
 
 typedef struct _timeconvolve
 {
     t_pxobject x_obj;
 	void *obex;
-	
-	// Buffer variables
-	
-	void *buffer_pointer;
-	t_symbol *buffer_name;
 	
 	// Internal buffers
 	
@@ -150,9 +145,6 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Set default initial attributes and variables
 	
-	x->buffer_pointer = 0;
-	x->buffer_name = 0;
-	
 	x->offset = 0;
 	x->length = 0;
 	x->chan = 1;
@@ -166,8 +158,8 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Allocate impulse buffer and input buffer
 	
-	x->impulse_buffer = ALIGNED_MALLOC (sizeof(float) * 2048);
-	x->input_buffer = ALIGNED_MALLOC (sizeof(float) *  8192);
+	x->impulse_buffer = (float *) ALIGNED_MALLOC(sizeof(float) * 2048);
+	x->input_buffer = (float *) ALIGNED_MALLOC(sizeof(float) *  8192);
 	
 	for (i = 0; i < 2048; i++)
 		x->impulse_buffer[i] = 0.f;
@@ -188,11 +180,9 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	// Standard ibuffer variables
 	
-	t_symbol *buffer_name = argc ? atom_getsym(argv) : 0; 
-	void *b = ibuffer_get_ptr(buffer_name);
-	void *buffer_samples_ptr;
-	long n_chans;
-	long format;
+	t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
+    
+    ibuffer_data data(buffer_name);
 	
 	// Attributes
 	
@@ -202,33 +192,19 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	
 	float *impulse_buffer = x->impulse_buffer;
     
-	AH_SIntPtr impulse_length;
-#ifndef __APPLE__
-	AH_SIntPtr impulse_offset, i;
-#endif
+	t_ptr_int impulse_length;
 	
 	if (!x->memory_flag)
 		return;
 	
-	if (b)
+	if (data.length)
 	{
-		x->buffer_pointer = b;
-		x->buffer_name = buffer_name;
-		
-		if (!ibuffer_info (b, &buffer_samples_ptr, &impulse_length, &n_chans, &format))
-		{
-			x->impulse_length = 0;
-			return;
-		}
-		
-		ibuffer_increment_inuse(b);
-		
-		if (n_chans < chan + 1)
-			chan = chan % n_chans;
+		if (data.num_chans < chan + 1)
+			chan = chan % data.num_chans;
 		
 		// Calculate impulse length
 		
-		impulse_length -= offset;
+        impulse_length = data.length - offset;
 		if (length && length < impulse_length)
 			impulse_length = length;
 		if (length && impulse_length < length)
@@ -241,35 +217,29 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
         
         if (impulse_length)
         {
-#ifdef __APPLE__
-            ibuffer_get_samps_rev (buffer_samples_ptr, impulse_buffer, offset, impulse_length, n_chans, x->chan - 1, format);
+#ifdef __APPLE__1
+            ibuffer_get_samps(data, impulse_buffer, offset, impulse_length, chan - 1, true);
 #else
-            impulse_offset = pad_length(impulse_length) - impulse_length;
+            t_ptr_int impulse_offset = pad_length(impulse_length) - impulse_length;
 
-            for (i = 0; i < impulse_offset; i++)
+            for (long i = 0; i < impulse_offset; i++)
                  impulse_buffer[i] = 0.f;
 
-            ibuffer_get_samps_rev (buffer_samples_ptr, impulse_buffer + impulse_offset, offset, impulse_length, n_chans, x->chan - 1, format);		
+            ibuffer_get_samps(data, impulse_buffer + impulse_offset, offset, impulse_length, chan - 1, true);
 #endif
         }
 		
         x->impulse_length = (long) impulse_length;
-
-		ibuffer_decrement_inuse (b);
 	}
 	else
 	{
 		if (buffer_name)
 		{
 			object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
-			x->buffer_pointer = 0;
-			x->buffer_name = buffer_name;
 			x->impulse_length = 0;
 		}
 		else 
 		{
-			x->buffer_pointer = 0;
-			x->buffer_name = 0;
 			x->impulse_length = 0;
 		}
 	}
