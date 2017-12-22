@@ -417,8 +417,10 @@ struct SIMDType<float, 4> : public SIMDVector<float, __m128, 4>
         return _mm_shuffle_ps(a.mVal, b.mVal, ((z<<6)|(y<<4)|(x<<2)|w));
     }
     
+#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_AVX256)
     operator AVX256Double() { return _mm256_cvtps_pd(mVal); }
-
+#endif
+    
     operator SizedVector<4, SSEDouble>()
     {
         SizedVector<4, SSEDouble> vec;
@@ -448,7 +450,10 @@ struct SIMDType<int32_t, 4> : public SIMDVector<int32_t, __m128i, 4>
     friend SIMDType max(const SIMDType& a, const SIMDType& b) { return _mm_max_epi32(a.mVal, b.mVal); }
 
     operator SSEFloat()     { return SSEFloat( _mm_cvtepi32_ps(mVal)); }
+    
+#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_AVX256)
     operator AVX256Double() { return _mm256_cvtepi32_pd(mVal); }
+#endif
     
     operator SizedVector<4, SSEDouble>()
     {
