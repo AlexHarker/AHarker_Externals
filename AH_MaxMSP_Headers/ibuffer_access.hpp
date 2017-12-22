@@ -51,7 +51,7 @@ enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
 
 struct ibuffer_data
 {    
-    ibuffer_data(t_symbol *name) : samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0), buffer_type(kBufferNone)
+    ibuffer_data(t_symbol *name) : buffer_type(kBufferNone), samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0)
     {
         buffer_object = name ? name->s_thing : NULL;
         
@@ -60,7 +60,8 @@ struct ibuffer_data
             if (ob_sym(buffer_object) == ps_buffer)
             {
                 t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
-                
+                buffer_type = kBufferMaxBuffer;
+
                 if (buffer->b_valid)
                 {
                     ATOMIC_INCREMENT(&buffer->b_inuse);
@@ -70,14 +71,14 @@ struct ibuffer_data
                     num_chans = buffer->b_nchans;
                     format = PCM_FLOAT;
                     sample_rate = buffer->b_sr;
-                    buffer_type = kBufferMaxBuffer;
                 }
             }
             
             if (ob_sym(buffer_object) == ps_ibuffer)
             {
                 t_ibuffer *buffer = reinterpret_cast<t_ibuffer *>(buffer_object);
-                
+                buffer_type = kBufferIBuffer;
+
                 if (buffer->valid)
                 {
                     ATOMIC_INCREMENT(&buffer->inuse);
@@ -87,7 +88,6 @@ struct ibuffer_data
                     num_chans = buffer->channels;
                     format = buffer->format;
                     sample_rate = buffer->sr;
-                    buffer_type = kBufferIBuffer;
                 }
             }
         }
@@ -128,15 +128,17 @@ struct ibuffer_data
     void release()
     {
         release_buffer();
+        buffer_type = kBufferNone;
         samples = NULL;
         length = 0;
         num_chans = 0;
         format = 0,
         sample_rate = 0.0;
-        buffer_type = kBufferNone;
         buffer_object = NULL;
     }
-    
+
+    BufferType buffer_type;
+
     void *samples;
     
     long length;
@@ -144,8 +146,6 @@ struct ibuffer_data
     long format;
     
     double sample_rate;
-
-    BufferType buffer_type;
     
 private:
     

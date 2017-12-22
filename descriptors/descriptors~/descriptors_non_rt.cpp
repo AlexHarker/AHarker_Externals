@@ -395,7 +395,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	// Access buffer and increment pointer
     
-	if (buffer.buffer_type == kBufferNone)
+	if (!buffer.sample_rate)
 	{
 		error ("descriptors~: could not access buffer");
 		return;
