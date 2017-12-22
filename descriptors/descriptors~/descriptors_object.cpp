@@ -9,11 +9,13 @@
  */
 
 #include "descriptors_object.h"
+#include "Statistics.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////// Common Basics (main / new / assist) ////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+t_class *this_class;
 
 void descriptors_main_common ()
 {
@@ -343,8 +345,8 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	
 	FFT_SPLIT_COMPLEX_F raw_fft_frame;
 	
-	float *raw_frame = x->fft_memory;
-	float *amplitudes = x->amps_buffer;
+	float *raw_frame = (float *) x->fft_memory;
+	float *amplitudes = (float *) x->amps_buffer;
 
 	long fft_size_halved = fft_size >> 1;
 	long fft_size_log2 = x->fft_size_log2;
@@ -598,14 +600,14 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 	double *cumulateAmps = x->cumulate + (fft_size * frame_pointer);
 	double *cumulate_sq_amps = cumulateAmps + num_bins;
 	
-	float *freqs = x->n_data;
+	float *freqs = (float *) x->n_data;
 	float *amps = freqs + num_bins;
 	char *mask = (char *) ((float *) amps + fft_size);
 	
-	float *median_amplitudes = x->median_memory;
+	float *median_amplitudes = (float *) x->median_memory;
 	long *median_indices = (long *) ((float *) x->median_memory + num_bins);
 	
-	float *ac_coefficients = x->ac_memory;
+	float *ac_coefficients = (float *) x->ac_memory;
 	double *loudness_curve = x->loudness_curve;
 	double *log_freq = x->log_freq;
 	
@@ -621,7 +623,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 	char forward_only;
 	char weight_frame2;
 	
-	enum PFDescriptorType descriptor_type = (long) params[0];
+    enum PFDescriptorType descriptor_type = (enum PFDescriptorType) params[0];
 	
 	switch (descriptor_type)
 	{
@@ -629,7 +631,8 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
 			{
-				descriptor = get_energy(cumulate_sq_amps, min_bin, max_bin, x->energy_compensation);			
+				//descriptor = get_energy(cumulate_sq_amps, min_bin, max_bin, x->energy_compensation);
+                descriptor = statSumSquares(amplitudes + min_bin, max_bin - min_bin) * x->energy_compensation;
 				if (params[3]) descriptor = pow_to_db (descriptor);	
 			}
 			
@@ -641,7 +644,9 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		case DESCRIPTOR_PF_ENERGY_RATIO:
 		
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
-				descriptor = get_energy_ratio(cumulate_sq_amps, num_bins, min_bin, max_bin);
+                descriptor = statSumSquares(amplitudes + min_bin, max_bin - min_bin) / statSumSquares(amplitudes, num_bins);
+                
+                //descriptor = get_energy_ratio(cumulate_sq_amps, num_bins, min_bin, max_bin);
 			
 			*param_ptr += 3;
 			break;
@@ -660,11 +665,11 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 				
 		case DESCRIPTOR_PF_SPECTRAL_CREST:
 		
-			vals_ptr = sq_amplitudes;
-			cumulate_ptr1 = cumulate_sq_amps;
-			
+            // FIX - this should be based on the amplitudes, not the energy
+            
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
-				descriptor = get_spectral_crest(vals_ptr, cumulate_ptr1, min_bin, max_bin);
+                descriptor = statCrest(amplitudes + min_bin, max_bin - min_bin);
+				//descriptor = get_spectral_crest(amplitudes, cumulate_amplitudes, min_bin, max_bin);
 			
 			if (params[3]) descriptor = pow_to_db (descriptor);
 			
@@ -739,7 +744,8 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_AVERAGE_AMP_ABS:
 		
-			descriptor = get_average_amp_abs(raw_frame, num_samps);
+            descriptor = statSumAbs(raw_frame, num_samps);
+			//descriptor = get_average_amp_abs(raw_frame, num_samps);
 			if (params[1]) 
 				descriptor = atodb (descriptor);
 			
@@ -750,8 +756,9 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_AVERAGE_AMP_RMS:
 		
-			descriptor = get_average_amp_rms(raw_frame, num_samps);
-			if (params[1]) 
+			descriptor = statRMS(raw_frame, num_samps);
+            // descriptor = get_average_amp_rms(raw_frame, num_samps);
+			if (params[1])
 				descriptor = atodb (descriptor);
 			
 			*param_ptr += 2;
@@ -761,7 +768,8 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_PEAK_AMP:
 		
-			descriptor = get_amp_peak(raw_frame, num_samps);
+            // descriptor = get_amp_peak(raw_frame, num_samps);
+            descriptor = statMax(raw_frame, num_samps);
 			if (params[1]) 
 				descriptor = atodb (descriptor);
 			
@@ -772,8 +780,9 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_LOUDNESS:
 		
-			descriptor = get_loudness(sq_amplitudes, loudness_curve, num_bins, x->energy_compensation);
-			
+			//descriptor = get_loudness(sq_amplitudes, loudness_curve, num_bins, x->energy_compensation);
+			descriptor = statWeightedSum(sq_amplitudes, loudness_curve, num_bins) * x->energy_compensation;
+            
 			if (params[1]) 
 				descriptor = pow_to_db(descriptor);
 			else 
@@ -794,7 +803,16 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
 			{
-				descriptor = get_shape_lin(x, vals_ptr, cumulate_ptr1, min_bin, max_bin, descriptor_type);
+                if (descriptor_type == DESCRIPTOR_PF_CENTROID_LIN)
+                    descriptor = statCentroid(amplitudes + min_bin, max_bin - min_bin);
+                else if (descriptor_type == DESCRIPTOR_PF_SPREAD_LIN)
+                    descriptor = statSpread(amplitudes + min_bin, max_bin - min_bin);
+                else if (descriptor_type == DESCRIPTOR_PF_SKEWNESS_LIN)
+                    descriptor = statSkewness(amplitudes + min_bin, max_bin - min_bin);
+                else
+                    descriptor = statKurtosis(amplitudes + min_bin, max_bin - min_bin);
+                
+				//descriptor = get_shape_lin(x, vals_ptr, cumulate_ptr1, min_bin, max_bin, descriptor_type);
 				if (descriptor_type == DESCRIPTOR_PF_CENTROID_LIN || descriptor_type == DESCRIPTOR_PF_SPREAD_LIN) descriptor *= bin_freq;			// Conversion to Linear Frequency								
 			}
 			
@@ -856,10 +874,12 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_SPECTRAL_FLATNESS:
 						
+            // FIX - should be based on ampltidues not energy
 			cumulate_ptr1 = cumulate_sq_amps;
 			
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
-				descriptor = get_sfm(log_amplitudes, cumulate_ptr1, min_bin, max_bin);
+                descriptor = statFlatness(amplitudes + min_bin, max_bin - min_bin);
+            //descriptor = get_sfm(log_amplitudes, cumulate_ptr1, min_bin, max_bin);
 			
 			*param_ptr += 3;
 			break;
@@ -936,7 +956,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			break;
 	}
 		
-	if (!isfinite(descriptor)) descriptor = DBL_MAX;
+	if (!std::isfinite(descriptor)) descriptor = DBL_MAX;
 		return descriptor;
 }
 

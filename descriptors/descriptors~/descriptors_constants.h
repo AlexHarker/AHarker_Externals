@@ -25,9 +25,9 @@
 #define DB_MIN -180.
 #define DB_EPSILON -300.
 #define DB_MAX_MKL_EQUAL -140.
-float POW_MIN;
-float LOG_MIN;
-double MKL_EQUALISE_MAX_LOG;
+extern float POW_MIN;
+extern float LOG_MIN;
+extern double MKL_EQUALISE_MAX_LOG;
 
 //////////////////////// Descriptor flag defines ////////////////////////
 
@@ -178,101 +178,100 @@ enum WindowType {
 
 ///////////////////////////// Symbols //////////////////////////////////
 
-t_symbol *ps_energy;
-t_symbol *ps_energy_ratio;
-t_symbol *ps_rolloff;
-t_symbol *ps_spectral_crest;
-t_symbol *ps_flux;
-t_symbol *ps_mkl;
-t_symbol *ps_foote;
-t_symbol *ps_abs;
-t_symbol *ps_rms;
-t_symbol *ps_peakamp;
-t_symbol *ps_loudness;
-t_symbol *ps_lin_centroid;
-t_symbol *ps_lin_spread;
-t_symbol *ps_lin_skewness;
-t_symbol *ps_lin_kurtosis;
-t_symbol *ps_log_centroid;
-t_symbol *ps_log_spread;
-t_symbol *ps_log_skewness;
-t_symbol *ps_log_kurtosis;
-t_symbol *ps_lin_brightness;
-t_symbol *ps_log_brightness;
-t_symbol *ps_sfm;
-t_symbol *ps_noise_ratio;
-t_symbol *ps_harmonic_ratio;
-t_symbol *ps_pitch;
-t_symbol *ps_confidence;
-t_symbol *ps_inharmonicity;
-t_symbol *ps_roughness;
-t_symbol *ps_spectral_peaks;
-t_symbol *ps_duration;
+extern t_symbol *ps_energy;
+extern t_symbol *ps_energy_ratio;
+extern t_symbol *ps_rolloff;
+extern t_symbol *ps_spectral_crest;
+extern t_symbol *ps_flux;
+extern t_symbol *ps_mkl;
+extern t_symbol *ps_foote;
+extern t_symbol *ps_abs;
+extern t_symbol *ps_rms;
+extern t_symbol *ps_peakamp;
+extern t_symbol *ps_loudness;
+extern t_symbol *ps_lin_centroid;
+extern t_symbol *ps_lin_spread;
+extern t_symbol *ps_lin_skewness;
+extern t_symbol *ps_lin_kurtosis;
+extern t_symbol *ps_log_centroid;
+extern t_symbol *ps_log_spread;
+extern t_symbol *ps_log_skewness;
+extern t_symbol *ps_log_kurtosis;
+extern t_symbol *ps_lin_brightness;
+extern t_symbol *ps_log_brightness;
+extern t_symbol *ps_sfm;
+extern t_symbol *ps_noise_ratio;
+extern t_symbol *ps_harmonic_ratio;
+extern t_symbol *ps_pitch;
+extern t_symbol *ps_confidence;
+extern t_symbol *ps_inharmonicity;
+extern t_symbol *ps_roughness;
+extern t_symbol *ps_spectral_peaks;
+extern t_symbol *ps_duration;
 
 /////////////////////////////
 
-t_symbol *ps_mean;
-t_symbol *ps_median;	
-t_symbol *ps_time_centroid;	
-t_symbol *ps_standard_dev;
-t_symbol *ps_range;
+extern t_symbol *ps_mean;
+extern t_symbol *ps_median;	
+extern t_symbol *ps_time_centroid;	
+extern t_symbol *ps_standard_dev;
+extern t_symbol *ps_range;
 
-t_symbol *ps_max;
-t_symbol *ps_max_pos;
-t_symbol *ps_min;
-t_symbol *ps_min_pos;
-t_symbol *ps_peak_pos;
-t_symbol *ps_peak;
-t_symbol *ps_trough;
-t_symbol *ps_trough_pos;
+extern t_symbol *ps_max;
+extern t_symbol *ps_max_pos;
+extern t_symbol *ps_min;
+extern t_symbol *ps_min_pos;
+extern t_symbol *ps_peak_pos;
+extern t_symbol *ps_peak;
+extern t_symbol *ps_trough;
+extern t_symbol *ps_trough_pos;
 
-t_symbol *ps_crossing_peak;
-t_symbol *ps_crossing_peak_pos;
-t_symbol *ps_cross_above;
-t_symbol *ps_crossings_above;
+extern t_symbol *ps_crossing_peak;
+extern t_symbol *ps_crossing_peak_pos;
+extern t_symbol *ps_cross_above;
+extern t_symbol *ps_crossings_above;
 
-t_symbol *ps_crossing_trough;
-t_symbol *ps_crossing_trough_pos;
-t_symbol *ps_cross_below;
-t_symbol *ps_crossings_below;
+extern t_symbol *ps_crossing_trough;
+extern t_symbol *ps_crossing_trough_pos;
+extern t_symbol *ps_cross_below;
+extern t_symbol *ps_crossings_below;
 
-t_symbol *ps_longest_cross_above;
-t_symbol *ps_longest_cross_below;
-t_symbol *ps_longest_crossings_above;
-t_symbol *ps_longest_crossings_below;
+extern t_symbol *ps_longest_cross_above;
+extern t_symbol *ps_longest_cross_below;
+extern t_symbol *ps_longest_crossings_above;
+extern t_symbol *ps_longest_crossings_below;
 
-t_symbol *ps_ratio_above;
-t_symbol *ps_ratio_below;
+extern t_symbol *ps_ratio_above;
+extern t_symbol *ps_ratio_below;
 
-t_symbol *ps_threshold;
-t_symbol *ps_masktime;
-
-/////////////////////////////
-
-t_symbol *ps_abs;
-t_symbol *ps_peak_mul;
-t_symbol *ps_peak_add;
-t_symbol *ps_peak_db;
-t_symbol *ps_mean_mul;
-t_symbol *ps_mean_add;
-t_symbol *ps_mean_db;
+extern t_symbol *ps_threshold;
+extern t_symbol *ps_masktime;
 
 /////////////////////////////
 
-t_symbol *ps_rectangle;
-t_symbol *ps_hann;
-t_symbol *ps_hamming;
-t_symbol *ps_kaiser;
-t_symbol *ps_triangle;
-t_symbol *ps_blackman;
-t_symbol *ps_blackman62;
-t_symbol *ps_blackman70;
-t_symbol *ps_blackman74;
-t_symbol *ps_blackman92;
-t_symbol *ps_blackman_harris;
-t_symbol *ps_flattop;
+extern t_symbol *ps_peak_mul;
+extern t_symbol *ps_peak_add;
+extern t_symbol *ps_peak_db;
+extern t_symbol *ps_mean_mul;
+extern t_symbol *ps_mean_add;
+extern t_symbol *ps_mean_db;
 
-t_symbol *ps_nullsym;
+/////////////////////////////
+
+extern t_symbol *ps_rectangle;
+extern t_symbol *ps_hann;
+extern t_symbol *ps_hamming;
+extern t_symbol *ps_kaiser;
+extern t_symbol *ps_triangle;
+extern t_symbol *ps_blackman;
+extern t_symbol *ps_blackman62;
+extern t_symbol *ps_blackman70;
+extern t_symbol *ps_blackman74;
+extern t_symbol *ps_blackman92;
+extern t_symbol *ps_blackman_harris;
+extern t_symbol *ps_flattop;
+
+extern t_symbol *ps_nullsym;
 
 
 #endif /* _DESCRIPTORS_CONSTANTS_ */

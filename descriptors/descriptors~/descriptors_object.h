@@ -31,9 +31,6 @@
 #include "descriptors_set_descriptors.h"
 	
 
-void *this_class;
-
-
 // Prototypes for basic object functionality
 
 void descriptors_main_common ();

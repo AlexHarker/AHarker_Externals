@@ -14,7 +14,6 @@
 #define _DESCRIPTORS_STATS_
 
 #include "descriptors_combsort.h"
-#include "descriptors_constants.h"
 
 // Common statistical values
 

@@ -22,7 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_energy (double *cumulate_ptr, long min_bin, long max_bin, double energy_compensation)
+double get_energy(double *cumulate_ptr, long min_bin, long max_bin, double energy_compensation)
 { 
 	if (min_bin) 
 		return (cumulate_ptr[max_bin - 1] - cumulate_ptr[min_bin - 1]) * energy_compensation;
@@ -36,7 +36,7 @@ double get_energy (double *cumulate_ptr, long min_bin, long max_bin, double ener
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_energy_ratio (double *cumulate_ptr, long num_bins, long min_bin, long max_bin)
+double get_energy_ratio(double *cumulate_ptr, long num_bins, long min_bin, long max_bin)
 {
 	double sum1 = get_energy(cumulate_ptr, min_bin, max_bin, 1.);		
 	double sum2 = cumulate_ptr[num_bins - 1];
@@ -53,7 +53,7 @@ double get_energy_ratio (double *cumulate_ptr, long num_bins, long min_bin, long
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_spectral_rolloff (double *cumulate_ptr, long num_bins, double bin_freq, double threshold)
+double get_spectral_rolloff(double *cumulate_ptr, long num_bins, double bin_freq, double threshold)
 {
 	double sum = cumulate_ptr[num_bins - 1] * threshold;
 	long i;	
@@ -76,7 +76,7 @@ double get_spectral_rolloff (double *cumulate_ptr, long num_bins, double bin_fre
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_spectral_crest (float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin)
+double get_spectral_crest(float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin)
 {
 	double sum = cumulate_ptr[max_bin - 1];
 	double max = 0.;
@@ -104,7 +104,7 @@ double get_spectral_crest (float *vals_ptr, double *cumulate_ptr, long min_bin, 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_flux (float *frame1, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char square_flag, char forward_only)
+double get_flux(float *frame1, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char square_flag, char forward_only)
 {
 	double norm_factor1 = 1.;
 	double norm_factor2 = 1.;
@@ -195,7 +195,7 @@ double get_flux (float *frame1, float *frame2, double *cumulate_ptr1, double *cu
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_mkl (float *log_frame1, float *log_frame2, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char forward_only, char weight_frame2, double log_thresh)
+double get_mkl(float *log_frame1, float *log_frame2, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char forward_only, char weight_frame2, double log_thresh)
 {
 	double norm_factor1 = 1.;
 	double norm_factor2 = 1.;
@@ -477,7 +477,7 @@ double get_shape_lin(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, lo
 	}
 	
 	if (shape_type == DESCRIPTOR_PF_SPREAD_LIN) 
-		return spread;
+		return spread * spread;
 	
 	if (shape_type == DESCRIPTOR_PF_SKEWNESS_LIN)
 	{
@@ -487,7 +487,7 @@ double get_shape_lin(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, lo
 			sum1 += vals_ptr[i] * current_val * current_val * current_val;
 		}
 		
-		return sum1 / (spread * spread * spread);
+		return sum1 / (spread * spread * spread * sum2);
 	}
 	
 	if (shape_type == DESCRIPTOR_PF_KURTOSIS_LIN)
@@ -498,7 +498,7 @@ double get_shape_lin(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, lo
 			sum1 += vals_ptr[i] * current_val * current_val * current_val * current_val;
 		}
 		
-		return sum1 / (spread * spread * spread * spread);
+		return sum1 / (spread * spread * spread * spread * sum2);
 	}
 	
 	// This will happen iff the shape_type is incorrectly defined
@@ -615,7 +615,7 @@ double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, do
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_brightness_lin (t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, long num_bins, long min_bin, long max_bin, double bin_freq, double threshold)
+double get_brightness_lin(t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, long num_bins, long min_bin, long max_bin, double bin_freq, double threshold)
 {
 	double confidence_ret;
 	double pitch = x->sr / get_pitch (x, raw_frame, ac_coefficients, num_bins, threshold, &confidence_ret);
@@ -632,7 +632,7 @@ double get_brightness_lin (t_descriptors *x, float *raw_frame, float *ac_coeffic
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_brightness_log (t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, double *log_freq, long num_bins, long min_bin, long max_bin, double threshold)
+double get_brightness_log(t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, double *log_freq, long num_bins, long min_bin, long max_bin, double threshold)
 {
 	double confidence_ret;
 	double pitch = x->sr / get_pitch (x, raw_frame, ac_coefficients, num_bins, threshold, &confidence_ret);
@@ -649,7 +649,7 @@ double get_brightness_log (t_descriptors *x, float *raw_frame, float *ac_coeffic
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_sfm (float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin)
+double get_sfm(float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin)
 {
 	// Using log summing here improves range issues massively
 	
@@ -677,7 +677,7 @@ double get_sfm (float *log_amplitudes, double *cumulate_ptr, long min_bin, long 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_noise_ratio (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *sq_amplitudes, double *cumulate_ptr, double *log_freq, long num_bins, long median_span)
+double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *sq_amplitudes, double *cumulate_ptr, double *log_freq, long num_bins, long median_span)
 {
 	double noise_ratio;
 	double sum1 = 0;
@@ -709,7 +709,7 @@ double get_noise_ratio (t_descriptors *x, long *median_indices, float *median_am
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-double get_inharmonicity (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, float *raw_frame, float *ac_coefficients, float *freqs, float *amps, char *mask, long num_bins, long N, long median_span, double bin_freq, double threshold)
+double get_inharmonicity(t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, float *raw_frame, float *ac_coefficients, float *freqs, float *amps, char *mask, long num_bins, long N, long median_span, double bin_freq, double threshold)
 {
 	double sum1 = 0;
 	double sum2 = 0;
@@ -764,14 +764,14 @@ double get_inharmonicity (t_descriptors *x, long *median_indices, float *median_
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void calc_ac_coefficients (t_descriptors *x, float *raw_frame)
+void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 {
 	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
 	FFT_SPLIT_COMPLEX_F full_fft_frame;
 	FFT_SPLIT_COMPLEX_F half_fft_frame;
 
-	float *ac_coefficients = x->ac_memory;
+	float *ac_coefficients = (float *) x->ac_memory;
 	
 	long fft_size = x->fft_size;
 	long fft_size_halved = fft_size >> 1;
@@ -825,7 +825,7 @@ void calc_ac_coefficients (t_descriptors *x, float *raw_frame)
 }
 
 
-void complex_mult_conjugate (FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, long length, float scale)
+void complex_mult_conjugate(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, long length, float scale)
 {
 	vFloat *in_real1 = (vFloat *) in1.realp;
 	vFloat *in_imag1 = (vFloat *) in1.imagp;
@@ -980,7 +980,7 @@ double get_pitch (t_descriptors *x, float *raw_frame, float *ac_coeff, long leng
 // Critical bandwidth CBW is given by P&L's function, as cited by H&K.
 
 
-double get_roughness (float *freqs, float *amps, long num_sines)
+double get_roughness(float *freqs, float *amps, long num_sines)
 {
 	double e; 																// base of natural logarithms
 	double cb_int; 															// interval between two partials in critical bandwidths

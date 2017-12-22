@@ -21,10 +21,7 @@
 
 #include "descriptors_constants.h"
 
-
-void *this_class;
-
-
+extern t_class *this_class;
 
 typedef struct _descriptors
 {

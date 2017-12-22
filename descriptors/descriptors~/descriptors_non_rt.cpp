@@ -111,19 +111,19 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	// Assign pointers (aligned pointers first)
 	// N.B. x->window must be the first allocation - this is the pointer that is freed.
 
-	x->window = allocated_memory;
+	x->window = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + max_fft_size);	
 	
 	x->fft_memory = allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
 	
-	x->amps_buffer = allocated_memory;
+	x->amps_buffer = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + ((max_fft_size >> 1) * 3 * RING_BUFFER_SIZE));
 	
 	x->ac_memory = allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
 
-	x->descriptor_data = allocated_memory;
+	x->descriptor_data = (double *) allocated_memory;
 	x->descriptor_data_size = descriptor_data_size; 	
 	allocated_memory = (void *) ((char *) allocated_memory + descriptor_data_size);			
 	
@@ -133,19 +133,19 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	x->median_memory = allocated_memory;
 	allocated_memory = (void *) ((long *) ((double *) allocated_memory + max_fft_size) + max_fft_size);
 	
-	x->summed_amplitudes = allocated_memory;
+	x->summed_amplitudes = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->cumulate = allocated_memory;
+	x->cumulate = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size * RING_BUFFER_SIZE));
 	
-	x->loudness_curve = allocated_memory;
+	x->loudness_curve = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->log_freq = allocated_memory;
+	x->log_freq = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->output_list = allocated_memory;
+	x->output_list = (t_atom *) allocated_memory;
 	
 	x->output_rt_clock = 0;
 	
@@ -265,7 +265,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	double *summed_amplitudes = x->summed_amplitudes;
 	
 	float *window = x->window;	
-	float *raw_frame = x->fft_memory;
+	float *raw_frame = (float *) x->fft_memory;
 	float *windowed_frame = raw_frame + fft_size;
 
 	vFloat *v_window = (vFloat *) window;	
@@ -303,7 +303,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	// Memory pointers for n_min and n_max finding etc.
 	
-	double *n_min = x->n_data;
+	double *n_min = (double *) x->n_data;
 	double *n_min_pos = n_min + MAX_N_SEARCH;
 	
 	double *n_max = n_min + (2 * MAX_N_SEARCH);
@@ -377,8 +377,8 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	long median_span;
 	long N;
 	
-	double *median_amplitudes = x->median_memory;
-	double *freqs = x->n_data;
+	double *median_amplitudes = (double *) x->median_memory;
+	double *freqs = (double *) x->n_data;
 	double *amps = freqs + fft_size_halved;
 	
 	long *median_indices = (long *) ((double *) median_amplitudes + num_bins);
@@ -703,7 +703,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			
 			for (l = 0; l < PF_NStore; l++)
 			{
-				stats_type = *pf_output_params++;
+				stats_type = (StatisticsType) *pf_output_params++;
 				output_pos = *pf_output_params++;
 				
 				switch (stats_type)
@@ -881,7 +881,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	{				
 		// Get descriptor type, calculate and store into position
 		
-		descriptor_type = pb_params[0];
+		descriptor_type = (enum PBDescriptorType) pb_params[0];
 		
 		switch (descriptor_type)
 		{
