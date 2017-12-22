@@ -166,7 +166,7 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
             
             for ( ; argc; argc--, argv++)
             {
-                if (entrymatcher_test_types(argv) != TEST_NONE)
+                if (argc > 1 && entrymatcher_test_types(argv + 1) != TEST_NONE)
                     break;
                 addTarget(atom_getsym(argv));
                 hasTarget = true;
