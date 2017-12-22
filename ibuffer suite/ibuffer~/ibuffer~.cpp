@@ -341,8 +341,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		free (x->thebuffer);
 		x->thebuffer = calloc(sample_size, (frames * channels_to_load + 64));
 		x->samples = (void *)((char *) x->thebuffer + (16 * sample_size));
-        UInt8 *data = (UInt8 *)x->samples;
-		
+        
 		// Bail if no memory
 		
 		if (!x->thebuffer)
@@ -357,6 +356,8 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             file.readRaw(x->samples, frames);
 		else 
 		{
+            UInt8 *data = (UInt8 *)x->samples;
+            
 			// Here we load in chunks to some temporary memory and then copy out ony the relevant channels
 			
 			load_temp = (UInt8 *) malloc(DEFAULT_WORK_CHUNK * sample_size * channels);
@@ -400,6 +401,8 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileLittleEndian)
 #endif
 		{
+            UInt8 *data = (UInt8 *)x->samples;
+            
 			switch (format)
 			{
 				case PCM_INT_16:
