@@ -382,7 +382,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 				for (j = 0, channels_swap = load_temp; j < work_chunk; j++, channels_swap += channels * sample_size)
 				{
 					for (k = 0; k < channels_to_load; k++, data += sample_size)
-						memcpy (data, channels_swap + channel_order[k], sample_size);
+						memcpy(data, channels_swap + channel_order[k], sample_size);
 				}
 			}
 			
