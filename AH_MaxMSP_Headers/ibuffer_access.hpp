@@ -225,10 +225,10 @@ static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offse
 {
     switch (buffer.format)
     {
-        case PCM_INT_16:    return fetch_float(buffer, chan)(offset);
-        case PCM_INT_24:    return fetch_24bit(buffer, chan)(offset);
-        case PCM_INT_32:    return fetch_32bit(buffer, chan)(offset);
-        case PCM_FLOAT:     return fetch_float(buffer, chan)(offset);
+        case PCM_FLOAT:     return fetch_float(buffer, chan).get(offset);
+        case PCM_INT_16:    return fetch_16bit(buffer, chan).get(offset);
+        case PCM_INT_24:    return fetch_24bit(buffer, chan).get(offset);
+        case PCM_INT_32:    return fetch_32bit(buffer, chan).get(offset);
     }
 
     return 0.0;

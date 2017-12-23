@@ -60,12 +60,12 @@ template <class T, class Ft> void ibuffer_get_samps_loop(Ft fetch, T *out, intpt
 	if (reverse)
     {
         for (intptr_t i = n_samps - 1; i >= 0; i--)
-            *out++ = fetch(offset + i);
+            *out++ = fetch.get(offset + i);
     }
     else
     {
         for (intptr_t i = 0; i < n_samps; i++)
-            *out++ = fetch(offset + i);
+            *out++ = fetch.get(offset + i);
     }
 }
 
