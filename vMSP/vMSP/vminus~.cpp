@@ -13,7 +13,7 @@
 struct minus_functor
 {
     template <class T>
-    T operator()(const T a, const T b) { return a + b; }
+    T operator()(const T a, const T b) { return a - b; }
     
     // Empty Implementations
     
