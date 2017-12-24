@@ -232,7 +232,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	t_partconvolve *x = (t_partconvolve *)object_alloc(this_class);
 	
-	x->safe_signal = 0;
+	x->safe_signal = NULL;
 	
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
@@ -740,8 +740,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 		// How many vectors to deal with this loop (depending on whether there is an fft to do before the end of the signal vector)
 		
         long till_next_fft = (fft_size_halved - (rw_counter & hop_mask));
-		long loop_size = vec_remain < till_next_fft ? vec_remain : till_next_fft;
         long hi_counter = (rw_counter + fft_size_halved) & (fft_size - 1);
+        long loop_size = std::min(vec_remain, till_next_fft);
 
 		// Load input into buffer (twice) and output from the output buffer
 		
