@@ -93,8 +93,8 @@ template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
     fetch(const ibuffer_data& data, long chan)
     : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
     
-    T operator()(intptr_t offset) { return samples[offset * num_chans]; }
-    double get(intptr_t offset) { return bit_scale != 1 ? operator()(offset) : scale * operator()(offset); }
+    T operator()(intptr_t offset)   { return samples[offset * num_chans]; }
+    double get(intptr_t offset)     { return bit_scale != 1 ? scale * operator()(offset) : operator()(offset); }
     
     T *samples;
     long num_chans;
