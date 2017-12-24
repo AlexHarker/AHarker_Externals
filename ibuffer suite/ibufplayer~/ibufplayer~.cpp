@@ -380,6 +380,8 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     vols[2] = x->vol3;
     vols[3] = x->vol4;
     
+    bool zero_outputs = true;
+    
     // Set default position output
     
     for (long i = 0; i < vec_size; i++)
@@ -409,6 +411,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
         
         if (x->pos <= max_samp && x->pos >= min_samp)
         {
+            zero_outputs = false;
             bool sig_control = x->sig_control;
             
             x->playing = true;
@@ -432,7 +435,8 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
             }
         }
     }
-    else
+    
+    if (zero_outputs)
     {
         // Zero outputs
         
