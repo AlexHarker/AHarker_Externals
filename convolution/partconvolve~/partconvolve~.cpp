@@ -47,7 +47,6 @@ t_class *this_class;
 typedef struct _partconvolve
 {
     t_pxobject x_obj;
-	void *obex;
 	
 	// FFT variables
 	
@@ -101,7 +100,7 @@ typedef struct _partconvolve
 } t_partconvolve;
 
 
-long int_log2 (long long in, long *inexact)
+long int_log2(long long in, long *inexact)
 {
 	long long temp = in;
 	long out = 0;
@@ -132,7 +131,6 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
 void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size);
 t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
-t_max_err partconvolve_fft_size_get(t_partconvolve *x, t_object *attr, long *argc, t_atom **argv);
 
 t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
@@ -183,7 +181,7 @@ int C74_EXPORT main(void)
     // Add Attributes
     
     CLASS_ATTR_LONG(this_class, "fftsize", 0L, t_partconvolve, fft_size);
-    CLASS_ATTR_ACCESSORS(this_class, "fftsize", partconvolve_fft_size_get, partconvolve_fft_size_set);
+    CLASS_ATTR_ACCESSORS(this_class, "fftsize", NULL, partconvolve_fft_size_set);
     CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
     
     CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
@@ -212,7 +210,6 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void partconvolve_free(t_partconvolve *x)
 {
 	dsp_free(&x->x_obj);
@@ -221,7 +218,6 @@ void partconvolve_free(t_partconvolve *x)
 	deallocate_aligned(x->fft_buffers[0]);
 	deallocate_aligned(x->safe_signal);
 }
-
 
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -335,7 +331,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size)
 {
 	long inexact = 0;
-	long max_fft_size_log2 = int_log2 (max_fft_size, &inexact);
+	long max_fft_size_log2 = int_log2(max_fft_size, &inexact);
 	
 	if (max_fft_size_log2 < 0)
 	{
@@ -375,7 +371,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 	if (!argc)
 		return MAX_ERR_NONE;
 	
-	fft_size_log2 = int_log2 (atom_getlong(argv), &inexact);
+	fft_size_log2 = int_log2(atom_getlong(argv), &inexact);
 	
 	if (fft_size_log2 < MIN_FFT_SIZE_LOG2 || fft_size_log2 > x->max_fft_size_log2)
 	{
@@ -420,21 +416,6 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 	}
 	
 	return MAX_ERR_NONE;
-}
-
-t_max_err partconvolve_fft_size_get(t_partconvolve *x, t_object *attr, long *argc, t_atom **argv)
-{
-    char alloc;
-    
-    // Allocate return atom
-    
-    atom_alloc(argc, argv, &alloc);
-
-    // Return value
-    
-    atom_setlong(*argv, x->fft_size);
-    
-    return MAX_ERR_NONE;
 }
 
 t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
@@ -562,12 +543,11 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	
 	// Calculate how much of the buffer to load
 	
-	impulse_length = buffer.get_length() - offset;
-	if (length && length < impulse_length)
-		impulse_length = length;
-    impulse_length = std::max(static_cast<t_ptr_int>(0), impulse_length);
-	if (x->eq_flag && impulse_length > fft_size_halved)
-		impulse_length = fft_size_halved;
+    impulse_length = std::max(static_cast<t_ptr_int>(0), buffer.get_length() - offset);
+	if (length)
+		impulse_length = std::min(static_cast<t_ptr_int>(length), impulse_length);
+	if (x->eq_flag)
+		impulse_length = std::min(static_cast<t_ptr_int>(fft_size_halved), impulse_length);
 	if (length && impulse_length < length)
 		object_error((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
 	if (impulse_length > x->max_impulse_length) 
@@ -587,10 +567,10 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
             long n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp2.realp, buffer_pos, n_samps, chan);
             std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
-			
+            impulse_length -= fft_size_halved;
+
 			// Get imag values (zero pad if not enough data)
 			
-			impulse_length -= fft_size_halved;
 			n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
             std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
@@ -905,18 +885,12 @@ t_int *partconvolve_perform(t_int *w)
     // Miss denormal routine
     
     partconvolve_perform_internal((t_partconvolve *) w[5], (float *)(w[2]), (float *)(w[3]), (long) (w[4]));
-    
     return w + 6;
 }
 
 t_int *partconvolve_perform_mem_alignment(t_int *w)
 {
-    float *in = (float *)(w[1]);
-    float *out = (float *)(w[2]);
-    long bytes = w[3];
-    
-    memcpy(out, in, bytes);
-    
+    std::copy(reinterpret_cast<float *>(w[1]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]));
     return w + 4;
 }
 
@@ -926,37 +900,34 @@ void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
 	
     if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
 	{
-		free (x->safe_signal);
+		deallocate_aligned(x->safe_signal);
 		x->safe_signal = (float *)allocate_aligned<float>(sp[0]->s_n);
 		
-		dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, x->safe_signal, sp[0]->s_n * sizeof(float));
+		dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, sp[0]->s_vec + sp[0]->s_n, x->safe_signal);
 		dsp_add(denormals_perform, 5, partconvolve_perform, x->safe_signal, x->safe_signal, sp[0]->s_n, x);
-		dsp_add(partconvolve_perform_mem_alignment, 3, x->safe_signal, sp[1]->s_vec, sp[0]->s_n * sizeof(float));
+		dsp_add(partconvolve_perform_mem_alignment, 3, x->safe_signal, x->safe_signal + sp[0]->s_n, sp[1]->s_vec);
 	}
 	else
 		dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
+template<class T, class U>
+void typecast_copy(const T *in, U *out, long size)
+{
+    for (long i = 0; i < size; i++)
+        out[i] = static_cast<U>(*in++);
+}
+
 void partconvolve_perform64(t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-	double *in = ins[0];
-	double *out = outs[0];
 	float *temp_in = (float *) outs[0];
 	float *temp_out = temp_in + vec_size;
 		
-	// Copy in
-	
-	for (long i = 0; i < vec_size; i++)
-		temp_in[i] = (float) *in++;
-	
-	// Process
-	
+	// Copy in, process and copy out
+
+    typecast_copy(ins[0], temp_in, vec_size);
 	partconvolve_perform_internal(x, temp_in, temp_out, vec_size);
-	
-	// Copy out
-	
-	for (long i = 0; i < vec_size; i++)
-		*out++ = (double) temp_out[i];
+    typecast_copy(temp_out, outs[0], vec_size);
 }
 
 void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
