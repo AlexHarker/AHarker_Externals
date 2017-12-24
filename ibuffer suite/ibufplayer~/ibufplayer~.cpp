@@ -429,7 +429,9 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
                 if (vols[i] && buffer.num_chans > i)
                     ibuffer_read(buffer, outs[i], positions, todo, i, vols[i], interp_type);
             
-            if (positions == reinterpret_cast<double *>(outs[obj_n_chans - 1]) && obj_n_chans > buffer.num_chans)
+            // FIX - do better here....
+            
+            if (positions == reinterpret_cast<double *>(outs[obj_n_chans - 1]) && (obj_n_chans > buffer.num_chans || !vols[obj_n_chans - 1]))
                 memset(positions, 0, todo * sizeof(double));
         }
     }
