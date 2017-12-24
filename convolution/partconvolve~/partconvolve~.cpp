@@ -24,6 +24,8 @@
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
 
+#include <algorithm>
+
 #define MIN_FFT_SIZE_LOG2					5
 #define MAX_FFT_SIZE_LOG2					20
 #define DEFAULT_MAX_FFT_SIZE_LOG2			16;
@@ -70,7 +72,7 @@ typedef struct _partconvolve
 	
 	// Internal buffers 
 	
-	SIMDType<float, 4> *fft_buffers[5];
+	float *fft_buffers[5];
 	
 	FFT_SPLIT_COMPLEX_F impulse_buffer;
 	FFT_SPLIT_COMPLEX_F	input_buffer;
@@ -143,8 +145,8 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
 
 void partconvolve_partition(t_partconvolve *x, long direct_flag);
 
-void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
-void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs);
+void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size);
+void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size);
 void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, long vec_size);
 
 t_int *partconvolve_perform(t_int *w);
@@ -226,7 +228,7 @@ void partconvolve_free(t_partconvolve *x)
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
     long max_impulse_length = BUFFER_SIZE_DEFAULT;
-	long max_fft_over_4;
+	long max_fft_size;
 	
 	// Setup the object and make inlets / outlets
 	
@@ -283,15 +285,15 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	max_impulse_length = x->max_impulse_length;
 	
-	max_fft_over_4 = (1 << x->max_fft_size_log2) >> 2;
+	max_fft_size = (1 << x->max_fft_size_log2);
 	
 	// This is designed to make sure we can load the max impulse length, whatever the fft size
 	
-	if (max_impulse_length % (max_fft_over_4 * 2))						
+	if (max_impulse_length % (max_fft_size / 2))
 	{
-		max_impulse_length /= (max_fft_over_4 * 2);
+		max_impulse_length /= (max_fft_size / 2);
 		max_impulse_length++;
-		max_impulse_length *= (max_fft_over_4 * 2);
+		max_impulse_length *= (max_fft_size / 2);
 	}
 	
 	x->impulse_buffer.realp = allocate_aligned<float>(max_impulse_length * 4);
@@ -301,17 +303,17 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Allocate fft and temporary buffers
 	
-	x->fft_buffers[0] = allocate_aligned<SIMDType<float, 4> >(max_fft_over_4 * 7);
-	x->fft_buffers[1] = x->fft_buffers[0] + max_fft_over_4;											
-	x->fft_buffers[2] = x->fft_buffers[1] + max_fft_over_4;											
-	x->fft_buffers[3] = x->fft_buffers[2] + max_fft_over_4;
+	x->fft_buffers[0] = allocate_aligned<float>(max_fft_size * 7);
+	x->fft_buffers[1] = x->fft_buffers[0] + max_fft_size;
+	x->fft_buffers[2] = x->fft_buffers[1] + max_fft_size;
+	x->fft_buffers[3] = x->fft_buffers[2] + max_fft_size;
 	
-	x->accum_buffer.realp = (float *) (x->fft_buffers[3] + max_fft_over_4);
-	x->accum_buffer.imagp = x->accum_buffer.realp + (max_fft_over_4 * 2);
-	x->partition_temp.realp = x->accum_buffer.imagp + (max_fft_over_4 * 2);
-	x->partition_temp.imagp = x->partition_temp.realp + (max_fft_over_4 * 2);
+	x->accum_buffer.realp = x->fft_buffers[3] + max_fft_size;
+	x->accum_buffer.imagp = x->accum_buffer.realp + max_fft_size;
+	x->partition_temp.realp = x->accum_buffer.imagp + max_fft_size;
+	x->partition_temp.imagp = x->partition_temp.realp + max_fft_size;
 	
-	x->fft_buffers[4] = (SIMDType<float, 4> *) (x->partition_temp.imagp + (max_fft_over_4 * 2));
+	x->fft_buffers[4] = x->partition_temp.imagp + max_fft_size;
 	
 	hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
 	
@@ -628,7 +630,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 	x->num_partitions = num_partitions;
 }
 
-void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
     SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
     SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
@@ -647,6 +649,8 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     
     out.imagp[0] += nyquist1 * nyquist2;
     
+    long num_vecs = vec_size / SIMDType<float, 4>::size;
+    
     // Do other bins
     
     for (long i = 0; i < num_vecs; i++)
@@ -661,7 +665,7 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     in2.imagp[0] = nyquist2;
 }
 
-void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
+void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
     SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
     SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
@@ -669,6 +673,8 @@ void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
     SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
     
+    long num_vecs = vec_size / SIMDType<float, 4>::size;
+
     for (long i = 0; i < num_vecs; i++)
     {
         out_real[i] = in_real1[i] * in_real2[i];
@@ -699,27 +705,22 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 	
 	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
-	SIMDType<float, 4> **fft_buffers = x->fft_buffers;
-	SIMDType<float, 4> *temp_vpointer1, *temp_vpointer2;
+	float **fft_buffers = x->fft_buffers;
 	
 	long fft_size = x->fft_size;
 	long fft_size_halved = fft_size >> 1 ;
-	long fft_size_over_4 = fft_size >> 2;
-	long fft_size_halved_over_4 = fft_size_halved >> 2;
 	long fft_size_log2 = x->fft_size_log2;
 	
 	long till_next_fft = x->till_next_fft;
 	long rw_pointer1 = x->rw_pointer1;
 	long rw_pointer2 = x->rw_pointer2;
 	
-	long vec_remain = vec_size >> 2;
-	long random_fft_offset, loop_size, i;
+	long vec_remain = vec_size;
+	long random_fft_offset, loop_size;
 	
 	bool reset_flag = x->reset_flag;
 	bool eq_flag = x->eq_flag;
-	
-	SIMDType<float, 4> vscale_mult((float) (1.0 / (double) (fft_size << 2)));
-	
+		
 	if  (!num_partitions || x->x_obj.z_disabled || !x->memory_flag)
 		goto zero_output;
 	
@@ -729,15 +730,15 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 	{
 		// Reset fft buffers + accum buffer
 		
-        memset(fft_buffers[0], 0, x->max_fft_size * 5 * sizeof(float));
+        std::fill_n(fft_buffers[0], x->max_fft_size * 5, 0.f);
 		
 		// Reset fft offset (randomly)
 		
-		while (fft_size_halved_over_4 <= (random_fft_offset = rand() / (RAND_MAX / fft_size_halved_over_4)));
+		while (fft_size_halved <= (random_fft_offset = rand() / (RAND_MAX / fft_size_halved)));
 		
 		till_next_fft = random_fft_offset;
-		rw_pointer1 = (fft_size_halved_over_4) - till_next_fft;
-		rw_pointer2 = rw_pointer1 + (fft_size_halved_over_4);
+		rw_pointer1 = fft_size_halved - till_next_fft;
+		rw_pointer2 = rw_pointer1 + fft_size_halved;
 		
 		// Reset scheduling variables
 		
@@ -764,9 +765,9 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 		
 		// Load input into buffer (twice) and output from the output buffer
 		
-        memcpy(((float *) fft_buffers[0]) + rw_pointer1, in, loop_size * 4 *  sizeof(float));
-        memcpy(((float *) fft_buffers[1]) + rw_pointer2, in, loop_size * 4 *  sizeof(float));
-        memcpy(out, ((float *) fft_buffers[3]) + rw_pointer1, loop_size * 4 * sizeof(float));
+        memcpy(fft_buffers[0] + rw_pointer1, in, loop_size * sizeof(float));
+        memcpy(fft_buffers[1] + rw_pointer2, in, loop_size * sizeof(float));
+        memcpy(out, fft_buffers[3] + rw_pointer1, loop_size * sizeof(float));
 
         // Update pointers and counters
         
@@ -800,9 +801,9 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 			
 			// Do processing
 			
-			for (i = next_partition; i < last_partition; i++)
+			for (long i = next_partition; i < last_partition; i++)
 			{	
-				partconvolve_perform_partition(buffer_temp, impulse_temp, accum_buffer, fft_size_halved_over_4);
+				partconvolve_perform_partition(buffer_temp, impulse_temp, accum_buffer, fft_size_halved);
 				DSP_SPLIT_COMPLEX_POINTER_CALC(impulse_temp, impulse_temp, fft_size_halved);
 				DSP_SPLIT_COMPLEX_POINTER_CALC(buffer_temp, buffer_temp, fft_size_halved);
 				partitions_done++;
@@ -816,83 +817,79 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 		{			
 			// Calculate the position to do the fft from/ to and calculate relevant pointers
 			
-			temp_vpointer1 = ((!eq_flag) != (rw_pointer1 != fft_size_over_4)) ? fft_buffers[1] : fft_buffers[0];
+			float *fft_input = ((!eq_flag) != (rw_pointer1 != fft_size)) ? fft_buffers[1] : fft_buffers[0];
 			calculated_offset = input_position * fft_size_halved;
 			DSP_SPLIT_COMPLEX_POINTER_CALC(buffer_temp, input_buffer, calculated_offset);
 			
 			// For eq mode - window using hann window
 			
 			if (eq_flag)			
-			{				
-				for (i = 0; i < fft_size_over_4; i++)
-					temp_vpointer1[i] = temp_vpointer1[i] * fft_buffers[4][i];
+			{
+                SIMDType<float, 4> *v_fft_input = reinterpret_cast<SIMDType<float, 4> *>(fft_input);
+                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
+                
+                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+					v_fft_input[i] = v_fft_input[i] * v_fft_buffer[i];
 			}
 			
 			// Do the fft and put into the input buffer
 			
-			hisstools_rfft(fft_setup_real, (float *) temp_vpointer1, &buffer_temp, fft_size, fft_size_log2);
+			hisstools_rfft(fft_setup_real, fft_input, &buffer_temp, fft_size, fft_size_log2);
             
 			// Process first partition here and accumulate the output (we need it now!)
 			
 			if (eq_flag) 
-				partconvolve_perform_equaliser(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved_over_4);
+				partconvolve_perform_equaliser(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved);
 			else 
-				partconvolve_perform_partition(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved_over_4);
+				partconvolve_perform_partition(buffer_temp, impulse_buffer, accum_buffer, fft_size_halved);
 			
 			// Processing done - do inverse fft on the accumulation buffer
 			
 			hisstools_rifft(fft_setup_real, &accum_buffer, (float *) fft_buffers[2], fft_size_log2);
-			
-			// Calculate temporary output pointers
-			
-			if (rw_pointer1 == fft_size_over_4)
-			{
-				temp_vpointer1 = fft_buffers[3];						
-				temp_vpointer2 = fft_buffers[3] + fft_size_halved_over_4;   
-			}
-			else
-			{
-				temp_vpointer1 = fft_buffers[3] + fft_size_halved_over_4;   
-				temp_vpointer2 = fft_buffers[3];
-			}
-			
+            
 			// Store the result to the output buffer		
 			
 			if (eq_flag)
 			{
-				// Window and overlap-add into output buffer
-				
-				for (i = 0; i < fft_size_halved_over_4; i++)
-				{
-					*(temp_vpointer1) = *(temp_vpointer1) + (fft_buffers[2][i] * fft_buffers[4][i]);
-					temp_vpointer1++;
-				}
-				for (; i < fft_size_over_4; i++)
-					*(temp_vpointer2++) = fft_buffers[2][i] * fft_buffers[4][i];
+                // Window and overlap-add into output buffer
+
+                SIMDType<float, 4> *v_fft_window = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
+                SIMDType<float, 4> *v_fft_output1 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (!rw_pointer1 ? fft_size_halved : 0));
+                SIMDType<float, 4> *v_fft_output2 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (!rw_pointer1 ? 0 : fft_size_halved));
+                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+
+                for (long i = 0; i < (fft_size_halved / SIMDType<float, 4>::size); i++)
+					v_fft_output1[i] = v_fft_output1[i] + (v_fft_buffer[i] * v_fft_window[i]);
+                for (long i = (fft_size_halved / SIMDType<float, 4>::size); i < (fft_size / SIMDType<float, 4>::size); i++)
+					v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
 			}
 			else
 			{
 				// Scale and store into output buffer (overlap-save)
 				
-				for (i = 0; i < fft_size_halved_over_4; i++)
-                    *(temp_vpointer1++) = *(fft_buffers[2] + i) * vscale_mult;
+                SIMDType<float, 4> v_scale_mult((float) (1.0 / (double) (fft_size << 2)));
+                SIMDType<float, 4> *v_fft_output = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (!rw_pointer1 ? fft_size_halved : 0));
+                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+                
+                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+                    v_fft_output[i] = v_fft_buffer[i] * v_scale_mult;
 			}
 			
 			// Clear accumulation buffer
 			
-            memset(accum_buffer.realp, 0, fft_size_halved * sizeof(float));
-            memset(accum_buffer.imagp, 0, fft_size_halved * sizeof(float));
-			
+            std::fill_n(accum_buffer.realp, fft_size_halved, 0.f);
+            std::fill_n(accum_buffer.imagp, fft_size_halved, 0.f);
+           
 			// Reset rw_pointers
 			
-			if (rw_pointer1 == fft_size_over_4) 
+			if (rw_pointer1 == fft_size)
 				rw_pointer1 = 0;
 			else 
 				rw_pointer2 = 0;
 			
 			// Set fft variables
 			
-			till_next_fft = fft_size_halved_over_4;
+			till_next_fft = fft_size_halved;
 			
 			// Set scheduling variables
 			
@@ -924,7 +921,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     
 zero_output:
 	
-    memset(out, 0, vec_size * sizeof(float));
+    std::fill_n(out, vec_size, 0.f);
 }
 
 t_int *partconvolve_perform(t_int *w)
