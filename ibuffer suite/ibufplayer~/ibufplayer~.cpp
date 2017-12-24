@@ -373,17 +373,14 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     
     long obj_n_chans = x->obj_n_chans;
     //bool input_connected = x->input_connected;
-    long todo = 0;
+    long to_do = 0;
     
     vols[0] = x->vol1;
     vols[1] = x->vol2;
     vols[2] = x->vol3;
     vols[3] = x->vol4;
     
-    // Zero outputs and set default position output
-    
-    for (long i = 0; i < obj_n_chans; i++)
-        memset(outs[i], 0, vec_size * sizeof(T));
+    // Set default position output
     
     for (long i = 0; i < vec_size; i++)
         phase_out[i] = 1.0;
@@ -418,7 +415,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
 
             // Calculate the phasor block
             
-            todo = ibufplayer_phase(positions, phase_out, in, vec_size, speed, start_samp, min_samp, max_samp, length_recip, sig_control, x->pos);
+            to_do = ibufplayer_phase(positions, phase_out, in, vec_size, speed, start_samp, min_samp, max_samp, length_recip, sig_control, x->pos);
             
             long ispeed = speed;;
             InterpType interp_type = (!(speed - ispeed) && !sig_control) ? kInterpNone : x->interp_type;
@@ -426,17 +423,24 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
             // Now get samples interpolating as relevant
             
             for (long i = 0; i < obj_n_chans; i++)
-                if (vols[i] && buffer.num_chans > i)
-                    ibuffer_read(buffer, outs[i], positions, todo, i, vols[i], interp_type);
-            
-            // FIX - do better here....
-            
-            if (positions == reinterpret_cast<double *>(outs[obj_n_chans - 1]) && (obj_n_chans > buffer.num_chans || !vols[obj_n_chans - 1]))
-                memset(positions, 0, todo * sizeof(double));
+            {
+                long chan_to_do = (vols[i] && buffer.num_chans > i) ? to_do : 0;
+                
+                if (chan_to_do)
+                    ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vols[i], interp_type);
+                memset(outs[i] + chan_to_do, 0, (vec_size - chan_to_do) * sizeof(T));
+            }
         }
     }
+    else
+    {
+        // Zero outputs
+        
+        for (long i = 0; i < obj_n_chans; i++)
+            memset(outs[i], 0, vec_size * sizeof(T));
+    }
     
-    bool playing = !(todo < vec_size);
+    bool playing = !(to_do < vec_size);
     if (!playing && x->playing)
         clock_delay (x->done_clock, 0);
     x->playing = playing;
