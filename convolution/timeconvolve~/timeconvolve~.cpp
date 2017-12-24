@@ -38,7 +38,6 @@ t_class *this_class;
 typedef struct _timeconvolve
 {
     t_pxobject x_obj;
-	void *obex;
 	
 	// Internal buffers
 	
@@ -195,14 +194,14 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	if (!x->memory_flag)
 		return;
 	
-	if (buffer.length)
+	if (buffer.get_length())
 	{
-		if (buffer.num_chans < chan + 1)
-			chan = chan % buffer.num_chans;
+		if (buffer.get_num_chans() < chan + 1)
+			chan = chan % buffer.get_num_chans();
 		
 		// Calculate impulse length
 		
-        impulse_length = buffer.length - offset;
+        impulse_length = buffer.get_length() - offset;
 		if (length && length < impulse_length)
 			impulse_length = length;
 		if (length && impulse_length < length)
@@ -231,7 +230,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 	}
 	else
 	{
-		if (buffer.buffer_type == kBufferNone && buffer_name)
+		if (buffer.get_type() == kBufferNone && buffer_name)
 		{
 			object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
 			x->impulse_length = 0;
@@ -404,7 +403,7 @@ void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
 
 
 #ifndef __APPLE__
-void timeconvolve_perform_scalar64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void timeconvolve_perform_scalar64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in = ins[0];
 	double *out = outs[0];
@@ -428,7 +427,7 @@ void timeconvolve_perform_scalar64 (t_timeconvolve *x, t_object *dsp64, double *
 #endif
 
 
-void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in = ins[0];
 	double *out = outs[0];

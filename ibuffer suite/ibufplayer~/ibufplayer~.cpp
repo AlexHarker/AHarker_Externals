@@ -188,7 +188,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
 	
-	if (buffer.buffer_type != kBufferNone)
+	if (buffer.get_type() != kBufferNone)
 	{
         // FIX! - check this!
 		if (s != x->buffer_name)
@@ -242,7 +242,7 @@ void ibufplayer_stop(t_ibufplayer *x)
 
 double ibuffer_sample_rate(t_symbol *name)
 {    
-    return ibuffer_data(name).sample_rate;
+    return ibuffer_data(name).get_sample_rate();
 }
 
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
@@ -389,15 +389,15 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     
     // Check on playback state / new play instruction and decide whether to output
     
-    if (buffer.length)
+    if (buffer.get_length())
     {
-        double speed = x->speed * buffer.sample_rate * x->sr_div;
+        double speed = x->speed * buffer.get_sample_rate() * x->sr_div;
         double start_samp = x->start_samp;
         double min_samp = x->min_samp;
         double max_samp = x->max_samp;
         
-        if (max_samp > buffer.length)
-            max_samp = buffer.length;
+        if (max_samp > buffer.get_length())
+            max_samp = buffer.get_length();
         
         double length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
         
@@ -424,7 +424,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
             
             for (long i = 0; i < obj_n_chans; i++)
             {
-                long chan_to_do = (vols[i] && buffer.num_chans > i) ? to_do : 0;
+                long chan_to_do = (vols[i] && buffer.get_num_chans() > i) ? to_do : 0;
                 
                 if (chan_to_do)
                     ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vols[i], interp_type);

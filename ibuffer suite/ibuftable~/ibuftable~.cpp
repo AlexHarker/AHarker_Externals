@@ -17,7 +17,9 @@
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
+
 t_class *this_class;
+
 
 typedef struct _ibuftable
 {
@@ -152,7 +154,7 @@ void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
     
     x->buffer_name = s;
     
-    if (buffer.buffer_type == kBufferNone && s)
+    if (buffer.get_type() == kBufferNone && s)
         object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
 }
 
@@ -207,13 +209,13 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
     
     ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, buffer.length - 1);
-    long end_samp = clip(x->end_samp, buffer.length - 1);
-    long chan = clip(x->chan - 1, buffer.num_chans - 1);
+    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
+    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
+    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
 
-    if (buffer.length >= 1)
+    if (buffer.get_length() >= 1)
     {
         perform_positions(out, in, vec_size, start_samp, end_samp);
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);

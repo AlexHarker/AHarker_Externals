@@ -110,13 +110,13 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
     
 	ibuffer_data buffer(name);
 	
-	if (buffer.buffer_type != kBufferNone)
+	if (buffer.get_type() != kBufferNone)
 	{
-		if (buffer.sample_rate)
+		if (buffer.get_sample_rate())
 		{
-			outlet_int(x->chans_outlet, buffer.num_chans);
-			outlet_float(x->sr_outlet, buffer.sample_rate);
-			outlet_float(x->length_outlet, (buffer.length / buffer.sample_rate) * 1000);
+			outlet_int(x->chans_outlet, buffer.get_num_chans());
+			outlet_float(x->sr_outlet, buffer.get_sample_rate());
+			outlet_float(x->length_outlet, (buffer.get_length() / buffer.get_sample_rate()) * 1000);
 		}
 		else 
 		{

@@ -49,118 +49,40 @@ extern t_symbol *ps_ibuffer;
 
 enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
 
-struct ibuffer_data
-{    
-    ibuffer_data(t_symbol *name) : buffer_type(kBufferNone), samples(NULL), length(0), num_chans(0), format(0), sample_rate(0.0)
-    {
-        buffer_object = name ? name->s_thing : NULL;
-        
-        if (buffer_object)
-        {
-            if (ob_sym(buffer_object) == ps_buffer)
-            {
-                t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
-                buffer_type = kBufferMaxBuffer;
-
-                if (buffer->b_valid)
-                {
-                    ATOMIC_INCREMENT(&buffer->b_inuse);
-                    
-                    samples = (void *) buffer->b_samples;
-                    length = buffer->b_frames;
-                    num_chans = buffer->b_nchans;
-                    format = PCM_FLOAT;
-                    sample_rate = buffer->b_sr;
-                }
-            }
-            
-            if (ob_sym(buffer_object) == ps_ibuffer)
-            {
-                t_ibuffer *buffer = reinterpret_cast<t_ibuffer *>(buffer_object);
-                buffer_type = kBufferIBuffer;
-
-                if (buffer->valid)
-                {
-                    ATOMIC_INCREMENT(&buffer->inuse);
-
-                    samples =  buffer->samples;
-                    length = buffer->frames;
-                    num_chans = buffer->channels;
-                    format = buffer->format;
-                    sample_rate = buffer->sr;
-                }
-            }
-        }
-    }
+class ibuffer_data
+{
     
-    //ibuffer_data() {}
+public:
     
-    ~ibuffer_data()
-    {
-        release_buffer();
-    }
+    ibuffer_data(t_symbol *name);
+    ~ibuffer_data();
     
-    void set_dirty()
-    {
-        if (buffer_type == kBufferMaxBuffer)
-            object_method(buffer_object, gensym("dirty"));
-    }
+    void set_dirty();
+    void set_size_in_samples(t_atom_long size);
     
-    void set_size_in_samples(t_atom_long size)
-    {
-        t_atom temp_atom[2];
-
-        atom_setlong(temp_atom, size);
-
-        if (buffer_type == kBufferMaxBuffer)
-        {
-            t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
-
-            ATOMIC_INCREMENT(&(buffer)->b_inuse);
-            object_method_typed(buffer_object, gensym("sizeinsamps"), 1, temp_atom, temp_atom + 1);
-            ATOMIC_DECREMENT(&(buffer)->b_inuse);
-            
-            samples = (void *) buffer->b_samples;
-            length = buffer->b_frames;
-        }
-    }
+    void release();
     
-    void release()
-    {
-        release_buffer();
-        buffer_type = kBufferNone;
-        samples = NULL;
-        length = 0;
-        num_chans = 0;
-        format = 0,
-        sample_rate = 0.0;
-        buffer_object = NULL;
-    }
+    BufferType get_type() const         { return buffer_type; };
+    void *get_samples() const           { return samples; };
+    t_ptr_int get_length() const        { return length; }
+    t_ptr_int get_num_chans() const     { return num_chans; }
+    double get_sample_rate() const      { return sample_rate; }
+    long get_format() const             { return format; }
+    
+private:
+    
+    void release_buffer();
 
     BufferType buffer_type;
 
     void *samples;
     
-    long length;
+    t_ptr_int length;
     long num_chans;
     long format;
     
     double sample_rate;
-    
-private:
-    
-    void release_buffer()
-    {
-        if (buffer_object)
-        {
-            if (ob_sym(buffer_object) == ps_buffer)
-                ATOMIC_DECREMENT(&((t_buffer *)buffer_object)->b_inuse);
-            
-            if (ob_sym(buffer_object) == ps_ibuffer)
-                ATOMIC_DECREMENT(&((t_ibuffer *)buffer_object)->inuse);
-        }
-    }
-    
+ 
     t_object *buffer_object;
 };
 
@@ -169,7 +91,7 @@ private:
 template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.samples) + chan), num_chans(data.num_chans) {}
+    : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
     
     T operator()(intptr_t offset) { return samples[offset * num_chans]; }
     double get(intptr_t offset) { return bit_scale != 1 ? operator()(offset) : scale * operator()(offset); }
@@ -181,7 +103,7 @@ template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 template<> struct fetch<int32_t, 24> : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.samples) + 3 * chan), num_chans(data.num_chans) {}
+    : table_fetcher(1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
     
     int32_t operator()(intptr_t offset)
     {
@@ -223,7 +145,7 @@ void ibuffer_read(const ibuffer_data& buffer, float *out, float *positions, intp
 
 static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan)
 {
-    switch (buffer.format)
+    switch (buffer.get_format())
     {
         case PCM_FLOAT:     return fetch_float(buffer, chan).get(offset);
         case PCM_INT_16:    return fetch_16bit(buffer, chan).get(offset);

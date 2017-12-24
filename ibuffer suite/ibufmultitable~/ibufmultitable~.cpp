@@ -18,6 +18,7 @@
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
+
 t_class *this_class;
 
 
@@ -83,7 +84,6 @@ int C74_EXPORT main(void)
 	
 	return 0;
 }
-
 
 void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
 {
@@ -170,7 +170,7 @@ void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
     
     x->buffer_name = s;
     
-    if (buffer.buffer_type == kBufferNone && s)
+    if (buffer.get_type() == kBufferNone && s)
         object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
 }
 
@@ -192,7 +192,6 @@ void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////// Core Perform Routine ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 template <class T, int N>
 void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
@@ -230,15 +229,15 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
     
     ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, buffer.length - 1);
-    long end_samp = clip(x->end_samp, buffer.length - 1);
-    long chan = clip(x->chan - 1, buffer.num_chans - 1);
+    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
+    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
+    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
     
-    if ((buffer.length - start_samp) >= 1)
+    if ((buffer.get_length() - start_samp) >= 1)
     {
-        perform_positions(out, in, offset_in, vec_size, start_samp, end_samp, buffer.length - 1);
+        perform_positions(out, in, offset_in, vec_size, start_samp, end_samp, buffer.get_length() - 1);
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else

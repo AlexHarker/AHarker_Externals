@@ -205,7 +205,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 	
 	ibuffer_data buffer(buffer_name);
 	
-    if (buffer.buffer_type == kBufferNone)
+    if (buffer.get_type() == kBufferNone)
 	{
 		error ("descriptors~: buffer not found");
 		return;
@@ -215,7 +215,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 	
 	// Calculate lengths
 	
-	sr = x->sr = buffer.sample_rate;
+	sr = x->sr = buffer.get_sample_rate();
 	mstosamps_val = sr / 1000.0;
 	
 	if (start_point_ms < 0) 
@@ -395,13 +395,13 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	// Access buffer and increment pointer
     
-	if (!buffer.sample_rate)
+	if (!buffer.get_sample_rate())
 	{
 		error ("descriptors~: could not access buffer");
 		return;
 	}
 		
-	sr = buffer.sample_rate;
+	sr = buffer.get_sample_rate();
 	samps_to_ms_val = 1000. / sr;
 	frame_to_ms_val = hop_size * 1000. / sr;
 	ms_to_frame_val = sr / (hop_size * 1000.);
@@ -415,10 +415,10 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	// Range check buffer access variables and calculate numer of frames
 	
-	if (buffer.num_chans < buffer_chan + 1)
-		buffer_chan = buffer_chan % buffer.num_chans;
+	if (buffer.get_num_chans() < buffer_chan + 1)
+		buffer_chan = buffer_chan % buffer.get_num_chans();
     
-    file_length = buffer.length;
+    file_length = buffer.get_length();
 	if (end_point && end_point < file_length)
 		file_length = end_point;
 	file_length -= start_point;

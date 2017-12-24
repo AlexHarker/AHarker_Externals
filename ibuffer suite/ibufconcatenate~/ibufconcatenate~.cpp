@@ -224,11 +224,11 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 		
 	t_atom last_added_list[3];
 
-	if (target.buffer_type == kBufferMaxBuffer)
+	if (target.get_type() == kBufferMaxBuffer)
 	{
 		// Check we have a mono buffer and that there is space for another item
 		
-		if (target.num_chans > 1)
+		if (target.get_num_chans() > 1)
 		{
 			error ("ibufconcatenate: only supports writing to mono buffers at this time");
 			return;
@@ -239,21 +239,21 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 
 		// Check we have enough memory in the buffer
 		
-		if (samp_offset + source.length + 1 > target.length)
+		if (samp_offset + source.get_length() + 1 > target.get_length())
 		{
 			// Calculate memory to allocate
 			
 			float *temp;
 
-			new_size = samp_offset + source.length + 1;
-			old_size = target.length;
+			new_size = samp_offset + source.get_length() + 1;
+			old_size = target.get_length();
 			
 			if (old_size + GROW_SIZE > new_size)
 				new_size = old_size + GROW_SIZE;
 			
 			// Allocate temporary memory
 			
-			temp = static_cast<float*>(malloc(sizeof(float) * target.length));
+			temp = static_cast<float*>(malloc(sizeof(float) * target.get_length()));
 			
 			if (!temp)
 			{
@@ -263,43 +263,43 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 
 			// Copy out
             
-            out_samps = static_cast<float *>(target.samples);
+            out_samps = static_cast<float *>(target.get_samples());
             std::copy(out_samps, out_samps + old_size, temp);
 			
 			// Set buffer to new size
 			
             target.set_size_in_samples(new_size);
 			
-            out_samps = static_cast<float *>(target.samples);
-			if (target.length);
+            out_samps = static_cast<float *>(target.get_samples());
+			if (target.get_length());
                 std::copy(temp, temp + old_size, out_samps);
 			
 			// Free temporary memory and check the resize has worked 
 			
 			free(temp);
 
-            if (samp_offset + source.length + 1 > target.length)
+            if (samp_offset + source.get_length() + 1 > target.get_length())
 			{
 				error ("ibufconcatenate: no room left in buffer");
 				return;
 			}
 		}
 		
-		out_samps = static_cast<float *>(target.samples);
+		out_samps = static_cast<float *>(target.get_samples());
 		
 		// Get samples from the source - this is constrained to only msp buffers do to unknown pointer alignment in the target (with the offset)
 		
-        ibuffer_get_samps(source, out_samps, samp_offset, source.length, 0);
+        ibuffer_get_samps(source, out_samps, samp_offset, source.get_length(), 0);
 		
 		// Add a silent sample
 		
-		*(out_samps + samp_offset + source.length) = 0.f;
+		*(out_samps + samp_offset + source.get_length()) = 0.f;
 		
 		// Store data
 		
-		sr_const = 1000.0 / target.sample_rate;
+		sr_const = 1000.0 / target.get_sample_rate();
 		starts[num_items] = (double) samp_offset * sr_const;
-		samp_offset = samp_offset + source.length + 1;
+		samp_offset = samp_offset + source.get_length() + 1;
 		ends[num_items] = (double) (samp_offset - 1) * sr_const; 
 		
 		x->attachment->num_items = num_items + 1;
@@ -328,8 +328,8 @@ double ibuffer_sample_rate(t_symbol *name)
 {
     ibuffer_data buffer(name);
     
-    if (buffer.sample_rate)
-        return buffer.sample_rate;
+    if (buffer.get_sample_rate())
+        return buffer.get_sample_rate();
     else
         return 44100.0;
 }
@@ -386,8 +386,8 @@ double ibuffer_full_length(t_symbol *name)
 {
     ibuffer_data buffer(name);
     
-    if (buffer.length)
-        return (buffer.length / buffer.sample_rate) * 1000.0;
+    if (buffer.get_length())
+        return (buffer.get_length() / buffer.get_sample_rate()) * 1000.0;
     else
         return 0.0;
 }
