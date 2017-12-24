@@ -158,7 +158,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 void descriptors_free(t_descriptors *x)
 {
 	ALIGNED_FREE (x->window);
-	hisstools_destroy_setup_f(x->fft_setup_real);
+	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
 		freeobject((t_object *)x->output_rt_clock);
 }
@@ -515,10 +515,9 @@ void calc_descriptors_non_rt(t_descriptors *x)
 			for (j <<= 2; j < window_size; j++)
 				windowed_frame[j] = raw_frame[j] * window[j];
 			
-			// Do FFT straight into position
+			// Do FFT straight into position with zero padding
 			
-			hisstools_unzip_f(windowed_frame, &raw_fft_frame, fft_size_log2);
-			hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
+            hisstools_rfft(fft_setup_real, windowed_frame, &raw_fft_frame, window_size, fft_size_log2);
 			
 			// Discard the nyquist bin (if necessary add this back later)
 			

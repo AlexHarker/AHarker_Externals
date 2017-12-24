@@ -134,7 +134,7 @@ void descriptors_free(t_descriptors *x)
 	dsp_free(&x->x_obj);
 	ALIGNED_FREE (x->window);
 	ALIGNED_FREE (x->rt_buffer);
-	hisstools_destroy_setup_f(x->fft_setup_real);
+	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
 		freeobject((t_object *)x->output_rt_clock);
 }
@@ -222,6 +222,8 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	x->last_pf_spectralpeaks_med_size = 0;
 	x->last_threshold = DBL_MAX;
 	
+    // FIX - zero-padding may have been previously broken
+    
 	// Copy samples to raw frame
 	
 	for (i = 0; i < window_size; i++)
@@ -239,11 +241,10 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	for (i <<= 2; i < window_size; i++)
 		windowed_frame[i] = raw_frame[i] * window[i];
 	
-	// Do fft straight into position
+	// Do fft straight into position (with zero-padding)
 	
-	hisstools_unzip_f(windowed_frame, &raw_fft_frame, fft_size_log2);
-	hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
-
+    hisstools_rfft(fft_setup_real, windowed_frame, &raw_fft_frame, window_size, fft_size_log2);
+    
 	// Discard The nyquist bin (if necessary add this back later)
 	
 	raw_fft_frame.imagp[0] = 0.;

@@ -798,21 +798,10 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 	
 	norm_factor = 0.25 / ((double)  fft_size * norm_factor);
 	
-	// Copy half the raw frame
+	// Do ffts straight into position with zero padding (one half the size of the other)
 	
-	for (i = 0; i < window_size >> 1; i++)
-		ac_coefficients[i] = raw_frame[i];										// Use AC_Cofficients Mem to store the zero-padded frame
-	
-	for (; i < fft_size; i++)
-		ac_coefficients[i] = 0.f;
-	
-	// Do ffts straight into position
-	
-	hisstools_unzip_f(raw_frame, &full_fft_frame, fft_size_log2);
-	hisstools_rfft_f(fft_setup_real, &full_fft_frame, fft_size_log2);
-
-	hisstools_unzip_f(ac_coefficients, &half_fft_frame, fft_size_log2);
-	hisstools_rfft_f(fft_setup_real, &half_fft_frame, fft_size_log2);
+	hisstools_rfft(fft_setup_real, raw_frame, &full_fft_frame, window_size, fft_size_log2);
+	hisstools_rfft(fft_setup_real, ac_coefficients, &half_fft_frame, (window_size >> 1), fft_size_log2);
 	
 	// Calculate ac coefficients
 	
@@ -820,8 +809,7 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 	
 	// Inverse fft
 	
-	hisstools_rifft_f(fft_setup_real, &full_fft_frame, fft_size_log2);
-	hisstools_zip_f(&full_fft_frame, ac_coefficients, fft_size_log2);
+    hisstools_rifft(fft_setup_real, &full_fft_frame, ac_coefficients, fft_size_log2);
 }
 
 

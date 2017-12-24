@@ -135,7 +135,7 @@ void descriptors_new_common (t_descriptors *x, long max_fft_size_log2, long desc
 {
 	// Initialise variables
 	
-	x->fft_setup_real = hisstools_create_setup_f(max_fft_size_log2);
+    hisstools_create_setup(&x->fft_setup_real, max_fft_size_log2);
 	x->frame_pointer = 0;
 	
 	// Multiply amplitude by 2 before conversion to get power (note this is never used as is - but set it to some sensible value anyway)
@@ -493,15 +493,9 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	for (i = 0; i < window_size; i++)
 		raw_frame[i] = window[i] * sin((8 * FFTW_TWOPI * (double) i) / (double) fft_size);
 		
-	// Zero pad to fft_size
+	// Do fft with zero padding
 		
-	for (i = window_size; i < fft_size; i++)
-		raw_frame[i] = 0.f;
-		
-	// Do fft 
-		
-	hisstools_unzip_f(raw_frame, &raw_fft_frame, fft_size_log2);
-	hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
+	hisstools_rfft(fft_setup_real, raw_frame, &raw_fft_frame, window_size, fft_size_log2);
     
 	// Zero nyquist bin (have to match what is done elsewhere)
 	

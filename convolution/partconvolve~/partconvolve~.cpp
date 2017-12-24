@@ -216,7 +216,7 @@ int C74_EXPORT main(void)
 void partconvolve_free(t_partconvolve *x)
 {
 	dsp_free(&x->x_obj);
-	hisstools_destroy_setup_f(x->fft_setup_real);
+	hisstools_destroy_setup(x->fft_setup_real);
 	deallocate_aligned(x->impulse_buffer.realp);
 	deallocate_aligned(x->fft_buffers[0]);
 	deallocate_aligned(x->safe_signal);
@@ -313,7 +313,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	x->fft_buffers[4] = (SIMDType<float, 4> *) (x->partition_temp.imagp + (max_fft_over_4 * 2));
 	
-	x->fft_setup_real = hisstools_create_setup_f (x->max_fft_size_log2);			
+	hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
 	
 	x->memory_flag = 1 && x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
 	
@@ -614,15 +614,9 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 			n_samps = (impulse_length > fft_size_halved) ? fft_size_halved : impulse_length;
             ibuffer_get_samps(buffer, buffer_temp1, buffer_pos, n_samps, chan);
 			
-			// Zero pad
+			// Do fft straight into position with zero padding
 			
-			for (i = n_samps; i < fft_size; i++)
-				buffer_temp1[i] = 0;
-			
-			// Do fft straight into position
-			
-			hisstools_unzip_f(buffer_temp1, &buffer_temp2, fft_size_log2);
-			hisstools_rfft_f(fft_setup_real, &buffer_temp2, fft_size_log2);
+            hisstools_rfft(fft_setup_real, buffer_temp1, &buffer_temp2, n_samps, fft_size_log2);
 			DSP_SPLIT_COMPLEX_POINTER_CALC(buffer_temp2, buffer_temp2, fft_size_halved);
 		}
 	}
@@ -836,9 +830,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 			
 			// Do the fft and put into the input buffer
 			
-			hisstools_unzip_f((float *) temp_vpointer1, &buffer_temp, fft_size_log2);
-			hisstools_rfft_f(fft_setup_real, &buffer_temp, fft_size_log2);
-			
+			hisstools_rfft(fft_setup_real, (float *) temp_vpointer1, &buffer_temp, fft_size, fft_size_log2);
+            
 			// Process first partition here and accumulate the output (we need it now!)
 			
 			if (eq_flag) 
@@ -848,8 +841,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 			
 			// Processing done - do inverse fft on the accumulation buffer
 			
-			hisstools_rifft_f(fft_setup_real, &accum_buffer, fft_size_log2);
-			hisstools_zip_f(&accum_buffer, (float *) fft_buffers[2], fft_size_log2);
+			hisstools_rifft(fft_setup_real, &accum_buffer, (float *) fft_buffers[2], fft_size_log2);
 			
 			// Calculate temporary output pointers
 			
@@ -872,7 +864,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 				
 				for (i = 0; i < fft_size_halved_over_4; i++)
 				{
-					*(temp_vpointer1) = *(temp_vpointer1) + (fft_buffers[2][i] * fft_buffers[4][i]); 
+					*(temp_vpointer1) = *(temp_vpointer1) + (fft_buffers[2][i] * fft_buffers[4][i]);
 					temp_vpointer1++;
 				}
 				for (; i < fft_size_over_4; i++)

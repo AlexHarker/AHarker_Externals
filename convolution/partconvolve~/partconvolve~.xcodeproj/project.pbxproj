@@ -11,13 +11,13 @@
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
 		B8E2BC6E19FA6CC500AE0E71 /* partconvolve~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E7A5480EE16E9A004ABE12 /* partconvolve~.cpp */; };
 		B8E2BC6F19FA6CC800AE0E71 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B84BD5B110E804DF002288DB /* ibuffer_access.cpp */; };
-		B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.c in Sources */ = {isa = PBXBuildFile; fileRef = B80B5097145F06BC00FD48FF /* HISSTools_FFT.c */; };
+		B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
-		B80B5097145F06BC00FD48FF /* HISSTools_FFT.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = HISSTools_FFT.c; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.c; sourceTree = SOURCE_ROOT; };
+		B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
 		B8141B2B10EB54D300CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B81F571D0D2422E0000D5E50 /* partconvolve~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconvolve~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B84BD5B110E804DF002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
@@ -69,7 +69,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B80B5097145F06BC00FD48FF /* HISSTools_FFT.c */,
+				B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */,
 				B8E7A5480EE16E9A004ABE12 /* partconvolve~.cpp */,
 				B84BD5B110E804DF002288DB /* ibuffer_access.cpp */,
 				B8DAF7F0181D8DE80049FB27 /* ibuffer_access.hpp */,
@@ -169,7 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.c in Sources */,
+				B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.cpp in Sources */,
 				B8E2BC6E19FA6CC500AE0E71 /* partconvolve~.cpp in Sources */,
 				B8E2BC6F19FA6CC800AE0E71 /* ibuffer_access.cpp in Sources */,
 			);
