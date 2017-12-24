@@ -33,8 +33,8 @@ void ibuffer_init()
     ps_lagrange = gensym("lagrange");    
 }
 
-template <class T>
-void ibuffer_read_format(const ibuffer_data& buffer, T *out, double *positions, intptr_t n_samps, long chan, T mul, InterpType interp)
+template <class T, class U>
+void ibuffer_read_format(const ibuffer_data& buffer, T *out, U *positions, intptr_t n_samps, long chan, T mul, InterpType interp)
 {
     switch(buffer.format)
     {
@@ -51,6 +51,11 @@ void ibuffer_read(const ibuffer_data& buffer, double *out, double *positions, in
 }
 
 void ibuffer_read(const ibuffer_data& buffer, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp)
+{
+    ibuffer_read_format<float>(buffer, out, positions, n_samps, chan, mul, interp);
+}
+
+void ibuffer_read(const ibuffer_data& buffer, float *out, float *positions, intptr_t n_samps, long chan, float mul, InterpType interp)
 {
     ibuffer_read_format<float>(buffer, out, positions, n_samps, chan, mul, interp);
 }

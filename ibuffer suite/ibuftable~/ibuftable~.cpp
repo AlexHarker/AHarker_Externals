@@ -176,23 +176,23 @@ void ibuftable_chan(t_ibuftable *x, t_atom_long chan)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 template <class T, int N>
-void perform_positions(SIMDType<double, N> *positions, SIMDType<T, N> *in, long num_samps, const double start_samp, const double end_samp)
+void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, long num_samps, const double start_samp, const double end_samp)
 {
-    const SIMDType<double, N> mul(end_samp - start_samp);
-    const SIMDType<double, N> add(start_samp);
-    const SIMDType<double, N> zero(static_cast<T>(0));
-    const SIMDType<double, N> one(static_cast<T>(1));
+    const SIMDType<T, N> mul(end_samp - start_samp);
+    const SIMDType<T, N> add(start_samp);
+    const SIMDType<T, N> zero(static_cast<T>(0));
+    const SIMDType<T, N> one(static_cast<T>(1));
     
     long num_vecs = num_samps / SIMDType<T, N>::size;
     
     for (long i = 0; i < num_vecs; i++)
-        positions[i] = (mul * min(one, max(zero, SIMDType<double, N>(*in++)))) + add;
+        positions[i] = (mul * min(one, max(zero, *in++))) + add;
 }
 
 template <class T>
-void perform_positions(double *positions, T *in, long vec_size, double start_samp, double end_samp)
+void perform_positions(T *positions, T *in, long vec_size, double start_samp, double end_samp)
 {
-    perform_positions(reinterpret_cast<SIMDType<double, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), vec_size, start_samp, end_samp);
+    perform_positions(reinterpret_cast<SIMDType<T, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), vec_size, start_samp, end_samp);
 }
 
 long clip(const long in, const long max)
@@ -201,7 +201,7 @@ long clip(const long in, const long max)
 }
 
 template <class T>
-void perform_core(t_ibuftable *x, T *in, T *out, double *positions, long vec_size)
+void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
 {
     // Check if the buffer is set / valid and get the length information
     
@@ -215,8 +215,8 @@ void perform_core(t_ibuftable *x, T *in, T *out, double *positions, long vec_siz
 
     if (buffer.length >= 1)
     {
-        perform_positions(positions, in, vec_size, start_samp, end_samp);
-        ibuffer_read(buffer, out, positions, vec_size, chan, 1.f, x->interp_type);
+        perform_positions(out, in, vec_size, start_samp, end_samp);
+        ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
     {
@@ -241,7 +241,7 @@ t_int *ibuftable_perform(t_int *w)
     t_ibuftable *x = (t_ibuftable *) w[5];
 		
 	if (!x->x_obj.z_disabled)
-        perform_core(x, in, out, NULL, vec_size);
+        perform_core(x, in, out, vec_size);
 
 	return w + 6;
 }
@@ -262,7 +262,7 @@ void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
-	perform_core(x, ins[0], outs[0], outs[0], vec_size);
+	perform_core(x, ins[0], outs[0], vec_size);
 }
 
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)

@@ -215,7 +215,7 @@ void ibuffer_get_samps(const ibuffer_data& buffer, double *out, intptr_t offset,
 
 void ibuffer_read(const ibuffer_data& buffer, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
 void ibuffer_read(const ibuffer_data& buffer, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
-
+void ibuffer_read(const ibuffer_data& buffer, float *out, float *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Get individual samples /////////////////////////////////////////////
