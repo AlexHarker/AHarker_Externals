@@ -14,7 +14,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
