@@ -195,11 +195,11 @@ void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan)
 
 
 template <class T, int N>
-void perform_positions(SIMDType<double, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp)
+void perform_positions(SIMDType<double, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
 {
     const SIMDType<double, N> mul(end_samp - start_samp);
     const SIMDType<double, N> add(start_samp);
-    const SIMDType<double, N> end(end_samp);
+    const SIMDType<double, N> end(last_samp);
     const SIMDType<double, N> zero(static_cast<T>(0));
     const SIMDType<double, N> one(static_cast<T>(1));
     
@@ -207,15 +207,15 @@ void perform_positions(SIMDType<double, N> *positions, SIMDType<T, N> *in, SIMDT
     
     for (long i = 0; i < num_vecs; i++)
     {
-        SIMDType<double, N> position = min(one, max(zero, SIMDType<double, N>(*in++))) + add + SIMDType<double, N>(*offset_in++);
+        SIMDType<double, N> position = min(one, max(zero, SIMDType<double, N>(*in++))) * mul + add + SIMDType<double, N>(*offset_in++);
         positions[i] = min(end, max(zero, position));
     }
 }
 
 template <class T>
-void perform_positions(double *positions, T *in, T *offset_in, long vec_size, double start_samp, double end_samp)
+void perform_positions(double *positions, T *in, T *offset_in, long vec_size, double start_samp, double end_samp, double last_samp)
 {
-    perform_positions(reinterpret_cast<SIMDType<double, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), reinterpret_cast<SIMDType<T, 1> *>(offset_in), vec_size, start_samp, end_samp);
+    perform_positions(reinterpret_cast<SIMDType<double, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), reinterpret_cast<SIMDType<T, 1> *>(offset_in), vec_size, start_samp, end_samp, last_samp);
 }
 
 long clip(const long in, const long max)
@@ -238,7 +238,7 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, double *posi
     
     if ((buffer.length - start_samp) >= 1)
     {
-        perform_positions(positions, in, offset_in, vec_size, start_samp, end_samp);
+        perform_positions(positions, in, offset_in, vec_size, start_samp, end_samp, buffer.length - 1);
         ibuffer_read(buffer, out, positions, vec_size, chan, 1.f, x->interp_type);
     }
     else
