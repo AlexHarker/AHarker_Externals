@@ -17,9 +17,9 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <AH_Random.h>
+#include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
@@ -70,7 +70,7 @@ typedef struct _partconvolve
 	
 	// Internal buffers 
 	
-	vFloat *fft_buffers[5];
+	SIMDType<float, 4> *fft_buffers[5];
 	
 	FFT_SPLIT_COMPLEX_F impulse_buffer;
 	FFT_SPLIT_COMPLEX_F	input_buffer;
@@ -217,9 +217,9 @@ void partconvolve_free(t_partconvolve *x)
 {
 	dsp_free(&x->x_obj);
 	hisstools_destroy_setup_f(x->fft_setup_real);
-	ALIGNED_FREE(x->impulse_buffer.realp);
-	ALIGNED_FREE(x->fft_buffers[0]);
-	ALIGNED_FREE(x->safe_signal);
+	deallocate_aligned(x->impulse_buffer.realp);
+	deallocate_aligned(x->fft_buffers[0]);
+	deallocate_aligned(x->safe_signal);
 }
 
 
@@ -294,14 +294,14 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 		max_impulse_length *= (max_fft_over_4 * 2);
 	}
 	
-	x->impulse_buffer.realp = (float *) ALIGNED_MALLOC ((max_impulse_length * 4 * sizeof(float)));
+	x->impulse_buffer.realp = allocate_aligned<float>(max_impulse_length * 4);
 	x->impulse_buffer.imagp = x->impulse_buffer.realp + max_impulse_length;
 	x->input_buffer.realp = x->impulse_buffer.imagp + max_impulse_length;
 	x->input_buffer.imagp = x->input_buffer.realp + max_impulse_length;
 	
 	// Allocate fft and temporary buffers
 	
-	x->fft_buffers[0] = (vFloat *) ALIGNED_MALLOC((max_fft_over_4 * 7 * sizeof(vFloat)));
+	x->fft_buffers[0] = allocate_aligned<SIMDType<float, 4> >(max_fft_over_4 * 7);
 	x->fft_buffers[1] = x->fft_buffers[0] + max_fft_over_4;											
 	x->fft_buffers[2] = x->fft_buffers[1] + max_fft_over_4;											
 	x->fft_buffers[3] = x->fft_buffers[2] + max_fft_over_4;
@@ -311,7 +311,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	x->partition_temp.realp = x->accum_buffer.imagp + (max_fft_over_4 * 2);
 	x->partition_temp.imagp = x->partition_temp.realp + (max_fft_over_4 * 2);
 	
-	x->fft_buffers[4] = (vFloat *) (x->partition_temp.imagp + (max_fft_over_4 * 2));
+	x->fft_buffers[4] = (SIMDType<float, 4> *) (x->partition_temp.imagp + (max_fft_over_4 * 2));
 	
 	x->fft_setup_real = hisstools_create_setup_f (x->max_fft_size_log2);			
 	
@@ -636,12 +636,12 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 
 void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
 {
-    vFloat *in_real1 = (vFloat *) in1.realp;
-    vFloat *in_imag1 = (vFloat *) in1.imagp;
-    vFloat *in_real2 = (vFloat *) in2.realp;
-    vFloat *in_imag2 = (vFloat *) in2.imagp;
-    vFloat *out_real = (vFloat *) out.realp;
-    vFloat *out_imag = (vFloat *) out.imagp;
+    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
+    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
+    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
+    SIMDType<float, 4> *in_imag2 = reinterpret_cast<SIMDType<float, 4> *>(in2.imagp);
+    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
+    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
     
     //	Do Nyquist Calculation and then zero these bins
     
@@ -657,8 +657,8 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     
     for (long i = 0; i < num_vecs; i++)
     {
-        out_real[i] = F32_VEC_ADD_OP(out_real[i], F32_VEC_SUB_OP(F32_VEC_MUL_OP(in_real1[i], in_real2[i]), F32_VEC_MUL_OP(in_imag1[i], in_imag2[i])));
-        out_imag[i] = F32_VEC_ADD_OP(out_imag[i], F32_VEC_ADD_OP(F32_VEC_MUL_OP(in_real1[i], in_imag2[i]), F32_VEC_MUL_OP(in_imag1[i], in_real2[i])));
+        out_real[i] = out_real[i] + (in_real1[i] * in_real2[i]) - in_imag1[i] * in_imag2[i];
+        out_imag[i] = out_imag[i] + (in_real1[i] * in_imag2[i]) + in_imag1[i] * in_real2[i];
     }
     
     // Replace nyquist bins
@@ -669,16 +669,16 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 
 void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long num_vecs)
 {
-    vFloat *in_real1 = (vFloat *) in1.realp;
-    vFloat *in_imag1 = (vFloat *) in1.imagp;
-    vFloat *in_real2 = (vFloat *) in2.realp;
-    vFloat *out_real = (vFloat *) out.realp;
-    vFloat *out_imag = (vFloat *) out.imagp;
+    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
+    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
+    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
+    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
+    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
     
     for (long i = 0; i < num_vecs; i++)
     {
-        out_real[i] = F32_VEC_MUL_OP(in_real1[i], in_real2[i]);
-        out_imag[i] = F32_VEC_MUL_OP(in_imag1[i], in_real2[i]);
+        out_real[i] = in_real1[i] * in_real2[i];
+        out_imag[i] = in_imag1[i] * in_real2[i];
     }
 }
 
@@ -705,8 +705,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 	
 	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
-	vFloat **fft_buffers = x->fft_buffers;
-	vFloat *temp_vpointer1, *temp_vpointer2;
+	SIMDType<float, 4> **fft_buffers = x->fft_buffers;
+	SIMDType<float, 4> *temp_vpointer1, *temp_vpointer2;
 	
 	long fft_size = x->fft_size;
 	long fft_size_halved = fft_size >> 1 ;
@@ -724,7 +724,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 	bool reset_flag = x->reset_flag;
 	bool eq_flag = x->eq_flag;
 	
-	vFloat vscale_mult = float2vector((float) (1.0 / (double) (fft_size << 2)));	
+	SIMDType<float, 4> vscale_mult((float) (1.0 / (double) (fft_size << 2)));
 	
 	if  (!num_partitions || x->x_obj.z_disabled || !x->memory_flag)
 		goto zero_output;
@@ -762,7 +762,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 	
 	while (vec_remain > 0)
 	{
-		// How many vFloats to deal with this loop (depending on whether there is an fft to do before the end of the signal vector)
+		// How many vectors to deal with this loop (depending on whether there is an fft to do before the end of the signal vector)
 		
 		loop_size = vec_remain < till_next_fft ? vec_remain : till_next_fft;
 		till_next_fft -= loop_size;
@@ -831,7 +831,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 			if (eq_flag)			
 			{				
 				for (i = 0; i < fft_size_over_4; i++)
-					temp_vpointer1[i] = F32_VEC_MUL_OP(temp_vpointer1[i], fft_buffers[4][i]);
+					temp_vpointer1[i] = temp_vpointer1[i] * fft_buffers[4][i];
 			}
 			
 			// Do the fft and put into the input buffer
@@ -872,18 +872,18 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
 				
 				for (i = 0; i < fft_size_halved_over_4; i++)
 				{
-					*(temp_vpointer1) = F32_VEC_ADD_OP(*(temp_vpointer1), F32_VEC_MUL_OP(fft_buffers[2][i], fft_buffers[4][i])); 
+					*(temp_vpointer1) = *(temp_vpointer1) + (fft_buffers[2][i] * fft_buffers[4][i]); 
 					temp_vpointer1++;
 				}
 				for (; i < fft_size_over_4; i++)
-					*(temp_vpointer2++) = F32_VEC_MUL_OP(fft_buffers[2][i], fft_buffers[4][i]);
+					*(temp_vpointer2++) = fft_buffers[2][i] * fft_buffers[4][i];
 			}
 			else
 			{
 				// Scale and store into output buffer (overlap-save)
 				
 				for (i = 0; i < fft_size_halved_over_4; i++)
-					*(temp_vpointer1++) = F32_VEC_MUL_OP(*(fft_buffers[2] + i), vscale_mult);
+                    *(temp_vpointer1++) = *(fft_buffers[2] + i) * vscale_mult;
 			}
 			
 			// Clear accumulation buffer
@@ -962,7 +962,7 @@ void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
     if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
 	{
 		free (x->safe_signal);
-		x->safe_signal = (float *) ALIGNED_MALLOC(sp[0]->s_n * sizeof(float));
+		x->safe_signal = (float *)allocate_aligned<float>(sp[0]->s_n);
 		
 		dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, x->safe_signal, sp[0]->s_n * sizeof(float));
 		dsp_add(denormals_perform, 5, partconvolve_perform, x->safe_signal, x->safe_signal, sp[0]->s_n, x);
@@ -1001,7 +1001,7 @@ void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double
 
 void partconvolve_memoryusage(t_partconvolve *x)
 {
-	long memory_size = ((x->max_impulse_length * 4 * sizeof(float)) + ((x->max_fft_size >> 2) * 7 * sizeof(vFloat)));
+	long memory_size = (x->max_impulse_length * 4 * sizeof(float)) + (x->max_fft_size * 7 * sizeof(float));
 	
 	if (memory_size > 1024)
 		object_post((t_object *)x, "using %.2lf MB", memory_size / 1048576.0);
