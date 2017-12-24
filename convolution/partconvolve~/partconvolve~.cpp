@@ -285,7 +285,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	max_impulse_length = x->max_impulse_length;
 	
-	max_fft_size = (1 << x->max_fft_size_log2);
+	max_fft_size = 1 << x->max_fft_size_log2;
 	
 	// This is designed to make sure we can load the max impulse length, whatever the fft size
 	
@@ -309,11 +309,11 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	x->fft_buffers[3] = x->fft_buffers[2] + max_fft_size;
 	
 	x->accum_buffer.realp = x->fft_buffers[3] + max_fft_size;
-	x->accum_buffer.imagp = x->accum_buffer.realp + max_fft_size;
-	x->partition_temp.realp = x->accum_buffer.imagp + max_fft_size;
-	x->partition_temp.imagp = x->partition_temp.realp + max_fft_size;
+	x->accum_buffer.imagp = x->accum_buffer.realp + (max_fft_size / 2);
+	x->partition_temp.realp = x->accum_buffer.imagp + (max_fft_size / 2);
+	x->partition_temp.imagp = x->partition_temp.realp + (max_fft_size / 2);
 	
-	x->fft_buffers[4] = x->partition_temp.imagp + max_fft_size;
+	x->fft_buffers[4] = x->partition_temp.imagp + (max_fft_size / 2);
 	
 	hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
 	
@@ -366,7 +366,7 @@ void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size)
 
 t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv)
 {
-	float *window = (float *) x->fft_buffers[4];
+	float *window = x->fft_buffers[4];
 	double window_gain = 0.;
 	double window_scale;
 	
@@ -401,7 +401,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 		x->fft_size_log2 = fft_size_log2;
 		x->fft_size = fft_size;
 		
-		// Make a vonn hann window (and sqrt for overlap 2)
+		// Make a hann window (and sqrt for overlap 2)
 		
 		for (i = 0; i < fft_size; i++)
 			window[i] = sqrt (0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) fft_size))));
