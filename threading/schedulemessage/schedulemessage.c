@@ -78,7 +78,6 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void *schedulemessage_new(double delay)
 {
     t_schedulemessage *x = (t_schedulemessage *) object_alloc(this_class);
@@ -91,11 +90,9 @@ void *schedulemessage_new(double delay)
     return x;
 }
 
-
 void schedulemessage_free(t_schedulemessage *x)
 {
 }
-
 
 void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -122,7 +119,6 @@ void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_at
     outlet_anything(x->message_out, msg, argc, argv);
 }
 
-
 void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
 {
 	t_atom out_atom;
@@ -131,7 +127,6 @@ void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
 	
 	schedulemessage_anything(x, ps_int, 1, &out_atom);
 }
-
 
 void schedulemessage_float(t_schedulemessage *x, double float_in)
 {
@@ -142,12 +137,10 @@ void schedulemessage_float(t_schedulemessage *x, double float_in)
 	schedulemessage_anything(x, ps_float, 1, &out_atom);
 }
 
-
 void schedulemessage_bang(t_schedulemessage *x)
 {
 	schedulemessage_anything(x, ps_bang, 0, 0);
 }
-
 
 void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -159,12 +152,10 @@ void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_
 		schedulemessage_output(x, msg, argc, argv);
 }
 
-
 void schedulemessage_delay(t_schedulemessage *x, double delay)
 {
 	x->delay = delay;
 }
-
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s)
 {
@@ -186,5 +177,3 @@ void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char 
 		}
 	}
 }
-	
-	

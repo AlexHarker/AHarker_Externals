@@ -61,11 +61,9 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void threadfilter_free(t_threadfilter *x)
 {
 }
-
 
 void *threadfilter_new()
 {
@@ -77,7 +75,6 @@ void *threadfilter_new()
     return x;
 }
 
-
 void threadfilter_int(t_threadfilter *x, t_atom_long value)
 {
 	if (isr())
@@ -85,7 +82,6 @@ void threadfilter_int(t_threadfilter *x, t_atom_long value)
 	else
 		outlet_int(x->message_out_lo, value); 
 }
-
 
 void threadfilter_float(t_threadfilter *x, double value)
 {
@@ -95,7 +91,6 @@ void threadfilter_float(t_threadfilter *x, double value)
 		outlet_float(x->message_out_lo, value); 
 }
 
-
 void threadfilter_bang(t_threadfilter *x)
 {
 	if (isr())
@@ -104,7 +99,6 @@ void threadfilter_bang(t_threadfilter *x)
 		outlet_bang(x->message_out_lo); 
 }
 
-
 void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (isr())
@@ -112,7 +106,6 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
 	else
 		outlet_anything(x->message_out_lo, msg, argc, argv);
 }
-
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 {
@@ -134,5 +127,3 @@ void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 		sprintf(s, "Input (anything)");
 	}
 }
-	
-	
