@@ -27,14 +27,12 @@ typedef struct _ibufinfo
 	
 } t_ibufinfo;
 
-
 void *ibufinfo_new(t_symbol *buffer_name);
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s);
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name);
 void ibufinfo_bang(t_ibufinfo *x);
-
 
 int C74_EXPORT main(void)
 {
@@ -101,7 +99,7 @@ void ibufinfo_bang(t_ibufinfo *x)
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	ibufinfo_set_internal(x, argc ? atom_getsym(argv) : 0);
+	ibufinfo_set_internal(x, argc ? atom_getsym(argv) : NULL);
 }
 
 void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
