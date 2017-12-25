@@ -122,14 +122,12 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void timeconvolve_free(t_timeconvolve *x)
 {
 	dsp_free(&x->x_obj);
     deallocate_aligned(x->impulse_buffer);
 	deallocate_aligned(x->input_buffer);
 }
-
 
 void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -171,7 +169,6 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	
 	return x;
 }
-
 
 void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -215,14 +212,14 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
         if (impulse_length)
         {
 #ifdef __APPLE__
-            ibuffer_get_samps(buffer, impulse_buffer, offset, impulse_length, chan - 1, true);
+            ibuffer_get_samps(buffer, impulse_buffer, offset, impulse_length, chan, true);
 #else
             t_ptr_int impulse_offset = pad_length(impulse_length) - impulse_length;
 
             for (long i = 0; i < impulse_offset; i++)
                  impulse_buffer[i] = 0.f;
 
-            ibuffer_get_samps(buffer, impulse_buffer + impulse_offset, offset, impulse_length, chan - 1, true);
+            ibuffer_get_samps(buffer, impulse_buffer + impulse_offset, offset, impulse_length, chan, true);
 #endif
         }
 		
@@ -241,7 +238,6 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 		}
 	}
 }
-
 
 #ifndef __APPLE__
 void time_domain_convolve_scalar(float *in, float *impulse, float *output, long N, long L)
@@ -274,7 +270,6 @@ void time_domain_convolve_scalar(float *in, float *impulse, float *output, long 
         *output++ = output_accum;
     }
 }
-
 
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
 {
@@ -309,7 +304,6 @@ void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output,
 	}
 }
 
-
 void timeconvolve_perform_scalar_internal(t_timeconvolve *x, float *in, float *out, long vec_size)
 {
 	float *impulse_buffer = x->impulse_buffer;
@@ -334,7 +328,6 @@ void timeconvolve_perform_scalar_internal(t_timeconvolve *x, float *in, float *o
 	time_domain_convolve_scalar(input_buffer + 4096 + (input_position - vec_size), impulse_buffer, out, vec_size, impulse_length);
 }
 
-
 t_int *timeconvolve_perform_scalar(t_int *w)
 {
     // Miss perform routine for denormal handling (w[2] onwards)
@@ -344,13 +337,11 @@ t_int *timeconvolve_perform_scalar(t_int *w)
     return w + 6;
 }
 #else
-
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
 {
     vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
 }
 #endif
-
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size)
 {
@@ -376,7 +367,6 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
     time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (SIMDType<float, 4> *) impulse_buffer, out, vec_size, impulse_length);
 }
 
-
 t_int *timeconvolve_perform(t_int *w)
 {
     // Miss perform routine for denormal handling (w[2] onwards)
@@ -385,7 +375,6 @@ t_int *timeconvolve_perform(t_int *w)
     
     return w + 6;
 }
-
 
 void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
 {
@@ -398,7 +387,6 @@ void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
     dsp_add(denormals_perform, 5, timeconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 #endif
 }
-
 
 #ifndef __APPLE__
 void timeconvolve_perform_scalar64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -424,29 +412,24 @@ void timeconvolve_perform_scalar64(t_timeconvolve *x, t_object *dsp64, double **
 }
 #endif
 
+template<class T, class U>
+void typecast_copy(const T *in, U *out, long size)
+{
+    for (long i = 0; i < size; i++)
+        out[i] = static_cast<U>(*in++);
+}
 
 void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-	double *in = ins[0];
-	double *out = outs[0];
-	float *temp_in = (float *) outs[0];
-	float *temp_out = temp_in + vec_size;
-		
-	// Copy in
-	
-    for (long i = 0; i < vec_size; i++)
-        temp_in[i] = *in++;
-	
-	// Process
-	
+    float *temp_in = reinterpret_cast<float *>(outs[0]);
+    float *temp_out = temp_in + vec_size;
+    
+    // Copy in, process and copy out
+    
+    typecast_copy(ins[0], temp_in, vec_size);
     timeconvolve_perform_internal(x, temp_in, temp_out, vec_size);
-	
-	// Copy out
-	
-	for (long i = 0; i < vec_size; i++)
-		*out++ = (double) temp_out[i];
+    typecast_copy(temp_out, outs[0], vec_size);
 }
-
 
 void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
@@ -459,7 +442,6 @@ void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double
     object_method(dsp64, gensym("dsp_add64"), x, timeconvolve_perform64);
 #endif
 }
-
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s)
 {
