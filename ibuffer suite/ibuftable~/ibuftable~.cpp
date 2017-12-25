@@ -185,7 +185,7 @@ void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, long num_s
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
-    long num_vecs = num_samps / SIMDType<T, N>::size;
+    long num_vecs = num_samps / N;
     
     for (long i = 0; i < num_vecs; i++)
         positions[i] = (mul * min(one, max(zero, *in++))) + add;
@@ -194,7 +194,17 @@ void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, long num_s
 template <class T>
 void perform_positions(T *positions, T *in, long vec_size, double start_samp, double end_samp)
 {
-    perform_positions(reinterpret_cast<SIMDType<T, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), vec_size, start_samp, end_samp);
+    const int size = SIMDLimits<T>::max_size;
+    long vec_count = (vec_size / size) * size;
+    
+    SIMDType<T, size> *v_positions = reinterpret_cast<SIMDType<T, size> *>(positions);
+    SIMDType<T, size> *v_in = reinterpret_cast<SIMDType<T, size> *>(in);
+    
+    SIMDType<T, 1> *s_positions = reinterpret_cast<SIMDType<T, 1> *>(positions + vec_count);
+    SIMDType<T, 1> *s_in = reinterpret_cast<SIMDType<T, 1> *>(in + vec_count);
+    
+    perform_positions(v_positions, v_in, vec_count, start_samp, end_samp);
+    perform_positions(s_positions, s_in, (vec_size - vec_count), start_samp, end_samp);
 }
 
 long clip(const long in, const long max)

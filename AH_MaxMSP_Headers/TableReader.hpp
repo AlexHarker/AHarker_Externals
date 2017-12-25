@@ -142,13 +142,8 @@ template <template <class T, class U, class V, class Tb> class Reader, class Tab
 void table_read(Table fetcher, W *out, const X *positions, intptr_t n_samps, double mul)
 {
     typedef typename Table::fetch_type fetch_type;
-#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_AVX256)
-    const int vec_size = 32 / sizeof(W);
-#else
-    const int vec_size = 16 / sizeof(W);
-#endif
-    
-    intptr_t n_vsample = (n_samps / SIMDType<W, vec_size>::size) * SIMDType<W, vec_size>::size;
+    const int vec_size = SIMDLimits<W>::max_size;
+    intptr_t n_vsample = (n_samps / vec_size) * vec_size;
     
     table_read_loop<SIMDType<W, vec_size>, SIMDType<fetch_type, vec_size>, X, Table, Reader>(fetcher, out, positions, n_vsample, mul);
     table_read_loop<Scalar<W>, Scalar<fetch_type>, X, Table, Reader>(fetcher, out + n_vsample, positions + n_vsample, n_samps - n_vsample, mul);

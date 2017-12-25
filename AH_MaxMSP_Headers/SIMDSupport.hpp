@@ -72,12 +72,57 @@ template <class T> void deallocate_aligned(T *ptr)
 #define SIMD_COMPILER_SUPPORT_AVX256 2
 #define SIMD_COMPILER_SUPPORT_AVX512 3
 
+template<class T> struct SIMDLimits
+{
+    static const int max_size = 1;
+    static const int byte_width = sizeof(T);
+};
+
 #if defined(__AVX512F__)
 #define SIMD_COMPILER_SUPPORT_LEVEL SIMD_COMPILER_SUPPORT_AVX512
+
+template<> struct SIMDLimits<double>
+{
+    static const int max_size = 8;
+    static const int byte_width = 64;
+};
+
+template<> struct SIMDLimits<float>
+{
+    static const int max_size = 16;
+    static const int byte_width = 64;
+};
+
 #elif defined(__AVX__)
 #define SIMD_COMPILER_SUPPORT_LEVEL SIMD_COMPILER_SUPPORT_AVX256
+
+template<> struct SIMDLimits<double>
+{
+    static const int max_size = 4;
+    static const int byte_width = 32;
+};
+
+template<> struct SIMDLimits<float>
+{
+    static const int max_size = 8;
+    static const int byte_width = 32;
+};
+
 #elif defined(__SSE__)
 #define SIMD_COMPILER_SUPPORT_LEVEL SIMD_COMPILER_SUPPORT_SSE128
+
+template<> struct SIMDLimits<double>
+{
+    static const int max_size = 2;
+    static const int byte_width = 16;
+};
+
+template<> struct SIMDLimits<float>
+{
+    static const int max_size = 4;
+    static const int byte_width = 16;
+};
+
 #else
 #define SIMD_COMPILER_SUPPORT_LEVEL SIMD_COMPILER_SUPPORT_SCALAR
 #endif
