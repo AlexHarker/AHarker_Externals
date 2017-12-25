@@ -288,13 +288,13 @@ void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output,
 		{
 			// Load vals
 			
-			output_accum = output_accum + impulse[j + 0] * SIMDType<float, 4>(input);
+			output_accum += impulse[j + 0] * SIMDType<float, 4>(input);
 			input += 4;
-            output_accum = output_accum + impulse[j + 1] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 1] * SIMDType<float, 4>(input);
 			input += 4;
-            output_accum = output_accum + impulse[j + 2] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 2] * SIMDType<float, 4>(input);
             input += 4;
-            output_accum = output_accum + impulse[j + 3] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 3] * SIMDType<float, 4>(input);
 			input += 4;
 		}
 		

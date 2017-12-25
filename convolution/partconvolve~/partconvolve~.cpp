@@ -624,8 +624,8 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     
     for (long i = 0; i < num_vecs; i++)
     {
-        out_real[i] = out_real[i] + (in_real1[i] * in_real2[i]) - in_imag1[i] * in_imag2[i];
-        out_imag[i] = out_imag[i] + (in_real1[i] * in_imag2[i]) + in_imag1[i] * in_real2[i];
+        out_real[i] += (in_real1[i] * in_real2[i]) - in_imag1[i] * in_imag2[i];
+        out_imag[i] += (in_real1[i] * in_imag2[i]) + in_imag1[i] * in_real2[i];
     }
     
     // Replace nyquist bins
@@ -803,7 +803,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
                 
                 for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
-                    v_fft_input[i] = v_fft_input[i] * v_fft_buffer[i];
+                    v_fft_input[i] *= v_fft_buffer[i];
             }
             
             // Do the fft and put into the input buffer
@@ -833,7 +833,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size_halved / SIMDType<float, 4>::size); i++)
-                    v_fft_output1[i] = v_fft_output1[i] + (v_fft_buffer[i] * v_fft_window[i]);
+                    v_fft_output1[i] += v_fft_buffer[i] * v_fft_window[i];
                 for (long i = (fft_size_halved / SIMDType<float, 4>::size); i < (fft_size / SIMDType<float, 4>::size); i++)
                     v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
             }
