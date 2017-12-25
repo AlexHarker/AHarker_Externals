@@ -1136,33 +1136,11 @@
 		B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Denormals.h; sourceTree = "<group>"; };
 		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
 		B8A791311A1F610D007BDF82 /* AH_Memory_Swap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Memory_Swap.h; sourceTree = "<group>"; };
-		B8A791321A1F610D007BDF82 /* AH_MSP_Version.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_MSP_Version.pch; sourceTree = "<group>"; };
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
-		B8A791351A1F610D007BDF82 /* AH_Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Types.h; sourceTree = "<group>"; };
 		B8A791361A1F610D007BDF82 /* AH_VectorOps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_VectorOps.h; sourceTree = "<group>"; };
-		B8A791371A1F610D007BDF82 /* AH_VectorOpsExtended.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_VectorOpsExtended.h; sourceTree = "<group>"; };
-		B8A791381A1F610D007BDF82 /* AH_Win_Complex_Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Win_Complex_Math.h; sourceTree = "<group>"; };
 		B8A791391A1F610D007BDF82 /* AH_Win_Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Win_Math.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dynamicdsp~.h"; sourceTree = "<group>"; };
-		B8A7913B1A1F610D007BDF82 /* erf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = erf.c; sourceTree = "<group>"; };
-		B8A7913C1A1F610D007BDF82 /* erf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = erf.h; sourceTree = "<group>"; };
-		B8A7913E1A1F610D007BDF82 /* FFT_Calls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Calls.h; sourceTree = "<group>"; };
-		B8A7913F1A1F610D007BDF82 /* FFT_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Header.h; sourceTree = "<group>"; };
-		B8A791401A1F610D007BDF82 /* FFT_Main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Main.h; sourceTree = "<group>"; };
-		B8A791411A1F610D007BDF82 /* FFT_Real.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Real.h; sourceTree = "<group>"; };
-		B8A791421A1F610D007BDF82 /* FFT_Scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Scalar.h; sourceTree = "<group>"; };
-		B8A791431A1F610D007BDF82 /* FFT_Setup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Setup.h; sourceTree = "<group>"; };
-		B8A791441A1F610D007BDF82 /* FFT_SIMD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_SIMD.h; sourceTree = "<group>"; };
-		B8A791451A1F610D007BDF82 /* FFT_Type_Double.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Type_Double.h; sourceTree = "<group>"; };
-		B8A791461A1F610D007BDF82 /* FFT_Type_Float.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FFT_Type_Float.h; sourceTree = "<group>"; };
-		B8A791471A1F610D007BDF82 /* HISSTools_FFT.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = HISSTools_FFT.c; sourceTree = "<group>"; };
-		B8A791481A1F610D007BDF82 /* HISSTools_FFT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT.h; sourceTree = "<group>"; };
-		B8A791491A1F610D007BDF82 /* HISSTools_FFT_SIMD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT_SIMD.h; sourceTree = "<group>"; };
 		B8A7914A1A1F610D007BDF82 /* ibuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ibuffer.h; sourceTree = "<group>"; };
-		B8A7914B1A1F610D007BDF82 /* ibuffer_access.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ibuffer_access.c; sourceTree = "<group>"; };
-		B8A7914C1A1F610D007BDF82 /* ibuffer_access.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ibuffer_access.h; sourceTree = "<group>"; };
-		B8A7914D1A1F610D007BDF82 /* nextafterf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = nextafterf.c; sourceTree = "<group>"; };
-		B8A7914E1A1F610D007BDF82 /* nextafterf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nextafterf.h; sourceTree = "<group>"; };
 		B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "dynamicdsp~.xcodeproj"; path = "dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "descriptors~.xcodeproj"; path = "descriptors/descriptors~/descriptors~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = entrymatcher.xcodeproj; path = descriptors/entrymatcher/entrymatcher.xcodeproj; sourceTree = "<group>"; };
@@ -1170,6 +1148,15 @@
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "convolution/partconvolve~/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "convolution/timeconvolve~/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B8F25E2C1FF162AE00245397 /* Interpolation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpolation.hpp; sourceTree = "<group>"; };
+		B8F25E2D1FF162AE00245397 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIMDExtended.hpp; sourceTree = "<group>"; };
+		B8F25E2E1FF162AE00245397 /* SIMDSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIMDSupport.hpp; sourceTree = "<group>"; };
+		B8F25E2F1FF162AE00245397 /* TableReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TableReader.hpp; sourceTree = "<group>"; };
+		B8F25E301FF162BC00245397 /* ibuffer_access.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ibuffer_access.hpp; sourceTree = "<group>"; };
+		B8F25E311FF162BC00245397 /* ibuffer_access.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ibuffer_access.cpp; sourceTree = "<group>"; };
+		B8F25E331FF162CA00245397 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HISSTools_FFT.cpp; sourceTree = "<group>"; };
+		B8F25E341FF162CA00245397 /* HISSTools_FFT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT.h; sourceTree = "<group>"; };
+		B8F25E351FF162CA00245397 /* HISSTools_FFT_Core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HISSTools_FFT_Core.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -1615,43 +1602,20 @@
 				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
 				B8A791311A1F610D007BDF82 /* AH_Memory_Swap.h */,
-				B8A791321A1F610D007BDF82 /* AH_MSP_Version.pch */,
 				B8A791341A1F610D007BDF82 /* AH_Random.h */,
-				B8A791351A1F610D007BDF82 /* AH_Types.h */,
 				B8A791361A1F610D007BDF82 /* AH_VectorOps.h */,
-				B8A791371A1F610D007BDF82 /* AH_VectorOpsExtended.h */,
-				B8A791381A1F610D007BDF82 /* AH_Win_Complex_Math.h */,
 				B8A791391A1F610D007BDF82 /* AH_Win_Math.h */,
 				B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */,
-				B8A7913B1A1F610D007BDF82 /* erf.c */,
-				B8A7913C1A1F610D007BDF82 /* erf.h */,
-				B8A7913D1A1F610D007BDF82 /* HISSTools_FFT */,
+				B8F25E321FF162CA00245397 /* HISSTools_FFT */,
 				B8A7914A1A1F610D007BDF82 /* ibuffer.h */,
-				B8A7914B1A1F610D007BDF82 /* ibuffer_access.c */,
-				B8A7914C1A1F610D007BDF82 /* ibuffer_access.h */,
-				B8A7914D1A1F610D007BDF82 /* nextafterf.c */,
-				B8A7914E1A1F610D007BDF82 /* nextafterf.h */,
+				B8F25E311FF162BC00245397 /* ibuffer_access.cpp */,
+				B8F25E301FF162BC00245397 /* ibuffer_access.hpp */,
+				B8F25E2C1FF162AE00245397 /* Interpolation.hpp */,
+				B8F25E2D1FF162AE00245397 /* SIMDExtended.hpp */,
+				B8F25E2E1FF162AE00245397 /* SIMDSupport.hpp */,
+				B8F25E2F1FF162AE00245397 /* TableReader.hpp */,
 			);
 			path = AH_MaxMSP_Headers;
-			sourceTree = "<group>";
-		};
-		B8A7913D1A1F610D007BDF82 /* HISSTools_FFT */ = {
-			isa = PBXGroup;
-			children = (
-				B8A7913E1A1F610D007BDF82 /* FFT_Calls.h */,
-				B8A7913F1A1F610D007BDF82 /* FFT_Header.h */,
-				B8A791401A1F610D007BDF82 /* FFT_Main.h */,
-				B8A791411A1F610D007BDF82 /* FFT_Real.h */,
-				B8A791421A1F610D007BDF82 /* FFT_Scalar.h */,
-				B8A791431A1F610D007BDF82 /* FFT_Setup.h */,
-				B8A791441A1F610D007BDF82 /* FFT_SIMD.h */,
-				B8A791451A1F610D007BDF82 /* FFT_Type_Double.h */,
-				B8A791461A1F610D007BDF82 /* FFT_Type_Float.h */,
-				B8A791471A1F610D007BDF82 /* HISSTools_FFT.c */,
-				B8A791481A1F610D007BDF82 /* HISSTools_FFT.h */,
-				B8A791491A1F610D007BDF82 /* HISSTools_FFT_SIMD.h */,
-			);
-			path = HISSTools_FFT;
 			sourceTree = "<group>";
 		};
 		B8B56C141465ED1500FE85B0 = {
@@ -1699,6 +1663,16 @@
 				B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */,
 			);
 			name = convolution;
+			sourceTree = "<group>";
+		};
+		B8F25E321FF162CA00245397 /* HISSTools_FFT */ = {
+			isa = PBXGroup;
+			children = (
+				B8F25E331FF162CA00245397 /* HISSTools_FFT.cpp */,
+				B8F25E341FF162CA00245397 /* HISSTools_FFT.h */,
+				B8F25E351FF162CA00245397 /* HISSTools_FFT_Core.h */,
+			);
+			path = HISSTools_FFT;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
