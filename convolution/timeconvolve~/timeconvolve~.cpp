@@ -25,10 +25,15 @@
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
+#include <algorithm>
 
 t_ptr_int pad_length(t_ptr_int length)
 {
-	return ((length + 15) >> 4) << 4;
+#ifdef __APPLE__
+    return length;
+#else
+    return ((length + 15) >> 4) << 4;
+#endif
 }
 
 
@@ -156,11 +161,8 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	x->impulse_buffer = allocate_aligned<float>(2048);
 	x->input_buffer = allocate_aligned<float>(8192);
 	
-	for (long i = 0; i < 2048; i++)
-		x->impulse_buffer[i] = 0.f;
-
-	for (long i = 0; i < 8192; i++)
-		x->input_buffer[i] = 0.f;
+    std::fill_n(x->impulse_buffer, 2048, 0.f);
+    std::fill_n(x->input_buffer, 8192, 0.f);
 
 	x->memory_flag = (x->impulse_buffer && x->input_buffer);
 	
@@ -204,38 +206,25 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 		if (length && impulse_length < length)
 			object_error ((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
 		
-		if (impulse_length < 0)
-			impulse_length = 0;
-		if (impulse_length > 2044)
-			impulse_length = 2044;
-        
+        std::min(std::max(impulse_length, static_cast<t_ptr_int>(0)), static_cast<t_ptr_int>(2044));
+		
         if (impulse_length)
         {
-#ifdef __APPLE__
-            ibuffer_get_samps(buffer, impulse_buffer, offset, impulse_length, chan, true);
-#else
+            // Padding is used to simplify processing under windows
+            
             t_ptr_int impulse_offset = pad_length(impulse_length) - impulse_length;
-
-            for (long i = 0; i < impulse_offset; i++)
-                 impulse_buffer[i] = 0.f;
-
+            std::fill_n(impulse_buffer, impulse_offset, 0.f);
             ibuffer_get_samps(buffer, impulse_buffer + impulse_offset, offset, impulse_length, chan, true);
-#endif
         }
 		
         x->impulse_length = (long) impulse_length;
 	}
 	else
 	{
+        x->impulse_length = 0;
+
 		if (buffer.get_type() == kBufferNone && buffer_name)
-		{
 			object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
-			x->impulse_length = 0;
-		}
-		else 
-		{
-			x->impulse_length = 0;
-		}
 	}
 }
 
