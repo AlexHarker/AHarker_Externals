@@ -801,7 +801,7 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 	// Do ffts straight into position with zero padding (one half the size of the other)
 	
 	hisstools_rfft(fft_setup_real, raw_frame, &full_fft_frame, window_size, fft_size_log2);
-	hisstools_rfft(fft_setup_real, ac_coefficients, &half_fft_frame, (window_size >> 1), fft_size_log2);
+	hisstools_rfft(fft_setup_real, raw_frame, &half_fft_frame, (window_size >> 1), fft_size_log2);
 	
 	// Calculate ac coefficients
 	
