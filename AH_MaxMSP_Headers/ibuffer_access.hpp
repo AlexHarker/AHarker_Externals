@@ -47,16 +47,43 @@ extern t_symbol *ps_lagrange;
 extern t_symbol *ps_buffer;
 extern t_symbol *ps_ibuffer;
 
-struct ibuffer_data {
+enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
+
+class ibuffer_data
+{
     
-    ibuffer_data() : samples(NULL), length(0), num_chans(0), format(0) {}
+public:
     
+    ibuffer_data(t_symbol *name);
+    ~ibuffer_data();
+    
+    void set_dirty();
+    void set_size_in_samples(t_atom_long size);
+    
+    void release();
+    
+    BufferType get_type() const         { return buffer_type; };
+    void *get_samples() const           { return samples; };
+    t_ptr_int get_length() const        { return length; }
+    t_ptr_int get_num_chans() const     { return num_chans; }
+    double get_sample_rate() const      { return sample_rate; }
+    long get_format() const             { return format; }
+    
+private:
+    
+    void release_buffer();
+
+    BufferType buffer_type;
+
     void *samples;
-    long length;
+    
+    t_ptr_int length;
     long num_chans;
     long format;
     
     double sample_rate;
+ 
+    t_object *buffer_object;
 };
 
 // Reading different formats
@@ -64,10 +91,10 @@ struct ibuffer_data {
 template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.samples) + chan), num_chans(data.num_chans) {}
+    : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
     
-    T operator()(intptr_t offset) { return samples[offset * num_chans]; }
-    double get(intptr_t offset) { return bit_scale != 1 ? operator()(offset) : scale * operator()(offset); }
+    T operator()(intptr_t offset)   { return samples[offset * num_chans]; }
+    double get(intptr_t offset)     { return bit_scale != 1 ? scale * operator()(offset) : operator()(offset); }
     
     T *samples;
     long num_chans;
@@ -76,7 +103,7 @@ template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 template<> struct fetch<int32_t, 24> : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.samples) + 3 * chan), num_chans(data.num_chans) {}
+    : table_fetcher(1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
     
     int32_t operator()(intptr_t offset)
     {
@@ -99,101 +126,31 @@ void ibuffer_init();
 
 // Get the value of an individual sample
 
-static inline double ibuffer_get_samp(const ibuffer_data& data, intptr_t offset, long chan);
+static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan);
 
 // Get consecutive samples (and in reverse)
 
-void ibuffer_get_samps(const ibuffer_data& data, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse);
-void ibuffer_get_samps(const ibuffer_data& data, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse);
+void ibuffer_get_samps(const ibuffer_data& buffer, float *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
+void ibuffer_get_samps(const ibuffer_data& buffer, double *out, intptr_t offset, intptr_t n_samps, long chan, bool reverse = false);
 
 // Read with various forms of interpolation
 
-void ibuffer_read(const ibuffer_data& data, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
-void ibuffer_read(const ibuffer_data& data, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
-
-        
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////// Get ibuffer and related info //////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static inline void *ibuffer_get_ptr(t_symbol *s)
-{
-    if (s)
-    {
-        t_object *b = s->s_thing;
-	
-        if (b && (ob_sym(b) == ps_ibuffer || ob_sym(b) == ps_buffer))
-        {
-            if (ob_sym(b) == ps_buffer)
-                ATOMIC_INCREMENT(&((t_buffer *)b)->b_inuse);
-            else
-                ATOMIC_INCREMENT(&((t_ibuffer *)b)->inuse);
-    
-            return b;
-        }
-    }
-    
-    return NULL;
-}
-
-static inline void ibuffer_release_ptr(void *thebuffer)
-{
-    if (!thebuffer)
-        return;
-    
-    if (ob_sym(thebuffer) == ps_buffer)
-        ATOMIC_DECREMENT(&((t_buffer *)thebuffer)->b_inuse);
-    else
-        ATOMIC_DECREMENT(&((t_ibuffer *)thebuffer)->inuse);
-}
-
-static inline const ibuffer_data ibuffer_info(void *thebuffer)
-{
-    ibuffer_data data;
-                 
-	if (thebuffer)
-    {
-        if (ob_sym(thebuffer) == ps_buffer)
-        {
-            t_buffer *buffer = (t_buffer *) thebuffer;
-            if (buffer->b_valid)
-            {
-                data.samples = (void *) buffer->b_samples;
-                data.length = buffer->b_frames;
-                data.num_chans = buffer->b_nchans;
-                data.format = PCM_FLOAT;
-                data.sample_rate = buffer->b_sr;
-            }
-        }
-        else
-        {
-            t_ibuffer *buffer = (t_ibuffer *) thebuffer;
-            if (buffer->valid)
-            {
-                data.samples =  buffer->samples;
-                data.length = buffer->frames;
-                data.num_chans = buffer->channels;
-                data.format = buffer->format;
-                data.sample_rate = buffer->sr;
-            }
-        }
-    }
-
-	return data;
-}
+void ibuffer_read(const ibuffer_data& buffer, float *out, double *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
+void ibuffer_read(const ibuffer_data& buffer, double *out, double *positions, intptr_t n_samps, long chan, double mul, InterpType interp);
+void ibuffer_read(const ibuffer_data& buffer, float *out, float *positions, intptr_t n_samps, long chan, float mul, InterpType interp);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Get individual samples /////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static inline double ibuffer_get_samp(const ibuffer_data& data, intptr_t offset, long chan)
+static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan)
 {
-    switch (data.format)
+    switch (buffer.get_format())
     {
-        case PCM_INT_16:    return fetch_float(data, chan)(offset);
-        case PCM_INT_24:    return fetch_24bit(data, chan)(offset);
-        case PCM_INT_32:    return fetch_32bit(data, chan)(offset);
-        case PCM_FLOAT:     return fetch_float(data, chan)(offset);
+        case PCM_FLOAT:     return fetch_float(buffer, chan).get(offset);
+        case PCM_INT_16:    return fetch_16bit(buffer, chan).get(offset);
+        case PCM_INT_24:    return fetch_24bit(buffer, chan).get(offset);
+        case PCM_INT_32:    return fetch_32bit(buffer, chan).get(offset);
     }
 
     return 0.0;

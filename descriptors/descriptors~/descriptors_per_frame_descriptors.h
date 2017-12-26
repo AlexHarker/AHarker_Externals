@@ -24,10 +24,10 @@
 
 // Energy and basic spectral derivatives
 
-double get_energy (double *cumulate_sq_amps, long min_bin, long max_bin, double energy_compensation);
+//double get_energy (double *cumulate_sq_amps, long min_bin, long max_bin, double energy_compensation);
 double get_energy_ratio (double *cumulate_sq_amps, long num_bins, long min_bin, long max_bin);
 double get_spectral_rolloff (double *cumulate_sq_amps, long num_bins, double bin_freq, double threshold);
-double get_spectral_crest (float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin);
+//double get_spectral_crest (float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin);
 
 // Spectral difference measures
 
@@ -37,17 +37,17 @@ double get_foote (float *frame1, float *frame2, long min_bin, long max_bin, char
 
 // Amplitude measures
 
-double get_average_amp_abs (float *raw_frame, long num_samps);
-double get_average_amp_rms (float *raw_frame, long num_samps);
-double get_amp_peak (float *raw_frame, long num_samps);
+//double get_average_amp_abs (float *raw_frame, long num_samps);
+//double get_average_amp_rms (float *raw_frame, long num_samps);
+//double get_amp_peak (float *raw_frame, long num_samps);
 
 // Loudness
 
-double get_loudness (float *sq_amplitudes, double *loudness_curve, long num_bins, double energy_compensation);
+//double get_loudness (float *sq_amplitudes, double *loudness_curve, long num_bins, double energy_compensation);
 
 // Shape descriptors (centroid / spread / skewness / kurtosis - in lin and log forms)
 
-double get_shape_lin (t_descriptors *x, float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin, enum PFDescriptorType shape_type);
+//double get_shape_lin (t_descriptors *x, float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin, enum PFDescriptorType shape_type);
 double get_shape_log (t_descriptors *x, float *vals_ptr, double *cumulate_ptr, double *log_freq, long min_bin, long max_bin, enum PFDescriptorType shape_type);
 
 // Brightness lin and log (dependent on centroid and pitch)
@@ -57,7 +57,7 @@ double get_brightness_log (t_descriptors *x, float *raw_frame, float *ac_coeffic
 
 // Noisiness and inhormanicity
 
-double get_sfm (float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin);
+//double get_sfm (float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin);
 double get_noise_ratio (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *sq_amplitudes, double *cumulate_ptr, double *log_freq, long num_bins, long median_span);
 double get_inharmonicity (t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, float *raw_frame, float *ac_coefficients, float *freqs, float *amps, char *mask, long num_bins, long N, long median_span, double bin_freq, double threshold);
 

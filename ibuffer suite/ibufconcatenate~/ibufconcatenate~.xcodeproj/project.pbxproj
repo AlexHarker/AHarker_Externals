@@ -24,12 +24,12 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B8691F5F11CE77610083DB47 /* ibufconcatedrive~.c in Sources */ = {isa = PBXBuildFile; fileRef = B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */; };
+		B8691F5F11CE77610083DB47 /* ibufconcatedrive~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.cpp */; };
 		B88E3A7F11CE729300FD3E96 /* ibufconcatenate_info~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */; };
 		B88E3A8511CE729300FD3E96 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B88E3A8811CE729300FD3E96 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B89EF5DB10EB78D100D86409 /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B89EF5DA10EB78D100D86409 /* ibuffer_access.c */; };
-		B8B8F83F11CE46F800D06092 /* ibufconcatenate~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */; };
+		B89EF5DB10EB78D100D86409 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */; };
+		B8B8F83F11CE46F800D06092 /* ibufconcatenate~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8B8F83E11CE46F800D06092 /* ibufconcatenate~.cpp */; };
 		B8B8F85C11CE511700D06092 /* ibufconcatenate_info~.h in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */; };
 /* End PBXBuildFile section */
 
@@ -54,11 +54,11 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* ibufconcatenate~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatenate~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufconcatedrive~.c"; sourceTree = "<group>"; };
+		B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ibufconcatedrive~.cpp"; sourceTree = "<group>"; };
 		B88E3A8E11CE729300FD3E96 /* ibufconcatedrive~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatedrive~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B89EF5DA10EB78D100D86409 /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
-		B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ibufconcatenate~.c"; sourceTree = "<group>"; };
+		B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
+		B8B8F83E11CE46F800D06092 /* ibufconcatenate~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ibufconcatenate~.cpp"; sourceTree = "<group>"; };
 		B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ibufconcatenate_info~.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,9 +116,9 @@
 			isa = PBXGroup;
 			children = (
 				B8B8F85B11CE511700D06092 /* ibufconcatenate_info~.h */,
-				B8B8F83E11CE46F800D06092 /* ibufconcatenate~.c */,
-				B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.c */,
-				B89EF5DA10EB78D100D86409 /* ibuffer_access.c */,
+				B8B8F83E11CE46F800D06092 /* ibufconcatenate~.cpp */,
+				B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.cpp */,
+				B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -261,8 +261,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B89EF5DB10EB78D100D86409 /* ibuffer_access.c in Sources */,
-				B8B8F83F11CE46F800D06092 /* ibufconcatenate~.c in Sources */,
+				B89EF5DB10EB78D100D86409 /* ibuffer_access.cpp in Sources */,
+				B8B8F83F11CE46F800D06092 /* ibufconcatenate~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8691F5F11CE77610083DB47 /* ibufconcatedrive~.c in Sources */,
+				B8691F5F11CE77610083DB47 /* ibufconcatedrive~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,18 +321,21 @@
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Development;
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Deployment;
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
 			name = Default;
 		};

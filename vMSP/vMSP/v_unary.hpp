@@ -1,47 +1,4 @@
 
-/*
- *  Template_Unary
- *
- *	This is a template file for a SIMD unary operator MSP object. 
- *	It should only be necessary to provide a few macro definitions before this code to comiple a fully functional object.
- *	See other source files for examples (e.g. vabs~.c).
- *
- *	The compiled object will support all block sizes, using SIMD where possible.
- *
- *	The following *MUST* be defined:
- *
- *	OBJNAME_STR			- The object name as a string (i.e. - with quotes)
- *	OBJNAME_FIRST(a)	- A macro to combine the object name followed by a given string
- *
- *		Should be defined like:
- *		#define OBJNAME_FIRST(a) objname ## a
- *	
- *	OBJNAME_SECOND(a)	- A macro to combine the object name followed by a given string
- *
- *		Should be defined like:
- *		#define OBJNAME_SECOND(a) a ## objname
- *
- *	F32_VEC_OP				- A unary 32 bit floating point SIMD operator (vFloat)
- *	F32_VEC_ARRAY			- A unary 32 bit floating point SIMD array function (float *out, float *out, long length)
- *	F32_SCALAR_OP			- A unary 32 bit floating point scalar operator (float)
- *
- *	F64_VEC_OP				- A unary 64 bit floating point SIMD operator (vDouble)
- *	F64_VEC_ARRAY			- A unary 64 bit floating point SIMD array function (double *out, double *out, long length)
- *	F64_SCALAR_OP			- A unary 64 bit floating point scalar operator (double)
- *
- *  To use the array version over the op define USE_F32_VEC_ARRAY or USE_F64_VEC_ARRAY as appropriate 
- *	To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD (according to which are available)
- *	It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
- *
- *	Optionally for objects requiring constants you can define:
- *
- *	SET_CONSTANTS		- Set constants in main routine (if necessary)
- *
- *  Copyright 2010 Alex Harker. All rights reserved.
- *
- */
-
-
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -58,14 +15,6 @@ enum CalculationType { kScalar, kVectorOp, kVectorArray };
 template<typename Functor, CalculationType Vec32, CalculationType Vec64>
 class v_unary
 {
-    
-#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_AVX256)
-    const static int width32 = 8;
-    const static int width64 = 4;
-#else
-    const static int width32 = 4;
-    const static int width64 = 2;
-#endif
     
 public:
     
@@ -117,9 +66,11 @@ public:
     template <class T>
     static void dsp(T *x, t_signal **sp, short *count)
     {
+        const static int simd_width = SIMDLimits<float>::max_size;
+        
         // Default to scalar routine
         
-        bool vector = (Vec32 != kScalar)  || ((sp[0]->s_n / width32) > 0);
+        bool vector = (Vec32 != kScalar)  || ((sp[0]->s_n / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1> >);
         long vec_size_val = sp[0]->s_n;
 
@@ -127,7 +78,7 @@ public:
         
         if (vector)
         {
-            vec_size_val /= width32;
+            vec_size_val /= simd_width;
 
             if (Vec32 == kVectorArray)
                 current_perform_routine = reinterpret_cast<method>(perform<perform_array<T> >);
@@ -137,11 +88,11 @@ public:
 
                 if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
                 {
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_misaligned<T, width32> >);
+                    current_perform_routine = reinterpret_cast<method>(perform<perform_misaligned<T, simd_width> >);
                     post ("%s: handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
                 }
                 else
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, width32> >);
+                    current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width> >);
             }
         }
         
@@ -205,9 +156,11 @@ public:
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
     {
+        const static int simd_width = SIMDLimits<double>::max_size;
+        
         // Default to scalar routine
         
-        bool vector = !(Vec64 != kScalar) || ((maxvectorsize / width64) > 0);
+        bool vector = !(Vec64 != kScalar) || ((maxvectorsize / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform64_op<T, 1>);
         
         // Use SIMD routines if possible
@@ -217,7 +170,7 @@ public:
             if (Vec64 == kVectorArray)
                 current_perform_routine = reinterpret_cast<method>(perform64_array<T>);
             else
-                current_perform_routine = reinterpret_cast<method>(perform64_op<T, width64>);
+                current_perform_routine = reinterpret_cast<method>(perform64_op<T, simd_width>);
         }
         
         object_method(dsp64, gensym("dsp_add64"), x, current_perform_routine, 0, 0);

@@ -82,6 +82,10 @@ void vlog_int(vlog *x, t_atom_long value)
     vlog_float(x, static_cast<double>(value));
 }
 
+int C74_EXPORT main()
+{
+    vlog::setup<vlog>("vlog~");
+}
 
 /*
 #include <ext.h>

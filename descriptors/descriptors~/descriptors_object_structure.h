@@ -21,10 +21,7 @@
 
 #include "descriptors_constants.h"
 
-
-void *this_class;
-
-
+extern t_class *this_class;
 
 typedef struct _descriptors
 {
@@ -47,8 +44,6 @@ typedef struct _descriptors
 	
 	t_symbol *buffer_name;
 
-	void *buffer_pointer;
-	
 	long buffer_chan;
 	long start_point;
 	long end_point;

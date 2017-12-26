@@ -8,6 +8,7 @@
 
 #include <AH_Atomic.h>
 #include <AH_VectorOps.h>
+#include <stdint.h>
 
 #ifdef __APPLE__
 

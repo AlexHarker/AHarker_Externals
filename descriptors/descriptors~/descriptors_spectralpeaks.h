@@ -19,7 +19,7 @@
 #include "descriptors_medianfilter.h"
 #include "descriptors_combsort.h"
 
-#include <AH_VectorOpsExtended.h>
+//#include <AH_VectorOpsExtended.h>
 
 // Double precision spectral peak finding
 

@@ -54,7 +54,7 @@
 		B8ECA0480F0A57A800B26D31 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B8ECA0640F0A580C00B26D31 /* dynamic.patch~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */; };
 		B8ECA0650F0A581C00B26D31 /* dynamic.in~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0150F0A577100B26D31 /* dynamic.in~.c */; };
-		B8ECA0660F0A582D00B26D31 /* dynamic.out~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0160F0A577100B26D31 /* dynamic.out~.c */; };
+		B8ECA0660F0A582D00B26D31 /* dynamic.out~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,7 +128,7 @@
 		B8EC176E10836C3600316C82 /* dynamic.this~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.this~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8EC17B31083727700316C82 /* dynamic.this~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.this~.c"; sourceTree = "<group>"; };
 		B8ECA0150F0A577100B26D31 /* dynamic.in~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.in~.c"; sourceTree = "<group>"; };
-		B8ECA0160F0A577100B26D31 /* dynamic.out~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.out~.c"; sourceTree = "<group>"; };
+		B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.out~.cpp"; sourceTree = "<group>"; };
 		B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.patch~.c"; sourceTree = "<group>"; };
 		B8ECA02A0F0A578000B26D31 /* dynamic.patch~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.patch~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ECA03B0F0A578900B26D31 /* dynamic.in~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.in~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -244,7 +244,7 @@
 				B8EC17B31083727700316C82 /* dynamic.this~.c */,
 				B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */,
 				B8ECA0150F0A577100B26D31 /* dynamic.in~.c */,
-				B8ECA0160F0A577100B26D31 /* dynamic.out~.c */,
+				B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */,
 				B803279811CCFCB3009E69AD /* dynamic.request~.c */,
 			);
 			name = Source;
@@ -657,7 +657,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8ECA0660F0A582D00B26D31 /* dynamic.out~.c in Sources */,
+				B8ECA0660F0A582D00B26D31 /* dynamic.out~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

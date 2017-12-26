@@ -1,46 +1,4 @@
 
-/*
- *  Template_Binary
- *
- *    This is a template file for a SIMD binary (either commutative or non-commutative) operator MSP object.
- *    It should only be necessary to provide a few macro definitions before this code to comiple a fully functional object.
- *    See other source files for examples (e.g. vdiv~.c).
- *
- *    The object will support all block sizes, using SIMD where possible.
- *    The object will also accept float / int arguments, and inputs for one of the two values (according to the connections to the object)
- *
- *    The following *MUST* be defined:
- *
- *    OBJNAME_STR            - The object name as a string (i.e. - with quotes)
- *    OBJNAME_FIRST(a)    - A macro to combine the object name followed by a given string
- *
- *        Should be defined like:
- *        #define OBJNAME_FIRST(a) objname ## a
- *
- *    OBJNAME_SECOND(a)    - A macro to combine the object name followed by a given string
- *
- *        Should be defined like:
- *        #define OBJNAME_SECOND(a) a ## objname
- * *
- *    F32_VEC_OP                - A binary 32 bit floating point SIMD operator (vFloat, vFloat)
- *    F32_VEC_ARRAY            - A binary 32 bit floating point SIMD array function (float *out, float *in1, float *in2, long length)
- *    F32_SCALAR_OP            - A binary 32 bit floating point scalar operator (float, float)
- *
- *    F64_VEC_OP                - A binary 64 bit floating point SIMD operator (vDouble, vDouble)
- *    F64_VEC_ARRAY            - A binary 64 bit floating point SIMD array function (double *out, double *in1, double *in2, long length)
- *    F64_SCALAR_OP            - A binary 64 bit floating point scalar operator (double, double)
- *
- *
- *  To use the array version over the op define USE_F32_VEC_ARRAY or USE_F64_VEC_ARRAY as appropriate
- *    To avoid using vector processing at all define NO_F32_SIMD or NO_F64_SIMD (according to which are available)
- *    It is best to define these based on the available functions (preferring the operation, then the array version, then no SIMD)
- *
- *    Optionally for objects requiring constants you can define:
- *
- *    SET_CONSTANTS        - Set constants in main routine (if necessary)
- * *  Copyright 2010 Alex Harker. All rights reserved.
- *
- */
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -63,14 +21,6 @@ class v_binary
 
     template <class T>
     static T fix_denorm(const T a) { return a; }
-    
-#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_AVX256)
-    const static int width32 = 8;
-    const static int width64 = 4;
-#else
-    const static int width32 = 4;
-    const static int width64 = 2;
-#endif
     
 public:
     
@@ -146,6 +96,8 @@ public:
     template <class T>
     static void dsp(T *x, t_signal **sp, short *count)
     {
+        const static int simd_width = SIMDLimits<float>::max_size;
+
         long routine = 0;
         long vec_size_val = sp[0]->s_n;
 
@@ -185,12 +137,12 @@ public:
         
         // Use SIMD code where possible
         
-        if (Vec32 != kScalar && ((sp[0]->s_n / width32) > 0))
+        if (Vec32 != kScalar && ((sp[0]->s_n / simd_width) > 0))
         {
             if (Vec32 == kVectorOp)
             {
                 routine += 3;
-                vec_size_val = sp[0]->s_n / width32;
+                vec_size_val = sp[0]->s_n / simd_width;
                 
                 if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
                 {
@@ -213,27 +165,27 @@ public:
         {
             // Scalar
             
-            case 0:     perform_routine = (method) perform<perform_op<T, 1> >;                          break;
-            case 1:     perform_routine = (method) perform<perform_single1_op<T, 1> >;                  break;
-            case 2:     perform_routine = (method) perform<perform_single2_op<T, 1> >;                  break;
+            case 0:     perform_routine = (method) perform<perform_op<T, 1> >;                              break;
+            case 1:     perform_routine = (method) perform<perform_single1_op<T, 1> >;                      break;
+            case 2:     perform_routine = (method) perform<perform_single2_op<T, 1> >;                      break;
             
             // Vector aligned
                 
-            case 3:     perform_routine = (method) perform<perform_op<T, width32> >;                    break;
-            case 4:     perform_routine = (method) perform<perform_single1_op<T, width32> >;            break;
-            case 5:     perform_routine = (method) perform<perform_single2_op<T, width32> >;            break;
+            case 3:     perform_routine = (method) perform<perform_op<T, simd_width> >;                     break;
+            case 4:     perform_routine = (method) perform<perform_single1_op<T, simd_width> >;             break;
+            case 5:     perform_routine = (method) perform<perform_single2_op<T, simd_width> >;             break;
             
             // Vector mis-aligned
                 
-            case 6:     perform_routine = (method) perform<perform_misaligned<T, width32> >;            break;
-            case 7:     perform_routine = (method) perform<perform_single1_misaligned<T, width32> >;    break;
-            case 8:     perform_routine = (method) perform<perform_single2_misaligned<T, width32> >;    break;
+            case 6:     perform_routine = (method) perform<perform_misaligned<T, simd_width> >;             break;
+            case 7:     perform_routine = (method) perform<perform_single1_misaligned<T, simd_width> >;     break;
+            case 8:     perform_routine = (method) perform<perform_single2_misaligned<T, simd_width> >;     break;
             
             // Vector array
             
-            case 9:     perform_routine = (method) perform<perform_array<T> >;                          break;
-            case 10:    perform_routine = (method) perform<perform_single1_array<T> >;                  break;
-            case 11:    perform_routine = (method) perform<perform_single2_array<T> >;                  break;
+            case 9:     perform_routine = (method) perform<perform_array<T> >;                              break;
+            case 10:    perform_routine = (method) perform<perform_single1_array<T> >;                      break;
+            case 11:    perform_routine = (method) perform<perform_single2_array<T> >;                      break;
         }
         
         dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size_val, x);
@@ -411,6 +363,8 @@ public:
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
     {
+        const static int simd_width = SIMDLimits<double>::max_size;
+        
         long routine = 0;
         long userparam = Reverse ? 1 : 0;
         
@@ -443,7 +397,7 @@ public:
         
         // Use SIMD code where possible
         
-        if (Vec64 != kScalar && ((maxvectorsize / width64) > 0))
+        if (Vec64 != kScalar && ((maxvectorsize / simd_width) > 0))
         {
             if (Vec64 == kVectorOp)
                 routine += 3;
@@ -462,21 +416,21 @@ public:
         {
             // Scalar
                 
-            case 0:     perform_routine = (method) perform64_op<T, 1>;                  break;
-            case 1:     perform_routine = (method) perform64_single1_op<T, 1>;          break;
-            case 2:     perform_routine = (method) perform64_single2_op<T, 1>;          break;
+            case 0:     perform_routine = (method) perform64_op<T, 1>;                      break;
+            case 1:     perform_routine = (method) perform64_single1_op<T, 1>;              break;
+            case 2:     perform_routine = (method) perform64_single2_op<T, 1>;              break;
                 
             // Vector aligned op
                 
-            case 3:     perform_routine = (method) perform64_op<T, width64>;            break;
-            case 4:     perform_routine = (method) perform64_single1_op<T, width64>;    break;
-            case 5:     perform_routine = (method) perform64_single2_op<T, width64>;    break;
+            case 3:     perform_routine = (method) perform64_op<T, simd_width>;             break;
+            case 4:     perform_routine = (method) perform64_single1_op<T, simd_width>;     break;
+            case 5:     perform_routine = (method) perform64_single2_op<T, simd_width>;     break;
                 
             // Vector aligned array
                 
-            case 6:     perform_routine = (method) perform64_array<T>;                  break;
-            case 7:     perform_routine = (method) perform64_single1_array<T>;          break;
-            case 8:     perform_routine = (method) perform64_single2_array<T>;          break;
+            case 6:     perform_routine = (method) perform64_array<T>;                      break;
+            case 7:     perform_routine = (method) perform64_single1_array<T>;              break;
+            case 8:     perform_routine = (method) perform64_single2_array<T>;              break;
         }
         
         object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, userparam);

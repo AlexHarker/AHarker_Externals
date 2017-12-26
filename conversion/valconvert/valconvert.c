@@ -18,10 +18,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#ifdef MSP_VERSION
-#include <AH_VectorOpsExtended.h>
-#endif
-
 void *this_class;
 
 

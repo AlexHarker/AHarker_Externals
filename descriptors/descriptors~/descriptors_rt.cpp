@@ -89,13 +89,13 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	// Assign pointers
 	// N.B. x->window must be the first allocation - this is the pointer that is freed.
 	
-	x->window = allocated_memory;
+	x->window = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + max_fft_size);	
 	
 	x->fft_memory = allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
 	
-	x->amps_buffer = allocated_memory;
+	x->amps_buffer = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + ((max_fft_size >> 1) * 3 * RING_BUFFER_SIZE));
 	
 	x->ac_memory = allocated_memory;
@@ -107,16 +107,16 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	x->median_memory = allocated_memory;
 	allocated_memory = (void *) ((long *) ((float *) allocated_memory + max_fft_size) + max_fft_size);
 	
-	x->cumulate = allocated_memory;
+	x->cumulate = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size * RING_BUFFER_SIZE));
 	
-	x->loudness_curve = allocated_memory;
+	x->loudness_curve =  (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->log_freq = allocated_memory;
+	x->log_freq =  (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->output_list = allocated_memory;
+	x->output_list = (t_atom *) allocated_memory;
 	x->summed_amplitudes = 0;
 
 	// Allocate a clock and call the common new routine
@@ -134,7 +134,7 @@ void descriptors_free(t_descriptors *x)
 	dsp_free(&x->x_obj);
 	ALIGNED_FREE (x->window);
 	ALIGNED_FREE (x->rt_buffer);
-	hisstools_destroy_setup_f(x->fft_setup_real);
+	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
 		freeobject((t_object *)x->output_rt_clock);
 }
@@ -160,7 +160,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	
 	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
-	float *raw_frame = x->fft_memory;
+	float *raw_frame = (float *) x->fft_memory;
 	float *windowed_frame = raw_frame + fft_size;
 	
 	FFT_SPLIT_COMPLEX_F raw_fft_frame;
@@ -170,7 +170,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	float *sq_amplitudes = this_frame;
 	float *amplitudes = sq_amplitudes + fft_size_halved;
 	float *log_amplitudes = amplitudes + fft_size_halved;
-	float *freqs = x->n_data;
+	float *freqs = (float *) x->n_data;
 	float *amps = freqs + fft_size_halved;
 	
 	vFloat *v_window = (vFloat *) window;
@@ -222,6 +222,8 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	x->last_pf_spectralpeaks_med_size = 0;
 	x->last_threshold = DBL_MAX;
 	
+    // FIX - zero-padding may have been previously broken
+    
 	// Copy samples to raw frame
 	
 	for (i = 0; i < window_size; i++)
@@ -239,11 +241,10 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	for (i <<= 2; i < window_size; i++)
 		windowed_frame[i] = raw_frame[i] * window[i];
 	
-	// Do fft straight into position
+	// Do fft straight into position (with zero-padding)
 	
-	hisstools_unzip_f(windowed_frame, &raw_fft_frame, fft_size_log2);
-	hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
-
+    hisstools_rfft(fft_setup_real, windowed_frame, &raw_fft_frame, window_size, fft_size_log2);
+    
 	// Discard The nyquist bin (if necessary add this back later)
 	
 	raw_fft_frame.imagp[0] = 0.;
@@ -412,7 +413,7 @@ void descriptors_dsp (t_descriptors *x, t_signal **sp, short *count)
 	if (rt_memory_size < mem_required)
 	{
 		ALIGNED_FREE (x->rt_buffer);
-		x->rt_buffer = ALIGNED_MALLOC (mem_required * sizeof (float));
+		x->rt_buffer = (float *) ALIGNED_MALLOC (mem_required * sizeof (float));
 		x->rt_memory_size = mem_required;
 	}
 		
@@ -515,7 +516,7 @@ void descriptors_dsp64 (t_descriptors *x, t_object *dsp64, short *count, double 
 	if (rt_memory_size < mem_required)
 	{
 		ALIGNED_FREE (x->rt_buffer);
-		x->rt_buffer = ALIGNED_MALLOC (mem_required * sizeof (float));
+		x->rt_buffer = (float *) ALIGNED_MALLOC (mem_required * sizeof (float));
 		x->rt_memory_size = mem_required;
 	}
 	

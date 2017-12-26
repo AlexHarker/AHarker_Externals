@@ -15,22 +15,22 @@ template <class T> struct table_fetcher
     const double scale;
 };
 
-// Generic intepolation readers
+// Generic interpolation readers
 
-template <class T, class U, class Table, typename Interp> struct interp_2_reader
+template <class T, class U, class V, class Table, typename Interp> struct interp_2_reader
 {
     interp_2_reader(Table fetcher) : fetch(fetcher) {}
     
-    T operator()(const double*& positions)
+    T operator()(const V*& positions)
     {
         typename T::scalar_type fract_array[T::size];
         typename U::scalar_type array[T::size * 2];
         
         for (int i = 0; i < T::size; i++)
         {
-            double position = *positions++;
+            V position = *positions++;
             intptr_t offset = static_cast<intptr_t>(position);
-            fract_array[i] = static_cast<typename T::scalar_type >(position - static_cast<double>(offset));
+            fract_array[i] = static_cast<typename T::scalar_type >(position - static_cast<V>(offset));
             
             array[i] = fetch(offset);
             array[i + T::size] = fetch(offset + 1);
@@ -46,20 +46,20 @@ template <class T, class U, class Table, typename Interp> struct interp_2_reader
     Interp interpolate;
 };
 
-template <class T, class U, class Table, typename Interp> struct interp_4_reader
+template <class T, class U, class V, class Table, typename Interp> struct interp_4_reader
 {
     interp_4_reader(Table fetcher) : fetch(fetcher) {}
     
-    T operator()(const double*& positions)
+    T operator()(const V*& positions)
     {
         typename U::scalar_type array[T::size * 4];
         typename T::scalar_type fract_array[T::size];
 
         for (int i = 0; i < T::size; i++)
         {
-            double position = *positions++;
+            V position = *positions++;
             intptr_t offset = static_cast<intptr_t>(position);
-            fract_array[i] = static_cast<typename T::scalar_type >(position - static_cast<double>(offset));
+            fract_array[i] = static_cast<typename T::scalar_type>(position - static_cast<V>(offset));
             
             array[i] = fetch(offset - 1);
             array[i + T::size] = fetch(offset);
@@ -81,11 +81,11 @@ template <class T, class U, class Table, typename Interp> struct interp_4_reader
 
 // Readers with specific interpolation types
 
-template <class T, class U, class Table> struct no_interp_reader
+template <class T, class U, class V, class Table> struct no_interp_reader
 {
     no_interp_reader(Table fetcher) : fetch(fetcher) {}
     
-    T operator()(const double*& positions)
+    T operator()(const V*& positions)
     {
         typename U::scalar_type array[T::size];
         
@@ -98,36 +98,36 @@ template <class T, class U, class Table> struct no_interp_reader
     Table fetch;
 };
 
-template <class T, class U, class Table>
-struct linear_reader : public interp_2_reader<T, U, Table, linear_interp<T> >
+template <class T, class U, class V, class Table>
+struct linear_reader : public interp_2_reader<T, U, V, Table, linear_interp<T> >
 {
-    linear_reader(Table fetcher) : interp_2_reader<T, U, Table, linear_interp<T> >(fetcher) {}
+    linear_reader(Table fetcher) : interp_2_reader<T, U, V, Table, linear_interp<T> >(fetcher) {}
 };
 
-template <class T, class U, class Table>
-struct cubic_bspline_reader : public interp_4_reader<T, U, Table, cubic_bspline_interp<T> >
+template <class T, class U, class V,  class Table>
+struct cubic_bspline_reader : public interp_4_reader<T, U, V, Table, cubic_bspline_interp<T> >
 {
-    cubic_bspline_reader(Table fetcher) : interp_4_reader<T, U, Table, cubic_bspline_interp<T> >(fetcher) {}
+    cubic_bspline_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_bspline_interp<T> >(fetcher) {}
 };
 
-template <class T, class U, class Table>
-struct cubic_hermite_reader : public interp_4_reader<T, U, Table, cubic_hermite_interp<T> >
+template <class T, class U, class V,  class Table>
+struct cubic_hermite_reader : public interp_4_reader<T, U, V, Table, cubic_hermite_interp<T> >
 {
-    cubic_hermite_reader(Table fetcher) : interp_4_reader<T, U, Table, cubic_hermite_interp<T> >(fetcher) {}
+    cubic_hermite_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_hermite_interp<T> >(fetcher) {}
 };
 
-template <class T, class U, class Table>
-struct cubic_lagrange_reader : public interp_4_reader<T, U, Table, cubic_lagrange_interp<T> >
+template <class T, class U, class V, class Table>
+struct cubic_lagrange_reader : public interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T> >
 {
-    cubic_lagrange_reader(Table fetcher) : interp_4_reader<T, U, Table, cubic_lagrange_interp<T> >(fetcher) {}
+    cubic_lagrange_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T> >(fetcher) {}
 };
 
 // Reading loop
 
-template <class T, class U, class Table, template <class V, class W, class Tb> class Reader>
-void table_read_loop(Table fetcher, typename T::scalar_type *out, const double *positions, intptr_t n_samps, typename U::scalar_type mul)
+template <class T, class U, class V, class Table, template <class W, class X, class Y, class Tb> class Reader>
+void table_read_loop(Table fetcher, typename T::scalar_type *out, const V *positions, intptr_t n_samps, typename U::scalar_type mul)
 {
-    Reader<T, U, Table> reader(fetcher);
+    Reader<T, U, V, Table> reader(fetcher);
     
     T *v_out = reinterpret_cast<T *>(out);
     T scale = mul * reader.fetch.scale;
@@ -138,22 +138,21 @@ void table_read_loop(Table fetcher, typename T::scalar_type *out, const double *
 
 // Template to determine vector/scalar types
 
-template <template <class T, class U, class Tb> class Reader, class Table, class V>
-void table_read(Table fetcher, V *out, const double *positions, intptr_t n_samps, double mul)
+template <template <class T, class U, class V, class Tb> class Reader, class Table, class W, class X>
+void table_read(Table fetcher, W *out, const X *positions, intptr_t n_samps, double mul)
 {
     typedef typename Table::fetch_type fetch_type;
-    const int vec_size = 32 / sizeof(V);
-
-    intptr_t n_vsample = (n_samps / SIMDType<V, vec_size>::size) * SIMDType<V, vec_size>::size;
+    const int vec_size = SIMDLimits<W>::max_size;
+    intptr_t n_vsample = (n_samps / vec_size) * vec_size;
     
-    table_read_loop<SIMDType<V, vec_size>, SIMDType<fetch_type, vec_size>, Table, Reader>(fetcher, out, positions, n_vsample, mul);
-    table_read_loop<Scalar<V>, Scalar<fetch_type>, Table, Reader>(fetcher, out + n_vsample, positions + n_vsample, n_samps - n_vsample, mul);
+    table_read_loop<SIMDType<W, vec_size>, SIMDType<fetch_type, vec_size>, X, Table, Reader>(fetcher, out, positions, n_vsample, mul);
+    table_read_loop<Scalar<W>, Scalar<fetch_type>, X, Table, Reader>(fetcher, out + n_vsample, positions + n_vsample, n_samps - n_vsample, mul);
 }
 
 // Main reading call that switches between different types of interpolation
 
-template <class T, class Table>
-void table_read(Table fetcher, T *out, const double *positions, intptr_t n_samps, T mul, InterpType interp)
+template <class T, class U, class Table>
+void table_read(Table fetcher, T *out, const U *positions, intptr_t n_samps, T mul, InterpType interp)
 {
     switch(interp)
     {

@@ -1229,7 +1229,7 @@ void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc
 			
 			// Parse the descriptor arguments (and store into params)
 
-			descriptor_num_params = descriptors_descriptors_pb(-descriptor_type, pb_params, &argv, &argc, num_pb_params, num_pb_descriptors, &num_to_output);
+			descriptor_num_params = descriptors_descriptors_pb((enum PBDescriptorType)-descriptor_type, pb_params, &argv, &argc, num_pb_params, num_pb_descriptors, &num_to_output);
 			
 			if (descriptor_num_params)
 			{
@@ -1261,7 +1261,7 @@ void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc
 			
 			// Parse the descriptor arguments (and store into params)
 			
-			descriptor_num_params = descriptors_descriptors_pf(descriptor_type, pf_params, &argv, &argc, num_pf_params, num_pf_descriptors, &num_to_output, 0);		// Note We Ignore the num_to_output return here
+			descriptor_num_params = descriptors_descriptors_pf((enum PFDescriptorType) descriptor_type, pf_params, &argv, &argc, num_pf_params, num_pf_descriptors, &num_to_output, 0);		// Note We Ignore the num_to_output return here
 			
 			if (descriptor_num_params)
 			{
@@ -1305,7 +1305,7 @@ void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc
 }
 
 
-void descriptors_descriptors_rt (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_descriptors_rt(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	long descriptor_type;
 	long descriptor_num_params = 0;
@@ -1341,7 +1341,7 @@ void descriptors_descriptors_rt (t_descriptors *x, t_symbol *msg, short argc, t_
 		
 		// Parse the descriptor arguments (and store into params)
 		
-		descriptor_num_params = descriptors_descriptors_pf(descriptor_type, pf_params, &argv, &argc, num_params, num_pf_descriptors, &num_to_output, 1);
+		descriptor_num_params = descriptors_descriptors_pf((enum PFDescriptorType) descriptor_type, pf_params, &argv, &argc, num_params, num_pf_descriptors, &num_to_output, 1);
 		
 		if (descriptor_num_params)
 		{

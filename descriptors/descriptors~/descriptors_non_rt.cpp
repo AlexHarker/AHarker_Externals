@@ -19,7 +19,7 @@
 
 #include "descriptors_object.h"
 
-#include <ibuffer_access.h>
+#include <ibuffer_access.hpp>
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,19 +111,19 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	// Assign pointers (aligned pointers first)
 	// N.B. x->window must be the first allocation - this is the pointer that is freed.
 
-	x->window = allocated_memory;
+	x->window = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + max_fft_size);	
 	
 	x->fft_memory = allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
 	
-	x->amps_buffer = allocated_memory;
+	x->amps_buffer = (float *) allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + ((max_fft_size >> 1) * 3 * RING_BUFFER_SIZE));
 	
 	x->ac_memory = allocated_memory;
 	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
 
-	x->descriptor_data = allocated_memory;
+	x->descriptor_data = (double *) allocated_memory;
 	x->descriptor_data_size = descriptor_data_size; 	
 	allocated_memory = (void *) ((char *) allocated_memory + descriptor_data_size);			
 	
@@ -133,19 +133,19 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	x->median_memory = allocated_memory;
 	allocated_memory = (void *) ((long *) ((double *) allocated_memory + max_fft_size) + max_fft_size);
 	
-	x->summed_amplitudes = allocated_memory;
+	x->summed_amplitudes = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->cumulate = allocated_memory;
+	x->cumulate = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size * RING_BUFFER_SIZE));
 	
-	x->loudness_curve = allocated_memory;
+	x->loudness_curve = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->log_freq = allocated_memory;
+	x->log_freq = (double *) allocated_memory;
 	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
 	
-	x->output_list = allocated_memory;
+	x->output_list = (t_atom *) allocated_memory;
 	
 	x->output_rt_clock = 0;
 	
@@ -158,7 +158,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 void descriptors_free(t_descriptors *x)
 {
 	ALIGNED_FREE (x->window);
-	hisstools_destroy_setup_f(x->fft_setup_real);
+	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
 		freeobject((t_object *)x->output_rt_clock);
 }
@@ -169,10 +169,9 @@ void descriptors_free(t_descriptors *x)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	t_symbol *buffer_name = 0;
-	void *b;
 	
 	double sr;
 	double mstosamps_val;
@@ -204,21 +203,20 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 	
 	// Check the buffer
 	
-	b = ibuffer_get_ptr (buffer_name);
+	ibuffer_data buffer(buffer_name);
 	
-	if (!b)
+    if (buffer.get_type() == kBufferNone)
 	{
-		error ("descriptors(rt)~: buffer not found");
+		error ("descriptors~: buffer not found");
 		return;
 	}
 	
-	x->buffer_pointer = b;
 	x->buffer_name = buffer_name;
 	
 	// Calculate lengths
 	
-	sr = x->sr = ibuffer_sample_rate (b);
-	mstosamps_val = sr / 1000.;
+	sr = x->sr = buffer.get_sample_rate();
+	mstosamps_val = sr / 1000.0;
 	
 	if (start_point_ms < 0) 
 		start_point_ms = 0;
@@ -234,7 +232,7 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 	x->end_point = end_point_ms * mstosamps_val;
 	x->buffer_chan = buffer_chan - 1;
 	
-	calc_descriptors_non_rt (x);
+	calc_descriptors_non_rt(x);
 }
 
 
@@ -243,7 +241,7 @@ void descriptors_analyse (t_descriptors *x, t_symbol *msg, short argc, t_atom *a
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void calc_descriptors_non_rt (t_descriptors *x)
+void calc_descriptors_non_rt(t_descriptors *x)
 {
 	t_atom *output_list = x->output_list;
 	
@@ -265,7 +263,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	double *summed_amplitudes = x->summed_amplitudes;
 	
 	float *window = x->window;	
-	float *raw_frame = x->fft_memory;
+	float *raw_frame = (float *) x->fft_memory;
 	float *windowed_frame = raw_frame + fft_size;
 
 	vFloat *v_window = (vFloat *) window;	
@@ -274,7 +272,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	vFloat *imag_data;
 
 #if (defined F32_VEC_LOG_OP)
-	vFloat v_half = {0.5, 0.5, 0.5, 0.5};
+	vFloat v_half = {0.5f, 0.5f, 0.5f, 0.5f};
 #endif
 #if (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
 	vFloat v_pow_min = {POW_MIN, POW_MIN, POW_MIN, POW_MIN};
@@ -303,7 +301,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	// Memory pointers for n_min and n_max finding etc.
 	
-	double *n_min = x->n_data;
+	double *n_min = (double *) x->n_data;
 	double *n_min_pos = n_min + MAX_N_SEARCH;
 	
 	double *n_max = n_min + (2 * MAX_N_SEARCH);
@@ -337,13 +335,8 @@ void calc_descriptors_non_rt (t_descriptors *x)
 
 	// Buffer variables
 	
-	void *b = x->buffer_pointer;
-	void *buffer_samples_ptr;
-	
-	AH_SIntPtr file_length;
-	long num_of_chans;
-	long int_size;
-	
+    ibuffer_data buffer(x->buffer_name);
+		
 	// Buffer access variables
 	
 	double num_frames_recip;
@@ -354,6 +347,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	long end_point = x->end_point;
 	long num_frames;
 	long num_samps;
+    t_ptr_int file_length;
 	
 	// Loop iterators
 	
@@ -377,8 +371,8 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	long median_span;
 	long N;
 	
-	double *median_amplitudes = x->median_memory;
-	double *freqs = x->n_data;
+	double *median_amplitudes = (double *) x->median_memory;
+	double *freqs = (double *) x->n_data;
 	double *amps = freqs + fft_size_halved;
 	
 	long *median_indices = (long *) ((double *) median_amplitudes + num_bins);
@@ -400,16 +394,14 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	}
 	
 	// Access buffer and increment pointer
-	
-	if (!ibuffer_info (b, &buffer_samples_ptr, &file_length, &num_of_chans, &int_size))
+    
+	if (!buffer.get_sample_rate())
 	{
-		error ("descriptors(rt)~: could not access buffer");
+		error ("descriptors~: could not access buffer");
 		return;
 	}
-	
-	ibuffer_increment_inuse(b);		
-	
-	sr = ibuffer_sample_rate (b);
+		
+	sr = buffer.get_sample_rate();
 	samps_to_ms_val = 1000. / sr;
 	frame_to_ms_val = hop_size * 1000. / sr;
 	ms_to_frame_val = sr / (hop_size * 1000.);
@@ -423,19 +415,19 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	// Range check buffer access variables and calculate numer of frames
 	
-	if (num_of_chans < buffer_chan + 1)
-		buffer_chan = buffer_chan % num_of_chans;
-				
+	if (buffer.get_num_chans() < buffer_chan + 1)
+		buffer_chan = buffer_chan % buffer.get_num_chans();
+    
+    file_length = buffer.get_length();
 	if (end_point && end_point < file_length)
 		file_length = end_point;
 	file_length -= start_point;
 	
-	num_frames = (long) ceil ((double) file_length / (double) hop_size);
+	num_frames = (long) ceil((double) file_length / (double) hop_size);
 	
 	if (num_frames < 1)
 	{
-		error("descriptors(rt)~: zero length file or segment");
-		ibuffer_decrement_inuse(b);
+		error("descriptors~: zero length file or segment");
 		return;
 	}
 	
@@ -447,8 +439,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	
 	if (!num_pf_descriptors_per_loop)
 	{
-		error("descriptors(rt)~: not enough memory - file is too long!");
-		ibuffer_decrement_inuse(b);
+		error("descriptors~: not enough memory - file is too long!");
 		return;
 	}	
 
@@ -510,7 +501,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			if (file_length >= (buffer_pos + window_size)) num_samps = window_size;
 			else num_samps = file_length - buffer_pos;
 			
-			ibuffer_get_samps (buffer_samples_ptr, raw_frame, start_point + buffer_pos, num_samps, num_of_chans, buffer_chan, int_size);
+			ibuffer_get_samps(buffer, raw_frame, start_point + buffer_pos, num_samps, buffer_chan);
 			
 			// Zero pad to fft size
 			
@@ -524,10 +515,9 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			for (j <<= 2; j < window_size; j++)
 				windowed_frame[j] = raw_frame[j] * window[j];
 			
-			// Do FFT straight into position
+			// Do FFT straight into position with zero padding
 			
-			hisstools_unzip_f(windowed_frame, &raw_fft_frame, fft_size_log2);
-			hisstools_rfft_f(fft_setup_real, &raw_fft_frame, fft_size_log2);
+            hisstools_rfft(fft_setup_real, windowed_frame, &raw_fft_frame, window_size, fft_size_log2);
 			
 			// Discard the nyquist bin (if necessary add this back later)
 			
@@ -703,7 +693,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 			
 			for (l = 0; l < PF_NStore; l++)
 			{
-				stats_type = *pf_output_params++;
+				stats_type = (StatisticsType) *pf_output_params++;
 				output_pos = *pf_output_params++;
 				
 				switch (stats_type)
@@ -881,7 +871,7 @@ void calc_descriptors_non_rt (t_descriptors *x)
 	{				
 		// Get descriptor type, calculate and store into position
 		
-		descriptor_type = pb_params[0];
+		descriptor_type = (enum PBDescriptorType) pb_params[0];
 		
 		switch (descriptor_type)
 		{
@@ -921,9 +911,9 @@ void calc_descriptors_non_rt (t_descriptors *x)
 		}
 	}
 	
-	// Decrement buffer pointer
+	// Release buffer
 	
-	ibuffer_decrement_inuse(b);
+    buffer.release();
 
 	// Output
 	

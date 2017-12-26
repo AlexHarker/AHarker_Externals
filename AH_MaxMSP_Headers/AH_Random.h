@@ -15,14 +15,14 @@
 #ifndef _AH_RANDOM_
 #define _AH_RANDOM_
 
-#include <AH_Types.h>
+#include <stdint.h>
 
 // Include lower tail quantile for standard normal distribution function, adapted from http://home.online.no/~pjacklam/notes/invnorm/impl/sprouse/ltqnorm.c
 // This facilities faster generation of windowed gaussian numbers, which are slow for large deviations when using rejection sampling
 
 #include <AH_LTQ_Norm.h>
 
-#ifndef _APPLE_
+#ifndef __APPLE__
 #include <erf.h>
 #endif
 
@@ -57,13 +57,13 @@
 
 typedef struct _rand_gen_
 {
-    AH_UInt32 increment;
-	AH_UInt32 carry;
-	AH_UInt32 STATE[CMWC_LAG_SIZE];
+    t_uint32 increment;
+    t_uint32 carry;
+	t_uint32 STATE[CMWC_LAG_SIZE];
 
 }	t_rand_gen;
 
-void initCMWC (t_rand_gen *gen, AH_UInt32 *init)
+void initCMWC (t_rand_gen *gen, t_uint32 *init)
 {
 	gen->increment = (CMWC_LAG_SIZE - 1);
     gen->carry = 123;
@@ -72,16 +72,16 @@ void initCMWC (t_rand_gen *gen, AH_UInt32 *init)
 		gen->STATE[i] = init[i];
 }
 
-static __inline AH_UInt32 CMWC (t_rand_gen *gen)
+static __inline t_uint32 CMWC (t_rand_gen *gen)
 {
-    AH_UInt32 i = gen->increment;
-    AH_UInt32 c = gen->carry;
-    AH_UInt32 x;
+    t_uint32 i = gen->increment;
+    t_uint32 c = gen->carry;
+    t_uint32 x;
 
-    AH_UInt64 t;
+    t_uint64 t;
     
     i = (i + 1) & (CMWC_LAG_SIZE - 1);
-    t = (AH_UInt64) CMWC_A_VALUE * gen->STATE[i] + c;
+    t = (t_uint64) CMWC_A_VALUE * gen->STATE[i] + c;
     c = (t >> 32);
     x = t + c;
     
@@ -106,7 +106,7 @@ static __inline AH_UInt32 CMWC (t_rand_gen *gen)
 
 void rand_seed (t_rand_gen *gen)
 {
-	AH_UInt32 seed[CMWC_LAG_SIZE];
+	t_uint32 seed[CMWC_LAG_SIZE];
 	
 #ifdef __APPLE__
 	for (long i = 0; i < CMWC_LAG_SIZE; i++)
@@ -128,7 +128,7 @@ void rand_seed (t_rand_gen *gen)
 
 // Generate a single pseudo-random unsigned integer
 
-static __inline AH_UInt32 rand_int (t_rand_gen *gen)
+static __inline t_uint32 rand_int (t_rand_gen *gen)
 {	
 	return CMWC(gen);
 }
@@ -137,9 +137,9 @@ static __inline AH_UInt32 rand_int (t_rand_gen *gen)
 ////// The following routine provides an interface to retrieve a single using OS provided routines (for seeding etc.) /////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-static __inline AH_UInt32 rand_int_os()
+static __inline t_uint32 rand_int_os()
 {
-    AH_UInt32 rand;
+    t_uint32 rand;
     
 #ifdef __APPLE__
     rand = arc4random();
@@ -166,10 +166,10 @@ static __inline AH_UInt32 rand_int_os()
 
 // Return an unsigned 32 bit integer
 
-static __inline AH_UInt32 rand_int_n (t_rand_gen *gen, AH_UInt32 n)
+static __inline t_uint32 rand_int_n (t_rand_gen *gen, t_uint32 n)
 {	
-	AH_UInt32 used = n;
-	AH_UInt32 i;
+	t_uint32 used = n;
+	t_uint32 i;
 	
 	used |= used >> 1;
 	used |= used >> 2;
@@ -186,7 +186,7 @@ static __inline AH_UInt32 rand_int_n (t_rand_gen *gen, AH_UInt32 n)
 
 // Return an signed 32 bit integer in the range [lo, hi]
 
-static __inline AH_SInt32 rand_int_range(t_rand_gen *gen, AH_SInt32 lo, AH_SInt32 hi)
+static __inline t_int32 rand_int_range(t_rand_gen *gen, t_int32 lo, t_int32 hi)
 {	
 	return lo + rand_int_n(gen, hi - lo);
 }

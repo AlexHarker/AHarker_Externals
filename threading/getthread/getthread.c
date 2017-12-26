@@ -58,11 +58,9 @@ int C74_EXPORT main(void)
 	return 0;
 }
 
-
 void getthread_free(t_getthread *x)
 {
 }
-
 
 void *getthread_new()
 {
@@ -73,36 +71,30 @@ void *getthread_new()
     return x;
 }
 
-
 void getthread_doit(t_getthread *x)
 {
 	outlet_int(x->thread_out, isr());
 }
-
 
 void getthread_int(t_getthread *x, t_atom_long value)
 { 	
 	getthread_doit(x);
 } 
 
-
 void getthread_float(t_getthread *x, double float_in)
 { 
 	getthread_doit(x);
 } 
-
 
 void getthread_list(t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	getthread_doit(x);
 }
 
-
 void getthread_anything(t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	getthread_doit(x);
 }
-
 
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s)
 {

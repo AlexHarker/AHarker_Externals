@@ -46,7 +46,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_VectorOpsExtended.h>
 #include <AH_Denormals.h>
 
 

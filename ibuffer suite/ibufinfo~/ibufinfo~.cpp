@@ -27,14 +27,12 @@ typedef struct _ibufinfo
 	
 } t_ibufinfo;
 
-
 void *ibufinfo_new(t_symbol *buffer_name);
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s);
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name);
 void ibufinfo_bang(t_ibufinfo *x);
-
 
 int C74_EXPORT main(void)
 {
@@ -101,24 +99,22 @@ void ibufinfo_bang(t_ibufinfo *x)
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	ibufinfo_set_internal(x, argc ? atom_getsym(argv) : 0);
+	ibufinfo_set_internal(x, argc ? atom_getsym(argv) : NULL);
 }
 
 void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 {
     x->name = name;
     
-	void *b = ibuffer_get_ptr(name);
+	ibuffer_data buffer(name);
 	
-	if (b) 
+	if (buffer.get_type() != kBufferNone)
 	{
-        const ibuffer_data data = ibuffer_info(b);
-		
-		if (data.sample_rate)
+		if (buffer.get_sample_rate())
 		{
-			outlet_int(x->chans_outlet, data.num_chans);
-			outlet_float(x->sr_outlet, data.sample_rate);
-			outlet_float(x->length_outlet, (data.length / data.sample_rate) * 1000);
+			outlet_int(x->chans_outlet, buffer.get_num_chans());
+			outlet_float(x->sr_outlet, buffer.get_sample_rate());
+			outlet_float(x->length_outlet, (buffer.get_length() / buffer.get_sample_rate()) * 1000);
 		}
 		else 
 		{
@@ -129,8 +125,6 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 	}
 	else
 		error("ibufinfo~: named (i)buffer~ does not exist");
-    
-    ibuffer_release_ptr(b);
 }
 
 

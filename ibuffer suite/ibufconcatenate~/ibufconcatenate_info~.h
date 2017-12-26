@@ -9,10 +9,8 @@
  *
  */
 
-
 #ifndef _IBUF_CONCATENATE_INFO__
 #define _IBUF_CONCATENATE_INFO__
-
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -39,7 +37,7 @@ typedef struct _ibufconcatenate_attach
 } t_ibufconcatenate_info;
 
 
-void *attach_class;
+t_class *attach_class;
 
 static void ibufconcatenate_info_setup();
 void *ibufconcatenate_info_new(t_symbol *buffer_name);
@@ -59,7 +57,6 @@ static void ibufconcatenate_info_setup()
     class_register(CLASS_NOBOX, attach_class);
 }
 
-
 void *ibufconcatenate_info_new(t_symbol *buffer_name)
 {
     t_ibufconcatenate_info *x = (t_ibufconcatenate_info *)object_alloc (attach_class);
@@ -71,7 +68,7 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
     x->samp_offset = 0;
     x->user_count = 0;
     
-    x->starts = malloc(sizeof(double) * MAX_ITEMS * 2);
+    x->starts = static_cast<double *>(malloc(sizeof(double) * MAX_ITEMS * 2));
     x->ends = x->starts + MAX_ITEMS;
     
     // Register the buffer name in a unique namespace
@@ -81,13 +78,11 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
     return(x);
 }
 
-
 void ibufconcatenate_info_free(t_ibufconcatenate_info *x)
 {
     object_unregister(x);
     free(x->starts);
 }
-
 
 // Helper functions to create and deal with the info
 
@@ -104,17 +99,16 @@ static __inline t_ibufconcatenate_info *new_ibufconcatenate_info(t_symbol *name)
 	
 	// Search for or create it
 	
-	registered = object_findregistered (gensym("ibufconcatenate_info_namespace"), name);
+	registered = static_cast<t_ibufconcatenate_info *>(object_findregistered (gensym("ibufconcatenate_info_namespace"), name));
 	
 	if (!registered)
-		registered = object_new_typed(CLASS_NOBOX, gensym("ibufconcatenate_info~"), 1, argv);
+		registered = static_cast<t_ibufconcatenate_info *>(object_new_typed(CLASS_NOBOX, gensym("ibufconcatenate_info~"), 1, argv));
 
 	if (registered)
 		registered->user_count++;
 		
 	return registered;
 }
-
 
 static __inline void detach_ibufconcatenate_info(t_ibufconcatenate_info *attachment)
 {		

@@ -23,11 +23,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <ibuffer_access.h>
+#include <algorithm>
+
+#include <ibuffer_access.hpp>
 #include "ibufconcatenate_info~.h"
 
 
-void *this_class;
+t_class *this_class;
 
 
 #define GROW_SIZE 1000000
@@ -203,16 +205,11 @@ void ibufconcatenate_clear (t_ibufconcatenate *x)
 }
 
 
-void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
+void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 {
-	void *target = ibuffer_get_ptr(x->attachment->buffer_name);
-	void *source = ibuffer_get_ptr(source_name);
+    ibuffer_data target(x->attachment->buffer_name);
+    ibuffer_data source(source_name);
 	
-	AH_SIntPtr t_length, s_length;
-	long t_format, s_format;
-	long t_chans, s_chans;
-	
-	void *t_samps, *s_samps;
 	float *out_samps;
 	
 	double *starts = x->attachment->starts;
@@ -224,24 +221,14 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 	long old_size;
 	
 	double sr_const;
-	
-	long i;
-	
-	t_atom temp_atom[2];
+		
 	t_atom last_added_list[3];
 
-	if (target && ob_sym(target) == ps_buffer && source && ob_sym(source) == ps_buffer)
+	if (target.get_type() == kBufferMaxBuffer)
 	{
-		// Get buffers (checking both source and target are standard msp buffers first
-		
-		if (!ibuffer_info (target, &t_samps, &t_length, &t_chans, &t_format)) 
-			return;
-		if (!ibuffer_info (source, &s_samps, &s_length, &s_chans, &s_format)) 
-			return;
-		
 		// Check we have a mono buffer and that there is space for another item
 		
-		if (t_chans > 1)
+		if (target.get_num_chans() > 1)
 		{
 			error ("ibufconcatenate: only supports writing to mono buffers at this time");
 			return;
@@ -252,21 +239,21 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 
 		// Check we have enough memory in the buffer
 		
-		if (samp_offset + s_length + 1 > t_length)
+		if (samp_offset + source.get_length() + 1 > target.get_length())
 		{
 			// Calculate memory to allocate
 			
 			float *temp;
 
-			new_size = samp_offset + s_length + 1;
-			old_size = t_length;
+			new_size = samp_offset + source.get_length() + 1;
+			old_size = target.get_length();
 			
 			if (old_size + GROW_SIZE > new_size)
 				new_size = old_size + GROW_SIZE;
 			
 			// Allocate temporary memory
 			
-			temp = malloc(sizeof(float) * t_length);
+			temp = static_cast<float*>(malloc(sizeof(float) * target.get_length()));
 			
 			if (!temp)
 			{
@@ -275,56 +262,44 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 			}
 
 			// Copy out
-			
-			ibuffer_increment_inuse(target);
-			for (i = 0; i < old_size; i++)
-				temp[i] = ((float *)t_samps)[i];
-			ibuffer_decrement_inuse(target);
+            
+            out_samps = static_cast<float *>(target.get_samples());
+            std::copy(out_samps, out_samps + old_size, temp);
 			
 			// Set buffer to new size
 			
-			atom_setlong(temp_atom, new_size);
-			object_method_typed ((t_object *)target, gensym("sizeinsamps"), 1, temp_atom, temp_atom + 1); 
+            target.set_size_in_samples(new_size);
 			
-			if (!ibuffer_info (target, &t_samps, &t_length, &t_chans, &t_format));
-			{			
-				// Copy back in
-				
-				ibuffer_increment_inuse(target);
-				for (i = 0; i < old_size; i++)
-					((float *)t_samps)[i] = temp[i];			
-				ibuffer_decrement_inuse(target);
-			}
+            out_samps = static_cast<float *>(target.get_samples());
+			if (target.get_length());
+                std::copy(temp, temp + old_size, out_samps);
 			
 			// Free temporary memory and check the resize has worked 
 			
 			free(temp);
 
-			if (samp_offset + s_length + 1 > t_length)
+            if (samp_offset + source.get_length() + 1 > target.get_length())
 			{
 				error ("ibufconcatenate: no room left in buffer");
 				return;
 			}
 		}
-
-		ibuffer_increment_inuse(target);
-		ibuffer_increment_inuse(source);
 		
-		out_samps = (float *) t_samps;
+		out_samps = static_cast<float *>(target.get_samples());
 		
 		// Get samples from the source - this is constrained to only msp buffers do to unknown pointer alignment in the target (with the offset)
 		
-		ibuffer_get_samps(s_samps, out_samps + samp_offset, 0, s_length, s_chans, 0, s_format);
+        ibuffer_get_samps(source, out_samps, samp_offset, source.get_length(), 0);
 		
 		// Add a silent sample
 		
-		*(out_samps + samp_offset + s_length) = 0.f;
+		*(out_samps + samp_offset + source.get_length()) = 0.f;
 		
 		// Store data
 		
-		sr_const = 1000. / ibuffer_sample_rate(target);
+		sr_const = 1000.0 / target.get_sample_rate();
 		starts[num_items] = (double) samp_offset * sr_const;
-		samp_offset = samp_offset + s_length + 1;
+		samp_offset = samp_offset + source.get_length() + 1;
 		ends[num_items] = (double) (samp_offset - 1) * sr_const; 
 		
 		x->attachment->num_items = num_items + 1;
@@ -332,13 +307,13 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 		
 		// Set the buffer as dirty
 		
-		object_method ((t_object *)target, gensym("dirty"));
+        target.set_dirty();
 		
 		// We are done with the buffers
-		
-		ibuffer_decrement_inuse(source);
-		ibuffer_decrement_inuse(target);
-		
+        
+        target.release();
+        source.release();
+        
 		// Output Values
 		
 		atom_setlong(last_added_list, num_items + 1);
@@ -349,14 +324,21 @@ void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name)
 	}
 }
 
+double ibuffer_sample_rate(t_symbol *name)
+{
+    ibuffer_data buffer(name);
+    
+    if (buffer.get_sample_rate())
+        return buffer.get_sample_rate();
+    else
+        return 44100.0;
+}
 
 void ibufconcatenate_entry(t_ibufconcatenate *x, double start, double end)
 {
-	void *target;
-
 	// Default sr to something sensible
 	
-	double sr = 44100.;
+    double sr = ibuffer_sample_rate(x->attachment->buffer_name);
 	
 	double *starts = x->attachment->starts;
 	double *ends = x->attachment->ends;
@@ -368,20 +350,14 @@ void ibufconcatenate_entry(t_ibufconcatenate *x, double start, double end)
 
 	if (num_items >= MAX_ITEMS)
 		return;
-	
-	// Get buffer
-	
-	target = ibuffer_get_ptr(x->attachment->buffer_name);
-	if (target)
-		sr = ibuffer_sample_rate(target);
-	
+    
 	// Store values
 	
 	starts[num_items] = start;
 	ends[num_items] = end; 
 		
-	if ((long) (end * sr / 1000.) > samp_offset)
-		samp_offset = end * sr / 1000.;
+	if ((long) (end * sr / 1000.0) > samp_offset)
+		samp_offset = end * sr / 1000.0;
 		
 	x->attachment->num_items = num_items + 1;
 	x->attachment->samp_offset = samp_offset;
@@ -406,37 +382,34 @@ static __inline long mstosamps (double ms, double sr)
 }
 
 
+double ibuffer_full_length(t_symbol *name)
+{
+    ibuffer_data buffer(name);
+    
+    if (buffer.get_length())
+        return (buffer.get_length() / buffer.get_sample_rate()) * 1000.0;
+    else
+        return 0.0;
+}
+
+
 void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 {
-	void *the_buffer = ibuffer_get_ptr(x->attachment->buffer_name);
-	void *null_samps;	
-	
 	double *starts = x->attachment->starts;
 	double *ends = x->attachment->ends;
 	
 	double start;
 	double end;
-	double full_length = 0;
+	double full_length = ibuffer_full_length(x->attachment->buffer_name);
 	double sr = 0;
-	
-	AH_SIntPtr samplength = 0;
     
     long num_items = x->attachment->num_items;
-    long null_temp;
     
 	t_atom atom_out[3];
 
 	if (!x->max_mode)
 		return;
 
-	// Get buffer
-	
-	if (ibuffer_info(the_buffer, &null_samps, &samplength, &null_temp, &null_temp))
-	{
-		sr = ibuffer_sample_rate(the_buffer);
-		full_length = (samplength / sr) * 1000.;
-	}
-			
 	if (item < 1 || item > num_items)
 	{
 		// Default Output Values
@@ -464,7 +437,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 }
 
 
-t_int *ibufconcatenate_perform (t_int *w)
+t_int *ibufconcatenate_perform(t_int *w)
 {	
 	// Set pointers
 	
@@ -476,30 +449,16 @@ t_int *ibufconcatenate_perform (t_int *w)
 	long vec_size = (long) w[6];
 	t_ibufconcatenate *x = (t_ibufconcatenate *) w[7];
 		
-	void *the_buffer = ibuffer_get_ptr(x->attachment->buffer_name);
-	void *null_samps;
-	
 	double *starts = x->attachment->starts;
 	double *ends = x->attachment->ends;
-	double full_length = 0;
+    double full_length = ibuffer_full_length(x->attachment->buffer_name);
 	double start;
 	double end;
 	
 	float ftemp;
-	
-    AH_SIntPtr samplength = 0;
-	
-    long num_items = x->attachment->num_items;
-	long null_temp;
-	
-	// Get buffer
-	
-	if (ibuffer_info(the_buffer, &null_samps, &samplength, &null_temp, &null_temp))
-	{
-		double sr = ibuffer_sample_rate(the_buffer);
-		full_length = (samplength / sr) * 1000.;
-	}
 		
+    long num_items = x->attachment->num_items;
+    
 	while (vec_size--)
 	{
 		// Get item
@@ -541,7 +500,7 @@ t_int *ibufconcatenate_perform (t_int *w)
 }
 
 
-void ibufconcatenate_perform64 (t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
@@ -550,28 +509,14 @@ void ibufconcatenate_perform64 (t_ibufconcatenate *x, t_object *dsp64, double **
 	double *start_hi_res = outs[1];
 	double *end_lo_res = outs[2];
 	double *end_hi_res = outs[3];
-	
-	void *the_buffer = ibuffer_get_ptr(x->attachment->buffer_name);
-	void *null_samps;
-	
+		
 	double *starts = x->attachment->starts;
 	double *ends = x->attachment->ends;
-	double full_length = 0;
+    double full_length = ibuffer_full_length(x->attachment->buffer_name);
 	double start;
 	double end;
-		
-    AH_SIntPtr samplength = 0;
     
 	long num_items = x->attachment->num_items;
-	long null_temp;
-	
-	// Get buffer
-	
-	if (ibuffer_info(the_buffer, &null_samps, &samplength, &null_temp, &null_temp))
-	{
-		double sr = ibuffer_sample_rate(the_buffer);
-		full_length = (samplength / sr) * 1000.;
-	}
 	
 	while (vec_size--)
 	{

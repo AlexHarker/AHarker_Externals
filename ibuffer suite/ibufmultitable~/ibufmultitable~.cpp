@@ -14,9 +14,9 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_VectorOps.h>
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
+
 
 t_class *this_class;
 
@@ -83,7 +83,6 @@ int C74_EXPORT main(void)
 	
 	return 0;
 }
-
 
 void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
 {
@@ -166,14 +165,12 @@ void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *a
 
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 {
-    void *b = ibuffer_get_ptr(s);
+    ibuffer_data buffer(s);
     
-    x->buffer_name = b ? s : NULL;
+    x->buffer_name = s;
     
-    if (!b && s)
-        object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
-    
-    ibuffer_release_ptr(b);
+    if (buffer.get_type() == kBufferNone && s)
+        object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
 }
 
 void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long start_samp)
@@ -195,29 +192,40 @@ void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan)
 //////////////////////////////////////////////////////////////// Core Perform Routine ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 template <class T, int N>
-void perform_positions(SIMDType<double, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp)
+void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
 {
-    const SIMDType<double, N> mul(end_samp - start_samp);
-    const SIMDType<double, N> add(start_samp);
-    const SIMDType<double, N> end(end_samp);
-    const SIMDType<double, N> zero(static_cast<T>(0));
-    const SIMDType<double, N> one(static_cast<T>(1));
+    const SIMDType<T, N> mul(end_samp - start_samp);
+    const SIMDType<T, N> add(start_samp);
+    const SIMDType<T, N> end(last_samp);
+    const SIMDType<T, N> zero(static_cast<T>(0));
+    const SIMDType<T, N> one(static_cast<T>(1));
     
-    long num_vecs = num_samps / SIMDType<T, N>::size;
+    long num_vecs = num_samps / N;
     
     for (long i = 0; i < num_vecs; i++)
     {
-        SIMDType<double, N> position = min(one, max(zero, SIMDType<double, N>(*in++))) + add + SIMDType<double, N>(*offset_in++);
+        SIMDType<T, N> position = min(one, max(zero, *in++)) * mul + add + *offset_in++;
         positions[i] = min(end, max(zero, position));
     }
 }
 
 template <class T>
-void perform_positions(double *positions, T *in, T *offset_in, long vec_size, double start_samp, double end_samp)
+void perform_positions(T *positions, T *in, T *offset_in, long vec_size, double start_samp, double end_samp, double last_samp)
 {
-    perform_positions(reinterpret_cast<SIMDType<double, 1> *>(positions), reinterpret_cast<SIMDType<T, 1> *>(in), reinterpret_cast<SIMDType<T, 1> *>(offset_in), vec_size, start_samp, end_samp);
+    const int size = SIMDLimits<T>::max_size;
+    long vec_count = (vec_size / size) * size;
+    
+    SIMDType<T, size> *v_positions = reinterpret_cast<SIMDType<T, size> *>(positions);
+    SIMDType<T, size> *v_in = reinterpret_cast<SIMDType<T, size> *>(in);
+    SIMDType<T, size> *v_offset_in = reinterpret_cast<SIMDType<T, size> *>(offset_in);
+    
+    SIMDType<T, 1> *s_positions = reinterpret_cast<SIMDType<T, 1> *>(positions + vec_count);
+    SIMDType<T, 1> *s_in = reinterpret_cast<SIMDType<T, 1> *>(in + vec_count);
+    SIMDType<T, 1> *s_offset_in = reinterpret_cast<SIMDType<T, 1> *>(offset_in + vec_count);
+
+    perform_positions(v_positions, v_in, v_offset_in, vec_count, start_samp, end_samp, last_samp);
+    perform_positions(s_positions, s_in, s_offset_in, (vec_size - vec_count), start_samp, end_samp, last_samp);
 }
 
 long clip(const long in, const long max)
@@ -226,31 +234,28 @@ long clip(const long in, const long max)
 }
 
 template <class T>
-void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, double *positions, long vec_size)
+void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_size)
 {
     // Check if the buffer is set / valid and get the length information
     
-    void *buffer_pointer = ibuffer_get_ptr(x->buffer_name);
-    const ibuffer_data data = ibuffer_info(buffer_pointer);
+    ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, data.length - 1);
-    long end_samp = clip(x->end_samp, data.length - 1);
-    long chan = clip(x->chan - 1, data.num_chans - 1);
+    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
+    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
+    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
     
-    if (buffer_pointer && ((data.length - start_samp) >= 1))
+    if ((buffer.get_length() - start_samp) >= 1)
     {
-        perform_positions(positions, in, offset_in, vec_size, start_samp, end_samp);
-        ibuffer_read(data, out, positions, vec_size, chan, 1.f, x->interp_type);
+        perform_positions(out, in, offset_in, vec_size, start_samp, end_samp, buffer.get_length() - 1);
+        ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
     {
         for (long i = 0; i < vec_size; i++)
             *out++ = 0.f;
     }
-    
-    ibuffer_release_ptr(buffer_pointer);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +275,7 @@ t_int *ibufmultitable_perform(t_int *w)
     t_ibufmultitable *x = (t_ibufmultitable *) w[6];
     
     if (!x->x_obj.z_disabled)
-        perform_core(x, in, offset_in, out, NULL, vec_size);
+        perform_core(x, in, offset_in, out, vec_size);
     
     return w + 7;
 }
@@ -291,7 +296,7 @@ void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count)
 
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    perform_core(x, ins[0], ins[1], outs[0], outs[0], vec_size);
+    perform_core(x, ins[0], ins[1], outs[0], vec_size);
 }
 
 void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)

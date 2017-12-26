@@ -9,18 +9,18 @@
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1D996410A4BB03700CE1530 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1D996400A4BB03700CE1530 /* Accelerate.framework */; };
-		B8E2BC7119FA6D2200AE0E71 /* timeconvolve~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DEE5820EE2F52700803D2F /* timeconvolve~.c */; };
-		B8E2BC7219FA6D2400AE0E71 /* ibuffer_access.c in Sources */ = {isa = PBXBuildFile; fileRef = B84BD76E10E81326002288DB /* ibuffer_access.c */; };
+		B81642101FED241E00CF6F87 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */; };
+		B8E2BC7119FA6D2200AE0E71 /* timeconvolve~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DEE5820EE2F52700803D2F /* timeconvolve~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D996400A4BB03700CE1530 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B8141A8F10EB52C000CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
+		B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* timeconvolve~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timeconvolve~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B84BD76E10E81326002288DB /* ibuffer_access.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ibuffer_access.c; path = ../../AH_MaxMSP_Headers/ibuffer_access.c; sourceTree = SOURCE_ROOT; };
-		B8DAF7E0181D8DD50049FB27 /* ibuffer_access.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ibuffer_access.h; path = ../../AH_MaxMSP_Headers/ibuffer_access.h; sourceTree = SOURCE_ROOT; };
-		B8DEE5820EE2F52700803D2F /* timeconvolve~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "timeconvolve~.c"; sourceTree = "<group>"; };
+		B8DAF7E0181D8DD50049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
+		B8DEE5820EE2F52700803D2F /* timeconvolve~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "timeconvolve~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,9 +67,9 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DEE5820EE2F52700803D2F /* timeconvolve~.c */,
-				B84BD76E10E81326002288DB /* ibuffer_access.c */,
-				B8DAF7E0181D8DD50049FB27 /* ibuffer_access.h */,
+				B8DEE5820EE2F52700803D2F /* timeconvolve~.cpp */,
+				B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */,
+				B8DAF7E0181D8DD50049FB27 /* ibuffer_access.hpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -166,8 +166,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E2BC7119FA6D2200AE0E71 /* timeconvolve~.c in Sources */,
-				B8E2BC7219FA6D2400AE0E71 /* ibuffer_access.c in Sources */,
+				B8E2BC7119FA6D2200AE0E71 /* timeconvolve~.cpp in Sources */,
+				B81642101FED241E00CF6F87 /* ibuffer_access.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

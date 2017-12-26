@@ -20,7 +20,7 @@
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
 #include <AH_Win_Math.h>
-#include <AH_VectorOpsExtended.h>
+//#include <AH_VectorOpsExtended.h>
 
 #include "descriptors_object_structure.h"
 #include "descriptors_conversion_helpers.h"
@@ -30,9 +30,6 @@
 #include "descriptors_statistics.h"
 #include "descriptors_set_descriptors.h"
 	
-
-void *this_class;
-
 
 // Prototypes for basic object functionality
 
