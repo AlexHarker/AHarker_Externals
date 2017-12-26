@@ -793,7 +793,7 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 	
 	// Calculate normalisation factor
 	
-	for (i = 0; i < fft_size_halved; i++)
+	for (i = 0; i < (window_size >> 1); i++)
 		norm_factor += raw_frame[i] * raw_frame[i];
 	
 	norm_factor = 0.25 / ((double)  fft_size * norm_factor);
@@ -805,7 +805,7 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 	
 	// Calculate ac coefficients
 	
-	complex_mult_conjugate (full_fft_frame, half_fft_frame, window_size >> 1, (float) norm_factor);
+	complex_mult_conjugate(full_fft_frame, half_fft_frame, window_size >> 1, (float) norm_factor);
 	
 	// Inverse fft
 	
