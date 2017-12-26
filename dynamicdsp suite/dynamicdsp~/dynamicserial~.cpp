@@ -83,6 +83,18 @@ typedef struct _dynamicserial
 } t_dynamicserial;
 
 
+t_atom_long dynamic_getindex(t_dynamicserial *x, void *p)
+{
+    for (long i = 0; i < x->slots->size(); i++)
+    {
+        long index;
+        const t_patcher *pp = x->slots->reportSubpatch(i, x, &index);
+        if (pp == p)
+            return index;
+    }
+    return -1;
+}
+
 // ========================================================================================================================================== //
 // Function Prototypes
 // ========================================================================================================================================== //
@@ -140,7 +152,6 @@ void *dynamicserial_client_temp_mem_resize(t_dynamicserial *x, t_ptr_int index, 
 // ========================================================================================================================================== //
 
 
-t_symbol *ps_dspchain;
 t_symbol *ps_args;
 t_symbol *ps_declareio;
 
@@ -195,11 +206,16 @@ int C74_EXPORT main(void)
 	class_addmethod(dynamicserial_class, (method)dynamicserial_query_temp_mem, "get_temp_mem", A_CANT, 0);
 	class_addmethod(dynamicserial_class, (method)dynamicserial_client_temp_mem_resize, "temp_mem_resize", A_CANT, 0);
 	
+    CLASS_ATTR_OBJ(dynamicserial_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj);
+    CLASS_ATTR_ACCESSORS(dynamicserial_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_INVISIBLE(dynamicserial_class, "ownsdspchain", 0);
+    
+    class_addmethod(dynamicserial_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
+
 	class_dspinit(dynamicserial_class);
 	
 	class_register(CLASS_BOX, dynamicserial_class);
 	
-	ps_dspchain = gensym("dspchain");
 	ps_args = gensym("args");
 	ps_declareio = gensym("declareio");
 	
@@ -348,14 +364,14 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 	for (long i = 0; i < num_sig_outs; i++)
 		outlet_new((t_object *)x, "signal");
     
+    // Get parent patcher
+    
+    x->parent_patch = (t_patcher *)gensym("#P")->s_thing;
+
 	// Setup slots
     
-    x->slots = new PatchSet<PatchSlot>((t_object *)x, num_ins, num_outs, outs);
+    x->slots = new PatchSet<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
     
-	// Initialise parent patcher
-	
-	x->parent_patch = (t_patcher *)gensym("#P")->s_thing;
-	
 	// Load patch
     
 	if (patch_name_entered)
@@ -697,16 +713,7 @@ void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
 
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg)
 {
-    // Report subpatchers if request by an object that is not a dspchain
-    
-    if (arg && (t_ptr_uint) arg != 1)
-		if (!NOGOOD(arg))
-			if (ob_sym(arg) == ps_dspchain)
-				return NULL;
-
-    // FIX - only if a valid patcher? Not sure - do tests...
-    
-    return (void *) x->slots->getPatch(index);
+    return (void *) x->slots->reportSubpatch(index, arg);
 }
 
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)

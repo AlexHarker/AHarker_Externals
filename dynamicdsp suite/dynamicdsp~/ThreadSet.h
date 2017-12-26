@@ -7,68 +7,96 @@
 #include <ext.h>
 
 #include <AH_Atomic.h>
-#include <AH_Types.h>
 #include <AH_VectorOps.h>
 
 #ifdef __APPLE__
+
+#include <libkern/OSAtomic.h>
 #include <pthread.h>
 #include <mach/semaphore.h>
 #include <mach/task.h>
+
+// Mac OS specific definitions
+
+typedef pthread_t OSThreadType;
+typedef semaphore_t OSSemaphoreType;
+typedef void *OSThreadFunctionType(void *arg);
+
 #else
-#include <Windows.h>
+
+// Windows OS specific definitions
+
+#include <windows.h>
+
+typedef HANDLE OSThreadType;
+typedef HANDLE OSSemaphoreType;
+DWORD WINAPI OSThreadFunctionType(LPVOID arg);
+
 #endif
 
-// Lightweight high priority thread and semaphore (note you should destroy the thread before the semaphore)
+
+// Lightweight thread
 
 struct Thread
 {
     
-#ifdef __APPLE__
-    typedef void *threadFunc(void *arg);
-#else
-    DWORD WINAPI threadFunc(LPVOID arg);
-#endif
+    typedef void ThreadFunctionType(void *);
     
-    Thread(threadFunc *threadFunction, void *arg);
+public:
+    
+    Thread(ThreadFunctionType *threadFunction, void *arg);
     ~Thread();
     
+    void close();
+    
 private:
     
-#ifdef __APPLE__
-    pthread_t mPth;
-#else
-    HANDLE mPth;
-    bool mExciting;
-#endif
+    // Deleted
+    
+    Thread(const Thread&);
+    Thread& operator=(const Thread&);
+    
+    // threadStart is a quick OS-style wrapper to call the object which calls the relevant static function
+    
+    static OSThreadFunctionType threadStart;
+    void call() { mThreadFunction(mArg); }
+    
+    // Data
+    
+    OSThreadType mInternal;
+    ThreadFunctionType *mThreadFunction;
+    void *mArg;
+    bool mValid;
 };
 
-struct Semaphore
+
+// Semaphore (note that you should most likely close() before the destructor is called
+
+class Semaphore
 {
-    Semaphore(long size);
+    
+public:
+    
+    Semaphore(long maxCount);
     ~Semaphore();
-
-    void tick(long n);
+    
+    void close();
+    void signal(long n);
     bool wait();
-        
+    
 private:
     
-#ifdef __APPLE__
-    task_t mTask;
-    semaphore_t mInternal;
-#else
-    long mSize;
-    HANDLE mInternal;
-#endif
-
+    // Deleted
+    
+    Semaphore(const Semaphore&);
+    Semaphore& operator=(const Semaphore&);
+    
+    // Data
+    
+    OSSemaphoreType mInternal;
+    bool mValid;
 };
 
-// Thread starting functions
-
- #ifdef __APPLE__
- void *threadStart(void *arg);
- #else
- DWORD WINAPI threadStart(LPVOID arg);
- #endif
 
 class ThreadSet
 {
@@ -102,12 +130,18 @@ public:
             mThreadSlots.push_back(ThreadSlot(this, i, numTempOuts));
         
         for (long i = 0; i < numThreads - 1; i++)
-            mThreads.push_back(new Thread(&threadStart, &mThreadSlots[i + 1]));
+            mThreads.push_back(new Thread(&threadEntry, &mThreadSlots[i + 1]));
 
     }
     
     ~ThreadSet()
     {
+        // Close sempahore and threads
+        
+        mSemaphore.close();
+        for (std::vector<Thread *>::iterator it = mThreads.begin(); it != mThreads.end(); it++)
+            (*it)->close();
+        
         // Free threads
         
         for (std::vector<Thread *>::iterator it = mThreads.begin(); it != mThreads.end(); it++)
@@ -121,7 +155,7 @@ public:
             for (std::vector<void *>::iterator jt = it->mTempBuffers.begin(); jt != it->mTempBuffers.end(); jt++)
                 ALIGNED_FREE(*jt);
     }
-    
+        
     inline void tick(long vecSize, long numThreads, void **sig_outs)
     {
         // Set number active threads
@@ -142,7 +176,7 @@ public:
         for (long i = 0; i < numThreads; i++)
             mThreadSlots[i].mProcessed = 0;
         
-        mSemaphore.tick(numThreads - 1);
+        mSemaphore.signal(numThreads - 1);
         
         // Process thread
         
@@ -202,13 +236,10 @@ public:
         return false;
     }
     
-    void threadEntry(long threadNum)
+    void threadClassEntry(long threadNum)
     {
-        while(1)
+        while (mSemaphore.wait())
         {
-            if (mSemaphore.wait())
-                break;
-            
             for (long i = threadNum; i < threadNum + mActive - 1; i++)
             {
                 // N.B. Get values from thread each time in case they have been changed
@@ -223,6 +254,16 @@ public:
             }
         }
     }
+    
+    static void threadEntry(void *arg)
+    {
+        ThreadSet::ThreadSlot *slot = static_cast<ThreadSet::ThreadSlot *>(arg);
+        ThreadSet *set =  static_cast<ThreadSet *>(slot->mOwner);
+        
+        set->threadClassEntry(slot->mIdx);
+    }
+    
+    long getNumThreads() const { return mThreadSlots.size(); }
     
 private:
     

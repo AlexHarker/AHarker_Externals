@@ -21,6 +21,13 @@ struct IO
     
 };
 
+// Deferred patch deletion
+
+void deletePatch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
+{
+    freeobject(patch);
+}
+
 // Set subpatcher association
 
 // FIX - could make this use inbuilt traverse (and hence part of class)
@@ -34,6 +41,11 @@ int setSubAssoc(t_patcher *p, t_object *x)
         object_method(p, gensym("setassoc"), x);
     
     return 0;
+}
+
+PatchSlot::~PatchSlot()
+{
+    freePatch();
 }
 
 // Loading
@@ -58,13 +70,13 @@ PatchSlot::LoadError PatchSlot::load(long userIndex, t_symbol *fileName, long ar
 PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
 {
     t_fourcc type;
-    t_fourcc valid_types[3];
+    t_fourcc validTypes[3];
     
     // Set the valid types to test for
     
-    valid_types[0] = FOUR_CHAR_CODE('maxb');
-    valid_types[1] = FOUR_CHAR_CODE('TEXT');
-    valid_types[2] = FOUR_CHAR_CODE('JSON');
+    validTypes[0] = FOUR_CHAR_CODE('maxb');
+    validTypes[1] = FOUR_CHAR_CODE('TEXT');
+    validTypes[2] = FOUR_CHAR_CODE('JSON');
     
     // Set all flags off / free old patch
     
@@ -78,7 +90,7 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     char name[512];
     strcpy(name, mName.c_str());
     
-    if (locatefile_extended(name, &mPath, &type, valid_types, 3))
+    if (locatefile_extended(name, &mPath, &type, validTypes, 3))
         return kFileNotFound;
     
     // FIX - this is a stop gap (needs better attention to figure out how to do this...)
@@ -86,47 +98,45 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     t_symbol *ps_dynamicdsp = gensym("___DynamicDSP~___");
     t_symbol *ps_patch_index = gensym("___DynamicPatchIndex___");
     t_symbol *ps_inhibit_subpatcher_vis = gensym("inhibit_subpatcher_vis");
-    //t_symbol *ps_PAT = gensym("#P");
+    t_symbol *ps_PAT = gensym("#P");
     
     // Store the old loading symbols
     
     t_object *previous = ps_dynamicdsp->s_thing;
     t_object *previous_index = ps_patch_index->s_thing;
     t_object *save_inhibit_state = ps_inhibit_subpatcher_vis->s_thing;
-    //t_patcher *saveparent = (t_patcher *)ps_PAT->s_thing;
+    t_patcher *saveparent = (t_patcher *)ps_PAT->s_thing;
 
     // Bind to the loading symbols
 
     ps_dynamicdsp->s_thing = mOwner;
     ps_patch_index->s_thing = (t_object *) mUserIndex;
     ps_inhibit_subpatcher_vis->s_thing = (t_object *) -1;
-    //ps_PAT->s_thing = (t_object *) x->parent_patch;
+    ps_PAT->s_thing = (t_object *)mParent;
 
     // Load the patch (don't interrupt dsp and set to allow Modify Read-Only)
     
-    short save_loadupdate = dsp_setloadupdate(false);
+    short savedLoadUpdate = dsp_setloadupdate(false);
     loadbang_suspend();
     mPatch = (t_patcher *)intload(name, mPath, 0 , mArgc, mArgv, false);
     object_method(mPatch, gensym("setclass"));
-    loadbang_resume();
-    dsp_setloadupdate(save_loadupdate);
     
     // Restore previous loading symbol bindings
     
     ps_dynamicdsp->s_thing = previous;
     ps_patch_index->s_thing = previous_index;
     ps_inhibit_subpatcher_vis->s_thing = save_inhibit_state;
-    //ps_PAT->s_thing = (t_object *) saveparent;
+    ps_PAT->s_thing = (t_object *) saveparent;
     
     // Check something has loaded and that it is a patcher
     
     if (!mPatch)
-        return kNothingLoaded;
+        return loadFinished(kNothingLoaded, savedLoadUpdate);
     
     if (!ispatcher((t_object *)mPatch))
     {
         freePatch();
-        return kNotPatcher;
+        return loadFinished(kNotPatcher, savedLoadUpdate);
     }
     
     // Find ins and link outs
@@ -136,12 +146,16 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     
     // Set window name / set associations / compile DSP if the owning patch is on
     
-    setWindowName();
     long result = 0;
+    setWindowName();
     object_method(mPatch, gensym("traverse"), setSubAssoc, mOwner, &result);
     
     if (sys_getdspobjdspstate(mOwner))
         compileDSP(vecSize, samplingRate, true);
+    
+    // Loadbang before turning the patch on
+    
+    loadFinished(kNone, savedLoadUpdate);
     
     // The patch is valid and ready to go
     
@@ -151,9 +165,12 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     return kNone;
 }
 
-PatchSlot::~PatchSlot()
+PatchSlot::LoadError PatchSlot::loadFinished(LoadError error, short savedLoadUpdate)
 {
-    freePatch();
+    loadbang_resume();
+    dsp_setloadupdate(savedLoadUpdate);
+    
+    return error;
 }
 
 // Messages
@@ -219,13 +236,13 @@ void PatchSlot::setWindowName()
     jpatcher_set_title(mPatch, gensym(windowName.c_str()));
 }
 
-void PatchSlot::openWindow()
+void PatchSlot::openWindow() const
 {
     if (mPatch)
         mess0((t_object *)mPatch, gensym("front"));
 }
 
-void PatchSlot::closeWindow()
+void PatchSlot::closeWindow() const
 {
     if (mPatch)
         object_method(mPatch, gensym("wclose"));
@@ -294,7 +311,10 @@ void PatchSlot::freePatch()
             it->clear();
         patcherTraverse<&PatchSlot::unlinkOutlets>(mPatch, NULL, mOwner);
         closeWindow();
-        freeobject((t_object *)mPatch);
+
+        // Defer patch deletion for speed and safety
+        
+        defer(mPatch, (method) deletePatch, NULL, 0, NULL);
     }
     
     mPatch = NULL;

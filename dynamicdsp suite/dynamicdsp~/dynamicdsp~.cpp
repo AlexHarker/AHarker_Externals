@@ -54,14 +54,11 @@ static t_ptr_uint sig_size;
 // Structures and typedefs
 // ========================================================================================================================================== //
 
-// Patch Set Class to Deal with Threads
+// Patch Set Struct to Deal with Threads
 
-class ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
+struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
 {
-    
-public:
-    
-    ThreadedPatchSet(t_object *x, long numIns, long numOuts, void **outs) : PatchSet(x, numIns, numOuts, outs) {}
+    ThreadedPatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs) : PatchSet(x, parent, numIns, numOuts, outs) {}
     
     bool processIfThreadMatches(long index, void *tempMem, void **outputs, t_ptr_uint tempMemSize, long thread, long available_threads)
     {
@@ -206,7 +203,6 @@ void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_
 // ========================================================================================================================================== //
 
 
-t_symbol *ps_dspchain;
 t_symbol *ps_args;
 t_symbol *ps_declareio;
 
@@ -214,6 +210,93 @@ t_symbol *ps_declareio;
 // ========================================================================================================================================== //
 // Main
 // ========================================================================================================================================== //
+
+t_max_err patchset_get_patches(t_dynamicdsp *x, t_object *attr, long *argc, t_atom **argv)
+{
+    return x->slots->serialise(argc, argv);
+}
+
+
+
+long poly_isparent(t_object *p, t_object *mightbeparent)
+{
+    t_object *pp = p;
+    
+    do {
+        object_method(pp, gensym("getvnewobjparent"), &pp);
+        if (pp == mightbeparent)
+            return true;
+    } while (pp);
+    
+    return false;
+}
+
+void poly_appendinstanceifneeded(char *buf, char *name, long instance)
+{
+    long len;
+    char seeninstance = false;
+    
+    len = strlen(name);
+    // is last character of name a right paren?
+    if (len > 3 && name[len - 1] == ')') {
+        // look for pattern, digits until left paren
+        char seendigit = true;
+        long i;
+        
+        for (i = len - 2; i >= 0; i--) {
+            if (isdigit(name[i])) {
+                seendigit = true;
+            } else {
+                if (!seendigit)
+                    break;
+                if (name[i] == '(') {
+                    seeninstance = true;
+                    break;
+                }
+            }
+        }
+    }
+    if (seeninstance)
+        strcpy(buf, name);
+    else
+        sprintf(buf, "%s (%ld)", name, instance);
+}
+
+void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
+{
+    long i;
+    t_symbol *name;
+    char buf[1024];
+    char subpatcher = false;
+    
+    *title = NULL;
+    
+    for (i = 0; i < x->slots->size(); i++)
+    {
+        const t_patcher *pp = x->slots->reportSubpatch(i, x);
+        if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
+        {
+            object_method(p, gensym("getname"), &name);
+            poly_appendinstanceifneeded(buf, name->s_name, i + 1);
+            *title = sysmem_newptr(strlen(buf)+1);
+            strcpy(*title,buf);
+            return;
+        }
+    }
+    // got here? it's ok, conventional title will be used
+}
+
+t_atom_long dynamic_getindex(t_dynamicdsp *x, void *p)
+{
+    for (long i = 0; i < x->slots->size(); i++)
+    {
+        long index;
+        const t_patcher *pp = x->slots->reportSubpatch(i, x, &index);
+        if (pp == p)
+            return index;
+    }
+    return -1;
+}
 
 
 int C74_EXPORT main(void)
@@ -266,11 +349,23 @@ int C74_EXPORT main(void)
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_temp_mem, "get_temp_mem", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_temp_mem_resize, "temp_mem_resize", A_CANT, 0);
 	
+    CLASS_ATTR_OBJ(dynamicdsp_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
+    CLASS_ATTR_ACCESSORS(dynamicdsp_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_INVISIBLE(dynamicdsp_class, "ownsdspchain", 0);
+    
+    class_addmethod(dynamicdsp_class, (method)poly_titleassoc, "titleassoc", A_CANT, 0);
+    class_addmethod(dynamicdsp_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
+
+/*
+    CLASS_ATTR_OBJ(dynamicdsp_class, "patches", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
+    CLASS_ATTR_ACCESSORS(dynamicdsp_class, "patches", (method) patchset_get_patches, (method) 0);
+    CLASS_ATTR_SAVE(dynamicdsp_class, "patches", 0);
+    CLASS_ATTR_INVISIBLE(dynamicdsp_class, "patches", 0);*/
+
 	class_dspinit(dynamicdsp_class);
 	
 	class_register(CLASS_BOX, dynamicdsp_class);
 		
-	ps_dspchain = gensym("dspchain");
 	ps_args = gensym("args");
 	ps_declareio = gensym("declareio");
 	
@@ -384,7 +479,6 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	x->request_manual_threading = 1;
 	x->request_num_active_threads = max_obj_threads;
 	
-    
 	// Set other variables to defaults
 	
 	x->num_sig_ins = num_sig_ins;
@@ -424,15 +518,15 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	for (long i = 0; i < num_sig_outs; i++)
 		outlet_new((t_object *)x, "signal");
 	
+    // Get parent patcher
+    
+    x->parent_patch = (t_patcher *)gensym("#P")->s_thing;										// store reference to parent patcher
+    
     // Setup temporary memory / threads / slots
 	
 	alloc_mem_swap(&x->temp_mem, 0, 0);
     x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
-    x->slots = new ThreadedPatchSet((t_object *)x, num_ins, num_outs, outs);
-    
-	// Initialise parent patcher
-    
-	x->parent_patch = (t_patcher *)gensym("#P")->s_thing;										// store reference to parent patcher
+    x->slots = new ThreadedPatchSet((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
 	// Load patch
 	
@@ -918,17 +1012,8 @@ void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
 }
 
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg)
-{		
-    // Report subpatchers if request by an object that is not a dspchain
-    
-    if (arg && (t_ptr_uint) arg != 1)
-        if (!NOGOOD(arg))
-            if (ob_sym(arg) == ps_dspchain)
-                return NULL;
-    
-    // FIX - only if a valid patcher? Not sure - do tests...
-    
-    return (void *) x->slots->getPatch(index);
+{
+    return (void *) x->slots->reportSubpatch(index, arg);
 }
 
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
@@ -1004,7 +1089,9 @@ void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index)
 
 void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size)
 {
-    schedule_grow_mem_swap(&x->temp_mem, size, size);
+    // FIX - better system for this...
+    
+    schedule_grow_mem_swap(&x->temp_mem, size * x->threads->getNumThreads(), size);
     
     x->slots->setTempMemSize(index, size);
     

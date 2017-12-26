@@ -4,6 +4,8 @@
 
 #include <ext.h>
 #include <jpatcher_api.h>
+#include <ext_dictionary.h>
+#include <ext_dictobj.h>
 
 #include <vector>
 
@@ -27,6 +29,20 @@ template <class slotClass> void doClose(t_object *x, t_symbol *s, long argc, t_a
     ((slotClass *)atom_getobj(argv))->closeWindow();
 }
 
+// dspchain Attribute Helper
+
+static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *argc, t_atom **argv)
+{
+    char alloc = false;
+    
+    if (atom_alloc(argc, argv, &alloc))
+        return MAX_ERR_GENERIC;
+    
+    // This prevents getdspchain on child patchers from walking up past this object
+    
+    atom_setlong(*argv,1);
+    return MAX_ERR_NONE;
+}
 
 // Main class
 
@@ -37,7 +53,7 @@ template <class slotClass> class PatchSet
 
 public:
     
-    PatchSet(t_object *x, long numIns, long numOuts, void **outs) : mOwner(x), mTargetIndex(0), mIsLoading(0), mNumIns(numIns)
+    PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs) : mOwner(x), mParent(parent), mTargetIndex(0), mIsLoading(0), mNumIns(numIns)
     {
         mOutTable.assign(outs, outs + numOuts);
     }
@@ -81,7 +97,7 @@ public:
         // Resize if necessary
         
         for (long i = size(); i < index+ 1; i++)
-            mSlots.push_back(new slotClass(mOwner, mNumIns, &mOutTable));
+            mSlots.push_back(new slotClass(mOwner, mParent, mNumIns, &mOutTable));
         
         // FIX - do errors!
         //PatchSlot::LoadError error =
@@ -98,7 +114,7 @@ public:
         {
             mSlots[index - 1]->setInvalid();
             slotClass *toDelete = mSlots[index - 1];
-            mSlots[index - 1] = new slotClass(mOwner, mNumIns, &mOutTable);
+            mSlots[index - 1] = new slotClass(mOwner, mParent, mNumIns, &mOutTable);
                    
             // FIX - errors...
             
@@ -135,10 +151,48 @@ public:
     
     // Get patch for subpatcher reporting
     
-    const t_patcher* getPatch(long index)
+    const t_patcher* reportSubpatch(long index, void *arg, long *userIndex = NULL)
     {
+        // Report subpatchers if requested by an object that is not a dspchain
+        
+        // FIX - this looks wrong to me...
+        
+        if ((t_ptr_uint) arg > 1)
+            if (!NOGOOD(arg))
+                if (ob_sym(arg) == gensym("dspchain"))
+                    return NULL;
+        
+        //  IS THIS CORRECT??
+        
+        // if ((t_ptr_uint) arg < 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
+        // return NULL;
+
+        /*
         if (userSlotExists(index + 1))
+        {
+            if (userIndex)
+                *userIndex = mSlots[index]->getUserIndex();
             return mSlots[index]->getPatch();
+        }
+        */
+        
+        // Loop over hosted patches to find the next one
+        
+        long count = 0;
+        
+        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+        {
+            if ((*it)->getPatch())
+            {
+                if (userIndex)
+                    *userIndex = (*it)->getUserIndex();
+                if (count++ == index)
+                    return (*it)->getPatch();
+            }
+        }
+        
+        if (userIndex)
+            *userIndex = -1;
         
         return NULL;
     }
@@ -333,6 +387,24 @@ public:
             mSlots[index - 1]->setTempMemSize(size);
     }
     
+    // Patch serialisation
+    
+    t_max_err serialise(long *argc, t_atom **argv)
+    {
+        t_dictionary *dict = dictionary_new();
+        //t_dictionary *slotDict = dictionary_new();
+        dictionary_appendlong(dict, gensym("slotcount"), size());
+          /*
+        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+            dictionary_appenddictionary(slotDict, gensym("key"), val)(*it)->serialise();
+        */
+        
+        t_max_err error = dictobj_dictionarytoatoms(dict, argc, argv);
+        object_free(dict);
+        
+        return error;
+    }
+    
 protected:
 
     void target(t_symbol *msg, long argc, t_atom *argv)
@@ -359,6 +431,7 @@ protected:
     // Data
    
     t_object *mOwner;
+    t_patcher *mParent;
     long mTargetIndex;
     t_int32_atomic mIsLoading;
     

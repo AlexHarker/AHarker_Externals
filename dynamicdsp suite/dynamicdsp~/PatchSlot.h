@@ -26,7 +26,7 @@ public:
     
 public:
     
-    PatchSlot(t_object *owner, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mTempMemSize(0), mTempMem(NULL), mOutTable(outTable), mOwner(owner)
+    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mTempMemSize(0), mTempMem(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
     }
@@ -42,10 +42,11 @@ public:
     
     // Getters
    
-    bool isEmpty() { return mPatch == NULL; }
+    bool isEmpty() const { return mPatch == NULL; }
     
     t_patcher *getPatch() { return mPatch; }
     bool getValid() { return mValid; }
+    long getUserIndex() { return mUserIndex; }
     bool getOn() { return mOn; }
     bool getBusy() { return mBusy; }
     void ***getOutputsHandle() { return &mOutputs; }
@@ -60,13 +61,13 @@ public:
 
     // Number of ins and outs
     
-    long getNumIns() { return mInTable.size(); }
-    long getNumOuts() { return mOutTable->size(); }
+    long getNumIns() const { return mInTable.size(); }
+    long getNumOuts() const { return mOutTable->size(); }
 
-    // Windows Managment
+    // Windows Management
     
-    void openWindow();
-    void closeWindow();
+    void openWindow() const;
+    void closeWindow() const;
 
 protected:
     
@@ -84,6 +85,8 @@ protected:
     
 private:
     
+    LoadError loadFinished(LoadError error, short savedLoadUpdate);
+
     template <void (PatchSlot::*Method)(t_patcher *p)> int patcherTraverse(t_patcher *p, void *arg, t_object *owner)
     {
         // Avoid recursion into a poly / pfft / dynamicdsp~
@@ -156,6 +159,7 @@ private:
     // Owner
     
     t_object *mOwner;
+    t_patcher *mParent;
 };
 
 
@@ -166,7 +170,7 @@ class ThreadedPatchSlot : public PatchSlot
     
 public:
     
-    ThreadedPatchSlot(t_object *owner, long numIns, std::vector<void *> *outTable) : PatchSlot(owner, numIns, outTable), mProcessingFlag(0), mThreadCurrent(0), mThreadRequest(0)   {}
+    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable) : PatchSlot(owner, parent, numIns, outTable), mProcessingFlag(0), mThreadCurrent(0), mThreadRequest(0)   {}
     
     void requestThread(long thread) { mThreadRequest = thread; }
     void updateThread() { mThreadCurrent = mThreadRequest; }
