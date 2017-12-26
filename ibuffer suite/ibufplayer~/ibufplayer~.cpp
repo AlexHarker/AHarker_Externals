@@ -20,18 +20,20 @@
 #include <AH_Denormals.h>
 #include <AH_Win_Math.h>
 #include <ibuffer_access.hpp>
+#include <algorithm>
 
 t_class *this_class;
 
 
-typedef enum {
-    
+enum t_transport_flag
+{
     FLAG_NONE,
     FLAG_PLAY,
     FLAG_STOP,
     
-} t_transport_flag;
+};
 
+const int max_num_chans = 4;
 
 typedef struct _ibufplayer
 {
@@ -39,16 +41,27 @@ typedef struct _ibufplayer
 	
 	t_symbol *buffer_name;
 	
-	double pos, speed, start_samp, min_samp, max_samp, sr_div;
-	float vol1, vol2, vol3, vol4;
-
     t_transport_flag transport_flag;
+
+    InterpType interp_type;
+
+    double pos;
+    double speed;
+    double start_samp;
+    double min_samp;
+    double max_samp;
+    double sr_div;
     
-	bool sig_control, input_connected, playing;
+    bool sig_control;
+    bool input_connected;
+    bool playing;
+    
+    double vols[max_num_chans];
+
 	long obj_n_chans;
 	
-    InterpType interp_type;
-	
+    float *float_outs[max_num_chans];
+
 	void *done_clock;
 	void *bang_outlet;
 	
@@ -73,6 +86,7 @@ void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+
 
 int C74_EXPORT main(void)
 {
@@ -111,11 +125,8 @@ void *ibufplayer_new(t_atom_long obj_n_chans)
 	x->bang_outlet = bangout(x);
 	
 	// Determine number of channels
-	
-	if (obj_n_chans < 1)
-		obj_n_chans = 1;
-	if (obj_n_chans > 4)
-		obj_n_chans = 4;
+    
+    obj_n_chans = std::max(static_cast<t_atom_long>(max_num_chans), std::min(static_cast<t_atom_long>(1), obj_n_chans));
 	
 	// Create signal outlets
 	
@@ -134,16 +145,14 @@ void *ibufplayer_new(t_atom_long obj_n_chans)
 	
 	x->buffer_name = NULL;
 	
-	x->vol1 = 1.f;
-	x->vol2 = 1.f;
-	x->vol3 = 1.f;
-	x->vol4 = 1.f;
-	
+    for (long i = 0 ; i < max_num_chans; i++)
+        x->vols[i] = 1.0;
+    
 	x->interp_type = kInterpCubicHermite;
 	
 	x->done_clock = clock_new(x, (method) ibufplayer_done_bang);
 
-	return (x);
+	return x;
 }
 
 void ibufplayer_free(t_ibufplayer *x)
@@ -206,16 +215,11 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 
 void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 {
-	x->vol1 = atom_getfloat(argv++);
-	
-	if (argc > 1) 
-		x->vol2 = atom_getfloat(argv++);
-	
-	if (argc > 2) 
-		x->vol3 = atom_getfloat(argv++);
-	
-	if (argc > 3) 
-		x->vol4 = atom_getfloat(argv);
+    for (long i = 0; i < max_num_chans; i++)
+    {
+        if (argc > i)
+            x->vols[i] = atom_getfloat(argv++);
+    }
 }
 
 void ibufplayer_interp(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
@@ -369,16 +373,8 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
 {
     // Object and local variables
     
-    float vols[4];
-    
     long obj_n_chans = x->obj_n_chans;
-    //bool input_connected = x->input_connected;
     long to_do = 0;
-    
-    vols[0] = x->vol1;
-    vols[1] = x->vol2;
-    vols[2] = x->vol3;
-    vols[3] = x->vol4;
     
     bool zero_outputs = true;
     
@@ -427,10 +423,12 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
             
             for (long i = 0; i < obj_n_chans; i++)
             {
-                long chan_to_do = (vols[i] && buffer.get_num_chans() > i) ? to_do : 0;
+                double vol = x->vols[i];
+                
+                long chan_to_do = (vol && buffer.get_num_chans() > i) ? to_do : 0;
                 
                 if (chan_to_do)
-                    ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vols[i], interp_type);
+                    ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vol, interp_type);
                 memset(outs[i] + chan_to_do, 0, (vec_size - chan_to_do) * sizeof(T));
             }
         }
@@ -462,26 +460,16 @@ t_int *ibufplayer_perform(t_int *w)
 	
 	// Set pointers
 	
-	float *in = (float *) w[2];
-	
-	float *outs[5];	
-	long vec_size = w[8];
-    t_ibufplayer *x = (t_ibufplayer *) w[9];
-	
-	float *phase_out;
-
-	outs[0] = (float *)(w[3]);
-	outs[1] = (float *)(w[4]);
-	outs[2] = (float *)(w[5]);
-	outs[3] = (float *)(w[6]);
-	outs[4] = (float *)(w[7]);
-	
-	phase_out = outs[4];
+	float *in = reinterpret_cast<float *>(w[2]);
+	float **outs = reinterpret_cast<float **>(w[3]);
+    float *phase_out = reinterpret_cast<float *>(w[4]);
+	long vec_size = w[5];
+    t_ibufplayer *x = reinterpret_cast<t_ibufplayer *>(w[6]);
 
     if (!x->x_obj.z_disabled)
         perform_core(x, in, outs, phase_out, NULL, vec_size);
     
-	return w + 10;
+	return w + 7;
 }
 
 void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
@@ -496,21 +484,10 @@ void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
 	
 	x->input_connected = count[0];
 	
-	switch (x->obj_n_chans)
-    {
-        case 1:
-            dsp_add(denormals_perform, 9, ibufplayer_perform, sp[0]->s_vec, sp[1]->s_vec, 0, 0, 0, sp[2]->s_vec, sp[0]->s_n, x);
-            break;
-        case 2:
-            dsp_add(denormals_perform, 9, ibufplayer_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, 0, 0, sp[3]->s_vec, sp[0]->s_n, x);
-            break;
-        case 3:
-            dsp_add(denormals_perform, 9, ibufplayer_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, 0, sp[4]->s_vec, sp[0]->s_n, x);
-            break;
-        case 4:
-            dsp_add(denormals_perform, 9, ibufplayer_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[0]->s_n, x);
-            break;
-    }
+    for (long i = 0; i < x->obj_n_chans; i++)
+        x->float_outs[i] = reinterpret_cast<float *>(sp[i + 1]->s_vec);
+    
+	dsp_add(denormals_perform, 6, ibufplayer_perform, sp[0]->s_vec, x->float_outs, sp[x->obj_n_chans]->s_vec, sp[0]->s_n, x);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
