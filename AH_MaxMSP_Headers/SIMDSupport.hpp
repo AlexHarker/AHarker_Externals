@@ -799,23 +799,23 @@ struct SIMDType<float, 16> : public SIMDVector<float, __m512, 16>
 
 static inline SIMDType<double, 1> abs(const SIMDType<double, 1> a)
 {
-    const static t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+    const static uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     
-    t_uint64 temp = *(reinterpret_cast<const t_uint64 *>(&a)) & bit_mask_64;
+    uint64_t temp = *(reinterpret_cast<const uint64_t *>(&a)) & bit_mask_64;
     return *(reinterpret_cast<double *>(&temp));
 }
 
 static inline SIMDType<float, 1> abs(const SIMDType<float, 1> a)
 {
-    const static t_uint32 bit_mask_32 = 0x7FFFFFFFU;
+    const static uint32_t bit_mask_32 = 0x7FFFFFFFU;
     
-    t_uint32 temp = *(reinterpret_cast<const t_uint32 *>(&a)) & bit_mask_32;
+    uint32_t temp = *(reinterpret_cast<const uint32_t *>(&a)) & bit_mask_32;
     return *(reinterpret_cast<float *>(&temp));
 }
 
 template <int N> SIMDType<double, N> abs(const SIMDType<double, N> a)
 {
-    const static t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+    const static uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     const double bit_mask_64d = *(reinterpret_cast<const double *>(&bit_mask_64));
 
     return a & SIMDType<double, N>(bit_mask_64d);
@@ -823,7 +823,7 @@ template <int N> SIMDType<double, N> abs(const SIMDType<double, N> a)
 
 template <int N> SIMDType<float, N> abs(const SIMDType<float, N> a)
 {
-    const static t_uint32 bit_mask_32 = 0x7FFFFFFFU;
+    const static uint32_t bit_mask_32 = 0x7FFFFFFFU;
     const float bit_mask_32f = *(reinterpret_cast<const double *>(&bit_mask_32));
     
     return a & SIMDType<float, N>(bit_mask_32f);
