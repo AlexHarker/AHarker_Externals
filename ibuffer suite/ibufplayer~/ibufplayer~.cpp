@@ -429,7 +429,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
                 
                 if (chan_to_do)
                     ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vol, interp_type);
-                memset(outs[i] + chan_to_do, 0, (vec_size - chan_to_do) * sizeof(T));
+                std::fill_n(outs[i] + chan_to_do, (vec_size - chan_to_do), 0);
             }
         }
     }
@@ -439,7 +439,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
         // Zero outputs
         
         for (long i = 0; i < obj_n_chans; i++)
-            memset(outs[i], 0, vec_size * sizeof(T));
+            std::fill_n(outs[i], vec_size, 0);
     }
     
     bool playing = !(to_do < vec_size);
