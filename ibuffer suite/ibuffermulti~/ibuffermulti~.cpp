@@ -119,7 +119,7 @@ void ibuffermulti_deferred_clear(t_ibuffermulti *x, t_symbol *s, short argc, t_a
 void ibuffermulti_clear(t_ibuffermulti *x)
 {
 	for (long i = 0; i < x->buffers.size(); i++)
-        defer(x, (method) ibuffermulti_deferred_delete, 0, 0, 0);
+        defer(x->buffers[i], (method) ibuffermulti_deferred_delete, 0, 0, 0);
 	
     x->buffers.clear();
 }
