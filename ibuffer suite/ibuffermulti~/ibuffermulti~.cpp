@@ -8,7 +8,9 @@
  *
  */
 
-// FIX - threadsafety for resizing
+
+// N.B. - alterations to the object structure only happen in the low priority thread for threadsafety
+
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -42,6 +44,7 @@ void ibuffermulti_assist(t_ibuffermulti *x, void *b, long m, long a, char *s);
 void ibuffermulti_user_clear(t_ibuffermulti *x);
 void ibuffermulti_deferred_clear(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv);
 void ibuffermulti_clear(t_ibuffermulti *x);
+void ibuffermulti_deferred_delete(t_object *x, t_symbol *s, short argc, t_atom *argv);
 void ibuffermulti_user_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv);
 void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv);
 
@@ -116,9 +119,14 @@ void ibuffermulti_deferred_clear(t_ibuffermulti *x, t_symbol *s, short argc, t_a
 void ibuffermulti_clear(t_ibuffermulti *x)
 {
 	for (long i = 0; i < x->buffers.size(); i++)
-		object_free(x->buffers[i]);
+        defer(x, (method) ibuffermulti_deferred_delete, 0, 0, 0);
 	
     x->buffers.clear();
+}
+
+void ibuffermulti_deferred_delete(t_object *x, t_symbol *s, short argc, t_atom *argv)
+{
+    object_free(x);
 }
 
 void ibuffermulti_user_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
