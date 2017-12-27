@@ -26,18 +26,18 @@ typedef struct _ahnoise
 } t_ahnoise;
 
 
-void *ahnoise_new ();
-void ahnoise_free (t_ahnoise *x);
-void ahnoise_assist (t_ahnoise *x, void *b, long m, long a, char *s);
+void *ahnoise_new();
+void ahnoise_free(t_ahnoise *x);
+void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s);
 
-t_int *ahnoise_perform (t_int *w);
-void ahnoise_dsp (t_ahnoise *x, t_signal **sp, short *count);
+t_int *ahnoise_perform(t_int *w);
+void ahnoise_dsp(t_ahnoise *x, t_signal **sp, short *count);
 
-void ahnoise_perform64 (t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ahnoise_dsp64 (t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("ahnoise~",
 						   (method)ahnoise_new,
@@ -77,7 +77,7 @@ void ahnoise_free(t_ahnoise *x)
 }
 
 
-t_int *ahnoise_perform (t_int *w)
+t_int *ahnoise_perform(t_int *w)
 {	
 	// Set pointers
 	
@@ -102,7 +102,7 @@ void ahnoise_dsp(t_ahnoise *x, t_signal **sp, short *count)
 }
 
 
-void ahnoise_perform64 (t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
@@ -116,7 +116,7 @@ void ahnoise_perform64 (t_ahnoise *x, t_object *dsp64, double **ins, long numins
 }
 
 
-void ahnoise_dsp64 (t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	object_method(dsp64, gensym("dsp_add64"), x, ahnoise_perform64, 0, NULL);
 }
