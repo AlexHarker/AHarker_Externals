@@ -128,11 +128,7 @@ void ibuffermulti_user_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *
 }
 
 void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
-{	
-	t_object *current_buffer;
-	t_atom return_val;
-	long *valid_val;
-
+{
 	// First make sure the ibuffer object is loaded
 	
 	if (!class_findbyname(CLASS_BOX, gensym("ibuffer~")))
@@ -144,27 +140,32 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
     
 	// Return a properly allocated object (may still return NULL if the .mxo is not present)
 	
-	current_buffer = reinterpret_cast<t_object *>(object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, 0));
-	
+	t_object *current_buffer = reinterpret_cast<t_object *>(object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, 0));
+    bool buffer_loaded = false;
+
 	// Now load the buffer 
 	
 	if (current_buffer && argc > 1 && atom_gettype(argv) == A_SYM && atom_gettype(argv + 1) == A_SYM)
 	{
+        t_atom return_val;
+
 		// Set name, then load file - finally check validity
 		
 		object_method_typed(current_buffer, ps_set, 1, argv, &return_val);
 		object_method_typed(current_buffer, ps_replace, argc - 1, argv + 1, &return_val);		
-		valid_val = (long *) object_method(current_buffer, ps_valid);
+		long *valid_val = (long *) object_method(current_buffer, ps_valid);
 		
 		if (valid_val && *valid_val)
-            x->buffers.push_back(current_buffer);
-		else
-		{
-			if (!valid_val)
-				post ("invalid ibuffer~ object");
-			freeobject(current_buffer);
-		}
+            buffer_loaded = true;
 	}
 	
+    if (buffer_loaded)
+        x->buffers.push_back(current_buffer);
+    else
+    {
+        object_error(reinterpret_cast<t_object *>(x), "could not load ibuffer~");
+        freeobject(current_buffer);
+    }
+    
 	outlet_int(x->number_out, x->buffers.size());
 }
