@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8DBD5060EDEB1DC00049F0E /* ahnoise~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* ahnoise~.c */; };
+		B8DBD5060EDEB1DC00049F0E /* ahnoise~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* ahnoise~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* ahnoise~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ahnoise~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8589F2519A7D4FC003F8618 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8DE14DC0EB46B030050BDFE /* ahnoise~.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = "ahnoise~.c"; sourceTree = "<group>"; };
+		B8DE14DC0EB46B030050BDFE /* ahnoise~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ahnoise~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DE14DC0EB46B030050BDFE /* ahnoise~.c */,
+				B8DE14DC0EB46B030050BDFE /* ahnoise~.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8DBD5060EDEB1DC00049F0E /* ahnoise~.c in Sources */,
+				B8DBD5060EDEB1DC00049F0E /* ahnoise~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
