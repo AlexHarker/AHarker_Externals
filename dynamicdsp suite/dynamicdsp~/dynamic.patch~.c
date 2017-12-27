@@ -49,7 +49,7 @@ void dynamic_patch_int(t_dynamic_patch *x, t_atom_long intin);
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new("dynamic.patch~",
 						   (method)dynamic_patch_new, 

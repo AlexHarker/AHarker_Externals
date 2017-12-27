@@ -69,7 +69,7 @@ void randomvals_int (t_randomvals *x, t_atom_long value);
 #endif
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {
 	
 #ifdef MSP_VERSION

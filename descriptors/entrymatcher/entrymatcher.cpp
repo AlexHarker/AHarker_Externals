@@ -71,7 +71,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 // Basic Object Routines: main, new, free and assist
 // ========================================================================================================================================== //
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class	= class_new	("entrymatcher",
 				(method) entrymatcher_new, 

@@ -55,7 +55,7 @@ void clock_delete(t_dynamic_this *x);
 void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new("dynamic.this~",
 						   (method)dynamic_this_new, 

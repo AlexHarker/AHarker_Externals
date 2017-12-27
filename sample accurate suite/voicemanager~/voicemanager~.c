@@ -53,7 +53,7 @@ t_int *voicemanager_perform (t_int *w);
 void voicemanager_perform64 (t_voicemanager *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void voicemanager_dsp64 (t_voicemanager *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("voicemanager~",
 						   (method)voicemanager_new,

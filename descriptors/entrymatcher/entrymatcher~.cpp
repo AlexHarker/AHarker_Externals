@@ -70,7 +70,7 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 // Basic Object Routines: main, new, free and assist
 // ========================================================================================================================================== //
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class	= class_new	("entrymatcher~",
                              (method) entrymatcher_new,

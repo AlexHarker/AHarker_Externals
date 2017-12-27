@@ -50,7 +50,7 @@ void dynamic_out_perform64 (t_dynamic_out *x, t_object *dsp64, double **ins, lon
 #endif
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new("dynamic.out~",
 						   (method) dynamic_out_new, 

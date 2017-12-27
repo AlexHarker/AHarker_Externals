@@ -43,7 +43,7 @@ void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv);
 void depack_assist(t_depack *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("depack", 
 							(method) depack_new, 

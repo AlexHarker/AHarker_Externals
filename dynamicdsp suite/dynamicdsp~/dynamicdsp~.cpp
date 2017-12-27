@@ -299,7 +299,7 @@ t_atom_long dynamic_getindex(t_dynamicdsp *x, void *p)
 }
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	dynamicdsp_class = class_new("dynamicdsp~",
 								 (method)dynamicdsp_new, 

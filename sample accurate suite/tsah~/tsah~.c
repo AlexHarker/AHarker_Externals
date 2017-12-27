@@ -48,7 +48,7 @@ void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, lo
 void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("tsah~",
 				(method)tsah_new,

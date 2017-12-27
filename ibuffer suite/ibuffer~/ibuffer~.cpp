@@ -44,7 +44,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
 t_symbol *ps_null;
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {
 	this_class = class_new ("ibuffer~", (method) ibuffer_new, (method)ibuffer_free, (short)sizeof(t_ibuffer), 0L, A_DEFSYM, A_DEFSYM, 0);
 	

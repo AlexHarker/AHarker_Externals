@@ -50,7 +50,7 @@ void schedulemessage_delay(t_schedulemessage *x, double delay);
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("schedulemessage", 
 							(method) schedulemessage_new, 

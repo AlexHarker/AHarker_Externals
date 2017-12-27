@@ -161,7 +161,7 @@ t_symbol *ps_declareio;
 // ========================================================================================================================================== //
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	dynamicserial_class = class_new("dynamicserial~",
 								 (method)dynamicserial_new, 

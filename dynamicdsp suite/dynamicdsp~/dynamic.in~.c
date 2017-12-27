@@ -46,7 +46,7 @@ t_int *dynamic_in_perform(t_int *w);
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new("dynamic.in~",
 						   (method)dynamic_in_new, 

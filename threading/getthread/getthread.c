@@ -37,7 +37,7 @@ void getthread_anything(t_getthread *x, t_symbol *msg, long argc, t_atom *argv);
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("getthread", 
                            (method) getthread_new,

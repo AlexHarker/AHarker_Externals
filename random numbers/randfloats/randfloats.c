@@ -56,7 +56,7 @@ double triplegaussrand (t_rand_gen *gen, double *params);
 double erfweighting (float mean, float dev);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("randfloats",
 						   (method)randfloats_new,

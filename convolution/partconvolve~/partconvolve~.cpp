@@ -156,7 +156,7 @@ void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s);
 void partconvolve_memoryusage(t_partconvolve *x);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new("partconvolve~",
                            (method)partconvolve_new,

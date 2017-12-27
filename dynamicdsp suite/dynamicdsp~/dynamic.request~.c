@@ -51,7 +51,7 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new("dynamic.request~",
 						   (method)dynamic_request_new, 

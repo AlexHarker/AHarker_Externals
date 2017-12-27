@@ -68,7 +68,7 @@ void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count);
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {
     this_class = class_new ("ibufconcatenate~",
 							(method) ibufconcatenate_new, 

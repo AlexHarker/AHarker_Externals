@@ -56,7 +56,7 @@ void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
 void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_ptr_int length);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {
     this_class = class_new("kernelmaker~",
 							(method) kernelmaker_new, 

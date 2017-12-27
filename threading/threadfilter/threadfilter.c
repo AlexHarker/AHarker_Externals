@@ -39,7 +39,7 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("threadfilter", 
 							(method) threadfilter_new, 

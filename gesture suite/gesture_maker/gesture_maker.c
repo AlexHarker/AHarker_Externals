@@ -117,7 +117,7 @@ SAFE_FLOAT_METHOD(gesture_maker_graintime)
 SAFE_FLOAT_METHOD(gesture_maker_initial_main)
 SAFE_FLOAT_METHOD(gesture_maker_initial_inflections)
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new ("gesture_maker",
 								(method) gesture_maker_new, 

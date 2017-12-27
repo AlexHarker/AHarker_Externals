@@ -53,7 +53,7 @@ void chebyshape_perform_dynamicdsp64 (t_chebyshape *x, t_object *dsp64, double *
 void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("chebyshape~",
 				(method)chebyshape_new,

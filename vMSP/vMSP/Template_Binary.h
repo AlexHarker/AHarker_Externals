@@ -102,7 +102,7 @@ void OBJNAME_FIRST(_assist)(OBJNAME_SECOND(t_) *x, void *b, long m, long a, char
 
 // Main routine
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new (OBJNAME_STR, (method) OBJNAME_FIRST(_new), (method)OBJNAME_FIRST(_free), sizeof(OBJNAME_SECOND(t_)), NULL, A_DEFFLOAT, 0);
 	

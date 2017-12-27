@@ -84,7 +84,7 @@ void timemap_stream (t_timemap *x, t_atom_long stream_mode, double init_val, dou
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new("timemap",
 						   (method)timemap_new, 

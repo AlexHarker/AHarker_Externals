@@ -51,7 +51,7 @@ t_int *ibufconcatedrive_perform (t_int *w);
 void ibufconcatedrive_perform64 (t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 
-int C74_EXPORT main (void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("ibufconcatedrive~",
 				(method)ibufconcatedrive_new,

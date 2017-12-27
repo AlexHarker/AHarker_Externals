@@ -54,7 +54,7 @@ void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins
 void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	this_class = class_new("ibufmultitable~",
 						   (method)ibufmultitable_new,

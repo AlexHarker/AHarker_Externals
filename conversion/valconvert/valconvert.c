@@ -101,7 +101,7 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {	
 	
 #ifdef MSP_VERSION

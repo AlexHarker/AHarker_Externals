@@ -88,7 +88,7 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new ("ibufplayer~",
 							(method) ibufplayer_new, 

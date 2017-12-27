@@ -85,7 +85,7 @@ void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, doubl
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new("timeconvolve~",
 						   (method)timeconvolve_new, 

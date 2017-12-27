@@ -159,7 +159,7 @@ static __inline double log_scalar_64 (double a, double base_const)
 }
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
     this_class = class_new ("vlog~", (method) vlog_new, (method)vlog_free, sizeof(t_vlog), NULL, A_DEFFLOAT, 0);
 	

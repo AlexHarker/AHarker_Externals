@@ -43,7 +43,7 @@ void macaddress_bang(t_macaddress *x);
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
 
-int C74_EXPORT main(void)
+int C74_EXPORT main()
 {
 	this_class = class_new ("macaddress",
 							(method)macaddress_new,
