@@ -107,7 +107,7 @@ int C74_EXPORT main()
 	
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibufplayer, kInterpCubicHermite>(this_class);
+    add_ibuffer_interp_attribute<t_ibufplayer, kInterpCubicHermite>(this_class, "interp");
     
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);

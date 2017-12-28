@@ -28,11 +28,11 @@ typedef struct _ibufmultitable
 	
 	t_symbol *buffer_name;
 	
-	t_atom_long start_samp;
-	t_atom_long end_samp;
-	t_atom_long chan;
-	
     InterpType interp_type;
+
+    t_atom_long chan;
+	t_atom_long start_samp;
+	t_atom_long end_samp;	
 	
 } t_ibufmultitable;
 
@@ -71,7 +71,11 @@ int C74_EXPORT main()
 	
     // Add Attributes
 
-    add_ibuffer_interp_attribute<t_ibufmultitable, kInterpLinear>(this_class);
+    add_ibuffer_interp_attribute<t_ibufmultitable, kInterpLinear>(this_class, "interp");
+    
+    CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibufmultitable, chan);
+    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
+    CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Channel");
     
     CLASS_ATTR_LONG(this_class, "startsamp", 0L, t_ibufmultitable, start_samp);
     CLASS_ATTR_FILTER_MIN(this_class, "startsamp", 0);
@@ -81,9 +85,10 @@ int C74_EXPORT main()
     CLASS_ATTR_FILTER_MIN(this_class, "endsamp", 0);
     CLASS_ATTR_LABEL(this_class, "endsamp", 0L, "End Sample");
     
-    CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibufmultitable, chan);
-    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
-    CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Channel");
+    CLASS_ATTR_ORDER(this_class, "interp", 0L, "1");
+    CLASS_ATTR_ORDER(this_class, "chan", 0L, "2");
+    CLASS_ATTR_ORDER(this_class, "startsamp", 0L, "3");
+    CLASS_ATTR_ORDER(this_class, "endsamp", 0L, "4");
     
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);

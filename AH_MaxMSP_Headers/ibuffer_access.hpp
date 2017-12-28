@@ -153,11 +153,6 @@ static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offse
 template <class T, InterpType defaultValue>
 t_max_err ibuf_interp_attribute_set(T *x, t_attr *a, long argc, t_atom *argv)
 {
-    static t_symbol *ps_linear = gensym("linear");
-    static t_symbol *ps_hermite = gensym("hermite");
-    static t_symbol *ps_bspline = gensym("bspline");
-    static t_symbol *ps_lagrange = gensym("lagrange");
-    
     if (!argc)
     {
         x->interp_type = defaultValue;
@@ -168,13 +163,13 @@ t_max_err ibuf_interp_attribute_set(T *x, t_attr *a, long argc, t_atom *argv)
     {
         t_symbol *type = atom_getsym(argv);
         
-        if (type == ps_linear)
+        if (type == gensym("linear"))
             x->interp_type = kInterpLinear;
-        else if (type == ps_bspline)
-            x->interp_type = kInterpCubicBSpline;
-        else if (type == ps_hermite)
+        else if (type == gensym("hermite"))
             x->interp_type = kInterpCubicHermite;
-        else if (type == ps_lagrange)
+        else if (type == gensym("bspline"))
+            x->interp_type = kInterpCubicBSpline;
+        else if (type == gensym("lagrange"))
             x->interp_type = kInterpCubicLagrange;
         else
             object_error((t_object *) x, "%s: no interpolation mode %s", object_classname(x)->s_name,  type->s_name);
@@ -201,19 +196,28 @@ t_max_err ibuf_interp_attribute_get(T *x, t_object *attr, long *argc, t_atom **a
         if (atom_alloc(argc, argv, &alloc))
             return MAX_ERR_GENERIC;
         
-        atom_setlong(*argv, x->interp_type - 1);
+        switch (x->interp_type)
+        {
+            case kInterpLinear:             atom_setsym(*argv, gensym("linear"));       break;
+            case kInterpCubicHermite:       atom_setsym(*argv, gensym("hermite"));      break;
+            case kInterpCubicBSpline:       atom_setsym(*argv, gensym("bspline"));      break;
+            case kInterpCubicLagrange:      atom_setsym(*argv, gensym("lagrange"));     break;
+            
+            default:
+                atom_setsym(*argv, gensym("linear"));
+        }
     }
     
     return MAX_ERR_NONE;
 }
 
 template <class T, InterpType defaultValue>
-void add_ibuffer_interp_attribute(t_class *this_class)
+void add_ibuffer_interp_attribute(t_class *this_class, const char *attrname)
 {
-    CLASS_ATTR_LONG(this_class, "interp", 0L, T, interp_type);
-    CLASS_ATTR_ENUM(this_class, "interp", 0L, "linear hermite bspline lagrange");
-    CLASS_ATTR_ACCESSORS(this_class, "interp", ibuf_interp_attribute_get<T>, (ibuf_interp_attribute_set<T, defaultValue>));
-    CLASS_ATTR_LABEL(this_class, "interp", 0L, "Interpolation Type");
+    CLASS_ATTR_LONG(this_class, attrname, 0L, T, interp_type);
+    CLASS_ATTR_ENUM(this_class, attrname, 0L, "linear hermite bspline lagrange");
+    CLASS_ATTR_ACCESSORS(this_class, attrname, ibuf_interp_attribute_get<T>, (ibuf_interp_attribute_set<T, defaultValue>));
+    CLASS_ATTR_LABEL(this_class, attrname, 0L, "Interpolation Type");
 }
 
 #endif	/* _IBUFFER_ACCESS_ */
