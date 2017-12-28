@@ -11,7 +11,6 @@
 #include <v_unary.hpp>
 #include <conversions.hpp>
 #include <SIMDExtended.hpp>
-#include <AH_Win_Math.h>
 
 // FIX - binary operation, clipping and initial base...
 

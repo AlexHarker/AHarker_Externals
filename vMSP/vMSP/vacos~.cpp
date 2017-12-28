@@ -10,7 +10,6 @@
 
 #include <v_unary.hpp>
 #include <SIMDExtended.hpp>
-#include <AH_Win_Math.h>
 #include "Helpers.h"
 
 struct acos_functor

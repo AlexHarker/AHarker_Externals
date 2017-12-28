@@ -10,7 +10,6 @@
 
 #include <v_unary.hpp>
 #include <SIMDExtended.hpp>
-#include <AH_Win_Math.h>
 #include "Helpers.h"
 
 struct atanh_functor
@@ -47,7 +46,6 @@ int C74_EXPORT main()
 
 
 #include <AH_VectorOpsExtended.h>
-#include <AH_Win_Math.h>
 #include "Helpers.h"
 
 

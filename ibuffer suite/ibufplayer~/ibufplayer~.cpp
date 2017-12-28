@@ -18,8 +18,9 @@
 #include <z_dsp.h>
 
 #include <AH_Denormals.h>
-#include <AH_Win_Math.h>
 #include <ibuffer_access.hpp>
+
+#include <limits>
 #include <algorithm>
 
 t_class *this_class;
@@ -283,7 +284,7 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
 	if (start < 0) 
 		start = 0;
 	if (end < 0) 
-		end = DBL_MAX;
+        end = std::numeric_limits<double>::max();
 	
 	speed = fabs(speed);
 	start_samp = start * sr_ms;

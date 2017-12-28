@@ -18,8 +18,6 @@
 #include <ext_obex.h>
 
 #include <AH_Random.h>
-#include <AH_Win_Math.h>
-
 
 void *this_class;
 
@@ -146,7 +144,7 @@ void timefilter_list (t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 }
 
 
-void timefilter_bang (t_timefilter *x)
+void timefilter_bang(t_timefilter *x)
 {
 	t_atom output_list[1024];
 	t_atom *list_pointer = output_list;

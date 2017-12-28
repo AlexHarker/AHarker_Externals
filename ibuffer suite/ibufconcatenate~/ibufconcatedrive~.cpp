@@ -18,9 +18,8 @@
 
 #include "ibufconcatenate_info~.h"
 
-#ifndef FLT_MAX
-#define FLT_MAX 3.402823466e+38f
-#endif
+#include <limits>
+
 
 t_class *this_class;
 
@@ -168,7 +167,7 @@ t_int *ibufconcatedrive_perform (t_int *w)
 			if (item < 1 || item > num_items)
 			{
 				lo = 0.;
-				hi = FLT_MAX;
+                hi = std::numeric_limits<float>::max();
 			}
 			else 
 			{
@@ -255,7 +254,7 @@ void ibufconcatedrive_perform64 (t_ibufconcatedrive *x, t_object *dsp64, double 
 			if (item < 1 || item > num_items)
 			{
 				lo = 0.;
-				hi = DBL_MAX;
+				hi = std::numeric_limits<double>::max();;
 			}
 			else 
 			{

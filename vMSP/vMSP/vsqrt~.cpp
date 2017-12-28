@@ -9,7 +9,6 @@
  */
 
 #include <v_unary.hpp>
-#include <AH_Win_Math.h>
 #include "Helpers.h"
 
 struct sqrt_functor
@@ -32,7 +31,6 @@ int C74_EXPORT main()
 /*
 
 #include <AH_VectorOpsExtended.h>
-#include <AH_Win_Math.h>
 #include "Helpers.h"
 
 
