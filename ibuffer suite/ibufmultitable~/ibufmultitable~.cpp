@@ -17,6 +17,7 @@
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
+#include <algorithm>
 
 t_class *this_class;
 
@@ -60,10 +61,7 @@ int C74_EXPORT main()
 						   (method)ibufmultitable_free,
 						   sizeof(t_ibufmultitable), 
 						   NULL, 
-						   A_SYM, 
-						   A_DEFLONG, 
-						   A_DEFLONG, 
-						   A_DEFLONG, 
+						   A_GIMME, 
 						   0);
 	
 	class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);
@@ -224,16 +222,13 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
     
     // Calculate output
     
-    if ((buffer.get_length() - start_samp) >= 1)
+    if (buffer.get_length() && (buffer.get_length() - start_samp) >= 1)
     {
         perform_positions(out, in, offset_in, vec_size, start_samp, end_samp, buffer.get_length() - 1);
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
-    {
-        for (long i = 0; i < vec_size; i++)
-            *out++ = 0.f;
-    }
+        std::fill_n(out, vec_size, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

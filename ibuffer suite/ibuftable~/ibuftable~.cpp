@@ -17,6 +17,7 @@
 #include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
+#include <algorithm>
 
 t_class *this_class;
 
@@ -201,16 +202,13 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
     
     // Calculate output
 
-    if (buffer.get_length() >= 1)
+    if (buffer.get_length())
     {
         perform_positions(out, in, vec_size, start_samp, end_samp);
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
-    {
-        for (long i = 0; i < vec_size; i++)
-            *out++ = 0.f;
-    }
+        std::fill_n(out, vec_size, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
