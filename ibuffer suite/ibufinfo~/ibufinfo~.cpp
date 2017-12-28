@@ -50,9 +50,7 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)ibufinfo_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
-	
-	ibuffer_init();
-	
+		
 	return 0;
 }
 

@@ -36,12 +36,11 @@ typedef struct _ibuftable
 } t_ibuftable;
 
 
-void *ibuftable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan);
+void *ibuftable_new(t_symbol *s, long argc, t_atom *argv);
 void ibuftable_free(t_ibuftable *x);
 void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 
-void ibuftable_interp(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
-void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv);
+void ibuftable_set(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
 void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
 void ibuftable_startsamp(t_ibuftable *x, t_atom_long startsamp);
 void ibuftable_endsamp(t_ibuftable *x, t_atom_long endsamp);
@@ -60,56 +59,65 @@ int C74_EXPORT main()
 						   (method)ibuftable_free,
 						   sizeof(t_ibuftable), 
 						   NULL, 
-						   A_SYM, 
-						   A_DEFLONG, 
-						   A_DEFLONG, 
-						   A_DEFLONG, 
+						   A_GIMME,
 						   0);
 	
-	class_addmethod(this_class, (method)ibuftable_interp, "interp", A_GIMME, 0);
-	class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);	
-	class_addmethod(this_class, (method)ibuftable_startsamp, "startsamp", A_LONG, 0);	
-	class_addmethod(this_class, (method)ibuftable_endsamp, "endsamp", A_LONG, 0);	
-	class_addmethod(this_class, (method)ibuftable_chan, "chan", A_LONG, 0);	
+	class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
 	class_addmethod(this_class, (method)ibuftable_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
 	
+    // Add Attributes
+    
+    add_ibuffer_interp_attribute<t_ibuftable, kInterpLinear>(this_class);
+    
+    CLASS_ATTR_LONG(this_class, "startsamp", 0L, t_ibuftable, start_samp);
+    CLASS_ATTR_FILTER_MIN(this_class, "startsamp", 0);
+    CLASS_ATTR_LABEL(this_class, "startsamp", 0L, "Start Sample");
+    
+    CLASS_ATTR_LONG(this_class, "endsamp", 0L, t_ibuftable, end_samp);
+    CLASS_ATTR_FILTER_MIN(this_class, "endsamp", 0);
+    CLASS_ATTR_LABEL(this_class, "endsamp", 0L, "End Sample");
+    
+    CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibuftable, chan);
+    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
+    CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Channel");
+    
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
-	
-	ibuffer_init();
-	
+		
 	return 0;
 }
 
-void *ibuftable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
+void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
 {
     t_ibuftable *x = (t_ibuftable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 1);
-    x->x_obj.z_misc = Z_NO_INPLACE;
 	outlet_new((t_object *)x, "signal");
 	
 	// Default variables
 	
-    x->buffer_name = the_buffer;
-	
+    t_symbol *buffer_name = NULL;
+    t_atom_long start_samp = 0;
+    t_atom_long end_samp = 512;
+    t_atom_long chan = 1;
+    
 	// Arguments
 	
-    if (end_samp == 0)
-        end_samp = 512;
-    if (end_samp < start_samp)
-        end_samp = start_samp;
+    long non_attr_argc = attr_args_offset(argc, argv);
     
-    if (start_samp > end_samp)
-        std::swap(start_samp, end_samp);
+    x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
+    x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
+    x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
+	x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
     
-	x->start_samp = start_samp;
-	x->end_samp = end_samp;
-	x->chan = chan;
 	x->interp_type = kInterpLinear;
 	
+    // Set attributes from arguments
+    
+    attr_args_process(x, argc, argv);
+    
 	return x;
 }
 
@@ -126,23 +134,6 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
         sprintf(s,"(signal) Position Input (0-1)");
 }
 
-void ibuftable_interp(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv)
-{
-	t_symbol *mode = argc ? atom_getsym(argv) : ps_linear;
-	
-	if (mode == ps_linear)
-		x->interp_type = kInterpLinear;
-	if (mode == ps_bspline)
-		x->interp_type = kInterpCubicBSpline;
-	if (mode == ps_hermite)
-		x->interp_type = kInterpCubicHermite;
-	if (mode == ps_lagrange)
-		x->interp_type = kInterpCubicLagrange;
-	
-	if (mode != ps_linear && mode != ps_bspline &&  mode != ps_hermite && mode != ps_lagrange)
-		object_error ((t_object *) x, "ibuftable~: no interpolation mode %s", mode->s_name);
-}
-
 void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
 {	
 	ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
@@ -156,21 +147,6 @@ void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
     
     if (buffer.get_type() == kBufferNone && s)
         object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
-}
-
-void ibuftable_startsamp(t_ibuftable *x, t_atom_long start_samp)
-{
-    x->start_samp = start_samp;
-}
-
-void ibuftable_endsamp(t_ibuftable *x, t_atom_long end_samp)
-{
-    x->end_samp = end_samp;
-}
-
-void ibuftable_chan(t_ibuftable *x, t_atom_long chan)
-{
-    x->chan = chan;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

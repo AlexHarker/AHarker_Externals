@@ -2,7 +2,7 @@
 /*
  *  ibuffer_access.cpp
  *
- *	This file provides code for accessing and interpolating samplesfrom an ibuffer (or standard MSP buffer).
+ *	This file provides code for accessing and interpolating samples from an ibuffer (or standard MSP buffer).
  *	Various kinds of interpolation are supported.
  *	All pointers used should be 16-byte aligned.
  *
@@ -13,14 +13,6 @@
  */
 
 #include "ibuffer_access.hpp"
-
-t_symbol *ps_none;
-t_symbol *ps_linear;
-t_symbol *ps_bspline;
-t_symbol *ps_hermite;
-t_symbol *ps_lagrange;
-t_symbol *ps_buffer;
-t_symbol *ps_ibuffer;
 
 // IBuffer Proxy
 
@@ -120,18 +112,10 @@ void ibuffer_data::release_buffer()
     }
 }
 
-// Functions
+t_symbol *ibuffer_data::ps_buffer = gensym("buffer~");
+t_symbol *ibuffer_data::ps_ibuffer = gensym("ibuffer~");
 
-void ibuffer_init()
-{
-    ps_buffer = gensym("buffer~");
-    ps_ibuffer = gensym("ibuffer~");
-    ps_none = gensym("none");
-    ps_linear = gensym("linear");
-    ps_bspline = gensym("bspline");
-    ps_hermite = gensym("hermite");
-    ps_lagrange = gensym("lagrange");    
-}
+// Functions
 
 template <class T, class U>
 void ibuffer_read_format(const ibuffer_data& buffer, T *out, U *positions, intptr_t n_samps, long chan, T mul, InterpType interp)

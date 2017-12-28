@@ -39,18 +39,12 @@
 #include "ibuffer.h"
 #include <TableReader.hpp>
 
-extern t_symbol *ps_none;
-extern t_symbol *ps_linear;
-extern t_symbol *ps_bspline;
-extern t_symbol *ps_hermite;
-extern t_symbol *ps_lagrange;
-extern t_symbol *ps_buffer;
-extern t_symbol *ps_ibuffer;
-
 enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
 
 class ibuffer_data
 {
+    static t_symbol * ps_buffer;
+    static t_symbol *ps_ibuffer;
     
 public:
     
@@ -120,10 +114,6 @@ typedef fetch<int16_t, 16> fetch_16bit;
 typedef fetch<int32_t, 24> fetch_24bit;
 typedef fetch<int32_t, 32> fetch_32bit;
 
-// Call in main routine to initialise buffer symbols
-
-void ibuffer_init();
-
 // Get the value of an individual sample
 
 static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offset, long chan);
@@ -154,6 +144,76 @@ static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offse
     }
 
     return 0.0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////// Interpolation Attributes ////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class T, InterpType defaultValue>
+t_max_err ibuf_interp_attribute_set(T *x, t_attr *a, long argc, t_atom *argv)
+{
+    static t_symbol *ps_linear = gensym("linear");
+    static t_symbol *ps_hermite = gensym("hermite");
+    static t_symbol *ps_bspline = gensym("bspline");
+    static t_symbol *ps_lagrange = gensym("lagrange");
+    
+    if (!argc)
+    {
+        x->interp_type = defaultValue;
+        return MAX_ERR_NONE;
+    }
+    
+    if (atom_gettype(argv) == A_SYM)
+    {
+        t_symbol *type = atom_getsym(argv);
+        
+        if (type == ps_linear)
+            x->interp_type = kInterpLinear;
+        else if (type == ps_bspline)
+            x->interp_type = kInterpCubicBSpline;
+        else if (type == ps_hermite)
+            x->interp_type = kInterpCubicHermite;
+        else if (type == ps_lagrange)
+            x->interp_type = kInterpCubicLagrange;
+        else
+            object_error((t_object *) x, "%s: no interpolation mode %s", object_classname(x)->s_name,  type->s_name);
+    }
+    else
+    {
+        t_atom_long index = atom_getlong(argv) - 1;
+        index = index < 0 ? 0 : index;
+        index = index > 3 ? 3 : index;
+        
+        x->interp_type = static_cast<InterpType>(index);
+    }
+    
+    return MAX_ERR_NONE;
+}
+
+template <class T>
+t_max_err ibuf_interp_attribute_get(T *x, t_object *attr, long *argc, t_atom **argv)
+{
+    if (argc && argv)
+    {
+        char alloc;
+        
+        if (atom_alloc(argc, argv, &alloc))
+            return MAX_ERR_GENERIC;
+        
+        atom_setlong(*argv, x->interp_type - 1);
+    }
+    
+    return MAX_ERR_NONE;
+}
+
+template <class T, InterpType defaultValue>
+void add_ibuffer_interp_attribute(t_class *this_class)
+{
+    CLASS_ATTR_LONG(this_class, "interp", 0L, T, interp_type);
+    CLASS_ATTR_ENUM(this_class, "interp", 0L, "linear hermite bspline lagrange");
+    CLASS_ATTR_ACCESSORS(this_class, "interp", ibuf_interp_attribute_get<T>, (ibuf_interp_attribute_set<T, defaultValue>));
+    CLASS_ATTR_LABEL(this_class, "interp", 0L, "Interpolation Type");
 }
 
 #endif	/* _IBUFFER_ACCESS_ */

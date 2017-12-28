@@ -36,11 +36,10 @@ typedef struct _ibufmultitable
 } t_ibufmultitable;
 
 
-void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan);
+void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv);
 void ibufmultitable_free(t_ibufmultitable *x);
 void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s);
 
-void ibufmultitable_interp(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s);
 void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long startsamp);
@@ -67,50 +66,61 @@ int C74_EXPORT main()
 						   A_DEFLONG, 
 						   0);
 	
-	class_addmethod(this_class, (method)ibufmultitable_interp, "interp", A_GIMME, 0);
-	class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);	
-	class_addmethod(this_class, (method)ibufmultitable_startsamp, "startsamp", A_LONG, 0);	
-	class_addmethod(this_class, (method)ibufmultitable_endsamp, "endsamp", A_LONG, 0);	
-	class_addmethod(this_class, (method)ibufmultitable_chan, "chan", A_LONG, 0);	
+	class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibufmultitable_assist, "assist", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufmultitable_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufmultitable_dsp64, "dsp64", A_CANT, 0);
 	
+    // Add Attributes
+
+    add_ibuffer_interp_attribute<t_ibufmultitable, kInterpLinear>(this_class);
+    
+    CLASS_ATTR_LONG(this_class, "startsamp", 0L, t_ibufmultitable, start_samp);
+    CLASS_ATTR_FILTER_MIN(this_class, "startsamp", 0);
+    CLASS_ATTR_LABEL(this_class, "startsamp", 0L, "Start Sample");
+    
+    CLASS_ATTR_LONG(this_class, "endsamp", 0L, t_ibufmultitable, end_samp);
+    CLASS_ATTR_FILTER_MIN(this_class, "endsamp", 0);
+    CLASS_ATTR_LABEL(this_class, "endsamp", 0L, "End Sample");
+    
+    CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibufmultitable, chan);
+    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
+    CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Channel");
+    
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
-	
-	ibuffer_init();
-	
+		
 	return 0;
 }
 
-void *ibufmultitable_new(t_symbol *the_buffer, t_atom_long start_samp, t_atom_long end_samp, t_atom_long chan)
+void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
 {
     t_ibufmultitable *x = (t_ibufmultitable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 2);
-    x->x_obj.z_misc = Z_NO_INPLACE;	
 	outlet_new((t_object *)x, "signal");
 	
-	// Default variables
-	
-	x->buffer_name = the_buffer;
-	
-	// Arguments
-	
-	if (end_samp == 0)
-		end_samp = 512;
-	if (end_samp < start_samp) 
-		end_samp = start_samp;
-		
-	if (start_samp > end_samp)
-        std::swap(start_samp, end_samp);
+    // Default variables
     
-	x->start_samp = start_samp;
-	x->end_samp = end_samp;
-	x->chan = chan;
+    t_symbol *buffer_name = NULL;
+    t_atom_long start_samp = 0;
+    t_atom_long end_samp = 512;
+    t_atom_long chan = 1;
     
-	x->interp_type = kInterpLinear;
+    // Arguments
+    
+    long non_attr_argc = attr_args_offset(argc, argv);
+    
+    x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
+    x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
+    x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
+    x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
+    
+    x->interp_type = kInterpLinear;
+    
+    // Set attributes from arguments
+    
+    attr_args_process(x, argc, argv);
 	
 	return x;
 }
@@ -141,23 +151,6 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 	}
 }
 
-void ibufmultitable_interp(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    t_symbol *mode = argc ? atom_getsym(argv) : ps_linear;
-    
-    if (mode == ps_linear)
-        x->interp_type = kInterpLinear;
-    if (mode == ps_bspline)
-        x->interp_type = kInterpCubicBSpline;
-    if (mode == ps_hermite)
-        x->interp_type = kInterpCubicHermite;
-    if (mode == ps_lagrange)
-        x->interp_type = kInterpCubicLagrange;
-    
-	if (mode != ps_linear && mode != ps_bspline &&  mode != ps_hermite && mode != ps_lagrange)
-		error ("ibufmultitable~: no interpolation mode %s", mode->s_name);
-}
-
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	ibufmultitable_set_internal(x, argc ? atom_getsym(argv) : 0);
@@ -171,21 +164,6 @@ void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
     
     if (buffer.get_type() == kBufferNone && s)
         object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
-}
-
-void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long start_samp)
-{
-	x->start_samp = start_samp;
-}
-
-void ibufmultitable_endsamp(t_ibufmultitable *x, t_atom_long end_samp)
-{
-	x->end_samp = end_samp;
-}
-
-void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan)
-{
-	x->chan = chan;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

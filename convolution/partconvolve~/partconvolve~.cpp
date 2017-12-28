@@ -200,9 +200,7 @@ int C74_EXPORT main()
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
-    
-    ibuffer_init();
-    
+        
     // Seed the random fft offset generator
     
     srand(rand_int_os());

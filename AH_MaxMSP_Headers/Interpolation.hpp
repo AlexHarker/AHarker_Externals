@@ -6,7 +6,7 @@
 
 enum InterpType
 {
-    kInterpNone, kInterpLinear, kInterpCubicHermite, kInterpCubicLagrange, kInterpCubicBSpline
+    kInterpNone, kInterpLinear, kInterpCubicHermite, kInterpCubicBSpline, kInterpCubicLagrange
 };
 
 // Linear

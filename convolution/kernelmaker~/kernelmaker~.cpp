@@ -74,9 +74,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method)kernelmaker_assist, "assist", A_CANT, 0L);
 	
 	class_register(CLASS_BOX, this_class);
-	
-	ibuffer_init();
-	
+		
 	ps_dirty = gensym("dirty");
 	
 	return 0;

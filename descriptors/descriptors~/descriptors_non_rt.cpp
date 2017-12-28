@@ -45,8 +45,6 @@ int C74_EXPORT main()
 	
 	class_register(CLASS_BOX, this_class);
 	
-    ibuffer_init();
-
 	return 0;
 }
 

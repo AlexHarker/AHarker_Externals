@@ -68,14 +68,13 @@ typedef struct _ibufplayer
 } t_ibufplayer;
 
 
-void *ibufplayer_new(t_atom_long obj_n_chans);
+void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_free(t_ibufplayer *x);
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s);
 
 void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s);
 void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
-void ibufplayer_interp(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_stop(t_ibufplayer *x);
 
@@ -95,39 +94,46 @@ int C74_EXPORT main()
 							(method) ibufplayer_free, 
 							sizeof (t_ibufplayer), 
 							NULL, 
-							A_DEFLONG,
+							A_GIMME,
 							0);
 	
 	class_addmethod(this_class, (method)ibufplayer_set, "set", A_GIMME, 0);	
 	class_addmethod(this_class, (method)ibufplayer_vols, "vols", A_GIMME, 0);
-	class_addmethod(this_class, (method)ibufplayer_interp, "interp", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibufplayer_play, "play", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibufplayer_stop, "stop", 0);
 	class_addmethod(this_class, (method)ibufplayer_assist, "assist", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufplayer_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufplayer_dsp64, "dsp64", A_CANT, 0);
 	
+    // Add Attributes
+    
+    add_ibuffer_interp_attribute<t_ibufplayer, kInterpCubicHermite>(this_class);
+    
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
-	
-	ibuffer_init();
-	  
+		  
 	return 0;
 }
 
-void *ibufplayer_new(t_atom_long obj_n_chans)
+void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 {
 	t_ibufplayer *x = (t_ibufplayer *)object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 1);
-	x->x_obj.z_misc = Z_NO_INPLACE;	
-	
-	x->bang_outlet = bangout(x);
-	
-	// Determine number of channels
+    // Arguments
     
+    long non_attr_argc = attr_args_offset(argc, argv);
+    
+    t_atom_long obj_n_chans = non_attr_argc > 0 ? atom_getlong(argv + 0) : 1;
     obj_n_chans = std::max(static_cast<t_atom_long>(max_num_chans), std::min(static_cast<t_atom_long>(1), obj_n_chans));
-	
+    
+    // Setup DSP
+    
+    dsp_setup((t_pxobject *)x, 1);
+
+    // Creat bang outlet
+    
+    x->bang_outlet = bangout(x);
+
 	// Create signal outlets
 	
     for (long i = 0; i < obj_n_chans + 1; i++)
@@ -142,7 +148,6 @@ void *ibufplayer_new(t_atom_long obj_n_chans)
 	x->input_connected = false;
     x->transport_flag = FLAG_NONE;
 	x->obj_n_chans = obj_n_chans;
-	
 	x->buffer_name = NULL;
 	
     for (long i = 0 ; i < max_num_chans; i++)
@@ -152,6 +157,10 @@ void *ibufplayer_new(t_atom_long obj_n_chans)
 	
 	x->done_clock = clock_new(x, (method) ibufplayer_done_bang);
 
+    // Set attributes from arguments
+    
+    attr_args_process(x, argc, argv);
+    
 	return x;
 }
 
@@ -199,7 +208,6 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 	
 	if (buffer.get_type() != kBufferNone)
 	{
-        // FIX! - check this!
 		if (s != x->buffer_name)
 			x->pos = -1.0;
 		x->buffer_name = s;
@@ -222,27 +230,10 @@ void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
     }
 }
 
-void ibufplayer_interp(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
-{
-	t_symbol *mode = argc ? atom_getsym(argv) : ps_hermite;
-	
-	if (mode == ps_bspline)
-		x->interp_type = kInterpCubicBSpline;
-	if (mode == ps_hermite)
-		x->interp_type = kInterpCubicHermite;
-	if (mode == ps_lagrange)
-		x->interp_type = kInterpCubicLagrange;
-	
-	if (mode != ps_bspline &&  mode != ps_hermite && mode != ps_lagrange)
-		error ("ibufplayer~: no interpolation mode %s", mode->s_name);
-}
-
 void ibufplayer_stop(t_ibufplayer *x)
 {	
 	x->transport_flag = FLAG_STOP;
 }
-
-// FIX - temp
 
 double ibuffer_sample_rate(t_symbol *name)
 {    
@@ -651,51 +642,7 @@ static __inline long ibufplayer_phase(double *pos_store, double speed, double st
     return todo;
 }
 
-
 // Scalar phasors for use under ppc and for smaller vector sizes
-
-static __inline long ibufplayer_phase_scalar(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
-                                             bool sig_control, float *f_in,  float *f_fracts, AH_SIntPtr *offsets, float *phase_out, long vec_size)
-{
-    AH_SIntPtr ipos;
-    double pos = *pos_store;
-    long todo, i;
-    float fract;
-    
-    if (sig_control)
-    {
-        for (i = 0; i < vec_size; i++)
-        {
-            float multspeed = *f_in++ * speed;
-            *offsets++ = ipos = (AH_SIntPtr) pos;
-            fract = pos - (double) ipos;
-            *phase_out++ = (pos - start_samp) * length_recip;
-            pos += multspeed;
-            *f_fracts++ = fract;
-            if (pos > max_samp || pos < min_samp)
-                break;
-        }
-        todo = i;
-    }
-    else
-    {
-        if (speed > 0)
-            todo = ((vec_size * speed) + pos > max_samp) ? (max_samp - pos) / speed : vec_size;
-        else
-            todo = ((vec_size * speed) + pos < min_samp) ? (min_samp - pos) / speed : vec_size;
-        
-        for (i = 0; i < todo; i++)
-        {
-            *offsets++ = ipos = (AH_SIntPtr) pos;
-            *f_fracts++ = pos - (double) ipos;
-            *phase_out++ = (pos - start_samp) * length_recip;
-            pos += speed;
-        }
-    }
-    
-    *pos_store = pos;
-    return todo;
-}
 
 static __inline long ibufplayer_phase64(double *pos_store, double speed, double start_samp, double min_samp, double max_samp, double length_recip,
                                          bool sig_control, double *d_in,  double *d_fracts, AH_SIntPtr *l_offsets, double *d_phase_out, long vec_size)
