@@ -173,7 +173,8 @@ double clip(double value, double min_val, double max_val)
 void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double *params = x->params;
-	
+    const static double max_dev = 1000000.0;
+    
 	if (argc >= 9)
 	{
 		// If there are enough arguments to set all three gaussian paramters
@@ -183,7 +184,7 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 			// Get mean/dev/weight check they are within bounds
 
 			x->params[4 * i + 0] = clip(atom_getfloat(argv + (3 * i + 0)), 0.0, 1.0);
-            x->params[4 * i + 1] = clip(atom_getfloat(argv + (3 * i + 1)), 0.0, 1000.0);
+            x->params[4 * i + 1] = clip(atom_getfloat(argv + (3 * i + 1)), 0.0, max_dev);
             x->params[4 * i + 2] = std::max(0.0, static_cast<double>(atom_getfloat(argv + (3 * i + 2))));
 
 			// Adjusted weight
@@ -200,7 +201,7 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
             // Get mean/dev and check they are within bounds
             
             params[0] = clip(atom_getfloat(argv + 0), 0.0, 1.0);
-            params[1] = clip(atom_getfloat(argv + 1), 0.0, 1000.0);
+            params[1] = clip(atom_getfloat(argv + 1), 0.0, max_dev);
 
             // Adjusted weighting (use previous weighting)
             
