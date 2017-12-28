@@ -172,7 +172,7 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
     else
     {
         object_error(reinterpret_cast<t_object *>(x), "could not load ibuffer~");
-        freeobject(current_buffer);
+        object_free(current_buffer);
     }
     
 	outlet_int(x->number_out, x->buffers.size());
