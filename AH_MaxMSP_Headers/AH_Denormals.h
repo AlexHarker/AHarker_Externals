@@ -16,16 +16,6 @@
 #include <ext.h>
 #include <z_dsp.h>
 
-
-// Check for intel compiliation
-
-#ifndef TARGET_INTEL
-#if defined( __i386__ ) || defined( __x86_64__ )
-#define TARGET_INTEL
-#endif
-#endif
-
-
 // Call this perform routine to turn denormals off in this thread - the second item in the array should be the perform routine you want to call subsequently
 // This routine is only called once, after which the main perform routine is called directly
 
@@ -33,9 +23,7 @@ t_int *denormals_perform (t_int *w)
 {	
 	// Replace the old MXCSR setting with the same, except set DAZ and FZ bits
 	
-#ifdef TARGET_INTEL
-	_mm_setcsr(_mm_getcsr() | 0x8040);					
-#endif
+	_mm_setcsr(_mm_getcsr() | 0x8040);
 	
 	// Swap this routine for the correct one, and then call the correct perform routine
 	
@@ -43,7 +31,6 @@ t_int *denormals_perform (t_int *w)
 	
  	return w + 1;
 }
-
 
 // Under windows we cannot rely on turning denormals off on the vector unit for scalar code, so we must fix denormals manually
 
