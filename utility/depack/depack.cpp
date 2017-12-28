@@ -13,10 +13,10 @@
 #include <ext_obex.h>
 
 
-#define MAXIMUM_NUM_OUTLETS 256
+const static int maximum_outlets = 256;
 
 
-void *this_class;
+t_class *this_class;
 
 
 typedef struct depack{
@@ -25,7 +25,7 @@ typedef struct depack{
 	
 	long num_outlets;
     
-	void *outlet_array[MAXIMUM_NUM_OUTLETS];
+	void *outlet_array[maximum_outlets];
 		
 } t_depack;
 
@@ -53,11 +53,11 @@ int C74_EXPORT main()
 							A_DEFLONG,
 							0);
 	
-    class_addmethod (this_class, (method)depack_int, "int", A_LONG, 0);
-	class_addmethod (this_class, (method)depack_float, "float", A_FLOAT, 0);
-	class_addmethod (this_class, (method)depack_list, "list", A_GIMME, 0);
-	class_addmethod (this_class, (method)depack_anything, "anything", A_GIMME, 0);
-	class_addmethod (this_class, (method)depack_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method)depack_int, "int", A_LONG, 0);
+	class_addmethod(this_class, (method)depack_float, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method)depack_list, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method)depack_anything, "anything", A_GIMME, 0);
+	class_addmethod(this_class, (method)depack_assist, "assist", A_CANT, 0);
 	
 	class_register(CLASS_BOX, this_class);
 	
@@ -80,10 +80,10 @@ void *depack_new(t_atom_long num_outlets)
         num_outlets = 1;
     }
     
-	if (num_outlets > MAXIMUM_NUM_OUTLETS)
+	if (num_outlets > maximum_outlets)
     {
-        object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
-        num_outlets = MAXIMUM_NUM_OUTLETS;
+        object_error((t_object *) x, "the maximum number of outlets is %ld", maximum_outlets);
+        num_outlets = maximum_outlets;
     }
 	
 	x->num_outlets = num_outlets;
@@ -93,7 +93,7 @@ void *depack_new(t_atom_long num_outlets)
 	for (i = num_outlets - 1; i >= 0; i--)
 		outlet_array[i] = outlet_new(x, 0);
 	
-    return (x);
+    return x;
 }
 
 void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset)

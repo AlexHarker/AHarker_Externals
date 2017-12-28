@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8D556020EB905E30007D4B5 /* denormkiller~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8D556010EB905E30007D4B5 /* denormkiller~.c */; };
+		B8D556020EB905E30007D4B5 /* denormkiller~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8D556010EB905E30007D4B5 /* denormkiller~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1BB1FD90A4ECF4A0012288F /* denormkiller~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "denormkiller~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ABBF5F19A7879D00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8D556010EB905E30007D4B5 /* denormkiller~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "denormkiller~.c"; sourceTree = "<group>"; };
+		B8D556010EB905E30007D4B5 /* denormkiller~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "denormkiller~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8D556010EB905E30007D4B5 /* denormkiller~.c */,
+				B8D556010EB905E30007D4B5 /* denormkiller~.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8D556020EB905E30007D4B5 /* denormkiller~.c in Sources */,
+				B8D556020EB905E30007D4B5 /* denormkiller~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
