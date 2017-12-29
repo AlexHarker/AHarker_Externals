@@ -8,8 +8,6 @@
  *	It supports 16, 24 and 32 integer formats, as well as 32 bit float and can load either all channels or specified channels.
  *	There are a corresponding set of playback and other objects that will also function with standard MSP buffers.
  *
- *	ibuffer~ is dependent on libsndfile by Erik de Castro Lopo (http://www.mega-nerd.com/libsndfile/) for interfacing with the soundfiles as stored on disk.
- *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
  */
@@ -24,10 +22,9 @@
 #include <AH_Atomic.h>
 #include <ibuffer.h>
 
+
 t_class *this_class;
 
-
-#define DEFAULT_WORK_CHUNK 10000
 
 void *ibuffer_new(t_symbol *name, t_symbol *path_sym);
 void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv);
@@ -99,7 +96,6 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
     return (x);
 }
 
-
 void ibuffer_free(t_ibuffer *x)
 {
 	x->valid = 0;
@@ -111,7 +107,6 @@ void ibuffer_free(t_ibuffer *x)
 		x->name->s_thing = 0;
 }
 
-
 void ibuffer_assist(t_ibuffer *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET) 
@@ -120,7 +115,6 @@ void ibuffer_assist(t_ibuffer *x, void *b, long m, long a, char *s)
 		sprintf(s,"File Operations");
 }
 
-
 void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
 	// Send name of buffer as the calling symbol
@@ -128,7 +122,6 @@ void ibuffer_name(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 	if (argc)
 		defer(x, (method) ibuffer_name_internal, atom_getsym(argv), 0, 0);
 }
-
 
 void ibuffer_name_internal(t_ibuffer *x, t_symbol *name, short argc, t_atom *argv)
 {	
@@ -146,12 +139,10 @@ void ibuffer_name_internal(t_ibuffer *x, t_symbol *name, short argc, t_atom *arg
 	}
 }
 
-
 void *ibuffer_valid(t_ibuffer *x)
 {	
 	return (void *) &x->valid;
 }
-
 
 void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
@@ -195,151 +186,150 @@ struct ibuffer_lock
     HISSTools::Utility::IAudioFile *m_file;
 };
 
+#ifdef __APPLE__
+void form_os_name(char *filename, char *foldname, char *fullname)
+{
+    char *name_ptr = foldname;
+    long offset;
+    long colon = 0;
+
+    // Start with the root '/Volumes/'
+    
+    strcpy(fullname, "/Volumes/");
+    
+    // Now copy the rest of the folder name but stripping the first colon
+    
+    for (offset = 9; *name_ptr; name_ptr++)
+    {
+        // colon will equal 1 only for the first colon (which we want to strip)
+        
+        if (*name_ptr == ':' || colon == 1)
+            colon++;
+        
+        if (*name_ptr && colon != 1)
+            fullname[offset++] = *name_ptr;
+    }
+
+    // Add a slash seperator and then copy the file name
+    
+    fullname[offset++] = '/';
+    strcpy(fullname + offset, filename);
+}
+#else
+void form_os_name(char *filename, char *foldname, char *fullname)
+{
+    long offset = strlen(foldname);;
+
+    // Copy folder name, add a slash seperator and then copy the file name
+
+    strcpy(fullname, foldname);
+    fullname[offset++] = '/';
+    strcpy(fullname + offset, filename);
+}
+#endif
+
+void ibuffer_switch_endianness(t_ibuffer *x)
+{
+    UInt8 *data = (UInt8 *)x->samples;
+            
+    if (x->format == PCM_INT_16)
+    {
+        for (t_ptr_int i = 0; i < x->frames * x->channels; i++, data += 2)
+            std::swap(data[0], data[1]);
+    }
+    else if (x->format == PCM_INT_24)
+    {
+        for (t_ptr_int i = 0; i < x->frames * x->channels; i++, data += 3)
+            std::swap(data[0], data[2]);
+    }
+    else
+    {
+        // (x->format == PCM_INT_32 or PCM_FLOAT)
+        
+        for (t_ptr_int i = 0; i < x->frames * x->channels; i++, data += 4)
+        {
+            std::swap(data[0], data[3]);
+            std::swap(data[1], data[2]);
+        }
+    }
+}
+
 void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
-	double sr;
-	
-	char null_char = 0;
-	
-	char filename[2048];
-	char foldname[2048];
-	char fullname[2048];
-	char *name_ptr = foldname;
-	
-	long channel_order [4];
-	long load_all_channels = 1;
-	long channels_to_load = 1;
-	long format = PCM_FLOAT;
-	long sample_size = 0;
-	long colon = 0;
-	long channels; 
-	long frames;
-	long work_chunk;
-	long i, j, k;
-	
-    t_fourcc type = 0;
-    
-	short path = 0;
-	short err;
-	
-	UInt8 *load_temp;
-	UInt8 *channels_swap;
-	
     HISSTools::Utility::IAudioFile file;
     
 	// Get path
-	
-	t_symbol *path_sym = atom_getsym(argv++);
-	argc--;
-	
-	if (path_sym)
+
+	if (argc)
 	{
+        char filename[2048];
+        char foldname[2048];
+        char fullname[2048];
+
+        char null_char = 0;
+
+        short path = 0;
+        t_fourcc type = 0;
+
 		// Find the file and get the correct filename ss well as that of the enclosing folder (making sure the later is in slash style)
 		
-		strcpy(filename, path_sym->s_name);
-		err = locatefile_extended(filename, &path , &type, &type,-1);
+		strcpy(filename, atom_getsym(argv++)->s_name);
+        argc--;
+        
+		short err = locatefile_extended(filename, &path , &type, &type,-1);
 		err |= path_topathname(path, &null_char, foldname);
 		err |= path_nameconform(foldname, fullname, PATH_STYLE_NATIVE, PATH_TYPE_ABSOLUTE);
 		
-		// If we now how a valid filename and folder name copy the strings into a fullname in the correct format 
+		// If we now how a valid filename and folder name copy the strings into a fullname in the correct format and try to open the file
 		
 		if (!err)
 		{
-			
-#ifdef __APPLE__
-			
-			// Start with the root '/Volumes/'
-			
-			strcpy(fullname, "/Volumes/");
-		
-			// Now copy the rest of the folder name but stripping the first colon
-			
-			for (i = 9; *name_ptr; name_ptr++) 
-			{
-				// colon will equal 1 only for the first colon (which we want to strip)
-				
-				if (*name_ptr == ':' || colon == 1)
-					colon++;
-				
-				if (*name_ptr && colon != 1)
-					fullname[i++] = *name_ptr;
-			}
-#else
-			// Copy string
-			
-			strcpy(fullname, foldname);		
-			i = strlen(foldname);
-#endif
-
-			// Add a slash seperator and then copy the file name 
-			
-			fullname[i++] = '/';
-
-			strcpy(fullname + i, filename);
-
-			// Try to open the file
-            
+            form_os_name(filename, foldname, fullname);
             file.open(fullname);
         }
 	}
     
     // Lock the ibuffer (automatically releases on return)
-    
-    // Load the format data and if we have a valid format load the sample
 
     ibuffer_lock lock(x, &file);
     
 	if (file.isOpen())
-	{		
-		// Get sample info 
-		
-		frames = file.getFrames();
-		channels = file.getChannels();
-		sr = file.getSamplingRate();
-		        
+	{
+        // Load the format data and if we have a valid format load the sample
+
+		x->frames = file.getFrames();
+		x->channels = file.getChannels();
+        x->sr = file.getSamplingRate();
+    
 		switch (file.getPCMFormat())
 		{
-            case HISSTools::Utility::BaseAudioFile::kAudioFileInt16:
-				format = PCM_INT_16;
-                sample_size = 2;
-				break;
-				
-			case HISSTools::Utility::BaseAudioFile::kAudioFileInt24:
-				format = PCM_INT_24;
-                sample_size = 3;
-				break;
-				
-			case HISSTools::Utility::BaseAudioFile::kAudioFileInt32:
-				format = PCM_INT_32;
-                sample_size = 4;
-				break;
-				
-            case HISSTools::Utility::BaseAudioFile::kAudioFileFloat32:
-                format = PCM_FLOAT;
-                sample_size = 4;
-                break;
+            case HISSTools::Utility::BaseAudioFile::kAudioFileInt16:    x->format = PCM_INT_16;    break;
+			case HISSTools::Utility::BaseAudioFile::kAudioFileInt24:    x->format = PCM_INT_24;    break;
+			case HISSTools::Utility::BaseAudioFile::kAudioFileInt32:    x->format = PCM_INT_32;    break;
+            case HISSTools::Utility::BaseAudioFile::kAudioFileFloat32:  x->format = PCM_FLOAT;     break;
                 
             default:
                 object_error((t_object *) x, "ibuffer~: incorrect sample format");
                 return;
 		}
 
-		// Sort channels to load (assume all)
-		// Only allow 4 channels max
+		// Sort channels to load (assume all if channels_to_load is zero)
 		
-		for (i = 0, channels_to_load = channels; i < ((argc <= 4) ? argc : 4); i++)
-		{
-			load_all_channels = 0;
-			channel_order[i] = (atom_getlong(argv + i) - 1) % channels;
-			if (channel_order[i] < 0) 
-				channel_order[i] = 0;
-			channels_to_load = i + 1;
-		}
+        std::vector<long> channel_order(argc);
+        
+		for (long i = 0; i < channel_order.size(); i++)
+        {
+			t_atom_long channel = atom_getlong(argv + i) - 1;
+            channel_order[i] = channel < 0 ? 0 : ((channel > x->channels - 1) ? x->channels - 1 : channel);
+        }
 		
 		// Free previous memory and allocate memory to store the sample
 		
-		free (x->thebuffer);
-		x->thebuffer = calloc(sample_size, (frames * channels_to_load + 64));
+        long num_chans_to_load = channel_order.size() ? channel_order.size() : x->channels;
+        long sample_size = file.getByteDepth();
+        
+		free(x->thebuffer);
+		x->thebuffer = calloc(sample_size, (x->frames * num_chans_to_load + 64));
 		x->samples = (void *)((char *) x->thebuffer + (16 * sample_size));
         
 		// Bail if no memory
@@ -352,89 +342,48 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		
 		// Load the audio data raw and close the file
 		
-		if (load_all_channels)
-            file.readRaw(x->samples, frames);
+		if (!channel_order.size())
+            file.readRaw(x->samples, x->frames);
 		else 
 		{
-            UInt8 *data = (UInt8 *)x->samples;
+            const static int default_work_chunk = 10000;
             
-			// Here we load in chunks to some temporary memory and then copy out ony the relevant channels
-			
-			load_temp = (UInt8 *) malloc(DEFAULT_WORK_CHUNK * sample_size * channels);
-			
+            // Here we load in chunks to some temporary memory and then copy out ony the relevant channels
+
+            UInt8 *data = (UInt8 *) x->samples;
+			UInt8 *load_temp = (UInt8 *) malloc(default_work_chunk * sample_size * x->channels);
+            UInt8 *channels_swap = load_temp;
+            
 			if (!load_temp) 
 			{
 				object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
                 return;
 			}
-			
-			for (i = 0; i < channels_to_load; i++)
-				channel_order[i] *= sample_size;
-			
-			for (i = 0; i < (frames + DEFAULT_WORK_CHUNK + 1) / DEFAULT_WORK_CHUNK; i++)
+            
+			for (long i = 0; i < (x->frames + default_work_chunk + 1) / default_work_chunk; i++)
 			{				
 				// Read chunk
 				
-				work_chunk = (i + 1) * DEFAULT_WORK_CHUNK > frames ?  frames - (i * DEFAULT_WORK_CHUNK): DEFAULT_WORK_CHUNK;
+				t_ptr_int work_chunk = (i + 1) * default_work_chunk > x->frames ?  x->frames - (i * default_work_chunk) : default_work_chunk;
                 file.readRaw(load_temp, work_chunk);
 				
 				// Copy channels
 				
-				for (j = 0, channels_swap = load_temp; j < work_chunk; j++, channels_swap += channels * sample_size)
-				{
-					for (k = 0; k < channels_to_load; k++, data += sample_size)
-						memcpy(data, channels_swap + channel_order[k], sample_size);
-				}
+				for (long j = 0; j < work_chunk; j++, channels_swap += x->channels * sample_size)
+					for (long k = 0; k < channel_order.size(); k++, data += sample_size)
+						memcpy(data, channels_swap + (channel_order[k] * sample_size), sample_size);
 			}
 			
 			// Free temp memory and store relevant variables
 			
 			free(load_temp);
-			channels = channels_to_load;
+			x->channels = channel_order.size();
 		}
 		
 		// If the samples are in the wrong endianness then reverse the byte order for each sample 
 		
-#if (TARGET_RT_LITTLE_ENDIAN || defined (WIN_VERSION))	
         if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileBigEndian)
-#else
-        if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileLittleEndian)
-#endif
-		{
-            UInt8 *data = (UInt8 *)x->samples;
-            
-			switch (format)
-			{
-				case PCM_INT_16:
-					
-					for (i = 0; i < frames * channels; i++, data += 2)
-                        std::swap(data[0], data[1]);
-					break;
-					
-				case PCM_INT_24:
-					
-					for (i = 0; i < frames * channels; i++, data += 3)
-                        std::swap(data[0], data[2]);
-					break;
-					
-				case PCM_INT_32:
-				case PCM_FLOAT:
-					
-					for (i = 0; i < frames * channels; i++, data += 4)
-					{
-                        std::swap(data[0], data[3]);
-                        std::swap(data[1], data[2]);
-					}
-					break;
-			}
-		}
-		
-		// Store sample info into object
-		
-		x->sr = sr;
-		x->frames = frames;
-		x->channels = channels;
-		x->format = format;
+            ibuffer_switch_endianness(x);
 		
 		// File is now loaded - destroy the lock and bang (must be in this order!)
 		
@@ -446,4 +395,3 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 		object_error((t_object *) x, "ibuffer~: could not find / open named file");
 	}
 }
-

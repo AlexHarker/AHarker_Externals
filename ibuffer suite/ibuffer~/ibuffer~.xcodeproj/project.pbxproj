@@ -90,8 +90,7 @@
 				B89B135A1CC18525008B0E1A /* IAudioFile.cpp */,
 				B89B135B1CC18525008B0E1A /* IAudioFile.h */,
 			);
-			name = AudioFile;
-			path = file_reading;
+			path = AudioFile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
