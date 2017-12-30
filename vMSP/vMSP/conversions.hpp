@@ -1,73 +1,46 @@
 
 #include <SIMDSupport.hpp>
 
-static __inline void f32_mul_const_array(float *o, float *i, long length, float constant)
+template <class T>
+static void mul_const_array(T *o, T *i, long length, T constant)
 {
-    SIMDType<float, 8> *v_o = reinterpret_cast<SIMDType<float, 8> *>(o);
-    SIMDType<float, 8> *v_i = reinterpret_cast<SIMDType<float, 8> *>(i);
-    SIMDType<float, 8>  v_constant(constant);
+    const int simd_width = SIMDLimits<T>::max_size;
     
-    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
+    SIMDType<T, simd_width> *v_o = reinterpret_cast<SIMDType<T, simd_width> *>(o);
+    SIMDType<T, simd_width> *v_i = reinterpret_cast<SIMDType<T, simd_width> *>(i);
+    SIMDType<T, simd_width> v_constant(constant);
     
-    for (; length > 0; length -= 8)
+    // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
+
+    for (; length > 0; length -= simd_width)
         *v_o++ =  *v_i++ * v_constant;
 }
 
-static __inline void f64_mul_const_array(double *o, double *i, long length, double constant)
+template <class T>
+void mul_const_array(T *io, long length, T constant)
 {
-    SIMDType<double, 4> *v_o = reinterpret_cast<SIMDType<double, 4> *>(o);
-    SIMDType<double, 4> *v_i = reinterpret_cast<SIMDType<double, 4> *>(i);
-    SIMDType<double, 4>  v_constant(constant);
-    
-    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
-    
-    for (; length > 0; length -= 4)
-        *v_o++ =  *v_i++ * v_constant;
+    mul_const_array(io, io, length, constant);
 }
 
-static __inline void f32_mul_const_array(float *io, long length, float constant)
+template <class T>
+void mul_add_const_array(T *o, T *i, long length, T mul, T add)
 {
-    f32_mul_const_array(io, io, length, constant);
-}
+    const int simd_width = SIMDLimits<T>::max_size;
 
-static __inline void f64_mul_const_array(double *io, long length, double constant)
-{
-    f64_mul_const_array(io, io, length, constant);
-}
-
-
-static __inline void f32_mul_add_const_array(float *o, float *i, long length, float mul, float add)
-{
-    SIMDType<float, 8> *v_o = reinterpret_cast<SIMDType<float, 8> *>(o);
-    SIMDType<float, 8> *v_i = reinterpret_cast<SIMDType<float, 8> *>(i);
-    SIMDType<float, 8>  v_mul(mul);
-    SIMDType<float, 8>  v_add(add);
+    SIMDType<T, simd_width> *v_o = reinterpret_cast<SIMDType<T, simd_width> *>(o);
+    SIMDType<T, simd_width> *v_i = reinterpret_cast<SIMDType<T, simd_width> *>(i);
+    SIMDType<T, simd_width> v_mul(mul);
+    SIMDType<T, simd_width> v_add(add);
     
-    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
-    
-    for (; length > 0; length -= 8)
+    // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
+
+    for (; length > 0; length -= simd_width)
         *v_o++ =  *v_i++ * v_mul + v_add;
 }
 
-static __inline void f64_mul_add_const_array(double *o, double *i, long length, double mul, double add)
+template <class T>
+void mul_add_const_array(T *io, long length, T mul, T add)
 {
-    SIMDType<double, 4> *v_o = reinterpret_cast<SIMDType<double, 4> *>(o);
-    SIMDType<double, 4> *v_i = reinterpret_cast<SIMDType<double, 4> *>(i);
-    SIMDType<double, 4>  v_mul(mul);
-    SIMDType<double, 4>  v_add(add);
-    
-    // N.B. we can assume that there are an exact number of vectors and that 64 bit vectors are aligned
-    
-    for (; length > 0; length -= 4)
-        *v_o++ =  *v_i++ * v_mul + v_add;
+    mul_add_const_array(io, io, length, mul, add);
 }
 
-static __inline void f32_mul_add_const_array(float *io, long length, float mul, float add)
-{
-    f32_mul_add_const_array(io, io, length, mul, add);
-}
-
-static __inline void f64_mul_add_const_array(double *io, long length, double mul, double add)
-{
-    f64_mul_add_const_array(io, io, length, mul, add);
-}

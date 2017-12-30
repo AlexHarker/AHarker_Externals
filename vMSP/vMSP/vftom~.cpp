@@ -23,16 +23,11 @@ struct ftom_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64; }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_log_array(o, i, size);
-        f32_mul_add_const_array(o, size, ftom_mul_constant_32, ftom_add_constant_32);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_log_array(o, i, size);
-        f64_mul_add_const_array(o, size, ftom_mul_constant_64, ftom_add_constant_64);
+        log_array(o, i, size);
+        mul_add_const_array(o, size, T(ftom_mul_constant_64), T(ftom_add_constant_64));
     }
     
     // Empty Implementations

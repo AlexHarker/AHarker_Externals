@@ -21,16 +21,11 @@ struct dbtoa_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * dbtoa_constant_32); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * dbtoa_constant_64); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_mul_const_array(o, i, size, dbtoa_constant_32);
-        f32_exp_array(o, o, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_mul_const_array(o, i, size, dbtoa_constant_64);
-        f64_exp_array(o, o, size);
+        mul_const_array(o, i, size, T(dbtoa_constant_64));
+        exp_array(o, o, size);
     }
     
     // Empty Implementations

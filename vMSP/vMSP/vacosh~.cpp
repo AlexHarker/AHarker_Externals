@@ -17,15 +17,10 @@ struct acosh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return nan_fixer()(acoshf(a.mVal)); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return nan_fixer()(acosh(a.mVal)); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_acosh_array(o, i, size);
-        nan_fixer()(o, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_acosh_array(o, i, size);
+        acosh_array(o, i, size);
         nan_fixer()(o, size);
     }
     

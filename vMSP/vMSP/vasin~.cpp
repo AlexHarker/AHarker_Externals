@@ -17,15 +17,10 @@ struct asin_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return nan_fixer()(asinf(a.mVal)); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return nan_fixer()(asin(a.mVal)); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_asin_array(o, i, size);
-        nan_fixer()(o, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_asin_array(o, i, size);
+        asin_array(o, i, size);
         nan_fixer()(o, size);
     }
     

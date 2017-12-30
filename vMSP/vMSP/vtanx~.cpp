@@ -17,15 +17,10 @@ struct tanx_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return nan_fixer()(tanf(a.mVal)); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return nan_fixer()(tan(a.mVal)); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_tan_array(o, i, size);
-        nan_fixer()(o, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_tan_array(o, i, size);
+        tan_array(o, i, size);
         nan_fixer()(o, size);
     }
 

@@ -23,7 +23,17 @@ struct nan_fixer
         return ((a_int & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) && ((a_int & 0x000FFFFFFFFFFFFFULL) != 0) ? 0.0 : a;
     }
     
-    void operator()(float *io, long size) {}
-    void operator()(double *io, long size) {}
+    template <class T>
+    void operator()(T *io, long size)
+    {
+        const int simd_width = SIMDLimits<T>::max_size;
+        
+        SIMDType<T, simd_width> *v_io = reinterpret_cast<SIMDType<T, simd_width> *>(io);
+        
+        // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
+        
+        for (; size > 0; size -= simd_width, v_io++)
+            *v_io =  operator()(*v_io);
+    }
 };
 #endif /* NANS_H */

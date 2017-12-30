@@ -11,7 +11,6 @@
 #include "v_binary.hpp"
 #include "nans.hpp"
 
-
 struct times_functor
 {
     template <class T>

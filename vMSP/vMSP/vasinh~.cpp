@@ -16,15 +16,8 @@ struct asinh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return asinhf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return asinh(a.mVal); }
     
-    void operator()(float *o, float *i, long size)
-    {
-        f32_asinh_array(o, i, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_asinh_array(o, i, size);
-    }
+    template <class T>
+    void operator()(T *o, T *i, long size) { asinh_array(o, i, size); }
     
     // Empty Implementations
     

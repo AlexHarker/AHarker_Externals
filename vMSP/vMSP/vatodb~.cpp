@@ -21,16 +21,11 @@ struct atodb_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return 20.f * log10f(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return 20.0 * log10(a.mVal); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_log_array(o, i, size);
-        f32_mul_const_array(o, size, atodb_constant_32);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_log_array(o, i, size);
-        f64_mul_const_array(o, size, atodb_constant_64);
+        log_array(o, i, size);
+        mul_const_array(o, size, T(atodb_constant_64));
     }
     
     // Empty Implementations

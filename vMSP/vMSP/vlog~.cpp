@@ -21,16 +21,11 @@ struct log_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(logf(a.mVal) * m_base_mul); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return log(a.mVal) * m_base_mul; }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_log_array(o, i, size);
-        f32_mul_const_array(o, i, size, static_cast<float>(m_base_mul));
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_log_array(o, i, size);
-        f64_mul_const_array(o, i, size, m_base_mul);
+        log_array(o, i, size);
+        mul_const_array(o, i, size, static_cast<T>(m_base_mul));
     }
     
     // Empty Implementations

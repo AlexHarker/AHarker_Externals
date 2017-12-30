@@ -17,15 +17,10 @@ struct atanh_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return nan_fixer()(atanhf(a.mVal)); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return nan_fixer()(atanh(a.mVal)); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_atanh_array(o, i, size);
-        nan_fixer()(o, size);
-    }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_atanh_array(o, i, size);
+        atanh_array(o, i, size);
         nan_fixer()(o, size);
     }
     

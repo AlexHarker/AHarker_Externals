@@ -23,18 +23,13 @@ struct mtof_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * mtof_mul_constant_32 + mtof_add_constant_32); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * mtof_mul_constant_64 + mtof_add_constant_32); }
     
-    void operator()(float *o, float *i, long size)
+    template <class T>
+    void operator()(T *o, T *i, long size)
     {
-        f32_mul_add_const_array(o, i, size, mtof_mul_constant_32, mtof_add_constant_32);
-        f32_exp_array(o, o, size);
+        mul_add_const_array(o, i, size, T(mtof_mul_constant_64), T(mtof_add_constant_64));
+        exp_array(o, o, size);
     }
-    
-    void operator()(double *o, double *i, long size)
-    {
-        f64_mul_add_const_array(o, i, size, mtof_mul_constant_64, mtof_add_constant_64);
-        f64_exp_array(o, o, size);
-    }
-    
+
     // Empty Implementations
     
     template <class T>
