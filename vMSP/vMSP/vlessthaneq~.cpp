@@ -8,8 +8,8 @@
  *
  */
 
-#include <v_binary.hpp>
-#include <comparisons.hpp>
+#include "v_binary.hpp"
+#include "comparisons.hpp"
 
 typedef v_binary<comparison_functor<less_eq>, kVectorOp, kVectorOp> vlessthaneq;
 

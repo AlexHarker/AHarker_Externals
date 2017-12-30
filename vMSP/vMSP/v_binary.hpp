@@ -139,25 +139,26 @@ public:
         
         if (Vec32 != kScalar && ((sp[0]->s_n / simd_width) > 0))
         {
-            if (Vec32 == kVectorOp)
+            if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
             {
-                routine += 3;
-                vec_size_val = sp[0]->s_n / simd_width;
-                
-                if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
-                {
-                    post("%s: handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
-                    routine += 3;
-                }
+                object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
             }
             else
             {
-                // Make temporary array for array-based vector routines
-                
-                routine += 9;
-                
-                if (routine != 9)
-                    x->m_temp_memory = allocate_aligned<float>(sp[0]->s_n);
+                if (Vec32 == kVectorOp)
+                {
+                    routine += 3;
+                    vec_size_val = sp[0]->s_n / simd_width;
+                }
+                else
+                {
+                    // Make temporary array for array-based vector routines
+                    
+                    routine += 6;
+                    
+                    if (routine != 6)
+                        x->m_temp_memory = allocate_aligned<float>(sp[0]->s_n);
+                }
             }
         }
         
@@ -169,23 +170,17 @@ public:
             case 1:     perform_routine = (method) perform<perform_single1_op<T, 1> >;                      break;
             case 2:     perform_routine = (method) perform<perform_single2_op<T, 1> >;                      break;
             
-            // Vector aligned
+            // Vector Op
                 
             case 3:     perform_routine = (method) perform<perform_op<T, simd_width> >;                     break;
             case 4:     perform_routine = (method) perform<perform_single1_op<T, simd_width> >;             break;
             case 5:     perform_routine = (method) perform<perform_single2_op<T, simd_width> >;             break;
-            
-            // Vector mis-aligned
                 
-            case 6:     perform_routine = (method) perform<perform_misaligned<T, simd_width> >;             break;
-            case 7:     perform_routine = (method) perform<perform_single1_misaligned<T, simd_width> >;     break;
-            case 8:     perform_routine = (method) perform<perform_single2_misaligned<T, simd_width> >;     break;
-            
             // Vector array
             
-            case 9:     perform_routine = (method) perform<perform_array<T> >;                              break;
-            case 10:    perform_routine = (method) perform<perform_single1_array<T> >;                      break;
-            case 11:    perform_routine = (method) perform<perform_single2_array<T> >;                      break;
+            case 6:     perform_routine = (method) perform<perform_array<T> >;                              break;
+            case 7:     perform_routine = (method) perform<perform_single1_array<T> >;                      break;
+            case 8:     perform_routine = (method) perform<perform_single2_array<T> >;                      break;
         }
         
         dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size_val, x);
@@ -296,66 +291,6 @@ public:
 
         while (vec_size--)
             *out1++ = fix_denorm(functor(*in1++, *in2++));
-    }
-    
-    
-    // 32 bit perform routine with first operand only at signal-rate (misaligned SIMD - early versions of Max 5 only - slightly slower)
-    
-    template <class T, int N>
-    static void perform_single1_misaligned(t_int *w)
-    {
-        float *in1 = reinterpret_cast<float *>(w[2]);
-        float *out1 = reinterpret_cast<float *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-
-        SIMDType<float, N> float_val(static_cast<float>(x->m_val));
-        
-        Functor &functor = x->m_functor;
-        
-        vec_size /= SIMDType<float, N>::size;
-
-        for ( ; vec_size--; in1 += N, out1 += N)
-            functor(SIMDType<float, N>(in1), float_val).store(out1);
-    }
-    
-    // 32 bit perform routine with second operand only at signal-rate (misaligned SIMD - early versions of Max 5 only - slightly slower)
-    
-    template <class T, int N>
-    static void perform_single2_misaligned(t_int *w)
-    {
-        float *in1 = reinterpret_cast<float *>(w[2]);
-        float *out1 = reinterpret_cast<float *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-
-        Functor &functor = x->m_functor;
-
-        SIMDType<float, N> float_val(static_cast<float>(x->m_val));
-
-        vec_size /= SIMDType<float, N>::size;
-
-        for ( ; vec_size--; in1 += N, out1 += N)
-            functor(float_val, SIMDType<float, N>(in1)).store(out1);
-    }
-    
-    // 32 bit perform routine with two signal-rate inputs (misaligned SIMD - early versions of Max 5 only - slightly slower)
-    
-    template <class T, int N>
-    static void perform_misaligned(t_int *w)
-    {
-        float *in1 = reinterpret_cast<float *>(w[2]);
-        float *in2 = reinterpret_cast<float *>(w[3]);
-        float *out1 = reinterpret_cast<float *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-
-        Functor &functor = x->m_functor;
-
-        vec_size /= SIMDType<float, N>::size;
-
-        for ( ; vec_size--; in1 += N, out1 += N)
-            functor(SIMDType<float, N>(in1), SIMDType<float, N>(in2)).store(out1);
     }
     
     // 64 bit dsp routine

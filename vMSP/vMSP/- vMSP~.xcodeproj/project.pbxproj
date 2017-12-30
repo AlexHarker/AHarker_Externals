@@ -414,6 +414,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = nans.hpp; sourceTree = "<group>"; };
 		B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = v_binary.hpp; sourceTree = "<group>"; };
 		B83978C71FDF5A360004E515 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDExtended.hpp; path = ../../AH_MaxMSP_Headers/SIMDExtended.hpp; sourceTree = "<group>"; };
 		B887FAFA1838D67200C83570 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
@@ -465,7 +466,6 @@
 		B8E492EE1095A30E00A88A63 /* vequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vequals~.cpp"; sourceTree = "<group>"; };
 		B8E493021095A32500A88A63 /* vplus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vplus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E493131095A32800A88A63 /* vequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E493A81095A68400A88A63 /* Template_Binary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Template_Binary.h; sourceTree = "<group>"; };
 		B8E493BF1095A73900A88A63 /* vdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vdiv~.cpp"; sourceTree = "<group>"; };
 		B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vgreaterthan~.cpp"; sourceTree = "<group>"; };
 		B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlessthan~.cpp"; sourceTree = "<group>"; };
@@ -847,11 +847,11 @@
 			children = (
 				B887FAFA1838D67200C83570 /* Helpers.h */,
 				B8E3954C1096121C0081D095 /* Template_Unary.h */,
-				B8E493A81095A68400A88A63 /* Template_Binary.h */,
 				B8F11CDE1FDEBD55003EE53A /* SIMDSupport.hpp */,
 				B83978C71FDF5A360004E515 /* SIMDExtended.hpp */,
 				B8C4C21B1FDF10310062CC55 /* comparisons.hpp */,
 				B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */,
+				B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */,
 				B8DA7B631FDDBC520037D848 /* v_unary.hpp */,
 				B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */,
 				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,

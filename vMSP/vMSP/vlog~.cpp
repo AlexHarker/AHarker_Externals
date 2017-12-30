@@ -8,8 +8,8 @@
  *
  */
 
-#include <v_unary.hpp>
-#include <conversions.hpp>
+#include "v_unary.hpp"
+#include "conversions.hpp"
 #include <SIMDExtended.hpp>
 
 // FIX - binary operation, clipping and initial base...

@@ -9,8 +9,8 @@
  *
  */
 
-#include <v_unary.hpp>
-#include <conversions.hpp>
+#include "v_unary.hpp"
+#include "conversions.hpp"
 #include <SIMDExtended.hpp>
 
 struct mtof_functor

@@ -78,19 +78,16 @@ public:
         
         if (vector)
         {
-            vec_size_val /= simd_width;
-
-            if (Vec32 == kVectorArray)
-                current_perform_routine = reinterpret_cast<method>(perform<perform_array<T> >);
+            // Check memory alignment of all relevant vectors
+            
+            if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
+                object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
             else
             {
-                // Check memory alignment of all relevant vectors
+                vec_size_val /= simd_width;
 
-                if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
-                {
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_misaligned<T, simd_width> >);
-                    post ("%s: handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
-                }
+                if (Vec32 == kVectorArray)
+                    current_perform_routine = reinterpret_cast<method>(perform<perform_array<T> >);
                 else
                     current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width> >);
             }
@@ -133,22 +130,6 @@ public:
 
         while (vec_size--)
             *out1++ = functor(*in1++);
-    }
-    
-    // 32 bit perform routine (misaligned SIMD - op - early versions of Max 5 only - slightly slower)
-    
-    template <class T, int N>
-    static void perform_misaligned(t_int *w)
-    {
-        float *in1 =  reinterpret_cast<float *>(w[2]);
-        float *out1 = reinterpret_cast<float *>(w[3]);
-        long vec_size = w[4];
-        T *x = reinterpret_cast<T *>(w[5]);
-        
-        Functor &functor = x->m_functor;
-
-        for ( ; vec_size--; in1 += N, out1 += N)
-            functor(SIMDType<float, N>(in1)).store(out1);
     }
     
     // 64 bit dsp routine

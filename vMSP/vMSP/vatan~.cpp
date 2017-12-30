@@ -8,7 +8,7 @@
  *
  */
 
-#include <v_unary.hpp>
+#include "v_unary.hpp"
 #include <SIMDExtended.hpp>
 
 struct atan_functor
