@@ -352,7 +352,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
             UInt8 *data = (UInt8 *) x->samples;
 			UInt8 *load_temp = (UInt8 *) malloc(default_work_chunk * sample_size * x->channels);
-            UInt8 *channels_swap = load_temp;
+
             
 			if (!load_temp) 
 			{
@@ -369,6 +369,8 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 				
 				// Copy channels
 				
+                UInt8 *channels_swap = load_temp;
+                
 				for (long j = 0; j < work_chunk; j++, channels_swap += x->channels * sample_size)
 					for (long k = 0; k < channel_order.size(); k++, data += sample_size)
 						memcpy(data, channels_swap + (channel_order[k] * sample_size), sample_size);
