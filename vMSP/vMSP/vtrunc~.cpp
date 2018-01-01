@@ -8,7 +8,29 @@
  *
  */
 
+#include "v_unary.hpp"
 
+struct trunc_functor
+{
+    template <class T>
+    T operator()(const T a) { return trunc(a); }
+    
+    // Empty Implementations
+    
+    void operator()(float *o, float *i, long size) {}
+    void operator()(double *o, double *i, long size) {}
+};
+
+typedef v_unary<trunc_functor, kVectorOp, kVectorOp> vtrunc;
+
+int C74_EXPORT main()
+{
+    vtrunc::setup<vtrunc>("vtrunc~");
+}
+
+
+
+/*
 #include <AH_VectorOps.h>
 #include "ext.h"
 
@@ -78,7 +100,7 @@ static __inline vFloat trunc_vec_32(vFloat in)
 }
 
 #ifdef VECTOR_F64_128BIT
-/*
+
 // N.B. large_vec has 0.5 subtracted pre conversion to avoid incorrect rounding - always integer saturated when used so results are correct
 // FIX - explain the above properly
 
@@ -90,7 +112,7 @@ static __inline vDouble trunc_vec_64(vDouble in)
 	vDouble trunc_vec2 = F64_VEC_ADD_OP(F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(F64_VEC_SUB_OP(in, large_vec))), large_vec);
 	vDouble trunc_vec = F64_VEC_SEL_OP(trunc_vec1, trunc_vec2, F64_VEC_GT_OP(abs_vec, v_intermediate_int_64));
 	return F64_VEC_SEL_OP(trunc_vec, in, F64_VEC_GT_OP(abs_vec, v_largest_int_64));
-}*/
+}
 #endif
 
 // Define operations (all intrinsic-based)
@@ -104,3 +126,4 @@ static __inline vDouble trunc_vec_64(vDouble in)
 // Having defined the necessary constants and macro the bulk of the code can now be included
 
 #include "Template_Unary.h"
+*/
