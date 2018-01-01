@@ -43,6 +43,11 @@ template <class T> T *allocate_aligned(size_t size)
     return static_cast<T *>(malloc(size * sizeof(T)));
 }
 
+static inline void *allocate_aligned_void(size_t size)
+{
+    return malloc(size);
+}
+
 template <class T> void deallocate_aligned(T *ptr)
 {
     free(ptr);
@@ -55,6 +60,11 @@ template <class T> void deallocate_aligned(T *ptr)
 template <class T> T *allocate_aligned(size_t size)
 {
     return static_cast<T *>(_aligned_malloc(size * sizeof(T), 16));
+}
+
+static inline void *allocate_aligned_void(size_t size)
+{
+    return _aligned_malloc(size, 16);
 }
 
 template <class T> void deallocate_aligned(T *ptr)

@@ -22,7 +22,6 @@
 
 #include <AH_Atomic.h>
 #include <AH_Memory_Swap.h>
-#include <AH_VectorOps.h>
 
 #include <dynamicdsp~.h>
 #include "PatchSlot.h"

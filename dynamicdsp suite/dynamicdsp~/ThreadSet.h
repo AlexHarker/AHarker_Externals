@@ -7,7 +7,7 @@
 #include <ext.h>
 
 #include <AH_Atomic.h>
-#include <AH_VectorOps.h>
+#include <SIMDSupport.hpp>
 #include <stdint.h>
 
 #ifdef __APPLE__
@@ -154,7 +154,7 @@ public:
         
         for (std::vector<ThreadSlot>::iterator it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
             for (std::vector<void *>::iterator jt = it->mTempBuffers.begin(); jt != it->mTempBuffers.end(); jt++)
-                ALIGNED_FREE(*jt);
+                deallocate_aligned(*jt);
     }
         
     inline void tick(long vecSize, long numThreads, void **sig_outs)
@@ -220,8 +220,8 @@ public:
             {
                 for (std::vector<void *>::iterator jt = it->mTempBuffers.begin(); jt != it->mTempBuffers.end(); jt++)
                 {
-                    ALIGNED_FREE(*jt);
-                    *jt = ALIGNED_MALLOC(size);
+                    deallocate_aligned(*jt);
+                    *jt = allocate_aligned_void(size);
                     if (!*jt)
                     {
                         object_error((t_object *) mOwner, "not enough memory");
