@@ -170,7 +170,7 @@ public:
             case 1:     perform_routine = (method) perform<perform_single1_op<T, 1> >;                      break;
             case 2:     perform_routine = (method) perform<perform_single2_op<T, 1> >;                      break;
             
-            // Vector Op
+            // Vector op
                 
             case 3:     perform_routine = (method) perform<perform_op<T, simd_width> >;                     break;
             case 4:     perform_routine = (method) perform<perform_single1_op<T, simd_width> >;             break;
@@ -355,13 +355,13 @@ public:
             case 1:     perform_routine = (method) perform64_single1_op<T, 1>;              break;
             case 2:     perform_routine = (method) perform64_single2_op<T, 1>;              break;
                 
-            // Vector aligned op
+            // Vector op
                 
             case 3:     perform_routine = (method) perform64_op<T, simd_width>;             break;
             case 4:     perform_routine = (method) perform64_single1_op<T, simd_width>;     break;
             case 5:     perform_routine = (method) perform64_single2_op<T, simd_width>;     break;
                 
-            // Vector aligned array
+            // Vector array
                 
             case 6:     perform_routine = (method) perform64_array<T>;                      break;
             case 7:     perform_routine = (method) perform64_single1_array<T>;              break;
@@ -499,6 +499,8 @@ private:
     double m_val;
     
     void *m_temp_memory;
+    
+public:
     
     Functor m_functor;
 };

@@ -17,7 +17,7 @@ struct div_functor
     {
         const static T zero(static_cast<typename T::scalar_type>(0));
         
-        return sel(b == zero, a / b, zero);
+        return sel(a / b, zero, b == zero);
     }
     
     // Empty Implementations
