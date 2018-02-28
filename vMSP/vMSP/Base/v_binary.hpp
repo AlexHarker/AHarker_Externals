@@ -14,7 +14,7 @@ enum CalculationType { kScalar, kVectorOp, kVectorArray };
 
 // Object structure
 
-template<typename Functor, CalculationType Vec32, CalculationType Vec64, bool Reverse = false>
+template<typename Functor, CalculationType Vec32, CalculationType Vec64>
 class v_binary
 {
     static float fix_denorm(const float a) { return AH_FIX_DENORM_FLOAT(a); }
@@ -101,8 +101,8 @@ public:
         long routine = 0;
         long vec_size_val = sp[0]->s_n;
 
-        float *used_input1 = reinterpret_cast<float *>(Reverse ? sp[1]->s_vec : sp[0]->s_vec);
-        float *used_input2 = reinterpret_cast<float *>(Reverse ? sp[0]->s_vec : sp[1]->s_vec);
+        float *used_input1 = reinterpret_cast<float *>(sp[0]->s_vec);
+        float *used_input2 = reinterpret_cast<float *>(sp[1]->s_vec);
         
         // Default to scalar routines
         
@@ -124,7 +124,7 @@ public:
         if (!count[0])
         {
             used_input1 = used_input2;
-            routine = Reverse ? 1 : 2;
+            routine = 2;
         }
         
         // Only pass the first input (twice)
@@ -132,7 +132,7 @@ public:
         if (!count[1])
         {
             used_input2 = used_input1;
-            routine = Reverse ? 2 : 1;
+            routine = 1;
         }
         
         // Use SIMD code where possible
@@ -301,7 +301,6 @@ public:
         const static int simd_width = SIMDLimits<double>::max_size;
         
         long routine = 0;
-        long userparam = Reverse ? 1 : 0;
         
         method perform_routine = (method) perform64_op<T, 1>;
         
@@ -319,16 +318,10 @@ public:
         // Use single routine
         
         if (!count[0])
-        {
-            userparam = Reverse ? 0 : 1;
-            routine = Reverse ? 1 : 2;
-        }
+            routine = 2;
         
         if (!count[1])
-        {
-            userparam = Reverse ? 1 : 0;
-            routine = Reverse ? 2 : 1;
-        }
+            routine = 1;
         
         // Use SIMD code where possible
         
@@ -368,7 +361,7 @@ public:
             case 8:     perform_routine = (method) perform64_single2_array<T>;              break;
         }
         
-        object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, userparam);
+        object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, 0);
     }
     
     // 64 bit perform routine with one LHS signal-rate input (SIMD - op)
@@ -378,7 +371,7 @@ public:
     {
         Functor &functor = x->m_functor;
 
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[userparam ? 1 : 0]);
+        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
         SIMDType<double, N> double_val(x->m_val);
@@ -396,7 +389,7 @@ public:
     {
         Functor &functor = x->m_functor;
         
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[userparam ? 1 : 0]);
+        SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
         SIMDType<double, N> double_val(x->m_val);
@@ -404,7 +397,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
 
         while (vec_size--)
-            *out1++ = fix_denorm(functor(double_val, *in1++));
+            *out1++ = fix_denorm(functor(double_val, *in2++));
     }
     
     // 64 bit perform routine with two signal-rate inputs (SIMD - op)
@@ -414,8 +407,8 @@ public:
     {
         Functor &functor = x->m_functor;
 
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[userparam ? 1 : 0]);
-        SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[userparam ? 0 : 1]);
+        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
+        SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
 
         vec_size /= SIMDType<double, N>::size;
@@ -432,7 +425,7 @@ public:
         double *temp_memory = (double *)x->m_temp_memory;
         
         std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], ins[userparam ? 1 : 0], temp_memory, vec_size);
+        x->m_functor(outs[0], ins[0], temp_memory, vec_size);
     }
     
     // 64 bit perform routine with one RHS signal-rate input (SIMD - array)
@@ -443,7 +436,7 @@ public:
         double *temp_memory = (double *)x->m_temp_memory;
         
         std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], temp_memory, ins[userparam ? 1 : 0], vec_size);
+        x->m_functor(outs[0], temp_memory, ins[1], vec_size);
     }
     
     // 64 bit perform routine with two signal-rate inputs (SIMD - array)
@@ -451,7 +444,7 @@ public:
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[userparam ? 1 : 0], ins[userparam ? 0 : 1], vec_size);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size);
     }
     
     // Assist routine

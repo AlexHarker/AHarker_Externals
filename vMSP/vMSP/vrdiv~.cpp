@@ -10,14 +10,14 @@
 
 #include "v_binary.hpp"
 
-struct div_functor
+struct rdiv_functor
 {
     template <class T>
     T operator()(const T a, const T b)
     {
         const static T zero(static_cast<typename T::scalar_type>(0));
         
-        return sel(a / b, zero, b == zero);
+        return sel(b / a, zero, a == zero);
     }
     
     // Empty Implementations
@@ -26,7 +26,7 @@ struct div_functor
     void operator()(double *o, double *i1, double *i2, long size) {}
 };
 
-typedef v_binary<div_functor, kVectorOp, kVectorOp, true> vrdiv;
+typedef v_binary<rdiv_functor, kVectorOp, kVectorOp> vrdiv;
 
 int C74_EXPORT main()
 {

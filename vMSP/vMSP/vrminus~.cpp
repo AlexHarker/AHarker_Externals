@@ -10,10 +10,10 @@
 
 #include "v_binary.hpp"
 
-struct minus_functor
+struct rminus_functor
 {
     template <class T>
-    T operator()(const T a, const T b) { return a - b; }
+    T operator()(const T a, const T b) { return b - a; }
     
     // Empty Implementations
     
@@ -21,7 +21,7 @@ struct minus_functor
     void operator()(double *o, double *i1, double *i2, long size) {}
 };
 
-typedef v_binary<minus_functor, kVectorOp, kVectorOp, true> vrminus;
+typedef v_binary<rminus_functor, kVectorOp, kVectorOp> vrminus;
 
 int C74_EXPORT main()
 {
