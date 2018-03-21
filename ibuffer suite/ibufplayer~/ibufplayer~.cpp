@@ -331,7 +331,7 @@ template<class T>
 long ibufplayer_phase(double *positions, T *phases, T *in, long vec_size, double speed, double start_samp, double min_samp, double max_samp, double length_recip, bool sig_control, double &pos_store)
 {
     double pos = pos_store;
-    long todo, i;
+    long to_do, i;
     
     if (sig_control)
     {
@@ -342,22 +342,22 @@ long ibufplayer_phase(double *positions, T *phases, T *in, long vec_size, double
             
             ibufplayer_update_phase(positions, phases, pos, *in++ * speed, start_samp, length_recip);
         }
-        todo = i;
+        to_do = i;
     }
     else
     {
         if (speed > 0)
-            todo = ((vec_size * speed) + pos > max_samp) ? (max_samp - pos) / speed : vec_size;
+            to_do = ((vec_size * speed) + pos > max_samp) ? (max_samp - pos) / speed : vec_size;
         else
-            todo = ((vec_size * speed) + pos < min_samp) ? (min_samp - pos) / speed : vec_size;
+            to_do = ((vec_size * speed) + pos < min_samp) ? (min_samp - pos) / speed : vec_size;
         
-        for (i = 0; i < todo; i++)
+        for (i = 0; i < to_do; i++)
             ibufplayer_update_phase(positions, phases, pos, speed, start_samp, length_recip);
     }
     
-    pos_store = todo < vec_size ? -1.0 : pos;
+    pos_store = to_do < vec_size ? -1.0 : pos;
     
-    return todo;
+    return to_do;
 }
 
 template <class T>
