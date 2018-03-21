@@ -867,7 +867,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		
 		case DESCRIPTOR_PF_SPECTRAL_FLATNESS:
 						
-            // FIX - should be based on ampltidues not energy
+            // FIX - should be based on amplitudes not energy
 			cumulate_ptr1 = cumulate_sq_amps;
 			
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
