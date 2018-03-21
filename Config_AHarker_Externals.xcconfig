@@ -9,6 +9,14 @@ C74SUPPORT = $(SRCROOT)/../../AH_Max_SDK/c74support
 HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
+// To install on build set SKIP_INSTALL to NO and DSTROOT to the desired location
+
+SKIP_INSTALL = YES
+DEPLOYMENT_LOCATION = YES
+DSTROOT = ~/Documents/Max 7/Packages/AHarker/externals
+INSTALL_PATH = /
+COPY_PHASE_STRIP = NO
+
 // Special Files
 
 GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
@@ -26,7 +34,6 @@ GCC_PREPROCESSOR_DEFINITIONS = DENORM_WANT_FIX=1 NO_TRANSLATION_SUPPORT=1
 // Static Configuration (don't change these)
 
 WRAPPER_EXTENSION = mxo
-DEPLOYMENT_LOCATION = NO
 GENERATE_PKGINFO_FILE = YES
 
 // Turn off C99 to minimise time spent working in Visual Studio
