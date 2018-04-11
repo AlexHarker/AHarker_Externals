@@ -9,7 +9,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>AHarker.$TARGET_NAME</string>
+	<string>${TARGET_NAME:rfc1034identifier}</string>
 	<key>CFBundlePackageType</key>
 	<string>iLaX</string>
 	<key>CFBundleSignature</key>
