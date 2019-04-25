@@ -13,23 +13,6 @@
 #include <AH_Atomic.h>
 
 
-// Deferred helpers
-
-template <class slotClass> void deleteSlot(t_object *x, t_symbol *s, long argc, t_atom *argv)
-{
-    delete (slotClass *)atom_getobj(argv);
-}
-
-template <class slotClass> void doOpen(t_object *x, t_symbol *s, long argc, t_atom *argv)
-{
-    ((slotClass *)atom_getobj(argv))->openWindow();
-}
-
-template <class slotClass> void doClose(t_object *x, t_symbol *s, long argc, t_atom *argv)
-{
-    ((slotClass *)atom_getobj(argv))->closeWindow();
-}
-
 // dspchain Attribute Helper
 
 static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *argc, t_atom **argv)
@@ -47,7 +30,7 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
 
 // Main class
 
-template <class slotClass>
+template <class SlotClass>
 class PatchSet
 {
 
@@ -55,7 +38,36 @@ class PatchSet
 
 public:
     
-    PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs) : mOwner(x), mParent(parent), mTargetIndex(0), mIsLoading(0), mNumIns(numIns)
+    // Deferred helpers
+    
+    static void doLoad(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        PatchSet *set = (PatchSet *)atom_getobj(argv + 0);
+        long index = (long) atom_getlong(argv + 1);
+        long vecSize = (long) atom_getlong(argv + 2);
+        long samplingRate = (long) atom_getlong(argv + 3);
+
+        set->loadDeferred(index, s, argc - 4, argv + 4, vecSize, samplingRate);
+    }
+    
+    static void deleteSlot(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        delete (SlotClass *)atom_getobj(argv);
+    }
+    
+    static void doOpen(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        ((SlotClass *)atom_getobj(argv))->openWindow();
+    }
+    
+    static void doClose(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        ((SlotClass *)atom_getobj(argv))->closeWindow();
+    }
+    
+    // Constructor
+    
+    PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs) : mOwner(x), mParent(parent), mTargetIndex(0), mNumIns(numIns)
     {
         mOutTable.assign(outs, outs + numOuts);
     }
@@ -68,15 +80,10 @@ public:
     
     long load(long index, t_symbol *patchName, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
-        // Check that this object is not loading in another thread
-        
-        if (ATOMIC_INCREMENT_BARRIER(&mIsLoading) > 1)
-        {
-            object_error((t_object *) mOwner, "patch is loading in another thread");
-            ATOMIC_DECREMENT_BARRIER(&mIsLoading);
-            return -1;
-        }
-        
+        std::vector<t_atom> newArgv(argc + 4);
+
+        // FIX - some kind of high value check for user specified index?
+
         // Find a free patch if no index is given
         
         if (index < 0)
@@ -86,24 +93,34 @@ public:
                     break;
         }
 
-        // FIX - some kind of high value check?
+        atom_setobj(newArgv.data() + 0, this);
+        atom_setlong(newArgv.data() + 1, index);
+        atom_setlong(newArgv.data() + 2, vecSize);
+        atom_setlong(newArgv.data() + 3, samplingRate);
         
+        for (long i = 0; i < argc; i++)
+            newArgv[i + 4] = argv[i];
+        
+        defer(mOwner, (method)doLoad, patchName, argc + 4, newArgv.data());
+    
+        return index;
+    }
+    
+    void loadDeferred(long index, t_symbol *patchName, long argc, t_atom *argv, long vecSize, long samplingRate)
+    {
         // Resize if necessary
         
         if (index >= size())
             mSlots.resize(index + 1);
         
-    
-        ATOMIC_DECREMENT_BARRIER(&mIsLoading);
-        std::unique_ptr<slotClass> newSlot(new slotClass(mOwner, mParent, mNumIns, &mOutTable));
-        PatchSlot::LoadError error = newSlot->load(index + 1, patchName, argc, argv, vecSize, samplingRate);
+        mSlots[index] = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, mNumIns, &mOutTable));
+        PatchSlot::LoadError error = mSlots[index]->load(index + 1, patchName, argc, argv, vecSize, samplingRate);
         
-        if (error == PatchSlot::LoadError::kNone)
-            mSlots[index] = std::move(newSlot);
-        else
+        if (error != PatchSlot::LoadError::kNone)
+        {
             object_error(mOwner, "error trying to load patch %s - %s", patchName->s_name, PatchSlot::errString(error));
-        
-        return index;
+            mSlots[index] = nullptr;
+        }
     }
 
     void remove(t_atom_long index)
@@ -111,12 +128,12 @@ public:
         if (userSlotExists(index))
         {
             mSlots[index - 1]->setInvalid();
-            slotClass *toDelete = mSlots[index - 1].release();
+            SlotClass *toDelete = mSlots[index - 1].release();
                         
             t_atom a;
             atom_setobj(&a, toDelete);
             
-            defer(mOwner,(method)deleteSlot<slotClass>, 0L, 1, &a);
+            defer(mOwner,(method)deleteSlot, 0L, 1, &a);
         }
         else
             object_error(mOwner, "no patch in slot %ld", index);
@@ -299,7 +316,7 @@ public:
         {
             t_atom a;
             atom_setobj(&a, mSlots[index - 1].get());
-            defer(mOwner,(method)doOpen<slotClass>, 0L, 1, &a);
+            defer(mOwner,(method)doOpen, 0L, 1, &a);
             
             return true;
         }
@@ -317,7 +334,7 @@ public:
                 {
                     t_atom a;
                     atom_setobj(&a, it->get());
-                    defer(mOwner,(method)doClose<slotClass>, 0L, 1, &a);
+                    defer(mOwner,(method)doClose, 0L, 1, &a);
                 }
             }
             
@@ -328,7 +345,7 @@ public:
         {
             t_atom a;
             atom_setobj(&a, mSlots[index - 1].get());
-            defer(mOwner,(method)doClose<slotClass>, 0L, 1, &a);
+            defer(mOwner,(method)doClose, 0L, 1, &a);
             
             return true;
         }
@@ -396,7 +413,7 @@ public:
         //t_dictionary *slotDict = dictionary_new();
         dictionary_appendlong(dict, gensym("slotcount"), size());
           /*
-        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+        for (typename std::vector<SlotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
             dictionary_appenddictionary(slotDict, gensym("key"), val)(*it)->serialise();
         */
         
@@ -434,12 +451,11 @@ protected:
     t_object *mOwner;
     t_patcher *mParent;
     long mTargetIndex;
-    t_int32_atomic mIsLoading;
     
     long mNumIns;
     
     std::vector<void *> mOutTable;
-    std::vector<std::unique_ptr<slotClass>> mSlots;
+    std::vector<std::unique_ptr<SlotClass>> mSlots;
 };
 
 #endif /* defined(__PATCHSET__) */

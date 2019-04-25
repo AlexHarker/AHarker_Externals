@@ -150,7 +150,7 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s);
 
 void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_clear(t_dynamicdsp *x);
-void dynamicdsp_user_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
+void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
 
 void dynamicdsp_bang(t_dynamicdsp *x);
 void dynamicdsp_int(t_dynamicdsp *x, t_atom_long n);
@@ -331,7 +331,7 @@ int C74_EXPORT main()
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_threadmap, "threadmap", A_GIMME, 0);							// MUST FIX TO GIMME FOR NOW
 	
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_clear, "clear", 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_user_loadpatch, "loadpatch", A_GIMME, 0);
+	class_addmethod(dynamicdsp_class, (method)dynamicdsp_loadpatch, "loadpatch", A_GIMME, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_target, "target", A_GIMME, 0);                                 // MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_targetfree, "targetfree", A_GIMME, 0);                         // MUST FIX TO GIMME FOR NOW
@@ -581,7 +581,7 @@ void dynamicdsp_clear(t_dynamicdsp *x)
     x->slots->clear();
 }
 
-void dynamicdsp_user_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
+void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
     t_symbol *patch_name = NULL;
     t_atom_long index = -1;
