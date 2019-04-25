@@ -114,7 +114,7 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     ps_inhibit_subpatcher_vis->s_thing = (t_object *) -1;
     ps_PAT->s_thing = (t_object *)mParent;
 
-    // Load the patch (don't interrupt dsp and set to allow Modify Read-Only)
+    // Load the patch (don't interrupt dsp and use setclass to allow Modify Read-Only)
     
     short savedLoadUpdate = dsp_setloadupdate(false);
     loadbang_suspend();

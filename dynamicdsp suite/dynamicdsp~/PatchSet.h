@@ -7,6 +7,7 @@
 #include <ext_dictionary.h>
 #include <ext_dictobj.h>
 
+#include <memory>
 #include <vector>
 
 #include <AH_Atomic.h>
@@ -58,14 +59,6 @@ public:
         mOutTable.assign(outs, outs + numOuts);
     }
     
-    ~PatchSet()
-    {
-        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-            delete *it;
-        
-        mSlots.clear();
-    }
-    
     // Size
     
     long size() { return mSlots.size(); }
@@ -88,7 +81,7 @@ public:
         if (index < 0)
         {
             for (index = 0; index < size(); index++)
-                if (mSlots[index]->isEmpty())
+                if (!mSlots[index])
                     break;
         }
 
@@ -96,14 +89,18 @@ public:
         
         // Resize if necessary
         
-        for (long i = size(); i < index+ 1; i++)
-            mSlots.push_back(new slotClass(mOwner, mParent, mNumIns, &mOutTable));
+        if (index >= size())
+            mSlots.resize(index + 1);
         
-        // FIX - do errors!
-        //PatchSlot::LoadError error =
-        mSlots[index]->load(index + 1, patchName, argc, argv, vecSize, samplingRate);
     
         ATOMIC_DECREMENT_BARRIER(&mIsLoading);
+        std::unique_ptr<slotClass> newSlot(new slotClass(mOwner, mParent, mNumIns, &mOutTable));
+        PatchSlot::LoadError error = newSlot->load(index + 1, patchName, argc, argv, vecSize, samplingRate);
+        
+        if (error == PatchSlot::LoadError::kNone)
+            mSlots[index] = std::move(newSlot);
+        else
+            object_error(mOwner, "error trying to load patch %s - %s", patchName->s_name, PatchSlot::errString(error));
         
         return index;
     }
@@ -113,22 +110,22 @@ public:
         if (userSlotExists(index))
         {
             mSlots[index - 1]->setInvalid();
-            slotClass *toDelete = mSlots[index - 1];
-            mSlots[index - 1] = new slotClass(mOwner, mParent, mNumIns, &mOutTable);
-                   
-            // FIX - errors...
-            
+            slotClass *toDelete = mSlots[index - 1].release();
+                        
             t_atom a;
             atom_setobj(&a, toDelete);
             
             defer(mOwner,(method)deleteSlot<slotClass>, 0L, 1, &a);
         }
+        else
+            object_error(mOwner, "no patch in slot %ld", index);
     }
     
     void clear()
     {
         for (long i = 1; i <= size(); i++)
-            remove(i);
+            if (userSlotExists(i))
+                remove(i);
     }
     
     // Update
@@ -137,11 +134,11 @@ public:
     {
         // Reload the patcher when it's updated
     
-        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
         {
             // FIX - this is not complete as a reloader...
             
-            if ((*it)->getPatch() == p)
+            if ((*it) && (*it)->getPatch() == p)
             {
                 (*it)->load(vecSize, samplingRate);
                 break;
@@ -180,9 +177,9 @@ public:
         
         long count = 0;
         
-        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
         {
-            if ((*it)->getPatch())
+            if ((*it) && (*it)->getPatch())
             {
                 if (userIndex)
                     *userIndex = (*it)->getUserIndex();
@@ -267,7 +264,7 @@ public:
         
         for (long i = lo; i < hi; i++)
         {
-            if (mSlots[i]->getValid() && !mSlots[i]->getBusy())
+            if (mSlots[i] && mSlots[i]->getValid() && !mSlots[i]->getBusy())
             {
                 mTargetIndex = i + 1;
                 return;
@@ -289,8 +286,8 @@ public:
     
     void compileDSP(long vecSize, long samplingRate)
     {
-        for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-            (*it)->compileDSP(vecSize, samplingRate);
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+            if (*it) (*it)->compileDSP(vecSize, samplingRate);
     }
 
     // Window Management
@@ -300,7 +297,7 @@ public:
         if (userSlotExists(index))
         {
             t_atom a;
-            atom_setobj(&a, mSlots[index - 1]);
+            atom_setobj(&a, mSlots[index - 1].get());
             defer(mOwner,(method)doOpen<slotClass>, 0L, 1, &a);
             
             return true;
@@ -313,11 +310,14 @@ public:
     {
         if (!index)
         {
-            for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
+            for (auto it = mSlots.begin(); it != mSlots.end(); it++)
             {
-                t_atom a;
-                atom_setobj(&a, *it);
-                defer(mOwner,(method)doClose<slotClass>, 0L, 1, &a);
+                if (*it)
+                {
+                    t_atom a;
+                    atom_setobj(&a, it->get());
+                    defer(mOwner,(method)doClose<slotClass>, 0L, 1, &a);
+                }
             }
             
             return true;
@@ -326,7 +326,7 @@ public:
         if (userSlotExists(index))
         {
             t_atom a;
-            atom_setobj(&a, mSlots[index - 1]);
+            atom_setobj(&a, mSlots[index - 1].get());
             defer(mOwner,(method)doClose<slotClass>, 0L, 1, &a);
             
             return true;
@@ -418,14 +418,14 @@ protected:
         }
         else
         {
-            for (typename std::vector<slotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-                (*it)->message(inlet, msg, argc, argv);
+            for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+                if (*it) (*it)->message(inlet, msg, argc, argv);
         }
     }
 
     bool userSlotExists(t_atom_long slotIndex)
     {
-        return slotIndex >= 1 && slotIndex <= mSlots.size();
+        return slotIndex >= 1 && slotIndex <= mSlots.size() && mSlots[slotIndex - 1];
     }
     
     // Data
@@ -438,7 +438,7 @@ protected:
     long mNumIns;
     
     std::vector<void *> mOutTable;
-    std::vector<slotClass *> mSlots;
+    std::vector<std::unique_ptr<slotClass>> mSlots;
 };
 
 #endif /* defined(__PATCHSET__) */

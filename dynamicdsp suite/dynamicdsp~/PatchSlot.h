@@ -41,9 +41,7 @@ public:
     bool process(void *tempMem, void **outputs, t_ptr_uint tempMemSize);
     
     // Getters
-   
-    bool isEmpty() const { return mPatch == NULL; }
-    
+       
     t_patcher *getPatch() { return mPatch; }
     bool getValid() { return mValid; }
     long getUserIndex() { return mUserIndex; }
@@ -69,6 +67,19 @@ public:
     void openWindow() const;
     void closeWindow() const;
 
+    // Error string
+    
+    static const char *errString(LoadError error)
+    {
+        switch (error)
+        {
+            case kNone:             return "";
+            case kFileNotFound      return "file not found";
+            case kNothingLoaded     return "nothing was loaded";
+            case kNotPatcher        return "file is not a patcher";
+        }
+    }
+    
 protected:
     
     inline bool checkProcess(void *tempMem, void **outputs, t_ptr_uint tempMemSize)

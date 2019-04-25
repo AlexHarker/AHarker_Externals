@@ -83,14 +83,14 @@ struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
 
     void resetProcessed()
     {
-        for (typename std::vector<ThreadedPatchSlot *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-            (*it)->resetProcessed();
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+            if (*it) (*it)->resetProcessed();
     }
     
     void updateThreads()
     {
-        for (typename std::vector<ThreadedPatchSlot *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-            (*it)->updateThread();
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+            if (*it) (*it)->updateThread();
     }
 };
 
@@ -214,8 +214,6 @@ t_max_err patchset_get_patches(t_dynamicdsp *x, t_object *attr, long *argc, t_at
 {
     return x->slots->serialise(argc, argv);
 }
-
-
 
 long poly_isparent(t_object *p, t_object *mightbeparent)
 {
@@ -615,11 +613,10 @@ void dynamicdsp_user_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *
 	{
 		patch_name = atom_getsym(argv);
 		argc--; argv++;
-		
-        // FIX - threading...
         
         index = x->slots->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
         
+        // FIX - threading...
         // FIX - review
         
         if (thread_request && index >= 0)
