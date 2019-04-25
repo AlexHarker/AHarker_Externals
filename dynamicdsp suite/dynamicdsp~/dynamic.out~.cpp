@@ -15,7 +15,7 @@
 #include <z_dsp.h>
 #include <ext_obex.h>
 
-#include <AH_VectorOps.h>
+#include <SIMDSupport.hpp>
 #include <dynamicdsp~.h>
 
 
@@ -45,9 +45,7 @@ void dynamic_out_int(t_dynamic_out *x, t_atom_long intin);
 t_int *dynamic_out_perform_scalar(t_int *w);
 t_int *dynamic_out_perform(t_int *w);
 void dynamic_out_perform_scalar64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-#ifdef VECTOR_F64_128BIT
 void dynamic_out_perform64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-#endif
 
 
 int C74_EXPORT main()
@@ -99,7 +97,9 @@ void dynamic_out_assist(t_dynamic_out *x, void *b, long m, long a, char *s)
 
 void dynamic_out_dsp(t_dynamic_out *x, t_signal **sp, short *count)
 {
-	if (((t_ptr_size) sp[0]->s_vec) % 16 || sp[0]->s_n < 8 || !SSE2_check())
+    const static int simd_width = SIMDLimits<float>::max_size;
+
+	if (((t_ptr_size) sp[0]->s_vec) % 16 || sp[0]->s_n < simd_width)
 		dsp_add(dynamic_out_perform_scalar, 3, sp[0]->s_vec, sp[0]->s_n, x);		// misaligned vector (not 16-byte aligned) or small vector sizes
 	else
 		dsp_add(dynamic_out_perform, 3, sp[0]->s_vec, sp[0]->s_n, x);				// aligned vector (should be the case from max 5.1.3 onwards
@@ -107,11 +107,11 @@ void dynamic_out_dsp(t_dynamic_out *x, t_signal **sp, short *count)
 
 void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-#ifdef VECTOR_F64_128BIT
-	if (maxvectorsize >= 8 && SSE2_check())
+    const static int simd_width = SIMDLimits<double>::max_size;
+    
+	if (maxvectorsize >= simd_width)
 		object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform64, 0, NULL);				// aligned vector 
     else
-#endif
 		object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform_scalar64, 0, NULL);		// scalar routine
 }
 
@@ -152,14 +152,16 @@ t_int *dynamic_out_perform_scalar(t_int *w)
 // Aligned SIMD Perform Routine
 
 t_int *dynamic_out_perform(t_int *w)												
-{	
-    vFloat *in1 = (vFloat *)(w[1]);
+{
+    using SIMD = SIMDType<float, SIMDLimits<float>::max_size>;
+    SIMD *in1 = (SIMD *)(w[1]);
     long vec_size = w[2];
     t_dynamic_out *x = (t_dynamic_out *)(w[3]);
 	
-	float ***out_handle = (float ***) x->out_handle;
-    vFloat *io_pointer;
+	SIMD ***out_handle = (SIMD ***) x->out_handle;
+    SIMD *io_pointer;
 	
+    const long num_vecs = vec_size / SIMDLimits<float>::max_size;
 	long num_sig_outs = x->num_sig_outs;
 	long outlet_num = x->outlet_num;
 	
@@ -168,11 +170,11 @@ t_int *dynamic_out_perform(t_int *w)
     
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = (vFloat *) (*out_handle)[outlet_num - 1]))
+        if ((io_pointer = (*out_handle)[outlet_num - 1]))
         {
-            for (long i = 0; i < vec_size >> 2; i++)
+            for (long i = 0; i < num_vecs; i++)
             {
-                *io_pointer = F32_VEC_ADD_OP(*io_pointer, *in1++);
+                *io_pointer = *io_pointer + *in1++;
                 io_pointer++;
             }
         }
@@ -206,16 +208,16 @@ void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **in
 	}
 }
 
-#ifdef VECTOR_F64_128BIT
-
 // Aligned SIMD Perform Routine 64 Bit
 
 void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
-    vDouble *in1 = (vDouble *) ins[0];	
-	vDouble *io_pointer;
-	
-	double ***out_handle = (double ***) x->out_handle;
+{
+    using SIMD = SIMDType<double, SIMDLimits<double>::max_size>;
+
+    const long num_vecs = vec_size / SIMDLimits<double>::max_size;
+    SIMD *in1 = (SIMD *) ins[0];
+	SIMD *io_pointer;
+	SIMD ***out_handle = (SIMD ***) x->out_handle;
 	
 	long num_sig_outs = x->num_sig_outs;
 	t_atom_long outlet_num = x->outlet_num;
@@ -225,16 +227,14 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
     
     if (outlet_num > 0 && outlet_num <= num_sig_outs)
     {
-        if ((io_pointer = (vDouble *) (*out_handle)[outlet_num - 1]))
+        if ((io_pointer = (*out_handle)[outlet_num - 1]))
         {
-            for (long i = 0; i < vec_size >> 1; i++)
+            for (long i = 0; i < num_vecs; i++)
             {
-                *io_pointer = F64_VEC_ADD_OP(*io_pointer, *in1++);
+                *io_pointer = *io_pointer + *in1++;
                 io_pointer++;
             }
         }
     }
 }
-
-#endif
 
