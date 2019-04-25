@@ -2,6 +2,7 @@
 #ifndef SIMDSUPPORT
 #define SIMDSUPPORT
 
+#include <cmath>
 #include <emmintrin.h>
 #include <immintrin.h>
 #include <stdint.h>
@@ -9,29 +10,29 @@
 /*
 // Load / Store / Unpack
  
-#define F32_VEC_MOVE_LO					_mm_movelh_ps
-#define F32_VEC_MOVE_HI					_mm_movehl_ps
-#define F64_VEC_UNPACK_LO				_mm_unpacklo_pd
-#define F64_VEC_UNPACK_HI				_mm_unpackhi_pd
-#define F64_VEC_STORE_HI				_mm_storeh_pd
-#define F64_VEC_STORE_LO				_mm_storel_pd
-
-// Conversions
-
-#define F32_VEC_FROM_I32				_mm_cvtepi32_ps
-#define I32_VEC_FROM_F32_ROUND			_mm_cvtps_epi32
-#define I32_VEC_FROM_F32_TRUNC			_mm_cvttps_epi32
+ #define F32_VEC_MOVE_LO                    _mm_movelh_ps
+ #define F32_VEC_MOVE_HI                    _mm_movehl_ps
+ #define F64_VEC_UNPACK_LO                  _mm_unpacklo_pd
+ #define F64_VEC_UNPACK_HI                  _mm_unpackhi_pd
+ #define F64_VEC_STORE_HI                   _mm_storeh_pd
+ #define F64_VEC_STORE_LO                   _mm_storel_pd
  
-#define F64_VEC_FROM_F32				_mm_cvtps_pd
-#define F32_VEC_FROM_F64				_mm_cvtpd_ps
-
-#define F64_VEC_FROM_I32				_mm_cvtepi32_pd 
-#define I32_VEC_FROM_F64_ROUND			_mm_cvtpd_epi32
-#define I32_VEC_FROM_F64_TRUNC			_mm_cvttpd_epi32
-
-// Shuffles
+ // Conversions
  
-#define I32_VEC_SHUFFLE_OP				_mm_shuffle_epi32
+ #define F32_VEC_FROM_I32                   _mm_cvtepi32_ps
+ #define I32_VEC_FROM_F32_ROUND             _mm_cvtps_epi32
+ #define I32_VEC_FROM_F32_TRUNC             _mm_cvttps_epi32
+ 
+ #define F64_VEC_FROM_F32                   _mm_cvtps_pd
+ #define F32_VEC_FROM_F64                   _mm_cvtpd_ps
+ 
+ #define F64_VEC_FROM_I32                   _mm_cvtepi32_pd
+ #define I32_VEC_FROM_F64_ROUND             _mm_cvtpd_epi32
+ #define I32_VEC_FROM_F64_TRUNC             _mm_cvttpd_epi32
+ 
+ // Shuffles
+ 
+ #define I32_VEC_SHUFFLE_OP                 _mm_shuffle_epi32
 */
 
 #ifdef __APPLE__
@@ -43,9 +44,20 @@ template <class T> T *allocate_aligned(size_t size)
     return static_cast<T *>(malloc(size * sizeof(T)));
 }
 
-static inline void *allocate_aligned_void(size_t size)
+template <class T> void deallocate_aligned(T *ptr)
 {
-    return malloc(size);
+    free(ptr);
+}
+
+#elif defined(__linux__)
+
+#include <stdlib.h>
+
+template <class T> T *allocate_aligned(size_t size)
+{
+    void *mem;
+    posix_memalign(&mem, 16, size * sizeof(T));
+    return static_cast<T *>(mem);
 }
 
 template <class T> void deallocate_aligned(T *ptr)
@@ -60,11 +72,6 @@ template <class T> void deallocate_aligned(T *ptr)
 template <class T> T *allocate_aligned(size_t size)
 {
     return static_cast<T *>(_aligned_malloc(size * sizeof(T), 16));
-}
-
-static inline void *allocate_aligned_void(size_t size)
-{
-    return _aligned_malloc(size, 16);
 }
 
 template <class T> void deallocate_aligned(T *ptr)
@@ -467,6 +474,9 @@ struct SIMDType<double, 2> : public SIMDVector<double, __m128d, 2>
     
     friend SIMDType sqrt(const SIMDType& a) { return _mm_sqrt_pd(a.mVal); }
     
+    friend SIMDType round(const SIMDType& a) { return _mm_round_pd(a.mVal, _MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC); }
+    friend SIMDType trunc(const SIMDType& a) { return _mm_round_pd(a.mVal, _MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC); }
+    
     friend SIMDType min(const SIMDType& a, const SIMDType& b) { return _mm_min_pd(a.mVal, b.mVal); }
     friend SIMDType max(const SIMDType& a, const SIMDType& b) { return _mm_max_pd(a.mVal, b.mVal); }
     friend SIMDType sel(const SIMDType& a, const SIMDType& b, const SIMDType& c) { return and_not(c, a) | (b & c); }
@@ -562,6 +572,9 @@ struct SIMDType<float, 4> : public SIMDVector<float, __m128, 4>
     SIMDType& operator /= (const SIMDType& b)   { return (*this = *this / b); }
     
     friend SIMDType sqrt(const SIMDType& a) { return _mm_sqrt_ps(a.mVal); }
+    
+    friend SIMDType round(const SIMDType& a) { return _mm_round_ps(a.mVal, _MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC); }
+    friend SIMDType trunc(const SIMDType& a) { return _mm_round_ps(a.mVal, _MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC); }
     
     friend SIMDType min(const SIMDType& a, const SIMDType& b) { return _mm_min_ps(a.mVal, b.mVal); }
     friend SIMDType max(const SIMDType& a, const SIMDType& b) { return _mm_max_ps(a.mVal, b.mVal); }
