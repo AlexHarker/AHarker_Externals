@@ -21,7 +21,7 @@
 #include <jpatcher_api.h>
 
 #include <AH_Atomic.h>
-#include <AH_Memory_Swap.h>
+#include <AH_Memory_Swap.hpp>
 #include <SIMDSupport.hpp>
 
 #include "PatchSlot.h"
@@ -636,8 +636,8 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 		deallocate_aligned(x->temp_buffers1[i]);
 		deallocate_aligned(x->temp_buffers2[i]);
 		
-		x->temp_buffers1[i] = allocate_aligned_void(sig_size * vec_size);
-		x->temp_buffers2[i] = allocate_aligned_void(sig_size * vec_size);
+		x->temp_buffers1[i] = allocate_aligned<u_int8_t>(sig_size * vec_size);
+		x->temp_buffers2[i] = allocate_aligned<u_int8_t>(sig_size * vec_size);
 		
 		if (!x->temp_buffers1[i] || !x->temp_buffers2[i])
 			mem_fail = true;

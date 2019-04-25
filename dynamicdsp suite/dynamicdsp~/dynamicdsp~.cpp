@@ -21,7 +21,7 @@
 #include <jpatcher_api.h>
 
 #include <AH_Atomic.h>
-#include <AH_Memory_Swap.h>
+#include <AH_Memory_Swap.hpp>
 
 #include <dynamicdsp~.h>
 #include "PatchSlot.h"

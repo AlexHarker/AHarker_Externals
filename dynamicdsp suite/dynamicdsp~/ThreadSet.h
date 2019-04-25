@@ -221,7 +221,7 @@ public:
                 for (std::vector<void *>::iterator jt = it->mTempBuffers.begin(); jt != it->mTempBuffers.end(); jt++)
                 {
                     deallocate_aligned(*jt);
-                    *jt = allocate_aligned_void(size);
+                    *jt = allocate_aligned<u_int8_t>(size);
                     if (!*jt)
                     {
                         object_error((t_object *) mOwner, "not enough memory");
