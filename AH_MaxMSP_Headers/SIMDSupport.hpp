@@ -457,7 +457,7 @@ struct SIMDType<double, 2> : public SIMDVector<double, __m128d, 2>
         vals[0] = a.mVals[0];
         vals[1] = a.mVals[1];
         
-        _mm_loadu_pd(vals);
+        mVal = _mm_loadu_pd(vals);
     }
     
     void store(double *a) { _mm_storeu_pd(a, mVal); }
