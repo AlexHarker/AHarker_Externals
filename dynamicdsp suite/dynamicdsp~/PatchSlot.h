@@ -74,9 +74,9 @@ public:
         switch (error)
         {
             case kNone:             return "";
-            case kFileNotFound      return "file not found";
-            case kNothingLoaded     return "nothing was loaded";
-            case kNotPatcher        return "file is not a patcher";
+            case kFileNotFound:     return "file not found";
+            case kNothingLoaded:    return "nothing was loaded";
+            case kNotPatcher:       return "file is not a patcher";
         }
     }
     

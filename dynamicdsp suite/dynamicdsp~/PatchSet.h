@@ -47,7 +47,8 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
 
 // Main class
 
-template <class slotClass> class PatchSet
+template <class slotClass>
+class PatchSet
 {
 
     // FIX - safety everywhere...!
