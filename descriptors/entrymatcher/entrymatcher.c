@@ -502,7 +502,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	
 	if (to_lookup < 0 || to_lookup >= num_entries) 
 	{
-		error("entrymatcher: entry does not exist %s", (argv - 1)->a_w.w_sym->s_name);
+		object_error((t_object *)x, "entry does not exist %s", (argv - 1)->a_w.w_sym->s_name);
 		return;
 	}
 	
@@ -638,7 +638,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 		
 		if (test_type == TEST_NONE)
 		{
-			error("entrymatcher: invalid test / no test specified in unparsed segment of matchers message");
+			object_error((t_object *)x, "invalid test / no test specified in unparsed segment of matchers message");
 			break;
 		}
 		

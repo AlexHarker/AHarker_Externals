@@ -124,7 +124,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, long argc, t_atom
 	
 	if (argc < 3)
 	{
-		error ("gesture_maker: not enough values for conversion parameter change");
+		object_error((t_object *)x, "not enough values for conversion parameter change");
 		return;
 	}
 	
@@ -184,7 +184,7 @@ void gesture_maker_convert_params (t_gesture_maker_convert *x, long argc, t_atom
 	subtract = (min_in * mult) - min_out;
 	
 	if (mode == CONVERT_LINEAR && mode_sym != ps_scale)
-		error ("gesture_maker: unknown conversion type - defaulting to scale");
+		object_error((t_object *)x, "gesture_maker: unknown conversion type - defaulting to scale");
 
 	x->mode = mode;
 	x->mult = mult;

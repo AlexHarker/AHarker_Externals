@@ -166,7 +166,7 @@ void recursive_folder_action(t_recursive_folder *x)
 			err = path_frompathname(sourcename, &path, fullname);
 			if (err || fullname[0]) 
 			{
-				error("recursive_folder: %s: not a folder", x->f_input->s_name);
+				object_error((t_object *)x, "%s: not a folder", x->f_input->s_name);
 				x->f_path = 0;
 			}
 			else 

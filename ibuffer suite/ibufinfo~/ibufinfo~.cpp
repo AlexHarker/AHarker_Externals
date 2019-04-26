@@ -122,7 +122,7 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
 		}		
 	}
 	else
-		error("ibufinfo~: named (i)buffer~ does not exist");
+		object_error((t_object *)x, "named (i)buffer~ does not exist");
 }
 
 

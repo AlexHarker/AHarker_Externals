@@ -218,7 +218,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 	{
 		x->buffer_name = NULL;
 		if (s)
-			error("ibufplayer~: no buffer %s", s->s_name);
+			object_error((t_object *)x, "no buffer %s", s->s_name);
 	}
 }
 

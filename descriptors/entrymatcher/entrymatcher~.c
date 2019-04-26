@@ -474,7 +474,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 		
 		if (test_type == TEST_NONE)
 		{
-			error("entrymatcher~: incorrect test type");
+			object_error((t_object *)x, "incorrect test type");
 			break;
 		}
 		
@@ -514,16 +514,16 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 		}
 		else 
 		{
-			error("entrymatcher~: specified column in matchers message does not exist (test number %ld)", i + 1);
+			object_error((t_object *)x, "specified column in matchers message does not exist (test number %ld)", i + 1);
 		}
 	}
 	
 	if (argc > 0)
 	{
 		if (i == max_matchers)
-			error("entrymatcher~: too many arguments to matchers message for number of specified tests");
+			object_error((t_object *)x, "too many arguments to matchers message for number of specified tests");
 		else 
-			error("entrymatcher~: not enough arguments to matchers message to correctly specify final matcher");
+			object_error((t_object *)x, "not enough arguments to matchers message to correctly specify final matcher");
 	}
 	
 	// Terminate with a zero to indicate the end of the parameter list
