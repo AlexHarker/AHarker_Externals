@@ -148,7 +148,7 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	x->min_dist = 0.;
 	x->max_dist = 1.;
 	x->max_retries = 10;
-	x->random_order = FALSE;
+	x->random_order = false;
 	
 	timemap_scaling(x, gensym("none"), 0, 1);
 	timemap_stream(x, 0, 0, 0, 1);
@@ -291,7 +291,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	{
 		// Loop until a suitable value is found (or we reach the maximum number of retries)
 		
-		for (suitable_val = FALSE, retries = 0, division = i; !suitable_val && retries < max_retries; retries++)
+		for (suitable_val = false, retries = 0, division = i; !suitable_val && retries < max_retries; retries++)
 		{
 			// Choose which of the remaining divisions to do if the order is random
 			
@@ -315,7 +315,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			
 			if (check_and_insert(&x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
 			{
-				suitable_val = TRUE;
+				suitable_val = true;
 				list_length++;
 				if (random_order) 
 					divisions[division_pos] = divisions[num_points - list_length];
@@ -376,11 +376,11 @@ double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, dou
 {
 	// Apply the appropriate scaling
 	
-	bool reciprocal = FALSE;
+	bool reciprocal = false;
 	
 	if (scale_mode == kScaleDiv && new_val < 0.5)
 	{
-		reciprocal = TRUE;
+		reciprocal = true;
 		new_val = 1.0 - new_val;
 	}
 	
@@ -412,7 +412,7 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
 {
 	// Find Position for New Value 
 	
-	bool suitable_val = TRUE;
+	bool suitable_val = true;
 	long new_pos, i, j;
 	
 	double test_val;
@@ -442,7 +442,7 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
 	}
 	
 	if (!suitable_val) 
-		return FALSE;
+		return false;
 	
 	// For the subsequent value
 
@@ -453,7 +453,7 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
 	}
 	
 	if (!suitable_val) 
-		return FALSE;
+		return false;
 	
 	// If we are in stream mode then check that this value will not result in output exceeding the stream bounds
 	
@@ -471,13 +471,13 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
             
             cumulate += new_val;
             if (cumulate < min_sbound || cumulate > max_sbound) 
-                return FALSE;
+                return false;
             
             for (i = new_pos; i < list_length; i++)
             {
                 cumulate += vals[i];
                 if (cumulate < min_sbound || cumulate > max_sbound) 
-                    return FALSE;
+                    return false;
             }
             break;
         
@@ -489,13 +489,13 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
             cumulate *= new_val;
 
             if (cumulate < min_sbound || cumulate > max_sbound) 
-                return FALSE;
+                return false;
             
             for (i = new_pos; i < list_length; i++)
             {
                 cumulate *= vals[i];
                 if (cumulate < min_sbound || cumulate > max_sbound) 
-                    return FALSE;
+                    return false;
             }
             break;
     }
@@ -507,7 +507,7 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
 	
 	vals[new_pos] = new_val;
 	
-	return TRUE;
+	return true;
 }
 
 
@@ -562,7 +562,7 @@ void timemap_max_retries(t_timemap *x, t_atom_long max_retries)
 
 void timemap_random_order(t_timemap *x, t_atom_long random_order)
 {
-    x->random_order = random_order ? TRUE : FALSE;
+    x->random_order = random_order ? true : false;
 }
 
 

@@ -458,17 +458,17 @@ t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, 
 
 void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, TRUE, FALSE);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, false);
 }
 
 void partconvolve_eq(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, TRUE, TRUE);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, true);
 }
 
 void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, FALSE, FALSE);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, false, false);
 }
 
 void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
