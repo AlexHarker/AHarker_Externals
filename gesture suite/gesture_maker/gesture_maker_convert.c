@@ -161,8 +161,8 @@ void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom 
 	
 	if (mode_sym == ps_amp)
 	{
-		min_out = pow (10, min_out / 20.);
-		max_out = pow (10, max_out / 20.);
+		min_out = pow(10, min_out / 20.);
+		max_out = pow(10, max_out / 20.);
 	}
 
 	if (mode_sym == ps_pitch)

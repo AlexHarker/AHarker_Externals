@@ -274,12 +274,12 @@ void gesture_maker_kernel_params_setup()
 	scurve_params.end_ratio = 0.1;
 	
 	kernel_param_rand = &kernel_param_rand_obj;
-	rand_seed (kernel_param_rand);
+	rand_seed(kernel_param_rand);
 }
 
 // Returns the specified gesture type according to the given symbol
 
-enum t_gesture_type gesture_maker_kernel_params_type (t_gesture_kernel *x, t_symbol *type)
+enum t_gesture_type gesture_maker_kernel_params_type(t_gesture_kernel *x, t_symbol *type)
 {
 	if (type == ps_flat)                return GESTURE_FLAT;
 	if (type == ps_line)                return GESTURE_LINE;
@@ -345,7 +345,7 @@ int gesture_maker_kernel_params_random_band(t_rand_gen *gen, t_atom *specifier)
 	if (atom_gettype(specifier) == A_SYM)
 	{
 		if (sscanf(atom_getsym(specifier)->s_name, "%d-%d", &lo, &hi) == 2)
-			return rand_int_range (gen, lo, hi);
+			return rand_int_range(gen, lo, hi);
 	}
 	
 	return 0;

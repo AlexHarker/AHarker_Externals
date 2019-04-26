@@ -172,7 +172,7 @@ void *gesture_maker_new()
 	inlet_new(x, "list");
 	
 	gesture_maker_init(x);
-	gesture_maker_kernel_reset (&x->kernel_main);
+	gesture_maker_kernel_reset(&x->kernel_main);
 	gesture_maker_kernel_reset(&x->kernel_inflections);
 	gesture_maker_multipart_reset(&x->multipart_inflections);
 	gesture_maker_convert_init(&x->convert_main);
