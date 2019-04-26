@@ -350,6 +350,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -361,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -371,6 +373,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
@@ -404,6 +407,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -415,6 +419,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -425,6 +430,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 			};
