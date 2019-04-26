@@ -47,13 +47,13 @@ void timefilter_free(t_timefilter *x);
 void *timefilter_new();
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s);
 
-void timefilter_list (t_timefilter *x, t_symbol *msg, long argc, t_atom *argv);
-void timefilter_bang (t_timefilter *x);
+void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv);
+void timefilter_bang(t_timefilter *x);
 
-void timefilter_float (t_timefilter *x, double filter);
-void timefilter_randfilter (t_timefilter *x, double randfilter);
-void timefilter_ordering (t_timefilter *x, t_atom_long ordering);
-void timefilter_reset (t_timefilter *x);
+void timefilter_float(t_timefilter *x, double filter);
+void timefilter_randfilter(t_timefilter *x, double randfilter);
+void timefilter_ordering(t_timefilter *x, t_atom_long ordering);
+void timefilter_reset(t_timefilter *x);
 
 void combsort(float *vals, long num_points);
 void randomsort(t_rand_gen *gen, float *vals, long num_points);
@@ -104,7 +104,7 @@ void *timefilter_new()
 	
     rand_seed(&x->gen);
     
-    return (x);
+    return x;
 }
 
 
@@ -127,7 +127,7 @@ void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void timefilter_list (t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
+void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	// Store an input list
 	
@@ -207,7 +207,7 @@ void timefilter_bang(t_timefilter *x)
 	
 	// Output and clear stored list
 	
-	outlet_list (x->the_list_outlet, 0L, output_list_length, output_list);
+	outlet_list(x->the_list_outlet, 0L, output_list_length, output_list);
 	x->stored_list_length = 0;
 }
 
@@ -217,19 +217,19 @@ void timefilter_bang(t_timefilter *x)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void timefilter_float (t_timefilter *x, double filter)
+void timefilter_float(t_timefilter *x, double filter)
 {
 	x->filter = fabs(filter);
 }
 
 
-void timefilter_randfilter (t_timefilter *x, double randfilter)
+void timefilter_randfilter(t_timefilter *x, double randfilter)
 {
 	x->randfilter = randfilter;
 }
 
 
-void timefilter_ordering (t_timefilter *x, t_atom_long ordering)
+void timefilter_ordering(t_timefilter *x, t_atom_long ordering)
 {
     t_ordering_mode mode;
     
@@ -240,7 +240,7 @@ void timefilter_ordering (t_timefilter *x, t_atom_long ordering)
 }
 
 
-void timefilter_reset (t_timefilter *x)
+void timefilter_reset(t_timefilter *x)
 {
 	x->stored_list_length = 0;
 }
@@ -298,12 +298,3 @@ void randomsort(t_rand_gen *gen, float *vals, long num_points)
 		vals[pos] = f_temp;
 	}
 }
-
-
-
-
-
-
-
-
-

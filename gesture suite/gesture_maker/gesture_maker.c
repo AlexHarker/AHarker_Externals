@@ -136,14 +136,6 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)gesture_maker_initial_main_safe, "initial_main", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_initial_inflections_safe, "initial_inflections", A_GIMME,  0);
 	
-    // FIX - remove and fix patches...
-	// N.B. The below solves some errors with a large number of incorrect message spellings in Fluence - to be corrected more properly at a later date
-	
-	class_addmethod(this_class, (method)gesture_maker_fixit, "inital_inflections", A_GIMME,  0);
-	class_addmethod(this_class, (method)gesture_maker_fixit, "inital_main", A_GIMME,  0);
-	class_addmethod(this_class, (method)gesture_maker_fixit, "initial_inflectiosn", A_GIMME,  0);
-	class_addmethod(this_class, (method)gesture_maker_fixit, "initial", A_GIMME,  0);
-
 	// End fixes
 	
 	class_addmethod(this_class, (method)gesture_maker_timings, "timings", A_GIMME,  0);

@@ -62,21 +62,21 @@ void timemap_free(t_timemap *x);
 void *timemap_new(double rand_amount, double centre, double warp);
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 
-static __inline double timemap_value (t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
-void timemap_calculate (t_timemap *x, t_atom_long num_points);
+static __inline double timemap_value(t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
+void timemap_calculate(t_timemap *x, t_atom_long num_points);
 double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max);
 
-bool check_and_insert (t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound);
+bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound);
 
-void timemap_rand_amount (t_timemap *x, double rand_amount);
-void timemap_centre (t_timemap *x, double centre);
-void timemap_warp (t_timemap *x, double warp);
-void timemap_min_dist (t_timemap *x, double min_dist);
-void timemap_max_dist (t_timemap *x, double max_dist);
-void timemap_max_retries (t_timemap *x, t_atom_long max_retries);
-void timemap_random_order (t_timemap *x, t_atom_long random_order);
-void timemap_scaling (t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val);
-void timemap_stream (t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound);
+void timemap_rand_amount(t_timemap *x, double rand_amount);
+void timemap_centre(t_timemap *x, double centre);
+void timemap_warp(t_timemap *x, double warp);
+void timemap_min_dist(t_timemap *x, double min_dist);
+void timemap_max_dist(t_timemap *x, double max_dist);
+void timemap_max_retries(t_timemap *x, t_atom_long max_retries);
+void timemap_random_order(t_timemap *x, t_atom_long random_order);
+void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val);
+void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,12 +124,12 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	t_timemap *x = (t_timemap *)object_alloc(this_class);
 	
     x->thelistout = listout(x);
-	intin (x, 6);
-	floatin (x, 5);
-	floatin (x, 4);
-	floatin (x, 3);
-	floatin (x, 2);
-	floatin (x, 1); 
+	intin(x, 6);
+	floatin(x, 5);
+	floatin(x, 4);
+	floatin(x, 3);
+	floatin(x, 2);
+	floatin(x, 1);
 	
 	if (centre > 1.) 
 		centre = 1.;
@@ -150,12 +150,12 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	x->max_retries = 10;
 	x->random_order = FALSE;
 	
-	timemap_scaling (x, gensym("none"), 0, 1);
-	timemap_stream (x, 0, 0, 0, 1);
+	timemap_scaling(x, gensym("none"), 0, 1);
+	timemap_stream(x, 0, 0, 0, 1);
     
     rand_seed(&x->gen);
 	
-    return (x);
+    return x;
 }
 
 
@@ -198,7 +198,7 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-static __inline double timemap_value (t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
+static __inline double timemap_value(t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
 {
     // Start with equally spaced values (in the range 0 to 1)
     
@@ -219,7 +219,7 @@ static __inline double timemap_value (t_rand_gen *gen, long i, double points_rec
 }
 
 
-void timemap_calculate (t_timemap *x, t_atom_long num_points)
+void timemap_calculate(t_timemap *x, t_atom_long num_points)
 {
 	t_atom output_list[1024];
 	float temp_vals[1024];
@@ -313,7 +313,7 @@ void timemap_calculate (t_timemap *x, t_atom_long num_points)
 			// If the value is good then keep it, increase list_length and replace the division we have just used with the one we would have used if working in order
 			// This maintains a valid list of unused divisions for the next time
 			
-			if (check_and_insert (&x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
+			if (check_and_insert(&x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
 			{
 				suitable_val = TRUE;
 				list_length++;
@@ -340,13 +340,13 @@ void timemap_calculate (t_timemap *x, t_atom_long num_points)
 			// Accumulate the values through addition
 			
 			list_length++;
-			atom_setfloat (output_list, init_val);
+			atom_setfloat(output_list, init_val);
 			cumulate = init_val;
             
 			for (i = 1; i < list_length; i++)
 			{
 				cumulate = temp_vals[i - 1] + cumulate;
-				atom_setfloat (output_list + i, cumulate);
+				atom_setfloat(output_list + i, cumulate);
 			}
 			break;
 			
@@ -367,12 +367,12 @@ void timemap_calculate (t_timemap *x, t_atom_long num_points)
 	}
 	
 	
-	outlet_list (x->thelistout, 0L, list_length, output_list);
+	outlet_list(x->thelistout, 0L, list_length, output_list);
 }
 
 
 
-double scale_val (double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max)
+double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max)
 {
 	// Apply the appropriate scaling
 	
@@ -408,7 +408,7 @@ double scale_val (double new_val, t_scale_mode scale_mode, double scale_val1, do
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-bool check_and_insert (t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
+bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
 {
 	// Find Position for New Value 
 	
@@ -516,7 +516,7 @@ bool check_and_insert (t_rand_gen *gen, double new_val, float *vals, double min_
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void timemap_rand_amount (t_timemap *x, double rand_amount)
+void timemap_rand_amount(t_timemap *x, double rand_amount)
 {
 	if (rand_amount > 1.)
         rand_amount = 1.;
@@ -526,7 +526,7 @@ void timemap_rand_amount (t_timemap *x, double rand_amount)
 }
 
 
-void timemap_centre (t_timemap *x, double centre)
+void timemap_centre(t_timemap *x, double centre)
 {
 	if (centre > 1.)
         centre = 1.;
@@ -536,37 +536,37 @@ void timemap_centre (t_timemap *x, double centre)
 }
 
 
-void timemap_warp (t_timemap *x, double warp)
+void timemap_warp(t_timemap *x, double warp)
 {
     x->warp = (warp < 0.) ? 1.0 : warp;
 }
 
 
-void timemap_min_dist (t_timemap *x, double min_dist)
+void timemap_min_dist(t_timemap *x, double min_dist)
 {
 	x->min_dist = fabs(min_dist);
 }
 
 
-void timemap_max_dist (t_timemap *x, double max_dist)
+void timemap_max_dist(t_timemap *x, double max_dist)
 {
 	x->max_dist = fabs(max_dist);
 }
 
 
-void timemap_max_retries (t_timemap *x, t_atom_long max_retries)
+void timemap_max_retries(t_timemap *x, t_atom_long max_retries)
 {
     x->max_retries = (max_retries < 0) ? 0 : max_retries;
 }
 
 
-void timemap_random_order (t_timemap *x, t_atom_long random_order)
+void timemap_random_order(t_timemap *x, t_atom_long random_order)
 {
     x->random_order = random_order ? TRUE : FALSE;
 }
 
 
-void timemap_scaling (t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val)
+void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val)
 {
 	t_scale_mode scale_mode = kScaleNone;
 	double scale_min = min_val;
@@ -621,7 +621,7 @@ void timemap_scaling (t_timemap *x, t_symbol *scale_mode_sym, double min_val, do
 }
 
 
-void timemap_stream (t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound)
+void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound)
 {
     t_stream_mode mode;
     

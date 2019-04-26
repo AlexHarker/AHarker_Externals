@@ -363,7 +363,7 @@ double gesture_maker_kernel_params_band_to_val(t_rand_gen *gen, int band_in, t_b
 	double end_ratio = params->end_ratio;
 	
 	double band = band_in - 0.5;
-	double rand_val = rand_windgauss (gen, 0.5, gauss_dev);
+	double rand_val = rand_windgauss(gen, 0.5, gauss_dev);
 	
 	// Find lo and hi values for this band
 	

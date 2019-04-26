@@ -44,7 +44,7 @@ void gesture_maker_convert_setup()
 
 // Initialise the convertor to default values
 
-void gesture_maker_convert_init (t_gesture_maker_convert *x)
+void gesture_maker_convert_init(t_gesture_maker_convert *x)
 {
 	x->mode = 0;
 	x->min = 0;
@@ -55,7 +55,7 @@ void gesture_maker_convert_init (t_gesture_maker_convert *x)
 
 // Scale a value accoring to the range and scaling specified
 
-double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
+double gesture_maker_convert_scale(t_gesture_maker_convert *x, double input)
 {
 	double scaled = 0.;
 	double max = x->max;
@@ -78,7 +78,7 @@ double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
 			
 		case CONVERT_LOG_IN:
 			
-			// Exponetial scaling (for a logarithmic input scaling)
+			// Exponential scaling (for a logarithmic input scaling)
 			
 			scaled = exp(input * x->mult - x->subtract);
 			break;
@@ -96,7 +96,7 @@ double gesture_maker_convert_scale (t_gesture_maker_convert *x, double input)
 
 // Routine for setting the parameters of the conversion
 
-void gesture_maker_convert_params (t_gesture_maker_convert *x, long argc, t_atom *argv)
+void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom *argv)
 {
 	double min_in;
 	double max_in;
