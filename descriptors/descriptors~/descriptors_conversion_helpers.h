@@ -14,7 +14,7 @@
 #define _CONVERSION_HELPERS_
 
 
-#include <AH_Win_Math.h>
+//#include <AH_Win_Math.h>
 #include "descriptors_constants.h"
 
 static __inline double dbtoa (double db)

@@ -92,9 +92,7 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     
     if (locatefile_extended(name, &mPath, &type, validTypes, 3))
         return kFileNotFound;
-    
-    // FIX - this is a stop gap (needs better attention to figure out how to do this...)
-    
+        
     t_symbol *ps_dynamicdsp = gensym("___DynamicDSP~___");
     t_symbol *ps_patch_index = gensym("___DynamicPatchIndex___");
     t_symbol *ps_inhibit_subpatcher_vis = gensym("inhibit_subpatcher_vis");

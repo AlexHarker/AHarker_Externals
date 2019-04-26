@@ -13,7 +13,7 @@
 #define _DESCRIPTORS_CONSTANTS_
 
 #include <ext.h>
-#include <AH_Win_Math.h>
+//#include <AH_Win_Math.h>
 
 /////////////////////////////// Constants ///////////////////////////////
 
