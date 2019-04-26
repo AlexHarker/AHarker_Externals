@@ -463,13 +463,13 @@ enum t_curve_type gesture_maker_curve_type(t_atom *specifier)
     
     switch (type)
     {
-        case 1:    return CURVE_POWER_SIN_REVERSE;
-        case 2:    return CURVE_POWER_RECIP_SIN_REVERSE;
-        case 3:    return CURVE_POWER_RECIP_SIN_FORWARD;
-        case 4:    return CURVE_POWER_ASIN_FORWARD;
-        case 5:    return CURVE_POWER_ASIN_REVERSE;
-        case 6:    return CURVE_POWER_RECIP_ASIN_REVERSE;
-        case 7:    return CURVE_POWER_RECIP_ASIN_FORWARD;
+        case 1:     return CURVE_POWER_SIN_REVERSE;
+        case 2:     return CURVE_POWER_RECIP_SIN_REVERSE;
+        case 3:     return CURVE_POWER_RECIP_SIN_FORWARD;
+        case 4:     return CURVE_POWER_ASIN_FORWARD;
+        case 5:     return CURVE_POWER_ASIN_REVERSE;
+        case 6:     return CURVE_POWER_RECIP_ASIN_REVERSE;
+        case 7:     return CURVE_POWER_RECIP_ASIN_FORWARD;
         default:    return CURVE_POWER_SIN_FORWARD;
     }
 }
