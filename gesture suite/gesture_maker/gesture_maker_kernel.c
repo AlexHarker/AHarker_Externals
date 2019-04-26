@@ -336,11 +336,15 @@ int gesture_maker_kernel_params_random_band(t_rand_gen *gen, t_atom *specifier)
 {
 	int lo = 0;
 	int hi = 0;
-	
-    // FIX - check range of long here...
-    
+	    
 	if (atom_gettype(specifier) == A_LONG)
-		return atom_getlong(specifier);
+    {
+        // N.B. - we avoid values that we know are out of range here - just in case
+        
+        t_atom_long a = atom_getlong(specifier);
+        
+        return (a > -1000) ? ((a < 1000) ? a : 1000) : -1000;
+    }
 	
 	if (atom_gettype(specifier) == A_SYM)
 	{

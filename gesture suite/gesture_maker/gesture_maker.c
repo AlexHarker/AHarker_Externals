@@ -106,17 +106,6 @@ void gesture_maker_fixit(t_gesture_maker *x, t_symbol *s, long argc, t_atom *arg
 //////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// FIX - review and reconsider non-GIMME methods...
-
-// Safe methods for Max 5 threadsafety
-
-#define SAFE_FLOAT_METHOD(base_method) void base_method##_safe(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv){if (argc) base_method(x, atom_getfloat(argv));}
-
-SAFE_FLOAT_METHOD(gesture_maker_drive)
-SAFE_FLOAT_METHOD(gesture_maker_graintime)
-SAFE_FLOAT_METHOD(gesture_maker_initial_main)
-SAFE_FLOAT_METHOD(gesture_maker_initial_inflections)
-
 int C74_EXPORT main()
 {
     this_class = class_new ("gesture_maker",
@@ -126,18 +115,15 @@ int C74_EXPORT main()
 								NULL, 
 								0);
 	
-	class_addmethod(this_class, (method)gesture_maker_drive_safe, "drive", A_GIMME, 0);
+	class_addmethod(this_class, (method)gesture_maker_drive, "drive", A_FLOAT, 0);
 	class_addmethod(this_class, (method)gesture_maker_events, "events", A_GIMME, 0);
 	class_addmethod(this_class, (method)gesture_maker_stop, "stop", 0);
-	class_addmethod(this_class, (method)gesture_maker_graintime_safe, "graintime", A_GIMME,  0);
+	class_addmethod(this_class, (method)gesture_maker_graintime, "graintime", A_FLOAT,  0);
 	class_addmethod(this_class, (method)gesture_maker_list, "list", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_gesture_main, "gesture_main", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_gesture_inflections, "gesture_inflections", A_GIMME,  0);
-	class_addmethod(this_class, (method)gesture_maker_initial_main_safe, "initial_main", A_GIMME,  0);
-	class_addmethod(this_class, (method)gesture_maker_initial_inflections_safe, "initial_inflections", A_GIMME,  0);
-	
-	// End fixes
-	
+	class_addmethod(this_class, (method)gesture_maker_initial_main, "initial_main", A_FLOAT,  0);
+	class_addmethod(this_class, (method)gesture_maker_initial_inflections, "initial_inflections", A_FLOAT,  0);
 	class_addmethod(this_class, (method)gesture_maker_timings, "timings", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_scaling_main, "scaling_main", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_scaling_inflections, "scaling_inflections", A_GIMME,  0);
