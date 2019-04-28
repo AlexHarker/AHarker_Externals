@@ -179,17 +179,8 @@ public:
         
         //  IS THIS CORRECT??
         
-        // if ((t_ptr_uint) arg < 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
+        // if ((t_ptr_uint) arg <= 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
         // return NULL;
-
-        /*
-        if (userSlotExists(index + 1))
-        {
-            if (userIndex)
-                *userIndex = mSlots[index]->getUserIndex();
-            return mSlots[index]->getPatch();
-        }
-        */
         
         // Loop over hosted patches to find the next one
         
