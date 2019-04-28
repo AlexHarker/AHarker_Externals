@@ -130,6 +130,8 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)gesture_maker_reset, "reset",  0);	
 		
 	class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);	
+
+    class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);	
 	
 	class_register(CLASS_BOX, this_class);
 	

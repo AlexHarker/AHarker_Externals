@@ -296,9 +296,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			// Choose which of the remaining divisions to do if the order is random
 			
 			if (random_order)
-			{
-                // FIX - this and the below relating to it....
-                
+			{                
                 division_pos = rand_int_n(&x->gen, num_points - (list_length + 1));
 				division = divisions[division_pos];
 			}
@@ -366,10 +364,8 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			break;
 	}
 	
-	
 	outlet_list(x->thelistout, 0L, list_length, output_list);
 }
-
 
 
 double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max)
@@ -634,7 +630,4 @@ void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, doub
 	x->min_sbound = min_sbound;
 	x->max_sbound = max_sbound;
 }
-
-
-
 
