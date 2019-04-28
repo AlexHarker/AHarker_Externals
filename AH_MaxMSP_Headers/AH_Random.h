@@ -164,9 +164,9 @@ static __inline t_uint32 rand_int_os()
 
 #define CONVERT_DOUBLE 2.32830643653869628906e-10
 
-// Return an unsigned 32 bit integer
+// Return an unsigned 32 bit integer in the range [0, n]
 
-static __inline t_uint32 rand_int_n (t_rand_gen *gen, t_uint32 n)
+static __inline t_uint32 rand_int_n(t_rand_gen *gen, t_uint32 n)
 {	
 	t_uint32 used = n;
 	t_uint32 i;
