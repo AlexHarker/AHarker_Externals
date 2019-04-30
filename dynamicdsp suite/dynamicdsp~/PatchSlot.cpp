@@ -78,10 +78,11 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     validTypes[1] = FOUR_CHAR_CODE('TEXT');
     validTypes[2] = FOUR_CHAR_CODE('JSON');
     
-    // Set all flags off / free old patch
+    // Set flags off / free old patch / set on ready to be changed at load time
     
-    mValid = mOn = mBusy = false;
+    mValid = mBusy = mOn = false;
     freePatch();
+    mOn = true;
     
     // Try to locate a file of the given name that is of the correct type
 
@@ -157,7 +158,6 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
     
     // The patch is valid and ready to go
     
-    mOn = true;
     mValid = true;
     
     return kNone;
