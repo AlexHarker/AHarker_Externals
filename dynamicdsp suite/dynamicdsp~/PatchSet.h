@@ -154,7 +154,7 @@ public:
     
         for (auto it = mSlots.begin(); it != mSlots.end(); it++)
         {
-            // FIX - this is not complete as a reloader...
+            // FIX - this is not complete as a reloader... (keep on state and follow patch)
             
             if ((*it) && (*it)->getPatch() == p)
             {

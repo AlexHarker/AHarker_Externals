@@ -84,7 +84,7 @@ protected:
     
     inline bool checkProcess(void *tempMem, void **outputs, t_ptr_uint tempMemSize)
     {
-        return (mDSPChain && mOn && mValid && (tempMemSize >= mTempMemSize));
+        return (mDSPChain && mValid && mOn && (tempMemSize >= mTempMemSize));
     }
     
     void processTick(void *tempMem, void **outputs)

@@ -157,7 +157,7 @@ void dynamic_this_bang(t_dynamic_this *x)
 	outlet_int(x->c_outlet, Dynamic_Get_Patch_Busy(x->dynamicdsp_parent, x->index));
 	outlet_int(x->b_outlet, !Dynamic_Get_Patch_On(x->dynamicdsp_parent, x->index));
 	if (x->index)
-		outlet_int (x->a_outlet, x->index);
+		outlet_int(x->a_outlet, x->index);
 }
 
 void dynamic_this_delete(t_dynamic_this *x)
