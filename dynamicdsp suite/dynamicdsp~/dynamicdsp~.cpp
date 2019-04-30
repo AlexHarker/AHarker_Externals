@@ -792,6 +792,8 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_p
 
 void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
+    const long max_simd_size = SIMDLimits<float>::max_size;
+
     // Sum output of threads for each signal outlet
     
     for (long i = 0; i < num_sig_outs; i++)
@@ -802,14 +804,31 @@ void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs
             float *next_sig_pointer = (float *)threads->getThreadOut(j, i);
             
             if (next_sig_pointer)
-                for (long k = 0; k < vec_size; k++)
-                    *io_pointer++ += *next_sig_pointer++;
+            {
+                if (vec_size < max_simd_size || t_ptr_uint(io_pointer) % 16)
+                {
+                    for (long k = 0; k < vec_size; k++)
+                        *io_pointer++ += *next_sig_pointer++;
+                }
+                else
+                {
+                    using SIMD = SIMDType<float, max_simd_size>;
+                    const long num_vecs = vec_size / max_simd_size;
+                    SIMD *a = (SIMD *) io_pointer;
+                    SIMD *b = (SIMD *) next_sig_pointer;
+                    
+                    for (long k = 0; k < num_vecs; k++)
+                        *a++ += *b++;
+                }
+            }
         }
     }
 }
 
 void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
+    const long max_simd_size = SIMDLimits<double>::max_size;
+    
     // Sum output of threads for each signal outlet
     
     for (long i = 0; i < num_sig_outs; i++)
@@ -820,8 +839,23 @@ void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_out
             double *next_sig_pointer = (double *)threads->getThreadOut(j, i);
             
             if (next_sig_pointer)
-                for (long k = 0; k < vec_size; k++)
-                    *io_pointer++ += *next_sig_pointer++;
+            {
+                if (vec_size < max_simd_size || t_ptr_uint(io_pointer) % 16)
+                {
+                    for (long k = 0; k < vec_size; k++)
+                        *io_pointer++ += *next_sig_pointer++;
+                }
+                else
+                {
+                    using SIMD = SIMDType<double, max_simd_size>;
+                    const long num_vecs = vec_size / max_simd_size;
+                    SIMD *a = (SIMD *) io_pointer;
+                    SIMD *b = (SIMD *) next_sig_pointer;
+                    
+                    for (long k = 0; k < num_vecs; k++)
+                        *a++ += *b++;
+                }
+            }
         }	
     } 
 }
