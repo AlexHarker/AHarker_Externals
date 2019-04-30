@@ -85,7 +85,7 @@ void *dynamic_out_new(t_atom_long outlet_num)
 	
 	x->outlet_num = outlet_num;
 		
-     dsp_setup((t_pxobject *)x, 1);
+    dsp_setup((t_pxobject *)x, 1);
     
     return (x);
 }
