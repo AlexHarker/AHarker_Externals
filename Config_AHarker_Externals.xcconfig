@@ -25,7 +25,10 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings
 
-MACOSX_DEPLOYMENT_TARGET = 10.6
+MACOSX_DEPLOYMENT_TARGET = 10.7
+CLANG_CXX_LANGUAGE_STANDARD = c++11
+CLANG_CXX_LIBRARY = libc++
+CLANG_X86_VECTOR_INSTRUCTIONS = avx2
 
 ARCHS = i386 x86_64 
 
