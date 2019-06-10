@@ -166,10 +166,15 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 
 void entrymatcher_dump(t_entrymatcher *x)
 {
-    EntryDatabase::ReadPointer database_ptr = database_getptr_read(x->database_object);
-
-	for (long i = 0; i < database_ptr->numItems(); i++)
+	for (long i = 0; ; i++)
+    {
+        EntryDatabase::ReadPointer database_ptr = database_getptr_read(x->database_object);
+        
+        if (i >= database_ptr->numItems())
+            break;
+        
         entrymatcher_lookup_output(x, database_ptr, i, 0, NULL);
+    }
 }
 
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
