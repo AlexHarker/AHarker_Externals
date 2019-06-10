@@ -17,7 +17,7 @@ struct pow_functor
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b) { return pow(b.mVal, a.mVal); }
  
     template <class T>
-    void operator()(T *o, T *i1, T *i2, long size) { pow_array(o, i1, i2, size); }
+    void operator()(T *o, T *i1, T *i2, long size, InputType type) { pow_array(o, i1, i2, size); }
     
     // Empty Implementations
    

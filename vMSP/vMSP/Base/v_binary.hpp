@@ -10,6 +10,7 @@
 #include "SIMDSupport.hpp"
 #include <AH_Denormals.h>
 
+enum InputType { kBinary, kScalar1, kScalar2 };
 enum CalculationType { kScalar, kVectorOp, kVectorArray };
 
 // Object structure
@@ -207,7 +208,7 @@ public:
         float *temp_memory = (float *)x->m_temp_memory;
         
         std::fill_n(((float *)temp_memory), vec_size, static_cast<float>(x->m_val));
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), temp_memory, vec_size);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), temp_memory, vec_size, kScalar1);
     }
     
     // 32 bit perform routine with RHS signal-rate input (SIMD - array)
@@ -221,7 +222,7 @@ public:
         float *temp_memory = (float *)x->m_temp_memory;
         
         std::fill_n(((float *)temp_memory), vec_size, static_cast<float>(x->m_val));
-        x->m_functor(reinterpret_cast<float *>(w[4]), temp_memory, reinterpret_cast<float *>(w[2]), vec_size);
+        x->m_functor(reinterpret_cast<float *>(w[4]), temp_memory, reinterpret_cast<float *>(w[2]), vec_size, kScalar2);
     }
     
     // 32 bit perform routine with two signal-rate inputs (SIMD - array)
@@ -231,7 +232,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[4]), static_cast<long>(w[5]));
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[4]), static_cast<long>(w[5]), kBinary);
     }
     
     // 32 bit perform routine with first operand only at signal-rate (SIMD - op)
@@ -425,7 +426,7 @@ public:
         double *temp_memory = (double *)x->m_temp_memory;
         
         std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], ins[0], temp_memory, vec_size);
+        x->m_functor(outs[0], ins[0], temp_memory, vec_size, kScalar1);
     }
     
     // 64 bit perform routine with one RHS signal-rate input (SIMD - array)
@@ -436,7 +437,7 @@ public:
         double *temp_memory = (double *)x->m_temp_memory;
         
         std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], temp_memory, ins[1], vec_size);
+        x->m_functor(outs[0], temp_memory, ins[1], vec_size, kScalar2);
     }
     
     // 64 bit perform routine with two signal-rate inputs (SIMD - array)
@@ -444,7 +445,7 @@ public:
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, kBinary);
     }
     
     // Assist routine

@@ -18,8 +18,8 @@ struct times_functor
     
     // Empty Implementations
 
-    void operator()(float *o, float *i1, float *i2, long size) {}
-    void operator()(double *o, double *i1, double *i2, long size) {}
+    void operator()(float *o, float *i1, float *i2, long size, InputType type) {}
+    void operator()(double *o, double *i1, double *i2, long size, InputType type) {}
 };
 
 typedef v_binary<times_functor, kVectorOp, kVectorOp> vtimes;
