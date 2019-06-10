@@ -378,7 +378,7 @@ static __inline void _mm_split_pd_epi64(vDouble a, vSInt64 *whole, vDouble *frac
      */
 }
 
-
+/*
 static __inline vSInt64 _mm_convert_trunc_pd_epi64(vDouble a)
 {
     static const vSInt64 mant_mask = {0xFFFFFFFFFFFFF, 0xFFFFFFFFFFFFF};
@@ -415,7 +415,7 @@ static __inline vSInt64 _mm_convert_trunc_pd_epi64(vDouble a)
     
     return result;
 }
-
+*/
 static __inline vDouble trunc_vec_64(vDouble a)
 {
     static const vSInt64 neg_one = {-1, -1};
@@ -447,108 +447,64 @@ static __inline vDouble trunc_vec_64(vDouble a)
 #define F64_VEC_TRUNC_OP            trunc_vec_64
 #define I64_VEC_FROM_F64_TRUNC      _mm_convert_trunc_pd_epi64
 #define F64_VEC_SPLIT_I64_F64       _mm_split_pd_epi64
+
+/*
+ // Constants
+ 
+ vFloat v_largest_int_32;
+ vFloat v_bit_mask_32;
+ 
+ t_uint64 large_mask_64 = 0xFFFFFFFFE0000000U;
+ t_uint64 bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+ t_uint32 bit_mask_32 = 0x7FFFFFFFU;
+ 
+ float largest_int_32 = 8388608.f;
+ double largest_int_64 = 4503599627370496.0;
+ 
+ // Core functions
+ 
+ static __inline float trunc_scalar_32(float in)
+ {
+ t_uint32 abs_temp = (*(t_uint32 *) &in) & 0x7FFFFFFFUL;
+ float abs_float = *(float *) &abs_temp;
+ t_int32 trunc_temp = (t_int32) in;
+ return (abs_float < largest_int_32) ? (float) trunc_temp : in;
+ }
+ 
+ static __inline double trunc_scalar_64(double in)
+ {
+ // FIX - check this....
+ 
+ t_uint64 abs_temp = (*(t_uint64 *) &in) & 0x7FFFFFFF;
+ double abs_double = *(double *) &abs_temp;
+ t_int64 trunc_temp = (t_int64) in;
+ return (abs_double < largest_int_64) ? (double) trunc_temp : in;
+ }
+ 
+ static __inline vFloat trunc_vec_32(vFloat in)
+ {
+ vFloat trunc_vec= F32_VEC_FROM_I32(I32_VEC_FROM_F32_TRUNC(in));
+ return F32_VEC_SEL_OP(trunc_vec, in, F32_VEC_GT_OP(F32_VEC_AND_OP(in, v_bit_mask_32), v_largest_int_32));
+ }
+ 
+ // N.B. large_vec has 0.5 subtracted pre conversion to avoid incorrect rounding - always integer saturated when used so results are correct
+ // FIX - explain the above properly
+ 
+ static __inline vDouble trunc_vec_64(vDouble in)
+ {
+ vDouble abs_vec = F64_VEC_AND_OP(in, v_bit_mask_64);
+ vDouble large_vec = F64_VEC_AND_OP(in, v_large_mask_64);
+ vDouble trunc_vec1 = F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(in));
+ vDouble trunc_vec2 = F64_VEC_ADD_OP(F64_VEC_FROM_I32(I32_VEC_FROM_F64_TRUNC(F64_VEC_SUB_OP(in, large_vec))), large_vec);
+ vDouble trunc_vec = F64_VEC_SEL_OP(trunc_vec1, trunc_vec2, F64_VEC_GT_OP(abs_vec, v_intermediate_int_64));
+ return F64_VEC_SEL_OP(trunc_vec, in, F64_VEC_GT_OP(abs_vec, v_largest_int_64));
+ }
+ #endif
+ */
+
+
+
 #else
-
-// Altivec
-
-static const vFloat Vec_Ops_F32_Zero = {0.f,0.f,0.f,0.f};
-
-// Floating point 32 bit intrinsics or local functions
-
-#define F32_VEC_MUL_OP(v1, v2)			vec_madd(v1,v2, Vec_Ops_F32_Zero)
-#define F32_VEC_DIV_OP					vdivf
-#define F32_VEC_ADD_OP					vec_add
-#define F32_VEC_SUB_OP					vec_sub
-
-#define F32_VEC_AND_OP					vec_and
-#define F32_VEC_XOR_OP					vec_xor
-#define F32_VEC_OR_OP					vec_or
-#define F32_VEC_SEL_OP					vec_sel
-
-#define F32_VEC_MIN_OP					vec_min
-#define F32_VEC_MAX_OP					vec_max
-
-#define F32_VEC_EQ_OP(a,b)              vec_cmpeq(a,b)
-#define F32_VEC_NEQ_OP(a,b)             vec_xor(vec_cmpeq(a,b),Vec_Ops_F32_One)
-#define F32_VEC_GT_OP(a,b)				vec_cmpgt(a,b) 
-#define F32_VEC_LT_OP(a,b)				vec_cmplt(a,b)
-
-#define F32_VEC_ULOAD(p)				vec_uload((unsigned char *)p)
-#define F32_VEC_USTORE(p, v)			vec_ustore((unsigned char *)p, (vector unsigned char)v)
-#define F32_VEC_SHUFFLE					vec_permute
-
-// Conversions from and to 32 bit floating point vectors
-
-#define F32_VEC_FROM_I32(a)				vec_ctf(a, 0)
-#define I32_VEC_FROM_F32_ROUND(a)		vec_cts(vec_round(a), 0)
-#define I32_VEC_FROM_F32_TRUNC(a)		vec_cts(a, 0)
-
-// Integer 32 bit intrinsics
-
-#define I32_VEC_ADD_OP					vec_add
-#define I32_VEC_SUB_OP					vec_sub
-
-#define I32_VEC_AND_OP					vec_and
-
-#define I32_VEC_MIN_OP					vec_min
-#define I32_VEC_MAX_OP					vec_max
-
-// Return a vector filled with a single signed integer value
-
-static __inline vSInt32 s32int2vector (int s32int_val) FORCE_INLINE;
-static __inline vSInt32 s32int2vector (int s32int_val) FORCE_INLINE_DEFINITION
-{
-	vSInt32 TheVector = {s32int_val, s32int_val, s32int_val, s32int_val};
-	return TheVector;
-}
-
-// Return a vector filled with a single float value
-
-static __inline vFloat float2vector (float floatval) FORCE_INLINE;
-static __inline vFloat float2vector (float floatval) FORCE_INLINE_DEFINITION
-{
-	vFloat TheVector;
-	float *TheFloatArray = (float *) &TheVector;
-	
-	TheFloatArray[0] = floatval;
-	TheFloatArray[1] = floatval;
-	TheFloatArray[2] = floatval;
-	TheFloatArray[3] = floatval;
-	
-	return TheVector;
-}
-
-// Provide altivec safe misaligned loads and stores (not sure how fast these are)
-// These routines are taken directly from the apple SSE migration guide
-// The guide can be found at http://developer.apple.com/legacy/mac/library/documentation/Performance/Conceptual/Accelerate_sse_migration/Accelerate_sse_migration.pdf
-
-
-static inline vFloat vec_uload(unsigned char *target) FORCE_INLINE;
-static inline vFloat vec_uload(unsigned char *target)										
-{
-    vector unsigned char MSQ, LSQ;
-    vector unsigned char mask;
-
-    MSQ = vec_ld(0, target);						// most significant quadword
-    LSQ = vec_ld(15, target);						// least significant quadword
-    mask = vec_lvsl(0, target);						// create the permute mask
-    return (vFloat) vec_perm(MSQ, LSQ, mask);		// align the data
-}
-
-
-static __inline void vec_ustore(unsigned char *target, vector unsigned char src) FORCE_INLINE;
-static __inline void vec_ustore(unsigned char *target, vector unsigned char src)				
-{
-    src = vec_perm( src, src, vec_lvsr( 0, target ) );
-    vec_ste( (vector unsigned char) src, 0, (unsigned char*) target );
-    vec_ste( (vector unsigned short) src,1,(unsigned short*) target );
-    vec_ste( (vector unsigned int) src, 3, (unsigned int*) target );
-    vec_ste( (vector unsigned int) src, 4, (unsigned int*) target );
-    vec_ste( (vector unsigned int) src, 8, (unsigned int*) target );
-    vec_ste( (vector unsigned int) src, 12, (unsigned int*) target );
-    vec_ste( (vector unsigned short) src,14,(unsigned short*) target );
-    vec_ste( (vector unsigned char) src,15,(unsigned char*) target );
-}
 
 #endif	/* TARGET_INTEL */
 
