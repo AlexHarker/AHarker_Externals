@@ -81,41 +81,32 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    // Create viewer patch
+    // Create viewer patch/object
     
-    // Create patcher (you must report this as a subpatcher to get audio working)
+    // Create patcher
     
     t_dictionary *d = dictionary_new();
     t_atom a;
     t_atom *av = NULL;
     long ac = 0;
     
+    // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
+    
+    t_symbol *ps_parent_patcher = gensym("#P");
+    t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
+    ps_parent_patcher->s_thing = NULL;
+    
     atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
     attr_args_dictionary(d, ac, av);
     atom_setobj(&a, d);
     x->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
-
+    ps_parent_patcher->s_thing = parent;
+    
     // Must set after creating, because reasons...
 
     object_attr_setsym(x->patch, gensym("title"), name);
     object_attr_setlong(x->patch, gensym("newviewdisabled"), 1);
     object_attr_setlong(x->patch, gensym("cansave"), 0);
-    
-    /*
-    long attrcount = 0;
-    t_symbol **names = NULL;
-    
-    object_attr_getnames(x->patch, &attrcount, &names);
-    
-    for (long i = 0; i < attrcount; i++)
-    {
-        long argc = 0;
-        t_atom *argv = NULL;
-        char *str = names[i]->s_name;
-        
-        object_attr_getvalueof(x->patch, names[i], &argc, &argv);
-        post("attribute called %s", str);
-    }*/
     
     // Make internal object (and set database)
     
