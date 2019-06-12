@@ -66,9 +66,9 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
 void entrymatcher_perform64 (t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-// ========================================================================================================================================== //
+/*****************************************/
 // Basic Object Routines: main, new, free and assist
-// ========================================================================================================================================== //
+/*****************************************/
 
 int C74_EXPORT main()
 {
@@ -173,9 +173,9 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
     }
 }
 
-// ========================================================================================================================================== //
+/*****************************************/
 // Matchers and Matching Routines
-// ========================================================================================================================================== //
+/*****************************************/
 
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -271,9 +271,9 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     }
 }
 
-// ========================================================================================================================================== //
+/*****************************************/
 // Perform and DSP Routines
-// ========================================================================================================================================== //
+/*****************************************/
 
 t_int *entrymatcher_perform(t_int *w)
 {
@@ -334,9 +334,9 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
     dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);
 }
 
-// ========================================================================================================================================== //
+/*****************************************/
 // 64bit Perform and DSP Routines
-// ========================================================================================================================================== //
+/*****************************************/
 
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	

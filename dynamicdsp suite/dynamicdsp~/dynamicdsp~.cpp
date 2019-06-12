@@ -35,10 +35,9 @@
 // FIX - allow patch crossfading
 // FIX - potential adc~ crashes / no audio - cannot get traction on this
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Global Varibles
-// ======================================================================================================= //
+/*****************************************/
 
 
 t_class *dynamicdsp_class;
@@ -48,10 +47,9 @@ static t_ptr_uint sig_size;
 #define MAX_ARGS 16
 #define MAX_IO 256
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Structures and typedefs
-// ======================================================================================================= //
+/*****************************************/
 
 // Patch Set Struct to Deal with Threads
 
@@ -138,10 +136,9 @@ typedef struct _dynamicdsp
     
 } t_dynamicdsp;
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Function Prototypes
-// ======================================================================================================= //
+/*****************************************/
 
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv);
@@ -197,19 +194,17 @@ void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_in
 void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index);
 void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size);
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Symbols
-// ======================================================================================================= //
+/*****************************************/
 
 
 t_symbol *ps_args;
 t_symbol *ps_declareio;
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Main
-// ======================================================================================================= //
+/*****************************************/
 
 t_max_err patchset_get_patches(t_dynamicdsp *x, t_object *attr, long *argc, t_atom **argv)
 {
@@ -372,10 +367,9 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Object Creation / Freeing / Assisstance
-// ======================================================================================================= //
+/*****************************************/
 
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
@@ -565,10 +559,9 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 		sprintf(s,"Signal / Message In %ld", a + 1);
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Patcher Loading / Deleting
-// ======================================================================================================= //
+/*****************************************/
 
 
 void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
@@ -633,10 +626,9 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 	else 
 		object_error((t_object *) x, "no patch specified");
 }
-
-// ======================================================================================================= //
+/*****************************************/
 // Messages in passed on to the patcher via the "in" objects / Voice targeting
-// ======================================================================================================= //
+/*****************************************/
 
 
 void dynamicdsp_bang(t_dynamicdsp *x)
@@ -674,10 +666,9 @@ void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *ar
     x->slots->objTargetFree(argc, argv);
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Multithreading Messages
-// ======================================================================================================= //
+/*****************************************/
 
 
 void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
@@ -726,10 +717,9 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
     x->update_thread_map = 1;
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Perform Routines
-// ======================================================================================================= //
+/*****************************************/
 
 
 static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
@@ -960,10 +950,9 @@ void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long 
 	dynamicdsp_perform_common(x, (void **) outs, vec_size);
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // DSP Routines
-// ======================================================================================================= //
+/*****************************************/
 
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
@@ -1003,10 +992,9 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 		object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, NULL);
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Patcher Window stuff
-// ======================================================================================================= //
+/*****************************************/
 
 
 void dynamicdsp_dblclick(t_dynamicdsp *x)
@@ -1031,10 +1019,9 @@ void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)
     x->slots->closeWindow(index);
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
-// ======================================================================================================= //
+/*****************************************/
 
 
 void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
@@ -1052,10 +1039,9 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 	*parent = x->parent_patch;
 }
 
-
-// ======================================================================================================= //
+/*****************************************/
 // Parent / Child Communication - Routines for owned objects to query the parent
-// ======================================================================================================= //
+/*****************************************/
 
 
 // Note that objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h.
