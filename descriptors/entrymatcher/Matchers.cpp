@@ -5,7 +5,7 @@
 #include "Matchers.h"
 #include "Sort.h"
 
-long Matchers::match(const EntryDatabase::ReadPointer& database, double ratioMatched, long maxMatches, bool sortOnlyIfLimited) const
+long Matchers::match(const EntryDatabase::ReadPointer& database, double ratioMatched, long maxMatches, bool mustSort) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
@@ -103,7 +103,7 @@ long Matchers::match(const EntryDatabase::ReadPointer& database, double ratioMat
 
     // FIX - better heuristics and more info on what has been sorted...
     
-    if (numMatches != mNumMatches && !sortOnlyIfLimited)
+    if (size() && (mustSort || numMatches < mNumMatches))
     {
         if (numMatches < (database->numItems() / 8))
             numMatches = sortTopN(numMatches, mNumMatches);

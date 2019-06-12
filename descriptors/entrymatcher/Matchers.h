@@ -143,7 +143,7 @@ public:
     
     Matchers() : mNumMatches(0), mAudioStyle(false) {}
     
-    long match(const EntryDatabase::ReadPointer& database, double ratioMatched = 1.0, long maxMatches = 0, bool sortOnlyIfLimited = false) const;
+    long match(const EntryDatabase::ReadPointer& database, double ratioMatched = 1.0, long maxMatches = 0, bool mustSort = true) const;
     
     size_t size() const { return mMatchers.size(); }
     
