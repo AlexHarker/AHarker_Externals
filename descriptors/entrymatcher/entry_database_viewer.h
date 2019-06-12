@@ -1,6 +1,6 @@
 
-#ifndef entry_database_viewer_h
-#define entry_database_viewer_h
+#ifndef ENTRY_DATABASE_VIEWER_H
+#define ENTRY_DATABASE_VIEWER_H
 
 #include <ext.h>
 #include <ext_obex.h>

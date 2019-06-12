@@ -36,6 +36,8 @@ int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
 
+void entry_database_view_removed(t_entry_database *database_object);
+
 /*****************************************/
 // Entry Database Max Object Routines
 /*****************************************/
@@ -56,6 +58,8 @@ int entry_database_init()
     
     class_register(CLASS_NOBOX, database_class);
     
+    class_addmethod(database_class, (method)entry_database_view_removed, "__view_removed", A_CANT, 0);
+
     entry_database_viewer_init();
     
     return 0;
@@ -81,38 +85,8 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    // Create viewer patch/object
-    
-    // Create patcher
-    
-    t_dictionary *d = dictionary_new();
-    t_atom a;
-    t_atom *av = NULL;
-    long ac = 0;
-    
-    // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
-    
-    t_symbol *ps_parent_patcher = gensym("#P");
-    t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
-    ps_parent_patcher->s_thing = NULL;
-    
-    atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
-    attr_args_dictionary(d, ac, av);
-    atom_setobj(&a, d);
-    x->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
-    ps_parent_patcher->s_thing = parent;
-    
-    // Must set after creating, because reasons...
-
-    object_attr_setsym(x->patch, gensym("title"), name);
-    object_attr_setlong(x->patch, gensym("newviewdisabled"), 1);
-    object_attr_setlong(x->patch, gensym("cansave"), 0);
-    
-    // Make internal object (and set database)
-    
-    x->viewer = newobject_sprintf(x->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
-    
-    object_method(x->viewer, gensym("__set_database"), &x->database);
+    x->patch = NULL;
+    x->viewer = NULL;
     
     return (x);
 }
@@ -139,7 +113,8 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     
     if (!x->notify)
     {
-        object_method(x->viewer, gensym("__build_view"));
+        if (x->viewer)
+            object_method(x->viewer, gensym("__build_view"));
         object_notify(x, database_modified, NULL);
         x->notify = true;
     }
@@ -240,11 +215,67 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
 
 // View
 
-void entry_database_view(void *x, t_entry_database *database_object)
+void entry_database_view(t_entry_database *database_object)
 {
-    // Bring to front
+    // Create and/or bring to front
     
-    object_method(database_object->patch, gensym("front"));
+    if (!database_object->patch)
+    {
+        // Create patcher
+        
+        t_dictionary *d = dictionary_new();
+        t_atom a;
+        t_atom *av = NULL;
+        long ac = 0;
+        
+        // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
+        
+        t_symbol *ps_parent_patcher = gensym("#P");
+        t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
+        ps_parent_patcher->s_thing = NULL;
+        
+        atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
+        attr_args_dictionary(d, ac, av);
+        atom_setobj(&a, d);
+        database_object->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+        ps_parent_patcher->s_thing = parent;
+        
+        // Must set after creating, because reasons...
+        
+        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.getName());
+        object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
+        object_attr_setlong(database_object->patch, gensym("cansave"), 0);
+        /*
+        long attrcount = 0;
+        t_symbol **names = NULL;
+        
+        object_attr_getnames(database_object->patch, &attrcount, &names);
+        
+        for (long i = 0; i < attrcount; i++)
+        {
+            long argc = 0;
+            t_atom *argv = NULL;
+            char *str = names[i]->s_name;
+            
+            object_attr_getvalueof(database_object->patch, names[i], &argc, &argv);
+            post("attribute called %s", str);
+        }
+        */
+        // Make internal object (and set database)
+        
+        database_object->viewer = newobject_sprintf(database_object->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
+        
+        object_method(database_object->viewer, gensym("__set_database"), database_object, &database_object->database);
+    }
+    
+    if (database_object->patch)
+        object_method(database_object->patch, gensym("front"));
+}
+
+void entry_database_view_removed(t_entry_database *database_object)
+{
+    database_object->patch = NULL;
+    database_object->viewer = NULL;
 }
 
 /*****************************************/
@@ -287,7 +318,7 @@ void database_release(void *x, t_object *database_object)
 
 void database_view(void *x, t_object *database_object)
 {
-    entry_database_view(x, (t_entry_database *) database_object);
+    entry_database_view((t_entry_database *) database_object);
 }
 
 // Retrieve Pointers for Reading or Writing

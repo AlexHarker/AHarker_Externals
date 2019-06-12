@@ -12,6 +12,7 @@ typedef struct _entry_database_viewer
     t_jbox              d_box;
     t_object            *d_dataview;
     t_object            *patcher;
+    t_object            *database_object;
     EntryDatabase       *database;
     bool                visible;
     bool                in_edit;
@@ -29,7 +30,7 @@ void entry_database_viewer_free(t_entry_database_viewer *x);
 void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview);
 void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview);
 
-void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database);
+void entry_database_viewer_set_database(t_entry_database_viewer *x, t_object *database_object, EntryDatabase *database);
 void entry_database_viewer_update(t_entry_database_viewer *x);
 void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr);
 void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
@@ -116,13 +117,15 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         attr_dictionary_process(x, d);
 
         jbox_ready(&x->d_box);
-        
     }
+    
     return(x);
 }
 
 void entry_database_viewer_free(t_entry_database_viewer *x)
 {
+    object_method(x->database_object, gensym("__view_removed"));
+    object_free(x->d_dataview);
     jbox_free(&x->d_box);
     x->~t_entry_database_viewer();
 }
@@ -139,9 +142,10 @@ void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object 
     jdataview_patcherinvis(x->d_dataview, patcherview);
 }
 
-void entry_database_viewer_set_database(t_entry_database_viewer *x, EntryDatabase *database)
+void entry_database_viewer_set_database(t_entry_database_viewer *x, t_object *database_object, EntryDatabase *database)
 {
     x->database = database;
+    x->database_object = database_object;
     entry_database_viewer_update(x);
 }
 
