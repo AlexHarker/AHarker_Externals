@@ -3,7 +3,7 @@
  *  vdtbtoa~
  *
  *	vdtbtoa~ is a vectorised version of vdtbtoa~.
- *	This object may be marginally less accurate than the standard version, although that disadvantage is porbably outweighed in most cases by the speed benefit.
+ *	This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
