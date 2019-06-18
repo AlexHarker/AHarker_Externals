@@ -11,14 +11,16 @@ enum InterpType
 
 // Linear
 
-template <class T>struct linear_interp
+template <class T>
+struct linear_interp
 {
     T operator()(const T& x, const T& y0, const T& y1) { return  (y0 + x * ((y1 - y0))); }
 };
 
 // Cubic Hermite
 
-template <class T> struct cubic_hermite_interp
+template <class T>
+struct cubic_hermite_interp
 {
     cubic_hermite_interp() : _5div2(2.5), _3div2(1.5), _1div2(0.5) {}
     
@@ -32,6 +34,8 @@ template <class T> struct cubic_hermite_interp
         return (((c3 * x + c2) * x + c1) * x + c0);
     }
     
+private:
+    
     const T _5div2;
     const T _3div2;
     const T _1div2;
@@ -39,9 +43,10 @@ template <class T> struct cubic_hermite_interp
 
 // Cubic Lagrange
 
-template <class T> struct cubic_lagrange_interp
+template <class T>
+struct cubic_lagrange_interp
 {
-    cubic_lagrange_interp() : _1div3(1.0/3.0), _1div6(1.0/6.0), _1div2(0.5) {}
+    cubic_lagrange_interp() : _1div3(T(1)/T(3)), _1div6(T(1)/T(6)), _1div2(0.5) {}
     
     T operator()(const T& x, const T& y0, const T& y1, const T& y2, const T& y3)
     {
@@ -53,6 +58,8 @@ template <class T> struct cubic_lagrange_interp
         return (((c3 * x + c2) * x + c1) * x + c0);
     }
     
+private:
+
     const T _1div3;
     const T _1div6;
     const T _1div2;
@@ -60,9 +67,10 @@ template <class T> struct cubic_lagrange_interp
 
 // Cubic B-spline
 
-template <class T> struct cubic_bspline_interp
+template <class T>
+struct cubic_bspline_interp
 {
-    cubic_bspline_interp() : _2div3(2.0/3.0), _1div6(1.0/6.0), _1div2(0.5) {}
+    cubic_bspline_interp() : _2div3(T(2)/T(3)), _1div6(T(1)/T(6)), _1div2(0.5) {}
     
     T operator()(const T& x, const T& y0, const T& y1, const T& y2, const T& y3)
     {
@@ -75,6 +83,8 @@ template <class T> struct cubic_bspline_interp
         return (((c3 * x + c2) * x + c1) * x + c0);
     }
     
+private:
+
     const T _2div3;
     const T _1div6;
     const T _1div2;

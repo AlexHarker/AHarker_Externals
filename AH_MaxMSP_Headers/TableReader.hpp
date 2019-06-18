@@ -109,27 +109,27 @@ template <class T, class U, class V, class Table> struct no_interp_reader
 };
 
 template <class T, class U, class V, class Table>
-struct linear_reader : public interp_2_reader<T, U, V, Table, linear_interp<T> >
+struct linear_reader : public interp_2_reader<T, U, V, Table, linear_interp<T>>
 {
-    linear_reader(Table fetcher) : interp_2_reader<T, U, V, Table, linear_interp<T> >(fetcher) {}
+    linear_reader(Table fetcher) : interp_2_reader<T, U, V, Table, linear_interp<T>>(fetcher) {}
 };
 
 template <class T, class U, class V,  class Table>
-struct cubic_bspline_reader : public interp_4_reader<T, U, V, Table, cubic_bspline_interp<T> >
+struct cubic_bspline_reader : public interp_4_reader<T, U, V, Table, cubic_bspline_interp<T>>
 {
-    cubic_bspline_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_bspline_interp<T> >(fetcher) {}
+    cubic_bspline_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_bspline_interp<T>>(fetcher) {}
 };
 
 template <class T, class U, class V,  class Table>
-struct cubic_hermite_reader : public interp_4_reader<T, U, V, Table, cubic_hermite_interp<T> >
+struct cubic_hermite_reader : public interp_4_reader<T, U, V, Table, cubic_hermite_interp<T>>
 {
-    cubic_hermite_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_hermite_interp<T> >(fetcher) {}
+    cubic_hermite_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_hermite_interp<T>>(fetcher) {}
 };
 
 template <class T, class U, class V, class Table>
-struct cubic_lagrange_reader : public interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T> >
+struct cubic_lagrange_reader : public interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T>>
 {
-    cubic_lagrange_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T> >(fetcher) {}
+    cubic_lagrange_reader(Table fetcher) : interp_4_reader<T, U, V, Table, cubic_lagrange_interp<T>>(fetcher) {}
 };
 
 // Reading loop
