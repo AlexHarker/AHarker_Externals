@@ -23,17 +23,21 @@ template <class T, class U, class V, class Table, typename Interp> struct interp
     
     T operator()(const V*& positions)
     {
-        typename T::scalar_type fract_array[T::size];
-        typename U::scalar_type array[T::size * 2];
+        using pos_type = typename T::scalar_type;
+        using out_type = typename U::scalar_type;
+        
+        pos_type fract_array[T::size];
+        out_type array[T::size * 2];
         
         for (int i = 0; i < T::size; i++)
         {
             V position = *positions++;
-            intptr_t offset = static_cast<intptr_t>(position);
-            fract_array[i] = static_cast<typename T::scalar_type >(position - static_cast<V>(offset));
             
-            array[i] = fetch(offset);
-            array[i + T::size] = fetch(offset + 1);
+            intptr_t offset     = static_cast<intptr_t>(position);
+            fract_array[i]      = static_cast<pos_type>(position - static_cast<V>(offset));
+            
+            array[i]            = static_cast<out_type>(fetch(offset + 0));
+            array[i + T::size]  = static_cast<out_type>(fetch(offset + 1));
         }
         
         const T y0 = U(array);
@@ -52,19 +56,23 @@ template <class T, class U, class V, class Table, typename Interp> struct interp
     
     T operator()(const V*& positions)
     {
-        typename U::scalar_type array[T::size * 4];
-        typename T::scalar_type fract_array[T::size];
+        using pos_type = typename T::scalar_type;
+        using out_type = typename U::scalar_type;
+        
+        pos_type fract_array[T::size];
+        out_type array[T::size * 4];
 
         for (int i = 0; i < T::size; i++)
         {
             V position = *positions++;
-            intptr_t offset = static_cast<intptr_t>(position);
-            fract_array[i] = static_cast<typename T::scalar_type>(position - static_cast<V>(offset));
             
-            array[i] = fetch(offset - 1);
-            array[i + T::size] = fetch(offset);
-            array[i + T::size * 2] = fetch(offset + 1);
-            array[i + T::size * 3] = fetch(offset + 2);
+            intptr_t offset         = static_cast<intptr_t>(position);
+            fract_array[i]          = static_cast<pos_type>(position - static_cast<V>(offset));
+            
+            array[i]                = static_cast<out_type>(fetch(offset - 1));
+            array[i + T::size]      = static_cast<out_type>(fetch(offset + 0));
+            array[i + T::size * 2]  = static_cast<out_type>(fetch(offset + 1));
+            array[i + T::size * 3]  = static_cast<out_type>(fetch(offset + 2));
         }
         
         const T y0 = U(array);
@@ -87,10 +95,12 @@ template <class T, class U, class V, class Table> struct no_interp_reader
     
     T operator()(const V*& positions)
     {
-        typename U::scalar_type array[T::size];
+        using out_type = typename U::scalar_type;
+        
+        out_type array[T::size];
         
         for (int i = 0; i < T::size; i++)
-            array[i] = fetch(static_cast<intptr_t>(*positions++));
+            array[i] = static_cast<out_type>(fetch(static_cast<intptr_t>(*positions++)));
         
         return U(array);
     }
@@ -125,12 +135,12 @@ struct cubic_lagrange_reader : public interp_4_reader<T, U, V, Table, cubic_lagr
 // Reading loop
 
 template <class T, class U, class V, class Table, template <class W, class X, class Y, class Tb> class Reader>
-void table_read_loop(Table fetcher, typename T::scalar_type *out, const V *positions, intptr_t n_samps, typename U::scalar_type mul)
+void table_read_loop(Table fetcher, typename T::scalar_type *out, const V *positions, intptr_t n_samps, double mul)
 {
     Reader<T, U, V, Table> reader(fetcher);
     
     T *v_out = reinterpret_cast<T *>(out);
-    T scale = mul * reader.fetch.scale;
+    T scale = static_cast<typename U::scalar_type>(mul * reader.fetch.scale);
     
     for (intptr_t i = 0; i < (n_samps / T::size); i++)
         *v_out++ = scale * reader(positions);
