@@ -8,7 +8,6 @@
  *
  */
 
-
 // N.B. - alterations to the object structure only happen in the low priority thread for threadsafety
 
 
@@ -17,6 +16,7 @@
 #include <z_dsp.h>
 
 #include <vector>
+
 
 t_class *this_class;
 
@@ -148,7 +148,9 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
     
 	// Return a properly allocated object (may still return NULL if the .mxo is not present)
 	
-	t_object *current_buffer = reinterpret_cast<t_object *>(object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, 0));
+    void *object_untyped = object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, nullptr);
+	t_object *current_buffer = reinterpret_cast<t_object *>(object_untyped);
+    
     bool buffer_loaded = false;
 
 	// Now load the buffer 
