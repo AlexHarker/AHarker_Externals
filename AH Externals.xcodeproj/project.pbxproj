@@ -152,9 +152,9 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B8C287AA22781C5100F110B2 /* PBXTargetDependency */,
 				B82F13511465FA90007FAC6A /* PBXTargetDependency */,
 				B82F134F1465FA90007FAC6A /* PBXTargetDependency */,
-				B82F134D1465FA90007FAC6A /* PBXTargetDependency */,
 				B82F134B1465FA90007FAC6A /* PBXTargetDependency */,
 				B82F13491465FA90007FAC6A /* PBXTargetDependency */,
 				B82F13531465FA90007FAC6A /* PBXTargetDependency */,
@@ -1070,13 +1070,6 @@
 			remoteGlobalIDString = B82F11191465F95E007FAC6A;
 			remoteInfo = "Dynamic DSP";
 		};
-		B82F134C1465FA90007FAC6A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C161465ED1500FE85B0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B82F10C71465F907007FAC6A;
-			remoteInfo = Descriptors;
-		};
 		B82F134E1465FA90007FAC6A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C161465ED1500FE85B0 /* Project object */;
@@ -1097,6 +1090,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8B56C2C1465ED6400FE85B0;
 			remoteInfo = "Buffer Externals";
+		};
+		B8C287A922781C5100F110B2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8C3050A12606AE500226E73;
+			remoteInfo = Both;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1137,7 +1137,6 @@
 		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
 		B8A791311A1F610D007BDF82 /* AH_Memory_Swap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AH_Memory_Swap.hpp; sourceTree = "<group>"; };
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
-		B8A791361A1F610D007BDF82 /* AH_VectorOps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_VectorOps.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dynamicdsp~.h"; sourceTree = "<group>"; };
 		B8A7914A1A1F610D007BDF82 /* ibuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ibuffer.h; sourceTree = "<group>"; };
 		B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "dynamicdsp~.xcodeproj"; path = "dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj"; sourceTree = "<group>"; };
@@ -1602,7 +1601,6 @@
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
 				B8A791311A1F610D007BDF82 /* AH_Memory_Swap.hpp */,
 				B8A791341A1F610D007BDF82 /* AH_Random.h */,
-				B8A791361A1F610D007BDF82 /* AH_VectorOps.h */,
 				B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */,
 				B8F25E321FF162CA00245397 /* HISSTools_FFT */,
 				B8A7914A1A1F610D007BDF82 /* ibuffer.h */,
@@ -2659,11 +2657,6 @@
 			target = B82F11191465F95E007FAC6A /* dynamicdsp suite */;
 			targetProxy = B82F134A1465FA90007FAC6A /* PBXContainerItemProxy */;
 		};
-		B82F134D1465FA90007FAC6A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B82F10C71465F907007FAC6A /* descriptors */;
-			targetProxy = B82F134C1465FA90007FAC6A /* PBXContainerItemProxy */;
-		};
 		B82F134F1465FA90007FAC6A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B82F10751465F905007FAC6A /* convolution */;
@@ -2678,6 +2671,11 @@
 			isa = PBXTargetDependency;
 			target = B8B56C2C1465ED6400FE85B0 /* ibuffer suite */;
 			targetProxy = B82F13521465FA90007FAC6A /* PBXContainerItemProxy */;
+		};
+		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Both;
+			targetProxy = B8C287A922781C5100F110B2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
