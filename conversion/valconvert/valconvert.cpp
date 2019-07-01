@@ -415,10 +415,12 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
 		x->mode = CONVERT_LOG_IN;
 	else if (msg == ps_exp  || msg == ps_iamp || msg == ps_ipitch)
 		x->mode = CONVERT_EXP_IN;
-    else if (msg != ps_scale)
-        object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
     else
+    {
+        if (msg != ps_scale)
+            object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
         x->mode = CONVERT_LINEAR;
+    }
     
 	if (msg == ps_amp)
         convert_power(min_out, max_out, 10.0, 20.0);
