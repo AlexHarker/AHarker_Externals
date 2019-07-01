@@ -21,9 +21,22 @@
 #include <algorithm>
 #include <cctype>
 #include <string>
+#include <vector>
 
 #include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
+
+
+#ifdef MSP_VERSION
+using max_object_base = t_pxobject;
+const char *object_name = "valconvert~";
+method free_routine = (method) dsp_free;
+#else
+using max_object_base = t_object;
+const char *object_name = "valconvert";
+method free_routine = 0L;
+#endif
+
 
 t_class *this_class;
 
@@ -40,11 +53,7 @@ enum t_conversion_mode {
 
 struct t_valconvert
 {
-#ifdef MSP_VERSION
-	t_pxobject a_obj;
-#else
-	t_object a_obj;
-#endif
+	max_object_base a_obj;
 	
 	t_conversion_mode mode;
 		
@@ -70,7 +79,6 @@ t_symbol *ps_list;
 
 
 void *valconvert_new(t_symbol *msg, long argc, t_atom *argv);
-void valconvert_free(t_valconvert *x);
 
 #ifdef MSP_VERSION
 
@@ -106,33 +114,22 @@ t_symbol *symbol_to_lowercase(t_symbol *sym)
 
 int C74_EXPORT main()
 {
-#ifdef MSP_VERSION
-    const char *object_name = "valconvert~";
-#else
-    const char *object_name = "valconvert";
-#endif
-    
-	this_class = class_new(object_name,
-						   (method) valconvert_new, 
-						   (method) valconvert_free, 
-						   sizeof(t_valconvert), 
-						   NULL, 
-						   A_GIMME,
-						   0);
+    this_class = class_new(object_name,
+                          (method) valconvert_new,
+                          free_routine,
+                          sizeof(t_valconvert),
+                          NULL,
+                          A_GIMME,
+                          0);
 	
 #ifdef MSP_VERSION
-
 	class_addmethod(this_class, (method)valconvert_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)valconvert_dsp64, "dsp64", A_CANT, 0);
-	
 	class_dspinit(this_class);
-	
 #else
-    
 	class_addmethod(this_class, (method)valconvert_int, "int", A_LONG, 0);
 	class_addmethod(this_class, (method)valconvert_float, "float", A_FLOAT, 0);
 	class_addmethod(this_class, (method)valconvert_list, "list", A_GIMME, 0);
-	
 #endif
 	
 	class_addmethod(this_class, (method)valconvert_anything, "anything", A_GIMME, 0);
@@ -154,25 +151,10 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
-void valconvert_free(t_valconvert *x)
-{
-#ifdef MSP_VERSION	
-	dsp_free(&x->a_obj);	
-#endif
-}
-
 void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 {
     t_valconvert *x = (t_valconvert *) object_alloc(this_class);
-	
-#ifdef MSP_VERSION	
-	dsp_setup((t_pxobject *)x, 1);
-	outlet_new((t_object *)x, "signal");
-#else
-	x->the_outlet = outlet_new(x, 0);
-#endif
-	
+		
 	x->mode = CONVERT_NONE;
 	x->lo = 0.0;
 	x->hi = 1.0;
@@ -191,14 +173,20 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 				valconvert_anything (x, atom_getsym(argv), argc - 1, argv + 1);
 		}
 	}
+    
+#ifdef MSP_VERSION
+    dsp_setup((t_pxobject *)x, 1);
+    outlet_new((t_object *)x, "signal");
+#else
+    x->the_outlet = outlet_new(x, 0);
+#endif
 	
-    return (x);
+    return x;
 }
 
 // Clip Helper
 
-template <class T>
-T clip(T x, T lo, T hi)
+double clip(double x, double lo, double hi)
 {
     x = (x > hi ? hi : x);
     return (x < lo ? lo : x);
@@ -277,8 +265,8 @@ void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec
             
         case CONVERT_EXP_IN:
             log_array(out, in, vec_size);
-            for (long i = 0; i < num_vecs; i++, out++)
-                *out_vec = min(max(lo, (*out_vec * mul - sub)), hi);
+            for (long i = 0; i < num_vecs; i++)
+                out_vec[i] = min(max(lo, (out_vec[i] * mul - sub)), hi);
             break;
     }
 }
@@ -330,7 +318,7 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
 }
 
 void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
-{				
+{
 	if (maxvectorsize >= SIMDLimits<double>::max_size)
 		object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform_SIMD64, 0, NULL);				
 	else	
@@ -370,22 +358,12 @@ void valconvert_int(t_valconvert *x, t_atom_long l_in)
 
 void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    t_atom *list = (t_atom *) malloc(argc * sizeof (t_atom));
-	t_atom *listptr = list;
-	long i = argc;
-	
-    if (!list)
-    {
-        object_error((t_object *) x, "could not allocate memory for conversion");
-        return;
-    }
-
-	while (i--) 
-		atom_setfloat(listptr++ ,valconvert_scale(x, atom_getfloat(argv++)));
-	
-	outlet_list(x->the_outlet, ps_list, argc, list);
+    std::vector<t_atom> list(argc);
     
-    free(list);
+    for (long i = 0; i < argc; i++)
+		atom_setfloat(list.data() + i ,valconvert_scale(x, atom_getfloat(argv++)));
+	
+	outlet_list(x->the_outlet, ps_list, argc, list.data());
 }
 
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
@@ -398,14 +376,24 @@ void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 
 #endif
 
+void convert_power(double &a, double&b, double base, double divisor)
+{
+    a = pow(base, a / divisor);
+    b = pow(base, b / divisor);
+}
+
+void convert_log(double &a, double&b)
+{
+    a = log(a);
+    b = log(b);
+}
+
 void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	t_conversion_mode mode = CONVERT_LINEAR;
-
     // Here we convert captialised symbols, so as to allow capitalisation
 
     msg = symbol_to_lowercase(msg);
-    
+
 	if (msg == ps_none)
 	{
 		x->mode = CONVERT_NONE;
@@ -424,52 +412,31 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
 	double max_out = atom_getfloat(argv++);
 
 	if (msg == ps_log || msg == ps_amp || msg == ps_pitch)
-		mode = CONVERT_LOG_IN;
-	
-	if (msg == ps_exp  || msg == ps_iamp || msg == ps_ipitch)
-		mode = CONVERT_EXP_IN;
-	
+		x->mode = CONVERT_LOG_IN;
+	else if (msg == ps_exp  || msg == ps_iamp || msg == ps_ipitch)
+		x->mode = CONVERT_EXP_IN;
+    else if (msg != ps_scale)
+        object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
+    else
+        x->mode = CONVERT_LINEAR;
+    
 	if (msg == ps_amp)
-	{
-		min_out = pow(10.0, min_out / 20.0);
-		max_out = pow(10.0, max_out / 20.0);
-	}
+        convert_power(min_out, max_out, 10.0, 20.0);
 	else if (msg == ps_pitch)
-	{
-		min_out = pow(2.0, min_out / 12.0);
-		max_out = pow(2.0, max_out / 12.0);
-	}
+        convert_power(min_out, max_out, 2.0, 12.0);
 	else if (msg == ps_iamp)
-	{
-		min_in = pow(10.0, min_in / 20.0);
-		max_in = pow(10.0, max_in / 20.0);
-	}
+        convert_power(min_in, max_in, 10.0, 20.0);
 	else if (msg == ps_ipitch)
-	{
-		min_in = pow(2.0, min_in / 12.0);
-		max_in = pow(2.0, max_in / 12.0);
-	}	
-	
-	double lo = min_out;
-	double hi = max_out;
-	
-	if (mode == CONVERT_LOG_IN)
-	{
-		min_out = log(min_out);
-		max_out = log(max_out);
-	}
-	else if (mode == CONVERT_EXP_IN)
-	{
-		min_in = log(min_in);
-		max_in = log(max_in);
-	}
-	
-	if (mode == CONVERT_LINEAR && msg != ps_scale)
-		object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
-	
-	x->mode = mode;
-	x->lo = lo;
-	x->hi = hi;
+        convert_power(min_in, max_in, 2.0, 12.0);
+
+	x->lo = min_out;
+	x->hi = max_out;
+    
+    if (x->mode == CONVERT_LOG_IN)
+        convert_log(min_out, max_out);
+    else if (x->mode == CONVERT_EXP_IN)
+        convert_log(min_in, max_in);
+    
     x->mul = (min_in == max_in) ? 0.0 : (max_out - min_out) / (max_in - min_in);
 	x->sub = (min_in * x->mul) - min_out;
 }
