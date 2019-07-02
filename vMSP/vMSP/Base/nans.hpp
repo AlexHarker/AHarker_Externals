@@ -4,17 +4,29 @@
 
 #include <stdint.h>
 
-struct nan_fixer
+
+// For fixing nans
+
+template <bool FixInfs>
+struct nan_and_inf_fixer
 {
     float operator()(const float a)
     {
         uint32_t a_int = *reinterpret_cast<const uint32_t *>(&a);
+        
+        if (FixInfs)
+            return ((a_int & 0x7F800000UL) == 0x7F800000UL) ? 0.f : a;
+        
         return ((a_int & 0x7F800000UL) == 0x7F800000UL) && (a_int & 0x007FFFFFUL) ? 0.f : a;
     }
     
     double operator()(const double a)
     {
         uint64_t a_int = *reinterpret_cast<const uint64_t *>(&a);
+        
+        if (FixInfs)
+            return ((a_int & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) ? 0.0 : a;
+        
         return ((a_int & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) && (a_int & 0x000FFFFFFFFFFFFFULL) ? 0.0 : a;
     }
     
@@ -28,7 +40,10 @@ struct nan_fixer
         
         const SIMDType<float, N> v_inf_32 = *reinterpret_cast<const float *>(&inf_32);
         
-        return and_not((v_inf_32 == (a & v_inf_32)) & (v_inf_32 != abs(a)), a);
+        if (FixInfs)
+            return and_not(v_inf_32 == (a & v_inf_32), a);
+        
+        return and_not(and_not(v_inf_32 == abs(a), v_inf_32 == (a & v_inf_32)), a);
     }
     
     template <int N>
@@ -38,7 +53,10 @@ struct nan_fixer
 
         const SIMDType<double, N> v_inf_64 = *reinterpret_cast<const double *>(&inf_64);
         
-        return and_not((v_inf_64 == (a & v_inf_64)) & (v_inf_64 != abs(a)), a);
+        if (FixInfs)
+            return and_not(v_inf_64 == (a & v_inf_64), a);
+        
+        return and_not(and_not(v_inf_64 == abs(a), v_inf_64 == (a & v_inf_64)), a);
     }
     
     template <class T>
@@ -54,5 +72,7 @@ struct nan_fixer
             *v_io = operator()(*v_io);
     }
 };
+
+using nan_fixer = nan_and_inf_fixer<true>;
 
 #endif /* NANS_H */
