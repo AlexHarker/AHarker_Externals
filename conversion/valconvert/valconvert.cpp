@@ -440,8 +440,8 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
 	else if (msg == ps_ipitch)
         convert_power(min_in, max_in, 2.0, 12.0);
 
-	x->lo = min_out;
-	x->hi = max_out;
+    x->lo = min_out < max_out ? min_out : max_out;
+	x->hi = min_out < max_out ? max_out : min_out;
     
     if (x->mode == CONVERT_LOG_IN)
         convert_log(min_out, max_out);
