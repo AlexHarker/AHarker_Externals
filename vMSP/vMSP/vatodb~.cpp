@@ -15,17 +15,23 @@
 
 struct atodb_functor
 {
-    const static float atodb_constant_32;
-    const static double atodb_constant_64;
+    const static double atodb_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return 20.f * log10f(a.mVal); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return 20.0 * log10(a.mVal); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return 20.f * log10f(a.mVal);
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return 20.0 * log10(a.mVal);
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
         log_array(o, i, size);
-        mul_const_array(o, size, T(atodb_constant_64));
+        mul_const_array(o, size, T(atodb_constant));
     }
     
     // Empty Implementations
@@ -36,8 +42,7 @@ struct atodb_functor
 
 // Initialise constants
 
-const float atodb_functor::atodb_constant_32 = static_cast<float>(20.0 / log(10.0));
-const double atodb_functor::atodb_constant_64 = 20.0 / log(10.0);
+const double atodb_functor::atodb_constant = 20.0 / log(10.0);
 
 typedef v_unary<atodb_functor, kVectorArray, kVectorArray> vatodb;
 

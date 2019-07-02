@@ -15,16 +15,22 @@
 
 struct dbtoa_functor
 {
-    const static float dbtoa_constant_32;
-    const static double dbtoa_constant_64;
+    const static double dbtoa_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * dbtoa_constant_32); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * dbtoa_constant_64); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return expf(a.mVal * static_cast<float>(dbtoa_constant));
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return exp(a.mVal * dbtoa_constant);
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
-        mul_const_array(o, i, size, T(dbtoa_constant_64));
+        mul_const_array(o, i, size, T(dbtoa_constant));
         exp_array(o, o, size);
     }
     
@@ -36,8 +42,7 @@ struct dbtoa_functor
 
 // Initialise constants
 
-const float dbtoa_functor::dbtoa_constant_32 = static_cast<float>(20.0 / log(10.0));
-const double dbtoa_functor::dbtoa_constant_64 = 20.0 / log(10.0);
+const double dbtoa_functor::dbtoa_constant = log(10.0) /  20.0;
 
 typedef v_unary<dbtoa_functor, kVectorArray, kVectorArray> vdbtoa;
 

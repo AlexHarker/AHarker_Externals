@@ -15,18 +15,24 @@
 
 struct mtof_functor
 {
-    const static float mtof_mul_constant_32;
-    const static double mtof_mul_constant_64;
-    const static float mtof_add_constant_32;
-    const static double mtof_add_constant_64;
+    const static double mtof_mul_constant;
+    const static double mtof_add_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return expf(a.mVal * mtof_mul_constant_32 + mtof_add_constant_32); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return exp(a.mVal * mtof_mul_constant_64 + mtof_add_constant_32); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        const float b = a.mVal * static_cast<float>(mtof_mul_constant);
+        return expf(b + static_cast<float>(mtof_add_constant));
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return exp(a.mVal * mtof_mul_constant + mtof_add_constant);
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
-        mul_add_const_array(o, i, size, T(mtof_mul_constant_64), T(mtof_add_constant_64));
+        mul_add_const_array(o, i, size, T(mtof_mul_constant), T(mtof_add_constant));
         exp_array(o, o, size);
     }
 
@@ -38,10 +44,8 @@ struct mtof_functor
 
 // Initialise constants
 
-const float mtof_functor::mtof_mul_constant_32 = static_cast<float>(log(2.0) / 12.0);
-const double mtof_functor::mtof_mul_constant_64 = log(2.0) / 12.0;
-const float mtof_functor::mtof_add_constant_32 = static_cast<float>(log(440.0) - (log(2.0) * 69.0 / 12.0));
-const double mtof_functor::mtof_add_constant_64 = log(440.0) - (log(2.0) * 69.0 / 12.0);
+const double mtof_functor::mtof_mul_constant = log(2.0) / 12.0;
+const double mtof_functor::mtof_add_constant = log(440.0) - (log(2.0) * 69.0 / 12.0);
 
 typedef v_unary<mtof_functor, kVectorArray, kVectorArray> vmtof;
 

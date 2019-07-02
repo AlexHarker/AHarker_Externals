@@ -15,19 +15,25 @@
 
 struct ftom_functor
 {
-    const static float ftom_mul_constant_32;
-    const static double ftom_mul_constant_64;
-    const static float ftom_add_constant_32;
-    const static double ftom_add_constant_64;
+    const static double ftom_mul_constant;
+    const static double ftom_add_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return static_cast<float>(ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return ftom_mul_constant_64 * log(a.mVal) + ftom_add_constant_64; }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        const float b = static_cast<float>(ftom_mul_constant) * logf(a.mVal);
+        return b + static_cast<float>(ftom_add_constant);
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return ftom_mul_constant * log(a.mVal) + ftom_add_constant;
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
         log_array(o, i, size);
-        mul_add_const_array(o, size, T(ftom_mul_constant_64), T(ftom_add_constant_64));
+        mul_add_const_array(o, size, T(ftom_mul_constant), T(ftom_add_constant));
     }
     
     // Empty Implementations
@@ -38,10 +44,8 @@ struct ftom_functor
 
 // Initialise constants
 
-const float ftom_functor::ftom_mul_constant_32 = static_cast<float>(12.0 / log(2.0));
-const double ftom_functor::ftom_mul_constant_64 = 12.0 / log(2.0);
-const float ftom_functor::ftom_add_constant_32 = static_cast<float>(269.0 - (log(440.0) * ftom_mul_constant_64));
-const double ftom_functor::ftom_add_constant_64 = 269.0 - (log(440.0) * ftom_mul_constant_64);
+const double ftom_functor::ftom_mul_constant = 12.0 / log(2.0);
+const double ftom_functor::ftom_add_constant = ((log(2.0) * 69.0 / 12.0) - log(440.0)) * ftom_mul_constant;
 
 typedef v_unary<ftom_functor, kVectorArray, kVectorArray> vftom;
 
