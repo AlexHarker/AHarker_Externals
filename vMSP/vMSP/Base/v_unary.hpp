@@ -71,7 +71,7 @@ public:
         // Default to scalar routine
         
         bool vector = (Vec32 != kScalar)  || ((sp[0]->s_n / simd_width) > 0);
-        method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1> >);
+        method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1>>);
         long vec_size_val = sp[0]->s_n;
 
         // Use SIMD routines if possible
@@ -87,9 +87,9 @@ public:
                 vec_size_val /= simd_width;
 
                 if (Vec32 == kVectorArray)
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_array<T> >);
+                    current_perform_routine = reinterpret_cast<method>(perform<perform_array<T>>);
                 else
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width> >);
+                    current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
             }
         }
         
