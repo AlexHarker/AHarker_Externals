@@ -192,6 +192,13 @@ double clip(double x, double lo, double hi)
     return (x < lo ? lo : x);
 }
 
+// Log Helper
+
+double safe_log(double x)
+{
+    return log(x < 0 ? 0 : x);
+}
+
 #ifdef MSP_VERSION
 
 // Templates
@@ -223,7 +230,7 @@ void valconvert_perform_scalar(t_valconvert *x, const T* in, T* out, long vec_si
             
         case CONVERT_EXP_IN:
             while (vec_size--)
-                *out++ = static_cast<T>(clip((log(*in++) * mul) - sub, lo, hi));
+                *out++ = static_cast<T>(clip((safe_log(*in++) * mul) - sub, lo, hi));
             break;
     }
 }
@@ -264,7 +271,9 @@ void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec
             break;
             
         case CONVERT_EXP_IN:
-            log_array(out, in, vec_size);
+            for (long i = 0; i < num_vecs; i++)
+                out_vec[i] = max(in_vec[i], T(0));
+            log_array(out, out, vec_size);
             for (long i = 0; i < num_vecs; i++)
                 out_vec[i] = min(max(lo, (out_vec[i] * mul - sub)), hi);
             break;
@@ -342,7 +351,7 @@ double valconvert_scale(t_valconvert *x, double input)
 		case CONVERT_NONE:      return input;
         case CONVERT_LINEAR:    return clip((input * x->mul) - x->sub, x->lo, x->hi);
         case CONVERT_LOG_IN:    return clip(exp((input * x->mul) - x->sub), x->lo, x->hi);
-		case CONVERT_EXP_IN:    return clip((log(input) * x->mul) - x->sub, x->lo, x->hi);
+		case CONVERT_EXP_IN:    return clip((safe_log(input) * x->mul) - x->sub, x->lo, x->hi);
 	}
 }
 
@@ -384,8 +393,8 @@ void convert_power(double &a, double&b, double base, double divisor)
 
 void convert_log(double &a, double&b)
 {
-    a = log(a);
-    b = log(b);
+    a = safe_log(a);
+    b = safe_log(b);
 }
 
 void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
