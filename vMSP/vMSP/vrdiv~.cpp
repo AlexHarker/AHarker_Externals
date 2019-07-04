@@ -9,6 +9,7 @@
  */
 
 #include "v_binary.hpp"
+#include "nans.hpp"
 
 struct rdiv_functor
 {
@@ -17,7 +18,7 @@ struct rdiv_functor
     {
         const static T zero(static_cast<typename T::scalar_type>(0));
         
-        return sel(b / a, zero, a == zero);
+        return nan_fixer()(b / a);
     }
     
     // Empty Implementations
