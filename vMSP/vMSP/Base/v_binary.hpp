@@ -5,7 +5,6 @@
 #include <z_dsp.h>
 
 #include <string>
-#include <algorithm>
 
 #include "SIMDSupport.hpp"
 #include <AH_Denormals.h>
@@ -15,7 +14,7 @@ enum CalculationType { kScalar, kVectorOp, kVectorArray };
 
 // Object structure
 
-template<typename Functor, CalculationType Vec32, CalculationType Vec64>
+template<typename Functor, CalculationType Vec32, CalculationType Vec64, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
     static float fix_denorm(const float a) { return AH_FIX_DENORM_FLOAT(a); }
@@ -55,9 +54,6 @@ public:
     static void free_object(T *x)
     {
         dsp_free(&x->m_obj);
-        
-        if (x->m_temp_memory)
-            deallocate_aligned(x->m_temp_memory);
     }
     
     // New routine
@@ -71,7 +67,6 @@ public:
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
         
         x->m_val = double_val;
-        x->m_temp_memory = NULL;
 
         return (x);
     }
@@ -109,33 +104,18 @@ public:
         
         method perform_routine = (method) perform<perform_op<T, 1> >;
         
-        if (x->m_temp_memory)
-        {
-            deallocate_aligned(x->m_temp_memory);
-            x->m_temp_memory = NULL;
-        }
-        
         // If nothing is connected then don't do anything here....
         
         if (!count[1] && !count[0])
             return;
         
-        // Only pass the second input (twice)
+        // Choose scalr routines as needed
         
         if (!count[0])
-        {
-            used_input1 = used_input2;
-            routine = 2;
-        }
-        
-        // Only pass the first input (twice)
-
-        if (!count[1])
-        {
-            used_input2 = used_input1;
+            routine = FirstInputAlwaysSignal ? 1 : 2;
+        else if (!count[1])
             routine = 1;
-        }
-        
+
         // Use SIMD code where possible
         
         if (Vec32 != kScalar && ((sp[0]->s_n / simd_width) > 0))
@@ -145,22 +125,7 @@ public:
                 object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
             }
             else
-            {
-                if (Vec32 == kVectorOp)
-                {
-                    routine += 3;
-                    vec_size_val = sp[0]->s_n / simd_width;
-                }
-                else
-                {
-                    // Make temporary array for array-based vector routines
-                    
-                    routine += 6;
-                    
-                    if (routine != 6)
-                        x->m_temp_memory = allocate_aligned<float>(sp[0]->s_n);
-                }
-            }
+                routine += (Vec32 == kVectorOp) ? 3 : 6;
         }
         
         switch (routine)
@@ -203,12 +168,8 @@ public:
     static void perform_single1_array(t_int *w)
     {
         T *x = reinterpret_cast<T *>(w[6]);
-        long vec_size = static_cast<long>(w[5]);
-
-        float *temp_memory = (float *)x->m_temp_memory;
         
-        std::fill_n(((float *)temp_memory), vec_size, static_cast<float>(x->m_val));
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), temp_memory, vec_size, kScalar1);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, kScalar1);
     }
     
     // 32 bit perform routine with RHS signal-rate input (SIMD - array)
@@ -217,12 +178,8 @@ public:
     static void perform_single2_array(t_int *w)
     {
         T *x = reinterpret_cast<T *>(w[6]);
-        long vec_size = static_cast<long>(w[5]);
-
-        float *temp_memory = (float *)x->m_temp_memory;
         
-        std::fill_n(((float *)temp_memory), vec_size, static_cast<float>(x->m_val));
-        x->m_functor(reinterpret_cast<float *>(w[4]), temp_memory, reinterpret_cast<float *>(w[2]), vec_size, kScalar2);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, kScalar2);
     }
     
     // 32 bit perform routine with two signal-rate inputs (SIMD - array)
@@ -232,7 +189,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[4]), static_cast<long>(w[5]), kBinary);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, kBinary);
     }
     
     // 32 bit perform routine with first operand only at signal-rate (SIMD - op)
@@ -260,7 +217,7 @@ public:
     template <class T, int N>
     static void perform_single2_op(t_int *w)
     {
-        SIMDType<float, N> *in1 = reinterpret_cast< SIMDType<float, N> *>(w[2]);
+        SIMDType<float, N> *in2 = reinterpret_cast< SIMDType<float, N> *>(w[3]);
         SIMDType<float, N> *out1 = reinterpret_cast< SIMDType<float, N> *>(w[4]);
         long vec_size = static_cast<long>(w[5]);
         T *x = reinterpret_cast<T *>(w[6]);
@@ -270,9 +227,9 @@ public:
         SIMDType<float, N> float_val(static_cast<float>(x->m_val));
 
         vec_size /= SIMDType<float, N>::size;
-        
+    
         while (vec_size--)
-            *out1++ = fix_denorm(functor(float_val, *in1++));
+            *out1++ = fix_denorm(functor(float_val, *in2++));
     }
     
     // 32 bit perform routine with two signal-rate inputs (SIMD - op)
@@ -299,47 +256,26 @@ public:
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
     {
+        method perform_routine = (method) perform64_op<T, 1>;
+        long routine = 0;
         const static int simd_width = SIMDLimits<double>::max_size;
         
-        long routine = 0;
-        
-        method perform_routine = (method) perform64_op<T, 1>;
-        
-        if (x->m_temp_memory)
-        {
-            deallocate_aligned(x->m_temp_memory);
-            x->m_temp_memory = NULL;
-        }
-            
         // If nothing is connected then don't do anything here....
             
         if (!count[1] && !count[0])
             return;
         
-        // Use single routine
+        // Choose scalar routines as needed
         
         if (!count[0])
-            routine = 2;
-        
-        if (!count[1])
+            routine = FirstInputAlwaysSignal ? 1 : 2;
+        else if (!count[1])
             routine = 1;
         
         // Use SIMD code where possible
         
         if (Vec64 != kScalar && ((maxvectorsize / simd_width) > 0))
-        {
-            if (Vec64 == kVectorOp)
-                routine += 3;
-            else
-            {
-                // Make temporary array for array-based vector routines
-            
-                routine += 6;
-
-                if (routine != 6)
-                    x->m_temp_memory = allocate_aligned<double>(maxvectorsize);
-            }
-        }
+            routine += (Vec32 == kVectorOp) ? 3 : 6;
         
         switch (routine)
         {
@@ -423,10 +359,7 @@ public:
     template <class T>
     static void perform64_single1_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        double *temp_memory = (double *)x->m_temp_memory;
-        
-        std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], ins[0], temp_memory, vec_size, kScalar1);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, kScalar1);
     }
     
     // 64 bit perform routine with one RHS signal-rate input (SIMD - array)
@@ -434,10 +367,7 @@ public:
     template <class T>
     static void perform64_single2_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        double *temp_memory = (double *)x->m_temp_memory;
-        
-        std::fill_n(((double *)temp_memory), vec_size, x->m_val);
-        x->m_functor(outs[0], temp_memory, ins[1], vec_size, kScalar2);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, kScalar2);
     }
     
     // 64 bit perform routine with two signal-rate inputs (SIMD - array)
@@ -445,7 +375,7 @@ public:
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, kBinary);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, kBinary);
     }
     
     // Assist routine
@@ -491,8 +421,6 @@ private:
     t_pxobject m_obj;
     
     double m_val;
-    
-    void *m_temp_memory;
         
     Functor m_functor;
 };
