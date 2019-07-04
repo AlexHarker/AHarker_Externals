@@ -7,37 +7,7 @@
 #include <immintrin.h>
 #include <stdint.h>
 
-/*
-// Load / Store / Unpack
- 
- #define F32_VEC_MOVE_LO                    _mm_movelh_ps
- #define F32_VEC_MOVE_HI                    _mm_movehl_ps
- #define F64_VEC_UNPACK_LO                  _mm_unpacklo_pd
- #define F64_VEC_UNPACK_HI                  _mm_unpackhi_pd
- #define F64_VEC_STORE_HI                   _mm_storeh_pd
- #define F64_VEC_STORE_LO                   _mm_storel_pd
- 
- // Conversions
- 
- #define F32_VEC_FROM_I32                   _mm_cvtepi32_ps
- #define I32_VEC_FROM_F32_ROUND             _mm_cvtps_epi32
- #define I32_VEC_FROM_F32_TRUNC             _mm_cvttps_epi32
- 
- #define F64_VEC_FROM_F32                   _mm_cvtps_pd
- #define F32_VEC_FROM_F64                   _mm_cvtpd_ps
- 
- #define F64_VEC_FROM_I32                   _mm_cvtepi32_pd
- #define I32_VEC_FROM_F64_ROUND             _mm_cvtpd_epi32
- #define I32_VEC_FROM_F64_TRUNC             _mm_cvttpd_epi32
- 
- // Shuffles
- 
- #define I32_VEC_SHUFFLE_OP                 _mm_shuffle_epi32
-*/
-
 #ifdef __APPLE__
-
-#include <cpuid.h>
 
 template <class T> T *allocate_aligned(size_t size)
 {
@@ -89,6 +59,14 @@ template <class T> void deallocate_aligned(T *ptr)
 #define SIMD_COMPILER_SUPPORT_SSE128 1
 #define SIMD_COMPILER_SUPPORT_AVX256 2
 #define SIMD_COMPILER_SUPPORT_AVX512 3
+
+// Microsoft Visual Studio doesn't ever define __SSE__ so if necessary we derive it from other defines
+
+#ifndef __SSE__
+#if defined _M_X64 || (defined _M_IX86_FP && _M_IX86_FP > 0)
+#define __SSE__ 1
+#endif
+#endif
 
 template<class T> struct SIMDLimits
 {
@@ -541,8 +519,8 @@ struct SIMDType<double, 4> : public SIMDVector<double, __m256d, 4>
     friend SIMDType operator | (const SIMDType& a, const SIMDType& b) { return _mm256_or_pd(a.mVal, b.mVal); }
     friend SIMDType operator ^ (const SIMDType& a, const SIMDType& b) { return _mm256_xor_pd(a.mVal, b.mVal); }
     
-    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_EQ_OQ); }
-    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_NEQ_OQ); }
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_EQ_UQ); }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_NEQ_UQ); }
     friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_GT_OQ); }
     friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_LT_OQ); }
     friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_pd(a.mVal, b.mVal, _CMP_GE_OQ); }
@@ -688,8 +666,8 @@ struct SIMDType<float, 8> : public SIMDVector<float, __m256, 8>
     friend SIMDType operator | (const SIMDType& a, const SIMDType& b) { return _mm256_or_ps(a.mVal, b.mVal); }
     friend SIMDType operator ^ (const SIMDType& a, const SIMDType& b) { return _mm256_xor_ps(a.mVal, b.mVal); }
     
-    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_EQ_OQ); }
-    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_NEQ_OQ); }
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_EQ_UQ); }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_NEQ_UQ); }
     friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_GT_OQ); }
     friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_LT_OQ); }
     friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return _mm256_cmp_ps(a.mVal, b.mVal, _CMP_GE_OQ); }
@@ -784,8 +762,8 @@ struct SIMDType<double, 8> : public SIMDVector<double, __m512d, 8>
     friend SIMDType operator | (const SIMDType& a, const SIMDType& b) { return _mm512_or_pd(a.mVal, b.mVal); }
     friend SIMDType operator ^ (const SIMDType& a, const SIMDType& b) { return _mm512_xor_pd(a.mVal, b.mVal); }
     
-    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_EQ_OQ); }
-    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_NEQ_OQ); }
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_EQ_UQ); }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_NEQ_UQ); }
     friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_GT_OQ); }
     friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_LT_OQ); }
     friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_pd_mask(a.mVal, b.mVal, _CMP_GE_OQ); }
@@ -826,8 +804,8 @@ struct SIMDType<float, 16> : public SIMDVector<float, __m512, 16>
     friend SIMDType operator | (const SIMDType& a, const SIMDType& b) { return _mm512_or_ps(a.mVal, b.mVal); }
     friend SIMDType operator ^ (const SIMDType& a, const SIMDType& b) { return _mm512_xor_ps(a.mVal, b.mVal); }
     
-    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_EQ_OQ); }
-    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_NEQ_OQ); }
+    friend SIMDType operator == (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_EQ_UQ); }
+    friend SIMDType operator != (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_NEQ_UQ); }
     friend SIMDType operator > (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_GT_OQ); }
     friend SIMDType operator < (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_LT_OQ); }
     friend SIMDType operator >= (const SIMDType& a, const SIMDType& b) { return _mm512_cmp_ps_mask(a.mVal, b.mVal, _CMP_GE_OQ); }
