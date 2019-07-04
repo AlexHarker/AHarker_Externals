@@ -49,7 +49,7 @@ struct log_functor
     struct replace_input_functor
     {
         template <class T>
-        T operator()(const T& a) { return select(T(min_constant), a, a > T(0.0)); }
+        T operator()(const T& a) { return sel(T(min_constant), a, a > T(0.0)); }
     };
     
     struct replace_base_functor
@@ -57,8 +57,8 @@ struct log_functor
         template <class T>
         T operator()(const T& a)
         {
-            const T b = select(a, T(M_E), a == T(0.0));
-            return select(b, T(std::numeric_limits<typename T::scalar_type>::infinity()), b == T(1.0));
+            const T b = sel(a, T(M_E), a == T(0.0));
+            return sel(b, T(std::numeric_limits<typename T::scalar_type>::infinity()), b == T(1.0));
         }
     };
     

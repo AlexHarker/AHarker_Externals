@@ -27,7 +27,7 @@ struct acosh_functor
     struct replace_functor
     {
         template <class T>
-        T operator()(const T& a) { return select(a, T(1.0), a < T(1.0)); }
+        T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
     };
     
     template <class T>

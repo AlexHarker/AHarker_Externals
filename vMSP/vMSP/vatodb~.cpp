@@ -55,7 +55,7 @@ struct atodb_functor
     struct output_fixer
     {
         template <class T>
-        T operator()(const T& a) { return select(nan_fixer()(a), T(-999), is_negative_inf(a)); }
+        T operator()(const T& a) { return sel(nan_fixer()(a), T(-999), is_negative_inf(a)); }
     };
     
     template <class T>
