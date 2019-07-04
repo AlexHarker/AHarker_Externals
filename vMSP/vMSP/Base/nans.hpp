@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 
+#include "vector_loops.hpp"
 
 // For fixing nans
 
@@ -59,17 +60,16 @@ struct nan_and_inf_fixer
         return and_not(and_not(v_inf_64 == abs(a), v_inf_64 == (a & v_inf_64)), a);
     }
     
+    struct nan_loop_fixer
+    {
+        template <class T>
+        T operator()(const T& a, nan_and_inf_fixer& op) { return op(a); }
+    };
+    
     template <class T>
     void operator()(T *io, long size)
     {
-        const int simd_width = SIMDLimits<T>::max_size;
-        
-        SIMDType<T, simd_width> *v_io = reinterpret_cast<SIMDType<T, simd_width> *>(io);
-        
-        // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
-        
-        for (; size > 0; size -= simd_width, v_io++)
-            *v_io = operator()(*v_io);
+        vector_loop<nan_loop_fixer>(io, io, size, *this);
     }
 };
 

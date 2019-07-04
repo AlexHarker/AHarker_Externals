@@ -1,46 +1,46 @@
 
 #include <SIMDSupport.hpp>
 
-template <class T>
-static void mul_const_array(T *o, T *i, long length, T constant)
-{
-    const int simd_width = SIMDLimits<T>::max_size;
-    
-    SIMDType<T, simd_width> *v_o = reinterpret_cast<SIMDType<T, simd_width> *>(o);
-    SIMDType<T, simd_width> *v_i = reinterpret_cast<SIMDType<T, simd_width> *>(i);
-    SIMDType<T, simd_width> v_constant(constant);
-    
-    // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
+#include "vector_loops.hpp"
 
-    for (; length > 0; length -= simd_width)
-        *v_o++ =  *v_i++ * v_constant;
+struct mul_functor
+{
+    template <class T>
+    T operator()(const T& a, const T& mul) { return a * mul; }
+};
+
+struct mul_add_functor
+{
+    template <class T>
+    T operator()(const T& a, const T& mul, T& add) { return a * mul + add; }
+};
+
+template <class T>
+static void mul_const_array(T *o, const T *i, long size, T mul)
+{
+    SIMDType<T, SIMDLimits<T>::max_size> v_mul(mul);
+    
+    vector_loop<mul_functor>(o, i, size, v_mul);
 }
 
 template <class T>
-void mul_const_array(T *io, long length, T constant)
+void mul_const_array(T *io, long size, T mul)
 {
-    mul_const_array(io, io, length, constant);
+    mul_const_array(io, io, size, mul);
 }
 
 template <class T>
-void mul_add_const_array(T *o, T *i, long length, T mul, T add)
+void mul_add_const_array(T *o, const T *i, long size, T mul, T add)
 {
-    const int simd_width = SIMDLimits<T>::max_size;
+    SIMDType<T, SIMDLimits<T>::max_size> v_mul(mul);
+    SIMDType<T, SIMDLimits<T>::max_size> v_add(add);
 
-    SIMDType<T, simd_width> *v_o = reinterpret_cast<SIMDType<T, simd_width> *>(o);
-    SIMDType<T, simd_width> *v_i = reinterpret_cast<SIMDType<T, simd_width> *>(i);
-    SIMDType<T, simd_width> v_mul(mul);
-    SIMDType<T, simd_width> v_add(add);
-    
-    // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
-
-    for (; length > 0; length -= simd_width)
-        *v_o++ =  *v_i++ * v_mul + v_add;
+    vector_loop<mul_add_functor>(o, i, size, v_mul, v_add);
 }
 
 template <class T>
-void mul_add_const_array(T *io, long length, T mul, T add)
+void mul_add_const_array(T *io, long size, T mul, T add)
 {
-    mul_add_const_array(io, io, length, mul, add);
+    mul_add_const_array(io, io, size, mul, add);
 }
 

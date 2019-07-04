@@ -9,17 +9,32 @@
  */
 
 #include "v_unary.hpp"
+#include "vector_loops.hpp"
 #include <SIMDExtended.hpp>
 
 struct acosh_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return acoshf(a.mVal); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return acosh(a.mVal); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return a.mVal < 1.f ? 0.f : acoshf(a.mVal);
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
+    }
+    
+    struct replace_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return select(a, T(1.0), a < T(1.0)); }
+    };
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
-        acosh_array(o, i, size);
+        vector_loop<replace_functor>(o, i, size);
+        acosh_array(o, o, size);
     }
     
     // Empty Implementations

@@ -9,19 +9,32 @@
  */
 
 #include "v_unary.hpp"
-#include "nans.hpp"
+#include "vector_loops.hpp"
 #include <SIMDExtended.hpp>
 
 struct acos_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return nan_fixer()(acosf(a.mVal)); }
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return nan_fixer()(acos(a.mVal)); }
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return abs(a).mVal > 1.f ? 0.f : acosf(a.mVal);
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return abs(a).mVal > 1.0 ? 0.0 : acos(a.mVal);
+    }
+    
+    struct replace_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return select(a, T(1.0), abs(a) > T(1.0)); }
+    };
     
     template <class T>
     void operator()(T *o, T *i, long size)
     {
-        acos_array(o, i, size);
-        nan_fixer()(o, size);
+        vector_loop<replace_functor>(o, i, size);
+        acos_array(o, o, size);
     }
     
     // Empty Implementations
