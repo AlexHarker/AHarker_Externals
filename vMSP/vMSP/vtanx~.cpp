@@ -9,7 +9,6 @@
  */
 
 #include "v_unary.hpp"
-#include "nans.hpp"
 #include <SIMDExtended.hpp>
 
 struct tanx_functor

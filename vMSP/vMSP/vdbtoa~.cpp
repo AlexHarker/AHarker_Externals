@@ -44,7 +44,7 @@ struct dbtoa_functor
 
 // Initialise constants
 
-const double dbtoa_functor::dbtoa_constant = log(10.0) /  20.0;
+const double dbtoa_functor::dbtoa_constant = log(10.0) / 20.0;
 
 typedef v_unary<dbtoa_functor, kVectorArray, kVectorArray> vdbtoa;
 
