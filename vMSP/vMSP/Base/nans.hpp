@@ -3,6 +3,7 @@
 #define NANS_H
 
 #include <stdint.h>
+#include <limits>
 
 #include "vector_loops.hpp"
 
@@ -34,30 +35,15 @@ struct nan_and_inf_fixer
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)       { return operator()(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)     { return operator()(a.mVal); }
     
-    template <int N>
-    SIMDType<float, N> operator()(const SIMDType<float, N> a)
+    template <class T, int N>
+    SIMDType<T, N> operator()(const SIMDType<T, N> a)
     {
-        const static uint32_t inf_32 = 0x7F800000U;
-        
-        const SIMDType<float, N> v_inf_32 = *reinterpret_cast<const float *>(&inf_32);
+        const SIMDType<T, N> v_inf(std::numeric_limits<T>::infinity());
         
         if (FixInfs)
-            return and_not(v_inf_32 == (a & v_inf_32), a);
+            return and_not(v_inf == (a & v_inf), a);
         
-        return and_not(and_not(v_inf_32 == abs(a), v_inf_32 == (a & v_inf_32)), a);
-    }
-    
-    template <int N>
-    SIMDType<double, N> operator()(const SIMDType<double, N> a)
-    {
-        const static uint64_t inf_64 = 0x7FF0000000000000U;
-
-        const SIMDType<double, N> v_inf_64 = *reinterpret_cast<const double *>(&inf_64);
-        
-        if (FixInfs)
-            return and_not(v_inf_64 == (a & v_inf_64), a);
-        
-        return and_not(and_not(v_inf_64 == abs(a), v_inf_64 == (a & v_inf_64)), a);
+        return and_not(and_not(v_inf == abs(a), v_inf == (a & v_inf)), a);
     }
     
     struct nan_loop_fixer
