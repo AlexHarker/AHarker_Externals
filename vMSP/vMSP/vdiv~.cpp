@@ -17,7 +17,9 @@ struct div_functor
     {
         const static T zero(static_cast<typename T::scalar_type>(0));
         
-        return sel(a / b, zero, b == zero);
+        // N.B - the exact behaviour of div~ is different when a is aNaN and bis zero, but it uses a * (1/b)
+        
+        return sel(zero, a / b, b != zero);
     }
     
     // Empty Implementations
