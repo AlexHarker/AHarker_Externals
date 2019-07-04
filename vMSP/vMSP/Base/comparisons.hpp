@@ -20,34 +20,4 @@ struct comparison_functor
     void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
 };
 
-struct equal
-{
-    template <class T> T operator()(const T a, const T b) { return a == b; }
-};
-
-struct not_equal
-{
-    template <class T> T operator()(const T a, const T b) { return a != b; }
-};
-
-struct greater
-{
-    template <class T> T operator()(const T a, const T b) { return a > b; }
-};
-
-struct greater_eq
-{
-    template <class T> T operator()(const T a, const T b) { return a >= b; }
-};
-
-struct less
-{
-    template <class T> T operator()(const T a, const T b) { return a < b; }
-};
-
-struct less_eq
-{
-    template <class T> T operator()(const T a, const T b) { return a <= b; }
-};
-
 #endif

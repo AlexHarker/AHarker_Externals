@@ -11,6 +11,11 @@
 #include "v_binary.hpp"
 #include "comparisons.hpp"
 
+struct equal
+{
+    template <class T> T operator()(const T a, const T b) { return a == b; }
+};
+
 typedef v_binary<comparison_functor<equal>, kVectorOp, kVectorOp> vequals;
 
 int C74_EXPORT main()
