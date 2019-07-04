@@ -14,12 +14,7 @@
 struct rdiv_functor
 {
     template <class T>
-    T operator()(const T a, const T b)
-    {
-        const static T zero(static_cast<typename T::scalar_type>(0));
-        
-        return nan_fixer()(b / a);
-    }
+    T operator()(const T a, const T b) { return nan_fixer()(b / a); }
     
     // Empty Implementations
     
