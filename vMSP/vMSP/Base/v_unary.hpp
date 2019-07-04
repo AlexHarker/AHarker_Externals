@@ -98,10 +98,10 @@ public:
     
     // 32 bit perform return wrapper
     
-    template<void perform_routine(t_int *w)>
+    template<void PerformRoutine(t_int *w)>
     static t_int *perform(t_int *w)
     {
-        perform_routine(w);
+        PerformRoutine(w);
         
         return w + 6;
     }
