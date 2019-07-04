@@ -14,8 +14,7 @@
 
 struct asin_functor
 {
-    SIMDType<float, 1> operator()
-    (const SIMDType<float, 1> a)
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return abs(a).mVal > 1.f ? 0.f : asinf(a.mVal);
     }
@@ -50,4 +49,3 @@ int C74_EXPORT main()
 {
     vasin::setup<vasin>("vasin~");
 }
-
