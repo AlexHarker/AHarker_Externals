@@ -21,8 +21,8 @@
 void *this_class;
 
 
-typedef struct schedulemessage{
-    
+typedef struct schedulemessage
+{
 	t_object a_obj;
 	
 	double delay;
