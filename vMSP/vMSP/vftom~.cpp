@@ -11,6 +11,7 @@
 
 #include "v_unary.hpp"
 #include "conversions.hpp"
+#include "nans.hpp"
 #include <SIMDExtended.hpp>
 
 struct ftom_functor
@@ -21,12 +22,12 @@ struct ftom_functor
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         const float b = static_cast<float>(ftom_mul_constant) * logf(a.mVal);
-        return b + static_cast<float>(ftom_add_constant);
+        return nan_fixer()(b + static_cast<float>(ftom_add_constant));
     }
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
-        return ftom_mul_constant * log(a.mVal) + ftom_add_constant;
+        return nan_fixer()(ftom_mul_constant * log(a.mVal) + ftom_add_constant);
     }
     
     template <class T>
@@ -34,6 +35,7 @@ struct ftom_functor
     {
         log_array(o, i, size);
         mul_add_const_array(o, size, T(ftom_mul_constant), T(ftom_add_constant));
+        nan_fixer()(o, size);
     }
     
     // Empty Implementations

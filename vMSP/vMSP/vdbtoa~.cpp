@@ -11,6 +11,7 @@
 
 #include "v_unary.hpp"
 #include "conversions.hpp"
+#include "nans.hpp"
 #include <SIMDExtended.hpp>
 
 struct dbtoa_functor
@@ -19,12 +20,12 @@ struct dbtoa_functor
     
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
-        return expf(a.mVal * static_cast<float>(dbtoa_constant));
+        return nan_fixer()(expf(a.mVal * static_cast<float>(dbtoa_constant)));
     }
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
-        return exp(a.mVal * dbtoa_constant);
+        return nan_fixer()(exp(a.mVal * dbtoa_constant));
     }
     
     template <class T>
@@ -32,6 +33,7 @@ struct dbtoa_functor
     {
         mul_const_array(o, i, size, T(dbtoa_constant));
         exp_array(o, o, size);
+        nan_fixer()(o, size);
     }
     
     // Empty Implementations

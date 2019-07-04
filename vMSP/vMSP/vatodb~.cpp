@@ -11,6 +11,7 @@
 
 #include "v_unary.hpp"
 #include "conversions.hpp"
+#include "nans.hpp"
 #include <SIMDExtended.hpp>
 
 struct atodb_functor
@@ -19,12 +20,12 @@ struct atodb_functor
     
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
-        return 20.f * log10f(a.mVal);
+        return nan_fixer()(20.f * log10f(a.mVal));
     }
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
-        return 20.0 * log10(a.mVal);
+        return nan_fixer()(20.0 * log10(a.mVal));
     }
     
     template <class T>
@@ -32,6 +33,7 @@ struct atodb_functor
     {
         log_array(o, i, size);
         mul_const_array(o, size, T(atodb_constant));
+        nan_fixer()(o, size);
     }
     
     // Empty Implementations
