@@ -493,9 +493,7 @@ private:
     double m_val;
     
     void *m_temp_memory;
-    
-public:
-    
+        
     Functor m_functor;
 };
 
