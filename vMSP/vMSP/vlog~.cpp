@@ -10,22 +10,23 @@
 
 #include "v_binary.hpp"
 #include "conversions.hpp"
+#include "vector_loops.hpp"
 #include <SIMDExtended.hpp>
 #include <alloca.h>
 
-// FIX - clipping
-//#define MIN_INPUT_VAL 0.0000000001
-
 struct log_functor
 {
+    static const double min_constant;
+    
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
     {
-        return static_cast<float>(logf(a.mVal) / logf(b.mVal));
+        float min_constant_f = static_cast<float>(min_constant);
+        return static_cast<float>(logf(a.mVal > 0.0 ? a.mVal : min_constant_f) / logf(b.mVal));
     }
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
-        return log(a.mVal) / log(b.mVal);
+        return log(a.mVal > 0.0 ? a.mVal : min_constant) / log(b.mVal);
     }
     
     double update_base(double base)
@@ -36,63 +37,48 @@ struct log_functor
         if (base != m_base)
         {
             m_base = base;
-            m_log_base = log(base);
-            m_base_mul = 1.0 / m_log_base;
+            m_base_mul = 1.0 / log(base);
         }
         
         return m_base_mul;
     }
-    
-    double get_mul(double base)
-    {
-        update_base(base);
-        return m_base_mul;
-    }
-    
-    double get_log(double base)
-    {
-        update_base(base);
-        return m_log_base;
-    }
 
+    struct replace_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return select(T(min_constant), a, a > T(0.0)); }
+    };
+    
     template <class T>
-    void operator()(T *o, T *i1, T *i2, long size, InputType type)
+    void operator()(T *o, T *i1, T *i2, long size, double val, InputType type)
     {
         const int simd_width = SIMDLimits<T>::max_size;
         
         switch (type)
         {
+            // N.B. - there is no signal/float input for log~ so if there's only one connection we take this route
+                
             case kScalar1:
-            {
-                const T mul = static_cast<T>(get_mul(*i2));
-                
-                log_array(o, i1, size);
-                mul_const_array(o, size, mul);
-                break;
-            }
-                
             case kScalar2:
             {
-                SIMDType<T, simd_width> v(get_log(*i1));
-                SIMDType<T, simd_width> *v_io = reinterpret_cast<SIMDType<T, simd_width> *>(o);
-
-                log_array(o, i2, size);
-
-                // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
+                const T mul = static_cast<T>(update_base(val));
                 
-                for (; size > 0; size -= simd_width, v_io++)
-                    *v_io = v / *v_io;
-                
+                vector_loop<replace_functor>(o, i1, size);
+                log_array(o, o, size);
+                mul_const_array(o, size, mul);
                 break;
             }
                 
             case kBinary:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
+
+                // N.B. must copy i2 first before writing to the outpu
                 
                 log_array(t, i2, size);
-                log_array(o, i1, size);
-                
+                vector_loop<replace_functor>(o, i1, size);
+                log_array(o, o, size);
+
                 SIMDType<T, simd_width> *v_io = reinterpret_cast<SIMDType<T, simd_width> *>(o);
                 SIMDType<T, simd_width> *v_i2 = reinterpret_cast<SIMDType<T, simd_width> *>(t);
 
@@ -112,14 +98,16 @@ struct log_functor
     T operator()(const T a, const T b) { return a; }
     
     double m_base = 1.0;
-    double m_log_base = 0.0;
     double m_base_mul = 0.0;
 };
 
-typedef v_binary<log_functor, kVectorArray, kVectorArray> vlog;
+// Initialise constants
+
+const double log_functor::min_constant = 0.0000000001;
+
+typedef v_binary<log_functor, kVectorArray, kVectorArray, true> vlog;
 
 int C74_EXPORT main()
 {
     vlog::setup<vlog>("vlog~");
 }
-
