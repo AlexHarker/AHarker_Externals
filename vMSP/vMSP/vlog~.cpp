@@ -10,7 +10,7 @@
 
 #include "v_binary.hpp"
 #include "conversions.hpp"
-#include "vector_loops.hpp"
+#include "vector_loop.hpp"
 #include <SIMDExtended.hpp>
 #include <alloca.h>
 #include <limits>

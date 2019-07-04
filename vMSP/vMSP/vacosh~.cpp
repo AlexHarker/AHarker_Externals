@@ -9,7 +9,7 @@
  */
 
 #include "v_unary.hpp"
-#include "vector_loops.hpp"
+#include "vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
 struct acosh_functor

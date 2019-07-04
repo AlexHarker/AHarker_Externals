@@ -1,7 +1,7 @@
 
 #include <SIMDSupport.hpp>
 
-#include "vector_loops.hpp"
+#include "vector_loop.hpp"
 
 struct mul_functor
 {

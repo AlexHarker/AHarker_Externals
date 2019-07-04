@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <limits>
 
-#include "vector_loops.hpp"
+#include "vector_loop.hpp"
 
 // For fixing nans
 
