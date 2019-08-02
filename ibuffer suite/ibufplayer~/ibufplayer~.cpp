@@ -18,6 +18,7 @@
 #include <z_dsp.h>
 
 #include <AH_Denormals.h>
+#include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
 #include <limits>
@@ -31,12 +32,13 @@ enum t_transport_flag
     FLAG_NONE,
     FLAG_PLAY,
     FLAG_STOP,
-    
 };
 
 const int max_num_chans = 4;
 
-typedef struct _ibufplayer
+// Main object struct
+
+struct t_ibufplayer
 {
     t_pxobject x_obj;
 	
@@ -46,7 +48,7 @@ typedef struct _ibufplayer
 
     InterpType interp_type;
 
-    double pos;
+    double drive;
     double speed;
     double start_samp;
     double min_samp;
@@ -66,8 +68,48 @@ typedef struct _ibufplayer
 	void *done_clock;
 	void *bang_outlet;
 	
-} t_ibufplayer;
+};
 
+// Phase info helper
+
+struct phase_info
+{
+    phase_info(bool sig_control, double speed, double start, double min, double max, double length)
+    : m_sig_control(sig_control), m_speed(speed), m_start(start)
+    , m_min(std::min(min, length)), m_max(std::min(max, length))
+    , m_length_norm((m_speed < 0 ? -1.0 : 1.0) / (m_max - m_min))
+    {}
+    
+    long fixed_speed_loop_size(double drive, long n_samps) const
+    {
+        if (m_speed > 0)
+            return ((n_samps * m_speed) + drive > m_max) ? (m_max - drive) / m_speed : n_samps;
+        
+        return ((n_samps * m_speed) + drive < m_min) ? (m_min - drive) / m_speed : n_samps;
+    }
+    
+    bool speed_is_int() const { return m_speed == std::round(m_speed) && !m_sig_control; }
+    
+    bool out_of_range(double drive) const { return drive > m_max || drive < m_min; }
+    
+    bool sig_control() const { return m_sig_control; }
+    
+    double speed() const { return m_speed; }
+    double start() const { return m_start; }
+    double min() const { return m_min; }
+    double max() const { return m_max; }
+    double length_norm() const { return m_length_norm; }
+    
+private:
+    
+    bool m_sig_control;
+    
+    double m_speed;
+    double m_start;
+    double m_min;
+    double m_max;
+    double m_length_norm;
+};
 
 void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_free(t_ibufplayer *x);
@@ -142,7 +184,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Default variables
 	
-	x->pos = 0;
+	x->drive = 0;
 	x->speed = 1;
 	x->sig_control = false;
 	x->playing = false;
@@ -210,7 +252,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 	if (buffer.get_type() != kBufferNone)
 	{
 		if (s != x->buffer_name)
-			x->pos = -1.0;
+			x->drive = -1.0;
 		x->buffer_name = s;
 		
 	}
@@ -315,101 +357,95 @@ void ibufplayer_done_bang(t_ibufplayer *x)
 	outlet_bang(x->bang_outlet);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////// Core Perform Routines ///////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Core Perform Routines
 
-template<class T>
-void ibufplayer_update_phase(double *&positions, T *&phases, double &pos, const double &speed, const double start_samp, const double length_recip)
+template <class T, class U>
+void ibufplayer_update_phase(U *&positions, T *&phases, U &pos, const U &speed, const phase_info &info)
 {
     *positions++ = pos;
-    *phases++ = (pos - start_samp) * length_recip;
+    *phases++ = (pos - info.start()) * info.length_norm();
     pos += speed;
 }
 
-template<class T>
-long ibufplayer_phase(double *positions, T *phases, T *in, long vec_size, double speed, double start_samp, double min_samp, double max_samp, double length_recip, bool sig_control, double &pos_store)
+template <int N, class T>
+void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const phase_info &info, long n_vecs)
 {
-    double pos = pos_store;
-    long to_do, i;
+    double pos_array[N];
     
-    if (sig_control)
-    {
-        for (i = 0; i < vec_size; i++)
-        {
-            if (pos > max_samp || pos < min_samp)
-                break;
-            
-            ibufplayer_update_phase(positions, phases, pos, *in++ * speed, start_samp, length_recip);
-        }
-        to_do = i;
-    }
-    else
-    {
-        if (speed > 0)
-            to_do = ((vec_size * speed) + pos > max_samp) ? (max_samp - pos) / speed : vec_size;
-        else
-            to_do = ((vec_size * speed) + pos < min_samp) ? (min_samp - pos) / speed : vec_size;
-        
-        for (i = 0; i < to_do; i++)
-            ibufplayer_update_phase(positions, phases, pos, speed, start_samp, length_recip);
-    }
+    for (int i = 0; i < N; i++, pos += info.speed())
+        pos_array[i] = pos;
     
-    pos_store = to_do < vec_size ? -1.0 : pos;
+    SIMDType<double, N> v_pos(pos_array);
+    SIMDType<double, N> v_speed(info.speed() * N);
+    SIMDType<double, N> *v_positions = reinterpret_cast<SIMDType<double, N> *>(positions);
+    SIMDType<T, N>* v_phases = reinterpret_cast<SIMDType<T, N> *>(phases);
+
+    for (long i = 0; i < n_vecs; i++)
+        ibufplayer_update_phase(v_positions, v_phases, v_pos, v_speed, info);
     
-    return to_do;
+    v_pos.store(pos_array);
+    pos = pos_array[0];
 }
 
 template <class T>
 void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positions, long vec_size)
 {
-    // Object and local variables
+    const int N = SIMDLimits<double>::max_size;
+
+    ibuffer_data buffer(x->buffer_name);
     
     long obj_n_chans = x->obj_n_chans;
     long to_do = 0;
     
-    bool zero_outputs = true;
-    
     // Set default position output
     
-    for (long i = 0; i < vec_size; i++)
-        phase_out[i] = 1.0;
-    
-    ibuffer_data buffer(x->buffer_name);
+    std::fill_n(phase_out, vec_size, 1.0);
     
     // Check on playback state / new play instruction and decide whether to output
     
     if (buffer.get_length())
     {
-        double speed = x->speed * buffer.get_sample_rate() * x->sr_div;
-        double start_samp = x->start_samp;
-        double min_samp = x->min_samp;
-        double max_samp = x->max_samp;
+        double per_samp = x->speed * buffer.get_sample_rate() * x->sr_div;
         
-        if (max_samp > buffer.get_length())
-            max_samp = buffer.get_length();
-        
-        double length_recip = (speed < 0) ? -1.0 / (max_samp - min_samp) : 1.0 / (max_samp - min_samp);
-        
+        phase_info info(x->sig_control, per_samp, x->start_samp, x->min_samp, x->max_samp, buffer.get_length());
+
         if (x->transport_flag == FLAG_PLAY)
-            x->pos = start_samp;
+            x->drive = x->start_samp;
         
         if (x->transport_flag == FLAG_STOP)
-            x->pos = -1.0;
+            x->drive = -1.0;
         
-        if (x->pos <= max_samp && x->pos >= min_samp)
+        if (!info.out_of_range(x->drive))
         {
-            zero_outputs = false;
-            bool sig_control = x->sig_control;
-            
             x->playing = true;
+
+            InterpType interp_type = info.speed_is_int() ? kInterpNone : x->interp_type;
 
             // Calculate the phasor block
             
-            to_do = ibufplayer_phase(positions, phase_out, in, vec_size, speed, start_samp, min_samp, max_samp, length_recip, sig_control, x->pos);
+            double drive = x->drive;
             
-            long ispeed = speed;;
-            InterpType interp_type = (!(speed - ispeed) && !sig_control) ? kInterpNone : x->interp_type;
+            if (info.sig_control())
+            {
+                for (to_do = 0; to_do < vec_size; to_do++)
+                {
+                    if (info.out_of_range(drive))
+                        break;
+                    
+                    ibufplayer_update_phase(positions, phase_out, drive, *in++ * info.speed(), info);
+                }
+            }
+            else
+            {
+                to_do = info.fixed_speed_loop_size(drive, vec_size);
+                const long v_count = ((t_ptr_uint) positions % 16 || (t_ptr_uint) phase_out % 16) ? 0 : to_do / N;
+                const long S = v_count * N;
+                
+                ibufplayer_phase_fixed<N>(positions + 0, phase_out + 0, drive, info, v_count);
+                ibufplayer_phase_fixed<1>(positions + S, phase_out + S, drive, info, to_do - S);
+            }
+            
+            x->drive = to_do < vec_size ? -1.0 : drive;
             
             // Now get samples interpolating as relevant
             
@@ -426,13 +462,15 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
         }
     }
     
-    if (zero_outputs)
+    // Zero outputs if needed
+    
+    if (!to_do)
     {
-        // Zero outputs
-        
         for (long i = 0; i < obj_n_chans; i++)
             std::fill_n(outs[i], vec_size, 0);
     }
+    
+    // Calculate playing flag
     
     bool playing = !(to_do < vec_size);
     if (!playing && x->playing)
@@ -441,10 +479,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     x->transport_flag = FLAG_NONE;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////// Perform and DSP for 32-bit signals ////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+// Perform and DSP for 32-bit signals
 
 t_int *ibufplayer_perform(t_int *w)
 {		
@@ -482,9 +517,7 @@ void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
 	dsp_add(denormals_perform, 6, ibufplayer_perform, sp[0]->s_vec, x->float_outs, sp[x->obj_n_chans]->s_vec, sp[0]->s_n, x);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////// Perform and DSP for 64-bit signals ////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+// Perform and DSP for 64-bit signals
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
