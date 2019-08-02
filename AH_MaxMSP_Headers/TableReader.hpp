@@ -61,7 +61,7 @@ template <class T, class U, class V, class Table, typename Interp> struct interp
         
         pos_type fract_array[T::size];
         out_type array[T::size * 4];
-
+        
         for (int i = 0; i < T::size; i++)
         {
             V position = *positions++;
@@ -156,7 +156,7 @@ void table_read(Table fetcher, W *out, const X *positions, intptr_t n_samps, dou
     intptr_t n_vsample = (n_samps / vec_size) * vec_size;
     
     table_read_loop<SIMDType<W, vec_size>, SIMDType<fetch_type, vec_size>, X, Table, Reader>(fetcher, out, positions, n_vsample, mul);
-    table_read_loop<Scalar<W>, Scalar<fetch_type>, X, Table, Reader>(fetcher, out + n_vsample, positions + n_vsample, n_samps - n_vsample, mul);
+    table_read_loop<SIMDType<W, 1>, SIMDType<fetch_type, 1>, X, Table, Reader>(fetcher, out + n_vsample, positions + n_vsample, n_samps - n_vsample, mul);
 }
 
 // Main reading call that switches between different types of interpolation
@@ -175,3 +175,4 @@ void table_read(Table fetcher, T *out, const U *positions, intptr_t n_samps, T m
 }
 
 #endif /* TableReader_h */
+
