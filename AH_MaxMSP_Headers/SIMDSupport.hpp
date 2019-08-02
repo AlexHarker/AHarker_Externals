@@ -219,7 +219,7 @@ template <class T> struct Scalar
     Scalar(const T* a) { mVal = *a; }
     template <class U> Scalar(const Scalar<U> a) { mVal = static_cast<T>(a.mVal); }
     
-    void store(T *a) { *a = mVal; }
+    void store(T *a) const { *a = mVal; }
     
     friend Scalar operator + (const Scalar& a, const Scalar& b) { return a.mVal + b.mVal; }
     friend Scalar operator - (const Scalar& a, const Scalar& b) { return a.mVal - b.mVal; }
@@ -275,7 +275,7 @@ struct SIMDType<double, 1>
     SIMDType(double a) : mVal(a) {}
     SIMDType(const double* a) { mVal = *a; }
     
-    void store(double *a) { *a = mVal; }
+    void store(double *a) const { *a = mVal; }
     
     friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return a.mVal + b.mVal; }
     friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return a.mVal - b.mVal; }
@@ -316,7 +316,7 @@ struct SIMDType<float, 1>
     SIMDType(float a) : mVal(a) {}
     SIMDType(const float* a) { mVal = *a; }
     
-    void store(float *a) { *a = mVal; }
+    void store(float *a) const { *a = mVal; }
     
     friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return a.mVal + b.mVal; }
     friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return a.mVal - b.mVal; }
@@ -369,7 +369,7 @@ struct SIMDType<float, 2>
         mVals[1] = a[1];
     }
     
-    void store(float *a)
+    void store(float *a) const
     {
         a[0] = mVals[0];
         a[1] = mVals[1];
@@ -428,7 +428,7 @@ struct SIMDType<double, 2> : public SIMDVector<double, __m128d, 2>
         mVal = _mm_loadu_pd(vals);
     }
     
-    void store(double *a) { _mm_storeu_pd(a, mVal); }
+    void store(double *a) const { _mm_storeu_pd(a, mVal); }
     
     friend SIMDType operator + (const SIMDType &a, const SIMDType& b) { return _mm_add_pd(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType &a, const SIMDType& b) { return _mm_sub_pd(a.mVal, b.mVal); }
@@ -483,7 +483,7 @@ struct SIMDType<double, 4> : public SIMDVector<double, __m256d, 4>
     SIMDType(const double* a) { mVal = _mm256_loadu_pd(a); }
     SIMDType(__m256d a) : SIMDVector(a) {}
     
-    void store(double *a) { _mm256_storeu_pd(a, mVal); }
+    void store(double *a) const { _mm256_storeu_pd(a, mVal); }
     
     friend SIMDType operator + (const SIMDType &a, const SIMDType &b) { return _mm256_add_pd(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType &a, const SIMDType &b) { return _mm256_sub_pd(a.mVal, b.mVal); }
@@ -527,7 +527,7 @@ struct SIMDType<float, 4> : public SIMDVector<float, __m128, 4>
     SIMDType(const float* a) { mVal = _mm_loadu_ps(a); }
     SIMDType(__m128 a) : SIMDVector(a) {}
     
-    void store(float *a) { _mm_storeu_ps(a, mVal); }
+    void store(float *a) const { _mm_storeu_ps(a, mVal); }
     
     friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return _mm_add_ps(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return _mm_sub_ps(a.mVal, b.mVal); }
@@ -588,7 +588,7 @@ struct SIMDType<int32_t, 4> : public SIMDVector<int32_t, __m128i, 4>
     SIMDType(const int32_t* a) { mVal = _mm_loadu_si128(reinterpret_cast<const __m128i *>(a)); }
     SIMDType(__m128i a) : SIMDVector(a) {}
     
-    void store(int32_t *a) { _mm_storeu_si128(reinterpret_cast<__m128i *>(a), mVal); }
+    void store(int32_t *a) const { _mm_storeu_si128(reinterpret_cast<__m128i *>(a), mVal); }
     
     friend SIMDType operator + (const SIMDType& a, const SIMDType& b) { return _mm_add_epi32(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType& a, const SIMDType& b) { return _mm_sub_epi32(a.mVal, b.mVal); }
@@ -630,7 +630,7 @@ struct SIMDType<float, 8> : public SIMDVector<float, __m256, 8>
     SIMDType(const float* a) { mVal = _mm256_loadu_ps(a); }
     SIMDType(__m256 a) : SIMDVector(a) {}
     
-    void store(float *a) { _mm256_storeu_ps(a, mVal); }
+    void store(float *a) const { _mm256_storeu_ps(a, mVal); }
     
     friend SIMDType operator + (const SIMDType &a, const SIMDType &b) { return _mm256_add_ps(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType &a, const SIMDType &b) { return _mm256_sub_ps(a.mVal, b.mVal); }
@@ -689,7 +689,7 @@ struct SIMDType<double, 8> : public SIMDVector<double, __m512d, 8>
     SIMDType(const double* a) { mVal = _mm512_loadu_pd(a); }
     SIMDType(__m512d a) : SIMDVector(a) {}
     
-    void store(double *a) { _mm512_storeu_pd(a, mVal); }
+    void store(double *a) const { _mm512_storeu_pd(a, mVal); }
     
     friend SIMDType operator + (const SIMDType &a, const SIMDType &b) { return _mm512_add_pd(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType &a, const SIMDType &b) { return _mm512_sub_pd(a.mVal, b.mVal); }
@@ -731,7 +731,7 @@ struct SIMDType<float, 16> : public SIMDVector<float, __m512, 16>
     SIMDType(const float* a) { mVal = _mm512_loadu_ps(a); }
     SIMDType(__m512 a) : SIMDVector(a) {}
     
-    void store(float *a) { _mm512_storeu_ps(a, mVal); }
+    void store(float *a) const { _mm512_storeu_ps(a, mVal); }
     
     friend SIMDType operator + (const SIMDType &a, const SIMDType &b) { return _mm512_add_ps(a.mVal, b.mVal); }
     friend SIMDType operator - (const SIMDType &a, const SIMDType &b) { return _mm512_sub_ps(a.mVal, b.mVal); }
