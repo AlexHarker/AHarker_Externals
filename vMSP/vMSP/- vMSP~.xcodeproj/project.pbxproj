@@ -417,6 +417,8 @@
 		B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = nans.hpp; path = Base/nans.hpp; sourceTree = "<group>"; };
 		B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = v_binary.hpp; path = Base/v_binary.hpp; sourceTree = "<group>"; };
 		B83978C71FDF5A360004E515 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDExtended.hpp; path = ../../AH_MaxMSP_Headers/SIMDExtended.hpp; sourceTree = "<group>"; };
+		B866CA5922CEC513005A20C3 /* vector_loop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector_loop.hpp; path = Base/vector_loop.hpp; sourceTree = "<group>"; };
+		B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = precision_handlers.hpp; path = Base/precision_handlers.hpp; sourceTree = "<group>"; };
 		B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = conversions.hpp; path = Base/conversions.hpp; sourceTree = "<group>"; };
 		B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminimum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -897,8 +899,10 @@
 			children = (
 				B8DA7B631FDDBC520037D848 /* v_unary.hpp */,
 				B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */,
+				B866CA5922CEC513005A20C3 /* vector_loop.hpp */,
 				B8C4C21B1FDF10310062CC55 /* comparisons.hpp */,
 				B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */,
+				B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */,
 				B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */,
 			);
 			name = "Base Clases";
