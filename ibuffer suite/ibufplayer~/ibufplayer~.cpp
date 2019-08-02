@@ -34,7 +34,7 @@ enum t_transport_flag
     FLAG_STOP,
 };
 
-const int max_num_chans = 4;
+const int max_num_chans = 64;
 
 // Main object struct
 
@@ -266,11 +266,8 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 
 void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 {
-    for (long i = 0; i < max_num_chans; i++)
-    {
-        if (argc > i)
-            x->vols[i] = atom_getfloat(argv++);
-    }
+    for (long i = 0; i < max_num_chans && i < argc; i++)
+        x->vols[i] = atom_getfloat(argv++);
 }
 
 void ibufplayer_stop(t_ibufplayer *x)
