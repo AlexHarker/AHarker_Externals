@@ -137,14 +137,14 @@ template <class T, void (T::*acquire_method)(), void (T::*release_method)()>
 struct lock_hold
 {
     lock_hold() : m_lock(nullptr) {}
-    lock_hold(thread_lock *lock) : m_lock(lock)    { m_lock->acquire_method(); }
-    ~lock_hold()                                   { destroy(); }
+    lock_hold(T *lock) : m_lock(lock)    { (m_lock->*acquire_method)(); }
+    ~lock_hold()                         { destroy(); }
     
     void destroy()
     {
         if (m_lock)
         {
-            m_lock->release_method();
+            (m_lock->*release_method)();
             m_lock = nullptr;
         }
     }
