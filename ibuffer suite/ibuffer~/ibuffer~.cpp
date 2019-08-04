@@ -17,6 +17,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
+
 #include "AudioFile/IAudioFile.h"
 
 #include <AH_Atomic.h>
@@ -346,7 +348,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             file.readRaw(x->samples, x->frames);
 		else 
 		{
-            const static int default_work_chunk = 10000;
+            const static t_ptr_int default_work_chunk = 8192;
             
             // Here we load in chunks to some temporary memory and then copy out ony the relevant channels
 
@@ -359,11 +361,11 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
                 return;
 			}
             
-			for (long i = 0; i < (x->frames + default_work_chunk + 1) / default_work_chunk; i++)
+			for (long i = 0; i < x->frames + default_work_chunk; i += default_work_chunk)
 			{				
 				// Read chunk
-				
-				t_ptr_int work_chunk = (i + 1) * default_work_chunk > x->frames ?  x->frames - (i * default_work_chunk) : default_work_chunk;
+                
+				t_ptr_int work_chunk = std::min(default_work_chunk, x->frames - i);
                 file.readRaw(load_temp, work_chunk);
 				
 				// Copy channels
