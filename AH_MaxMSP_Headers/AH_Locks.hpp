@@ -11,7 +11,7 @@
 
 struct thread_lock
 {
-    const static int max_iter_before_sleep = 5;
+    enum { max_iter_before_sleep = 5 };
 
     thread_lock() : m_flag(0) {}
     thread_lock(const thread_lock&) = delete;
@@ -41,9 +41,10 @@ struct thread_lock
     void acquire_periodic_sleep()
     {
         using namespace std::chrono_literals;
+        const int max_iter = thread_lock::max_iter_before_sleep;
         bool acquired = false;
         
-        for (int i = 0; !acquired; i = std::min(i++, max_iter_before_sleep))
+        for (int i = 0; !acquired; i = std::min(i++, max_iter))
         {
             if (attempt())
                 acquired = true;
@@ -88,9 +89,10 @@ struct read_write_lock
     void promote()
     {
         using namespace std::chrono_literals;
+        const int max_iter = thread_lock::max_iter_before_sleep;
         bool acquired = false;
         
-        for (int i = 0; !acquired; i = std::min(i++, thread_lock::max_iter_before_sleep))
+        for (int i = 0; !acquired; i = std::min(i++, max_iter))
         {
             m_read_lock.acquire();
             if (m_read_count == 1)

@@ -1146,6 +1146,7 @@
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "convolution/partconvolve~/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "convolution/timeconvolve~/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B8E61D8222F7056D000A140C /* AH_Locks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AH_Locks.hpp; sourceTree = "<group>"; };
 		B8F25E2C1FF162AE00245397 /* Interpolation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpolation.hpp; sourceTree = "<group>"; };
 		B8F25E2D1FF162AE00245397 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIMDExtended.hpp; sourceTree = "<group>"; };
 		B8F25E2E1FF162AE00245397 /* SIMDSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIMDSupport.hpp; sourceTree = "<group>"; };
@@ -1596,6 +1597,7 @@
 		B8A7912D1A1F610D007BDF82 /* AH_MaxMSP_Headers */ = {
 			isa = PBXGroup;
 			children = (
+				B8E61D8222F7056D000A140C /* AH_Locks.hpp */,
 				B8A7912E1A1F610D007BDF82 /* AH_Atomic.h */,
 				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
