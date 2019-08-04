@@ -3,7 +3,8 @@
 
 #include "entry_database_max.h"
 #include "entry_database_viewer.h"
-#include "Locks.h"
+
+#include <AH_Locks.hpp>
 
 /*****************************************/
 // Entry Database Max Object Struture
@@ -14,7 +15,7 @@ typedef struct entry_database
     t_object a_obj;
     
     EntryDatabase database;
-    Lock lock;
+    thread_lock lock;
     
     t_object *patch;
     t_object *viewer;
@@ -76,7 +77,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Construct the database and lock
     
-    new(&x->lock) Lock();
+    new(&x->lock) thread_lock();
     new(&x->database) EntryDatabase(name, num_columns);
     
     // Reserve entries, set count to one and set to notify
@@ -98,7 +99,7 @@ void entry_database_free(t_entry_database *x)
     // Destruct C++ objects
     
     x->database.~EntryDatabase();
-    x->lock.~Lock();
+    x->lock.~thread_lock();
     
     // Destroy patch (which destroys viewer)
     
@@ -141,7 +142,7 @@ void entry_database_release(void *client, t_entry_database *x)
         
         object_detach(ps_name_space_name, x->database.getName(), client);
         
-        HoldLock(&x->lock);
+        spin_lock_hold(&x->lock);
         last_client = (--x->count <= 0);
     }
     
@@ -171,7 +172,7 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     if (x && x != old_database_object)
     {
-        HoldLock(&x->lock);
+        spin_lock_hold(&x->lock);
 
         if ((found_new = x->count > 0))
             x->count++;

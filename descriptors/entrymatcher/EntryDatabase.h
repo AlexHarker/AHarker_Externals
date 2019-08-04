@@ -6,7 +6,8 @@
 #include <vector>
 
 #include "CustomAtom.h"
-#include "Locks.h"
+
+#include <AH_Locks.hpp>
 
 class EntryDatabase
 {
@@ -53,7 +54,7 @@ public:
     
     struct ReadPointer
     {
-        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)   { mPtr->mLock.acquireRead(); }
+        ReadPointer(const EntryDatabase *ptr) : mPtr(ptr)   { mPtr->mLock.acquire_read(); }
         ReadPointer(const ReadPointer&) = delete;
         ReadPointer& operator=(const ReadPointer&) = delete;
         ReadPointer( ReadPointer&&) = default;
@@ -63,7 +64,7 @@ public:
         {
             if (mPtr)
             {
-                mPtr->mLock.releaseRead();
+                mPtr->mLock.release_read();
                 mPtr = NULL;
             }
         }
@@ -148,14 +149,14 @@ private:
         {
             if (mPromoted)
             {
-                mPtr->mLock.releaseWrite();
+                mPtr->mLock.release_write();
                 mPtr = NULL;
             }
         }
         
         void promoteToWrite()
         {
-            mPtr->mLock.promoteReadToWrite();
+            mPtr->mLock.promote();
             mPromoted = true;
         }
         
@@ -167,10 +168,10 @@ private:
         bool mPromoted;
     };
     
-    void clear(HoldWriteLock &lock);
-    void setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
-    void setColumnNames(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
-    void addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *argv);
+    void clear(write_lock_hold &lock);
+    void setColumnLabelModes(write_lock_hold &lock, void *x, long argc, t_atom *argv);
+    void setColumnNames(write_lock_hold &lock, void *x, long argc, t_atom *argv);
+    void addEntry(write_lock_hold &lock, void *x, long argc, t_atom *argv);
     void removeEntry(void *x, t_atom *identifier);
     void removeEntries(ReadWritePointer& readLockedDatabase, const std::vector<long>& indices);
     
@@ -215,7 +216,7 @@ private:
     std::vector<UntypedAtom> mEntries;
     std::vector<CustomAtom::Type> mTypes;
 
-    mutable ReadWriteLock mLock;
+    mutable read_write_lock mLock;
 };
 
 

@@ -30,13 +30,13 @@ t_symbol *ps_identfier = gensym("identifier");
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     setColumnLabelModes(lock, x, argc, argv);
 }
 
 // Set Column Labels (with pre-held lock)
 
-void EntryDatabase::setColumnLabelModes(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnLabelModes(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
     bool labelsModesChanged = false;
     
@@ -60,13 +60,13 @@ void EntryDatabase::setColumnLabelModes(HoldWriteLock &lock, void *x, long argc,
 
 void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     setColumnNames(lock, x, argc, argv);
 }
 
 // Set Column Names (with pre-held lock)
 
-void EntryDatabase::setColumnNames(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
     if (argc > numColumns())
         object_error((t_object *) x, "more names than columns");
@@ -143,7 +143,7 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
 
 void EntryDatabase::reserve(long items)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     
     mIdentifiers.reserve(items);
     mOrder.reserve(items);
@@ -155,13 +155,13 @@ void EntryDatabase::reserve(long items)
 
 void EntryDatabase::clear()
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     clear(lock);
 }
 
 // Clear (with pre-held lock)
 
-void EntryDatabase::clear(HoldWriteLock &lock)
+void EntryDatabase::clear(write_lock_hold &lock)
 {
     mEntries.clear();
     mIdentifiers.clear();
@@ -177,13 +177,13 @@ void EntryDatabase::clear(HoldWriteLock &lock)
 
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     addEntry(lock, x, argc, argv);
 }
 
 // Add (with pre-held lock)
 
-void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
     if (!argc--)
     {
@@ -230,7 +230,7 @@ void EntryDatabase::addEntry(HoldWriteLock &lock, void *x, long argc, t_atom *ar
 
 void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
 
     long order;
     long idx = searchIdentifiers(identifier, order);
@@ -415,7 +415,7 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
 
 void EntryDatabase::removeEntry(void *x, t_atom *identifier)
 {
-    HoldWriteLock lock(&mLock);
+    write_lock_hold lock(&mLock);
     
     long order;
     long idx = searchIdentifiers(identifier, order);
@@ -746,7 +746,7 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
     
     if (dictMeta && dictData)
     {
-        HoldWriteLock lock(&mLock);
+        write_lock_hold lock(&mLock);
         clear(lock);
         
         t_atom_long newNumColumns;
