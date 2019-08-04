@@ -203,7 +203,7 @@ long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name
     if (target.get_type() != kBufferMaxBuffer)
         return -1;
     
-    t_ptr_int offset = mstosamps(access.get_max_end(), target.get_sample_rate());
+    t_ptr_int offset = mstosamps(access.get_max_end(), target.get_sample_rate()) + 2;
     t_ptr_int required_length = offset + source.get_length() + 1;
     
     // Check we have enough memory in the buffer
@@ -249,11 +249,6 @@ long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name
     
     float *out_samps = static_cast<float *>(target.get_samples()) + offset * target.get_num_chans();
     
-    // Add silent sample per channel
-    
-    std::fill_n(out_samps, target.get_num_chans(), 0.f);
-    out_samps += target.get_num_chans();
-
     // Copy samples
     
     if (target.get_num_chans() == 1)
@@ -283,12 +278,18 @@ long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name
         }
     }
     
+    // Copy samples at either end to ensure playback is within range
+    
+    std::copy_n(out_samps, target.get_num_chans(), out_samps - target.get_num_chans());
+    out_samps += (source.get_length() - 1) * target.get_num_chans();
+    std::copy_n(out_samps, target.get_num_chans(), out_samps + target.get_num_chans());
+
     // Store data
     
     double sr_const = 1000.0 / target.get_sample_rate();
     
-    beg = (offset + 1) * sr_const;
-    end = (offset + source.get_length() + 1) * sr_const;
+    beg = offset * sr_const;
+    end = (offset + source.get_length() - 1) * sr_const;
     
     long item = access.add_item(beg, end);
     
