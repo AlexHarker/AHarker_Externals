@@ -380,11 +380,11 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
     if (item == -1)
         end = full_length;
     else
-        access.get_item(item, beg, end);
+        access.get_item(item - 1, beg, end);
     
-    atom_setlong(atom_out+0, mstosamps(beg, sr));
-    atom_setlong(atom_out+1, mstosamps(end, sr));
-    atom_setfloat(atom_out+2, sr);
+    atom_setlong(atom_out + 0, mstosamps(beg, sr));
+    atom_setlong(atom_out + 1, mstosamps(end, sr));
+    atom_setfloat(atom_out + 2, sr);
     
     outlet_list(x->data_out, 0, 3, atom_out);
 }
@@ -430,7 +430,7 @@ void ibufconcatenate_perform_core(t_ibufconcatenate *x, T **ins, T **outs, long 
         if (item == -1)
             end = full_length;
         else
-            access.get_item(item, beg, end);
+            access.get_item(item - 1, beg, end);
         
         // Chunk Output Values
         
