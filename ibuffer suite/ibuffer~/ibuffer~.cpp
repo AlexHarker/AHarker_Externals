@@ -313,7 +313,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
                 return;
 		}
 
-		// Sort channels to load (assume all if channels_to_load is zero)
+		// Sort channels to load (assume all if argc is zero)
 		
         std::vector<long> channel_order(argc);
         
@@ -353,7 +353,6 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             UInt8 *data = (UInt8 *) x->samples;
 			UInt8 *load_temp = (UInt8 *) malloc(default_work_chunk * sample_size * x->channels);
 
-            
 			if (!load_temp) 
 			{
 				object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
