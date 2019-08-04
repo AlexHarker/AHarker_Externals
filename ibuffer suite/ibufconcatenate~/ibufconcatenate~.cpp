@@ -26,43 +26,43 @@
 #include <algorithm>
 
 #include <ibuffer_access.hpp>
-#include "ibufconcatenate_info~.h"
+#include "ibufconcatenate_info.hpp"
 
 
 t_class *this_class;
 
 
-#define GROW_SIZE 1000000
+const int BUFFER_GROW_SIZE = 1048576;
 
 
-typedef struct _ibufconcatenate
+struct t_ibufconcatenate
 {
     t_pxobject x_obj;
 	
 	t_ibufconcatenate_info *attachment;
 	
-	long max_mode;
+	t_atom_long max_mode;
 	
 	void *data_out;
 	void *last_added_out;
+};
 
-} t_ibufconcatenate;
 
-
-void *ibufconcatenate_new (t_symbol *buffer_name, long max_mode);
-void ibufconcatenate_free (t_ibufconcatenate *x);
-void ibufconcatenate_assist (t_ibufconcatenate *x, void *b, long m, long a, char *s);
+void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode);
+void ibufconcatenate_free(t_ibufconcatenate *x);
+void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char *s);
 
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name);
-void ibufconcatenate_clear (t_ibufconcatenate *x);
-void ibufconcatenate_append (t_ibufconcatenate *x, t_symbol *source_name);
-void ibufconcatenate_entry (t_ibufconcatenate *x, double start, double end);
+void ibufconcatenate_clear(t_ibufconcatenate *x);
+void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name);
+void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end);
+void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double end);
 
-static __inline long mstosamps (double ms, double sr);
+static inline t_ptr_int mstosamps(double ms, double sr);
 void ibufconcatenate_int(t_ibufconcatenate *x, long in);
 
-t_int *ibufconcatenate_perform (t_int *w);
-void ibufconcatenate_perform64 (t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+t_int *ibufconcatenate_perform(t_int *w);
+void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count);
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
@@ -95,10 +95,9 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
-void *ibufconcatenate_new (t_symbol *buffer_name, long max_mode)
+void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode)
 {
-    t_ibufconcatenate *x = (t_ibufconcatenate *)object_alloc (this_class);
+    t_ibufconcatenate *x = (t_ibufconcatenate *)object_alloc(this_class);
 	
 	x->last_added_out = listout(x);
 
@@ -115,16 +114,11 @@ void *ibufconcatenate_new (t_symbol *buffer_name, long max_mode)
 		x->data_out = listout(x);
 	}
 	
-	x->attachment = new_ibufconcatenate_info(buffer_name);
-	
-	if (!x->attachment)
-		return 0;
-	
+	x->attachment = attach_ibufconcatenate_info(buffer_name);
 	x->max_mode = max_mode;
 	
-	return(x);
+	return x;
 }
-
 
 void ibufconcatenate_free(t_ibufconcatenate *x)
 {
@@ -133,8 +127,7 @@ void ibufconcatenate_free(t_ibufconcatenate *x)
 	detach_ibufconcatenate_info(x->attachment);
 }
 
-
-void ibufconcatenate_assist (t_ibufconcatenate *x, void *b, long m, long a, char *s)
+void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char *s)
 {
 	if (!x->max_mode)
 	{
@@ -188,197 +181,171 @@ void ibufconcatenate_assist (t_ibufconcatenate *x, void *b, long m, long a, char
 	}
 }
 
-
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name)
 {
 	detach_ibufconcatenate_info(x->attachment);
-	x->attachment = new_ibufconcatenate_info(buffer_name);
+	x->attachment = attach_ibufconcatenate_info(buffer_name);
 }
 
-
-void ibufconcatenate_clear (t_ibufconcatenate *x)
-{	
-	x->attachment->num_items = 0;
-	x->attachment->samp_offset = 0;
+void ibufconcatenate_clear(t_ibufconcatenate *x)
+{
+    t_ibufconcatenate_info::write_access access(x->attachment);
+    access.clear();
 }
 
+long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name, double &beg, double &end)
+{
+    t_ibufconcatenate_info::write_access access(x->attachment);
+    
+    ibuffer_data target(access.buffername());
+    ibuffer_data source(source_name);
+    
+    if (target.get_type() != kBufferMaxBuffer)
+        return -1;
+    
+    t_ptr_int offset = mstosamps(access.get_max_end(), target.get_sample_rate());
+    t_ptr_int required_length = offset + source.get_length() + 1;
+    
+    // Check we have enough memory in the buffer
+    
+    if (required_length >= target.get_length())
+    {
+        struct temp_buffer
+        {
+            temp_buffer(t_ptr_int size) : m_ptr(static_cast<float*>(malloc(sizeof(float) * size))) {}
+            ~temp_buffer() { free(m_ptr); }
+            float *m_ptr;
+        };
+        
+        // Calculate memory to allocate
+        
+        t_ptr_int old_size = target.get_length() * target.get_num_chans();
+        t_ptr_int new_size = std::max(required_length * target.get_num_chans(), old_size + BUFFER_GROW_SIZE);
+        
+        // Allocate temporary memory
+        
+        temp_buffer temp(old_size);
+        
+        if (temp.m_ptr)
+        {
+            // Copy from current buffer to temporary memory
+            
+            std::copy_n(static_cast<float *>(target.get_samples()), old_size, temp.m_ptr);
+            
+            // Set buffer to new size and copy back from temporary memory
+            
+            target.set_size_in_samples(new_size);
+            
+            if (required_length >= target.get_length())
+                std::copy_n(temp.m_ptr, old_size, static_cast<float *>(target.get_samples()));
+        }
+        
+        if (required_length < target.get_length())
+        {
+            error ("ibufconcatenate: no room left in buffer");
+            return -1;
+        }
+    }
+    
+    float *out_samps = static_cast<float *>(target.get_samples()) + offset * target.get_num_chans();
+    
+    // Add silent sample per channel
+    
+    std::fill_n(out_samps, target.get_num_chans(), 0.f);
+    out_samps += target.get_num_chans();
+
+    // Copy samples
+    
+    if (target.get_num_chans() == 1)
+    {
+        // Single channel case
+        
+        ibuffer_get_samps(source, out_samps, 0, source.get_length(), 0);
+    }
+    else
+    {
+        // Multichannel case (copies to temporary block and reads source with modulo channels
+        
+        const t_ptr_int target_chans = target.get_num_chans();
+        const t_ptr_int block_size = 256;
+        float samp_block[block_size];
+        
+        for (t_ptr_int i = 0; i < source.get_length(); i += block_size)
+        {
+            for (t_ptr_int j = 0; j < target_chans; j++)
+            {
+                t_ptr_int loop_size = std::min(source.get_length() - j, block_size);
+                ibuffer_get_samps(source, samp_block, 0, loop_size, j % source.get_num_chans());
+                
+                for (t_ptr_int k = 0; k < loop_size; k++)
+                    out_samps[i * target_chans + j + k] = samp_block[k];
+            }
+        }
+    }
+    
+    // Store data
+    
+    double sr_const = 1000.0 / target.get_sample_rate();
+    
+    beg = (offset + 1) * sr_const;
+    end = (offset + source.get_length() + 1) * sr_const;
+    
+    long item = access.add_item(beg, end);
+    
+    // Set the buffer as dirty
+    
+    target.set_dirty();
+    
+    // We are done with the buffers
+    
+    target.release();
+    source.release();
+    
+    return item;
+}
 
 void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
 {
-    ibuffer_data target(x->attachment->buffer_name);
-    ibuffer_data source(source_name);
-	
-	float *out_samps;
-	
-	double *starts = x->attachment->starts;
-	double *ends = x->attachment->ends;
-	
-	long samp_offset = x->attachment->samp_offset;
-	long num_items = x->attachment->num_items;
-	long new_size;
-	long old_size;
-	
-	double sr_const;
-		
-	t_atom last_added_list[3];
-
-	if (target.get_type() == kBufferMaxBuffer)
-	{
-		// Check we have a mono buffer and that there is space for another item
-		
-		if (target.get_num_chans() > 1)
-		{
-			error ("ibufconcatenate: only supports writing to mono buffers at this time");
-			return;
-		}
-		
-		if (num_items >= MAX_ITEMS)
-			return;
-
-		// Check we have enough memory in the buffer
-		
-		if (samp_offset + source.get_length() + 1 > target.get_length())
-		{
-			// Calculate memory to allocate
-			
-			float *temp;
-
-			new_size = samp_offset + source.get_length() + 1;
-			old_size = target.get_length();
-			
-			if (old_size + GROW_SIZE > new_size)
-				new_size = old_size + GROW_SIZE;
-			
-			// Allocate temporary memory
-			
-			temp = static_cast<float*>(malloc(sizeof(float) * target.get_length()));
-			
-			if (!temp)
-			{
-				error ("ibufconcatenate: no room left in buffer");
-				return;
-			}
-
-			// Copy out
-            
-            out_samps = static_cast<float *>(target.get_samples());
-            std::copy(out_samps, out_samps + old_size, temp);
-			
-			// Set buffer to new size
-			
-            target.set_size_in_samples(new_size);
-			
-            out_samps = static_cast<float *>(target.get_samples());
-			if (target.get_length());
-                std::copy(temp, temp + old_size, out_samps);
-			
-			// Free temporary memory and check the resize has worked 
-			
-			free(temp);
-
-            if (samp_offset + source.get_length() + 1 > target.get_length())
-			{
-				error ("ibufconcatenate: no room left in buffer");
-				return;
-			}
-		}
-		
-		out_samps = static_cast<float *>(target.get_samples());
-		
-		// Get samples from the source - this is constrained to only msp buffers do to unknown pointer alignment in the target (with the offset)
-		
-        ibuffer_get_samps(source, out_samps, samp_offset, source.get_length(), 0);
-		
-		// Add a silent sample
-		
-		*(out_samps + samp_offset + source.get_length()) = 0.f;
-		
-		// Store data
-		
-		sr_const = 1000.0 / target.get_sample_rate();
-		starts[num_items] = (double) samp_offset * sr_const;
-		samp_offset = samp_offset + source.get_length() + 1;
-		ends[num_items] = (double) (samp_offset - 1) * sr_const; 
-		
-		x->attachment->num_items = num_items + 1;
-		x->attachment->samp_offset = samp_offset;
-		
-		// Set the buffer as dirty
-		
-        target.set_dirty();
-		
-		// We are done with the buffers
-        
-        target.release();
-        source.release();
-        
-		// Output Values
-		
-		atom_setlong(last_added_list, num_items + 1);
-		atom_setfloat(last_added_list+1, starts[num_items]);
-		atom_setfloat(last_added_list+2, ends[num_items]);
-		
-		outlet_list(x->last_added_out, 0, 3, last_added_list);
-	}
-}
-
-double ibuffer_sample_rate(t_symbol *name)
-{
-    ibuffer_data buffer(name);
+    double beg = 0.0;
+    double end = 0.0;
     
-    if (buffer.get_sample_rate())
-        return buffer.get_sample_rate();
-    else
-        return 44100.0;
+    long item = ibufconcatenate_append_internal(x, source_name, beg, end);
+   
+    if (item != -1)
+        ibufconcatenate_output(x, item, beg, end);
 }
 
-void ibufconcatenate_entry(t_ibufconcatenate *x, double start, double end)
+void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end)
 {
-	// Default sr to something sensible
-	
-    double sr = ibuffer_sample_rate(x->attachment->buffer_name);
-	
-	double *starts = x->attachment->starts;
-	double *ends = x->attachment->ends;
-	
-	long samp_offset = x->attachment->samp_offset;
-	long num_items = x->attachment->num_items;
-	
-	t_atom last_added_list[3];
-
-	if (num_items >= MAX_ITEMS)
-		return;
+    // Scope to release lock before calling the output
     
-	// Store values
-	
-	starts[num_items] = start;
-	ends[num_items] = end; 
+    auto add = [&]()
+    {
+        t_ibufconcatenate_info::write_access access(x->attachment);
+        return access.add_item(beg, end);
+    };
 		
-	if ((long) (end * sr / 1000.0) > samp_offset)
-		samp_offset = end * sr / 1000.0;
-		
-	x->attachment->num_items = num_items + 1;
-	x->attachment->samp_offset = samp_offset;
-	
-	// Output
-	
-	atom_setlong(last_added_list, num_items + 1);
-	atom_setfloat(last_added_list+1, starts[num_items]);
-	atom_setfloat(last_added_list+2, ends[num_items]);
-	
-	outlet_list(x->last_added_out, 0, 3, last_added_list);
+    long item = add();
+    ibufconcatenate_output(x, item, beg, end);
 }
 
-
-static __inline long mstosamps (double ms, double sr)
+void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double end)
 {
-#ifdef __APPLE__ 
-	return (long) round((ms * sr) / 1000.);
-#else
-	return (long) (((ms * sr) / 1000.) + 0.5);
-#endif
+    t_atom list[3];
+    
+    // Output
+    
+    atom_setlong(list, item);
+    atom_setfloat(list + 1, beg);
+    atom_setfloat(list + 2, end);
+    
+    outlet_list(x->last_added_out, 0, 3, list);
 }
 
+static inline t_ptr_int mstosamps(double ms, double sr)
+{
+    return (t_ptr_int) std::round((ms * sr) / 1000.0);
+}
 
 double ibuffer_full_length(t_symbol *name)
 {
@@ -390,177 +357,119 @@ double ibuffer_full_length(t_symbol *name)
         return 0.0;
 }
 
-
 void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 {
-	double *starts = x->attachment->starts;
-	double *ends = x->attachment->ends;
-	
-	double start;
-	double end;
-	double full_length = ibuffer_full_length(x->attachment->buffer_name);
+    t_ibufconcatenate_info::read_access access(x->attachment);
+
+	double full_length = ibuffer_full_length(access.buffername());
 	double sr = 0;
-    
-    long num_items = x->attachment->num_items;
     
 	t_atom atom_out[3];
 
 	if (!x->max_mode)
 		return;
 
-	if (item < 1 || item > num_items)
-	{
-		// Default Output Values
-		
-		start = 0.; 
-		
-		if (item != -1)
-			end = 0.;
-		else
-			end = full_length;
-	}
-	else 
-	{	
-		// Chunk Output Values
-		
-		start = starts[item - 1];
-		end = ends[item - 1];
-	}	
+    // Default Output Values
+    
+    double beg = 0.0;
+    double end = 0.0;
+    
+    item--;
+    
+    if (item == -1)
+        end = full_length;
+    else
+        access.get_item(item, beg, end);
 	
-	atom_setlong(atom_out+0, mstosamps(start, sr));
+	atom_setlong(atom_out+0, mstosamps(beg, sr));
 	atom_setlong(atom_out+1, mstosamps(end, sr));
 	atom_setfloat(atom_out+2, sr);
 	
 	outlet_list(x->data_out, 0, 3, atom_out);
 }
 
+void store(float *lo_res, float *hi_res, double output)
+{
+    *lo_res = static_cast<float>(output);
+    *hi_res = output - *lo_res;
+}
+
+void store(double *lo_res, double *hi_res, double output)
+{
+    *lo_res = output;
+    *hi_res = 0.0;
+}
+
+template <class T>
+void ibufconcatenate_perform_core(t_ibufconcatenate *x, T **ins, T **outs, long vec_size)
+{
+    // Set pointers
+    
+    T *in = ins[0];
+    T *beg_lo_res = outs[0];
+    T *beg_hi_res = outs[1];
+    T *end_lo_res = outs[2];
+    T *end_hi_res = outs[3];
+    
+    t_ibufconcatenate_info::read_access access(x->attachment);
+
+    double full_length = ibuffer_full_length(access.buffername());
+    
+    while (vec_size--)
+    {
+        // Get item
+        
+        long item = (long) *in++;
+        
+        // Default Output Values
+        
+        double beg = 0.0;
+        double end = 0.0;
+        
+        if (item == -1)
+            end = full_length;
+        else
+            access.get_item(item, beg, end);
+        
+        // Chunk Output Values
+        
+        store(beg_lo_res++, beg_hi_res++, beg);
+        store(end_lo_res++, end_hi_res++, end);
+    }
+}
 
 t_int *ibufconcatenate_perform(t_int *w)
-{	
-	// Set pointers
-	
-	float *in = (float *) w[1];
-	float *start_lo_res = (float *) w[2];
-	float *start_hi_res = (float *) w[3];
-	float *end_lo_res = (float *) w[4];
-	float *end_hi_res = (float *) w[5];
+{
+    // Set pointers
+    
+    float *ins[1];
+    float *outs[4];
+    
+    ins[0] = (float *) w[1];
+
+    outs[0] = (float *) w[2];
+    outs[1] = (float *) w[3];
+    outs[2] = (float *) w[4];
+    outs[3] = (float *) w[5];
+    
 	long vec_size = (long) w[6];
 	t_ibufconcatenate *x = (t_ibufconcatenate *) w[7];
-		
-	double *starts = x->attachment->starts;
-	double *ends = x->attachment->ends;
-    double full_length = ibuffer_full_length(x->attachment->buffer_name);
-	double start;
-	double end;
 	
-	float ftemp;
-		
-    long num_items = x->attachment->num_items;
-    
-	while (vec_size--)
-	{
-		// Get item
-		
-		long item = (long) *in++;
-		
-		if (item < 1 || item > num_items)
-		{
-			// Default Output Values
-			
-			*start_lo_res++ = 0.f;
-			*start_hi_res++ = 0.f; 
-			
-			if (item != -1)
-			{	
-				*end_lo_res++ = 0.f;
-				*end_hi_res++ = 0.f;
-			}
-			else
-			{
-				*end_lo_res++ = ftemp = full_length;
-				*end_hi_res++ = full_length - ftemp;
-			}
-		}
-		else 
-		{	
-			// Chunk Output Values
-			
-			start = starts[item - 1];
-			end = ends[item - 1];
-			*start_lo_res++ = ftemp = start;
-			*start_hi_res++ = start - ftemp;
-			*end_lo_res++ = ftemp = end;
-			*end_hi_res++ = end - ftemp;
-		}	
-	}
-	
+    ibufconcatenate_perform_core(x, ins, outs, vec_size);
+
 	return w + 8;
 }
 
-
 void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
-	// Set pointers
-	
-	double *in = ins[0];
-	double *start_lo_res = outs[0];
-	double *start_hi_res = outs[1];
-	double *end_lo_res = outs[2];
-	double *end_hi_res = outs[3];
-		
-	double *starts = x->attachment->starts;
-	double *ends = x->attachment->ends;
-    double full_length = ibuffer_full_length(x->attachment->buffer_name);
-	double start;
-	double end;
-    
-	long num_items = x->attachment->num_items;
-	
-	while (vec_size--)
-	{
-		// Get item
-		
-		long item = (long) *in++;
-		
-		if (item < 1 || item > num_items)
-		{
-			// Default Output Values
-			
-			*start_lo_res++ = 0.f;
-			*start_hi_res++ = 0.f; 
-			
-			if (item != -1)
-			{	
-				*end_lo_res++ = 0.f;
-				*end_hi_res++ = 0.f;
-			}
-			else
-			{
-				*end_lo_res++ = full_length;
-				*end_hi_res++ = 0.;
-			}
-		}
-		else 
-		{	
-			// Chunk Output Values
-			
-			start = starts[item - 1];
-			end = ends[item - 1];
-			*start_lo_res++ = start;
-			*start_hi_res++ = 0.0;
-			*end_lo_res++ = end;
-			*end_hi_res++ = 0.0;
-		}	
-	}
+{
+    ibufconcatenate_perform_core(x, ins, outs, vec_size);
 }
-
 
 void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count)
 {				
 	if (!x->max_mode)
 		dsp_add(ibufconcatenate_perform, 7, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[0]->s_n, x);
 }
-
 
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
