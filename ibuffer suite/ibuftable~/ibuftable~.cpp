@@ -22,7 +22,7 @@
 t_class *this_class;
 
 
-typedef struct _ibuftable
+struct t_ibuftable
 {
     t_pxobject x_obj;
 		
@@ -34,7 +34,7 @@ typedef struct _ibuftable
 	t_atom_long start_samp;
 	t_atom_long end_samp;
     
-} t_ibuftable;
+};
 
 
 void *ibuftable_new(t_symbol *s, long argc, t_atom *argv);

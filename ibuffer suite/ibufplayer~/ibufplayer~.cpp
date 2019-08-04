@@ -67,7 +67,6 @@ struct t_ibufplayer
 
 	void *done_clock;
 	void *bang_outlet;
-	
 };
 
 // Phase info helper

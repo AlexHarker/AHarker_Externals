@@ -15,7 +15,7 @@
 
 t_class *this_class;
 
-typedef struct _ibufinfo
+struct t_ibufinfo
 {
     t_object x_obj;
 	
@@ -25,7 +25,7 @@ typedef struct _ibufinfo
 	void *sr_outlet;
 	void *chans_outlet;
 	
-} t_ibufinfo;
+};
 
 void *ibufinfo_new(t_symbol *buffer_name);
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s);

@@ -22,7 +22,7 @@
 t_class *this_class;
 
 
-typedef struct _ibufmultitable
+struct t_ibufmultitable
 {
     t_pxobject x_obj;
 	
@@ -34,7 +34,7 @@ typedef struct _ibufmultitable
 	t_atom_long start_samp;
 	t_atom_long end_samp;	
 	
-} t_ibufmultitable;
+};
 
 
 void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv);
