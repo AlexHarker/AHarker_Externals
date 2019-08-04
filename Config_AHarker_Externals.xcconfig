@@ -5,7 +5,7 @@ PRODUCT_NAME = $TARGET_NAME
 
 // Paths
 
-C74SUPPORT = $(SRCROOT)/../../AH_Max_SDK/c74support
+C74SUPPORT = $(SRCROOT)/../../../max-sdk-8.0.3/source/c74support
 HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
@@ -13,7 +13,7 @@ FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-include
 
 SKIP_INSTALL = YES
 DEPLOYMENT_LOCATION = YES
-DSTROOT = ~/Documents/Max 7/Packages/AHarker/externals
+DSTROOT = ~/Documents/Max 8/Packages/AHarker/externals
 INSTALL_PATH = /
 COPY_PHASE_STRIP = NO
 
@@ -26,9 +26,9 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 // Per architecture and deployment settings
 
 MACOSX_DEPLOYMENT_TARGET = 10.7
-CLANG_CXX_LANGUAGE_STANDARD = c++11
+CLANG_CXX_LANGUAGE_STANDARD = c++14
 CLANG_CXX_LIBRARY = libc++
-CLANG_X86_VECTOR_INSTRUCTIONS = avx2
+CLANG_X86_VECTOR_INSTRUCTIONS = avx
 
 ARCHS = i386 x86_64 
 
