@@ -171,9 +171,13 @@ void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 
 // Core Perform Routine
 
-template <class T, int N>
-void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, SIMDType<T, N> *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
+template <int N, class T>
+void perform_positions(T *positions, T *in, T *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
 {
+    SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
+    SIMDType<T, N> *v_in = reinterpret_cast<SIMDType<T, N> *>(in);
+    SIMDType<T, N> *v_offset_in = reinterpret_cast<SIMDType<T, N> *>(offset_in);
+    
     const SIMDType<T, N> mul(end_samp - start_samp);
     const SIMDType<T, N> add(start_samp);
     const SIMDType<T, N> end(last_samp);
@@ -184,27 +188,9 @@ void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, SIMDType<T
     
     for (long i = 0; i < num_vecs; i++)
     {
-        SIMDType<T, N> position = min(one, max(zero, *in++)) * mul + add + *offset_in++;
-        positions[i] = min(end, max(zero, position));
+        SIMDType<T, N> position = min(one, max(zero, *v_in++)) * mul + add + *v_offset_in++;
+        v_positions[i] = min(end, max(zero, position));
     }
-}
-
-template <class T>
-void perform_positions(T *positions, T *in, T *offset_in, long vec_size, double start_samp, double end_samp, double last_samp)
-{
-    const int size = SIMDLimits<T>::max_size;
-    long vec_count = (vec_size / size) * size;
-    
-    SIMDType<T, size> *v_positions = reinterpret_cast<SIMDType<T, size> *>(positions);
-    SIMDType<T, size> *v_in = reinterpret_cast<SIMDType<T, size> *>(in);
-    SIMDType<T, size> *v_offset_in = reinterpret_cast<SIMDType<T, size> *>(offset_in);
-    
-    SIMDType<T, 1> *s_positions = reinterpret_cast<SIMDType<T, 1> *>(positions + vec_count);
-    SIMDType<T, 1> *s_in = reinterpret_cast<SIMDType<T, 1> *>(in + vec_count);
-    SIMDType<T, 1> *s_offset_in = reinterpret_cast<SIMDType<T, 1> *>(offset_in + vec_count);
-
-    perform_positions(v_positions, v_in, v_offset_in, vec_count, start_samp, end_samp, last_samp);
-    perform_positions(s_positions, s_in, s_offset_in, (vec_size - vec_count), start_samp, end_samp, last_samp);
 }
 
 long clip(const long in, const long max)
@@ -222,12 +208,23 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
     long start_samp = clip(x->start_samp, buffer.get_length() - 1);
     long end_samp = clip(x->end_samp, buffer.get_length() - 1);
     long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
+    double last_samp = buffer.get_length() - 1;
     
     // Calculate output
     
     if (buffer.get_length() && (buffer.get_length() - start_samp) >= 1)
     {
-        perform_positions(out, in, offset_in, vec_size, start_samp, end_samp, buffer.get_length() - 1);
+        // Positions
+        
+        const int N = SIMDLimits<T>::max_size;
+        const long v_count = vec_size / N;
+        const long S = v_count * N;
+
+        // Read from buffer
+
+        perform_positions<N>(out + 0, in + 0, offset_in + 0, v_count, start_samp, end_samp, last_samp);
+        perform_positions<1>(out + S, in + S, offset_in + S, (v_count - S), start_samp, end_samp, last_samp);
+
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else

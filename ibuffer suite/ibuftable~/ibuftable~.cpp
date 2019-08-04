@@ -157,34 +157,19 @@ void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
 
 // Core Perform Routines
 
-template <class T, int N>
-void perform_positions(SIMDType<T, N> *positions, SIMDType<T, N> *in, long num_samps, const double start_samp, const double end_samp)
+template <int N, class T>
+void perform_positions(T *positions, T *in, long n_vecs, double start_samp, double end_samp)
 {
+    SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
+    SIMDType<T, N> *v_in = reinterpret_cast<SIMDType<T, N> *>(in);
+    
     const SIMDType<T, N> mul(end_samp - start_samp);
     const SIMDType<T, N> add(start_samp);
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
-    long num_vecs = num_samps / N;
-    
-    for (long i = 0; i < num_vecs; i++)
-        positions[i] = (mul * min(one, max(zero, *in++))) + add;
-}
-
-template <class T>
-void perform_positions(T *positions, T *in, long vec_size, double start_samp, double end_samp)
-{
-    const int size = SIMDLimits<T>::max_size;
-    long vec_count = (vec_size / size) * size;
-    
-    SIMDType<T, size> *v_positions = reinterpret_cast<SIMDType<T, size> *>(positions);
-    SIMDType<T, size> *v_in = reinterpret_cast<SIMDType<T, size> *>(in);
-    
-    SIMDType<T, 1> *s_positions = reinterpret_cast<SIMDType<T, 1> *>(positions + vec_count);
-    SIMDType<T, 1> *s_in = reinterpret_cast<SIMDType<T, 1> *>(in + vec_count);
-    
-    perform_positions(v_positions, v_in, vec_count, start_samp, end_samp);
-    perform_positions(s_positions, s_in, (vec_size - vec_count), start_samp, end_samp);
+    for (long i = 0; i < n_vecs; i++)
+        v_positions[i] = (mul * min(one, max(zero, *v_in++))) + add;
 }
 
 long clip(const long in, const long max)
@@ -207,7 +192,17 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
 
     if (buffer.get_length())
     {
-        perform_positions(out, in, vec_size, start_samp, end_samp);
+        // Positions
+        
+        const int N = SIMDLimits<T>::max_size;
+        const long v_count = vec_size / N;
+        const long S = v_count * N;
+        
+        perform_positions<N>(out + 0, in + 0, v_count, start_samp, end_samp);
+        perform_positions<1>(out + S, in + S, (vec_size - S), start_samp, end_samp);
+
+        // Read from buffer
+        
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
