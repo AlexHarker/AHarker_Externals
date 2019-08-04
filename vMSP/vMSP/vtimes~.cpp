@@ -2,7 +2,7 @@
 /*
  *  vtimes~
  *
- *	vtimes~ is a vectorised version of times~.
+ *  vtimes~ is a vectorised version of times~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

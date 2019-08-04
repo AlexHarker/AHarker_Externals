@@ -2,7 +2,7 @@
 /*
  *  vsinh~
  *
- *	vsinh~ is a vectorised version of sinh~.
+ *  vsinh~ is a vectorised version of sinh~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

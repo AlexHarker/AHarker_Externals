@@ -2,7 +2,7 @@
 /*
  *  vtrunc~
  *
- *	vtrunc~ is a vectorised version of trunc~.
+ *  vtrunc~ is a vectorised version of trunc~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

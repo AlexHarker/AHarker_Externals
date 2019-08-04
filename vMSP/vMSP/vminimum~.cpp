@@ -2,7 +2,7 @@
 /*
  *  vminimum~
  *
- *	vminimum~ is a vectorised version of minimum~.
+ *  vminimum~ is a vectorised version of minimum~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

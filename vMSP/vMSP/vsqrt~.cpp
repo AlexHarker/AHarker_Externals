@@ -2,7 +2,7 @@
 /*
  *  vsqrt~
  *
- *	vsqrt~ is a vectorised version of sqrt~.
+ *  vsqrt~ is a vectorised version of sqrt~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

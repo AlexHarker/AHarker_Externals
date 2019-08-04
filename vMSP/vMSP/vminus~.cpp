@@ -2,7 +2,7 @@
 /*
  *  vminus~
  *
- *	vminus~ is a vectorised version of minus~.
+ *  vminus~ is a vectorised version of minus~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

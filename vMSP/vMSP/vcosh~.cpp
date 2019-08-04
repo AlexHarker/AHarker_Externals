@@ -2,7 +2,7 @@
 /*
  *  vcosh~
  *
- *	vcosh~ is a vectorised version of cosh~.
+ *  vcosh~ is a vectorised version of cosh~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

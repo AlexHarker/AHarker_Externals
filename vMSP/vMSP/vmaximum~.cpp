@@ -2,7 +2,7 @@
 /*
  *  vmaximum~
  *
- *	vmaximum~ is a vectorised version of maximum~.
+ *  vmaximum~ is a vectorised version of maximum~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

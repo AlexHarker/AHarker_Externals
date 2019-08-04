@@ -2,7 +2,7 @@
 /*
  *  vabs~
  *
- *	vabs~ is a vectorised version of abs~.
+ *  vabs~ is a vectorised version of abs~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

@@ -2,7 +2,7 @@
 /*
  *  vnotequals~
  *
- *	vnotequals~ is a vectorised version of notequals~.
+ *  vnotequals~ is a vectorised version of notequals~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

@@ -2,7 +2,7 @@
 /*
  *  vatanh~
  *
- *	vatanh~ is a vectorised version of atanh~.
+ *  vatanh~ is a vectorised version of atanh~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

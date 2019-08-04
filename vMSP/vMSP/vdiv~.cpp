@@ -2,7 +2,7 @@
 /*
  *  vdiv~
  *
- *	vdiv~ is a vectorised version of div~.
+ *  vdiv~ is a vectorised version of div~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

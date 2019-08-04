@@ -2,7 +2,7 @@
 /*
  *  vlessthaneq~
  *
- *	vlessthaneq~ is a vectorised version of lessthaneq~.
+ *  vlessthaneq~ is a vectorised version of lessthaneq~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

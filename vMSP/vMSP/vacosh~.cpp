@@ -2,7 +2,7 @@
 /*
  *  vacosh~
  *
- *	vacosh~ is a vectorised version of acosh~.
+ *  vacosh~ is a vectorised version of acosh~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

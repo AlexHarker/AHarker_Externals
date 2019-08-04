@@ -2,7 +2,7 @@
 /*
  *  vsinx~
  *
- *	vsinx~ is a vectorised version of sinx~.
+ *  vsinx~ is a vectorised version of sinx~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

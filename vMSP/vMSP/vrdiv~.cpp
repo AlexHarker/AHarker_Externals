@@ -2,7 +2,7 @@
 /*
  *  vrdiv~
  *
- *	vrdiv~ is a vectorised version of rdiv~.
+ *  vrdiv~ is a vectorised version of rdiv~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

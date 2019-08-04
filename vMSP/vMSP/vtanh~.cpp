@@ -2,7 +2,7 @@
 /*
  *  vtanh~
  *
- *	vtanh~ is a vectorised version of tanh~.
+ *  vtanh~ is a vectorised version of tanh~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

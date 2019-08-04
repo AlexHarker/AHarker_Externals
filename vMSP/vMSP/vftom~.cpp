@@ -2,8 +2,8 @@
 /*
  *  vftom~
  *
- *	vftom~ is a vectorised version of v_ftom~.
- *	This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
+ *  vftom~ is a vectorised version of v_ftom~.
+ *  This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

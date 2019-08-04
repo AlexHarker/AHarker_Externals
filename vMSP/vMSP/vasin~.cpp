@@ -2,7 +2,7 @@
 /*
  *  vasin~
  *
- *	vasin~ is a vectorised version of asin~.
+ *  vasin~ is a vectorised version of asin~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

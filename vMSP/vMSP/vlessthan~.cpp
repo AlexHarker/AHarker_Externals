@@ -2,7 +2,7 @@
 /*
  *  vlessthan~
  *
- *	vlessthan~ is a vectorised version of lessthan~.
+ *  vlessthan~ is a vectorised version of lessthan~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

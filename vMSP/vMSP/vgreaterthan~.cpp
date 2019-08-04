@@ -1,8 +1,8 @@
 
-/*
+/* 
  *  vgreaterthan~
  *
- *	vgreaterthan~ is a vectorised version of greaterthan~.
+ *  vgreaterthan~ is a vectorised version of greaterthan~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

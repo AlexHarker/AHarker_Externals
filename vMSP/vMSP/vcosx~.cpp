@@ -2,7 +2,7 @@
 /*
  *  vcosx~
  *
- *	vcosx~ is a vectorised version of cosx~.
+ *  vcosx~ is a vectorised version of cosx~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

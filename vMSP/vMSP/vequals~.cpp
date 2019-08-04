@@ -2,7 +2,7 @@
 /*
  *  vequals~
  *
- *	vequals~ is a vectorised version of equals~.
+ *  vequals~ is a vectorised version of equals~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

@@ -2,7 +2,7 @@
 /*
  *  vplus~
  *
- *	vplus~ is a vectorised version of plus~.
+ *  vplus~ is a vectorised version of plus~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

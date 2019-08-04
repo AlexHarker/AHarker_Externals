@@ -2,7 +2,7 @@
 /*
  *  vtanx~
  *
- *	vtanx~ is a vectorised version of tanx~.
+ *  vtanx~ is a vectorised version of tanx~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *

@@ -2,7 +2,7 @@
 /*
  *  vlog~
  *
- *	vlog~ is a vectorised version of log~.
+ *  vlog~ is a vectorised version of log~.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
