@@ -32,8 +32,7 @@ struct t_ibufmultitable
 
     t_atom_long chan;
 	t_atom_long start_samp;
-	t_atom_long end_samp;	
-	
+	t_atom_long end_samp;
 };
 
 
@@ -43,9 +42,6 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s);
-void ibufmultitable_startsamp(t_ibufmultitable *x, t_atom_long startsamp);
-void ibufmultitable_endsamp(t_ibufmultitable *x, t_atom_long endsamp);
-void ibufmultitable_chan(t_ibufmultitable *x, t_atom_long chan);
 
 t_int *ibufmultitable_perform(t_int *w);
 void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count);

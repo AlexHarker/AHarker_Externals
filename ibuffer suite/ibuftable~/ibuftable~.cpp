@@ -33,7 +33,6 @@ struct t_ibuftable
     t_atom_long chan;
 	t_atom_long start_samp;
 	t_atom_long end_samp;
-    
 };
 
 
@@ -43,9 +42,6 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 
 void ibuftable_set(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
 void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
-void ibuftable_startsamp(t_ibuftable *x, t_atom_long startsamp);
-void ibuftable_endsamp(t_ibuftable *x, t_atom_long endsamp);
-void ibuftable_chan(t_ibuftable *x, t_atom_long chan);
 
 t_int *ibuftable_perform(t_int *w);
 void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count);
