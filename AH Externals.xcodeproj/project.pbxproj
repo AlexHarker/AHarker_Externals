@@ -1515,9 +1515,9 @@
 				B82F0E0D1465F164007FAC6A /* ibuffer~.xcodeproj */,
 				B82F0E161465F16D007FAC6A /* ibuffermulti~.xcodeproj */,
 				B82F0E1F1465F173007FAC6A /* ibufinfo~.xcodeproj */,
-				B82F0E281465F178007FAC6A /* ibufmultitable~.xcodeproj */,
 				B82F0E311465F17E007FAC6A /* ibufplayer~.xcodeproj */,
 				B82F0E3A1465F184007FAC6A /* ibuftable~.xcodeproj */,
+				B82F0E281465F178007FAC6A /* ibufmultitable~.xcodeproj */,
 			);
 			name = "ibuffer suite";
 			sourceTree = "<group>";
