@@ -11,7 +11,7 @@ FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-include
 
 // To install on build set SKIP_INSTALL to NO and DSTROOT to the desired location
 
-SKIP_INSTALL = YES
+SKIP_INSTALL = NO
 DEPLOYMENT_LOCATION = YES
 DSTROOT = ~/Documents/Max 8/Packages/AHarker/externals
 INSTALL_PATH = /
