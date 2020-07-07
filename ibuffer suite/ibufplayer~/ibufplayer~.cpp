@@ -166,7 +166,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     long non_attr_argc = attr_args_offset(argc, argv);
     
     t_atom_long obj_n_chans = non_attr_argc > 0 ? atom_getlong(argv + 0) : 1;
-    obj_n_chans = std::max(static_cast<t_atom_long>(max_num_chans), std::min(static_cast<t_atom_long>(1), obj_n_chans));
+    obj_n_chans = std::min(static_cast<t_atom_long>(max_num_chans), std::max(static_cast<t_atom_long>(1), obj_n_chans));
     
     // Setup DSP
     
