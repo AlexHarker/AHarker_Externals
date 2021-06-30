@@ -17,6 +17,10 @@
 #include "gesture_maker_kernel.h"
 #include <AH_Random.h>
 
+// Forward declation
+
+double gesture_maker_kernel_params_val(t_rand_gen *gen, t_atom *specifier, double last_val);
+
 // Symbols
 
 t_symbol *ps_flat;
@@ -208,12 +212,20 @@ double gesture_maker_kernel_calc(t_gesture_kernel *x, double in_val)
 	return in_val;
 }
 
-// Set the intial value for the kernel
+// Set the initial value for the kernel
 
 void gesture_maker_kernel_initial(t_gesture_kernel *x, double in_val)
 {
 	x->last_val = in_val;
 }
+
+// Set the initial value for the kernel from a specifier (including a random band)
+
+void gesture_maker_kernel_initial_specifier(t_gesture_kernel *x, t_atom *specifier)
+{
+    x->last_val = gesture_maker_kernel_params_val(kernel_param_rand, specifier, x->last_val);
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -73,7 +73,7 @@ typedef struct gesture_kernel
 	
     t_curve_params curve_params[3];
 
-    // LAst value
+    // Last value
     
     double last_val;
     
@@ -97,5 +97,6 @@ typedef struct rand_banding_params
 void gesture_maker_kernel_reset(t_gesture_kernel *x);
 double gesture_maker_kernel_calc(t_gesture_kernel *x, double in_val);
 void gesture_maker_kernel_initial(t_gesture_kernel *x, double in_val);
+void gesture_maker_kernel_initial_specifier(t_gesture_kernel *x, t_atom *specifier);
 void gesture_maker_kernel_params(t_gesture_kernel *x, long argc, t_atom *argv);
 void gesture_maker_kernel_params_setup();

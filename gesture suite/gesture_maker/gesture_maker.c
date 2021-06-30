@@ -89,6 +89,9 @@ void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long arg
 void gesture_maker_initial_main(t_gesture_maker *x, double in_val);
 void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val);
 
+void gesture_maker_start_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
+void gesture_maker_start_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
+
 void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 
 void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
@@ -124,6 +127,8 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)gesture_maker_gesture_inflections, "gesture_inflections", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_initial_main, "initial_main", A_FLOAT,  0);
 	class_addmethod(this_class, (method)gesture_maker_initial_inflections, "initial_inflections", A_FLOAT,  0);
+    class_addmethod(this_class, (method)gesture_maker_start_main, "start_main", A_GIMME,  0);
+    class_addmethod(this_class, (method)gesture_maker_start_inflections, "start_inflections", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_timings, "timings", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_scaling_main, "scaling_main", A_GIMME,  0);
 	class_addmethod(this_class, (method)gesture_maker_scaling_inflections, "scaling_inflections", A_GIMME,  0);
@@ -401,6 +406,18 @@ void gesture_maker_initial_main(t_gesture_maker *x, double in_val)
 void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val)
 {
 	gesture_maker_kernel_initial(&x->kernel_inflections, in_val);
+}
+
+void gesture_maker_start_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
+{
+    if (argc)
+        gesture_maker_kernel_initial_specifier(&x->kernel_main, argv);
+}
+
+void gesture_maker_start_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
+{
+    if (argc)
+        gesture_maker_kernel_initial_specifier(&x->kernel_inflections, argv);
 }
 
 void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
