@@ -483,7 +483,7 @@ void gesture_maker_get_curve_specification(t_curve_params *params, t_atom *speci
     double power_val = atom_getfloat(specifiers + 0);
     double scurve_val = atom_getfloat(specifiers + 1);
     
-    power_val = power_val > 1.0 ? 1.0 : power_val;
+    power_val = power_val < 1.0 ? 1.0 : power_val;
     scurve_val = scurve_val < 0.0 ? 0.0 : scurve_val;
     scurve_val = scurve_val > 1.0 ? 1.0 : scurve_val;
     scurve_val = pow(scurve_val, 0.35);
