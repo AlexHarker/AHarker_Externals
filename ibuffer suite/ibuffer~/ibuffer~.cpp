@@ -22,7 +22,7 @@
 #include "AudioFile/IAudioFile.h"
 
 #include <AH_Atomic.h>
-#include <ibuffer.h>
+#include <ibuffer.hpp>
 
 
 t_class *this_class;
@@ -72,14 +72,14 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
 	dsp_setup((t_pxobject *)x, 0);
 	
 	x->name = 0;
-	x->valid = 1;
-	x->thebuffer = NULL;
-    x->samples = NULL;
+	x->memory = nullptr;
+    x->samples = nullptr;
 	x->frames = 0;
 	x->channels = 0;
-	x->format = 0;
+	x->format = PCM_FLOAT;
 	x->sr = 0;
 	x->inuse = 0;
+    x->valid = 1;
 	
 	x->bang_out = bangout(x);
 	
@@ -103,7 +103,7 @@ void ibuffer_free(t_ibuffer *x)
 	x->valid = 0;
 	
 	dsp_free(&x->x_obj);
-	free(x->thebuffer);
+	free(x->memory);
 	
 	if (x->name) 
 		x->name->s_thing = 0;
@@ -180,8 +180,8 @@ struct ibuffer_lock
         if (m_file)
             m_file->close();
         
-        m_ibuffer = NULL;
-        m_file = NULL;
+        m_ibuffer = nullptr;
+        m_file = nullptr;
     }
     
     t_ibuffer *m_ibuffer;
@@ -330,13 +330,13 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         long num_chans_to_load = channel_order.size() ? channel_order.size() : x->channels;
         long sample_size = file.getByteDepth();
         
-		free(x->thebuffer);
-		x->thebuffer = calloc(sample_size, (x->frames * num_chans_to_load + 64));
-		x->samples = (void *)((char *) x->thebuffer + (16 * sample_size));
+		free(x->memory);
+		x->memory = calloc(sample_size, (x->frames * num_chans_to_load + 64));
+		x->samples = (void *)((char *) x->memory + (16 * sample_size));
         
 		// Bail if no memory
 		
-		if (!x->thebuffer)
+		if (!x->memory)
 		{
 			object_error((t_object *) x, "ibuffer~: could not allocate memory to load file");
             return;
