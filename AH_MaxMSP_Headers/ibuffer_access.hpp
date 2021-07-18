@@ -36,7 +36,7 @@
 #ifndef _IBUFFER_ACCESS_
 #define _IBUFFER_ACCESS_
 
-#include "ibuffer.h"
+#include "ibuffer.hpp"
 #include <TableReader.hpp>
 
 enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
