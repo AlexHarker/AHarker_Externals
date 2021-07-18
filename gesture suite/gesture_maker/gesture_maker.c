@@ -229,7 +229,7 @@ void gesture_maker_reset(t_gesture_maker *x)
 
 void gesture_maker_stop(t_gesture_maker *x)
 {	
-	// The stop routine is used internally and by users to cancel any gesture that is currently exectuing (this will *not* cause a bang message to be sent out of the done outlet)
+	// The stop routine is used internally and by users to cancel any gesture that is currently executing (this will *not* cause a bang message to be sent out of the done outlet)
 	
     clock_unset(x->gesture_clock);
 	
