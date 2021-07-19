@@ -24,9 +24,9 @@
 #include <AH_Memory_Swap.hpp>
 
 #include <dynamicdsp~.h>
-#include "PatchSlot.h"
-#include "PatchSet.h"
-#include "ThreadSet.h"
+#include "PatchSlot.hpp"
+#include "PatchSet.hpp"
+#include "ThreadSet.hpp"
 
 // FIX - gen~ loading issue - workaround in place
 

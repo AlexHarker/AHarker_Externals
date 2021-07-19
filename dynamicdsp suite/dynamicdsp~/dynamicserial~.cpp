@@ -24,8 +24,8 @@
 #include <AH_Memory_Swap.hpp>
 #include <SIMDSupport.hpp>
 
-#include "PatchSlot.h"
-#include "PatchSet.h"
+#include "PatchSlot.hpp"
+#include "PatchSet.hpp"
 
 /*****************************************/
 // Global Varibles
