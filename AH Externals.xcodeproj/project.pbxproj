@@ -1135,7 +1135,6 @@
 		B8A7912E1A1F610D007BDF82 /* AH_Atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Atomic.h; sourceTree = "<group>"; };
 		B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Denormals.h; sourceTree = "<group>"; };
 		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
-		B8A791311A1F610D007BDF82 /* AH_Memory_Swap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AH_Memory_Swap.hpp; sourceTree = "<group>"; };
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dynamicdsp~.h"; sourceTree = "<group>"; };
 		B8A7914A1A1F610D007BDF82 /* ibuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ibuffer.hpp; sourceTree = "<group>"; };
@@ -1601,7 +1600,6 @@
 				B8A7912E1A1F610D007BDF82 /* AH_Atomic.h */,
 				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
-				B8A791311A1F610D007BDF82 /* AH_Memory_Swap.hpp */,
 				B8A791341A1F610D007BDF82 /* AH_Random.h */,
 				B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */,
 				B8F25E321FF162CA00245397 /* HISSTools_FFT */,
