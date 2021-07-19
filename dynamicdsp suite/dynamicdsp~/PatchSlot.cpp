@@ -237,7 +237,7 @@ void PatchSlot::setWindowName()
 void PatchSlot::openWindow() const
 {
     if (mPatch)
-        mess0((t_object *)mPatch, gensym("front"));
+        object_method(mPatch, gensym("front"));
 }
 
 void PatchSlot::closeWindow() const
@@ -286,7 +286,7 @@ void PatchSlot::unlinkOutlets(t_patcher *p)
     
     for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
     {
-        if (jbox_get_maxclass(b)  == ps_out)
+        if (jbox_get_maxclass(b) == ps_out)
         {
             IO *io = (IO *)jbox_get_object(b);
             long inlet = io->s_index - 1;

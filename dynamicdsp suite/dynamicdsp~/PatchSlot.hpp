@@ -24,8 +24,6 @@ public:
     
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
     
-public:
-    
     PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
@@ -96,7 +94,8 @@ private:
     
     LoadError loadFinished(LoadError error, short savedLoadUpdate);
 
-    template <void (PatchSlot::*Method)(t_patcher *p)> int patcherTraverse(t_patcher *p, void *arg, t_object *owner)
+    template <void (PatchSlot::*Method)(t_patcher *p)>
+    int patcherTraverse(t_patcher *p, void *arg, t_object *owner)
     {
         // Avoid recursion into a poly / pfft / dynamicdsp~
      
