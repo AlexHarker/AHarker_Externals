@@ -34,6 +34,24 @@ class PatchSet
 
     // FIX - safety everywhere...!
 
+    static SlotClass *slotFromAtom(t_atom *argv)
+    {
+        return reinterpret_cast<SlotClass *>(atom_getobj(argv));
+    }
+    
+    void deferSlotAction(SlotClass *slot, method action)
+    {
+        t_atom a;
+        atom_setobj(&a, slot);
+        defer(mOwner, action, 0L, 1, &a);
+    }
+    
+    void deferSlotAction(t_atom_long index, method action)
+    {
+        if (userSlotExists(index))
+            deferSlotAction(mSlots[index - 1].get(), action);
+    }
+    
 public:
     
     // Deferred helpers
@@ -50,17 +68,17 @@ public:
     
     static void deleteSlot(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        delete (SlotClass *)atom_getobj(argv);
+        delete slotFromAtom(argv);
     }
     
     static void doOpen(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        ((SlotClass *)atom_getobj(argv))->openWindow();
+        slotFromAtom(argv)->openWindow();
     }
     
     static void doClose(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        ((SlotClass *)atom_getobj(argv))->closeWindow();
+        slotFromAtom(argv)->closeWindow();
     }
     
     // Constructor
@@ -126,12 +144,7 @@ public:
         if (userSlotExists(index))
         {
             mSlots[index - 1]->setInvalid();
-            SlotClass *toDelete = mSlots[index - 1].release();
-                        
-            t_atom a;
-            atom_setobj(&a, toDelete);
-            
-            defer(mOwner,(method)deleteSlot, 0L, 1, &a);
+            deferSlotAction(mSlots[index - 1].release(), (method) deleteSlot);
         }
         else
             object_error(mOwner, "no patch in slot %ld", index);
@@ -139,7 +152,7 @@ public:
     
     void clear()
     {
-        for (long i = 1; i <= size(); i++)
+        for (t_atom_long i = 1; i <= size(); i++)
             if (userSlotExists(i))
                 remove(i);
     }
@@ -299,73 +312,37 @@ public:
 
     // Window Management
     
-    bool openWindow(t_atom_long index)
+    void openWindow(t_atom_long index)
     {
-        if (userSlotExists(index))
-        {
-            t_atom a;
-            atom_setobj(&a, mSlots[index - 1].get());
-            defer(mOwner,(method)doOpen, 0L, 1, &a);
-            
-            return true;
-        }
-        
-        return false;
+        deferSlotAction(index, (method) doOpen);
     }
     
-    bool closeWindow(t_atom_long index)
+    void closeWindow(t_atom_long index)
     {
         if (!index)
         {
-            for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-            {
-                if (*it)
-                {
-                    t_atom a;
-                    atom_setobj(&a, it->get());
-                    defer(mOwner,(method)doClose, 0L, 1, &a);
-                }
-            }
-            
-            return true;
+            for (t_atom_long i = 1; i <= size(); i++)
+                deferSlotAction(i, (method) doClose);
         }
-        
-        if (userSlotExists(index))
-        {
-            t_atom a;
-            atom_setobj(&a, mSlots[index - 1].get());
-            defer(mOwner,(method)doClose, 0L, 1, &a);
-            
-            return true;
-        }
-        
-        return false;
+        else
+            deferSlotAction(index, (method) doClose);
     }
     
     // Queries
     
     void *getOutputHandle(t_ptr_int index)
     {
-        if (userSlotExists(index))
-            return mSlots[index - 1]->getOutputsHandle();
-        else
-            return NULL;
+        return userSlotExists(index) ? mSlots[index - 1]->getOutputsHandle() : nullptr;
     }
     
     bool getOn(t_ptr_int index)
     {
-        if (userSlotExists(index))
-            return mSlots[index - 1]->getOn();
-        
-        return false;
+        return userSlotExists(index) ? mSlots[index - 1]->getOn() : false;
     }
     
     bool getBusy(t_ptr_int index)
     {
-        if (userSlotExists(index))
-            return mSlots[index - 1]->getBusy();
-        
-        return false;
+        return userSlotExists(index) ? mSlots[index - 1]->getBusy() : false;
     }
     
     void setOn(t_ptr_int index, t_ptr_int state)
