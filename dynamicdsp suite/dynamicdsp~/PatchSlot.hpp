@@ -41,12 +41,12 @@ public:
     
     // Getters
        
-    t_patcher *getPatch() { return mPatch; }
-    bool getValid() { return mValid; }
-    long getUserIndex() { return mUserIndex; }
-    bool getOn() { return mOn; }
-    bool getBusy() { return mBusy; }
     void ***getOutputsHandle() { return &mOutputs; }
+    t_patcher *getPatch() const { return mPatch; }
+    bool getValid() const { return mValid; }
+    long getUserIndex() const { return mUserIndex; }
+    bool getOn() const { return mOn; }
+    bool getBusy() const { return mBusy; }
     
     // Setters
     

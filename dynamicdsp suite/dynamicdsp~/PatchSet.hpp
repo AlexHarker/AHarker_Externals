@@ -242,7 +242,6 @@ public:
     
     // Target Methods
     
-    
     void messageTarget(long argc, t_atom *argv)
     {
         t_atom_long targetIndex = argc ? atom_getlong(argv) : 0;
