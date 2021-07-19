@@ -26,7 +26,6 @@ typedef struct getthread{
 
 
 void *getthread_new();
-void getthread_free(t_getthread *x);
 
 void getthread_doit(t_getthread *x);
 void getthread_int(t_getthread *x, t_atom_long value);
@@ -41,7 +40,7 @@ int C74_EXPORT main()
 {
     this_class = class_new("getthread",
                           (method) getthread_new,
-                          (method) getthread_free,
+                          (method) NULL,
                           sizeof(t_getthread),
                           NULL,
                           0);
@@ -56,10 +55,6 @@ int C74_EXPORT main()
     class_register(CLASS_BOX, this_class);
     
     return 0;
-}
-
-void getthread_free(t_getthread *x)
-{
 }
 
 void *getthread_new()

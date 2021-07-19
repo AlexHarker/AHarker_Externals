@@ -29,7 +29,6 @@ typedef struct threadfilter{
 
 
 void *threadfilter_new();
-void threadfilter_free(t_threadfilter *x);
 
 void threadfilter_int(t_threadfilter *x, t_atom_long value);
 void threadfilter_float(t_threadfilter *x, double value);
@@ -43,7 +42,7 @@ int C74_EXPORT main()
 {
     this_class = class_new("threadfilter",
                           (method) threadfilter_new,
-                          (method) threadfilter_free,
+                          (method) NULL,
                           sizeof(t_threadfilter),
                           NULL,
                           0);
@@ -58,10 +57,6 @@ int C74_EXPORT main()
     class_register(CLASS_BOX, this_class);
     
     return 0;
-}
-
-void threadfilter_free(t_threadfilter *x)
-{
 }
 
 void *threadfilter_new()
@@ -126,4 +121,3 @@ void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
         sprintf(s, "Input (anything)");
     }
 }
-

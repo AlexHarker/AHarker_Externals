@@ -38,7 +38,6 @@ t_symbol *ps_bang;
 
 
 void *schedulemessage_new(double delay);
-void schedulemessage_free(t_schedulemessage *x);
 
 void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv);
 void schedulemessage_int(t_schedulemessage *x, t_atom_long value);
@@ -54,7 +53,7 @@ int C74_EXPORT main()
 {
     this_class = class_new("schedulemessage",
                           (method) schedulemessage_new,
-                          (method) schedulemessage_free,
+                          (method) NULL,
                           sizeof(t_schedulemessage),
                           NULL,
                           A_DEFFLOAT,
@@ -87,10 +86,6 @@ void *schedulemessage_new(double delay)
     x->delay = delay;
     
     return x;
-}
-
-void schedulemessage_free(t_schedulemessage *x)
-{
 }
 
 void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
