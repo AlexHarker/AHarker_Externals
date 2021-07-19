@@ -218,7 +218,7 @@ public:
     
     void messageBang()
     {
-        target(gensym("bang"), 0, 0);
+        target(gensym("bang"), 0, nullptr);
     }
     
     void messageInt(t_atom_long n)
