@@ -20,8 +20,6 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#include <AH_Memory_Swap.hpp>
-
 #include <dynamicdsp~.h>
 #include "PatchSlot.hpp"
 #include "PatchSet.hpp"
@@ -57,20 +55,20 @@ struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
     ThreadedPatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs)
     : PatchSet(x, parent, numIns, numOuts, outs) {}
     
-    bool processIfThreadMatches(long index, void *tempMem, void **outputs, t_ptr_uint tempMemSize, long thread, long nThreads)
+    bool processIfThreadMatches(long index, void **outputs, long thread, long nThreads)
     {
         if (!userSlotExists(index + 1))
             return false;
         
-        return mSlots[index]->processIfThreadMatches(tempMem, outputs, tempMemSize, thread, nThreads);
+        return mSlots[index]->processIfThreadMatches(outputs, thread, nThreads);
     }
     
-    bool processIfUnprocessed(long index, void *tempMem, void **outputs, t_ptr_uint tempMemSize)
+    bool processIfUnprocessed(long index, void **outputs)
     {
         if (!userSlotExists(index + 1))
             return false;
         
-        return mSlots[index]->processIfUnprocessed(tempMem, outputs, tempMemSize);
+        return mSlots[index]->processIfUnprocessed(outputs);
     }
     
     void requestThread(long index, long thread)
@@ -127,18 +125,17 @@ typedef struct _dynamicdsp
 	
 	long max_obj_threads;
 	
-    // Temporary Memory / Thread Data / Patches
+    // Thread Data / Patches
     
-	t_safe_mem_swap temp_mem;
     ThreadSet *threads;
     ThreadedPatchSet *slots;
     
 } t_dynamicdsp;
 
+
 /*****************************************/
 // Function Prototypes
 /*****************************************/
-
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicdsp_free(t_dynamicdsp *x);
@@ -162,7 +159,7 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
 static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
-void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long num_active_threads);
+void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, long thread_num, long num_active_threads);
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -188,16 +185,15 @@ void *dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_int index);
 void *dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_int index);
 void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
 void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
-void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index);
-void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size);
+
 
 /*****************************************/
 // Symbols
 /*****************************************/
 
-
 t_symbol *ps_args;
 t_symbol *ps_declareio;
+
 
 /*****************************************/
 // Main
@@ -336,8 +332,6 @@ int C74_EXPORT main()
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_get_patch_busy, "get_patch_busy", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_set_patch_on, "set_patch_on", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_set_patch_busy, "set_patch_busy", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_temp_mem, "get_temp_mem", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_temp_mem_resize, "temp_mem_resize", A_CANT, 0);
 	
     CLASS_ATTR_OBJ(dynamicdsp_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
     CLASS_ATTR_ACCESSORS(dynamicdsp_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
@@ -513,7 +507,6 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup temporary memory / threads / slots
 	
-	alloc_mem_swap(&x->temp_mem, 0, 0);
     x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
     x->slots = new ThreadedPatchSet((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
@@ -529,9 +522,8 @@ void dynamicdsp_free(t_dynamicdsp *x)
 {
 	dsp_free((t_pxobject *)x);
 	
-	// Free temporary memory / threads / patches
+	// Free threads / patches
 
-    free_mem_swap(&x->temp_mem);
     delete x->threads;
 	delete x->slots;
 	
@@ -771,7 +763,7 @@ static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_
     }
 }
 
-void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long num_active_threads)
+void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, long thread_num, long num_active_threads)
 {
     long num_sig_outs = x->num_sig_outs;
     
@@ -790,7 +782,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_p
     if (x->manual_threading)
     {
         for (long i = 0; i < x->slots->size(); i++)
-            x->slots->processIfThreadMatches(i, temp_mem_ptr, sig_outs, temp_mem_size, thread_num, num_active_threads);
+            x->slots->processIfThreadMatches(i, sig_outs, thread_num, num_active_threads);
     }
     else
     {
@@ -801,7 +793,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_p
             if (++index >= size)
                 index -= size;
             
-            x->slots->processIfUnprocessed(i, temp_mem_ptr, sig_outs, temp_mem_size);
+            x->slots->processIfUnprocessed(i, sig_outs);
         }
     }
     
@@ -815,9 +807,6 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_p
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
-    void *new_temp_mem_ptr;
-    t_ptr_uint new_temp_mem_size;
-	
 	long num_active_threads = x->request_num_active_threads;
     long multithread_flag = (x->slots->size() > 1) && x->multithread_flag;
 	
@@ -839,19 +828,6 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 	{
 		x->update_thread_map = 0;											
 		x->slots->updateThreads();
-	}
-	
-	// Update the temporary memory if relevant
-	
-	if (attempt_mem_swap(&x->temp_mem) == SWAP_DONE)
-	{
-		// Store the new pointers and size
-		
-		new_temp_mem_ptr = x->temp_mem.current_ptr;
-		new_temp_mem_size = x->temp_mem.current_size;
-		
-		for (long i = 0; i < x->max_obj_threads; i++)
-            x->threads->setTempMemory(i, (char *) new_temp_mem_ptr + (new_temp_mem_size * i), new_temp_mem_size);
 	}
     
 	// Do processing - the switch aims to get more speed from inlining a fixed loop size
@@ -1053,27 +1029,4 @@ void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_int index, t_ptr_int 
 void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state)
 {
     x->slots->setBusy(index, state);
-}
-
-// Temporary memory
-
-// dynamicdsp~ provides memory per audio thread for temporary calculations.
-// Objects requiring temporary memory during their perform method request a minimum size during their dsp routine
-// The pointer should be requested during the perform routine, and should not be stored
-// This reduces memory allocation, and potentially increases speed by keeping temporary memory in the cache
-
-void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index)
-{
-    return x->slots->getTempMemHandle(index);
-}
-
-void *dynamicdsp_client_temp_mem_resize(t_dynamicdsp *x, t_ptr_int index, t_ptr_uint size)
-{
-    // FIX - better system for this...
-    
-    schedule_grow_mem_swap(&x->temp_mem, size * x->threads->getNumThreads(), size);
-    
-    x->slots->setTempMemSize(index, size);
-    
-    return (void *) 1;
 }

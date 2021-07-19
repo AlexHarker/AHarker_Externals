@@ -26,10 +26,11 @@ public:
     
 public:
     
-    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mTempMemSize(0), mTempMem(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
+    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
     }
+    
     ~PatchSlot();
     
     LoadError load(long userIndex, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
@@ -38,7 +39,7 @@ public:
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
     
     void compileDSP(long vecSize, long samplingRate, bool forceWhenInvalid = false);
-    bool process(void *tempMem, void **outputs, t_ptr_uint tempMemSize);
+    bool process(void **outputs);
     
     // Getters
        
@@ -48,14 +49,12 @@ public:
     bool getOn() { return mOn; }
     bool getBusy() { return mBusy; }
     void ***getOutputsHandle() { return &mOutputs; }
-    void **getTempMemHandle() { return &mTempMem; }
     
     // Setters
     
     void setOn(bool on) { mOn = on; }
     void setBusy(bool busy) { mBusy = busy; }
     void setInvalid() { mValid = false; }
-    void setTempMemSize(t_ptr_uint size) { mTempMemSize = size; }
 
     // Number of ins and outs
     
@@ -82,15 +81,14 @@ public:
     
 protected:
     
-    inline bool checkProcess(void *tempMem, void **outputs, t_ptr_uint tempMemSize)
+    inline bool checkProcess()
     {
-        return (mDSPChain && mValid && mOn && (tempMemSize >= mTempMemSize));
+        return (mDSPChain && mValid && mOn);
     }
     
-    void processTick(void *tempMem, void **outputs)
+    void processTick(void **outputs)
     {
         mOutputs = outputs;
-        mTempMem = tempMem;
         dspchain_tick(mDSPChain);
     }
     
@@ -157,11 +155,6 @@ private:
     
     void **mOutputs;
     
-    // Temporary Memory Variables
-    
-    t_ptr_uint mTempMemSize;
-    void *mTempMem;
-    
     // Inlet and Outlet Communication
     
     std::vector< std::vector<void *> > mInTable;
@@ -187,8 +180,8 @@ public:
     void updateThread() { mThreadCurrent = mThreadRequest; }
     void resetProcessed() { mProcessingLock.release(); }
     
-    bool processIfUnprocessed(void *tempMem, void **outputs, t_ptr_uint tempMemSize);
-    bool processIfThreadMatches(void *tempMem, void **outputs, t_ptr_uint tempMemSize, long thread, long availableThreads);
+    bool processIfUnprocessed(void **outputs);
+    bool processIfThreadMatches(void **outputs, long thread, long availableThreads);
 
 private:
 

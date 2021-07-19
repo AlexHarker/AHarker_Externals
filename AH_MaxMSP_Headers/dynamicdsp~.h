@@ -105,22 +105,4 @@ static __inline void Dynamic_Set_Patch_On (void *obj, long index, t_atom_long st
 		mess2((t_object *)obj, gensym("set_patch_on"), (void *)index, (void *)state);
 }
 
-// Temporary Memory Queries //
-
-static __inline void **Dynamic_Get_Temp_Mem(void *obj, long index, void **default_memory)
-{
-	if (DynamicIsValid(obj) && index > 0)
-		return (void **) mess1((t_object *)obj, gensym("get_temp_mem"), (void *)index);
-	else
-		return default_memory;
-}
-
-static __inline long Dynamic_Temp_Mem_Resize(void *obj, long index, t_ptr_uint size)
-{
-    if (DynamicIsValid(obj) && index > 0)
-        return (long) mess2((t_object *)obj, gensym("temp_mem_resize"), (void *)index, (void *)size);
-    else
-        return 0;
-}
-
 #endif		/* _DYNAMICDSP_	*/

@@ -20,7 +20,6 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#include <AH_Memory_Swap.hpp>
 #include <SIMDSupport.hpp>
 
 #include "PatchSlot.hpp"
@@ -71,11 +70,6 @@ typedef struct _dynamicserial
 	void **temp_buffers2;
 	
 	long num_proxies;				// number of proxies = MAX(num_sig_ins, num_ins)
-				
-	// Temporary Memory Variables
-	
-	t_safe_mem_swap temp_mem;
-	
 	
 } t_dynamicserial;
 
@@ -140,9 +134,6 @@ void *dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_int index);
 void *dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_int index);
 void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
 void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
-void *dynamicserial_query_temp_mem(t_dynamicserial *x, t_ptr_int index);
-void *dynamicserial_client_temp_mem_resize(t_dynamicserial *x, t_ptr_int index, t_ptr_uint size);
-
 
 /*****************************************/
 // Symbols
@@ -299,12 +290,6 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 		}
 	}
 
-    
-
-	// Setup temporary memory
-	
-	alloc_mem_swap(&x->temp_mem, 0, 0);
-
 	// Set other variables to defaults
 	
 	x->num_sig_ins = num_sig_ins;
@@ -381,10 +366,6 @@ void dynamicserial_free(t_dynamicserial *x)
 	// Free patches
 	
     delete x->slots;
-	
-	// Free other resources
-	
-	free_mem_swap(&x->temp_mem);
 	
     // Free temp buffers
     
@@ -535,12 +516,6 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 	for (long i = 0; i < num_sig_outs; i++)
 		memset(sig_outs[i], 0, sig_size * vec_size);
 	
-	// Update the temporary memory if relevant
-	
-	attempt_mem_swap(&x->temp_mem);
-	void *temp_mem_ptr = x->temp_mem.current_ptr;
-	t_ptr_uint temp_mem_size = x->temp_mem.current_size;
-	
 	// Copy inputs in and zero output temp buffers
 
 	for (long i = 0; i < num_sig_ins; i++)
@@ -563,7 +538,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 			
         // Process and flip if processing has occurred
             
-        if (x->slots->process(i, temp_mem_ptr, flip ? temp_buffers1 : temp_buffers2, temp_mem_size))
+        if (x->slots->process(i, flip ? temp_buffers1 : temp_buffers2))
             flip = flip ? false : true;
 	}
 	
@@ -760,25 +735,4 @@ void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_int index, t_pt
 void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_ptr_int state)
 {
     x->slots->setBusy(index, state);
-}
-
-// Temporary memory
-
-// dynamicserial~ provides memory per audio thread for temporary calculations.
-// Objects requiring temporary memory during their perform method request a minimum size during their dsp routine
-// The pointer should be requested during the perform routine, and should not be stored
-// This reduces memory allocation, and potentially increases speed by keeping temporary memory in the cache
-
-void *dynamicserial_query_temp_mem(t_dynamicserial *x, t_ptr_int index)
-{
-    return x->slots->getTempMemHandle(index);
-}
-
-void *dynamicserial_client_temp_mem_resize(t_dynamicserial *x, t_ptr_int index, t_ptr_uint size)
-{	
-	schedule_grow_mem_swap(&x->temp_mem, size, size);
-
-    x->slots->setTempMemSize(index, size);
-
-	return (void *) 1;
 }

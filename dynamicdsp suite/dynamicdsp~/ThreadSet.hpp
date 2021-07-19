@@ -104,11 +104,11 @@ class ThreadSet
     
 public:
     
-    typedef void procFunc(t_object *, void **, void *, t_ptr_uint, long, long, long);
+    typedef void procFunc(t_object *, void **, long, long, long);
     
     struct ThreadSlot
     {
-        ThreadSlot(void *owner, long idx, long numTempOuts) : mOwner(owner), mIdx(idx), mProcessed(1), mTempMemory(NULL), mTempMemSize(0)
+        ThreadSlot(void *owner, long idx, long numTempOuts) : mOwner(owner), mIdx(idx), mProcessed(1)
         {
             mTempBuffers.resize(numTempOuts);
         }
@@ -117,8 +117,6 @@ public:
 
         void *mOwner;
         long mIdx;
-        void *mTempMemory;
-        t_ptr_uint mTempMemSize;
         std::atomic<int> mProcessed;
         std::vector<void *> mTempBuffers;
     };
@@ -168,7 +166,7 @@ public:
         
         if (numThreads == 1)
         {
-            mProcess(mOwner, sig_outs, mThreadSlots[0].mTempMemory, mThreadSlots[0].mTempMemSize, vecSize, 0, 1);
+            mProcess(mOwner, sig_outs, vecSize, 0, 1);
             return;
         }
             
@@ -181,7 +179,7 @@ public:
         
         // Process thread
         
-        mProcess(mOwner, mThreadSlots[0].getBuffers(), mThreadSlots[0].mTempMemory, mThreadSlots[0].mTempMemSize, vecSize, 0, numThreads);
+        mProcess(mOwner, mThreadSlots[0].getBuffers(), vecSize, 0, numThreads);
     
         // Wait for all the other threads to return
         
@@ -199,12 +197,6 @@ public:
         
         return sysinfo.dwNumberOfProcessors;
 #endif
-    }
-    
-    void setTempMemory(long thread, void *memory, t_ptr_uint size)
-    {
-        mThreadSlots[thread].mTempMemory = memory;
-        mThreadSlots[thread].mTempMemSize = size;
     }
     
     template <typename T>
@@ -251,7 +243,7 @@ public:
                 
                 if (mThreadSlots[idx].mProcessed.compare_exchange_strong(expected, 2))
                 {
-                    mProcess(mOwner, mThreadSlots[idx].getBuffers(), mThreadSlots[idx].mTempMemory, mThreadSlots[idx].mTempMemSize, mVecSize, idx, mActive);
+                    mProcess(mOwner, mThreadSlots[idx].getBuffers(), mVecSize, idx, mActive);
                     mThreadSlots[idx].mProcessed = 1;
                 }
             }

@@ -283,12 +283,12 @@ public:
     
     // Process and DSP
     
-    bool process(long index, void *tempMem, void **outputs, t_ptr_uint tempMemSize)
+    bool process(long index, void **outputs)
     {
         if (!userSlotExists(index + 1))
             return false;
         
-        return mSlots[index]->process(tempMem, outputs, tempMemSize);
+        return mSlots[index]->process(outputs);
     }
     
     void compileDSP(long vecSize, long samplingRate)
@@ -352,14 +352,6 @@ public:
             return NULL;
     }
     
-    void *getTempMemHandle(t_ptr_int index)
-    {
-        if (userSlotExists(index))
-            return mSlots[index - 1]->getTempMemHandle();
-        else
-            return NULL;
-    }
-    
     bool getOn(t_ptr_int index)
     {
         if (userSlotExists(index))
@@ -386,12 +378,6 @@ public:
     {
         if (userSlotExists(index))
             mSlots[index - 1]->setBusy(state ? true : false);
-    }
-    
-    void setTempMemSize(t_ptr_int index, t_ptr_uint size)
-    {
-        if (userSlotExists(index))
-            mSlots[index - 1]->setTempMemSize(size);
     }
     
     // Patch serialisation

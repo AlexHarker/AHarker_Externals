@@ -184,11 +184,11 @@ void PatchSlot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
 
 // Processing and DSP
 
-bool PatchSlot::process(void *tempMem, void **outputs, t_ptr_uint tempMemSize)
+bool PatchSlot::process(void **outputs)
 {
-    if (checkProcess(tempMem, outputs, tempMemSize))
+    if (checkProcess())
     {
-        processTick(tempMem, outputs);
+        processTick(outputs);
         return true;
     }
     
@@ -321,21 +321,21 @@ void PatchSlot::freePatch()
 
 // ThreadedPatchSlot Additions
 
-bool ThreadedPatchSlot::processIfUnprocessed(void *tempMem, void **outputs, t_ptr_uint tempMemSize)
+bool ThreadedPatchSlot::processIfUnprocessed(void **outputs)
 {
-    if (PatchSlot::checkProcess(tempMem, outputs, tempMemSize) && checkProcess())
+    if (PatchSlot::checkProcess() && checkProcess())
     {
-        processTick(tempMem, outputs);
+        processTick(outputs);
         return true;
     }
     
     return false;
 }
 
-bool ThreadedPatchSlot::processIfThreadMatches(void *tempMem, void **outputs, t_ptr_uint tempMemSize, long thread, long availableThreads)
+bool ThreadedPatchSlot::processIfThreadMatches(void **outputs, long thread, long availableThreads)
 {
     if ((mThreadCurrent % availableThreads) == thread)
-        return process(tempMem, outputs, tempMemSize);
+        return process(outputs);
     
     return false;
 }
