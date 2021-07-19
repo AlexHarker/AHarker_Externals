@@ -43,3 +43,7 @@ CVS/
 # MaxSDKs
 
 c74support/
+
+# Builds
+
+*.mxo
