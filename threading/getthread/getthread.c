@@ -2,9 +2,9 @@
 /*
  *  getthread
  *
- *    getthread is an object to report which thread incoming events are in (output is 1 for the scheduler thread, 0 otherwise).
+ *  getthread is an object to report which thread incoming events are in (output is 1 for the scheduler thread, 0 otherwise).
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 

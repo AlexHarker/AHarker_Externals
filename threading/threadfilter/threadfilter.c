@@ -2,11 +2,11 @@
 /*
  *  threadfilter
  *
- *    threadfilter filters its input into two streams, those in the low priority thread, and those in the high priority scheduler thread.
+ *  threadfilter filters its input into two streams, those in the low priority thread, and those in the high priority scheduler thread.
  *
- *    The most obvious use of threadfilter is to avoid threading issues, especially in the case of global code.
+ *  The most obvious use of threadfilter is to avoid threading issues, especially in the case of global code.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 

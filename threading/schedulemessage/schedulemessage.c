@@ -2,14 +2,14 @@
 /*
  *  schedulemessage
  *
- *    schedulemessage has two potential uses:
+ *  schedulemessage has two potential uses:
  *
- *    1 - To move messages from the low priority thread to high priority scheduler thread (if it it exists).
- *    2 - To delay any message (like delay, or pipe but for any messages).
+ *  1 - To move messages from the low priority thread to high priority scheduler thread (if it it exists).
+ *  2 - To delay any message (like delay, or pipe but for any messages).
  *
- *    See documentations for details of usage and intricatcies of timing / threading issues.
+ *  See documentations for details of usage and intricatcies of timing / threading issues.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
