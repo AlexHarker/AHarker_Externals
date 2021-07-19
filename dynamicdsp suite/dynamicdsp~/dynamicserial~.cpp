@@ -20,7 +20,6 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#include <AH_Atomic.h>
 #include <AH_Memory_Swap.hpp>
 #include <SIMDSupport.hpp>
 
@@ -31,13 +30,13 @@
 // Global Varibles
 /*****************************************/
 
-
 t_class *dynamicserial_class;
 
 static t_ptr_uint sig_size;
 
 #define MAX_ARGS 16
 #define MAX_IO 256
+
 
 /*****************************************/
 // Object Structure
@@ -92,10 +91,11 @@ t_atom_long dynamic_getindex(t_dynamicserial *x, void *p)
     }
     return -1;
 }
+
+
 /*****************************************/
 // Function Prototypes
 /*****************************************/
-
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicserial_free(t_dynamicserial *x);
@@ -143,18 +143,18 @@ void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_
 void *dynamicserial_query_temp_mem(t_dynamicserial *x, t_ptr_int index);
 void *dynamicserial_client_temp_mem_resize(t_dynamicserial *x, t_ptr_int index, t_ptr_uint size);
 
+
 /*****************************************/
 // Symbols
 /*****************************************/
 
-
 t_symbol *ps_args;
 t_symbol *ps_declareio;
+
 
 /*****************************************/
 // Main
 /*****************************************/
-
 
 int C74_EXPORT main()
 {
@@ -219,10 +219,10 @@ int C74_EXPORT main()
 	return 0;
 }
 
+
 /*****************************************/
 // Object Creation / Freeing / Assisstance
 /*****************************************/
-
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 {	
@@ -424,10 +424,10 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 		sprintf(s,"Signal / Message In %ld", a + 1);
 }
 
+
 /*****************************************/
 // Patcher Loading / Deleting
 /*****************************************/
-
 
 void dynamicserial_deletepatch(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -469,10 +469,11 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 	else 
 		object_error((t_object *) x, "no patch specified");
 }
+
+
 /*****************************************/
 // Messages in passed on to the patcher via the "in" objects / Voice targeting
 /*****************************************/
-
 
 void dynamicserial_bang(t_dynamicserial *x)
 {	
@@ -509,10 +510,10 @@ void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_at
     x->slots->objTargetFree(argc, argv);
 }
 
+
 /*****************************************/
 // Perform and DSP Routines
 /*****************************************/
-
 
 void dynamicserial_perform_common(t_dynamicserial *x)
 {	
@@ -608,10 +609,10 @@ void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, 
 	dynamicserial_perform_denormal_handled(x);
 }
 
+
 /*****************************************/
 // DSP Routines
 /*****************************************/
-
 
 bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 {
@@ -662,10 +663,10 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, NULL);
 }
 
+
 /*****************************************/
 // Patcher Window stuff
 /*****************************************/
-
 
 void dynamicserial_dblclick(t_dynamicserial *x)
 {
@@ -689,10 +690,10 @@ void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index)
     x->slots->closeWindow(index);
 }
 
+
 /*****************************************/
 // Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
 /*****************************************/
-
 
 void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
 {
@@ -709,10 +710,10 @@ void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
 	*parent = x->parent_patch;
 }
 
+
 /*****************************************/
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
-
 
 // Note that objects wishing to query the parent dynamicserial~ object should call the functions in dynamicdsp.h
 // These act as suitable wrappers to send the appropriate message to the parent object and returns values as appropriate

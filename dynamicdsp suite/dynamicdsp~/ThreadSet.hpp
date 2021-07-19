@@ -2,13 +2,13 @@
 #ifndef __THREADSET__
 #define __THREADSET__
 
+#include <atomic>
 #include <vector>
 
 #include <ext.h>
-
-#include <AH_Atomic.h>
-#include <SIMDSupport.hpp>
 #include <stdint.h>
+
+#include <SIMDSupport.hpp>
 
 #ifdef __APPLE__
 
@@ -117,9 +117,9 @@ public:
 
         void *mOwner;
         long mIdx;
-        t_int32_atomic mProcessed;
         void *mTempMemory;
         t_ptr_uint mTempMemSize;
+        std::atomic<int> mProcessed;
         std::vector<void *> mTempBuffers;
     };
     
@@ -207,9 +207,10 @@ public:
         mThreadSlots[thread].mTempMemSize = size;
     }
     
-    void *getThreadOut(long thread, long index)
+    template <typename T>
+    T *getThreadOut(long thread, long index)
     {
-        return mThreadSlots[thread].mTempBuffers[index];
+        return (T *) mThreadSlots[thread].mTempBuffers[index];
     }
         
     bool resizeTempBuffers(t_ptr_int size)
@@ -246,8 +247,9 @@ public:
                 // N.B. Get values from thread each time in case they have been changed
                 
                 long idx = (i % (mActive - 1)) + 1;
+                int expected = 0;
                 
-                if (Atomic_Compare_And_Swap(0, 2, &mThreadSlots[idx].mProcessed))
+                if (mThreadSlots[idx].mProcessed.compare_exchange_strong(expected, 2))
                 {
                     mProcess(mOwner, mThreadSlots[idx].getBuffers(), mThreadSlots[idx].mTempMemory, mThreadSlots[idx].mTempMemSize, mVecSize, idx, mActive);
                     mThreadSlots[idx].mProcessed = 1;

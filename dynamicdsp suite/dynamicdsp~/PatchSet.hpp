@@ -10,8 +10,6 @@
 #include <memory>
 #include <vector>
 
-#include <AH_Atomic.h>
-
 
 // dspchain Attribute Helper
 

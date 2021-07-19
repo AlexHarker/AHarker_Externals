@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <AH_Atomic.h>
+#include <AH_Locks.hpp>
 
 
 // Simple class
@@ -181,22 +181,22 @@ class ThreadedPatchSlot : public PatchSlot
     
 public:
     
-    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable) : PatchSlot(owner, parent, numIns, outTable), mProcessingFlag(0), mThreadCurrent(0), mThreadRequest(0)   {}
+    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable) : PatchSlot(owner, parent, numIns, outTable), mThreadCurrent(0), mThreadRequest(0)   {}
     
     void requestThread(long thread) { mThreadRequest = thread; }
     void updateThread() { mThreadCurrent = mThreadRequest; }
-    void resetProcessed() { mProcessingFlag = 0; }
+    void resetProcessed() { mProcessingLock.release(); }
     
     bool processIfUnprocessed(void *tempMem, void **outputs, t_ptr_uint tempMemSize);
     bool processIfThreadMatches(void *tempMem, void **outputs, t_ptr_uint tempMemSize, long thread, long availableThreads);
 
 private:
 
-    bool checkProcess() { return Atomic_Compare_And_Swap(0, 1, &mProcessingFlag); }
+    bool checkProcess() { return mProcessingLock.attempt(); }
 
     // Threading Variables
     
-    t_int32_atomic mProcessingFlag;
+    thread_lock mProcessingLock;
     long mThreadCurrent;
     long mThreadRequest;
 };

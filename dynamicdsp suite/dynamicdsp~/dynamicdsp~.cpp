@@ -20,7 +20,6 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#include <AH_Atomic.h>
 #include <AH_Memory_Swap.hpp>
 
 #include <dynamicdsp~.h>
@@ -164,8 +163,6 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 
 static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
 void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_ptr, t_ptr_uint temp_mem_size, long vec_size, long thread_num, long num_active_threads);
-void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
-void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads);
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -367,10 +364,10 @@ int C74_EXPORT main()
 	return 0;
 }
 
+
 /*****************************************/
 // Object Creation / Freeing / Assisstance
 /*****************************************/
-
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 {	
@@ -563,7 +560,6 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 // Patcher Loading / Deleting
 /*****************************************/
 
-
 void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
     x->slots->remove(atom_getlong(argv));
@@ -626,10 +622,11 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 	else 
 		object_error((t_object *) x, "no patch specified");
 }
+
+
 /*****************************************/
 // Messages in passed on to the patcher via the "in" objects / Voice targeting
 /*****************************************/
-
 
 void dynamicdsp_bang(t_dynamicdsp *x)
 {	
@@ -666,10 +663,10 @@ void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *ar
     x->slots->objTargetFree(argc, argv);
 }
 
+
 /*****************************************/
 // Multithreading Messages
 /*****************************************/
-
 
 void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -721,6 +718,41 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 // Perform Routines
 /*****************************************/
 
+template <typename T>
+void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+{
+    const long max_simd_size = SIMDLimits<T>::max_size;
+    
+    // Sum output of threads for each signal outlet
+    
+    for (long i = 0; i < num_sig_outs; i++)
+    {
+        for (long j = 0; j < num_active_threads; j++)
+        {
+            T *io_pointer = (T *) sig_outs[i];
+            T *next_sig_pointer = threads->getThreadOut<T>(j, i);
+            
+            if (next_sig_pointer)
+            {
+                if (vec_size < max_simd_size || t_ptr_uint(io_pointer) % 16)
+                {
+                    for (long k = 0; k < vec_size; k++)
+                        *io_pointer++ += *next_sig_pointer++;
+                }
+                else
+                {
+                    using SIMD = SIMDType<T, max_simd_size>;
+                    const long num_vecs = vec_size / max_simd_size;
+                    SIMD *a = (SIMD *) io_pointer;
+                    SIMD *b = (SIMD *) next_sig_pointer;
+                    
+                    for (long k = 0; k < num_vecs; k++)
+                        *a++ += *b++;
+                }
+            }
+        }
+    }
+}
 
 static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
 {
@@ -733,9 +765,9 @@ static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_
         // Sum outputs
     
         if (sig_size == sizeof(float))
-            dynamicdsp_sum_float(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
+            dynamicdsp_sum<float>(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
         else
-            dynamicdsp_sum_double(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
+            dynamicdsp_sum<double>(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
     }
 }
 
@@ -780,75 +812,6 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, void *temp_mem_p
 #endif
 }
 
-void dynamicdsp_sum_float(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
-{
-    const long max_simd_size = SIMDLimits<float>::max_size;
-
-    // Sum output of threads for each signal outlet
-    
-    for (long i = 0; i < num_sig_outs; i++)
-    {
-        for (long j = 0; j < num_active_threads; j++)
-        {
-            float *io_pointer = (float *)sig_outs[i];
-            float *next_sig_pointer = (float *)threads->getThreadOut(j, i);
-            
-            if (next_sig_pointer)
-            {
-                if (vec_size < max_simd_size || t_ptr_uint(io_pointer) % 16)
-                {
-                    for (long k = 0; k < vec_size; k++)
-                        *io_pointer++ += *next_sig_pointer++;
-                }
-                else
-                {
-                    using SIMD = SIMDType<float, max_simd_size>;
-                    const long num_vecs = vec_size / max_simd_size;
-                    SIMD *a = (SIMD *) io_pointer;
-                    SIMD *b = (SIMD *) next_sig_pointer;
-                    
-                    for (long k = 0; k < num_vecs; k++)
-                        *a++ += *b++;
-                }
-            }
-        }
-    }
-}
-
-void dynamicdsp_sum_double(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
-{
-    const long max_simd_size = SIMDLimits<double>::max_size;
-    
-    // Sum output of threads for each signal outlet
-    
-    for (long i = 0; i < num_sig_outs; i++)
-    {
-        for (long j = 0; j < num_active_threads; j++)
-        {
-            double *io_pointer = (double *)sig_outs[i];
-            double *next_sig_pointer = (double *)threads->getThreadOut(j, i);
-            
-            if (next_sig_pointer)
-            {
-                if (vec_size < max_simd_size || t_ptr_uint(io_pointer) % 16)
-                {
-                    for (long k = 0; k < vec_size; k++)
-                        *io_pointer++ += *next_sig_pointer++;
-                }
-                else
-                {
-                    using SIMD = SIMDType<double, max_simd_size>;
-                    const long num_vecs = vec_size / max_simd_size;
-                    SIMD *a = (SIMD *) io_pointer;
-                    SIMD *b = (SIMD *) next_sig_pointer;
-                    
-                    for (long k = 0; k < num_vecs; k++)
-                        *a++ += *b++;
-                }
-            }
-        }	
-    } 
-}
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
@@ -891,8 +854,8 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
             x->threads->setTempMemory(i, (char *) new_temp_mem_ptr + (new_temp_mem_size * i), new_temp_mem_size);
 	}
     
-	// Do processing - the switching aims to get more speed out of inlining with a fixed loop size
-	// Note that the signle threaded case is handled as a special case in the ThreadSet class
+	// Do processing - the switch aims to get more speed from inlining a fixed loop size
+	// N.B. - the single threaded case is handled as a special case in the ThreadSet class
     
 	switch (num_active_threads)
     {                
@@ -942,7 +905,7 @@ t_int *dynamicdsp_perform(t_int *w)
 	return w + 2;	
 }
 
-void dynamicdsp_perform64 (t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	for (long i = 0; i < x->num_sig_ins; i++)
 		x->sig_ins[i] = ins[i];
@@ -992,10 +955,10 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 		object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, NULL);
 }
 
+
 /*****************************************/
 // Patcher Window stuff
 /*****************************************/
-
 
 void dynamicdsp_dblclick(t_dynamicdsp *x)
 {
@@ -1019,10 +982,10 @@ void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)
     x->slots->closeWindow(index);
 }
 
+
 /*****************************************/
 // Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
 /*****************************************/
-
 
 void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
 {
@@ -1039,6 +1002,7 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 	*parent = x->parent_patch;
 }
 
+
 /*****************************************/
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
@@ -1051,17 +1015,17 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 
 void *dynamicdsp_query_num_sigins(t_dynamicdsp *x)
 {
-    return (void *)x->num_sig_ins;
+    return (void *) x->num_sig_ins;
 }
 
 void *dynamicdsp_query_num_sigouts(t_dynamicdsp *x)
 {
-    return (void *)x->num_sig_outs;
+    return (void *) x->num_sig_outs;
 }
 
 void *dynamicdsp_query_sigins(t_dynamicdsp *x)
 {
-    return (void *)x->sig_ins;
+    return (void *) x->sig_ins;
 }
 
 void *dynamicdsp_query_sigouts(t_dynamicdsp *x, long index)
@@ -1097,7 +1061,6 @@ void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_in
 // Objects requiring temporary memory during their perform method request a minimum size during their dsp routine
 // The pointer should be requested during the perform routine, and should not be stored
 // This reduces memory allocation, and potentially increases speed by keeping temporary memory in the cache
-
 
 void *dynamicdsp_query_temp_mem(t_dynamicdsp *x, t_ptr_int index)
 {
