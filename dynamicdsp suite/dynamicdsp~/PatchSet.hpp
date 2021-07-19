@@ -203,26 +203,26 @@ public:
     
     // Message Communication
     
-    void objBang()
+    void messageBang()
     {
         target(gensym("bang"), 0, 0);
     }
     
-    void objInt(t_atom_long n)
+    void messageInt(t_atom_long n)
     {
         t_atom n_atom;
         atom_setlong(&n_atom, n);
         target(gensym("int"), 1, &n_atom);
     }
     
-    void objFloat(double f)
+    void messageFloat(double f)
     {
         t_atom f_atom;
         atom_setfloat(&f_atom, f);
         target(gensym("float"), 1, &f_atom);
     }
     
-    void objAnything(t_symbol *s, long argc, t_atom *argv)
+    void messageAnything(t_symbol *s, long argc, t_atom *argv)
     {
         target(s, argc, argv);
     }
@@ -230,7 +230,7 @@ public:
     // Target Methods
     
     
-    void objTarget(long argc, t_atom *argv)
+    void messageTarget(long argc, t_atom *argv)
     {
         t_atom_long targetIndex = argc ? atom_getlong(argv) : 0;
         
@@ -240,7 +240,7 @@ public:
             mTargetIndex = -1;
     }
     
-    void objTargetFree(long argc, t_atom *argv)
+    void messageTargetFree(long argc, t_atom *argv)
     {
         long maxSlot = mSlots.size();
         long lo = 0;

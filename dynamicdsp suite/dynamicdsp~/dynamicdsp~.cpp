@@ -622,37 +622,37 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 
 void dynamicdsp_bang(t_dynamicdsp *x)
 {	
-    x->slots->objBang();
+    x->slots->messageBang();
 }
 
 void dynamicdsp_int(t_dynamicdsp *x, t_atom_long n)
 {
-    x->slots->objInt(n);
+    x->slots->messageInt(n);
 }
 
 void dynamicdsp_float(t_dynamicdsp *x, double f)
 {
-    x->slots->objFloat(f);
+    x->slots->messageFloat(f);
 }
 
 void dynamicdsp_list(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->objAnything(s, argc, argv);
+    x->slots->messageAnything(s, argc, argv);
 }
 
 void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->objAnything(s, argc, argv);
+    x->slots->messageAnything(s, argc, argv);
 }
 
 void dynamicdsp_target(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->objTarget(argc, argv);
+    x->slots->messageTarget(argc, argv);
 }
 
 void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->objTargetFree(argc, argv);
+    x->slots->messageTargetFree(argc, argv);
 }
 
 

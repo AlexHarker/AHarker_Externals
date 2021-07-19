@@ -458,37 +458,37 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 
 void dynamicserial_bang(t_dynamicserial *x)
 {	
-    x->slots->objBang();
+    x->slots->messageBang();
 }
 
 void dynamicserial_int(t_dynamicserial *x, t_atom_long n)
 {
-    x->slots->objInt(n);
+    x->slots->messageInt(n);
 }
 
 void dynamicserial_float(t_dynamicserial *x, double f)
 {
-    x->slots->objFloat(f);
+    x->slots->messageFloat(f);
 }
 
 void dynamicserial_list(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->objAnything(s, argc, argv);
+    x->slots->messageAnything(s, argc, argv);
 }
 
 void dynamicserial_anything(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->objAnything(s, argc, argv);
+    x->slots->messageAnything(s, argc, argv);
 }
 
 void dynamicserial_target(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->objTarget(argc, argv);
+    x->slots->messageTarget(argc, argv);
 }
 
 void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->objTargetFree(argc, argv);
+    x->slots->messageTargetFree(argc, argv);
 }
 
 
