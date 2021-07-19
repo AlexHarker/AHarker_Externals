@@ -1,5 +1,5 @@
 
-#include "PatchSlot.h"
+#include "PatchSlot.hpp"
 
 #include <algorithm>
 #include <jpatcher_api.h>

@@ -1,7 +1,7 @@
 
 #include <assert.h>
 
-#include "ThreadSet.h"
+#include "ThreadSet.hpp"
 
 #ifdef __APPLE__
 
