@@ -421,14 +421,14 @@ void dynamicserial_clear(t_dynamicserial *x)
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
 	t_symbol *patch_name = NULL;
-    t_atom_long index = -1;
+    t_atom_long index = 0;
 		
 	// Get requested patch index if there is one
 	
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		index = atom_getlong(argv) - 1;
-        if (index < 0)
+		index = atom_getlong(argv);
+        if (index < 1)
 		{
 			object_error((t_object *) x, "patch index out of range");
 			return;
@@ -523,7 +523,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 	
 	// Loop over patches
 	
-	for (long i = 0; i < x->slots->size(); i++)
+	for (long i = 1; i <= x->slots->size(); i++)
 	{
 		// Copy in pointers
         
@@ -537,7 +537,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
         // Process and flip if processing has occurred
             
         if (x->slots->process(i, flip ? temp_buffers1 : temp_buffers2))
-            flip = flip ? false : true;
+            flip = !flip;
 	}
 	
 	// Copy outputs

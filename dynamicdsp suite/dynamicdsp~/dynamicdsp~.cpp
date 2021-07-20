@@ -55,39 +55,23 @@ struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
     ThreadedPatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs)
     : PatchSet(x, parent, numIns, numOuts, outs) {}
     
-    bool processIfThreadMatches(long index, void **outputs, long thread, long nThreads)
+    bool processIfThreadMatches(t_atom_long index, void **outputs, long thread, long nThreads)
     {
-        if (!userSlotExists(index + 1))
-            return false;
-        
-        return mSlots[index]->processIfThreadMatches(outputs, thread, nThreads);
+        return slotActionResult(&ThreadedPatchSlot::processIfThreadMatches, index, outputs, thread, nThreads);
     }
     
-    bool processIfUnprocessed(long index, void **outputs)
+    bool processIfUnprocessed(t_atom_long index, void **outputs)
     {
-        if (!userSlotExists(index + 1))
-            return false;
-        
-        return mSlots[index]->processIfUnprocessed(outputs);
+        return slotActionResult(&ThreadedPatchSlot::processIfUnprocessed, index, outputs);
     }
     
     void requestThread(long index, long thread)
     {
-        if (userSlotExists(index + 1))
-            mSlots[index]->requestThread(thread);
+        slotAction(&ThreadedPatchSlot::requestThread, index, thread);
     }
 
-    void resetProcessed()
-    {
-        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-            if (*it) (*it)->resetProcessed();
-    }
-    
-    void updateThreads()
-    {
-        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-            if (*it) (*it)->updateThread();
-    }
+    void resetProcessed()   { forAllSlots(&ThreadedPatchSlot::resetProcessed); }
+    void updateThreads()    { forAllSlots(&ThreadedPatchSlot::updateThread); }
 };
 
 ////////////////////////////////////// The object structure //////////////////////////////////////
@@ -565,15 +549,15 @@ void dynamicdsp_clear(t_dynamicdsp *x)
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
     t_symbol *patch_name = NULL;
-    t_atom_long index = -1;
+    t_atom_long index = 0;
 	t_atom_long thread_request = -1;
 	
 	// Get requested patch index if there is one
 	
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		index = atom_getlong(argv) - 1;
-		if (index < 0)
+		index = atom_getlong(argv);
+		if (index < 1)
 		{
 			object_error((t_object *) x, "patch index out of range");
 			return;
@@ -781,16 +765,16 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     
     if (x->manual_threading)
     {
-        for (long i = 0; i < x->slots->size(); i++)
+        for (long i = 1; i <= x->slots->size(); i++)
             x->slots->processIfThreadMatches(i, sig_outs, thread_num, num_active_threads);
     }
     else
     {
         long size = x->slots->size();
-        long index = (thread_num * (size / num_active_threads)) - 1;
-        for (long i = 0; i < size; i++)
+        long index = (thread_num * (size / num_active_threads));
+        for (long i = 1; i <= size; i++)
         {
-            if (++index >= size)
+            if (++index > size)
                 index -= size;
             
             x->slots->processIfUnprocessed(i, sig_outs);

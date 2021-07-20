@@ -1,6 +1,6 @@
 
-#ifndef __PATCHSET__
-#define __PATCHSET__
+#ifndef _PATCHSET_H_
+#define _PATCHSET_H_
 
 #include <ext.h>
 #include <jpatcher_api.h>
@@ -11,7 +11,7 @@
 #include <vector>
 
 
-// dspchain Attribute Helper
+// Attribute Helper for dspchains
 
 static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *argc, t_atom **argv)
 {
@@ -28,24 +28,25 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
 
 // Main class
 
+// N.B. index counting is from 1 (0 means all or out of range)
+
 template <class SlotClass>
 class PatchSet
 {
-    // FIX - safety everywhere...!
     typedef SlotClass* (PatchSet::*GetSlot)(t_atom_long index);
     
 public:
     
     // Deferred helpers
     
-    static void doLoad(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    static void deferredLoad(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        PatchSet *set = (PatchSet *)atom_getobj(argv + 0);
-        long index = (long) atom_getlong(argv + 1);
-        long vecSize = (long) atom_getlong(argv + 2);
-        long samplingRate = (long) atom_getlong(argv + 3);
+        PatchSet *set = reinterpret_cast<PatchSet *>(atom_getobj(argv + 0));
+        t_atom_long index = atom_getlong(argv + 1);
+        long vecSize = static_cast<long>(atom_getlong(argv + 2));
+        long samplingRate = static_cast<long>(atom_getlong(argv + 3));
 
-        set->loadDeferred(index, s, argc - 4, argv + 4, vecSize, samplingRate);
+        set->doLoad(index, s, argc - 4, argv + 4, vecSize, samplingRate);
     }
     
     static void doDelete(t_object *x, t_symbol *s, long argc, t_atom *argv)
@@ -73,59 +74,44 @@ public:
     
     // Size
     
-    long size() { return mSlots.size(); }
+    long size() const { return mSlots.size(); }
     
-    // Load and Remove
+    // Load / Remove / Clear
     
-    long load(long index, t_symbol *patchName, long argc, t_atom *argv, long vecSize, long samplingRate)
+    long load(t_atom_long index, t_symbol *patch, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
-        std::vector<t_atom> newArgv(argc + 4);
+        std::vector<t_atom> deferredArgs(argc + 4);
 
         // FIX - some kind of high value check for user specified index?
 
         // Find a free patch if no index is given
         
-        if (index < 0)
+        if (index < 1)
         {
-            for (index = 0; index < size(); index++)
-                if (!mSlots[index])
+            for (index = 1; index <= size(); index++)
+                if (!mSlots[index - 1])
                     break;
         }
 
-        atom_setobj(newArgv.data() + 0, this);
-        atom_setlong(newArgv.data() + 1, index);
-        atom_setlong(newArgv.data() + 2, vecSize);
-        atom_setlong(newArgv.data() + 3, samplingRate);
+        // Set arguments
+        
+        atom_setobj(deferredArgs.data() + 0, this);
+        atom_setlong(deferredArgs.data() + 1, index);
+        atom_setlong(deferredArgs.data() + 2, vecSize);
+        atom_setlong(deferredArgs.data() + 3, samplingRate);
         
         for (long i = 0; i < argc; i++)
-            newArgv[i + 4] = argv[i];
+            deferredArgs[i + 4] = argv[i];
         
-        defer(mOwner, (method)doLoad, patchName, argc + 4, newArgv.data());
+        defer(mOwner, (method) deferredLoad, patch, argc + 4, deferredArgs.data());
     
         return index;
-    }
-    
-    void loadDeferred(long index, t_symbol *patchName, long argc, t_atom *argv, long vecSize, long samplingRate)
-    {
-        // Resize if necessary
-        
-        if (index >= size())
-            mSlots.resize(index + 1);
-        
-        mSlots[index] = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, mNumIns, &mOutTable));
-        PatchSlot::LoadError error = mSlots[index]->load(index + 1, patchName, argc, argv, vecSize, samplingRate);
-        
-        if (error != PatchSlot::LoadError::kNone)
-        {
-            object_error(mOwner, "error trying to load patch %s - %s", patchName->s_name, PatchSlot::errString(error));
-            mSlots[index] = nullptr;
-        }
     }
     
     void remove(t_atom_long index)
     {
         if (!deferSlotAction(index, (method) doDelete, &PatchSet::release))
-            object_error(mOwner, "no patch in slot %ld", index);
+            object_error(mOwner, "no patch found in slot %ld", index);
     }
     
     void clear()
@@ -164,36 +150,30 @@ public:
     
     void target(long argc, t_atom *argv)
     {
-        t_atom_long targetIndex = argc ? atom_getlong(argv) : 0;
+        t_atom_long index = argc ? atom_getlong(argv) : 0;
         
-        if (targetIndex >= 0 || targetIndex <= mSlots.size())
-            mTargetIndex = targetIndex;
-        else
-            mTargetIndex = -1;
+        mTargetIndex = (index >= 0 && index <= mSlots.size()) ? index : -1;
     }
     
     void targetFree(long argc, t_atom *argv)
     {
-        long maxSlot = mSlots.size();
-        long lo = 0;
-        long hi = maxSlot;
+        t_atom_long maxSlot = size();
+        t_atom_long lo = 0;
+        t_atom_long hi = maxSlot;
         
-        t_atom_long in1 = argc > 0 ? atom_getlong(argv + 0) : 0;
-        t_atom_long in2 = argc > 1 ? atom_getlong(argv + 1) : 0;
+        // Get and clip inputs
         
-        // Clip inputs
-        
-        in1 = (in1 < 1) ? 1 : ((in1 > maxSlot) ? maxSlot : in1);
-        in2 = (in2 < 1) ? 1 : ((in2 > maxSlot) ? maxSlot : in2);
+        t_atom_long in1 = argc > 0 ? std::min(std::max(in1, t_atom_long(1)), maxSlot) : 1;
+        t_atom_long in2 = argc > 1 ? std::min(std::max(in2, t_atom_long(1)), maxSlot) : 1;
         
         // Load arguments
         
-        if (argc)
+        if (argc && maxSlot)
         {
             if (argc > 1)
             {
-                lo = ((in1 < in2) ? in1 : in2) - 1;
-                hi = ((in1 > in2) ? in1 : in2);
+                lo = std::min(in1, in2) - 1;
+                hi = std::max(in1, in2);
             }
             else
                 hi = in1;
@@ -201,7 +181,7 @@ public:
         
         // Search for a free voice
         
-        for (long i = lo; i < hi; i++)
+        for (t_atom_long i = lo; i < hi; i++)
         {
             if (mSlots[i] && mSlots[i]->getValid() && !mSlots[i]->getBusy())
             {
@@ -215,18 +195,14 @@ public:
     
     // Process and DSP
     
-    bool process(long index, void **outputs)
+    bool process(t_atom_long index, void **outputs)
     {
-        if (!userSlotExists(index + 1))
-            return false;
-        
-        return mSlots[index]->process(outputs);
+        return slotActionResult(&SlotClass::process, index, outputs);
     }
     
     void compileDSP(long vecSize, long samplingRate)
     {
-        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-            if (*it) (*it)->compileDSP(vecSize, samplingRate);
+        forAllSlots(&SlotClass::compileDSP, vecSize, samplingRate, false);
     }
 
     // Window Management
@@ -258,24 +234,22 @@ public:
     
     bool getOn(t_ptr_int index)
     {
-        return userSlotExists(index) ? mSlots[index - 1]->getOn() : false;
+        return slotActionResult(&PatchSlot::getOn, index);
     }
     
     bool getBusy(t_ptr_int index)
     {
-        return userSlotExists(index) ? mSlots[index - 1]->getBusy() : false;
+        return slotActionResult(&PatchSlot::getBusy, index);
     }
     
     void setOn(t_ptr_int index, t_ptr_int state)
     {
-        if (userSlotExists(index))
-            mSlots[index - 1]->setOn(state ? true : false);
+        slotAction(&PatchSlot::setOn, index, state ? true : false);
     }
     
     void setBusy(t_ptr_int index, t_ptr_int state)
     {
-        if (userSlotExists(index))
-            mSlots[index - 1]->setBusy(state ? true : false);
+        slotAction(&PatchSlot::setBusy, index, state ? true : false);
     }
     
     // Update
@@ -298,7 +272,7 @@ public:
     
     // Get patch for subpatcher reporting
     
-    t_patcher* subpatch(long index, void *arg, long *userIndex = NULL)
+    t_patcher* subpatch(long index, void *arg, long *userIndex = nullptr)
     {
         // Report subpatchers if requested by an object that is not a dspchain
         
@@ -332,7 +306,7 @@ public:
         if (userIndex)
             *userIndex = -1;
         
-        return NULL;
+        return nullptr;
     }
     
     // Patch serialisation
@@ -355,25 +329,34 @@ public:
     
 protected:
 
+    bool slotExists(t_atom_long index)
+    {
+        return index >= 1 && index <= mSlots.size() && mSlots[index - 1];
+    }
+    
+    void doLoad(t_atom_long index, t_symbol *patch, long argc, t_atom *argv, long vecSize, long samplingRate)
+    {
+        // Load into a new slot
+        
+        auto slot = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, mNumIns, &mOutTable));
+        auto error = slot->load(index, patch, argc, argv, vecSize, samplingRate);
+        
+        // Deal with error or retain in the specified slot
+        
+        if (error != PatchSlot::LoadError::kNone)
+            object_error(mOwner, "error trying to load patch %s - %s", patch->s_name, PatchSlot::getError(error));
+        else
+            mSlots.emplace(mSlots.begin() + index, std::move(slot));
+    }
+    
     void sendMessage(t_symbol *msg, long argc, t_atom *argv)
     {
         long inlet = proxy_getinlet(mOwner);
         
-        if (mTargetIndex)
-        {
-            if (userSlotExists(mTargetIndex))
-                mSlots[mTargetIndex - 1]->message(inlet, msg, argc, argv);
-        }
+        if (mTargetIndex == 0)
+            forAllSlots(&SlotClass::message, inlet, msg, argc, argv);
         else
-        {
-            for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-                if (*it) (*it)->message(inlet, msg, argc, argv);
-        }
-    }
-
-    bool userSlotExists(t_atom_long slotIndex)
-    {
-        return slotIndex >= 1 && slotIndex <= mSlots.size() && mSlots[slotIndex - 1];
+            slotAction(&SlotClass::message, mTargetIndex, inlet, msg, argc, argv);
     }
     
     SlotClass *get(t_atom_long index)
@@ -389,7 +372,7 @@ protected:
     
     bool deferSlotAction(t_atom_long index, method action, GetSlot getter)
     {
-        if (!userSlotExists(index))
+        if (!slotExists(index))
             return false;
         
         t_atom a;
@@ -401,6 +384,29 @@ protected:
     static SlotClass *slotFromAtom(t_atom *argv)
     {
         return reinterpret_cast<SlotClass *>(atom_getobj(argv));
+    }
+    
+    template <typename Method, typename ...Args>
+    void slotAction(Method method, t_atom_long index, Args...args)
+    {
+        if (slotExists(index))
+            (*mSlots[index - 1].*method)(args...);
+    }
+    
+    template <typename Method, typename ...Args>
+    bool slotActionResult(Method method, t_atom_long index, Args...args)
+    {
+        if (!slotExists(index))
+            return false;
+        
+        return (*mSlots[index - 1].*method)(args...);
+    }
+
+    template <typename Method, typename ...Args>
+    void forAllSlots(Method method, Args...args)
+    {
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+            if (*it) ((**it).*method)(args...);
     }
     
     // Data
@@ -415,4 +421,4 @@ protected:
     std::vector<std::unique_ptr<SlotClass>> mSlots;
 };
 
-#endif /* defined(__PATCHSET__) */
+#endif /* defined(_PATCHSET_H_) */

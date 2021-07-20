@@ -24,7 +24,8 @@ public:
     
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
     
-    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable) : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
+    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable)
+    : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
     }
@@ -36,7 +37,7 @@ public:
     
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
     
-    void compileDSP(long vecSize, long samplingRate, bool forceWhenInvalid = false);
+    void compileDSP(long vecSize, long samplingRate, bool forceWhenInvalid);
     bool process(void **outputs);
     
     // Getters
@@ -65,8 +66,8 @@ public:
     void closeWindow() const;
 
     // Error string
-    
-    static const char *errString(LoadError error)
+
+    static const char *getError(LoadError error)
     {
         switch (error)
         {
