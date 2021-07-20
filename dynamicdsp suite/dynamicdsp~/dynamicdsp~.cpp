@@ -259,7 +259,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     
     for (i = 0; i < x->slots->size(); i++)
     {
-        const t_patcher *pp = x->slots->reportSubpatch(i, x);
+        const t_patcher *pp = x->slots->subpatch(i, x);
         if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
         {
             object_method(p, gensym("getname"), &name);
@@ -277,7 +277,7 @@ t_atom_long dynamic_getindex(t_dynamicdsp *x, void *p)
     for (long i = 0; i < x->slots->size(); i++)
     {
         long index;
-        const t_patcher *pp = x->slots->reportSubpatch(i, x, &index);
+        const t_patcher *pp = x->slots->subpatch(i, x, &index);
         if (pp == p)
             return index;
     }
@@ -970,7 +970,7 @@ void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
 
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg)
 {
-    return (void *) x->slots->reportSubpatch(index, arg);
+    return reinterpret_cast<void *>(x->slots->subpatch(index, arg));
 }
 
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)

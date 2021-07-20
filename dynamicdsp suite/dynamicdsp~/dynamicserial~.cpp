@@ -79,7 +79,7 @@ t_atom_long dynamic_getindex(t_dynamicserial *x, void *p)
     for (long i = 0; i < x->slots->size(); i++)
     {
         long index;
-        const t_patcher *pp = x->slots->reportSubpatch(i, x, &index);
+        const t_patcher *pp = x->slots->subpatch(i, x, &index);
         if (pp == p)
             return index;
     }
@@ -675,7 +675,7 @@ void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
 
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg)
 {
-    return (void *) x->slots->reportSubpatch(index, arg);
+    return (void *) x->slots->subpatch(index, arg);
 }
 
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)

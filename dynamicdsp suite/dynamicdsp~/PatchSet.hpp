@@ -22,7 +22,7 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
     
     // This prevents getdspchain on child patchers from walking up past this object
     
-    atom_setlong(*argv,1);
+    atom_setlong(*argv, 1);
     return MAX_ERR_NONE;
 }
 
@@ -65,7 +65,8 @@ public:
     
     // Constructor
     
-    PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs) : mOwner(x), mParent(parent), mTargetIndex(0), mNumIns(numIns)
+    PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs)
+    : mOwner(x), mParent(parent), mTargetIndex(0), mNumIns(numIns)
     {
         mOutTable.assign(outs, outs + numOuts);
     }
@@ -131,63 +132,6 @@ public:
     {
         for (t_atom_long i = 1; i <= size(); i++)
             deferSlotAction(i, (method) doDelete, &PatchSet::release);
-    }
-    
-    // Update
-    
-    void update(t_patcher *p, long vecSize, long samplingRate)
-    {
-        // Reload the patcher when it's updated
-    
-        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-        {
-            // FIX - this is not complete as a reloader... (keep on state and follow patch)
-            
-            if ((*it) && (*it)->getPatch() == p)
-            {
-                (*it)->load(vecSize, samplingRate);
-                break;
-            }
-        }
-    }
-    
-    // Get patch for subpatcher reporting
-    
-    const t_patcher* reportSubpatch(long index, void *arg, long *userIndex = NULL)
-    {
-        // Report subpatchers if requested by an object that is not a dspchain
-        
-        // FIX - this looks wrong to me...
-        
-        if ((t_ptr_uint) arg > 1)
-            if (!NOGOOD(arg))
-                if (ob_sym(arg) == gensym("dspchain"))
-                    return NULL;
-        
-        //  IS THIS CORRECT??
-        
-        // if ((t_ptr_uint) arg <= 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
-        // return NULL;
-        
-        // Loop over hosted patches to find the next one
-        
-        long count = 0;
-        
-        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-        {
-            if ((*it) && (*it)->getPatch())
-            {
-                if (userIndex)
-                    *userIndex = (*it)->getUserIndex();
-                if (count++ == index)
-                    return (*it)->getPatch();
-            }
-        }
-        
-        if (userIndex)
-            *userIndex = -1;
-        
-        return NULL;
     }
     
     // Message Communication
@@ -332,6 +276,63 @@ public:
     {
         if (userSlotExists(index))
             mSlots[index - 1]->setBusy(state ? true : false);
+    }
+    
+    // Update
+    
+    void update(t_patcher *p, long vecSize, long samplingRate)
+    {
+        // Reload the patcher when it's updated
+        
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+        {
+            // FIX - this is not complete as a reloader... (keep on state and follow patch)
+            
+            if ((*it) && (*it)->getPatch() == p)
+            {
+                (*it)->load(vecSize, samplingRate);
+                break;
+            }
+        }
+    }
+    
+    // Get patch for subpatcher reporting
+    
+    t_patcher* subpatch(long index, void *arg, long *userIndex = NULL)
+    {
+        // Report subpatchers if requested by an object that is not a dspchain
+        
+        // FIX - this looks wrong to me...
+        
+        if ((t_ptr_uint) arg > 1)
+            if (!NOGOOD(arg))
+                if (ob_sym(arg) == gensym("dspchain"))
+                    return NULL;
+        
+        //  IS THIS CORRECT??
+        
+        // if ((t_ptr_uint) arg <= 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
+        // return NULL;
+        
+        // Loop over hosted patches to find the next one
+        
+        long count = 0;
+        
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+        {
+            if ((*it) && (*it)->getPatch())
+            {
+                if (userIndex)
+                    *userIndex = (*it)->getUserIndex();
+                if (count++ == index)
+                    return (*it)->getPatch();
+            }
+        }
+        
+        if (userIndex)
+            *userIndex = -1;
+        
+        return NULL;
     }
     
     // Patch serialisation
