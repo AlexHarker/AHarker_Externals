@@ -23,6 +23,11 @@ typedef pthread_t OSThreadType;
 typedef semaphore_t OSSemaphoreType;
 typedef void *OSThreadFunctionType(void *arg);
 
+struct NumProcessors
+{
+    unsigned long operator()() { return MPProcessors(); }
+};
+
 #else
 
 // Windows OS specific definitions
@@ -33,8 +38,18 @@ typedef HANDLE OSThreadType;
 typedef HANDLE OSSemaphoreType;
 DWORD WINAPI OSThreadFunctionType(LPVOID arg);
 
-#endif
+struct NumProcessors
+{
+    unsigned long operator()() 
+    {
+        SYSTEM_INFO sysinfo;
+        GetSystemInfo(&sysinfo);
+    
+        return sysinfo.dwNumberOfProcessors;
+    }
+};
 
+#endif
 
 // Lightweight thread
 
@@ -185,18 +200,6 @@ public:
         
         for (long i = 1; i < numThreads; i++)
             while (mThreadSlots[i].mProcessed != 1);
-    }
-    
-    static unsigned long getNumProcessors()
-    {
-#ifdef __APPLE__
-        return MPProcessors();
-#else
-        SYSTEM_INFO sysinfo;
-        GetSystemInfo(&sysinfo);
-        
-        return sysinfo.dwNumberOfProcessors;
-#endif
     }
     
     template <typename T>
