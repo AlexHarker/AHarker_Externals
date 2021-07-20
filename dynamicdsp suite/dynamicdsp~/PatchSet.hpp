@@ -32,24 +32,7 @@ template <class SlotClass>
 class PatchSet
 {
     // FIX - safety everywhere...!
-
-    static SlotClass *slotFromAtom(t_atom *argv)
-    {
-        return reinterpret_cast<SlotClass *>(atom_getobj(argv));
-    }
-    
-    void deferSlotAction(SlotClass *slot, method action)
-    {
-        t_atom a;
-        atom_setobj(&a, slot);
-        defer(mOwner, action, 0L, 1, &a);
-    }
-    
-    void deferSlotAction(t_atom_long index, method action)
-    {
-        if (userSlotExists(index))
-            deferSlotAction(mSlots[index - 1].get(), action);
-    }
+    typedef SlotClass* (PatchSet::*GetSlot)(t_atom_long index);
     
 public:
     
@@ -65,7 +48,7 @@ public:
         set->loadDeferred(index, s, argc - 4, argv + 4, vecSize, samplingRate);
     }
     
-    static void deleteSlot(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    static void doDelete(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
         delete slotFromAtom(argv);
     }
@@ -137,23 +120,17 @@ public:
             mSlots[index] = nullptr;
         }
     }
-
+    
     void remove(t_atom_long index)
     {
-        if (userSlotExists(index))
-        {
-            mSlots[index - 1]->setInvalid();
-            deferSlotAction(mSlots[index - 1].release(), (method) deleteSlot);
-        }
-        else
+        if (!deferSlotAction(index, (method) doDelete, &PatchSet::release))
             object_error(mOwner, "no patch in slot %ld", index);
     }
     
     void clear()
     {
         for (t_atom_long i = 1; i <= size(); i++)
-            if (userSlotExists(i))
-                remove(i);
+            deferSlotAction(i, (method) doDelete, &PatchSet::release);
     }
     
     // Update
@@ -310,20 +287,22 @@ public:
 
     // Window Management
     
-    void openWindow(t_atom_long index)
+    bool openWindow(t_atom_long index)
     {
-        deferSlotAction(index, (method) doOpen);
+        return deferSlotAction(index, (method) doOpen, &PatchSet::get);
     }
     
-    void closeWindow(t_atom_long index)
+    bool closeWindow(t_atom_long index)
     {
         if (!index)
         {
             for (t_atom_long i = 1; i <= size(); i++)
-                deferSlotAction(i, (method) doClose);
+                deferSlotAction(i, (method) doClose, &PatchSet::get);
+            
+            return true;
         }
         else
-            deferSlotAction(index, (method) doClose);
+            return deferSlotAction(index, (method) doClose, &PatchSet::get);
     }
     
     // Queries
@@ -394,6 +373,33 @@ protected:
     bool userSlotExists(t_atom_long slotIndex)
     {
         return slotIndex >= 1 && slotIndex <= mSlots.size() && mSlots[slotIndex - 1];
+    }
+    
+    SlotClass *get(t_atom_long index)
+    {
+        return mSlots[index - 1].get();
+    }
+    
+    SlotClass *release(t_atom_long index)
+    {
+        mSlots[index - 1]->setInvalid();
+        return mSlots[index - 1].release();
+    }
+    
+    bool deferSlotAction(t_atom_long index, method action, GetSlot getter)
+    {
+        if (!userSlotExists(index))
+            return false;
+        
+        t_atom a;
+        atom_setobj(&a, (this->*getter)(index));
+        defer(mOwner, action, 0L, 1, &a);
+        return true;
+    }
+    
+    static SlotClass *slotFromAtom(t_atom *argv)
+    {
+        return reinterpret_cast<SlotClass *>(atom_getobj(argv));
     }
     
     // Data
