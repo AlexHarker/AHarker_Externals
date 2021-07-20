@@ -1,6 +1,6 @@
 
-#ifndef __PATCHSLOT__
-#define __PATCHSLOT__
+#ifndef _PATCHSLOT_H_
+#define _PATCHSLOT_H_
 
 #include <ext.h>
 #include <z_dsp.h>
@@ -25,7 +25,7 @@ public:
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
     
     PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable)
-    : mPatch(NULL), mPathSymbol(NULL), mPath(0), mDSPChain(NULL), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(NULL), mOutTable(outTable), mOwner(owner), mParent(parent)
+    : mPatch(nullptr), mDSPChain(nullptr), mPathSymbol(nullptr), mPath(0), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(nullptr), mOutTable(outTable), mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
     }
@@ -43,22 +43,22 @@ public:
     // Getters
        
     void ***getOutputsHandle() { return &mOutputs; }
-    t_patcher *getPatch() const { return mPatch; }
-    bool getValid() const { return mValid; }
-    long getUserIndex() const { return mUserIndex; }
-    bool getOn() const { return mOn; }
-    bool getBusy() const { return mBusy; }
+    t_patcher *getPatch() const                 { return mPatch; }
+    bool getValid() const                       { return mValid; }
+    long getUserIndex() const                   { return mUserIndex; }
+    bool getOn() const                          { return mOn; }
+    bool getBusy() const                        { return mBusy; }
     
     // Setters
     
-    void setOn(bool on) { mOn = on; }
-    void setBusy(bool busy) { mBusy = busy; }
-    void setInvalid() { mValid = false; }
+    void setOn(bool on)         { mOn = on; }
+    void setBusy(bool busy)     { mBusy = busy; }
+    void setInvalid()           { mValid = false; }
 
     // Number of ins and outs
     
-    long getNumIns() const { return mInTable.size(); }
-    long getNumOuts() const { return mOutTable->size(); }
+    long getNumIns() const      { return mInTable.size(); }
+    long getNumOuts() const     { return mOutTable->size(); }
 
     // Windows Management
     
@@ -67,29 +67,7 @@ public:
 
     // Error string
 
-    static const char *getError(LoadError error)
-    {
-        switch (error)
-        {
-            case kNone:             return "";
-            case kFileNotFound:     return "file not found";
-            case kNothingLoaded:    return "nothing was loaded";
-            case kNotPatcher:       return "file is not a patcher";
-        }
-    }
-    
-protected:
-    
-    inline bool checkProcess()
-    {
-        return (mDSPChain && mValid && mOn);
-    }
-    
-    void processTick(void **outputs)
-    {
-        mOutputs = outputs;
-        dspchain_tick(mDSPChain);
-    }
+    static const char *getError(LoadError error);
     
 private:
     
@@ -134,10 +112,10 @@ private:
     // Patch and variables / dspchain
     
     t_patcher *mPatch;
+    t_dspchain *mDSPChain;
     t_symbol *mPathSymbol;
     std::string mName;
     short mPath;
-    t_dspchain *mDSPChain;
     long mUserIndex;
     
     // Arguments (stored in case of reload / update)
@@ -157,7 +135,7 @@ private:
     
     // Inlet and Outlet Communication
     
-    std::vector< std::vector<void *> > mInTable;
+    std::vector<std::vector<void *>> mInTable;
     std::vector<void *> *mOutTable;
     
     // Owner
@@ -174,18 +152,24 @@ class ThreadedPatchSlot : public PatchSlot
     
 public:
     
-    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable) : PatchSlot(owner, parent, numIns, outTable), mThreadCurrent(0), mThreadRequest(0)   {}
+    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable)
+    : PatchSlot(owner, parent, numIns, outTable), mThreadCurrent(0), mThreadRequest(0) {}
     
-    void requestThread(long thread) { mThreadRequest = thread; }
-    void updateThread() { mThreadCurrent = mThreadRequest; }
-    void resetProcessed() { mProcessingLock.release(); }
+    void requestThread(long thread)     { mThreadRequest = thread; }
+    void updateThread()                 { mThreadCurrent = mThreadRequest; }
+    void resetProcessed()               { mProcessingLock.release(); }
     
-    bool processIfUnprocessed(void **outputs);
-    bool processIfThreadMatches(void **outputs, long thread, long availableThreads);
+    bool processIfUnprocessed(void **outputs)
+    {
+        return mProcessingLock.attempt() ? process(outputs) : false;
+    }
+    
+    bool processIfThreadMatches(void **outputs, long thread, long nThreads)
+    {
+        return ((mThreadCurrent % nThreads) == thread) ? process(outputs) : false;
+    }
 
 private:
-
-    bool checkProcess() { return mProcessingLock.attempt(); }
 
     // Threading Variables
     
@@ -194,4 +178,4 @@ private:
     long mThreadRequest;
 };
 
-#endif /* defined(__PATCHSLOT__) */
+#endif /* defined(_PATCHSLOT_H_) */

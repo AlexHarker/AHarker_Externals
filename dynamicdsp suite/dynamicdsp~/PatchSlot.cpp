@@ -186,9 +186,10 @@ void PatchSlot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
 
 bool PatchSlot::process(void **outputs)
 {
-    if (checkProcess())
+    if (mDSPChain && mValid && mOn)
     {
-        processTick(outputs);
+        mOutputs = outputs;
+        dspchain_tick(mDSPChain);
         return true;
     }
     
@@ -244,6 +245,19 @@ void PatchSlot::closeWindow() const
 {
     if (mPatch)
         object_method(mPatch, gensym("wclose"));
+}
+
+// Error strings
+
+const char *PatchSlot::getError(LoadError error)
+{
+    switch (error)
+    {
+        case kNone:             return "";
+        case kFileNotFound:     return "file not found";
+        case kNothingLoaded:    return "nothing was loaded";
+        case kNotPatcher:       return "file is not a patcher";
+    }
 }
 
 // Inlet linking and unlinking
@@ -315,27 +329,6 @@ void PatchSlot::freePatch()
         defer(mPatch, (method) deletePatch, NULL, 0, NULL);
     }
     
-    mPatch = NULL;
-    mDSPChain = NULL;
-}
-
-// ThreadedPatchSlot Additions
-
-bool ThreadedPatchSlot::processIfUnprocessed(void **outputs)
-{
-    if (PatchSlot::checkProcess() && checkProcess())
-    {
-        processTick(outputs);
-        return true;
-    }
-    
-    return false;
-}
-
-bool ThreadedPatchSlot::processIfThreadMatches(void **outputs, long thread, long availableThreads)
-{
-    if ((mThreadCurrent % availableThreads) == thread)
-        return process(outputs);
-    
-    return false;
+    mPatch = nullptr;
+    mDSPChain = nullptr;
 }
