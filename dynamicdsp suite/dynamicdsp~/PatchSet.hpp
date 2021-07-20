@@ -31,7 +31,6 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
 template <class SlotClass>
 class PatchSet
 {
-
     // FIX - safety everywhere...!
 
     static SlotClass *slotFromAtom(t_atom *argv)
@@ -218,31 +217,31 @@ public:
     
     void messageBang()
     {
-        target(gensym("bang"), 0, nullptr);
+        sendMessage(gensym("bang"), 0, nullptr);
     }
     
     void messageInt(t_atom_long n)
     {
         t_atom n_atom;
         atom_setlong(&n_atom, n);
-        target(gensym("int"), 1, &n_atom);
+        sendMessage(gensym("int"), 1, &n_atom);
     }
     
     void messageFloat(double f)
     {
         t_atom f_atom;
         atom_setfloat(&f_atom, f);
-        target(gensym("float"), 1, &f_atom);
+        sendMessage(gensym("float"), 1, &f_atom);
     }
     
     void messageAnything(t_symbol *s, long argc, t_atom *argv)
     {
-        target(s, argc, argv);
+        sendMessage(s, argc, argv);
     }
     
     // Target Methods
     
-    void messageTarget(long argc, t_atom *argv)
+    void target(long argc, t_atom *argv)
     {
         t_atom_long targetIndex = argc ? atom_getlong(argv) : 0;
         
@@ -252,7 +251,7 @@ public:
             mTargetIndex = -1;
     }
     
-    void messageTargetFree(long argc, t_atom *argv)
+    void targetFree(long argc, t_atom *argv)
     {
         long maxSlot = mSlots.size();
         long lo = 0;
@@ -376,7 +375,7 @@ public:
     
 protected:
 
-    void target(t_symbol *msg, long argc, t_atom *argv)
+    void sendMessage(t_symbol *msg, long argc, t_atom *argv)
     {
         long inlet = proxy_getinlet(mOwner);
         

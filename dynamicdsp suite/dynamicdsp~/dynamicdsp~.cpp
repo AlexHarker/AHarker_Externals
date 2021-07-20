@@ -647,12 +647,12 @@ void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 
 void dynamicdsp_target(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->messageTarget(argc, argv);
+    x->slots->target(argc, argv);
 }
 
 void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->messageTargetFree(argc, argv);
+    x->slots->targetFree(argc, argv);
 }
 
 

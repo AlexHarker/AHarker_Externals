@@ -481,12 +481,12 @@ void dynamicserial_anything(t_dynamicserial *x, t_symbol *s, long argc, t_atom *
 
 void dynamicserial_target(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->messageTarget(argc, argv);
+    x->slots->target(argc, argv);
 }
 
 void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->messageTargetFree(argc, argv);
+    x->slots->targetFree(argc, argv);
 }
 
 
