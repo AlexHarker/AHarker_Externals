@@ -18,7 +18,6 @@ struct IO
     
     long s_index;
     void *s_outlet;
-    
 };
 
 // Deferred patch deletion
@@ -39,6 +38,37 @@ int setSubAssoc(t_patcher *p, t_object *x)
     object_method(p, gensym("getassoc"), &assoc);
     if (!assoc)
         object_method(p, gensym("setassoc"), x);
+    
+    return 0;
+}
+
+// Patcher Traversal
+
+template <void (PatchSlot::*Method)(t_patcher *p)>
+int PatchSlot::patcherTraverse(t_patcher *p, void *arg, t_object *owner)
+{
+    // Avoid recursion into a poly / pfft / dynamicdsp~
+    
+    t_object *assoc = 0;
+    object_method(p, gensym("getassoc"), &assoc);
+    if (assoc && assoc != owner)
+        return 0;
+    
+    // Call function
+    
+    (this->*Method)(p);
+    
+    // Continue search for subpatchers
+    
+    for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
+    {
+        t_patcher *p2;
+        long index = 0;
+        
+        while (b && (p2 = (t_patcher *)object_subpatcher(jbox_get_object(b), &index, arg)))
+            if (patcherTraverse<Method>(p2, arg, owner))
+                return 1;
+    }
     
     return 0;
 }

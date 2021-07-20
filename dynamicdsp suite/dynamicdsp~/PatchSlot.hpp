@@ -15,9 +15,6 @@
 
 class PatchSlot
 {
-    
-private:
- 
     enum { MAX_ARGS = 16 };
  
 public:
@@ -25,7 +22,11 @@ public:
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
     
     PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable)
-    : mPatch(nullptr), mDSPChain(nullptr), mPathSymbol(nullptr), mPath(0), mUserIndex(0), mArgc(0), mValid(false), mOn(false), mBusy(false), mOutputs(nullptr), mOutTable(outTable), mOwner(owner), mParent(parent)
+    : mPatch(nullptr), mDSPChain(nullptr), mPathSymbol(nullptr)
+    , mPath(0), mUserIndex(0), mArgc(0)
+    , mValid(false), mOn(false), mBusy(false)
+    , mOutputs(nullptr), mOutTable(outTable)
+    , mOwner(owner), mParent(parent)
     {
         mInTable.resize(numIns);
     }
@@ -71,36 +72,10 @@ public:
     
 private:
     
-    LoadError loadFinished(LoadError error, short savedLoadUpdate);
-
     template <void (PatchSlot::*Method)(t_patcher *p)>
-    int patcherTraverse(t_patcher *p, void *arg, t_object *owner)
-    {
-        // Avoid recursion into a poly / pfft / dynamicdsp~
-     
-        t_object *assoc = 0;
-        object_method(p, gensym("getassoc"), &assoc);
-        if (assoc && assoc != owner)
-            return 0;
-
-        // Call function
-        
-        (this->*Method)(p);
-        
-        // Continue search for subpatchers
-        
-        for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
-        {
-            t_patcher *p2;
-            long index = 0;
-            
-            while (b && (p2 = (t_patcher *)object_subpatcher(jbox_get_object(b), &index, arg)))
-                if (patcherTraverse<Method>(p2, arg, owner))
-                    return 1;
-        }
-        
-        return 0;
-    }
+    int patcherTraverse(t_patcher *p, void *arg, t_object *owner);
+    
+    LoadError loadFinished(LoadError error, short savedLoadUpdate);
     
     void findIns(t_patcher *p);
     void linkOutlets(t_patcher *p);
