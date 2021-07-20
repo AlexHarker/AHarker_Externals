@@ -11,7 +11,7 @@
 #include <AH_Locks.hpp>
 
 
-// Simple class
+// PatchSlot Class
 
 class PatchSlot
 {

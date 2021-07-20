@@ -78,7 +78,7 @@ public:
     
     // Load / Remove / Clear
     
-    long load(t_atom_long index, t_symbol *patch, long argc, t_atom *argv, long vecSize, long samplingRate)
+    long load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
         std::vector<t_atom> deferredArgs(argc + 4);
 
@@ -103,7 +103,7 @@ public:
         for (long i = 0; i < argc; i++)
             deferredArgs[i + 4] = argv[i];
         
-        defer(mOwner, (method) deferredLoad, patch, argc + 4, deferredArgs.data());
+        defer(mOwner, (method) deferredLoad, path, argc + 4, deferredArgs.data());
     
         return index;
     }
@@ -334,17 +334,17 @@ protected:
         return index >= 1 && index <= mSlots.size() && mSlots[index - 1];
     }
     
-    void doLoad(t_atom_long index, t_symbol *patch, long argc, t_atom *argv, long vecSize, long samplingRate)
+    void doLoad(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
         // Load into a new slot
         
         auto slot = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, mNumIns, &mOutTable));
-        auto error = slot->load(index, patch, argc, argv, vecSize, samplingRate);
+        auto error = slot->load(index, path, argc, argv, vecSize, samplingRate);
         
         // Deal with error or retain in the specified slot
         
         if (error != PatchSlot::LoadError::kNone)
-            object_error(mOwner, "error trying to load patch %s - %s", patch->s_name, PatchSlot::getError(error));
+            object_error(mOwner, "error trying to load patch %s - %s", path->s_name, PatchSlot::getError(error));
         else
             mSlots.emplace(mSlots.begin() + index, std::move(slot));
     }
