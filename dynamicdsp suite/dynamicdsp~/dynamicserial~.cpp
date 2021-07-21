@@ -31,6 +31,9 @@
 
 t_class *dynamicserial_class;
 
+t_symbol *ps_args;
+t_symbol *ps_declareio;
+
 static t_ptr_uint sig_size;
 
 #define MAX_ARGS 16
@@ -119,7 +122,6 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 
 void dynamicserial_dblclick(t_dynamicserial *x);
 void dynamicserial_open(t_dynamicserial *x, t_atom_long index);
-void dynamicserial_pclose(t_dynamicserial *x);
 void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index);
 
 void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p);
@@ -134,13 +136,6 @@ void *dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_int index);
 void *dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_int index);
 void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
 void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
-
-/*****************************************/
-// Symbols
-/*****************************************/
-
-t_symbol *ps_args;
-t_symbol *ps_declareio;
 
 
 /*****************************************/
@@ -651,11 +646,6 @@ void dynamicserial_dblclick(t_dynamicserial *x)
 void dynamicserial_open(t_dynamicserial *x, t_atom_long index)
 {
     x->slots->openWindow(index);
-}
-
-void dynamicserial_pclose(t_dynamicserial *x)
-{
-    // Do Nothing
 }
 
 void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index)

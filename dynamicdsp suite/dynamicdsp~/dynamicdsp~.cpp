@@ -39,17 +39,18 @@
 
 t_class *dynamicdsp_class;
 
+t_symbol *ps_args;
+t_symbol *ps_declareio;
+
 static t_ptr_uint sig_size;
 
 #define MAX_ARGS 16
 #define MAX_IO 256
 
-/*****************************************/
-// Structures and typedefs
-/*****************************************/
 
-
-////////////////////////////////////// The object structure //////////////////////////////////////
+/*****************************************/
+// Object structure
+/*****************************************/
 
 typedef struct _dynamicdsp
 {
@@ -129,7 +130,6 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 
 void dynamicdsp_dblclick(t_dynamicdsp *x);
 void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index);
-void dynamicdsp_pclose(t_dynamicdsp *x);
 void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index);
 
 void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p);
@@ -144,14 +144,6 @@ void *dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_int index);
 void *dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_int index);
 void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
 void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_int index, t_ptr_int state);
-
-
-/*****************************************/
-// Symbols
-/*****************************************/
-
-t_symbol *ps_args;
-t_symbol *ps_declareio;
 
 
 /*****************************************/
@@ -893,11 +885,6 @@ void dynamicdsp_dblclick(t_dynamicdsp *x)
 void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index)
 {
     x->slots->openWindow(index);
-}
-
-void dynamicdsp_pclose(t_dynamicdsp *x)
-{
-	// Do Nothing
 }
 
 void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)

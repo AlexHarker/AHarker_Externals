@@ -54,12 +54,12 @@ public:
     
     // Getters
        
-    void ***getOutputsHandle() { return &mOutputs; }
-    t_patcher *getPatch() const                 { return mPatch; }
-    bool getValid() const                       { return mValid; }
-    long getUserIndex() const                   { return mUserIndex; }
-    bool getOn() const                          { return mOn; }
-    bool getBusy() const                        { return mBusy; }
+    t_patcher *getPatch() const     { return mPatch; }
+    bool getValid() const           { return mValid; }
+    long getUserIndex() const       { return mUserIndex; }
+    bool getOn() const              { return mOn; }
+    bool getBusy() const            { return mBusy; }
+    void ***getOutputsHandle()      { return &mOutputs; }
     
     // Setters
     
