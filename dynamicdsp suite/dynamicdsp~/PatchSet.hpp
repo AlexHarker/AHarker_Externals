@@ -419,4 +419,31 @@ protected:
     std::vector<std::unique_ptr<SlotClass>> mSlots;
 };
 
+
+// Class with threading additions
+
+struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
+{
+    ThreadedPatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs)
+    : PatchSet(x, parent, numIns, numOuts, outs) {}
+    
+    bool processIfThreadMatches(t_atom_long index, void **outputs, long thread, long nThreads)
+    {
+        return slotActionResult(&ThreadedPatchSlot::processIfThreadMatches, index, outputs, thread, nThreads);
+    }
+    
+    bool processIfUnprocessed(t_atom_long index, void **outputs)
+    {
+        return slotActionResult(&ThreadedPatchSlot::processIfUnprocessed, index, outputs);
+    }
+    
+    void requestThread(long index, long thread)
+    {
+        slotAction(&ThreadedPatchSlot::requestThread, index, thread);
+    }
+    
+    void resetProcessed()   { forAllSlots(&ThreadedPatchSlot::resetProcessed); }
+    void updateThreads()    { forAllSlots(&ThreadedPatchSlot::updateThread); }
+};
+
 #endif /* defined(_PATCHSET_H_) */
