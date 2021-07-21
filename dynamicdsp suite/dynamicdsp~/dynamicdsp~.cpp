@@ -52,7 +52,7 @@ static t_ptr_uint sig_size;
 // Object structure
 /*****************************************/
 
-typedef struct _dynamicdsp
+struct t_dynamicdsp
 {
     t_pxobject x_obj;
     
@@ -89,8 +89,7 @@ typedef struct _dynamicdsp
     
     ThreadSet *threads;
     ThreadedPatchSet *slots;
-    
-} t_dynamicdsp;
+};
 
 
 /*****************************************/
@@ -917,9 +916,8 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
 
-
-// Note that objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h.
-// These act as suitable wrappers to send the appropriate message to the parent object and returns values as appropriate
+// Note - objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h
+// These send the appropriate message to the parent object and return values as appropriate
 
 // Signals
 

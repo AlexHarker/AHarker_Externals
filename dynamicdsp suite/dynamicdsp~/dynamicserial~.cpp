@@ -25,6 +25,7 @@
 #include "PatchSlot.hpp"
 #include "PatchSet.hpp"
 
+
 /*****************************************/
 // Global Varibles
 /*****************************************/
@@ -44,7 +45,7 @@ static t_ptr_uint sig_size;
 // Object Structure
 /*****************************************/
 
-typedef struct _dynamicserial
+struct t_dynamicserial
 {
     t_pxobject x_obj;
     
@@ -73,9 +74,7 @@ typedef struct _dynamicserial
 	void **temp_buffers2;
 	
 	long num_proxies;				// number of proxies = MAX(num_sig_ins, num_ins)
-	
-} t_dynamicserial;
-
+};
 
 t_atom_long dynamic_getindex(t_dynamicserial *x, void *p)
 {
@@ -678,8 +677,8 @@ void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
 
-// Note that objects wishing to query the parent dynamicserial~ object should call the functions in dynamicdsp.h
-// These act as suitable wrappers to send the appropriate message to the parent object and returns values as appropriate
+// Note - objects wishing to query the parent dynamicserial~ object should call the functions in dynamicdsp.h
+// These send the appropriate message to the parent object and return values as appropriate
 
 // Signals
 
