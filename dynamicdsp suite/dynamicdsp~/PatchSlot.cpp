@@ -10,16 +10,6 @@
 #endif
 
 
-// Generic in/out structure
-
-struct IO
-{
-    t_object s_obj;
-    
-    long s_index;
-    void *s_outlet;
-};
-
 // Deferred patch deletion
 
 void deletePatch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
@@ -94,10 +84,12 @@ PatchSlot::LoadError PatchSlot::load(long userIndex, t_symbol *fileName, long ar
     
     // Load
     
-    return load(vecSize, samplingRate);
+    return load(vecSize, samplingRate, true);
 }
 
-PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate)
+// FIX deal with initialise
+
+PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initialise)
 {
     t_fourcc type;
     t_fourcc validTypes[3];
@@ -197,7 +189,6 @@ PatchSlot::LoadError PatchSlot::loadFinished(LoadError error, short savedLoadUpd
 {
     loadbang_resume();
     dsp_setloadupdate(savedLoadUpdate);
-    
     return error;
 }
 
@@ -292,58 +283,47 @@ const char *PatchSlot::getError(LoadError error)
 
 // Inlet linking and unlinking
 
-void PatchSlot::findIns(t_patcher *p)
+void PatchSlot::handleIO(t_patcher *p, const char *type, long maxIndex, std::function<void(IO *, long)> func)
 {
-    t_symbol *ps_in = gensym("in");
+    t_symbol *ps_io = gensym(type);
     
     for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
     {
-        if (jbox_get_maxclass(b) == ps_in)
+        if (jbox_get_maxclass(b) == ps_io)
         {
-            IO *io = (IO *)jbox_get_object(b);
-            long inlet = io->s_index - 1;
-            if (inlet >= 0 && inlet < getNumIns())
-                mInTable[inlet].push_back(io->s_obj.o_outlet);
+            IO *io = reinterpret_cast<IO *>(jbox_get_object(b));
+            long index = io->s_index - 1;
+            if (index >= 0 && index < maxIndex)
+                func(io, index);
         }
     }
+}
+
+void PatchSlot::findIns(t_patcher *p)
+{
+    auto store = [&](IO *io, long index) { mInTable[index].push_back(io->s_obj.o_outlet); };
+
+    handleIO(p, "in", getNumIns(), store);
 }
 
 void PatchSlot::linkOutlets(t_patcher *p)
 {
-    t_symbol *ps_out = gensym("out");
+    auto link = [&](IO *io, long index) { outlet_add(io->s_outlet, (*mOutTable)[index]); };
     
-    for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
-    {
-        if (jbox_get_maxclass(b) == ps_out)
-        {
-            IO *io = (IO *)jbox_get_object(b);
-            long inlet = io->s_index - 1;
-            if (inlet >= 0 && inlet < getNumOuts())
-                outlet_add(io->s_outlet, (*mOutTable)[io->s_index - 1]);
-        }
-    }
+    handleIO(p, "out", getNumOuts(), link);
 }
 
 void PatchSlot::unlinkOutlets(t_patcher *p)
 {
-    t_symbol *ps_out = gensym("out");
+    auto unlink = [&](IO *io, long index) { outlet_rm(io->s_outlet, (*mOutTable)[index]); };
     
-    for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
-    {
-        if (jbox_get_maxclass(b) == ps_out)
-        {
-            IO *io = (IO *)jbox_get_object(b);
-            long inlet = io->s_index - 1;
-            if (inlet >= 0 && inlet < getNumOuts())
-                outlet_rm(io->s_outlet, (*mOutTable)[io->s_index - 1]);
-        }
-    }
+    handleIO(p, "out", getNumOuts(), unlink);
 }
 
 void PatchSlot::freePatch()
 {
     if (mDSPChain)
-        freeobject((t_object *)mDSPChain);
+        freeobject(reinterpret_cast<t_object *>(mDSPChain));
 
     if (mPatch)
     {

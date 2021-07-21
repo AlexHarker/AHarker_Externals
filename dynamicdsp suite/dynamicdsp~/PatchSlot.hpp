@@ -5,6 +5,7 @@
 #include <ext.h>
 #include <z_dsp.h>
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -15,6 +16,16 @@
 
 class PatchSlot
 {
+    // Generic in/out structure
+    
+    struct IO
+    {
+        t_object s_obj;
+        
+        long s_index;
+        void *s_outlet;
+    };
+    
     enum { MAX_ARGS = 16 };
  
 public:
@@ -33,8 +44,8 @@ public:
     
     ~PatchSlot();
     
-    LoadError load(long userIndex, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
-    LoadError load(long vecSize, long samplingRate);
+    LoadError load(long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
+    LoadError load(long vecSize, long samplingRate, bool initialise);
     
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
     
@@ -77,12 +88,14 @@ private:
     
     LoadError loadFinished(LoadError error, short savedLoadUpdate);
     
+    void setWindowName();
+    void freePatch();
+    
+    void handleIO(t_patcher *p, const char *type, long maxIndex, std::function<void(IO*, long)> func);
+    
     void findIns(t_patcher *p);
     void linkOutlets(t_patcher *p);
     void unlinkOutlets(t_patcher *p);
-
-    void setWindowName();
-    void freePatch();
 
     // Patch and variables / dspchain
     
