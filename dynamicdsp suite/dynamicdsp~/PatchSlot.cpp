@@ -19,9 +19,7 @@ void deletePatch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
 
 // Set subpatcher association
 
-// FIX - could make this use inbuilt traverse (and hence part of class)
-
-int setSubAssoc(t_patcher *p, t_object *x)
+int setSubpatcherAssoc(t_patcher *p, t_object *x)
 {
     t_object *assoc;
     
@@ -70,17 +68,17 @@ PatchSlot::~PatchSlot()
 
 // Loading
 
-PatchSlot::LoadError PatchSlot::load(long userIndex, t_symbol *fileName, long argc, t_atom *argv, long vecSize, long samplingRate)
+PatchSlot::LoadError PatchSlot::load(long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
 {
     // Copy Arguments
     
-    mPathSymbol = fileName;
-    mName = std::string(fileName->s_name);
+    mPathSymbol = path;
+    mName = std::string(path->s_name);
     mPath = 0;
-    mUserIndex = userIndex;
+    mUserIndex = index;
     mArgc = std::min(argc, (long) MAX_ARGS);
-    if (mArgc)
-        memcpy(mArgv, argv, mArgc * sizeof(t_atom));
+    
+    std::copy_n(argv, mArgc, mArgv);
     
     // Load
     
@@ -169,7 +167,7 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initi
     
     long result = 0;
     setWindowName();
-    object_method(mPatch, gensym("traverse"), setSubAssoc, mOwner, &result);
+    object_method(mPatch, gensym("traverse"), setSubpatcherAssoc, mOwner, &result);
     
     if (sys_getdspobjdspstate(mOwner))
         compileDSP(vecSize, samplingRate, true);
@@ -224,7 +222,7 @@ void PatchSlot::compileDSP(long vecSize, long samplingRate, bool forceWhenInvali
         // Free the old dspchain
     
         if (mDSPChain)
-            freeobject((t_object *)mDSPChain);
+            freeobject(reinterpret_cast<t_object *>(mDSPChain));
     
         // Recompile
     
@@ -236,7 +234,7 @@ void PatchSlot::compileDSP(long vecSize, long samplingRate, bool forceWhenInvali
         if (mDSPChain && mDSPChain->c_broken)
         {
             if (mDSPChain)
-                freeobject((t_object *)mDSPChain);
+                freeobject(reinterpret_cast<t_object *>(mDSPChain));
             
             mDSPChain = dspchain_compile(mPatch, vecSize, samplingRate);
         }
