@@ -327,7 +327,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	long num_sig_outs = 2;
 	long num_ins = 2;
 	long num_outs = 2;	
-    long max_obj_threads = ThreadSet::getNumProcessors();
+    long max_obj_threads = NumProcessors()();
 	
 	// Check if there is a patch name given to load
 	
