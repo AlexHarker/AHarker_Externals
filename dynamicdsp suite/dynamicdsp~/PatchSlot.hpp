@@ -59,7 +59,7 @@ public:
     long getUserIndex() const       { return mUserIndex; }
     bool getOn() const              { return mOn; }
     bool getBusy() const            { return mBusy; }
-    void ***getOutputsHandle()      { return &mOutputs; }
+    void ***getOutputHandle()       { return &mOutputs; }
     
     // Setters
     

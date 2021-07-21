@@ -227,9 +227,9 @@ public:
     
     // Queries
     
-    void *getOutputHandle(t_ptr_int index)
+    void ***getOutputHandle(t_ptr_int index)
     {
-        return slotExists(index) ? mSlots[index - 1]->getOutputsHandle() : nullptr;
+        return slotExists(index) ? mSlots[index - 1]->getOutputHandle() : nullptr;
     }
     
     bool getOn(t_ptr_int index)
