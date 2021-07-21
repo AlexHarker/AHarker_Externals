@@ -420,4 +420,4 @@ struct ThreadedPatchSet : public PatchSet<ThreadedPatchSlot>
     void updateThreads()    { forAllSlots(&ThreadedPatchSlot::updateThread); }
 };
 
-#endif /* defined(_PATCHSET_H_) */
+#endif  /* _PATCHSET_H_ */

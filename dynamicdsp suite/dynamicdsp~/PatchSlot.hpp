@@ -166,4 +166,4 @@ private:
     long mThreadRequest;
 };
 
-#endif /* defined(_PATCHSLOT_H_) */
+#endif  /* _PATCHSLOT_H_ */

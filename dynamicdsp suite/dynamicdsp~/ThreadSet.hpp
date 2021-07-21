@@ -169,4 +169,4 @@ private:
     std::vector<ThreadSlot> mThreadSlots;
 };
 
-#endif /* defined(_THREADSET_H_) */
+#endif  /* _THREADSET_H_ */
