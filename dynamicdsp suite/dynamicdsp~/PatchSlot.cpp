@@ -308,6 +308,8 @@ void PatchSlot::unlinkOutlets(t_patcher *p)
     handleIO(p, "out", getNumOuts(), unlink);
 }
 
+// Free patch
+
 void PatchSlot::freePatch()
 {
     if (mDSPChain)

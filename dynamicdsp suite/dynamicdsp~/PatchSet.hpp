@@ -78,7 +78,7 @@ public:
     
     // Load / Remove / Clear
     
-    long load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
+    t_atom_long load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
         std::vector<t_atom> deferredArgs(argc + 4);
 
@@ -229,7 +229,7 @@ public:
     
     void *getOutputHandle(t_ptr_int index)
     {
-        return userSlotExists(index) ? mSlots[index - 1]->getOutputsHandle() : nullptr;
+        return slotExists(index) ? mSlots[index - 1]->getOutputsHandle() : nullptr;
     }
     
     bool getOn(t_ptr_int index)
