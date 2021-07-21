@@ -9,6 +9,21 @@
 #define snprintf _snprintf
 #endif
 
+struct SymbolBinding
+{
+    SymbolBinding(const char *str, void *item) : mSymbol(gensym(str)), mPrevious(mSymbol->s_thing)
+    {
+        mSymbol->s_thing = reinterpret_cast<t_object *>(item);
+    }
+    
+    ~SymbolBinding()
+    {
+        mSymbol->s_thing = mPrevious;
+    }
+    
+    t_symbol *mSymbol;
+    t_object *mPrevious;
+};
 
 // Deferred patch deletion
 
@@ -46,14 +61,14 @@ int PatchSlot::patcherTraverse(t_patcher *p, void *arg, t_object *owner)
     
     (this->*Method)(p);
     
-    // Continue search for subpatchers
+    // Continue search for subpatchers and traverse them if found
     
     for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
     {
         t_patcher *p2;
         long index = 0;
         
-        while (b && (p2 = (t_patcher *)object_subpatcher(jbox_get_object(b), &index, arg)))
+        while (b && (p2 = reinterpret_cast<t_patcher *>(object_subpatcher(jbox_get_object(b), &index, arg))))
             if (patcherTraverse<Method>(p2, arg, owner))
                 return 1;
     }
@@ -85,8 +100,6 @@ PatchSlot::LoadError PatchSlot::load(long index, t_symbol *path, long argc, t_at
     return load(vecSize, samplingRate, true);
 }
 
-// FIX deal with initialise
-
 PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initialise)
 {
     t_fourcc type;
@@ -100,93 +113,70 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initi
     
     // Set flags off / free old patch / set on ready to be changed at load time
     
+    bool on = initialise ? true : mOn;
     mValid = mBusy = mOn = false;
     freePatch();
-    mOn = true;
+    mOn = on;
     
     // Try to locate a file of the given name that is of the correct type
-
-    // FIX - make this nicer
     
     char name[512];
     strcpy(name, mName.c_str());
     
     if (locatefile_extended(name, &mPath, &type, validTypes, 3))
         return kFileNotFound;
-        
-    t_symbol *ps_dynamicdsp = gensym("___DynamicDSP~___");
-    t_symbol *ps_patch_index = gensym("___DynamicPatchIndex___");
-    t_symbol *ps_inhibit_subpatcher_vis = gensym("inhibit_subpatcher_vis");
-    t_symbol *ps_PAT = gensym("#P");
     
-    // Store the old loading symbols
+    // Store the binding symbols with RAII to restore once done
     
-    t_object *previous = ps_dynamicdsp->s_thing;
-    t_object *previous_index = ps_patch_index->s_thing;
-    t_object *save_inhibit_state = ps_inhibit_subpatcher_vis->s_thing;
-    t_patcher *saveparent = (t_patcher *)ps_PAT->s_thing;
+    SymbolBinding owner("___DynamicDSP~___", mOwner);
+    SymbolBinding index("___DynamicPatchIndex___", reinterpret_cast<void *>(mUserIndex));
+    SymbolBinding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
+    SymbolBinding PAT("#P", mParent);
 
-    // Bind to the loading symbols
-
-    ps_dynamicdsp->s_thing = mOwner;
-    ps_patch_index->s_thing = (t_object *) mUserIndex;
-    ps_inhibit_subpatcher_vis->s_thing = (t_object *) -1;
-    ps_PAT->s_thing = (t_object *)mParent;
-
-    // Load the patch (don't interrupt dsp and use setclass to allow Modify Read-Only)
+    // Load the patch (don't interrupt dsp and use )
     
     short savedLoadUpdate = dsp_setloadupdate(false);
     loadbang_suspend();
-    mPatch = (t_patcher *)intload(name, mPath, 0 , mArgc, mArgv, false);
-    object_method(mPatch, gensym("setclass"));
-    
-    // Restore previous loading symbol bindings
-    
-    ps_dynamicdsp->s_thing = previous;
-    ps_patch_index->s_thing = previous_index;
-    ps_inhibit_subpatcher_vis->s_thing = save_inhibit_state;
-    ps_PAT->s_thing = (t_object *) saveparent;
-    
+    mPatch = reinterpret_cast<t_patcher *>(intload(name, mPath, 0 , mArgc, mArgv, false));
+
     // Check something has loaded and that it is a patcher
     
     if (!mPatch)
         return loadFinished(kNothingLoaded, savedLoadUpdate);
     
-    if (!ispatcher((t_object *)mPatch))
-    {
-        freePatch();
+    if (!ispatcher(reinterpret_cast<t_object *>(mPatch)))
         return loadFinished(kNotPatcher, savedLoadUpdate);
-    }
-    
-    // Find ins and link outs
-    
-    patcherTraverse<&PatchSlot::findIns>(mPatch, NULL, mOwner);
-    patcherTraverse<&PatchSlot::linkOutlets>(mPatch, NULL, mOwner);
-    
-    // Set window name / set associations / compile DSP if the owning patch is on
+
+    // Use setclass to allow Modify Read-Only / Set associations
     
     long result = 0;
-    setWindowName();
+    object_method(mPatch, gensym("setclass"));
     object_method(mPatch, gensym("traverse"), setSubpatcherAssoc, mOwner, &result);
+
+    // Find ins and link outs
+    
+    patcherTraverse<&PatchSlot::findIns>(mPatch, nullptr, mOwner);
+    patcherTraverse<&PatchSlot::linkOutlets>(mPatch, nullptr, mOwner);
+    
+    // Set window name and compile DSP if the owning patch is on
+    
+    setWindowName();
     
     if (sys_getdspobjdspstate(mOwner))
         compileDSP(vecSize, samplingRate, true);
     
-    // Loadbang before turning the patch on
+    // Finish loading (which fires loadbang and sets the valid flag)
     
-    loadFinished(kNone, savedLoadUpdate);
-    
-    // The patch is valid and ready to go
-    
-    mValid = true;
-    
-    return kNone;
+    return loadFinished(kNone, savedLoadUpdate);
 }
 
 PatchSlot::LoadError PatchSlot::loadFinished(LoadError error, short savedLoadUpdate)
 {
     loadbang_resume();
     dsp_setloadupdate(savedLoadUpdate);
+    mValid = error == kNone ? true : false;
+    if (!mValid)
+        freePatch();
     return error;
 }
 
