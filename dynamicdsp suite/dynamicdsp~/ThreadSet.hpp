@@ -1,6 +1,6 @@
 
-#ifndef __THREADSET__
-#define __THREADSET__
+#ifndef _THREADSET_H_
+#define _THREADSET_H_
 
 #include <atomic>
 #include <vector>
@@ -50,6 +50,7 @@ struct NumProcessors
 };
 
 #endif
+
 
 // Lightweight thread
 
@@ -112,6 +113,8 @@ private:
 };
 
 
+// ThreadSet class
+
 class ThreadSet
 {
     
@@ -166,4 +169,4 @@ private:
     std::vector<ThreadSlot> mThreadSlots;
 };
 
-#endif /* defined(__THREADSET__) */
+#endif /* defined(_THREADSET_H_) */

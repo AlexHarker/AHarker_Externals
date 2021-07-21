@@ -11,7 +11,7 @@
 #include <vector>
 
 
-// Attribute Helper for dspchains
+// Attribute helper for dspchains
 
 static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *argc, t_atom **argv)
 {
@@ -26,7 +26,7 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
     return MAX_ERR_NONE;
 }
 
-// Main class
+// PatchSet class
 
 // N.B. index counting is from 1 (0 means all or out of range)
 
