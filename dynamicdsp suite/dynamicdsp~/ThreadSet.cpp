@@ -5,8 +5,6 @@
 
 #ifdef __APPLE__
 
-// FIX - priorities and policies (see FrameLib)
-
 // Thread Mac OS implementation
 
 Thread::Thread(ThreadFunctionType *threadFunction, void *arg) : mThreadFunction(threadFunction), mArg(arg), mValid(true)
@@ -22,11 +20,18 @@ Thread::Thread(ThreadFunctionType *threadFunction, void *arg) : mThreadFunction(
     // Set detach state and policy
     
     pthread_attr_setdetachstate(&threadAttributes, PTHREAD_CREATE_JOINABLE);
-    pthread_attr_setschedpolicy(&threadAttributes, SCHED_FIFO);
+    
+    if (maxversion() >= 0x800)
+        pthread_attr_setschedpolicy(&threadAttributes, SCHED_RR);
+    else
+        pthread_attr_setschedpolicy(&threadAttributes, SCHED_FIFO);
     
     // Set the priority of the thread before we create it
     
-    schedulingParameters.sched_priority = 75;
+    if (maxversion() >= 0x800)
+        schedulingParameters.sched_priority = 43;
+    else
+        schedulingParameters.sched_priority = 63;
     
     // Set the scheduling attributes and create the thread
     
