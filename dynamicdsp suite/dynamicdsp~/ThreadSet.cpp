@@ -200,16 +200,12 @@ bool Semaphore::wait()
 ThreadSet::ThreadSet(t_object *owner, procFunc *process, long numThreads, long numOuts)
 : mOwner(owner), mProcess(process)
 , mActive(std::max(1L, numThreads)), mVecSize(0), mBufferSize(0)
-, mSemaphore(mActive - 1)
+, mSemaphore(mActive - 1), mThreadSlots(numThreads, ThreadSlot(this, numOuts))
 {
-    // Create slots and threads
-
-    for (long i = 0; i < numThreads; i++)
-        mThreadSlots.emplace_back(this, i, numOuts);
+    // Create threads
     
     for (long i = 0; i < numThreads - 1; i++)
-        mThreads.emplace_back(new Thread(&threadEntry, &mThreadSlots[i + 1]));
-    
+        mThreads.emplace_back(new Thread(&threadEntry, mThreadSlots.data() + i + 1));
 }
 
 ThreadSet::~ThreadSet()
@@ -290,16 +286,16 @@ void ThreadSet::threadEntry(void *arg)
     ThreadSet::ThreadSlot *slot = static_cast<ThreadSet::ThreadSlot *>(arg);
     ThreadSet *set = static_cast<ThreadSet *>(slot->mOwner);
     
-    set->processingLoop(slot->mIdx);
+    set->processingLoop(slot - set->mThreadSlots.data());
 }
 
-void ThreadSet::processingLoop(long threadNum)
+void ThreadSet::processingLoop(long threadIdx)
 {
     while (mSemaphore.wait())
     {
         // Loop through possible threads in case we are woken multiple times
         
-        for (long i = threadNum; i < threadNum + mActive - 1; i++)
+        for (long i = threadIdx; i < threadIdx + mActive - 1; i++)
         {
             // N.B. Get values from thread each time in case they have been changed
             

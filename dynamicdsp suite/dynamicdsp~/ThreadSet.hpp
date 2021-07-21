@@ -124,15 +124,18 @@ public:
     
     struct ThreadSlot
     {
-        ThreadSlot(void *owner, long idx, long numOuts) : mOwner(owner), mIdx(idx), mProcessed(1)
+        ThreadSlot(void *owner, long numOuts)
+        : mOwner(owner), mProcessed(1)
         {
             mBuffers.resize(numOuts, nullptr);
         }
         
+        ThreadSlot(const ThreadSlot& other)
+        : mOwner(other.mOwner), mProcessed(1), mBuffers(other.mBuffers) {}
+        
         void **getBuffers() { return mBuffers.data(); }
 
         void *mOwner;
-        long mIdx;
         std::atomic<int> mProcessed;
         std::vector<void *> mBuffers;
     };
@@ -155,7 +158,7 @@ public:
 
 private:
     
-    void processingLoop(long threadNum);
+    void processingLoop(long threadIdx);
 
     t_object *mOwner;
     procFunc *mProcess;
