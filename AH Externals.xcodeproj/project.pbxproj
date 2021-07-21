@@ -43,15 +43,15 @@
 			name = descriptors;
 			productName = "All Externals";
 		};
-		B82F11191465F95E007FAC6A /* dynamicdsp suite */ = {
+		B82F11191465F95E007FAC6A /* dynamic suite */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = B82F11681465F95E007FAC6A /* Build configuration list for PBXAggregateTarget "dynamicdsp suite" */;
+			buildConfigurationList = B82F11681465F95E007FAC6A /* Build configuration list for PBXAggregateTarget "dynamic suite" */;
 			buildPhases = (
 			);
 			dependencies = (
-				B80B92EC183BD5160014C9C4 /* PBXTargetDependency */,
+				B8758ED226A8DCF1001005A8 /* PBXTargetDependency */,
 			);
-			name = "dynamicdsp suite";
+			name = "dynamic suite";
 			productName = "All Externals";
 		};
 		B82F116B1465F961007FAC6A /* gesture suite */ = {
@@ -608,62 +608,6 @@
 			remoteGlobalIDString = B8BEAA810CD67F7700F906C8;
 			remoteInfo = meandev;
 		};
-		B80B9263183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B1D995FF0A4BA74D00CE1530;
-			remoteInfo = "dynamicdsp~";
-		};
-		B80B9265183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8ECA02A0F0A578000B26D31;
-			remoteInfo = "dynamic.patch~";
-		};
-		B80B9267183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8EC176E10836C3600316C82;
-			remoteInfo = "dynamic.this~";
-		};
-		B80B9269183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B803277711CCFC69009E69AD;
-			remoteInfo = "dynamic.request~";
-		};
-		B80B926B183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8ECA03B0F0A578900B26D31;
-			remoteInfo = "dynamic.in~";
-		};
-		B80B926D183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8ECA04E0F0A57A800B26D31;
-			remoteInfo = "dynamic.out~";
-		};
-		B80B9273183BD3D50014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B8600FBC12C22A6500864B9B;
-			remoteInfo = "dynamicserial~";
-		};
-		B80B92EB183BD5160014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8ECA0590F0A57F800B26D31;
-			remoteInfo = "dynamic suite";
-		};
 		B80B92F6183BD52E0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */;
@@ -1091,6 +1035,62 @@
 			remoteGlobalIDString = B8B56C2C1465ED6400FE85B0;
 			remoteInfo = "Buffer Externals";
 		};
+		B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B1D995FF0A4BA74D00CE1530;
+			remoteInfo = "dynamicdsp~";
+		};
+		B8758EC526A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B8600FBC12C22A6500864B9B;
+			remoteInfo = "dynamicserial~";
+		};
+		B8758EC726A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B8ECA02A0F0A578000B26D31;
+			remoteInfo = "dynamic.patch~";
+		};
+		B8758EC926A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B8EC176E10836C3600316C82;
+			remoteInfo = "dynamic.this~";
+		};
+		B8758ECB26A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B803277711CCFC69009E69AD;
+			remoteInfo = "dynamic.request~";
+		};
+		B8758ECD26A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B8ECA03B0F0A578900B26D31;
+			remoteInfo = "dynamic.in~";
+		};
+		B8758ECF26A8DCD7001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B8ECA04E0F0A57A800B26D31;
+			remoteInfo = "dynamic.out~";
+		};
+		B8758ED126A8DCF1001005A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA0590F0A57F800B26D31;
+			remoteInfo = "dynamic objects";
+		};
 		B8C287A922781C5100F110B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
@@ -1137,7 +1137,7 @@
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamicdsp~.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dynamicdsp~.h"; sourceTree = "<group>"; };
 		B8A7914A1A1F610D007BDF82 /* ibuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ibuffer.hpp; sourceTree = "<group>"; };
-		B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "dynamicdsp~.xcodeproj"; path = "dynamicdsp suite/dynamicdsp~/dynamicdsp~.xcodeproj"; sourceTree = "<group>"; };
+		B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "dynamic~.xcodeproj"; path = "dynamic suite/dynamic~/dynamic~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "descriptors~.xcodeproj"; path = "descriptors/descriptors~/descriptors~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = entrymatcher.xcodeproj; path = descriptors/entrymatcher/entrymatcher.xcodeproj; sourceTree = "<group>"; };
 		B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "kernelmaker~.xcodeproj"; path = "convolution/kernelmaker~/kernelmaker~.xcodeproj"; sourceTree = "<group>"; };
@@ -1292,20 +1292,6 @@
 			isa = PBXGroup;
 			children = (
 				B80B91D5183BD1930014C9C4 /* meandev.mxo */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		B80B9251183BD3D50014C9C4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B80B9264183BD3D50014C9C4 /* dynamicdsp~.mxo */,
-				B80B9274183BD3D50014C9C4 /* dynamicserial~.mxo */,
-				B80B9266183BD3D50014C9C4 /* dynamic.patch~.mxo */,
-				B80B9268183BD3D50014C9C4 /* dynamic.this~.mxo */,
-				B80B926A183BD3D50014C9C4 /* dynamic.request~.mxo */,
-				B80B926C183BD3D50014C9C4 /* dynamic.in~.mxo */,
-				B80B926E183BD3D50014C9C4 /* dynamic.out~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1592,6 +1578,20 @@
 			name = vMSP;
 			sourceTree = "<group>";
 		};
+		B8758EB926A8DCD5001005A8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B8758EC426A8DCD7001005A8 /* dynamicdsp~.mxo */,
+				B8758EC626A8DCD7001005A8 /* dynamicserial~.mxo */,
+				B8758EC826A8DCD7001005A8 /* dynamic.patch~.mxo */,
+				B8758ECA26A8DCD7001005A8 /* dynamic.this~.mxo */,
+				B8758ECC26A8DCD7001005A8 /* dynamic.request~.mxo */,
+				B8758ECE26A8DCD7001005A8 /* dynamic.in~.mxo */,
+				B8758ED026A8DCD7001005A8 /* dynamic.out~.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		B8A7912D1A1F610D007BDF82 /* AH_MaxMSP_Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1620,7 +1620,7 @@
 				B82F0DBF1465F0B0007FAC6A /* conversion */,
 				B8B56CC31465EFC100FE85B0 /* convolution */,
 				B8B56CB61465EF9500FE85B0 /* descriptors */,
-				B8B56CBE1465EFA500FE85B0 /* dynamicdsp suite */,
+				B8B56CBE1465EFA500FE85B0 /* dynamic suite */,
 				B82F0F441465F61A007FAC6A /* gesture suite */,
 				B82F0DFA1465F13E007FAC6A /* ibuffer suite */,
 				B82F0ED31465F443007FAC6A /* miscellaneous */,
@@ -1641,12 +1641,12 @@
 			name = descriptors;
 			sourceTree = "<group>";
 		};
-		B8B56CBE1465EFA500FE85B0 /* dynamicdsp suite */ = {
+		B8B56CBE1465EFA500FE85B0 /* dynamic suite */ = {
 			isa = PBXGroup;
 			children = (
-				B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */,
+				B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */,
 			);
-			name = "dynamicdsp suite";
+			name = "dynamic suite";
 			sourceTree = "<group>";
 		};
 		B8B56CC31465EFC100FE85B0 /* convolution */ = {
@@ -1718,8 +1718,8 @@
 					ProjectRef = B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */;
 				},
 				{
-					ProductGroup = B80B9251183BD3D50014C9C4 /* Products */;
-					ProjectRef = B8B56C301465EDEA00FE85B0 /* dynamicdsp~.xcodeproj */;
+					ProductGroup = B8758EB926A8DCD5001005A8 /* Products */;
+					ProjectRef = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
 				},
 				{
 					ProductGroup = B80B92FC183BD53D0014C9C4 /* Products */;
@@ -1843,7 +1843,7 @@
 				B82F10231465F901007FAC6A /* conversion */,
 				B82F10751465F905007FAC6A /* convolution */,
 				B82F10C71465F907007FAC6A /* descriptors */,
-				B82F11191465F95E007FAC6A /* dynamicdsp suite */,
+				B82F11191465F95E007FAC6A /* dynamic suite */,
 				B82F116B1465F961007FAC6A /* gesture suite */,
 				B8B56C2C1465ED6400FE85B0 /* ibuffer suite */,
 				B82F11BE1465F991007FAC6A /* miscellaneous */,
@@ -2194,55 +2194,6 @@
 			remoteRef = B80B91D4183BD1930014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B80B9264183BD3D50014C9C4 /* dynamicdsp~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicdsp~.mxo";
-			remoteRef = B80B9263183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9266183BD3D50014C9C4 /* dynamic.patch~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamic.patch~.mxo";
-			remoteRef = B80B9265183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9268183BD3D50014C9C4 /* dynamic.this~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamic.this~.mxo";
-			remoteRef = B80B9267183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B926A183BD3D50014C9C4 /* dynamic.request~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamic.request~.mxo";
-			remoteRef = B80B9269183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B926C183BD3D50014C9C4 /* dynamic.in~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamic.in~.mxo";
-			remoteRef = B80B926B183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B926E183BD3D50014C9C4 /* dynamic.out~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamic.out~.mxo";
-			remoteRef = B80B926D183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B80B9274183BD3D50014C9C4 /* dynamicserial~.mxo */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "dynamicserial~.mxo";
-			remoteRef = B80B9273183BD3D50014C9C4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		B80B92F7183BD52E0014C9C4 /* descriptors~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -2432,6 +2383,55 @@
 			remoteRef = B80B95CA183BDBEF0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		B8758EC426A8DCD7001005A8 /* dynamicdsp~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamicdsp~.mxo";
+			remoteRef = B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758EC626A8DCD7001005A8 /* dynamicserial~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamicserial~.mxo";
+			remoteRef = B8758EC526A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758EC826A8DCD7001005A8 /* dynamic.patch~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamic.patch~.mxo";
+			remoteRef = B8758EC726A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758ECA26A8DCD7001005A8 /* dynamic.this~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamic.this~.mxo";
+			remoteRef = B8758EC926A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758ECC26A8DCD7001005A8 /* dynamic.request~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamic.request~.mxo";
+			remoteRef = B8758ECB26A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758ECE26A8DCD7001005A8 /* dynamic.in~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamic.in~.mxo";
+			remoteRef = B8758ECD26A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B8758ED026A8DCD7001005A8 /* dynamic.out~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "dynamic.out~.mxo";
+			remoteRef = B8758ECF26A8DCD7001005A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
@@ -2494,11 +2494,6 @@
 			isa = PBXTargetDependency;
 			name = meandev;
 			targetProxy = B80B91D8183BD1AE0014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B92EC183BD5160014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "dynamic suite";
-			targetProxy = B80B92EB183BD5160014C9C4 /* PBXContainerItemProxy */;
 		};
 		B80B9306183BD5470014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2652,7 +2647,7 @@
 		};
 		B82F134B1465FA90007FAC6A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B82F11191465F95E007FAC6A /* dynamicdsp suite */;
+			target = B82F11191465F95E007FAC6A /* dynamic suite */;
 			targetProxy = B82F134A1465FA90007FAC6A /* PBXContainerItemProxy */;
 		};
 		B82F134F1465FA90007FAC6A /* PBXTargetDependency */ = {
@@ -2669,6 +2664,11 @@
 			isa = PBXTargetDependency;
 			target = B8B56C2C1465ED6400FE85B0 /* ibuffer suite */;
 			targetProxy = B82F13521465FA90007FAC6A /* PBXContainerItemProxy */;
+		};
+		B8758ED226A8DCF1001005A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic objects";
+			targetProxy = B8758ED126A8DCF1001005A8 /* PBXContainerItemProxy */;
 		};
 		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2982,7 +2982,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		B82F11681465F95E007FAC6A /* Build configuration list for PBXAggregateTarget "dynamicdsp suite" */ = {
+		B82F11681465F95E007FAC6A /* Build configuration list for PBXAggregateTarget "dynamic suite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B82F11691465F95E007FAC6A /* Development */,

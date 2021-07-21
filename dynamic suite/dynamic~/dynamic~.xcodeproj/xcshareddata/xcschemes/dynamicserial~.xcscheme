@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
-               BuildableName = "dynamic objects"
-               BlueprintName = "dynamic objects"
-               ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+               BlueprintIdentifier = "B8600FA812C22A6500864B9B"
+               BuildableName = "dynamicserial~.mxo"
+               BlueprintName = "dynamicserial~"
+               ReferencedContainer = "container:dynamic~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,17 +42,13 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <PathRunnable
-         runnableDebuggingMode = "0"
-         FilePath = "/Applications/Max.app">
-      </PathRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
-            BuildableName = "dynamic objects"
-            BlueprintName = "dynamic objects"
-            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+            BlueprintIdentifier = "B8600FA812C22A6500864B9B"
+            BuildableName = "dynamicserial~.mxo"
+            BlueprintName = "dynamicserial~"
+            ReferencedContainer = "container:dynamic~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -67,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B8ECA0590F0A57F800B26D31"
-            BuildableName = "dynamic objects"
-            BlueprintName = "dynamic objects"
-            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+            BlueprintIdentifier = "B8600FA812C22A6500864B9B"
+            BuildableName = "dynamicserial~.mxo"
+            BlueprintName = "dynamicserial~"
+            ReferencedContainer = "container:dynamic~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

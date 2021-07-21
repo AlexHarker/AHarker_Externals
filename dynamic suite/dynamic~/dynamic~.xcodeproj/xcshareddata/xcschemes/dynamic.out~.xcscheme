@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-               BuildableName = "dynamicdsp~.mxo"
-               BlueprintName = "dynamicdsp~"
-               ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+               BlueprintIdentifier = "B8ECA03F0F0A57A800B26D31"
+               BuildableName = "dynamic.out~.mxo"
+               BlueprintName = "dynamic.out~"
+               ReferencedContainer = "container:dynamic~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-            BuildableName = "dynamicdsp~.mxo"
-            BlueprintName = "dynamicdsp~"
-            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+            BlueprintIdentifier = "B8ECA03F0F0A57A800B26D31"
+            BuildableName = "dynamic.out~.mxo"
+            BlueprintName = "dynamic.out~"
+            ReferencedContainer = "container:dynamic~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-            BuildableName = "dynamicdsp~.mxo"
-            BlueprintName = "dynamicdsp~"
-            ReferencedContainer = "container:dynamicdsp~.xcodeproj">
+            BlueprintIdentifier = "B8ECA03F0F0A57A800B26D31"
+            BuildableName = "dynamic.out~.mxo"
+            BlueprintName = "dynamic.out~"
+            ReferencedContainer = "container:dynamic~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

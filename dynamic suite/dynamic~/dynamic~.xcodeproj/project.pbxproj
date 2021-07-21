@@ -471,7 +471,7 @@
 			attributes = {
 				LastUpgradeCheck = 0600;
 			};
-			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "dynamicdsp~" */;
+			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "dynamic~" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -994,7 +994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		0FFBC544097463A900D78707 /* Build configuration list for PBXProject "dynamicdsp~" */ = {
+		0FFBC544097463A900D78707 /* Build configuration list for PBXProject "dynamic~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFBC545097463A900D78707 /* Development */,
