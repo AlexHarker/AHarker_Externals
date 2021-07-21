@@ -31,11 +31,11 @@
 // FIX - use an atomic counter for autoloadbalance to decrease thread sync costs??
 // FIX - allow patch crossfading
 // FIX - potential adc~ crashes / no audio - cannot get traction on this
+// FIX - patch serialisation
 
 /*****************************************/
 // Global Varibles
 /*****************************************/
-
 
 t_class *dynamicdsp_class;
 
@@ -157,11 +157,6 @@ t_symbol *ps_declareio;
 /*****************************************/
 // Main
 /*****************************************/
-
-t_max_err patchset_get_patches(t_dynamicdsp *x, t_object *attr, long *argc, t_atom **argv)
-{
-    return x->slots->serialise(argc, argv);
-}
 
 long poly_isparent(t_object *p, t_object *mightbeparent)
 {
@@ -298,12 +293,6 @@ int C74_EXPORT main()
     
     class_addmethod(dynamicdsp_class, (method)poly_titleassoc, "titleassoc", A_CANT, 0);
     class_addmethod(dynamicdsp_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
-
-/*
-    CLASS_ATTR_OBJ(dynamicdsp_class, "patches", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
-    CLASS_ATTR_ACCESSORS(dynamicdsp_class, "patches", (method) patchset_get_patches, (method) 0);
-    CLASS_ATTR_SAVE(dynamicdsp_class, "patches", 0);
-    CLASS_ATTR_INVISIBLE(dynamicdsp_class, "patches", 0);*/
 
 	class_dspinit(dynamicdsp_class);
 	
@@ -762,7 +751,6 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     _mm_setcsr(oldMXCSR);	
 #endif
 }
-
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {

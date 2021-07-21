@@ -307,24 +307,6 @@ public:
         return nullptr;
     }
     
-    // Patch serialisation
-    
-    t_max_err serialise(long *argc, t_atom **argv)
-    {
-        t_dictionary *dict = dictionary_new();
-        //t_dictionary *slotDict = dictionary_new();
-        dictionary_appendlong(dict, gensym("slotcount"), size());
-          /*
-        for (typename std::vector<SlotClass *>::iterator it = mSlots.begin(); it != mSlots.end(); it++)
-            dictionary_appenddictionary(slotDict, gensym("key"), val)(*it)->serialise();
-        */
-        
-        t_max_err error = dictobj_dictionarytoatoms(dict, argc, argv);
-        object_free(dict);
-        
-        return error;
-    }
-    
 protected:
 
     bool slotExists(t_atom_long index)
