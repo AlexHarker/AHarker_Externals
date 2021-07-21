@@ -273,18 +273,11 @@ public:
     t_patcher* subpatch(long index, void *arg, long *userIndex = nullptr)
     {
         // Report subpatchers if requested by an object that is not a dspchain
-        
-        // FIX - this looks wrong to me...
-        
+                
         if ((t_ptr_uint) arg > 1)
             if (!NOGOOD(arg))
                 if (ob_sym(arg) == gensym("dspchain"))
-                    return NULL;
-        
-        //  IS THIS CORRECT??
-        
-        // if ((t_ptr_uint) arg <= 1 || NOGOOD(arg) || ob_sym(arg) == gensym("dspchain"))
-        // return NULL;
+                    return nullptr;
         
         // Loop over hosted patches to find the next one
         
@@ -292,12 +285,11 @@ public:
         
         for (auto it = mSlots.begin(); it != mSlots.end(); it++)
         {
-            if ((*it) && (*it)->getPatch())
+            if ((*it) && (*it)->getPatch() && count++ == index)
             {
                 if (userIndex)
                     *userIndex = (*it)->getUserIndex();
-                if (count++ == index)
-                    return (*it)->getPatch();
+                return (*it)->getPatch();
             }
         }
         
