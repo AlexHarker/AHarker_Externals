@@ -186,4 +186,124 @@ bool Semaphore::wait()
 
 #endif
 
+// ThreadSet Class
 
+ThreadSet::ThreadSet(t_object *owner, procFunc *process, long numThreads, long numOuts)
+: mOwner(owner), mProcess(process), mSemaphore(numThreads - 1), mActive(numThreads), mVecSize(0), mBufferSize(0)
+{
+    numThreads = numThreads < 1 ? 1 : numThreads;
+    
+    for (long i = 0; i < numThreads; i++)
+        mThreadSlots.emplace_back(this, i, numTempOuts);
+    
+    for (long i = 0; i < numThreads - 1; i++)
+        mThreads.push_back(new Thread(&threadEntry, &mThreadSlots[i + 1]));
+    
+}
+
+ThreadSet::~ThreadSet()
+{
+    // Close sempahore and threads
+    
+    mSemaphore.close();
+    for (std::vector<Thread *>::iterator it = mThreads.begin(); it != mThreads.end(); it++)
+        (*it)->close();
+    
+    // Free threads
+    
+    for (std::vector<Thread *>::iterator it = mThreads.begin(); it != mThreads.end(); it++)
+        delete (*it);
+    
+    mThreads.clear();
+    
+    // Free temporary buffers
+    
+    for (std::vector<ThreadSlot>::iterator it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
+        for (std::vector<void *>::iterator jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+            deallocate_aligned(*jt);
+}
+
+void ThreadSet::tick(long vecSize, long numThreads, void **sig_outs)
+{
+    // Set number active threads
+    
+    // FIX - safety
+    
+    mActive = numThreads;
+    mVecSize = vecSize;
+    
+    if (numThreads == 1)
+    {
+        mProcess(mOwner, sig_outs, vecSize, 0, 1);
+        return;
+    }
+    
+    // Set flags
+    
+    for (long i = 0; i < numThreads; i++)
+        mThreadSlots[i].mProcessed = 0;
+    
+    mSemaphore.signal(numThreads - 1);
+    
+    // Process thread
+    
+    mProcess(mOwner, mThreadSlots[0].getBuffers(), vecSize, 0, numThreads);
+    
+    // Wait for all the other threads to return
+    
+    for (long i = 1; i < numThreads; i++)
+        while (mThreadSlots[i].mProcessed != 1);
+}
+
+bool ThreadSet::resizeTempBuffers(t_ptr_int size)
+{
+    if (size != mBufferSize)
+    {
+        for (std::vector<ThreadSlot>::iterator it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
+        {
+            for (std::vector<void *>::iterator jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+            {
+                deallocate_aligned(*jt);
+                *jt = allocate_aligned<u_int8_t>(size);
+                if (!*jt)
+                {
+                    object_error((t_object *) mOwner, "not enough memory");
+                    mBufferSize = 0;
+                    return true;
+                }
+            }
+        }
+    }
+    
+    mBufferSize = size;
+    
+    return false;
+}
+
+void ThreadSet::threadClassEntry(long threadNum)
+{
+    while (mSemaphore.wait())
+    {
+        for (long i = threadNum; i < threadNum + mActive - 1; i++)
+        {
+            // N.B. Get values from thread each time in case they have been changed
+            
+            long idx = (i % (mActive - 1)) + 1;
+            int expected = 0;
+            
+            if (mThreadSlots[idx].mProcessed.compare_exchange_strong(expected, 2))
+            {
+                mProcess(mOwner, mThreadSlots[idx].getBuffers(), mVecSize, idx, mActive);
+                mThreadSlots[idx].mProcessed = 1;
+            }
+        }
+    }
+}
+
+void ThreadSet::threadEntry(void *arg)
+{
+    ThreadSet::ThreadSlot *slot = static_cast<ThreadSet::ThreadSlot *>(arg);
+    ThreadSet *set =  static_cast<ThreadSet *>(slot->mOwner);
+    
+    set->threadClassEntry(slot->mIdx);
+}
