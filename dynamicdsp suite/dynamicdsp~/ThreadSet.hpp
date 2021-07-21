@@ -123,7 +123,7 @@ public:
     {
         ThreadSlot(void *owner, long idx, long numOuts) : mOwner(owner), mIdx(idx), mProcessed(1)
         {
-            mBuffers.resize(numOuts);
+            mBuffers.resize(numOuts, nullptr);
         }
         
         void **getBuffers() { return mBuffers.data(); }
@@ -156,14 +156,14 @@ private:
 
     t_object *mOwner;
     procFunc *mProcess;
+
+    long mActive;
+    long mVecSize;
+    t_ptr_int mBufferSize;
+
     Semaphore mSemaphore;
     std::vector<std::unique_ptr<Thread>> mThreads;
     std::vector<ThreadSlot> mThreadSlots;
-    
-    long mActive;
-    long mVecSize;
-
-    t_ptr_int mBufferSize;
 };
 
 #endif /* defined(__THREADSET__) */

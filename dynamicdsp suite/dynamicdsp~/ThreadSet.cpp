@@ -197,16 +197,14 @@ bool Semaphore::wait()
 // ThreadSet Class
 
 ThreadSet::ThreadSet(t_object *owner, procFunc *process, long numThreads, long numOuts)
-: mOwner(owner), mProcess(process), mSemaphore(numThreads - 1), mActive(numThreads), mVecSize(0), mBufferSize(0)
+: mOwner(owner), mProcess(process)
+, mActive(std::max(1L, numThreads)), mVecSize(0), mBufferSize(0)
+, mSemaphore(mActive - 1)
 {
-    // FIX - need to do this before fields above...
-    
-    numThreads = std::max(1L, numThreads);
-
     // Create slots and threads
 
-    //for (long i = 0; i < numThreads; i++)
-    //    mThreadSlots.emplace_back(this, i, numTempOuts);
+    for (long i = 0; i < numThreads; i++)
+        mThreadSlots.emplace_back(this, i, numOuts);
     
     for (long i = 0; i < numThreads - 1; i++)
         mThreads.emplace_back(new Thread(&threadEntry, &mThreadSlots[i + 1]));
@@ -218,13 +216,14 @@ ThreadSet::~ThreadSet()
     // Close semaphore and join threads
     
     mSemaphore.close();
+    
     for (auto it = mThreads.begin(); it != mThreads.end(); it++)
         (*it)->join();
     
     // Free temporary buffers
     
-    for (std::vector<ThreadSlot>::iterator it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
-        for (std::vector<void *>::iterator jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+    for (auto it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
+        for (auto jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
             deallocate_aligned(*jt);
 }
 
@@ -232,9 +231,7 @@ void ThreadSet::tick(long vecSize, long numThreads, void **outs)
 {
     // Set number active threads
     
-    // FIX - safety
-    
-    mActive = numThreads;
+    mActive = std::min(numThreads, getNumThreads());
     mVecSize = vecSize;
     
     if (numThreads == 1)
@@ -264,9 +261,9 @@ bool ThreadSet::resizeBuffers(t_ptr_int size)
 {
     if (size != mBufferSize)
     {
-        for (std::vector<ThreadSlot>::iterator it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
+        for (auto it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
         {
-            for (std::vector<void *>::iterator jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+            for (auto jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
             {
                 deallocate_aligned(*jt);
                 *jt = allocate_aligned<u_int8_t>(size);
