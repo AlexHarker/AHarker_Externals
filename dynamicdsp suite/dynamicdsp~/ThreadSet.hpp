@@ -35,7 +35,7 @@ struct NumProcessors
 #include <windows.h>
 
 typedef HANDLE OSThreadType;
-typedef HANDLE OSSemaphoreType;
+using OSSemaphoreType = struct WinSemaphore { HANDLE mHandle; long mMaxCount; };
 DWORD WINAPI OSThreadFunctionType(LPVOID arg);
 
 struct NumProcessors
@@ -55,7 +55,6 @@ struct NumProcessors
 
 struct Thread
 {
-    
     typedef void ThreadFunctionType(void *);
     
 public:
@@ -63,14 +62,14 @@ public:
     Thread(ThreadFunctionType *threadFunction, void *arg);
     ~Thread();
     
-    void close();
+    // Non-copyable
+    
+    Thread(const Thread&) = delete;
+    Thread& operator=(const Thread&) = delete;
+    
+    void join();
     
 private:
-    
-    // Deleted
-    
-    Thread(const Thread&);
-    Thread& operator=(const Thread&);
     
     // threadStart is a quick OS-style wrapper to call the object which calls the relevant static function
     
@@ -90,22 +89,21 @@ private:
 
 class Semaphore
 {
-    
 public:
     
     Semaphore(long maxCount);
     ~Semaphore();
+    
+    // Non-copyable
+    
+    Semaphore(const Semaphore&) = delete;
+    Semaphore& operator=(const Semaphore&) = delete;
     
     void close();
     void signal(long n);
     bool wait();
     
 private:
-    
-    // Deleted
-    
-    Semaphore(const Semaphore&);
-    Semaphore& operator=(const Semaphore&);
     
     // Data
     
@@ -138,27 +136,28 @@ public:
     
     ThreadSet(t_object *owner, procFunc *process, long numThreads, long numOuts);
     ~ThreadSet();
-        
-    void tick(long vecSize, long numThreads, void **sig_outs);
-    bool resizeTempBuffers(t_ptr_int size);
-
-    void threadClassEntry(long threadNum);
-    static void threadEntry(void *arg);
-
+    
     long getNumThreads() const { return mThreadSlots.size(); }
 
+    void tick(long vecSize, long numThreads, void **outs);
+    bool resizeBuffers(t_ptr_int size);
+
     template <typename T>
-    T *getThreadOut(long thread, long index)
+    T *getThreadBuffer(long thread, long index)
     {
         return (T *) mThreadSlots[thread].mBuffers[index];
     }
-    
+
+    static void threadEntry(void *arg);
+
 private:
     
+    void processingLoop(long threadNum);
+
     t_object *mOwner;
     procFunc *mProcess;
     Semaphore mSemaphore;
-    std::vector<Thread *> mThreads;
+    std::vector<std::unique_ptr<Thread>> mThreads;
     std::vector<ThreadSlot> mThreadSlots;
     
     long mActive;

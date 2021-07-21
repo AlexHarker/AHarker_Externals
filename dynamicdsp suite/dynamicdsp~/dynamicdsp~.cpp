@@ -662,7 +662,7 @@ void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long
         for (long j = 0; j < num_active_threads; j++)
         {
             T *io_pointer = (T *) sig_outs[i];
-            T *next_sig_pointer = threads->getThreadOut<T>(j, i);
+            T *next_sig_pointer = threads->getThreadBuffer<T>(j, i);
             
             if (next_sig_pointer)
             {
@@ -835,7 +835,7 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 {	
-    bool mem_fail = x->threads->resizeTempBuffers(vec_size * sig_size);
+    bool mem_fail = x->threads->resizeBuffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	
