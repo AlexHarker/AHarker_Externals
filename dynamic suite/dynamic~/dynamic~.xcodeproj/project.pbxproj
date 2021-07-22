@@ -30,7 +30,7 @@
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B803276E11CCFC69009E69AD /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B803276F11CCFC69009E69AD /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
-		B803279911CCFCB3009E69AD /* dynamic.request~.c in Sources */ = {isa = PBXBuildFile; fileRef = B803279811CCFCB3009E69AD /* dynamic.request~.c */; };
+		B803279911CCFCB3009E69AD /* dynamic.request~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B803279811CCFCB3009E69AD /* dynamic.request~.cpp */; };
 		B85B63AE1CC4236600381391 /* ThreadSet.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85B63AC1CC4236600381391 /* ThreadSet.hpp */; };
 		B85B63AF1CC43A6100381391 /* ThreadSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85B63AB1CC4236600381391 /* ThreadSet.cpp */; };
 		B8600FB412C22A6500864B9B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
@@ -45,15 +45,15 @@
 		B8D6A6840ED6379E007C648E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B8EC176510836C3600316C82 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8EC176610836C3600316C82 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
-		B8EC17B51083727C00316C82 /* dynamic.this~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8EC17B31083727700316C82 /* dynamic.this~.c */; };
+		B8EC17B51083727C00316C82 /* dynamic.this~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC17B31083727700316C82 /* dynamic.this~.cpp */; };
 		B8ECA0210F0A578000B26D31 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8ECA0240F0A578000B26D31 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B8ECA0320F0A578900B26D31 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8ECA0350F0A578900B26D31 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B8ECA0450F0A57A800B26D31 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8ECA0480F0A57A800B26D31 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
-		B8ECA0640F0A580C00B26D31 /* dynamic.patch~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */; };
-		B8ECA0650F0A581C00B26D31 /* dynamic.in~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0150F0A577100B26D31 /* dynamic.in~.c */; };
+		B8ECA0640F0A580C00B26D31 /* dynamic.patch~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0170F0A577100B26D31 /* dynamic.patch~.cpp */; };
+		B8ECA0650F0A581C00B26D31 /* dynamic.in~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */; };
 		B8ECA0660F0A582D00B26D31 /* dynamic.out~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */; };
 /* End PBXBuildFile section */
 
@@ -113,7 +113,7 @@
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* dynamicdsp~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamicdsp~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B803277711CCFC69009E69AD /* dynamic.request~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.request~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B803279811CCFCB3009E69AD /* dynamic.request~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dynamic.request~.c"; sourceTree = "<group>"; };
+		B803279811CCFCB3009E69AD /* dynamic.request~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.request~.cpp"; sourceTree = "<group>"; };
 		B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicdsp~.cpp"; sourceTree = "<group>"; };
 		B85B63AB1CC4236600381391 /* ThreadSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadSet.cpp; sourceTree = "<group>"; };
 		B85B63AC1CC4236600381391 /* ThreadSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ThreadSet.hpp; sourceTree = "<group>"; };
@@ -126,10 +126,10 @@
 		B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatchSlot.hpp; sourceTree = "<group>"; };
 		B8D6A6830ED6379E007C648E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B8EC176E10836C3600316C82 /* dynamic.this~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.this~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8EC17B31083727700316C82 /* dynamic.this~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.this~.c"; sourceTree = "<group>"; };
-		B8ECA0150F0A577100B26D31 /* dynamic.in~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.in~.c"; sourceTree = "<group>"; };
+		B8EC17B31083727700316C82 /* dynamic.this~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.this~.cpp"; sourceTree = "<group>"; };
+		B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.in~.cpp"; sourceTree = "<group>"; };
 		B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.out~.cpp"; sourceTree = "<group>"; };
-		B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = "dynamic.patch~.c"; sourceTree = "<group>"; };
+		B8ECA0170F0A577100B26D31 /* dynamic.patch~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.patch~.cpp"; sourceTree = "<group>"; };
 		B8ECA02A0F0A578000B26D31 /* dynamic.patch~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.patch~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ECA03B0F0A578900B26D31 /* dynamic.in~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.in~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ECA04E0F0A57A800B26D31 /* dynamic.out~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.out~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -241,11 +241,11 @@
 				B87283981CC39A5100A1C38E /* PatchSet.hpp */,
 				B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */,
 				B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */,
-				B8EC17B31083727700316C82 /* dynamic.this~.c */,
-				B8ECA0170F0A577100B26D31 /* dynamic.patch~.c */,
-				B8ECA0150F0A577100B26D31 /* dynamic.in~.c */,
+				B8EC17B31083727700316C82 /* dynamic.this~.cpp */,
+				B8ECA0170F0A577100B26D31 /* dynamic.patch~.cpp */,
+				B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */,
 				B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */,
-				B803279811CCFCB3009E69AD /* dynamic.request~.c */,
+				B803279811CCFCB3009E69AD /* dynamic.request~.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -616,7 +616,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B803279911CCFCB3009E69AD /* dynamic.request~.c in Sources */,
+				B803279911CCFCB3009E69AD /* dynamic.request~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,7 +633,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8EC17B51083727C00316C82 /* dynamic.this~.c in Sources */,
+				B8EC17B51083727C00316C82 /* dynamic.this~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,7 +641,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8ECA0640F0A580C00B26D31 /* dynamic.patch~.c in Sources */,
+				B8ECA0640F0A580C00B26D31 /* dynamic.patch~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -649,7 +649,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8ECA0650F0A581C00B26D31 /* dynamic.in~.c in Sources */,
+				B8ECA0650F0A581C00B26D31 /* dynamic.in~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,13 +16,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 
 
-void *this_class;
+t_class *this_class;
 
 
-typedef struct _dynamic_request
+struct t_dynamic_request
 {
     t_pxobject x_obj;
 	
@@ -33,8 +33,7 @@ typedef struct _dynamic_request
     bool valid;
 	
 	double lastval;
-	
-} t_dynamic_request;
+};
 
 
 void dynamic_request_free(t_dynamic_request *x);
@@ -81,12 +80,12 @@ void dynamic_request_free(t_dynamic_request *x)
 void *dynamic_request_new(t_atom_long inlet_num)
 {
     t_dynamic_request *x = (t_dynamic_request *)object_alloc(this_class);
-	void *dynamicdsp_parent = Get_Dynamic_Object();
-	long num_sig_ins = Dynamic_Get_Num_Sig_Ins(dynamicdsp_parent);
+	void *dynamic_parent = dynamic_get_parent();
+	long num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);
 	
     x->inlet_num = -1;
     x->valid = false;
-    x->sig_ins = Dynamic_Get_Sig_In_Ptrs(dynamicdsp_parent);
+    x->sig_ins = dynamic_get_sig_in_ptrs(dynamic_parent);
     x->num_sig_ins = num_sig_ins;
     x->lastval = 0;
 
@@ -155,7 +154,7 @@ t_int *dynamic_request_perform(t_int *w)
 	float *from;
 	float lastval = x->lastval;
 	
-	from = x->sig_ins[x->inlet_num - 1];
+	from = (float *) x->sig_ins[x->inlet_num - 1];
 	
 	for (long i = 0; i < vec_size >> 1; i++)
 	{
@@ -186,7 +185,7 @@ t_int *dynamic_request_perform_small(t_int *w)
 	float *from;
 	float lastval = x->lastval;
 	
-	from = x->sig_ins[x->inlet_num - 1];
+	from = (float *) x->sig_ins[x->inlet_num - 1];
 	
 	for (long i = 0; i < vec_size; i++)
 	{
@@ -211,7 +210,7 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
 	
 	double lastval = x->lastval;
 			
-	from = x->sig_ins[x->inlet_num - 1];
+	from = (double *) x->sig_ins[x->inlet_num - 1];
 	
 	for (long i = 0; i < vec_size >> 1; i++)
 	{
@@ -238,7 +237,7 @@ void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, doub
 	
 	double lastval = x->lastval;
 		
-	from = x->sig_ins[x->inlet_num - 1];
+	from = (double *) x->sig_ins[x->inlet_num - 1];
 	
 	for (long i = 0; i < vec_size; i++)
 	{

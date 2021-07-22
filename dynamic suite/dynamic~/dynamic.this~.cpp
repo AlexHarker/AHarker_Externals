@@ -17,13 +17,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 
 
-void *this_class;
+t_class *this_class;
 
 
-typedef struct _dynamic_this
+struct t_dynamic_this
 {
     t_object x_obj;
 	
@@ -34,9 +34,8 @@ typedef struct _dynamic_this
 	
 	long index;
 	
-	void *dynamicdsp_parent;
-	
-} t_dynamic_this;
+	void *dynamic_parent;
+};
 
 
 t_symbol *ps_deletepatch; 
@@ -93,11 +92,11 @@ void *dynamic_this_new(t_atom_long on, t_atom_long busy)
     x->a_outlet = intout(x);
 	x->m_clock = clock_new(x, (method)*clock_delete);
 	
-	x->dynamicdsp_parent = Get_Dynamic_Object();
-	x->index = Get_Dynamic_Patch_Index(x->dynamicdsp_parent);
+	x->dynamic_parent = dynamic_get_parent();
+	x->index = dynamic_get_patch_index(x->dynamic_parent);
 	
-    Dynamic_Set_Patch_Busy(x->dynamicdsp_parent, x->index, busy);
-	Dynamic_Set_Patch_On(x->dynamicdsp_parent, x->index, on);
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, busy);
+	dynamic_set_patch_on(x->dynamic_parent, x->index, on);
 	
 	return (x);
 }
@@ -115,8 +114,8 @@ void dynamic_this_busy(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv
 
 void dynamic_this_busy_internal(t_dynamic_this *x, t_atom_long arg_val)
 {	
-    Dynamic_Set_Patch_Busy(x->dynamicdsp_parent, x->index, arg_val);
-	outlet_int(x->c_outlet, Dynamic_Get_Patch_Busy(x->dynamicdsp_parent, x->index));
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
+	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
 }
 
 void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
@@ -128,8 +127,8 @@ void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv
 	
 	arg_val = atom_getlong(argv);
 	
-	Dynamic_Set_Patch_On(x->dynamicdsp_parent, x->index, !arg_val);
-	outlet_int(x->b_outlet, !Dynamic_Get_Patch_On(x->dynamicdsp_parent, x->index));
+	dynamic_set_patch_on(x->dynamic_parent, x->index, !arg_val);
+	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 }
 
 void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
@@ -141,10 +140,10 @@ void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *arg
 	
 	arg_val = atom_getlong(argv);
 	
-    Dynamic_Set_Patch_Busy(x->dynamicdsp_parent, x->index, arg_val);
-	Dynamic_Set_Patch_On(x->dynamicdsp_parent, x->index, arg_val);
-	outlet_int(x->c_outlet, Dynamic_Get_Patch_Busy(x->dynamicdsp_parent, x->index));
-	outlet_int(x->b_outlet, !Dynamic_Get_Patch_On(x->dynamicdsp_parent, x->index));
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
+	dynamic_set_patch_on(x->dynamic_parent, x->index, arg_val);
+	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
+	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 }
 
 void dynamic_this_loadbang(t_dynamic_this *x)
@@ -154,8 +153,8 @@ void dynamic_this_loadbang(t_dynamic_this *x)
 
 void dynamic_this_bang(t_dynamic_this *x)
 {
-	outlet_int(x->c_outlet, Dynamic_Get_Patch_Busy(x->dynamicdsp_parent, x->index));
-	outlet_int(x->b_outlet, !Dynamic_Get_Patch_On(x->dynamicdsp_parent, x->index));
+	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
+	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 	if (x->index)
 		outlet_int(x->a_outlet, x->index);
 }
@@ -171,8 +170,8 @@ void clock_delete(t_dynamic_this *x)
 	
 	atom_setlong(&arg, x->index);
 	
-	if (x->dynamicdsp_parent)
-		typedmess(((t_object *)x->dynamicdsp_parent), ps_deletepatch, 1, &arg);
+	if (x->dynamic_parent)
+		typedmess(((t_object *)x->dynamic_parent), ps_deletepatch, 1, &arg);
 }
 
 void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s)

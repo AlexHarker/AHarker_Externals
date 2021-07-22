@@ -20,7 +20,7 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 #include "PatchSlot.hpp"
 #include "PatchSet.hpp"
 #include "ThreadSet.hpp"
@@ -390,7 +390,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Multithreading Setup - defaults to multi-threading off for nested objects, on for non-nested
 	
-	if (Get_Dynamic_Object()) 
+	if (dynamic_get_parent()) 
 		x->multithread_flag = 0;									
 	else 
 		x->multithread_flag = 1;

@@ -15,13 +15,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 
 
-void *this_class;
+t_class *this_class;
 
 
-typedef struct _dynamic_in
+struct t_dynamic_in
 {
     t_pxobject x_obj;
 	
@@ -30,8 +30,7 @@ typedef struct _dynamic_in
 	
 	t_atom_long inlet_num;
     bool valid;
-    
-} t_dynamic_in;
+};
 
 
 void dynamic_in_free(t_dynamic_in *x);
@@ -76,10 +75,10 @@ void dynamic_in_free(t_dynamic_in *x)
 void *dynamic_in_new(t_atom_long inlet_num)
 {
     t_dynamic_in *x = (t_dynamic_in *)object_alloc(this_class);
-    void *dynamicdsp_parent = Get_Dynamic_Object();
+    void *dynamic_parent = dynamic_get_parent();
 
-    x->num_sig_ins = Dynamic_Get_Num_Sig_Ins(dynamicdsp_parent);;
-    x->sig_ins = Dynamic_Get_Sig_In_Ptrs(dynamicdsp_parent);
+    x->num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);;
+    x->sig_ins = dynamic_get_sig_in_ptrs(dynamic_parent);
     x->inlet_num = -1;
     x->valid = false;
     

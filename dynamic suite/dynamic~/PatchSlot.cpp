@@ -128,8 +128,8 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initi
     
     // Store the binding symbols with RAII to restore once done
     
-    SymbolBinding owner("___DynamicDSP~___", mOwner);
-    SymbolBinding index("___DynamicPatchIndex___", reinterpret_cast<void *>(mUserIndex));
+    SymbolBinding owner("__dynamic.host_object__", mOwner);
+    SymbolBinding index("__dynamic.patch_index__", reinterpret_cast<void *>(mUserIndex));
     SymbolBinding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
     SymbolBinding PAT("#P", mParent);
 

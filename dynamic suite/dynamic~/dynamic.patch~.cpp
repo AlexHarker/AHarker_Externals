@@ -16,13 +16,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 
 
-void *this_class;
+t_class *this_class;
 
 
-typedef struct _dynamic_patch
+struct t_dynamic_patch
 {
     t_object x_obj;
 	
@@ -31,9 +31,8 @@ typedef struct _dynamic_patch
 	
 	long index;
 	
-	void *dynamicdsp_parent;
-	
-} t_dynamic_patch;
+	void *dynamic_parent;
+};
 
 
 t_symbol *ps_deletepatch; 
@@ -79,8 +78,8 @@ void *dynamic_patch_new(t_atom_long state)
     x->m_outlet = intout(x);
 	x->m_clock = clock_new(x, (method)*clock_delete);
 	
-	x->dynamicdsp_parent = Get_Dynamic_Object();
-	x->index = Get_Dynamic_Patch_Index(x->dynamicdsp_parent);
+	x->dynamic_parent = dynamic_get_parent();
+	x->index = dynamic_get_patch_index(x->dynamic_parent);
 	
 	dynamic_patch_int(x, state);
 	
@@ -94,8 +93,8 @@ void dynamic_patch_free(t_dynamic_patch *x)
 
 void dynamic_patch_int(t_dynamic_patch *x, t_atom_long intin)
 {	
-    Dynamic_Set_Patch_Busy(x->dynamicdsp_parent, x->index, intin);
-	Dynamic_Set_Patch_On(x->dynamicdsp_parent, x->index, intin);
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, intin);
+	dynamic_set_patch_on(x->dynamic_parent, x->index, intin);
 }
 
 void dynamic_patch_loadbang(t_dynamic_patch *x)
@@ -106,7 +105,7 @@ void dynamic_patch_loadbang(t_dynamic_patch *x)
 void dynamic_patch_bang(t_dynamic_patch *x)
 {
 	if (x->index)
-		outlet_int (x->m_outlet, x->index);
+		outlet_int(x->m_outlet, x->index);
 }
 
 void dynamic_patch_delete(t_dynamic_patch *x)
@@ -120,8 +119,8 @@ void clock_delete(t_dynamic_patch *x)
 	
 	atom_setlong(&arg, x->index);
 	
-	if (x->dynamicdsp_parent)
-		typedmess(((t_object *)x->dynamicdsp_parent), ps_deletepatch, 1, &arg);
+	if (x->dynamic_parent)
+		typedmess(((t_object *)x->dynamic_parent), ps_deletepatch, 1, &arg);
 }
 
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s)

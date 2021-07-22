@@ -16,7 +16,7 @@
 #include <ext_obex.h>
 
 #include <SIMDSupport.hpp>
-#include <dynamicdsp~.h>
+#include <dynamicdsp~.hpp>
 
 
 t_class *this_class;
@@ -78,10 +78,10 @@ void dynamic_out_free(t_dynamic_out *x)
 void *dynamic_out_new(t_atom_long outlet_num)
 {
     t_dynamic_out *x = (t_dynamic_out *)object_alloc(this_class);
-	void *dynamicdsp_parent = Get_Dynamic_Object();
+	void *dynamicdsp_parent = dynamic_get_parent();
 	
-	x->out_handle = Dynamic_Get_Sig_Out_Handle(dynamicdsp_parent, Get_Dynamic_Patch_Index(dynamicdsp_parent));
-	x->num_sig_outs = Dynamic_Get_Num_Sig_Outs(dynamicdsp_parent);
+	x->out_handle = dynamic_get_sig_out_handle(dynamicdsp_parent, dynamic_get_patch_index(dynamicdsp_parent));
+	x->num_sig_outs = dynamic_get_num_sig_outs(dynamicdsp_parent);
 	
 	x->outlet_num = outlet_num;
 		
