@@ -16,7 +16,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <dynamicdsp~.hpp>
+#include <dynamic~.hpp>
 
 
 t_class *this_class;

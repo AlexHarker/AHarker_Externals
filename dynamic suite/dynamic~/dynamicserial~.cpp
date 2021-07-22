@@ -127,14 +127,14 @@ void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p);
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg);
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent);
 
-void *dynamicserial_query_num_sigins(t_dynamicserial *x);
-void *dynamicserial_query_num_sigouts(t_dynamicserial *x);
-void *dynamicserial_query_sigins(t_dynamicserial *x);
-void *dynamicserial_query_sigouts(t_dynamicserial *x, t_ptr_int index);
-void *dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_int index);
-void *dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_int index);
-void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
-void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_ptr_int state);
+void dynamicserial_query_num_sigins(t_dynamicserial *x, long *num_sig_ins);
+void dynamicserial_query_num_sigouts(t_dynamicserial *x, long *num_sig_outs);
+void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins);
+void dynamicserial_query_sigouts(t_dynamicserial *x, long index, void ****out_handle);
+void dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state);
+void dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state);
+void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state);
+void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state);
 
 
 /*****************************************/
@@ -175,14 +175,14 @@ int C74_EXPORT main()
 	class_addmethod(dynamicserial_class, (method)dynamicserial_target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicserial_class, (method)dynamicserial_targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
 	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigins, "get_num_sigins", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigouts, "get_num_sigouts", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigins, "get_sigins", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigouts, "get_sigouts", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_on, "get_patch_on", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_busy, "get_patch_busy", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_on, "set_patch_on", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_busy, "set_patch_busy", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigins, "query_num_sigins", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigouts, "query_num_sigouts", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigins, "query_sigins", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigouts, "query_sigouts", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_on, "client_get_patch_on", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_on, "client_set_patch_on", A_CANT, 0);
+	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
 	
     CLASS_ATTR_OBJ(dynamicserial_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj);
     CLASS_ATTR_ACCESSORS(dynamicserial_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
@@ -677,49 +677,49 @@ void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
 
-// Note - objects wishing to query the parent dynamicserial~ object should call the functions in dynamicdsp.h
+// Note - objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h
 // These send the appropriate message to the parent object and return values as appropriate
 
 // Signals
 
-void *dynamicserial_query_num_sigins(t_dynamicserial *x)
+void dynamicserial_query_num_sigins(t_dynamicserial *x, long *num_sig_ins)
 {
-	return (void *)x->num_temp_buffers;
+    *num_sig_ins = x->num_sig_ins;
 }
 
-void *dynamicserial_query_num_sigouts(t_dynamicserial *x)
+void dynamicserial_query_num_sigouts(t_dynamicserial *x, long *num_sig_outs)
 {
-	return (void *)x->num_temp_buffers;
+    *num_sig_outs = x->num_sig_outs;
 }
 
-void *dynamicserial_query_sigins(t_dynamicserial *x)
+void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins)
 {
-	return (void *)x->ins_temp;
+    *sig_ins = x->sig_ins;
 }
 
-void *dynamicserial_query_sigouts(t_dynamicserial *x, t_ptr_int index)
+void dynamicserial_query_sigouts(t_dynamicserial *x, long index, void ****out_handle)
 {
-    return x->slots->getOutputHandle(index);
+    *out_handle = x->slots->getOutputHandle(index);
 }
 
 // State
 
-void *dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_int index)
+void dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
 {
-    return (void *) (t_atom_long) x->slots->getOn(index);
+    *state = x->slots->getOn(idx);
 }
 
-void *dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_int index)
+void dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
 {
-    return (void *) (t_atom_long) x->slots->getBusy(index);
+    *state = x->slots->getBusy(idx);
 }
 
-void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_int index, t_ptr_int state)
+void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setOn(index, state);
+    x->slots->setOn(idx, state);
 }
 
-void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_int index, t_ptr_int state)
+void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setBusy(index, state);
+    x->slots->setBusy(idx, state);
 }

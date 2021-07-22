@@ -15,8 +15,8 @@
 #include <z_dsp.h>
 #include <ext_obex.h>
 
+#include <dynamic~.hpp>
 #include <SIMDSupport.hpp>
-#include <dynamicdsp~.hpp>
 
 
 t_class *this_class;
