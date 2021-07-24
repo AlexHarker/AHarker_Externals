@@ -63,10 +63,15 @@ public:
     
     // Setters
     
-    void setOn(bool on)         { mOn = on; }
-    void setBusy(bool busy)     { mBusy = busy; }
+    void setOn(bool on);
+    void setBusy(bool busy);
     void setInvalid()           { mValid = false; }
 
+    // Listeners
+    
+    void registerListener(t_object *listener);
+    void unregisterListener(t_object *listener);
+    
     // Number of ins and outs
     
     long getNumIns() const      { return mInTable.size(); }
@@ -126,6 +131,10 @@ private:
     std::vector<std::vector<void *>> mInTable;
     std::vector<void *> *mOutTable;
     
+    // State Listener Objects (need notifying)
+    
+    std::vector<t_object *> mStateListeners;
+
     // Owner
     
     t_object *mOwner;

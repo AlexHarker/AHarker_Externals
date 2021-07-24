@@ -49,6 +49,8 @@ void dynamic_this_busy(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv
 void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamic_this_bang(t_dynamic_this *x);
+void dynamic_this_output_busy(t_dynamic_this *x);
+void dynamic_this_output_mute(t_dynamic_this *x);
 void dynamic_this_delete(t_dynamic_this *x);
 void clock_delete(t_dynamic_this *x);
 void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s);
@@ -76,6 +78,9 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method) dynamic_this_bang, "bang", 0);
     class_addmethod(this_class, (method) dynamic_this_bang, "loadbang", A_CANT, 0);
 
+    class_addmethod(this_class, (method) dynamic_this_output_busy, "changebusy", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_this_output_mute, "changeon", A_CANT, 0);
+
     class_addmethod(this_class, (method) dynamic_this_delete, "delete", 0);
 
 	class_register(CLASS_BOX, this_class);
@@ -102,12 +107,15 @@ void *dynamic_this_new(t_atom_long on, t_atom_long busy)
     dynamic_set_patch_busy(x->dynamic_parent, x->index, busy);
 	dynamic_set_patch_on(x->dynamic_parent, x->index, on);
 	
+    dynamic_register_listener(x->dynamic_parent, x->index, x);
+
 	return x;
 }
 
 void dynamic_this_free(t_dynamic_this *x)
 {
 	freeobject((t_object *)x->m_clock);
+    dynamic_unregister_listener(x->dynamic_parent, x->index, x);
 }
 
 void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s)
@@ -144,7 +152,6 @@ void dynamic_this_busy(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv
 void dynamic_this_busy_internal(t_dynamic_this *x, t_atom_long arg_val)
 {	
     dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
-	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
 }
 
 void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
@@ -157,7 +164,6 @@ void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv
 	arg_val = atom_getlong(argv);
 	
 	dynamic_set_patch_on(x->dynamic_parent, x->index, !arg_val);
-	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 }
 
 void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
@@ -171,18 +177,28 @@ void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *arg
 	
     dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
 	dynamic_set_patch_on(x->dynamic_parent, x->index, arg_val);
-	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
-	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 }
 
 // Get State
 
 void dynamic_this_bang(t_dynamic_this *x)
 {
-	outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
-	outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
+    dynamic_this_output_busy(x);
+    dynamic_this_output_mute(x);
 	if (x->index)
 		outlet_int(x->a_outlet, x->index);
+}
+
+// Output State
+
+void dynamic_this_output_busy(t_dynamic_this *x)
+{
+    outlet_int(x->c_outlet, dynamic_get_patch_busy(x->dynamic_parent, x->index));
+}
+
+void dynamic_this_output_mute(t_dynamic_this *x)
+{
+    outlet_int(x->b_outlet, !dynamic_get_patch_on(x->dynamic_parent, x->index));
 }
 
 // Delete

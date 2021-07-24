@@ -109,6 +109,18 @@ struct DynamicHost
         *index = x->patch_set->getLoadingIndex();
     }
     
+    // Listeners
+    
+    static void register_listener(T *x, t_ptr_uint idx, t_object *listener)
+    {
+        x->patch_set->registerListener(idx, listener);
+    }
+    
+    static void unregister_listener(T *x, t_ptr_uint idx, t_object *listener)
+    {
+        x->patch_set->unregisterListener(idx, listener);
+    }
+    
     // Signals
     
     static void query_num_sigins(T *x, long *num_sig_ins)

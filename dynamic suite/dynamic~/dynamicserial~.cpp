@@ -133,7 +133,9 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
 	
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
-	class_addmethod(this_class, (method) handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
+    class_addmethod(this_class, (method)handler::register_listener, "register_listener", A_CANT, 0);
+    class_addmethod(this_class, (method)handler::unregister_listener, "unregister_listener", A_CANT, 0);
+    class_addmethod(this_class, (method) handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
 	class_addmethod(this_class, (method) handler::query_num_sigouts, "query_num_sigouts", A_CANT, 0);
 	class_addmethod(this_class, (method) handler::query_sigins, "query_sigins", A_CANT, 0);
 	class_addmethod(this_class, (method) handler::query_sigouts, "query_sigouts", A_CANT, 0);

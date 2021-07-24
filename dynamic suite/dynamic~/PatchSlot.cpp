@@ -229,6 +229,35 @@ void PatchSlot::compileDSP(long vecSize, long samplingRate, bool forceWhenInvali
     }
 }
 
+// State
+
+void PatchSlot::setOn(bool on)
+{
+    mOn = on;
+    for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+        object_method((*it), gensym("changeon"));
+}
+
+void PatchSlot::setBusy(bool busy)
+{
+    mBusy = busy;
+    for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+        object_method((*it), gensym("changebusy"));
+}
+
+// Listeners
+
+void PatchSlot::registerListener(t_object *listener)
+{
+    mStateListeners.push_back(listener);
+}
+
+void PatchSlot::unregisterListener(t_object *listener)
+{
+    auto &v = mStateListeners;
+    v.erase(std::remove(v.begin(), v.end(), listener), v.end());
+}
+
 // Window Management
 
 void PatchSlot::setWindowName()
@@ -327,6 +356,7 @@ void PatchSlot::freePatch()
         defer(mPatch, (method) deletePatch, NULL, 0, NULL);
     }
     
+    mStateListeners.clear();
     mPatch = nullptr;
     mDSPChain = nullptr;
 }

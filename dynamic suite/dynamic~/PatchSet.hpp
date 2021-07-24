@@ -225,6 +225,18 @@ public:
             return deferSlotAction(index, (method) doClose, &PatchSet::get);
     }
     
+    // Listeners
+    
+    void registerListener(t_ptr_int index, t_object *listener)
+    {
+        slotAction(&PatchSlot::registerListener, index, listener);
+    }
+    
+    void unregisterListener(t_ptr_int index, t_object *listener)
+    {
+        slotAction(&PatchSlot::unregisterListener, index, listener);
+    }
+    
     // Queries
     
     void ***getOutputHandle(t_ptr_int index)
