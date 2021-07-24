@@ -132,10 +132,6 @@ void dynamic_patch_delete(t_dynamic_patch *x)
 
 void clock_delete(t_dynamic_patch *x)
 {
-	t_atom arg;
-	
-	atom_setlong(&arg, x->index);
-	
-	if (x->dynamic_parent)
-		typedmess(((t_object *)x->dynamic_parent), ps_deletepatch, 1, &arg);
+    if (x->dynamic_parent)
+        object_method(x->dynamic_parent, ps_deletepatch, x->index);
 }

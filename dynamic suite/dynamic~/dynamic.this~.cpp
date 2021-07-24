@@ -2,16 +2,15 @@
 /*
  *  dynamic.this~
  *
- *	dynamic.this~ is like thispoly~ but for patchers hosted inside a dynamicdsp~ object.
+ *	dynamic.this~ is like thispoly~ but for patchers hosted inside a dynamic~ object.
  *	
- *	It can be used to control muting and busy status, as well as to safely delete the patch it exists in (without interrupting general audio processing).
- *	It is also the mechanism for determining which slot of the host object the patch is loaded into (similar to voice number in poly~).
+ *	It can be used to control muting and busy status for the given patch.
+*   It can also be used to safely delete the patch it exists in (without interrupting other audio processing).
+ *	Finlaly, it is the mechanism for determining which slot of the host object the patch is loaded into.
  * 
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
-
-// FIX - don't output before loadbang!
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -210,10 +209,6 @@ void dynamic_this_delete(t_dynamic_this *x)
 
 void clock_delete(t_dynamic_this *x)
 {
-	t_atom arg;
-	
-	atom_setlong(&arg, x->index);
-	
-	if (x->dynamic_parent)
-		typedmess(((t_object *)x->dynamic_parent), ps_deletepatch, 1, &arg);
+    if (x->dynamic_parent)
+        object_method(x->dynamic_parent, ps_deletepatch, x->index);
 }

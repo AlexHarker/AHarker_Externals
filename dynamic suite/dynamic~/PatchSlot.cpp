@@ -233,16 +233,22 @@ void PatchSlot::compileDSP(long vecSize, long samplingRate, bool forceWhenInvali
 
 void PatchSlot::setOn(bool on)
 {
-    mOn = on;
-    for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
-        object_method((*it), gensym("changeon"));
+    if (getValid())
+    {
+        mOn = on;
+        for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+            object_method((*it), gensym("changeon"));
+    }
 }
 
 void PatchSlot::setBusy(bool busy)
 {
-    mBusy = busy;
-    for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
-        object_method((*it), gensym("changebusy"));
+    if (getValid())
+    {
+        mBusy = busy;
+        for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+            object_method((*it), gensym("changebusy"));
+    }
 }
 
 // Listeners
