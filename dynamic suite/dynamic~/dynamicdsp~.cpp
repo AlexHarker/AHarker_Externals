@@ -25,6 +25,8 @@
 #include "PatchSet.hpp"
 #include "ThreadSet.hpp"
 
+#include "dynamic_host.hpp"
+
 // FIX - gen~ loading issue - workaround in place
 
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
@@ -37,7 +39,7 @@
 // Global Varibles
 /*****************************************/
 
-t_class *dynamicdsp_class;
+t_class *this_class;
 
 t_symbol *ps_args;
 t_symbol *ps_declareio;
@@ -100,17 +102,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicdsp_free(t_dynamicdsp *x);
 void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s);
 
-void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicdsp_clear(t_dynamicdsp *x);
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
-
-void dynamicdsp_bang(t_dynamicdsp *x);
-void dynamicdsp_int(t_dynamicdsp *x, t_atom_long n);
-void dynamicdsp_float(t_dynamicdsp *x, double f);
-void dynamicdsp_list(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
-void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
-void dynamicdsp_target(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
 void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
@@ -126,24 +118,6 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
-
-void dynamicdsp_dblclick(t_dynamicdsp *x);
-void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index);
-void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index);
-
-void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p);
-void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg);
-void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent);
-
-void dynamicdsp_loading_index(t_dynamicdsp *x, t_atom_long *index);
-void dynamicdsp_query_num_sigins(t_dynamicdsp *x, long *num_sig_ins);
-void dynamicdsp_query_num_sigouts(t_dynamicdsp *x, long *num_sig_outs);
-void dynamicdsp_query_sigins(t_dynamicdsp *x, void ***sig_ins);
-void dynamicdsp_query_sigouts(t_dynamicdsp *x, long index, void ****out_handle);
-void dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state);
-void dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state);
-void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state);
-void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state);
 
 
 /*****************************************/
@@ -226,7 +200,9 @@ t_atom_long dynamic_getindex(t_dynamicdsp *x, t_patcher *p)
 
 int C74_EXPORT main()
 {
-	dynamicdsp_class = class_new("dynamicdsp~",
+    using handler = DynamicHost<t_dynamicdsp>;
+
+	this_class = class_new("dynamicdsp~",
 								 (method)dynamicdsp_new, 
 								 (method)dynamicdsp_free, 
 								 sizeof(t_dynamicdsp), 
@@ -234,55 +210,56 @@ int C74_EXPORT main()
 								 A_GIMME, 
 								 0);
 	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_dsp, "dsp", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method)dynamicdsp_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method)dynamicdsp_dsp64, "dsp64", A_CANT, 0);
 	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_assist, "assist", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_open, "open", A_DEFLONG, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_dblclick, "dblclick", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_wclose, "wclose", A_DEFLONG, 0);
-	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_pupdate, "pupdate", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_subpatcher, "subpatcher", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_parentpatcher, "parentpatcher", A_CANT, 0);
-    class_addmethod(dynamicdsp_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
-
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_bang, "bang", 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_int, "int", A_LONG, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_float, "float", A_FLOAT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_list, "list", A_GIMME, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_anything, "anything", A_GIMME, 0);
-	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_autoloadbalance, "autoloadbalance", A_GIMME, 0);				// MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_multithread, "multithread", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_activethreads, "activethreads", A_GIMME, 0);					// MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_threadmap, "threadmap", A_GIMME, 0);							// MUST FIX TO GIMME FOR NOW
-	
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_clear, "clear", 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_loadpatch, "loadpatch", A_GIMME, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_target, "target", A_GIMME, 0);                                 // MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_targetfree, "targetfree", A_GIMME, 0);                         // MUST FIX TO GIMME FOR NOW
-	
-    class_addmethod(dynamicdsp_class, (method)dynamicdsp_loading_index, "loading_index", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigins, "query_num_sigins", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigouts, "query_num_sigouts", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_sigins, "query_sigins", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_sigouts, "query_sigouts", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_get_patch_on, "client_get_patch_on", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_set_patch_on, "client_set_patch_on", A_CANT, 0);
-	class_addmethod(dynamicdsp_class, (method)dynamicdsp_client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
-	
-    CLASS_ATTR_OBJ(dynamicdsp_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
-    CLASS_ATTR_ACCESSORS(dynamicdsp_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
-    CLASS_ATTR_INVISIBLE(dynamicdsp_class, "ownsdspchain", 0);
+	class_addmethod(this_class, (method)dynamicdsp_assist, "assist", A_CANT, 0);
     
-    class_addmethod(dynamicdsp_class, (method)poly_titleassoc, "titleassoc", A_CANT, 0);
-
-	class_dspinit(dynamicdsp_class);
+    class_addmethod(this_class, (method)handler::open, "open", A_DEFLONG, 0);
+	class_addmethod(this_class, (method)handler::dblclick, "dblclick", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::wclose, "wclose", A_DEFLONG, 0);
 	
-	class_register(CLASS_BOX, dynamicdsp_class);
+	class_addmethod(this_class, (method)handler::pupdate, "pupdate", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::subpatcher, "subpatcher", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::parentpatcher, "parentpatcher", A_CANT, 0);
+    class_addmethod(this_class, (method)handler::getindex, "getindex", A_CANT, 0);
+
+	class_addmethod(this_class, (method)handler::msgbang, "bang", 0);
+	class_addmethod(this_class, (method)handler::msgint, "int", A_LONG, 0);
+	class_addmethod(this_class, (method)handler::msgfloat, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method)handler::msglist, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method)handler::msganything, "anything", A_GIMME, 0);
+	
+	class_addmethod(this_class, (method)dynamicdsp_autoloadbalance, "autoloadbalance", A_GIMME, 0);				// MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)dynamicdsp_multithread, "multithread", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)dynamicdsp_activethreads, "activethreads", A_GIMME, 0);					// MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)dynamicdsp_threadmap, "threadmap", A_GIMME, 0);							// MUST FIX TO GIMME FOR NOW
+	
+	class_addmethod(this_class, (method)handler::clear, "clear", 0);
+	class_addmethod(this_class, (method)dynamicdsp_loadpatch, "loadpatch", A_GIMME, 0);
+	class_addmethod(this_class, (method)handler::deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
+    
+	class_addmethod(this_class, (method)handler::target, "target", A_GIMME, 0);                                 // MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)handler::targetfree, "targetfree", A_GIMME, 0);                         // MUST FIX TO GIMME FOR NOW
+	
+    class_addmethod(this_class, (method)handler::loading_index, "loading_index", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_sigins, "query_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_sigouts, "query_sigouts", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_get_patch_on, "client_get_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
+	
+    CLASS_ATTR_OBJ(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicdsp, x_obj);
+    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
+    
+    class_addmethod(this_class, (method)poly_titleassoc, "titleassoc", A_CANT, 0);
+
+	class_dspinit(this_class);
+	
+	class_register(CLASS_BOX, this_class);
 		
 	ps_args = gensym("args");
 	ps_declareio = gensym("declareio");
@@ -299,7 +276,7 @@ int C74_EXPORT main()
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 {	
-	t_dynamicdsp *x = (t_dynamicdsp *)object_alloc(dynamicdsp_class);
+	t_dynamicdsp *x = (t_dynamicdsp *)object_alloc(this_class);
 	
 	t_symbol *patch_name_entered = NULL;
 	t_symbol *tempsym;
@@ -483,18 +460,8 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 }
 
 /*****************************************/
-// Patcher Loading / Deleting
+// Patcher Loading
 /*****************************************/
-
-void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->remove(atom_getlong(argv));
-}
-
-void dynamicdsp_clear(t_dynamicdsp *x)
-{
-    x->patch_set->clear();
-}
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -547,46 +514,6 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 	} 
 	else 
 		object_error((t_object *) x, "no patch specified");
-}
-
-
-/*****************************************/
-// Messages in passed on to the patcher via the "in" objects / Voice targeting
-/*****************************************/
-
-void dynamicdsp_bang(t_dynamicdsp *x)
-{	
-    x->patch_set->messageBang();
-}
-
-void dynamicdsp_int(t_dynamicdsp *x, t_atom_long n)
-{
-    x->patch_set->messageInt(n);
-}
-
-void dynamicdsp_float(t_dynamicdsp *x, double f)
-{
-    x->patch_set->messageFloat(f);
-}
-
-void dynamicdsp_list(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
-{
-    x->patch_set->messageAnything(s, argc, argv);
-}
-
-void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
-{
-    x->patch_set->messageAnything(s, argc, argv);
-}
-
-void dynamicdsp_target(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->target(argc, argv);
-}
-
-void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->targetFree(argc, argv);
 }
 
 
@@ -862,102 +789,4 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 	
 	if (!dynamicdsp_dsp_common(x, maxvectorsize, samplerate))
 		object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, NULL);
-}
-
-
-/*****************************************/
-// Patcher Window stuff
-/*****************************************/
-
-void dynamicdsp_dblclick(t_dynamicdsp *x)
-{
-    for (long i = 1; i <= x->patch_set->size(); i++)
-        if (x->patch_set->openWindow(i))
-            break;
-}
-
-void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index)
-{
-    x->patch_set->openWindow(index);
-}
-
-void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)
-{
-    x->patch_set->closeWindow(index);
-}
-
-
-/*****************************************/
-// Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
-/*****************************************/
-
-void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
-{
-    x->patch_set->update(p, x->last_vec_size, x->last_samp_rate);
-}
-
-void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg)
-{
-    return x->patch_set->subpatch(index, arg);
-}
-
-void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
-{
-	*parent = x->parent_patch;
-}
-
-
-/*****************************************/
-// Parent / Child Communication - Routines for owned objects to query the parent
-/*****************************************/
-
-// Loading Index
-
-void dynamicdsp_loading_index(t_dynamicdsp *x, t_atom_long *index)
-{
-    *index = x->patch_set->getLoadingIndex();
-}
-
-// Signals
-
-void dynamicdsp_query_num_sigins(t_dynamicdsp *x, long *num_sig_ins)
-{
-    *num_sig_ins = x->num_sig_ins;
-}
-
-void dynamicdsp_query_num_sigouts(t_dynamicdsp *x, long *num_sig_outs)
-{
-    *num_sig_outs = x->num_sig_outs;
-}
-
-void dynamicdsp_query_sigins(t_dynamicdsp *x, void ***sig_ins)
-{
-    *sig_ins = x->sig_ins;
-}
-
-void dynamicdsp_query_sigouts(t_dynamicdsp *x, long index, void ****out_handle)
-{
-    *out_handle = x->patch_set->getOutputHandle(index);
-}
-
-// State
-
-void dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state)
-{
-    *state = x->patch_set->getOn(idx);
-}
-
-void dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state)
-{
-    *state = x->patch_set->getBusy(idx);
-}
-
-void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state)
-{
-    x->patch_set->setOn(idx, state);
-}
-
-void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state)
-{
-    x->patch_set->setBusy(idx, state);
 }

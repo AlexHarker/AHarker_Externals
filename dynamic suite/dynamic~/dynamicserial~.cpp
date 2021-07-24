@@ -25,12 +25,14 @@
 #include "PatchSlot.hpp"
 #include "PatchSet.hpp"
 
+#include "dynamic_host.hpp"
+
 
 /*****************************************/
 // Global Varibles
 /*****************************************/
 
-t_class *dynamicserial_class;
+t_class *this_class;
 
 t_symbol *ps_args;
 t_symbol *ps_declareio;
@@ -76,11 +78,6 @@ struct t_dynamicserial
 	long num_proxies;				// number of proxies = MAX(num_sig_ins, num_ins)
 };
 
-t_atom_long dynamic_getindex(t_dynamicserial *x, t_patcher *p)
-{
-    return x->patch_set->patchIndex(p);
-}
-
 
 /*****************************************/
 // Function Prototypes
@@ -90,18 +87,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicserial_free(t_dynamicserial *x);
 void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s);
 
-void dynamicserial_deletepatch(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicserial_clear(t_dynamicserial *x);
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv);
-
-void dynamicserial_bang(t_dynamicserial *x);
-void dynamicserial_int(t_dynamicserial *x, t_atom_long n);
-void dynamicserial_float(t_dynamicserial *x, double f);
-void dynamicserial_list(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv);
-void dynamicserial_anything(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv);
-
-void dynamicserial_target(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv);
 
 void dynamicserial_perform_common(t_dynamicserial *x);
 void dynamicserial_perform_denormal_handled(t_dynamicserial *x);
@@ -112,32 +98,15 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-void dynamicserial_dblclick(t_dynamicserial *x);
-void dynamicserial_open(t_dynamicserial *x, t_atom_long index);
-void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index);
-
-void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p);
-void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg);
-void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent);
-
-void dynamicserial_loading_index(t_dynamicserial *x, t_atom_long *index);
-void dynamicserial_query_num_sigins(t_dynamicserial *x, long *num_sig_ins);
-void dynamicserial_query_num_sigouts(t_dynamicserial *x, long *num_sig_outs);
-void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins);
-void dynamicserial_query_sigouts(t_dynamicserial *x, long index, void ****out_handle);
-void dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state);
-void dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state);
-void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state);
-void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state);
-
-
 /*****************************************/
 // Main
 /*****************************************/
 
 int C74_EXPORT main()
 {
-	dynamicserial_class = class_new("dynamicserial~",
+    using handler = DynamicHost<t_dynamicserial>;
+    
+	this_class = class_new("dynamicserial~",
 								 (method)dynamicserial_new, 
 								 (method)dynamicserial_free, 
 								 sizeof(t_dynamicserial), 
@@ -145,49 +114,49 @@ int C74_EXPORT main()
 								 A_GIMME, 
 								 0);
 	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_dsp, "dsp", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method)dynamicserial_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method)dynamicserial_dsp64, "dsp64", A_CANT, 0);
 	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_assist, "assist", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_open, "open", A_DEFLONG, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_dblclick, "dblclick", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_wclose, "wclose", A_DEFLONG, 0);
-	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_pupdate, "pupdate", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_subpatcher, "subpatcher", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_parentpatcher, "parentpatcher", A_CANT, 0);
-	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_bang, "bang", 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_int, "int", A_LONG, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_float, "float", A_FLOAT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_list, "list", A_GIMME, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_anything, "anything", A_GIMME, 0);
-	
-	class_addmethod(dynamicserial_class, (method)dynamicserial_clear, "clear", 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicserial_class, (method)dynamicserial_target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
-	class_addmethod(dynamicserial_class, (method)dynamicserial_targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
-	
-    class_addmethod(dynamicserial_class, (method)dynamicserial_loading_index, "loading_index", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigins, "query_num_sigins", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigouts, "query_num_sigouts", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigins, "query_sigins", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigouts, "query_sigouts", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_on, "client_get_patch_on", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_on, "client_set_patch_on", A_CANT, 0);
-	class_addmethod(dynamicserial_class, (method)dynamicserial_client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
-	
-    CLASS_ATTR_OBJ(dynamicserial_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj);
-    CLASS_ATTR_ACCESSORS(dynamicserial_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
-    CLASS_ATTR_INVISIBLE(dynamicserial_class, "ownsdspchain", 0);
+	class_addmethod(this_class, (method)dynamicserial_assist, "assist", A_CANT, 0);
     
-    class_addmethod(dynamicserial_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
-
-	class_dspinit(dynamicserial_class);
+    class_addmethod(this_class, (method)handler::open, "open", A_DEFLONG, 0);
+	class_addmethod(this_class, (method)handler::dblclick, "dblclick", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::wclose, "wclose", A_DEFLONG, 0);
 	
-	class_register(CLASS_BOX, dynamicserial_class);
+	class_addmethod(this_class, (method)handler::pupdate, "pupdate", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::subpatcher, "subpatcher", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::parentpatcher, "parentpatcher", A_CANT, 0);
+    class_addmethod(this_class, (method)handler::getindex, "getindex", A_CANT, 0);
+
+	class_addmethod(this_class, (method)handler::msgbang, "bang", 0);
+	class_addmethod(this_class, (method)handler::msgint, "int", A_LONG, 0);
+	class_addmethod(this_class, (method)handler::msgfloat, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method)handler::msglist, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method)handler::msganything, "anything", A_GIMME, 0);
+	
+    class_addmethod(this_class, (method)handler::clear, "clear", 0);
+	class_addmethod(this_class, (method)dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
+    class_addmethod(this_class, (method)handler::deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)handler::target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method)handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
+	
+    class_addmethod(this_class, (method)handler::loading_index, "loading_index", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_num_sigouts, "query_num_sigouts", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_sigins, "query_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::query_sigouts, "query_sigouts", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_get_patch_on, "client_get_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method)handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
+	
+    CLASS_ATTR_OBJ(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj);
+    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
+    
+	class_dspinit(this_class);
+	
+	class_register(CLASS_BOX, this_class);
 	
 	ps_args = gensym("args");
 	ps_declareio = gensym("declareio");
@@ -204,7 +173,7 @@ int C74_EXPORT main()
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 {	
-	t_dynamicserial *x = (t_dynamicserial *) object_alloc(dynamicserial_class);
+	t_dynamicserial *x = (t_dynamicserial *) object_alloc(this_class);
     
 	t_symbol *patch_name_entered = NULL;
 	t_symbol *tempsym;
@@ -394,18 +363,8 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 
 
 /*****************************************/
-// Patcher Loading / Deleting
+// Patcher Loading
 /*****************************************/
-
-void dynamicserial_deletepatch(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->remove(atom_getlong(argv));
-}
-
-void dynamicserial_clear(t_dynamicserial *x)
-{
-    x->patch_set->clear();
-}
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -436,46 +395,6 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 	}
 	else 
 		object_error((t_object *) x, "no patch specified");
-}
-
-
-/*****************************************/
-// Messages in passed on to the patcher via the "in" objects / Voice targeting
-/*****************************************/
-
-void dynamicserial_bang(t_dynamicserial *x)
-{	
-    x->patch_set->messageBang();
-}
-
-void dynamicserial_int(t_dynamicserial *x, t_atom_long n)
-{
-    x->patch_set->messageInt(n);
-}
-
-void dynamicserial_float(t_dynamicserial *x, double f)
-{
-    x->patch_set->messageFloat(f);
-}
-
-void dynamicserial_list(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
-{
-    x->patch_set->messageAnything(s, argc, argv);
-}
-
-void dynamicserial_anything(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
-{
-    x->patch_set->messageAnything(s, argc, argv);
-}
-
-void dynamicserial_target(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->target(argc, argv);
-}
-
-void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->patch_set->targetFree(argc, argv);
 }
 
 
@@ -623,102 +542,4 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 	
 	if (!dynamicserial_dsp_common(x, maxvectorsize, samplerate))
 		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, NULL);
-}
-
-
-/*****************************************/
-// Patcher Window stuff
-/*****************************************/
-
-void dynamicserial_dblclick(t_dynamicserial *x)
-{
-    for (long i = 1; i <= x->patch_set->size(); i++)
-        if (x->patch_set->openWindow(i))
-            break;
-}
-
-void dynamicserial_open(t_dynamicserial *x, t_atom_long index)
-{
-    x->patch_set->openWindow(index);
-}
-
-void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index)
-{
-    x->patch_set->closeWindow(index);
-}
-
-
-/*****************************************/
-// Patcher Utilities (these deal with various updating and necessary behind the scenes state stuff)
-/*****************************************/
-
-void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
-{
-    x->patch_set->update(p, x->last_vec_size, x->last_samp_rate);
-}
-
-void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg)
-{
-    return x->patch_set->subpatch(index, arg);
-}
-
-void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
-{
-	*parent = x->parent_patch;
-}
-
-
-/*****************************************/
-// Parent / Child Communication - Routines for owned objects to query the parent
-/*****************************************/
-
-// Loading Index
-
-void dynamicserial_loading_index(t_dynamicserial *x, t_atom_long *index)
-{
-    *index = x->patch_set->getLoadingIndex();
-}
-
-// Signals
-
-void dynamicserial_query_num_sigins(t_dynamicserial *x, long *num_sig_ins)
-{
-    *num_sig_ins = x->num_sig_ins;
-}
-
-void dynamicserial_query_num_sigouts(t_dynamicserial *x, long *num_sig_outs)
-{
-    *num_sig_outs = x->num_sig_outs;
-}
-
-void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins)
-{
-    *sig_ins = x->sig_ins;
-}
-
-void dynamicserial_query_sigouts(t_dynamicserial *x, long index, void ****out_handle)
-{
-    *out_handle = x->patch_set->getOutputHandle(index);
-}
-
-// State
-
-void dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
-{
-    *state = x->patch_set->getOn(idx);
-}
-
-void dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
-{
-    *state = x->patch_set->getBusy(idx);
-}
-
-void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
-{
-    x->patch_set->setOn(idx, state);
-}
-
-void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
-{
-    x->patch_set->setBusy(idx, state);
 }

@@ -121,6 +121,7 @@
 		B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicserial~.cpp"; sourceTree = "<group>"; };
 		B87283961CC38D2D00A1C38E /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = "dynamic~.hpp"; path = "../../AH_MaxMSP_Headers/dynamic~.hpp"; sourceTree = "<group>"; };
 		B87283981CC39A5100A1C38E /* PatchSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatchSet.hpp; sourceTree = "<group>"; };
+		B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dynamic_host.hpp; sourceTree = "<group>"; };
 		B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchSlot.cpp; sourceTree = "<group>"; };
 		B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatchSlot.hpp; sourceTree = "<group>"; };
@@ -239,6 +240,7 @@
 				B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */,
 				B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */,
 				B87283981CC39A5100A1C38E /* PatchSet.hpp */,
+				B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */,
 				B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */,
 				B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */,
 				B8EC17B31083727700316C82 /* dynamic.this~.cpp */,
