@@ -53,7 +53,7 @@ struct t_dynamicserial
 	
 	// Patch Data and Variables 
 	
-    PatchSet<PatchSlot> *slots;
+    PatchSet<PatchSlot> *patch_set;
 			
 	long last_vec_size;
 	long last_samp_rate;
@@ -78,7 +78,7 @@ struct t_dynamicserial
 
 t_atom_long dynamic_getindex(t_dynamicserial *x, t_patcher *p)
 {
-    return x->slots->patchIndex(p);
+    return x->patch_set->patchIndex(p);
 }
 
 
@@ -336,12 +336,12 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 	// Setup slots
     
-    x->slots = new PatchSet<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new PatchSet<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
     
 	// Load patch
     
 	if (patch_name_entered)
-        x->slots->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
 	
 	return x;
 }
@@ -352,7 +352,7 @@ void dynamicserial_free(t_dynamicserial *x)
 	
 	// Free patches
 	
-    delete x->slots;
+    delete x->patch_set;
 	
     // Free temp buffers
     
@@ -399,12 +399,12 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 
 void dynamicserial_deletepatch(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->remove(atom_getlong(argv));
+    x->patch_set->remove(atom_getlong(argv));
 }
 
 void dynamicserial_clear(t_dynamicserial *x)
 {
-    x->slots->clear();
+    x->patch_set->clear();
 }
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
@@ -432,7 +432,7 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 		patch_name = atom_getsym(argv);
 		argc--; argv++;
 		
-        x->slots->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
 	}
 	else 
 		object_error((t_object *) x, "no patch specified");
@@ -445,37 +445,37 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 
 void dynamicserial_bang(t_dynamicserial *x)
 {	
-    x->slots->messageBang();
+    x->patch_set->messageBang();
 }
 
 void dynamicserial_int(t_dynamicserial *x, t_atom_long n)
 {
-    x->slots->messageInt(n);
+    x->patch_set->messageInt(n);
 }
 
 void dynamicserial_float(t_dynamicserial *x, double f)
 {
-    x->slots->messageFloat(f);
+    x->patch_set->messageFloat(f);
 }
 
 void dynamicserial_list(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->messageAnything(s, argc, argv);
+    x->patch_set->messageAnything(s, argc, argv);
 }
 
 void dynamicserial_anything(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->messageAnything(s, argc, argv);
+    x->patch_set->messageAnything(s, argc, argv);
 }
 
 void dynamicserial_target(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->target(argc, argv);
+    x->patch_set->target(argc, argv);
 }
 
 void dynamicserial_targetfree(t_dynamicserial *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->targetFree(argc, argv);
+    x->patch_set->targetFree(argc, argv);
 }
 
 
@@ -512,7 +512,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 	
 	// Loop over patches
 	
-	for (long i = 1; i <= x->slots->size(); i++)
+	for (long i = 1; i <= x->patch_set->size(); i++)
 	{
 		// Copy in pointers
         
@@ -525,7 +525,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 			
         // Process and flip if processing has occurred
             
-        if (x->slots->process(i, flip ? temp_buffers1 : temp_buffers2))
+        if (x->patch_set->process(i, flip ? temp_buffers1 : temp_buffers2))
             flip = !flip;
 	}
 	
@@ -582,7 +582,7 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 			
 	// Do internal dsp compile
 	
-	x->slots->compileDSP(vec_size, samp_rate);
+	x->patch_set->compileDSP(vec_size, samp_rate);
 	
 	for (long i = 0; i < x->num_temp_buffers; i++)
 	{
@@ -632,19 +632,19 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 
 void dynamicserial_dblclick(t_dynamicserial *x)
 {
-    for (long i = 1; i <= x->slots->size(); i++)
-        if (x->slots->openWindow(i))
+    for (long i = 1; i <= x->patch_set->size(); i++)
+        if (x->patch_set->openWindow(i))
             break;
 }
 
 void dynamicserial_open(t_dynamicserial *x, t_atom_long index)
 {
-    x->slots->openWindow(index);
+    x->patch_set->openWindow(index);
 }
 
 void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index)
 {
-    x->slots->closeWindow(index);
+    x->patch_set->closeWindow(index);
 }
 
 
@@ -654,12 +654,12 @@ void dynamicserial_wclose(t_dynamicserial *x, t_atom_long index)
 
 void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
 {
-    x->slots->update(p, x->last_vec_size, x->last_samp_rate);
+    x->patch_set->update(p, x->last_vec_size, x->last_samp_rate);
 }
 
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg)
 {
-    return x->slots->subpatch(index, arg);
+    return x->patch_set->subpatch(index, arg);
 }
 
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
@@ -676,7 +676,7 @@ void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
 
 void dynamicserial_loading_index(t_dynamicserial *x, t_atom_long *index)
 {
-    *index = x->slots->getLoadingIndex();
+    *index = x->patch_set->getLoadingIndex();
 }
 
 // Signals
@@ -698,27 +698,27 @@ void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins)
 
 void dynamicserial_query_sigouts(t_dynamicserial *x, long index, void ****out_handle)
 {
-    *out_handle = x->slots->getOutputHandle(index);
+    *out_handle = x->patch_set->getOutputHandle(index);
 }
 
 // State
 
 void dynamicserial_client_get_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
 {
-    *state = x->slots->getOn(idx);
+    *state = x->patch_set->getOn(idx);
 }
 
 void dynamicserial_client_get_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_atom_long *state)
 {
-    *state = x->slots->getBusy(idx);
+    *state = x->patch_set->getBusy(idx);
 }
 
 void dynamicserial_client_set_patch_on(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setOn(idx, state);
+    x->patch_set->setOn(idx, state);
 }
 
 void dynamicserial_client_set_patch_busy(t_dynamicserial *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setBusy(idx, state);
+    x->patch_set->setBusy(idx, state);
 }

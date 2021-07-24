@@ -88,7 +88,7 @@ struct t_dynamicdsp
     // Thread Data / Patches
     
     ThreadSet *threads;
-    ThreadedPatchSet *slots;
+    ThreadedPatchSet *patch_set;
 };
 
 
@@ -203,9 +203,9 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     
     *title = NULL;
     
-    for (i = 0; i < x->slots->size(); i++)
+    for (i = 0; i < x->patch_set->size(); i++)
     {
-        const t_patcher *pp = x->slots->subpatch(i, x);
+        const t_patcher *pp = x->patch_set->subpatch(i, x);
         if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
         {
             object_method(p, gensym("getname"), &name);
@@ -220,7 +220,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
 
 t_atom_long dynamic_getindex(t_dynamicdsp *x, t_patcher *p)
 {
-    return x->slots->patchIndex(p);
+    return x->patch_set->patchIndex(p);
 }
 
 
@@ -442,12 +442,12 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Setup temporary memory / threads / slots
 	
     x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
-    x->slots = new ThreadedPatchSet((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new ThreadedPatchSet((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
 	// Load patch
 	
 	if (patch_name_entered)
-        x->slots->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
 	
 	return x;
 }
@@ -459,7 +459,7 @@ void dynamicdsp_free(t_dynamicdsp *x)
 	// Free threads / patches
 
     delete x->threads;
-	delete x->slots;
+	delete x->patch_set;
 	
 	// Free other resources
 	
@@ -488,12 +488,12 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 
 void dynamicdsp_deletepatch(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->remove(atom_getlong(argv));
+    x->patch_set->remove(atom_getlong(argv));
 }
 
 void dynamicdsp_clear(t_dynamicdsp *x)
 {
-    x->slots->clear();
+    x->patch_set->clear();
 }
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
@@ -530,7 +530,7 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 		patch_name = atom_getsym(argv);
 		argc--; argv++;
         
-        index = x->slots->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
+        index = x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
         
         // FIX - threading...
         // FIX - review
@@ -538,9 +538,9 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
         if (thread_request && index >= 0)
         {
             if (thread_request > 0)
-                x->slots->requestThread(index, thread_request);
+                x->patch_set->requestThread(index, thread_request);
             else
-                x->slots->requestThread(index, index);
+                x->patch_set->requestThread(index, index);
             
             x->update_thread_map = 1;
         }
@@ -556,37 +556,37 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 
 void dynamicdsp_bang(t_dynamicdsp *x)
 {	
-    x->slots->messageBang();
+    x->patch_set->messageBang();
 }
 
 void dynamicdsp_int(t_dynamicdsp *x, t_atom_long n)
 {
-    x->slots->messageInt(n);
+    x->patch_set->messageInt(n);
 }
 
 void dynamicdsp_float(t_dynamicdsp *x, double f)
 {
-    x->slots->messageFloat(f);
+    x->patch_set->messageFloat(f);
 }
 
 void dynamicdsp_list(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->messageAnything(s, argc, argv);
+    x->patch_set->messageAnything(s, argc, argv);
 }
 
 void dynamicdsp_anything(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->slots->messageAnything(s, argc, argv);
+    x->patch_set->messageAnything(s, argc, argv);
 }
 
 void dynamicdsp_target(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->target(argc, argv);
+    x->patch_set->target(argc, argv);
 }
 
 void dynamicdsp_targetfree(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->slots->targetFree(argc, argv);
+    x->patch_set->targetFree(argc, argv);
 }
 
 
@@ -633,9 +633,9 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 		thread_request = atom_getlong(argv + 1) - 1;
     
 	if (thread_request >= 0)
-        x->slots->requestThread(index, thread_request);
+        x->patch_set->requestThread(index, thread_request);
     else
-        x->slots->requestThread(index, index);
+        x->patch_set->requestThread(index, index);
     
     x->update_thread_map = 1;
 }
@@ -715,19 +715,19 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     
     if (x->manual_threading)
     {
-        for (long i = 1; i <= x->slots->size(); i++)
-            x->slots->processIfThreadMatches(i, sig_outs, thread_num, num_active_threads);
+        for (long i = 1; i <= x->patch_set->size(); i++)
+            x->patch_set->processIfThreadMatches(i, sig_outs, thread_num, num_active_threads);
     }
     else
     {
-        long size = x->slots->size();
+        long size = x->patch_set->size();
         long index = (thread_num * (size / num_active_threads));
         for (long i = 1; i <= size; i++)
         {
             if (++index > size)
                 index -= size;
             
-            x->slots->processIfUnprocessed(i, sig_outs);
+            x->patch_set->processIfUnprocessed(i, sig_outs);
         }
     }
     
@@ -741,7 +741,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
 	long num_active_threads = x->request_num_active_threads;
-    long multithread_flag = (x->slots->size() > 1) && x->multithread_flag;
+    long multithread_flag = (x->patch_set->size() > 1) && x->multithread_flag;
 	
 	// Zero Outputs
 	
@@ -755,12 +755,12 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     num_active_threads = !multithread_flag ? 1 : num_active_threads;
     
 	if (!x->manual_threading)
-        x->slots->resetProcessed();
+        x->patch_set->resetProcessed();
 	
 	if (x->update_thread_map)
 	{
 		x->update_thread_map = 0;											
-		x->slots->updateThreads();
+		x->patch_set->updateThreads();
 	}
     
 	// Do processing - the switch aims to get more speed from inlining a fixed loop size
@@ -833,7 +833,7 @@ bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 	
 	// Do internal dsp compile (for each valid patch)
 	
-    x->slots->compileDSP(vec_size, samp_rate);
+    x->patch_set->compileDSP(vec_size, samp_rate);
     
 	x->last_vec_size = vec_size;
 	x->last_samp_rate = samp_rate;
@@ -871,19 +871,19 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 
 void dynamicdsp_dblclick(t_dynamicdsp *x)
 {
-    for (long i = 1; i <= x->slots->size(); i++)
-        if (x->slots->openWindow(i))
+    for (long i = 1; i <= x->patch_set->size(); i++)
+        if (x->patch_set->openWindow(i))
             break;
 }
 
 void dynamicdsp_open(t_dynamicdsp *x, t_atom_long index)
 {
-    x->slots->openWindow(index);
+    x->patch_set->openWindow(index);
 }
 
 void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)
 {
-    x->slots->closeWindow(index);
+    x->patch_set->closeWindow(index);
 }
 
 
@@ -893,12 +893,12 @@ void dynamicdsp_wclose(t_dynamicdsp *x, t_atom_long index)
 
 void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
 {
-    x->slots->update(p, x->last_vec_size, x->last_samp_rate);
+    x->patch_set->update(p, x->last_vec_size, x->last_samp_rate);
 }
 
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg)
 {
-    return x->slots->subpatch(index, arg);
+    return x->patch_set->subpatch(index, arg);
 }
 
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
@@ -915,7 +915,7 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 
 void dynamicdsp_loading_index(t_dynamicdsp *x, t_atom_long *index)
 {
-    *index = x->slots->getLoadingIndex();
+    *index = x->patch_set->getLoadingIndex();
 }
 
 // Signals
@@ -937,27 +937,27 @@ void dynamicdsp_query_sigins(t_dynamicdsp *x, void ***sig_ins)
 
 void dynamicdsp_query_sigouts(t_dynamicdsp *x, long index, void ****out_handle)
 {
-    *out_handle = x->slots->getOutputHandle(index);
+    *out_handle = x->patch_set->getOutputHandle(index);
 }
 
 // State
 
 void dynamicdsp_client_get_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state)
 {
-    *state = x->slots->getOn(idx);
+    *state = x->patch_set->getOn(idx);
 }
 
 void dynamicdsp_client_get_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_atom_long *state)
 {
-    *state = x->slots->getBusy(idx);
+    *state = x->patch_set->getBusy(idx);
 }
 
 void dynamicdsp_client_set_patch_on(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setOn(idx, state);
+    x->patch_set->setOn(idx, state);
 }
 
 void dynamicdsp_client_set_patch_busy(t_dynamicdsp *x, t_ptr_uint idx, t_ptr_uint state)
 {
-    x->slots->setBusy(idx, state);
+    x->patch_set->setBusy(idx, state);
 }
