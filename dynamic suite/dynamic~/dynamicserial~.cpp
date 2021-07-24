@@ -2,14 +2,16 @@
 /*
  *  dynamicserial~
  *
- *	dynamicserial~ is an audio processing object for dynamically loading and managing serially processing audio (or non-audio) patches in realtime, without affecting other patches that are processing.
- *	
- *	It is related to the dynamicdsp~ object and has a similar functionality but is designed for serial rather than parallel processing (and hence is not multithreaded).
- *	There is an associated set of objects for audio input / output and querying and setting patch state (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
+ *	dynamicserial~ is an audio processing object for dynamically loading / managing patches
+ *  Loading patches does not affect other audio patches that are processing.
+ *	It is similar to dynamicdsp~, but is designed for serial processing (hence it isn't multithreaded).
+ *
+ *	There is an associated set of objects for audio input / output and querying and setting patch state:
+ *  (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
  *
  *	See the helpfile documentation for further details of functionality.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -28,9 +30,7 @@
 #include "dynamic_host.hpp"
 
 
-/*****************************************/
 // Global Varibles
-/*****************************************/
 
 t_class *this_class;
 
@@ -39,13 +39,10 @@ t_symbol *ps_declareio;
 
 static t_ptr_uint sig_size;
 
-#define MAX_ARGS 16
-#define MAX_IO 256
+constexpr int MAX_ARGS = 16;
+constexpr int MAX_IO = 256;
 
-
-/*****************************************/
 // Object Structure
-/*****************************************/
 
 struct t_dynamicserial
 {
@@ -78,10 +75,7 @@ struct t_dynamicserial
 	long num_proxies;				// number of proxies = MAX(num_sig_ins, num_ins)
 };
 
-
-/*****************************************/
 // Function Prototypes
-/*****************************************/
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicserial_free(t_dynamicserial *x);
@@ -98,57 +92,55 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-/*****************************************/
 // Main
-/*****************************************/
 
 int C74_EXPORT main()
 {
     using handler = DynamicHost<t_dynamicserial>;
     
 	this_class = class_new("dynamicserial~",
-								 (method)dynamicserial_new, 
-								 (method)dynamicserial_free, 
+								 (method) dynamicserial_new,
+								 (method) dynamicserial_free,
 								 sizeof(t_dynamicserial), 
 								 NULL, 
 								 A_GIMME, 
 								 0);
 	
-	class_addmethod(this_class, (method)dynamicserial_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)dynamicserial_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamicserial_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamicserial_dsp64, "dsp64", A_CANT, 0);
 	
-	class_addmethod(this_class, (method)dynamicserial_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamicserial_assist, "assist", A_CANT, 0);
     
-    class_addmethod(this_class, (method)handler::open, "open", A_DEFLONG, 0);
-	class_addmethod(this_class, (method)handler::dblclick, "dblclick", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::wclose, "wclose", A_DEFLONG, 0);
+    class_addmethod(this_class, (method) handler::open, "open", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) handler::dblclick, "dblclick", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::wclose, "wclose", A_DEFLONG, 0);
 	
-	class_addmethod(this_class, (method)handler::pupdate, "pupdate", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::subpatcher, "subpatcher", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::parentpatcher, "parentpatcher", A_CANT, 0);
-    class_addmethod(this_class, (method)handler::getindex, "getindex", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::pupdate, "pupdate", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::subpatcher, "subpatcher", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::parentpatcher, "parentpatcher", A_CANT, 0);
+    class_addmethod(this_class, (method) handler::getindex, "getindex", A_CANT, 0);
 
-	class_addmethod(this_class, (method)handler::msgbang, "bang", 0);
-	class_addmethod(this_class, (method)handler::msgint, "int", A_LONG, 0);
-	class_addmethod(this_class, (method)handler::msgfloat, "float", A_FLOAT, 0);
-	class_addmethod(this_class, (method)handler::msglist, "list", A_GIMME, 0);
-	class_addmethod(this_class, (method)handler::msganything, "anything", A_GIMME, 0);
+	class_addmethod(this_class, (method) handler::msgbang, "bang", 0);
+	class_addmethod(this_class, (method) handler::msgint, "int", A_LONG, 0);
+	class_addmethod(this_class, (method) handler::msgfloat, "float", A_FLOAT, 0);
+	class_addmethod(this_class, (method) handler::msglist, "list", A_GIMME, 0);
+	class_addmethod(this_class, (method) handler::msganything, "anything", A_GIMME, 0);
 	
-    class_addmethod(this_class, (method)handler::clear, "clear", 0);
-	class_addmethod(this_class, (method)dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
+    class_addmethod(this_class, (method) dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
+    class_addmethod(this_class, (method) handler::clear, "clear", 0);
     class_addmethod(this_class, (method)handler::deletepatch, "deletepatch", A_GIMME, 0);						// MUST FIX TO GIMME FOR NOW
-	class_addmethod(this_class, (method)handler::target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
-	class_addmethod(this_class, (method)handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method) handler::target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
+	class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
 	
-    class_addmethod(this_class, (method)handler::loading_index, "loading_index", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::query_num_sigouts, "query_num_sigouts", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::query_sigins, "query_sigins", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::query_sigouts, "query_sigouts", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::client_get_patch_on, "client_get_patch_on", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
-	class_addmethod(this_class, (method)handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
+    class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::query_num_sigouts, "query_num_sigouts", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::query_sigins, "query_sigins", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::query_sigouts, "query_sigouts", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::client_get_patch_on, "client_get_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
+	class_addmethod(this_class, (method) handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
 	
     CLASS_ATTR_OBJ(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj);
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
@@ -166,16 +158,13 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
-/*****************************************/
-// Object Creation / Freeing / Assisstance
-/*****************************************/
+// New / Free / Assist
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 {	
 	t_dynamicserial *x = (t_dynamicserial *) object_alloc(this_class);
     
-	t_symbol *patch_name_entered = NULL;
+	t_symbol *patch_name_entered = nullptr;
 	t_symbol *tempsym;
 	
     void *outs[MAX_IO];
@@ -274,16 +263,16 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 	x->temp_buffers2 = (void **) malloc(num_temp_buffers * sizeof(void *));
 	
 	for (long i = 0; i < num_sig_ins; i++)
-		x->sig_ins[i] = NULL;
+		x->sig_ins[i] = nullptr;
 	for (long i = 0; i < num_sig_outs; i++)
-		x->sig_outs[i] = NULL;
+		x->sig_outs[i] = nullptr;
 	for (long i = 0; i < num_temp_buffers; i++)
-		x->ins_temp[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = NULL;
+		x->ins_temp[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = nullptr;
 
 	// Make non-signal outlets first
 	
      for (long i = num_outs - 1; i >= 0; i--)
-        outs[i] = outlet_new((t_object *)x, NULL);
+        outs[i] = outlet_new((t_object *)x, 0);
     	
 	// Make signal ins
 	
@@ -291,7 +280,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 	
     // All proxies (signals or messages must be declared as if signal inlets
     
-	dsp_setup((t_pxobject *) x, x->num_proxies);
+	dsp_setup((t_pxobject *)x, x->num_proxies);
 	x->x_obj.z_misc = Z_NO_INPLACE;
 	
 	// Make signal outs
@@ -361,10 +350,7 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 		sprintf(s,"Signal / Message In %ld", a + 1);
 }
 
-
-/*****************************************/
-// Patcher Loading
-/*****************************************/
+// Patch Loading
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -397,10 +383,7 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 		object_error((t_object *) x, "no patch specified");
 }
 
-
-/*****************************************/
-// Perform and DSP Routines
-/*****************************************/
+// Perform Routines
 
 void dynamicserial_perform_common(t_dynamicserial *x)
 {	
@@ -454,30 +437,10 @@ void dynamicserial_perform_common(t_dynamicserial *x)
         memcpy(sig_outs[i], flip ? temp_buffers2[i] : temp_buffers1[i], vec_size * sig_size);
 }
 
-void dynamicserial_perform_denormal_handled(t_dynamicserial *x)
-{
-    // Turn off denormals
-    
-#if defined( __i386__ ) || defined( __x86_64__ )
-    int oldMXCSR = _mm_getcsr();						// read the old MXCSR setting
-    _mm_setcsr(oldMXCSR | 0x8040);						// write the new MXCSR setting setting DAZ and FZ bits
-#endif
-    
-    // Process
-    
-    dynamicserial_perform_common(x);
-    
-    // Return denormals to previous state
-
-#if defined( __i386__ ) || defined( __x86_64__ )
-    _mm_setcsr(oldMXCSR);
-#endif
-}
-
 t_int *dynamicserial_perform(t_int *w)
 {
     if (!((t_dynamicserial *) (w[1]))->x_obj.z_disabled)
-        dynamicserial_perform_denormal_handled((t_dynamicserial *) w[1]);
+        dynamicserial_perform_common((t_dynamicserial *) w[1]);
 	
 	return w + 2;	
 }
@@ -487,13 +450,10 @@ void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, 
     memcpy(x->sig_ins, ins, x->num_sig_ins * sizeof(void *));
     memcpy(x->sig_outs, outs, x->num_sig_ins * sizeof(void *));
     
-	dynamicserial_perform_denormal_handled(x);
+	dynamicserial_perform_common(x);
 }
 
-
-/*****************************************/
-// DSP Routines
-/*****************************************/
+// DSP
 
 bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 {
