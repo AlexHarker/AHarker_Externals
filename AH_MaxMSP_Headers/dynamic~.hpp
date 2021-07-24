@@ -13,7 +13,11 @@
 #ifndef _DYNAMIC_INTERFACE_
 #define _DYNAMIC_INTERFACE_
 
+#include <algorithm>
+
 #include <ext.h>
+
+// Helper to check that an object that appears to be a host is of the correct type
 
 static inline bool dynamic_is_dynamic_host(void *x)
 {
@@ -21,22 +25,58 @@ static inline bool dynamic_is_dynamic_host(void *x)
                  object_classname(x) == gensym("dynamicserial~"));
 }
 
-// FIX - timing of calls
-// Object Queries (*must* be called these routines during patch loading)
+// Helper to allow traversal through parent patchers
+
+static inline t_object *dynamic_traverse_assoc(t_object *p, void *obj)
+{
+    for (t_object *pp = p; pp; p = pp, pp = jpatcher_get_parentpatcher(p))
+    {
+        void *assoc = nullptr;
+        object_method(pp, gensym("getassoc"), &assoc);
+        
+        if (assoc != obj)
+        {
+            if (!obj)
+                p = pp;
+            break;
+        }
+    }
+    
+    return p;
+}
+
+// Object Queries (*must* call these routines during new routines)
 
 static inline void *dynamic_get_parent()
 {
-	void *obj = gensym("__dynamic.host_object__")->s_thing;
-
+    void *obj = gensym("__dynamic.host_object__")->s_thing;
+    
+    if (!obj)
+    {
+        t_object *p = dynamic_traverse_assoc(gensym("#P")->s_thing, nullptr);
+        object_method(p, gensym("getassoc"), &obj);
+    }
+    
     return dynamic_is_dynamic_host(obj) ? obj : nullptr;
 }
 
 static inline long dynamic_get_patch_index(void *obj)
 {
+    long index = 0;
+    
 	if (dynamic_is_dynamic_host(obj))
-		return (long) gensym("__dynamic.patch_index__")->s_thing;
-	else
-		return 0L;
+    {
+        object_method(obj, gensym("loading_index"), &index);
+        
+        if (!index)
+        {
+            t_object *p = dynamic_traverse_assoc(gensym("#P")->s_thing, nullptr);
+            p = dynamic_traverse_assoc(p, obj);
+            index = std::max(0L, (long) object_method(obj,  gensym("getindex"), p));
+        }
+    }
+	
+    return index;
 }
 
 // Functions for querying the host object
@@ -76,7 +116,7 @@ static inline long dynamic_get_num_sig_outs(void *obj)
 
 static inline void **dynamic_get_sig_in_ptrs(void *obj)
 {
-    return dynamic_object_query<void **>(obj, "query_num_sigins");
+    return dynamic_object_query<void **>(obj, "query_sigins");
 }
 
 static inline void ***dynamic_get_sig_out_handle(void *obj, long index)

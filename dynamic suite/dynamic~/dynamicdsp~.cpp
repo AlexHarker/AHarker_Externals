@@ -135,6 +135,7 @@ void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p);
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg);
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent);
 
+void dynamicdsp_loading_index(t_dynamicdsp *x, t_atom_long *index);
 void dynamicdsp_query_num_sigins(t_dynamicdsp *x, long *num_sig_ins);
 void dynamicdsp_query_num_sigouts(t_dynamicdsp *x, long *num_sig_outs);
 void dynamicdsp_query_sigins(t_dynamicdsp *x, void ***sig_ins);
@@ -217,16 +218,9 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     // got here? it's ok, conventional title will be used
 }
 
-t_atom_long dynamic_getindex(t_dynamicdsp *x, void *p)
+t_atom_long dynamic_getindex(t_dynamicdsp *x, t_patcher *p)
 {
-    for (long i = 0; i < x->slots->size(); i++)
-    {
-        long index;
-        const t_patcher *pp = x->slots->subpatch(i, x, &index);
-        if (pp == p)
-            return index;
-    }
-    return -1;
+    return x->slots->patchIndex(p);
 }
 
 
@@ -251,7 +245,8 @@ int C74_EXPORT main()
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_pupdate, "pupdate", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_subpatcher, "subpatcher", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_parentpatcher, "parentpatcher", A_CANT, 0);
-	
+    class_addmethod(dynamicdsp_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
+
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_bang, "bang", 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_int, "int", A_LONG, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_float, "float", A_FLOAT, 0);
@@ -269,6 +264,7 @@ int C74_EXPORT main()
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_target, "target", A_GIMME, 0);                                 // MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_targetfree, "targetfree", A_GIMME, 0);                         // MUST FIX TO GIMME FOR NOW
 	
+    class_addmethod(dynamicdsp_class, (method)dynamicdsp_loading_index, "loading_index", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigins, "query_num_sigins", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_num_sigouts, "query_num_sigouts", A_CANT, 0);
 	class_addmethod(dynamicdsp_class, (method)dynamicdsp_query_sigins, "query_sigins", A_CANT, 0);
@@ -283,7 +279,6 @@ int C74_EXPORT main()
     CLASS_ATTR_INVISIBLE(dynamicdsp_class, "ownsdspchain", 0);
     
     class_addmethod(dynamicdsp_class, (method)poly_titleassoc, "titleassoc", A_CANT, 0);
-    class_addmethod(dynamicdsp_class, (method)dynamic_getindex, "getindex", A_CANT, 0);
 
 	class_dspinit(dynamicdsp_class);
 	
@@ -903,7 +898,7 @@ void dynamicdsp_pupdate(t_dynamicdsp *x, void *b, t_patcher *p)
 
 void *dynamicdsp_subpatcher(t_dynamicdsp *x, long index, void *arg)
 {
-    return reinterpret_cast<void *>(x->slots->subpatch(index, arg));
+    return x->slots->subpatch(index, arg);
 }
 
 void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
@@ -916,8 +911,12 @@ void dynamicdsp_parentpatcher(t_dynamicdsp *x, t_patcher **parent)
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
 
-// Note - objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h
-// These send the appropriate message to the parent object and return values as appropriate
+// Loading Index
+
+void dynamicdsp_loading_index(t_dynamicdsp *x, t_atom_long *index)
+{
+    *index = x->slots->getLoadingIndex();
+}
 
 // Signals
 

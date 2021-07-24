@@ -76,16 +76,9 @@ struct t_dynamicserial
 	long num_proxies;				// number of proxies = MAX(num_sig_ins, num_ins)
 };
 
-t_atom_long dynamic_getindex(t_dynamicserial *x, void *p)
+t_atom_long dynamic_getindex(t_dynamicserial *x, t_patcher *p)
 {
-    for (long i = 0; i < x->slots->size(); i++)
-    {
-        long index;
-        const t_patcher *pp = x->slots->subpatch(i, x, &index);
-        if (pp == p)
-            return index;
-    }
-    return -1;
+    return x->slots->patchIndex(p);
 }
 
 
@@ -127,6 +120,7 @@ void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p);
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg);
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent);
 
+void dynamicserial_loading_index(t_dynamicserial *x, t_atom_long *index);
 void dynamicserial_query_num_sigins(t_dynamicserial *x, long *num_sig_ins);
 void dynamicserial_query_num_sigouts(t_dynamicserial *x, long *num_sig_outs);
 void dynamicserial_query_sigins(t_dynamicserial *x, void ***sig_ins);
@@ -175,6 +169,7 @@ int C74_EXPORT main()
 	class_addmethod(dynamicserial_class, (method)dynamicserial_target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
 	class_addmethod(dynamicserial_class, (method)dynamicserial_targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
 	
+    class_addmethod(dynamicserial_class, (method)dynamicserial_loading_index, "loading_index", A_CANT, 0);
 	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigins, "query_num_sigins", A_CANT, 0);
 	class_addmethod(dynamicserial_class, (method)dynamicserial_query_num_sigouts, "query_num_sigouts", A_CANT, 0);
 	class_addmethod(dynamicserial_class, (method)dynamicserial_query_sigins, "query_sigins", A_CANT, 0);
@@ -664,7 +659,7 @@ void dynamicserial_pupdate(t_dynamicserial *x, void *b, t_patcher *p)
 
 void *dynamicserial_subpatcher(t_dynamicserial *x, long index, void *arg)
 {
-    return (void *) x->slots->subpatch(index, arg);
+    return x->slots->subpatch(index, arg);
 }
 
 void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
@@ -677,8 +672,12 @@ void dynamicserial_parentpatcher(t_dynamicserial *x, t_patcher **parent)
 // Parent / Child Communication - Routines for owned objects to query the parent
 /*****************************************/
 
-// Note - objects wishing to query the parent dynamicdsp~ object should call the functions in dynamicdsp.h
-// These send the appropriate message to the parent object and return values as appropriate
+// Loading Index
+
+void dynamicserial_loading_index(t_dynamicserial *x, t_atom_long *index)
+{
+    *index = x->slots->getLoadingIndex();
+}
 
 // Signals
 

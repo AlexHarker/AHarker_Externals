@@ -32,9 +32,9 @@ public:
     
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
     
-    PatchSlot(t_object *owner, t_object *parent, long numIns, std::vector<void *> *outTable)
+    PatchSlot(t_object *owner, t_object *parent, t_atom_long index, long numIns, std::vector<void *> *outTable)
     : mPatch(nullptr), mDSPChain(nullptr), mPathSymbol(nullptr)
-    , mPath(0), mUserIndex(0), mArgc(0)
+    , mPath(0), mUserIndex(index), mArgc(0)
     , mValid(false), mOn(false), mBusy(false)
     , mOutputs(nullptr), mOutTable(outTable)
     , mOwner(owner), mParent(parent)
@@ -44,7 +44,7 @@ public:
     
     ~PatchSlot();
     
-    LoadError load(long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
+    LoadError load(t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
     LoadError load(long vecSize, long samplingRate, bool initialise);
     
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
@@ -54,12 +54,12 @@ public:
     
     // Getters
        
-    t_patcher *getPatch() const     { return mPatch; }
-    bool getValid() const           { return mValid; }
-    long getUserIndex() const       { return mUserIndex; }
-    bool getOn() const              { return mOn; }
-    bool getBusy() const            { return mBusy; }
-    void ***getOutputHandle()       { return &mOutputs; }
+    t_patcher *getPatch() const         { return mPatch; }
+    t_atom_long getUserIndex() const    { return mUserIndex; }
+    bool getValid() const               { return mValid; }
+    bool getOn() const                  { return mOn; }
+    bool getBusy() const                { return mBusy; }
+    void ***getOutputHandle()           { return &mOutputs; }
     
     // Setters
     
@@ -140,8 +140,8 @@ class ThreadedPatchSlot : public PatchSlot
     
 public:
     
-    ThreadedPatchSlot(t_object *owner, t_patcher *parent, long numIns, std::vector<void *> *outTable)
-    : PatchSlot(owner, parent, numIns, outTable), mThreadCurrent(0), mThreadRequest(0) {}
+    ThreadedPatchSlot(t_object *owner, t_patcher *parent, t_atom_long index, long numIns, std::vector<void *> *outTable)
+    : PatchSlot(owner, parent, index, numIns, outTable), mThreadCurrent(0), mThreadRequest(0) {}
     
     void requestThread(long thread)     { mThreadRequest = thread; }
     void updateThread()                 { mThreadCurrent = mThreadRequest; }

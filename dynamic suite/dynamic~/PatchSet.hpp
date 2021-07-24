@@ -67,7 +67,7 @@ public:
     // Constructor
     
     PatchSet(t_object *x, t_patcher *parent, long numIns, long numOuts, void **outs)
-    : mOwner(x), mParent(parent), mTargetIndex(0), mNumIns(numIns)
+    : mOwner(x), mParent(parent), mLoadingIndex(0), mTargetIndex(0), mNumIns(numIns)
     {
         mOutTable.assign(outs, outs + numOuts);
     }
@@ -242,6 +242,11 @@ public:
         return slotActionResult(&PatchSlot::getBusy, index);
     }
     
+    t_atom_long getLoadingIndex()
+    {
+        return mLoadingIndex;
+    }
+    
     void setOn(t_ptr_int index, t_ptr_int state)
     {
         slotAction(&PatchSlot::setOn, index, state ? true : false);
@@ -268,9 +273,20 @@ public:
         }
     }
     
+    // Get patch index from a pointer to the patch (used also by the max patch traversal system)
+    
+    t_atom_long patchIndex(t_patcher *p)
+    {
+        for (auto it = mSlots.begin(); it != mSlots.end(); it++)
+            if ((*it) && (*it)->getPatch() == p)
+                return (*it)->getUserIndex();
+        
+        return -1;
+    }
+    
     // Get patch for subpatcher reporting
     
-    t_patcher* subpatch(long index, void *arg, long *userIndex = nullptr)
+    t_patcher* subpatch(long index, void *arg)
     {
         // Report subpatchers if requested by an object that is not a dspchain
                 
@@ -284,18 +300,9 @@ public:
         long count = 0;
         
         for (auto it = mSlots.begin(); it != mSlots.end(); it++)
-        {
             if ((*it) && (*it)->getPatch() && count++ == index)
-            {
-                if (userIndex)
-                    *userIndex = (*it)->getUserIndex();
                 return (*it)->getPatch();
-            }
-        }
-        
-        if (userIndex)
-            *userIndex = -1;
-        
+    
         return nullptr;
     }
     
@@ -308,17 +315,23 @@ protected:
     
     void doLoad(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
     {
-        // Load into a new slot
+        // Load into the specified slot
         
-        auto slot = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, mNumIns, &mOutTable));
-        auto error = slot->load(index, path, argc, argv, vecSize, samplingRate);
+        if (size() < index)
+            mSlots.resize(index);
         
-        // Deal with error or retain in the specified slot
+        mLoadingIndex = index;
+        mSlots[index - 1] = std::unique_ptr<SlotClass>(new SlotClass(mOwner, mParent, index, mNumIns, &mOutTable));
+        auto error = mSlots[index - 1]->load(path, argc, argv, vecSize, samplingRate);
+        mLoadingIndex = 0;
+        
+        // If there is an error report and empty the slot
         
         if (error != PatchSlot::LoadError::kNone)
+        {
+            mSlots[index - 1] = nullptr;
             object_error(mOwner, "error trying to load patch %s - %s", path->s_name, PatchSlot::getError(error));
-        else
-            mSlots.emplace(mSlots.begin() + index, std::move(slot));
+        }
     }
     
     void sendMessage(t_symbol *msg, long argc, t_atom *argv)
@@ -385,8 +398,9 @@ protected:
    
     t_object *mOwner;
     t_patcher *mParent;
-    long mTargetIndex;
     
+    t_atom_long mLoadingIndex;
+    long mTargetIndex;
     long mNumIns;
     
     std::vector<void *> mOutTable;

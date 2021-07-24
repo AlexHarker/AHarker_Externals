@@ -83,14 +83,13 @@ PatchSlot::~PatchSlot()
 
 // Loading
 
-PatchSlot::LoadError PatchSlot::load(long index, t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
+PatchSlot::LoadError PatchSlot::load(t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
 {
     // Copy Arguments
     
     mPathSymbol = path;
     mName = std::string(path->s_name);
     mPath = 0;
-    mUserIndex = index;
     mArgc = std::min(argc, (long) MAX_ARGS);
     
     std::copy_n(argv, mArgc, mArgv);
@@ -129,7 +128,6 @@ PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initi
     // Store the binding symbols with RAII to restore once done
     
     SymbolBinding owner("__dynamic.host_object__", mOwner);
-    SymbolBinding index("__dynamic.patch_index__", reinterpret_cast<void *>(mUserIndex));
     SymbolBinding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
     SymbolBinding PAT("#P", mParent);
 
