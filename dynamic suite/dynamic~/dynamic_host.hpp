@@ -138,9 +138,9 @@ struct DynamicHost
         *sig_ins = x->sig_ins;
     }
     
-    static void query_sigouts(T *x, long index, void ****out_handle)
+    static void query_sigouts(T *x, t_ptr_uint idx, void ****out_handle)
     {
-        *out_handle = x->patch_set->getOutputHandle(index);
+        *out_handle = x->patch_set->getOutputHandle(idx);
     }
     
     // State
