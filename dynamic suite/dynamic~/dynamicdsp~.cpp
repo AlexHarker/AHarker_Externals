@@ -192,11 +192,6 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     // got here? it's ok, conventional title will be used
 }
 
-t_atom_long dynamic_getindex(t_dynamicdsp *x, t_patcher *p)
-{
-    return x->patch_set->patchIndex(p);
-}
-
 
 int C74_EXPORT main()
 {
