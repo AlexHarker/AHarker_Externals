@@ -2,11 +2,11 @@
 /*
  *  dynamic.in~
  *
- *	dynamic.in~ acts like in~ but for patchers loaded inside a dynamicdsp~ object.
+ *  dynamic.in~ acts like in~ but for patchers loaded inside a dynamic~ host object.
  *	
- *	Unlike in~ the user can change the signal inlet which the object refers to by sending an int to the object.
+ *  Unlike in~ the user can change the signal inlet which the object refers to by sending an int to the object.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -18,8 +18,9 @@
 #include <dynamic~.hpp>
 
 
-t_class *this_class;
+// Class and object structure
 
+t_class *this_class;
 
 struct t_dynamic_in
 {
@@ -32,18 +33,21 @@ struct t_dynamic_in
     bool valid;
 };
 
+// Function prototypes
 
-void dynamic_in_free(t_dynamic_in *x);
 void *dynamic_in_new(t_atom_long inlet_num);
 void dynamic_in_assist(t_dynamic_in *x, void *b, long m, long a, char *s);
+void dynamic_in_free(t_dynamic_in *x);
+
+void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num);
+
+t_int *dynamic_in_perform(t_int *w);
+void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count);
 void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num);
-t_int *dynamic_in_perform(t_int *w);
-void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-
+// Main
 
 int C74_EXPORT main()
 {
@@ -67,10 +71,7 @@ int C74_EXPORT main()
 	return 0;
 }
 
-void dynamic_in_free(t_dynamic_in *x)
-{
-	dsp_free(&x->x_obj);
-}
+// New / Free / Assist
 
 void *dynamic_in_new(t_atom_long inlet_num)
 {
@@ -83,11 +84,16 @@ void *dynamic_in_new(t_atom_long inlet_num)
     x->valid = false;
     
     dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x,"signal");
+    outlet_new((t_object *)x, "signal");
 	
     dynamic_in_int(x, inlet_num);
     
-    return (x);
+    return x;
+}
+
+void dynamic_in_free(t_dynamic_in *x)
+{
+    dsp_free(&x->x_obj);
 }
 
 void dynamic_in_assist(t_dynamic_in *x, void *b, long m, long a, char *s)
@@ -98,15 +104,7 @@ void dynamic_in_assist(t_dynamic_in *x, void *b, long m, long a, char *s)
 		sprintf(s,"(int) Inlet Number");
 }
 
-void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count)
-{
-	dsp_add(dynamic_in_perform, 3, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
-void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
-{
-	object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, NULL);
-}
+// Int handler
 
 void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 {
@@ -118,6 +116,8 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
         x->valid = true;
     }
 }
+
+// Perform / DSP
 
 t_int *dynamic_in_perform(t_int *w)
 {	
@@ -139,4 +139,14 @@ void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long n
         memcpy(outs[0], x->sig_ins[x->inlet_num - 1], vec_size * sizeof(double));
 	else
         memset(outs[0], 0, vec_size * sizeof(double));
+}
+
+void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count)
+{
+    dsp_add(dynamic_in_perform, 3, sp[1]->s_vec, sp[0]->s_n, x);
+}
+
+void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+{
+    object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, NULL);
 }
