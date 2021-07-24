@@ -58,17 +58,17 @@ void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, 
 int C74_EXPORT main()
 {
 	this_class = class_new("dynamic.request~",
-						   (method)dynamic_request_new, 
-						   (method)dynamic_request_free, 
+						   (method) dynamic_request_new,
+						   (method) dynamic_request_free, 
 						   sizeof(t_dynamic_request), 
 						   NULL, 
 						   A_DEFLONG, 
 						   0);
     
-	class_addmethod(this_class, (method)dynamic_request_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)dynamic_request_dsp64, "dsp64", A_CANT, 0);
-    class_addmethod(this_class, (method)dynamic_request_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)dynamic_request_int, "int", A_LONG, 0);
+	class_addmethod(this_class, (method) dynamic_request_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamic_request_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_request_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamic_request_int, "int", A_LONG, 0);
     
 	class_dspinit(this_class);
 	
@@ -81,7 +81,7 @@ int C74_EXPORT main()
 
 void *dynamic_request_new(t_atom_long inlet_num)
 {
-    t_dynamic_request *x = (t_dynamic_request *)object_alloc(this_class);
+    t_dynamic_request *x = (t_dynamic_request *) object_alloc(this_class);
 	void *dynamic_parent = dynamic_get_parent();
 	long num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);
 	
@@ -112,7 +112,7 @@ void dynamic_request_assist(t_dynamic_request *x, void *b, long m, long a, char 
 		sprintf(s,"(signal) Request Value / (int) Inlet Number");
 }
 
-// Int handler
+// Int Handler
 
 // Unlike dynamic.in~ the request object is either valid when dsp goes on or not.
 // It can only be set to valid inputs (this speeds things up).

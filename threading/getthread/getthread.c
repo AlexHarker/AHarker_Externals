@@ -45,12 +45,12 @@ int C74_EXPORT main()
                           NULL,
                           0);
     
-    class_addmethod(this_class, (method)getthread_doit, "bang", 0);
-    class_addmethod(this_class, (method)getthread_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)getthread_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)getthread_list, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)getthread_anything, "anything", A_GIMME, 0);
-    class_addmethod(this_class, (method)getthread_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) getthread_doit, "bang", 0);
+    class_addmethod(this_class, (method) getthread_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) getthread_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) getthread_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) getthread_anything, "anything", A_GIMME, 0);
+    class_addmethod(this_class, (method) getthread_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     

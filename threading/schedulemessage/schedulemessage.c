@@ -59,13 +59,13 @@ int C74_EXPORT main()
                           A_DEFFLOAT,
                           0);
 
-    class_addmethod(this_class, (method)schedulemessage_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)schedulemessage_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)schedulemessage_delay, "ft1", A_FLOAT, 0);
-    class_addmethod(this_class, (method)schedulemessage_bang, "bang", 0);
-    class_addmethod(this_class, (method)schedulemessage_anything, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)schedulemessage_anything, "anything", A_GIMME, 0);
-    class_addmethod(this_class, (method)schedulemessage_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) schedulemessage_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) schedulemessage_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) schedulemessage_delay, "ft1", A_FLOAT, 0);
+    class_addmethod(this_class, (method) schedulemessage_bang, "bang", 0);
+    class_addmethod(this_class, (method) schedulemessage_anything, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) schedulemessage_anything, "anything", A_GIMME, 0);
+    class_addmethod(this_class, (method) schedulemessage_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     

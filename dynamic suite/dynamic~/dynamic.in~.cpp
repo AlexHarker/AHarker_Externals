@@ -4,7 +4,7 @@
  *
  *  dynamic.in~ acts like in~ but for patchers loaded inside a dynamic~ host object.
  *	
- *  Unlike in~ the user can change the signal inlet which the object refers to by sending an int to the object.
+ *  Unlike in~ you can change the signal inlet which the object refers to by sending an int to the object.
  *
  *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
@@ -52,17 +52,17 @@ void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sam
 int C74_EXPORT main()
 {
 	this_class = class_new("dynamic.in~",
-						   (method)dynamic_in_new, 
-						   (method)dynamic_in_free, 
+						   (method) dynamic_in_new,
+						   (method) dynamic_in_free, 
 						   sizeof(t_dynamic_in), 
 						   NULL, 
 						   A_DEFLONG, 
 						   0);
     
-	class_addmethod(this_class, (method)dynamic_in_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)dynamic_in_dsp64, "dsp64", A_CANT, 0);
-    class_addmethod(this_class, (method)dynamic_in_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)dynamic_in_int, "int", A_LONG, 0);
+	class_addmethod(this_class, (method) dynamic_in_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamic_in_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_in_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) dynamic_in_int, "int", A_LONG, 0);
     
 	class_dspinit(this_class);
 	
@@ -75,7 +75,7 @@ int C74_EXPORT main()
 
 void *dynamic_in_new(t_atom_long inlet_num)
 {
-    t_dynamic_in *x = (t_dynamic_in *)object_alloc(this_class);
+    t_dynamic_in *x = (t_dynamic_in *) object_alloc(this_class);
     void *dynamic_parent = dynamic_get_parent();
 
     x->num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);;
@@ -104,7 +104,7 @@ void dynamic_in_assist(t_dynamic_in *x, void *b, long m, long a, char *s)
 		sprintf(s,"(int) Inlet Number");
 }
 
-// Int handler
+// Int Handler
 
 void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 {

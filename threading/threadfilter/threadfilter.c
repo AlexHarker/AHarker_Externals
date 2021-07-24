@@ -47,12 +47,12 @@ int C74_EXPORT main()
                           NULL,
                           0);
     
-    class_addmethod(this_class, (method)threadfilter_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)threadfilter_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)threadfilter_bang, "bang", 0);
-    class_addmethod(this_class, (method)threadfilter_anything, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)threadfilter_anything, "anything", A_GIMME, 0);
-    class_addmethod(this_class, (method)threadfilter_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) threadfilter_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) threadfilter_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) threadfilter_bang, "bang", 0);
+    class_addmethod(this_class, (method) threadfilter_anything, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) threadfilter_anything, "anything", A_GIMME, 0);
+    class_addmethod(this_class, (method) threadfilter_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
