@@ -2,15 +2,16 @@
 /*
  *  valconvert and valconvert~
  *
- *  valconvert and its audio rate counterpart (valconvert~) are general pupose scaling objects for useful musical scalings (log / exp / pitch / amp / scale).
- *
+ *  valconvert and its audio rate counterpart (valconvert~) are general pupose scaling objects.
+ *  They inclued several useful musical scalings (log / exp / pitch / amp / scale).
  *  The max version scales ints (float output), floats and lists, the audio rate version scales signals.
  *
  *  Scaling is set by a parameter message.
- *  Scaling type refers to interpretation of the *input* rather than the output, so the log setting treats the input as logarithmic and scales expoentatially (for frequency for example).
+ *  Scaling type refers to interpretation of the *input* rather than the output.
+ *  E.g. the log setting treats the input as logarithmic and scales exponentially (e.g to control frequency).
  *  See the documentation for more detail on other modes.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -37,8 +38,7 @@ const char *object_name = "valconvert";
 method free_routine = 0L;
 #endif
 
-
-t_class *this_class;
+// Globals and Object Structure
 
 enum t_conversion_mode
 {
@@ -62,6 +62,8 @@ struct t_valconvert
     void *the_outlet;
 };
 
+t_class *this_class;
+
 t_symbol *ps_scale;
 t_symbol *ps_log;
 t_symbol *ps_amp;
@@ -73,6 +75,7 @@ t_symbol *ps_ipitch;
 
 t_symbol *ps_list;
 
+// Function Protoypes
 
 void *valconvert_new(t_symbol *msg, long argc, t_atom *argv);
 
@@ -98,6 +101,7 @@ void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv);
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s);
 
+// Lowercase Conversion
 
 t_symbol *symbol_to_lowercase(t_symbol *sym)
 {
@@ -106,6 +110,8 @@ t_symbol *symbol_to_lowercase(t_symbol *sym)
     
     return gensym(str.c_str());
 }
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -145,6 +151,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Free / Assist
 
 void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 {
@@ -196,7 +204,9 @@ double safe_log(double x)
 
 #ifdef MSP_VERSION
 
-// Templates
+// Signal-specific
+
+// Perform Templates
 
 template <class T>
 void valconvert_perform_scalar(t_valconvert *x, const T* in, T* out, long vec_size)
@@ -329,6 +339,8 @@ void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double sam
         object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform64, 0, NULL);
 }
 
+// Signal-specific Assist
+
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
@@ -338,6 +350,8 @@ void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 }
 
 #else
+
+// Message Scaling
 
 double valconvert_scale(t_valconvert *x, double input)
 {
@@ -370,6 +384,8 @@ void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
     outlet_list(x->the_outlet, ps_list, argc, list.data());
 }
 
+// Message Assist
+
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
@@ -379,6 +395,8 @@ void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 }
 
 #endif
+
+// Methods to set the scaling
 
 void convert_power(double &a, double&b, double base, double divisor)
 {
