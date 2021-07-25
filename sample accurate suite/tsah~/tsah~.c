@@ -51,16 +51,16 @@ void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, lon
 int C74_EXPORT main()
 {	
 	this_class = class_new("tsah~",
-				(method)tsah_new,
-				(method)tsah_free,
+				(method) tsah_new,
+				(method) tsah_free,
 				sizeof(t_tsah), 
                 NULL,
 				A_DEFLONG, 
 				0);
 	
-	class_addmethod(this_class, (method)tsah_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)tsah_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)tsah_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) tsah_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) tsah_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) tsah_dsp64, "dsp64", A_CANT, 0);
 	
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
@@ -73,7 +73,7 @@ void *tsah_new(t_atom_long num_outlets)
 {	
 	long i;
 	
-	t_tsah *x = (t_tsah *)object_alloc(this_class);
+	t_tsah *x = (t_tsah *) object_alloc(this_class);
     
 	num_outlets = num_outlets < 1 ? 1 : num_outlets;
     
@@ -91,18 +91,16 @@ void *tsah_new(t_atom_long num_outlets)
 		x->last_outputs[i] = 0.;
 	}
 	
-	x->x_obj.z_misc = Z_NO_INPLACE;															// due to working method!!
+	x->x_obj.z_misc = Z_NO_INPLACE;		// due to working method!!
 	x->num_outlets = num_outlets;
 	
-	return (x);
+	return x;
 }
-
 
 void tsah_free(t_tsah *x)
 {
 	dsp_free(&x->x_obj);
 }
-	
 
 t_int *tsah_perform(t_int *w)
 {		
@@ -124,7 +122,6 @@ t_int *tsah_perform(t_int *w)
 	
 	return w + 6;
 }
-
 
 t_int *tsah_perform_multiple(t_int *w)
 {			
@@ -155,7 +152,6 @@ t_int *tsah_perform_multiple(t_int *w)
 	return w + 4;
 }
 
-
 void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
 {				
 	long i;
@@ -174,7 +170,6 @@ void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
 		dsp_add(tsah_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
 }
 
-
 void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
 	double *in = ins[0];
@@ -191,7 +186,6 @@ void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, doubl
 	
 	x->last_outputs[0] = output;
 }
-
 
 void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
@@ -217,7 +211,6 @@ void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numi
 		last_outputs[i] = output_temp;
 	}
 }
-
 
 void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
@@ -249,7 +242,6 @@ void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, lo
 	}
 }
 
-
 void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {		
 	if (x->num_outlets > 1)
@@ -262,7 +254,6 @@ void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, lon
 	else
 		object_method(dsp64, gensym("dsp_add64"), x, tsah_perform64, 0, NULL);
 }
-
 
 void tsah_assist(t_tsah *x, void *b, long m, long a, char *s)
 {
