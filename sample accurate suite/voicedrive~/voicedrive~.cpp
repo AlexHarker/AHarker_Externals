@@ -358,7 +358,7 @@ void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long n
 	// Zero the hr output if in precision mode
 	
 	if (hr_out)
-		for (i = 0; i < vec_size--; i++) 
+		for (i = 0; i < vec_size; i++) 
 			hr_out[i] = 0.;
 	
 	x->length = length;
