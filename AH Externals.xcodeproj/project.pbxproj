@@ -95,6 +95,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B82F775126AE169300D493D3 /* PBXTargetDependency */,
 				B8060D7026ADA1D000593106 /* PBXTargetDependency */,
 				B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */,
 				B80B951B183BDA130014C9C4 /* PBXTargetDependency */,
@@ -1009,6 +1010,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8B56C2C1465ED6400FE85B0;
 			remoteInfo = "Buffer Externals";
+		};
+		B82F775026AE169300D493D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0F201465F59F007FAC6A /* voicedrive~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "voicedrive~";
 		};
 		B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2615,6 +2623,11 @@
 			isa = PBXTargetDependency;
 			target = B8B56C2C1465ED6400FE85B0 /* ibuffer suite */;
 			targetProxy = B82F13521465FA90007FAC6A /* PBXContainerItemProxy */;
+		};
+		B82F775126AE169300D493D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "voicedrive~";
+			targetProxy = B82F775026AE169300D493D3 /* PBXContainerItemProxy */;
 		};
 		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
