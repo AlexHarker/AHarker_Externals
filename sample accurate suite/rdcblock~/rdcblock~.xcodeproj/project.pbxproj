@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8DBD5060EDEB1DC00049F0E /* rdcblock~.c in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* rdcblock~.c */; };
+		B8DBD5060EDEB1DC00049F0E /* rdcblock~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		B81F571D0D2422E0000D5E50 /* rdcblock~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rdcblock~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C1837919A8036C00304236 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8DE14DC0EB46B030050BDFE /* rdcblock~.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = "rdcblock~.c"; sourceTree = "<group>"; };
+		B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "rdcblock~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +60,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DE14DC0EB46B030050BDFE /* rdcblock~.c */,
+				B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8DBD5060EDEB1DC00049F0E /* rdcblock~.c in Sources */,
+				B8DBD5060EDEB1DC00049F0E /* rdcblock~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

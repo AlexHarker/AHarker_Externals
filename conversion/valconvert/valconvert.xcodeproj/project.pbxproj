@@ -6,21 +6,6 @@
 	objectVersion = 42;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		B8C2E6B111C3984600A7E297 /* valconvert objects */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = B8C2E6BB11C3984900A7E297 /* Build configuration list for PBXAggregateTarget "valconvert objects" */;
-			buildPhases = (
-			);
-			dependencies = (
-				B8C2E6BD11C3989100A7E297 /* PBXTargetDependency */,
-				B8C2E6BF11C3989200A7E297 /* PBXTargetDependency */,
-			);
-			name = "valconvert objects";
-			productName = "max and msp valconvert";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B1A2C25E0A4C272200236386 /* valconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1A2C25D0A4C272200236386 /* valconvert.cpp */; };
@@ -28,23 +13,6 @@
 		B8C2E6A011C397E100A7E297 /* valconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1A2C25D0A4C272200236386 /* valconvert.cpp */; };
 		B8C2E6A211C397E100A7E297 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B8C2E6BC11C3989100A7E297 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = valconvert;
-		};
-		B8C2E6BE11C3989200A7E297 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8C2E69C11C397E100A7E297;
-			remoteInfo = "valconvert~";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -204,7 +172,6 @@
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* valconvert */,
 				B8C2E69C11C397E100A7E297 /* valconvert~ */,
-				B8C2E6B111C3984600A7E297 /* valconvert objects */,
 			);
 		};
 /* End PBXProject section */
@@ -261,19 +228,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B8C2E6BD11C3989100A7E297 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D01CCC60486CAD60068D4B7 /* valconvert */;
-			targetProxy = B8C2E6BC11C3989100A7E297 /* PBXContainerItemProxy */;
-		};
-		B8C2E6BF11C3989200A7E297 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8C2E69C11C397E100A7E297 /* valconvert~ */;
-			targetProxy = B8C2E6BE11C3989200A7E297 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
@@ -360,28 +314,6 @@
 			};
 			name = Default;
 		};
-		B8C2E6B211C3984600A7E297 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "max and msp valconvert";
-			};
-			name = Development;
-		};
-		B8C2E6B311C3984600A7E297 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = "max and msp valconvert";
-			};
-			name = Deployment;
-		};
-		B8C2E6B411C3984600A7E297 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "max and msp valconvert";
-			};
-			name = Default;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -411,16 +343,6 @@
 				B8C2E6A711C397E100A7E297 /* Development */,
 				B8C2E6A811C397E100A7E297 /* Deployment */,
 				B8C2E6A911C397E100A7E297 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		B8C2E6BB11C3984900A7E297 /* Build configuration list for PBXAggregateTarget "valconvert objects" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B8C2E6B211C3984600A7E297 /* Development */,
-				B8C2E6B311C3984600A7E297 /* Deployment */,
-				B8C2E6B411C3984600A7E297 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

@@ -6,26 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		B8ECA0590F0A57F800B26D31 /* dynamic objects */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = B8ECA0710F0A586200B26D31 /* Build configuration list for PBXAggregateTarget "dynamic objects" */;
-			buildPhases = (
-			);
-			dependencies = (
-				B8B56CF51465F01200FE85B0 /* PBXTargetDependency */,
-				B8E8E8EB1091FC7B00A3FF7C /* PBXTargetDependency */,
-				B8ECA05D0F0A580100B26D31 /* PBXTargetDependency */,
-				B8EC17B91083729E00316C82 /* PBXTargetDependency */,
-				B8ECA05F0F0A580100B26D31 /* PBXTargetDependency */,
-				B8ECA0610F0A580100B26D31 /* PBXTargetDependency */,
-				B803278811CCFC79009E69AD /* PBXTargetDependency */,
-			);
-			name = "dynamic objects";
-			productName = "Dynamic Suite";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B803276E11CCFC69009E69AD /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
@@ -56,58 +36,6 @@
 		B8ECA0650F0A581C00B26D31 /* dynamic.in~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */; };
 		B8ECA0660F0A582D00B26D31 /* dynamic.out~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B803278711CCFC79009E69AD /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B803276811CCFC69009E69AD;
-			remoteInfo = "dynamic.in~ copy";
-		};
-		B8B56CF41465F01200FE85B0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8600FA812C22A6500864B9B;
-			remoteInfo = "dynamicserial~";
-		};
-		B8E8E8EA1091FC7B00A3FF7C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "DynamicDSP~";
-		};
-		B8EC17B81083729E00316C82 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8EC175E10836C3600316C82;
-			remoteInfo = "Dynamic.This~";
-		};
-		B8ECA05C0F0A580100B26D31 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8ECA01B0F0A578000B26D31;
-			remoteInfo = "DynamicPatch~";
-		};
-		B8ECA05E0F0A580100B26D31 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8ECA02C0F0A578900B26D31;
-			remoteInfo = "DynamicIn~";
-		};
-		B8ECA0600F0A580100B26D31 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8ECA03F0F0A57A800B26D31;
-			remoteInfo = "DynamicOut~";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -494,7 +422,6 @@
 				B803276811CCFC69009E69AD /* dynamic.request~ */,
 				B8ECA02C0F0A578900B26D31 /* dynamic.in~ */,
 				B8ECA03F0F0A57A800B26D31 /* dynamic.out~ */,
-				B8ECA0590F0A57F800B26D31 /* dynamic objects */,
 			);
 		};
 /* End PBXProject section */
@@ -664,44 +591,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B803278811CCFC79009E69AD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B803276811CCFC69009E69AD /* dynamic.request~ */;
-			targetProxy = B803278711CCFC79009E69AD /* PBXContainerItemProxy */;
-		};
-		B8B56CF51465F01200FE85B0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8600FA812C22A6500864B9B /* dynamicserial~ */;
-			targetProxy = B8B56CF41465F01200FE85B0 /* PBXContainerItemProxy */;
-		};
-		B8E8E8EB1091FC7B00A3FF7C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D01CCC60486CAD60068D4B7 /* dynamicdsp~ */;
-			targetProxy = B8E8E8EA1091FC7B00A3FF7C /* PBXContainerItemProxy */;
-		};
-		B8EC17B91083729E00316C82 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8EC175E10836C3600316C82 /* dynamic.this~ */;
-			targetProxy = B8EC17B81083729E00316C82 /* PBXContainerItemProxy */;
-		};
-		B8ECA05D0F0A580100B26D31 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8ECA01B0F0A578000B26D31 /* dynamic.patch~ */;
-			targetProxy = B8ECA05C0F0A580100B26D31 /* PBXContainerItemProxy */;
-		};
-		B8ECA05F0F0A580100B26D31 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8ECA02C0F0A578900B26D31 /* dynamic.in~ */;
-			targetProxy = B8ECA05E0F0A580100B26D31 /* PBXContainerItemProxy */;
-		};
-		B8ECA0610F0A580100B26D31 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8ECA03F0F0A57A800B26D31 /* dynamic.out~ */;
-			targetProxy = B8ECA0600F0A580100B26D31 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
@@ -956,33 +845,6 @@
 			};
 			name = Default;
 		};
-		B8ECA0720F0A586200B26D31 /* Development */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				PRODUCT_NAME = "Dynamic Suite";
-			};
-			name = Development;
-		};
-		B8ECA0730F0A586200B26D31 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				PRODUCT_NAME = "Dynamic Suite";
-			};
-			name = Deployment;
-		};
-		B8ECA0740F0A586200B26D31 /* Default */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = "Dynamic Suite";
-			};
-			name = Default;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1062,16 +924,6 @@
 				B8ECA04B0F0A57A800B26D31 /* Development */,
 				B8ECA04C0F0A57A800B26D31 /* Deployment */,
 				B8ECA04D0F0A57A800B26D31 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		B8ECA0710F0A586200B26D31 /* Build configuration list for PBXAggregateTarget "dynamic objects" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B8ECA0720F0A586200B26D31 /* Development */,
-				B8ECA0730F0A586200B26D31 /* Deployment */,
-				B8ECA0740F0A586200B26D31 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;

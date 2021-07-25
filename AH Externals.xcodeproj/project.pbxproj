@@ -97,13 +97,10 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B80B9517183BD9F90014C9C4 /* PBXTargetDependency */,
 				B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */,
 				B80B951B183BDA130014C9C4 /* PBXTargetDependency */,
 				B80B951D183BDA1F0014C9C4 /* PBXTargetDependency */,
 				B80B951F183BDA2A0014C9C4 /* PBXTargetDependency */,
-				B80B9521183BDA370014C9C4 /* PBXTargetDependency */,
-				B80B9523183BDA3F0014C9C4 /* PBXTargetDependency */,
 			);
 			name = "sample accurate library";
 			productName = "All Externals";
@@ -797,13 +794,6 @@
 			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
 			remoteInfo = "voicemanager~";
 		};
-		B80B9516183BD9F90014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0EF31465F56C007FAC6A /* chebyshape~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "chebyshape~";
-		};
 		B80B9518183BDA0C0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B82F0EFC1465F573007FAC6A /* rbiquad~.xcodeproj */;
@@ -831,20 +821,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "tsah~";
-		};
-		B80B9520183BDA370014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0F201465F59F007FAC6A /* voicedrive~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "voicedrive~";
-		};
-		B80B9522183BDA3F0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0F291465F5A7007FAC6A /* voicemanager~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "voicemanager~";
 		};
 		B80B9593183BDBAE0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2535,11 +2511,6 @@
 			name = "timeconvolve~";
 			targetProxy = B80B9495183BD8700014C9C4 /* PBXContainerItemProxy */;
 		};
-		B80B9517183BD9F90014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "chebyshape~";
-			targetProxy = B80B9516183BD9F90014C9C4 /* PBXContainerItemProxy */;
-		};
 		B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "rbiquad~";
@@ -2559,16 +2530,6 @@
 			isa = PBXTargetDependency;
 			name = "tsah~";
 			targetProxy = B80B951E183BDA2A0014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B9521183BDA370014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "voicedrive~";
-			targetProxy = B80B9520183BDA370014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B9523183BDA3F0014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "voicemanager~";
-			targetProxy = B80B9522183BDA3F0014C9C4 /* PBXContainerItemProxy */;
 		};
 		B80B95CD183BDBFE0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

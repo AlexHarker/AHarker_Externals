@@ -1,10 +1,11 @@
 
 /*
- *  rbiquad~ (reset - able biquad)
+ *  rbiquad~ (resetable biquad)
  *
- *	rbiquad~ is a biquad filter that accepts only signal rate coefficients. The memory can be cleared on a sample accurate basis, using a dedicated reset input.
+ *	rbiquad~ is a biquad filter that accepts only signal rate coefficients.
+ *  The memory can be cleared on a sample accurate basis, using a dedicated reset input.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -15,10 +16,12 @@
 
 #include <AH_Denormals.h>
 
-void *this_class;
 
+// Globals and Object Structure
 
-typedef struct _rbiquad
+t_class *this_class;
+
+struct t_rbiquad
 {
     t_pxobject x_obj;
 	
@@ -26,33 +29,34 @@ typedef struct _rbiquad
 	double x2;
 	double y1;
 	double y2;
-	
-} t_rbiquad;
+};
 
+// Function Prototypes
 
 void *rbiquad_new();
 void rbiquad_free(t_rbiquad *x);
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s);
 
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
 t_int *rbiquad_perform(t_int *w);
-
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+
+void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {	
 	this_class = class_new("rbiquad~",
-				(method)rbiquad_new,
-				(method)rbiquad_free,
+				(method) rbiquad_new,
+				(method) rbiquad_free,
 				sizeof(t_rbiquad), 
 				NULL, 
 				0);
 	
-	class_addmethod(this_class, (method)rbiquad_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)rbiquad_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)rbiquad_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) rbiquad_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) rbiquad_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) rbiquad_dsp64, "dsp64", A_CANT, 0);
 	
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
@@ -60,29 +64,30 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
 
 void *rbiquad_new()
 {
-    t_rbiquad *x = (t_rbiquad *)object_alloc(this_class);
+    t_rbiquad *x = (t_rbiquad *) object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 7);
 	outlet_new((t_object *)x, "signal");
 	
 	x->x1 = x->x2 = x->y1 = x->y2 = 0.;
 	
-	return (x);
+	return x;
 }
-
 
 void rbiquad_free(t_rbiquad *x)
 {
 	dsp_free(&x->x_obj);
 }
 
+// Perform
 
 t_int *rbiquad_perform(t_int *w)
 {	
-	// set pointers
+	// Set Pointers
 	
 	float *in1 = (float *) w[2];
 	float *in2 = (float *) w[3];
@@ -128,12 +133,12 @@ t_int *rbiquad_perform(t_int *w)
 		
 		out_val = (float) y;
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_FLOAT(out_val);
 		
 		// Shift memory
 		
 		y2 = y1;
-		y1 = AH_FIX_DENORM_DOUBLE(y);
+		y1 = FIX_DENORM_DOUBLE(y);
 		x2 = x1;
 		x1 = in;
 	}
@@ -148,18 +153,10 @@ t_int *rbiquad_perform(t_int *w)
 	return w + 12;
 }
 
-
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
-{				
-	dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
-}
-
-
-
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
-	// set pointers
-	
+    // Set Pointers
+
 	double *in1 = ins[0];
 	double *in2 = ins[1];
 	double *in3 = ins[2];
@@ -199,7 +196,7 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 		
 		y = (a0 * in) + (a1 * x1) + (a2 * x2) - (b1 * y1) - (b2 * y2);
 
-		out_val = AH_FIX_DENORM_DOUBLE(y);
+		out_val = FIX_DENORM_DOUBLE(y);
 		
 		*out++ = out_val;
 		
@@ -219,51 +216,56 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 	x->y2 = y2;
 }
 
+// DSP
+
+void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
+{
+    dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
+}
 
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, NULL);
 }
 
+// Assist
 
 
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s)
 {
-	if (m == ASSIST_INLET)
-	{
-		switch (a)
-		{
-			case 0:
-				sprintf(s,"(signal) Input");
-				break;
-				
-			case 1:
-				sprintf(s,"(signal) FF Coefficient 0");
-				break;
-				
-			case 2:
-				sprintf(s,"(signal) FF Coefficient 1");
-				break;
-				
-			case 3:
-				sprintf(s,"(signal) FF Coefficient 2");
-				break;
-				
-			case 4:
-				sprintf(s,"(signal) FB Coefficient 1");
-				break;
-				
-			case 5:
-				sprintf(s,"(signal) FB Coefficient 2");
-				break;
-
-			case 6:
-				sprintf(s,"(signal) Reset Trigger");
-				break;				
-		}
-	}
-	else
-		sprintf(s,"(signal) Output");}
-
-
-
+    if (m == ASSIST_INLET)
+    {
+        switch (a)
+        {
+            case 0:
+                sprintf(s,"(signal) Input");
+                break;
+                
+            case 1:
+                sprintf(s,"(signal) FF Coefficient 0");
+                break;
+                
+            case 2:
+                sprintf(s,"(signal) FF Coefficient 1");
+                break;
+                
+            case 3:
+                sprintf(s,"(signal) FF Coefficient 2");
+                break;
+                
+            case 4:
+                sprintf(s,"(signal) FB Coefficient 1");
+                break;
+                
+            case 5:
+                sprintf(s,"(signal) FB Coefficient 2");
+                break;
+                
+            case 6:
+                sprintf(s,"(signal) Reset Trigger");
+                break;
+        }
+    }
+    else
+        sprintf(s,"(signal) Output");
+}

@@ -18,24 +18,24 @@
 #include <ext_obex.h>
 
 
-void *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
-typedef struct schedulemessage
+t_symbol *ps_int;
+t_symbol *ps_float;
+t_symbol *ps_bang;
+
+struct t_schedulemessage
 {
     t_object a_obj;
     
     double delay;
     
     void *message_out;
-    
-} t_schedulemessage;
+};
 
-
-t_symbol *ps_int;
-t_symbol *ps_float;
-t_symbol *ps_bang;
-
+// Function Prototypes
 
 void *schedulemessage_new(double delay);
 
@@ -48,6 +48,7 @@ void schedulemessage_delay(t_schedulemessage *x, double delay);
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -76,6 +77,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New
+
 void *schedulemessage_new(double delay)
 {
     t_schedulemessage *x = (t_schedulemessage *) object_alloc(this_class);
@@ -87,6 +90,8 @@ void *schedulemessage_new(double delay)
     
     return x;
 }
+
+// Message Handlers
 
 void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -150,6 +155,8 @@ void schedulemessage_delay(t_schedulemessage *x, double delay)
 {
     x->delay = delay;
 }
+
+// Assist
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s)
 {

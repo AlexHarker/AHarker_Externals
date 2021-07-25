@@ -32,16 +32,6 @@ t_int *denormals_perform (t_int *w)
  	return w + 1;
 }
 
-// Under windows we cannot rely on turning denormals off on the vector unit for scalar code, so we must fix denormals manually
-
-#ifndef __APPLE__
-#define AH_FIX_DENORM_FLOAT		FIX_DENORM_FLOAT
-#define AH_FIX_DENORM_DOUBLE	FIX_DENORM_DOUBLE
-#else
-#define AH_FIX_DENORM_FLOAT(v)	v
-#define AH_FIX_DENORM_DOUBLE(v)	v
-#endif
-
 #endif		/* _AH_DENORMALS_ */
 
 
