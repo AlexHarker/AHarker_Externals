@@ -146,4 +146,16 @@ static inline void dynamic_set_patch_on(void *obj, long index, bool state)
     dynamic_object_method(obj, "client_set_patch_on", index, state);
 }
 
+// State Queries
+
+static inline void dynamic_register_listener(void *obj, long index, void *listener)
+{
+    dynamic_object_method(obj, "register_listener", index, listener);
+}
+
+static inline void dynamic_unregister_listener(void *obj, long index, void *listener)
+{
+    dynamic_object_method(obj, "unregister_listener", index, listener);
+}
+
 #endif  /* _DYNAMIC_INTERFACE_	*/
