@@ -13,7 +13,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B80B9316183BD5770014C9C4 /* PBXTargetDependency */,
 			);
 			name = conversion;
 			productName = "All Externals";
@@ -49,7 +48,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B8758ED226A8DCF1001005A8 /* PBXTargetDependency */,
 			);
 			name = "dynamic suite";
 			productName = "All Externals";
@@ -661,13 +659,6 @@
 			remoteGlobalIDString = B8C2E6AA11C397E100A7E297;
 			remoteInfo = "valconvert~";
 		};
-		B80B9315183BD5770014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0DC01465F0BC007FAC6A /* valconvert.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8C2E6B111C3984600A7E297;
-			remoteInfo = "max + msp valconvert";
-		};
 		B80B940A183BD6C60014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B82F0F461465F625007FAC6A /* gesture_maker.xcodeproj */;
@@ -1060,13 +1051,6 @@
 			remoteGlobalIDString = B8ECA04E0F0A57A800B26D31;
 			remoteInfo = "dynamic.out~";
 		};
-		B8758ED126A8DCF1001005A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8ECA0590F0A57F800B26D31;
-			remoteInfo = "dynamic objects";
-		};
 		B8C287A922781C5100F110B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
@@ -1108,7 +1092,6 @@
 		B82F0F781465F674007FAC6A /* macaddress.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = macaddress.xcodeproj; path = utility/macaddress/macaddress.xcodeproj; sourceTree = "<group>"; };
 		B82F0F811465F67A007FAC6A /* recursivefolder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = recursivefolder.xcodeproj; path = utility/recursivefolder/recursivefolder.xcodeproj; sourceTree = "<group>"; };
 		B82F0FA31465F7F4007FAC6A /* - vMSP~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "- vMSP~.xcodeproj"; path = "vMSP/vMSP/- vMSP~.xcodeproj"; sourceTree = "<group>"; };
-		B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Denormals.h; sourceTree = "<group>"; };
 		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "dynamic~.hpp"; sourceTree = "<group>"; };
@@ -1572,7 +1555,6 @@
 			isa = PBXGroup;
 			children = (
 				B8E61D8222F7056D000A140C /* AH_Locks.hpp */,
-				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
 				B8A791341A1F610D007BDF82 /* AH_Random.h */,
 				B8A7913A1A1F610D007BDF82 /* dynamic~.hpp */,
@@ -2481,11 +2463,6 @@
 			name = Both;
 			targetProxy = B80B9307183BD5500014C9C4 /* PBXContainerItemProxy */;
 		};
-		B80B9316183BD5770014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "max + msp valconvert";
-			targetProxy = B80B9315183BD5770014C9C4 /* PBXContainerItemProxy */;
-		};
 		B80B941D183BD6DF0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = gesture_maker;
@@ -2625,11 +2602,6 @@
 			isa = PBXTargetDependency;
 			target = B8B56C2C1465ED6400FE85B0 /* ibuffer suite */;
 			targetProxy = B82F13521465FA90007FAC6A /* PBXContainerItemProxy */;
-		};
-		B8758ED226A8DCF1001005A8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "dynamic objects";
-			targetProxy = B8758ED126A8DCF1001005A8 /* PBXContainerItemProxy */;
 		};
 		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
