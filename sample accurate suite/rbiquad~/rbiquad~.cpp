@@ -230,7 +230,6 @@ void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerat
 
 // Assist
 
-
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_INLET)
