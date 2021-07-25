@@ -81,10 +81,6 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv);
 
 #ifdef MSP_VERSION
 
-t_int *valconvert_perform(t_int *w);
-t_int *valconvert_perform_SIMD(t_int *w);
-void valconvert_dsp(t_valconvert *x, t_signal **sp, short *count);
-
 void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
@@ -124,7 +120,6 @@ int C74_EXPORT main()
                           0);
     
 #ifdef MSP_VERSION
-    class_addmethod(this_class, (method)valconvert_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method)valconvert_dsp64, "dsp64", A_CANT, 0);
     class_dspinit(this_class);
 #else
@@ -206,11 +201,13 @@ double safe_log(double x)
 
 // Signal-specific
 
-// Perform Templates
+// Perform / DSP
 
-template <class T>
-void valconvert_perform_scalar(t_valconvert *x, const T* in, T* out, long vec_size)
+void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
+    double *in = ins[0];
+    double *out = outs[0];
+    
     double mul = x->mul;
     double sub = x->sub;
     double lo = x->lo;
@@ -225,30 +222,31 @@ void valconvert_perform_scalar(t_valconvert *x, const T* in, T* out, long vec_si
             
         case CONVERT_LINEAR:
             while (vec_size--)
-                *out++ = static_cast<T>(clip((*in++ * mul) - sub, lo, hi));
+                *out++ = clip((*in++ * mul) - sub, lo, hi);
             break;
             
         case CONVERT_LOG_IN:
             while (vec_size--)
-                *out++ = static_cast<T>(clip(exp((*in++ * mul) - sub), lo, hi));
+                *out++ = clip(exp((*in++ * mul) - sub), lo, hi);
             break;
             
         case CONVERT_EXP_IN:
             while (vec_size--)
-                *out++ = static_cast<T>(clip((safe_log(*in++) * mul) - sub, lo, hi));
+                *out++ = clip((safe_log(*in++) * mul) - sub, lo, hi);
             break;
     }
 }
 
-template <class T>
-void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec_size)
+void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    using VecType = SIMDType<T, SIMDLimits<T>::max_size>;
+    using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
     
-    const VecType *in_vec = reinterpret_cast<const VecType *>(in);
-    VecType *out_vec = reinterpret_cast<VecType *>(out);
+    double *out = outs[0];
+
+    const VecType *in_vec = reinterpret_cast<const VecType *>(ins[0]);
+    VecType *out_vec = reinterpret_cast<VecType *>(outs[0]);
     
-    long num_vecs = vec_size / SIMDLimits<T>::max_size;
+    long num_vecs = vec_size / SIMDLimits<double>::max_size;
     
     VecType mul(x->mul);
     VecType sub(x->sub);
@@ -277,58 +275,12 @@ void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec
             
         case CONVERT_EXP_IN:
             for (long i = 0; i < num_vecs; i++)
-                out_vec[i] = max(in_vec[i], T(0));
+                out_vec[i] = max(in_vec[i], double(0));
             log_array(out, out, vec_size);
             for (long i = 0; i < num_vecs; i++)
                 out_vec[i] = min(max(lo, (out_vec[i] * mul - sub)), hi);
             break;
     }
-}
-
-// 32 Bit MSP
-
-t_int *valconvert_perform(t_int *w)
-{
-    float *in = (float *) w[1];
-    float *out = (float *) w[2];
-    long vec_size = w[3];
-    t_valconvert *x = (t_valconvert *) w[4];
-    
-    valconvert_perform_scalar(x, in, out, vec_size);
-    
-    return w + 5;
-}
-
-t_int *valconvert_perform_SIMD(t_int *w)
-{
-    float *in = (float *) w[1];
-    float *out = (float *) w[2];
-    long vec_size = (long) w[3];
-    t_valconvert *x = (t_valconvert *) w[4];
-    
-    valconvert_perform_simd_base(x, in, out, vec_size);
-    
-    return w + 5;
-}
-
-void valconvert_dsp(t_valconvert *x, t_signal **sp, short *count)
-{
-    if (sp[0]->s_n >= SIMDLimits<float>::max_size)
-        dsp_add(valconvert_perform_SIMD, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-    else
-        dsp_add(valconvert_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
-// 64 bit MSP
-
-void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    valconvert_perform_scalar(x, ins[0], outs[0], vec_size);
-}
-
-void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    valconvert_perform_simd_base(x, ins[0], outs[0], vec_size);
 }
 
 void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
