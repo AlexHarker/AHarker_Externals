@@ -1,12 +1,12 @@
 
 /*
- *  rdcblock~ (reset-able dc blocking filter)
+ *  rdcblock~ (resetable dc blocking filter)
  *
- *	rdcblock~ is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input.
+ *	rdcblock~ is a  dc blocking filter in which the memory can be reset on a sample-accurate basis.
  *
  *	There are two reset modes, one that zeros the memory, another that resets to the current input value.
  *
- *	Copyright 2010 Alex Harker. All rights reserved.
+ *	Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -18,7 +18,9 @@
 #include <AH_Denormals.h>
 
 
-void *this_class;
+// Globals and Object Structure
+
+t_class *this_class;
 
 typedef struct _rdcblock
 {
@@ -31,6 +33,7 @@ typedef struct _rdcblock
 	
 } t_rdcblock;
 
+// Function Prototypes
 
 void *rdcblock_new(t_atom_long mode);
 void rdcblock_free(t_rdcblock *x);
@@ -38,12 +41,14 @@ void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s);
 
 t_int *rdcblock_perform(t_int *w);
 t_int *rdcblock_perform_inval(t_int *w);
-void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count);
 
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+
+void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count);
 void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {	
@@ -65,6 +70,8 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
+
 void *rdcblock_new(t_atom_long mode)
 {
     t_rdcblock *x = (t_rdcblock *) object_alloc(this_class);
@@ -75,13 +82,15 @@ void *rdcblock_new(t_atom_long mode)
 	x->x1 = x->y1 = 0.0;
 	x->mode = mode;
 	
-	return (x);
+	return x;
 }
 
 void rdcblock_free(t_rdcblock *x)
 {
 	dsp_free(&x->x_obj);
 }
+
+// Perform
 
 t_int *rdcblock_perform (t_int *w)
 {		
@@ -180,14 +189,6 @@ t_int *rdcblock_perform_inval(t_int *w)
 	return w + 7;
 }
 
-void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count)
-{				
-	if (x->mode)
-		dsp_add(denormals_perform, 6, rdcblock_perform_inval, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-	else
-		dsp_add(denormals_perform, 6, rdcblock_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-}
-
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {		
 	double *in1 = ins[0];
@@ -271,6 +272,16 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 	x->y1 = y;
 }
 
+// DSP
+
+void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count)
+{
+    if (x->mode)
+        dsp_add(denormals_perform, 6, rdcblock_perform_inval, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
+    else
+        dsp_add(denormals_perform, 6, rdcblock_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
+}
+
 void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	if (x->mode)
@@ -278,6 +289,8 @@ void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sampler
 	else 
 		object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform64, 0, NULL);
 }
+
+// Assist
 
 void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s)
 {

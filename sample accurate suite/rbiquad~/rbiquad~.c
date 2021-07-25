@@ -1,11 +1,11 @@
 
 /*
- *  rbiquad~ (reset-able biquad)
+ *  rbiquad~ (resetable biquad)
  *
  *	rbiquad~ is a biquad filter that accepts only signal rate coefficients.
  *  The memory can be cleared on a sample accurate basis, using a dedicated reset input.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -16,8 +16,10 @@
 
 #include <AH_Denormals.h>
 
-void *this_class;
 
+// Globals and Object Structure
+
+t_class *this_class;
 
 typedef struct _rbiquad
 {
@@ -30,17 +32,19 @@ typedef struct _rbiquad
 	
 } t_rbiquad;
 
+// Function Prototypes
 
 void *rbiquad_new();
 void rbiquad_free(t_rbiquad *x);
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s);
 
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
 t_int *rbiquad_perform(t_int *w);
-
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+
+void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {	
@@ -61,6 +65,8 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
+
 void *rbiquad_new()
 {
     t_rbiquad *x = (t_rbiquad *) object_alloc(this_class);
@@ -77,6 +83,8 @@ void rbiquad_free(t_rbiquad *x)
 {
 	dsp_free(&x->x_obj);
 }
+
+// Perform
 
 t_int *rbiquad_perform(t_int *w)
 {	
@@ -146,11 +154,6 @@ t_int *rbiquad_perform(t_int *w)
 	return w + 12;
 }
 
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
-{				
-	dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
-}
-
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
     // Set Pointers
@@ -214,45 +217,56 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 	x->y2 = y2;
 }
 
+// DSP
+
+void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
+{
+    dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
+}
+
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, NULL);
 }
 
+// Assist
+
+
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s)
 {
-	if (m == ASSIST_INLET)
-	{
-		switch (a)
-		{
-			case 0:
-				sprintf(s,"(signal) Input");
-				break;
-				
-			case 1:
-				sprintf(s,"(signal) FF Coefficient 0");
-				break;
-				
-			case 2:
-				sprintf(s,"(signal) FF Coefficient 1");
-				break;
-				
-			case 3:
-				sprintf(s,"(signal) FF Coefficient 2");
-				break;
-				
-			case 4:
-				sprintf(s,"(signal) FB Coefficient 1");
-				break;
-				
-			case 5:
-				sprintf(s,"(signal) FB Coefficient 2");
-				break;
-
-			case 6:
-				sprintf(s,"(signal) Reset Trigger");
-				break;				
-		}
-	}
-	else
-		sprintf(s,"(signal) Output");}
+    if (m == ASSIST_INLET)
+    {
+        switch (a)
+        {
+            case 0:
+                sprintf(s,"(signal) Input");
+                break;
+                
+            case 1:
+                sprintf(s,"(signal) FF Coefficient 0");
+                break;
+                
+            case 2:
+                sprintf(s,"(signal) FF Coefficient 1");
+                break;
+                
+            case 3:
+                sprintf(s,"(signal) FF Coefficient 2");
+                break;
+                
+            case 4:
+                sprintf(s,"(signal) FB Coefficient 1");
+                break;
+                
+            case 5:
+                sprintf(s,"(signal) FB Coefficient 2");
+                break;
+                
+            case 6:
+                sprintf(s,"(signal) Reset Trigger");
+                break;
+        }
+    }
+    else
+        sprintf(s,"(signal) Output");
+}

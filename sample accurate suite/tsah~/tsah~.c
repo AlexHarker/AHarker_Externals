@@ -2,9 +2,10 @@
 /*
  *  tsah~ (trigger sample-hold)
  *
- *	tsah~ is like sah~ but the output value is updated whenever the trigger input is non-zero (meaning the output can be updated once per sample if desired).
+ *	tsah~ is like sah~ but the output value is updated whenever the trigger input is non-zero.
+ *  This means that the output can be updated once per sample if desired.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -14,11 +15,11 @@
 #include <z_dsp.h>
 
 
+// Globals and Object Structure
+
+t_class *this_class;
+
 #define MAXIMUM_NUM_OUTLETS 64
-
-
-void *this_class;
-
 
 typedef struct _tsah
 {
@@ -33,6 +34,7 @@ typedef struct _tsah
 	
 } t_tsah;
 
+// Function Prototypes
 
 void *tsah_new(t_atom_long num_outlets);
 void tsah_free(t_tsah *x);
@@ -40,13 +42,15 @@ void tsah_assist(t_tsah *x, void *b, long m, long a, char *s);
 
 t_int *tsah_perform(t_int *w);
 t_int *tsah_perform_multiple(t_int *w);
-void tsah_dsp(t_tsah *x, t_signal **sp, short *count);
 
 void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+
+void tsah_dsp(t_tsah *x, t_signal **sp, short *count);
 void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {	
@@ -68,6 +72,7 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
 
 void *tsah_new(t_atom_long num_outlets)
 {	
@@ -102,6 +107,10 @@ void tsah_free(t_tsah *x)
 	dsp_free(&x->x_obj);
 }
 
+// Perform
+
+// Standard Perform (one input to sample)
+
 t_int *tsah_perform(t_int *w)
 {		
 	float *in = (float *) w[1];
@@ -122,6 +131,8 @@ t_int *tsah_perform(t_int *w)
 	
 	return w + 6;
 }
+
+// Multiple Perform (multiple inputs to sample)
 
 t_int *tsah_perform_multiple(t_int *w)
 {			
@@ -152,23 +163,7 @@ t_int *tsah_perform_multiple(t_int *w)
 	return w + 4;
 }
 
-void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
-{				
-	long i;
-	
-	if (x->num_outlets > 1)
-	{
-		for (i = 0; i < x->num_outlets; i++)
-		{
-			x->sig_ins[i] = (float *) sp[i]->s_vec;
-			x->sig_outs[i] = (float *) sp[x->num_outlets + i + 1]->s_vec;
-		}
-			 
-		dsp_add(tsah_perform_multiple, 3, sp[x->num_outlets]->s_vec, sp[0]->s_n, x);
-	}
-	else 
-		dsp_add(tsah_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-}
+// 64 Bit Standard Perform (one input to sample)
 
 void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
@@ -187,11 +182,12 @@ void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, doubl
 	x->last_outputs[0] = output;
 }
 
+// 64 Bit Multiple Perform (multiple inputs to sample)
+
 void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
     double *last_outputs = x->last_outputs;
     long num_outlets = x->num_outlets;
-	
 	
 	for (long i = 0; i < num_outlets; i++)
 	{
@@ -211,6 +207,8 @@ void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numi
 		last_outputs[i] = output_temp;
 	}
 }
+
+// 64 Bit Multiple Perform Loop Unrolled (multiple inputs to sample)
 
 void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {			
@@ -242,11 +240,31 @@ void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, lo
 	}
 }
 
+// DSP
+
+void tsah_dsp(t_tsah *x, t_signal **sp, short *count)
+{
+    long i;
+    
+    if (x->num_outlets > 1)
+    {
+        for (i = 0; i < x->num_outlets; i++)
+        {
+            x->sig_ins[i] = (float *) sp[i]->s_vec;
+            x->sig_outs[i] = (float *) sp[x->num_outlets + i + 1]->s_vec;
+        }
+        
+        dsp_add(tsah_perform_multiple, 3, sp[x->num_outlets]->s_vec, sp[0]->s_n, x);
+    }
+    else
+        dsp_add(tsah_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
+}
+
 void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {		
 	if (x->num_outlets > 1)
 	{
-		if (maxvectorsize > 2)
+		if (maxvectorsize >= 4)
 			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64_unroll, 0, NULL);
 		else
 			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64, 0, NULL);
@@ -255,21 +273,23 @@ void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, lon
 		object_method(dsp64, gensym("dsp_add64"), x, tsah_perform64, 0, NULL);
 }
 
+// Assist
+
 void tsah_assist(t_tsah *x, void *b, long m, long a, char *s)
 {
-	if (m == ASSIST_INLET)
-	{
-		switch (a)
-		{
-		case 0:
-			sprintf(s,"(signal) Signal To Sample");
-			break;
-			
-		case 1:
-			sprintf(s,"(signal) Trigger");
-			break;
-		}
-	}
-	else
-		sprintf(s,"(signal) Held Values");
+    if (m == ASSIST_INLET)
+    {
+        switch (a)
+        {
+            case 0:
+                sprintf(s,"(signal) Signal To Sample");
+                break;
+                
+            case 1:
+                sprintf(s,"(signal) Trigger");
+                break;
+        }
+    }
+    else
+        sprintf(s,"(signal) Held Values");
 }

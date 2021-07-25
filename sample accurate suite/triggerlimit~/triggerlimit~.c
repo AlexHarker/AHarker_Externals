@@ -2,11 +2,11 @@
 /*
  *  triggerlimit~
  *
- *	triggerlimit~ limits the rate of input triggers (non-zero samples) to a maximum rate specified in samples.
+ *	triggerlimit~ limits the rate of non-zero samples to a maximum rate specified in samples.
  *
- *	The initial intention of this object was to avoid very rapid triggering in situations that would result in excessive CPU usage.
+ *	The initial intention of this object was to reduce rapid triggering of grains (and hence high CPU usage).
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -16,8 +16,9 @@
 #include <z_dsp.h>
 
 
-void *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
 typedef struct _triggerlimit
 {
@@ -28,18 +29,20 @@ typedef struct _triggerlimit
 	
 } t_triggerlimit;
 
+// Function  Protoypes
 
 void *triggerlimit_new(t_atom_long limit);
 void triggerlimit_int(t_triggerlimit *x, t_atom_long limit);
 void triggerlimit_free(t_triggerlimit *x);
 void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s);
 
-void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count);
 t_int *triggerlimit_perform(t_int *w);
-
 void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+
+void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count);
 void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {	
@@ -62,6 +65,7 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
 
 void *triggerlimit_new(t_atom_long limit)
 {	
@@ -78,18 +82,22 @@ void *triggerlimit_new(t_atom_long limit)
 	return x;
 }
 
-void triggerlimit_int(t_triggerlimit *x, t_atom_long limit)
-{
-	if (limit < 1)
-		limit = 1;
-	x->limit = limit;
-	x->count = 0;
-}
-
 void triggerlimit_free(t_triggerlimit *x)
 {
 	dsp_free(&x->x_obj);
 }
+
+// Int Handler
+
+void triggerlimit_int(t_triggerlimit *x, t_atom_long limit)
+{
+    if (limit < 1)
+        limit = 1;
+    x->limit = limit;
+    x->count = 0;
+}
+
+// Perform
 
 t_int *triggerlimit_perform(t_int *w)
 {		
@@ -127,12 +135,6 @@ t_int *triggerlimit_perform(t_int *w)
 	return w + 5;
 }
 
-void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count)
-{				
-	x->count = 0; 
-	dsp_add(triggerlimit_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
 void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {		
 	double *in = ins[0];
@@ -165,16 +167,26 @@ void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, lo
 	x->count = count;
 }
 
+// DSP
+
+void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count)
+{
+    x->count = 0;
+    dsp_add(triggerlimit_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
+}
+
 void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	x->count = 0; 
 	object_method(dsp64, gensym("dsp_add64"), x, triggerlimit_perform64, 0, NULL);
 }
 
+// Assist
+
 void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s)
 {
-	if (m == ASSIST_INLET)
-		sprintf(s,"(signal) Triggers In ");
-	else
-		sprintf(s,"(signal) Triggers Out");
+    if (m == ASSIST_INLET)
+        sprintf(s,"(signal) Triggers In ");
+    else
+        sprintf(s,"(signal) Triggers Out");
 }
