@@ -20,14 +20,13 @@
 
 t_class *this_class;
 
-typedef struct _triggerlimit
+struct t_triggerlimit
 {
     t_pxobject x_obj;
 	
 	t_atom_long limit;
 	t_atom_long count;
-	
-} t_triggerlimit;
+};
 
 // Function  Protoypes
 

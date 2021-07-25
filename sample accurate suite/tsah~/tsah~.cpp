@@ -19,9 +19,9 @@
 
 t_class *this_class;
 
-#define MAXIMUM_NUM_OUTLETS 64
+constexpr int MAXIMUM_NUM_OUTLETS = 64;
 
-typedef struct _tsah
+struct t_tsah
 {
     t_pxobject x_obj;
 	
@@ -31,8 +31,7 @@ typedef struct _tsah
 	double last_outputs[MAXIMUM_NUM_OUTLETS];
 	
 	long num_outlets;
-	
-} t_tsah;
+};
 
 // Function Prototypes
 

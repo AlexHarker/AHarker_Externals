@@ -22,7 +22,7 @@
 
 t_class *this_class;
 
-typedef struct _rdcblock
+struct t_rdcblock
 {
     t_pxobject x_obj;
 	
@@ -30,8 +30,7 @@ typedef struct _rdcblock
 	double y1;
 	
 	t_atom_long mode;
-	
-} t_rdcblock;
+};
 
 // Function Prototypes
 
@@ -125,10 +124,10 @@ t_int *rdcblock_perform (t_int *w)
         // Shift memories
 
 		x1 = x0;
-		y1 = AH_FIX_DENORM_DOUBLE(y);
+		y1 = FIX_DENORM_DOUBLE(y);
         
         yf = (float) y;
-        *out++ = AH_FIX_DENORM_FLOAT(yf);
+        *out++ = FIX_DENORM_FLOAT(yf);
     }
 	
 	// Store memory
@@ -213,7 +212,7 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
 		// Filter
 		
 		y = x0 - x1 + (0.99 * y1);
-        y = AH_FIX_DENORM_DOUBLE(y);
+        y = FIX_DENORM_DOUBLE(y);
 
         // Shift memories
 

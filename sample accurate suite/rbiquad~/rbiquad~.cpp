@@ -21,7 +21,7 @@
 
 t_class *this_class;
 
-typedef struct _rbiquad
+struct t_rbiquad
 {
     t_pxobject x_obj;
 	
@@ -29,8 +29,7 @@ typedef struct _rbiquad
 	double x2;
 	double y1;
 	double y2;
-	
-} t_rbiquad;
+};
 
 // Function Prototypes
 
@@ -134,12 +133,12 @@ t_int *rbiquad_perform(t_int *w)
 		
 		out_val = (float) y;
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_FLOAT(out_val);
 		
 		// Shift memory
 		
 		y2 = y1;
-		y1 = AH_FIX_DENORM_DOUBLE(y);
+		y1 = FIX_DENORM_DOUBLE(y);
 		x2 = x1;
 		x1 = in;
 	}
@@ -197,7 +196,7 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 		
 		y = (a0 * in) + (a1 * x1) + (a2 * x2) - (b1 * y1) - (b2 * y2);
 
-		out_val = AH_FIX_DENORM_DOUBLE(y);
+		out_val = FIX_DENORM_DOUBLE(y);
 		
 		*out++ = out_val;
 		
