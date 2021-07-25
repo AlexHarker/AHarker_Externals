@@ -2,12 +2,13 @@
 /*
  *  chebyshape~
  *
- *	chebyshape~ is an object for waveshaping an audio input using chebyshev polynomials of the first kind.
+ *	chebyshape~ is an object for waveshaping using chebyshev polynomials of the first kind.
  *
- *	There is a special mode for using chebyshape~ inside a dynamicdsp~ in which the coefficients may be updated directly from the inputs to the dynamicdsp~ object at specified samples.
+ *	There is a special mode for using chebyshape~ inside a dynamic~ host object.
+ *  In this mode the coefficients may be updated sample-accurately directly from the inputs to the host object.
  *	This is an efficient alternative to the normal mode, which updates coefficients every sample. 
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -16,57 +17,63 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
+
 #include <AH_Denormals.h>
-#include <dynamicdsp~.h>
+#include <dynamic~.hpp>
 
-void *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
-typedef struct _chebyshape
+constexpr long MAX_COEFF = 32;
+
+struct t_chebyshape
 {
     t_pxobject x_obj;
 	
 	long num_coeff;
 	
-	void *coeff_ins[32];
-	double coeff[32];
+	void *coeff_ins[MAX_COEFF];
+	double coeff[MAX_COEFF];
 	
 	long offset;
 	long num_sig_ins;
 	
 	void **sig_ins;
-	
-} t_chebyshape;
+};
 
+// Function Protoypes
 
-void *chebyshape_new (t_atom_long num_coeff, t_atom_long offset);
-void chebyshape_free (t_chebyshape *x);
-void chebyshape_assist (t_chebyshape *x, void *b, long m, long a, char *s);
+void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset);
+void chebyshape_free(t_chebyshape *x);
+void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s);
 
-void chebyshape_dsp (t_chebyshape *x, t_signal **sp, short *count);
-void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+t_int *chebyshape_perform_dynamic(t_int *w);
+t_int *chebyshape_perform(t_int *w);
 
-t_int *chebyshape_perform_dynamicdsp (t_int *w);
-t_int *chebyshape_perform (t_int *w);
-
-void chebyshape_perform_dynamicdsp64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void chebyshape_perform_dynamic64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
+void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count);
+void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+
+// Main
 
 int C74_EXPORT main()
 {	
 	this_class = class_new("chebyshape~",
-				(method)chebyshape_new,
-				(method)chebyshape_free,
+				(method) chebyshape_new,
+				(method) chebyshape_free,
 				sizeof(t_chebyshape), 
 				NULL, 
 				A_DEFLONG, 
 				A_DEFLONG,
 				0);
 	
-	class_addmethod(this_class, (method)chebyshape_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)chebyshape_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)chebyshape_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) chebyshape_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) chebyshape_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) chebyshape_dsp64, "dsp64", A_CANT, 0);
 	   
 	class_dspinit(this_class);
 	class_register(CLASS_BOX, this_class);
@@ -74,61 +81,44 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
 
 void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
 {
-    t_chebyshape *x = (t_chebyshape *)object_alloc(this_class);
+    t_chebyshape *x = (t_chebyshape *) object_alloc(this_class);
     
-	void *dynamicdsp_parent;
-	long num_sig_ins;
-
     // Get dynamicdsp~ host (if it exists)
 	
-	dynamicdsp_parent = Get_Dynamic_Object();
+	void *dynamic_parent = dynamic_get_parent();
     
-	x->sig_ins = Dynamic_Get_Sig_In_Ptrs(dynamicdsp_parent);
-    x->num_sig_ins = num_sig_ins = Dynamic_Get_Num_Sig_Ins(dynamicdsp_parent);
+	x->sig_ins = dynamic_get_sig_in_ptrs(dynamic_parent);
+    x->num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);
     
-	// Number of coefficients
+	// Clip Number of coefficients / Mode
 	
-	if (num_coeff < 2) 
-		num_coeff = 2;
-	if (num_coeff > 32)
-		num_coeff = 32;
+	x->num_coeff = std::max(2L, std::min(static_cast<long>(num_coeff), MAX_COEFF));
+    x->offset = std::max(0L, std::min(static_cast<long>(offset), x->num_sig_ins));
 	
-	x->num_coeff = num_coeff;
-	
-	// Mode
-	
-	if (offset < 0)
-		offset = 0;
-    if (offset > num_sig_ins)
-		offset = num_sig_ins;
-	
-	if (!offset)
-    {
+	if (!x->offset)
 		dsp_setup((t_pxobject *)x, num_coeff + 1);
-		outlet_new((t_object *)x, "signal");
-		x->offset = 0;
-	}
-	else 
-	{	
+	else
 		dsp_setup((t_pxobject *)x, 2);
-		outlet_new((t_object *)x, "signal");
-		x->offset = (long) offset;
-	}
-		
-	return (x);
+    
+    outlet_new((t_object *)x, "signal");
+	
+	return x;
 }
-
 
 void chebyshape_free(t_chebyshape *x)
 {
 	dsp_free(&x->x_obj);
 }
 
+// Perform
 
-t_int *chebyshape_perform_dynamicdsp (t_int *w)
+// Perform (within a dynamic~ host object)
+
+t_int *chebyshape_perform_dynamic(t_int *w)
 {	
 	// Set pointers
 	
@@ -184,43 +174,44 @@ t_int *chebyshape_perform_dynamicdsp (t_int *w)
 		}
 		
 		// Do waveshaping iteratively (loop unrolled)
-		// Hopefully fixing the feedback should be enough to quash denormals quickly enough  (on mac/SSE the macros below do nothing)
 		
 		for (i = 1;  i + 3 < max_cheby; i += 4)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+1] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+2] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+3] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		for (;  i < max_cheby; i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_FLOAT(out_val);
 		j++;
 	}
 		
 	return w + 8;
 }
 
-t_int *chebyshape_perform (t_int *w)
+// Perform (standard)
+
+t_int *chebyshape_perform(t_int *w)
 {	
 	// Set pointers
 	
@@ -250,44 +241,44 @@ t_int *chebyshape_perform (t_int *w)
 		out_val = in_val * coeff_ins[0][j];
 		
 		// Do waveshaping iteratively (loop unrolled)
-		// Hopefully fixing the feedback should be enough to quash denormals quickly enough  (on mac/SSE the macros below do nothing)
 		
 		for (i = 1;  i + 3 < num_coeff; i += 4)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+1][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+2][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+3][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		for (;  i < num_coeff;  i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_FLOAT(out_val);
 		j++;
 	}
 				
 	return w + 7;
 }
 
+// 64 Bit Perform (within a dynamic~ host object)
 
-void chebyshape_perform_dynamicdsp64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
@@ -342,42 +333,42 @@ void chebyshape_perform_dynamicdsp64 (t_chebyshape *x, t_object *dsp64, double *
 		}
 		
 		// Do waveshaping iteratively (loop unrolled)
-		// Hopefully fixing the feedback should be enough to quash denormals quickly enough  (on mac/SSE the macros below do nothing)
 		
 		for (i = 1;  i + 3 < max_cheby; i += 4)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+1] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+2] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+3] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		for (;  i < max_cheby; i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_DOUBLE(out_val);
 		j++;
 	}
 }
 
+// 64 Bit Perform (standard)
 
-void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
@@ -404,40 +395,40 @@ void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long 
 		out_val = in_val * coeff_ins[0][j];
 		
 		// Do waveshaping iteratively (loop unrolled)
-		// Hopefully fixing the feedback should be enough to quash denormals quickly enough  (on mac/SSE the macros below do nothing)
 		
 		for (i = 1;  i + 3 < num_coeff; i += 4)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+1][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+2][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+3][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		for (;  i < num_coeff;  i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = AH_FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
 		}
 		
-		*out++ = AH_FIX_DENORM_FLOAT(out_val);
+		*out++ = FIX_DENORM_DOUBLE(out_val);
 		j++;
 	}
 }
 
+// DSP
 
 void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count)
 {				
@@ -469,11 +460,10 @@ void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count)
 				coeff_ins[i] = sig_ins[i + offset - 1];
 				coeff[i] = 0.;
 			}
-			dsp_add(chebyshape_perform_dynamicdsp, 7, sp[0]->s_vec, sp[1]->s_vec, coeff_ins, coeff, sp[2]->s_vec, sp[0]->s_n, num_coeff);
+			dsp_add(chebyshape_perform_dynamic, 7, sp[0]->s_vec, sp[1]->s_vec, coeff_ins, coeff, sp[2]->s_vec, sp[0]->s_n, num_coeff);
 		}
 	}
 }
-
 
 void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
@@ -500,12 +490,12 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 				coeff_ins[i] = sig_ins[i + offset - 1];
 				coeff[i] = 0.;
 			}
-			object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform_dynamicdsp64, 0, NULL);
+			object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform_dynamic64, 0, NULL);
 		}
 	}
 }
 
-
+// Assist
 
 void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s)
 {
@@ -529,6 +519,3 @@ void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s)
 		}
 	}
 }
-
-
-
