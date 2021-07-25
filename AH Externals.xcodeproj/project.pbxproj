@@ -95,6 +95,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B8060D7026ADA1D000593106 /* PBXTargetDependency */,
 				B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */,
 				B80B951B183BDA130014C9C4 /* PBXTargetDependency */,
 				B80B951D183BDA1F0014C9C4 /* PBXTargetDependency */,
@@ -183,6 +184,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXContainerItemProxy section */
+		B8060D6F26ADA1D000593106 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0EF31465F56C007FAC6A /* chebyshape~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "chebyshape~";
+		};
 		B80B8FC2183BCC730014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B82F0FA31465F7F4007FAC6A /* - vMSP~.xcodeproj */;
@@ -2393,6 +2401,11 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
+		B8060D7026ADA1D000593106 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "chebyshape~";
+			targetProxy = B8060D6F26ADA1D000593106 /* PBXContainerItemProxy */;
+		};
 		B80B9166183BD06C0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "denormkiller~";
