@@ -13,17 +13,18 @@
 #include <ext_obex.h>
 
 
-void *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
-typedef struct getthread{
+struct t_getthread{
     
     t_object a_obj;
     
     void *thread_out;
-    
-} t_getthread;
+};
 
+// Function Prototypes
 
 void *getthread_new();
 
@@ -35,6 +36,7 @@ void getthread_anything(t_getthread *x, t_symbol *msg, long argc, t_atom *argv);
 
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -57,6 +59,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New
+
 void *getthread_new()
 {
     t_getthread *x = (t_getthread *) object_alloc (this_class);
@@ -65,6 +69,8 @@ void *getthread_new()
     
     return x;
 }
+
+// Message Handlers
 
 void getthread_doit(t_getthread *x)
 {
@@ -90,6 +96,8 @@ void getthread_anything(t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 {
     getthread_doit(x);
 }
+
+// Assist
 
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s)
 {

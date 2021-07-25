@@ -2,7 +2,8 @@
 /*
  *  threadfilter
  *
- *  threadfilter filters its input into two streams, those in the low priority thread, and those in the high priority scheduler thread.
+ *  threadfilter filters its input into two streams.
+ *  One stream contains those in the low priority thread, and the other those in the high priority thread.
  *
  *  The most obvious use of threadfilter is to avoid threading issues, especially in the case of global code.
  *
@@ -15,18 +16,20 @@
 #include <ext_obex.h>
 
 
-void *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
-typedef struct threadfilter{
+struct t_threadfilter{
     
     t_object a_obj;
     
     void *message_out_lo;
     void *message_out_hi;
     
-} t_threadfilter;
+};
 
+// Function Prototypes
 
 void *threadfilter_new();
 
@@ -37,6 +40,7 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -59,6 +63,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New
+
 void *threadfilter_new()
 {
     t_threadfilter *x = (t_threadfilter *) object_alloc(this_class);
@@ -68,6 +74,8 @@ void *threadfilter_new()
     
     return x;
 }
+
+// Message Handlers
 
 void threadfilter_int(t_threadfilter *x, t_atom_long value)
 {
@@ -100,6 +108,9 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
     else
         outlet_anything(x->message_out_lo, msg, argc, argv);
 }
+
+// Assist
+
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 {
