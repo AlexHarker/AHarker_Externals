@@ -359,7 +359,7 @@ void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long n
 	
 	if (hr_out)
 		for (i = 0; i < vec_size; i++) 
-			hr_out[i] = 0.;
+			hr_out[i] = 0.0;
 	
 	x->length = length;
 	x->length_val = length_val;
