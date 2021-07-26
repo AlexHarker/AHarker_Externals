@@ -118,15 +118,12 @@ void voicemanager_reset(t_voicemanager *x)
 
 void voicemanager_active(t_voicemanager *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	t_atom_long active  = x->max_voices;
+	long active = x->max_voices;
 	
 	if (argc)
-		active = atom_getlong(argv);
-		
-	if (active > x->max_voices)
-		active = x->max_voices;
-	
-	x->active_voices = static_cast<long>(active);
+		active = static_cast<long>(atom_getlong(argv));
+
+    x->active_voices = std::max(0L, std::min(x->max_voices, active));
 }
 
 // Perform
