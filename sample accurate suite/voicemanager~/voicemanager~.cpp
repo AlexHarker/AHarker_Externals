@@ -4,10 +4,16 @@
  *
  *	voicemanager~ is a (sub)sample-accurate voice manager for use with the voicedrive~ object.
  *
- *	Typically voicemanager~ is located outside of a poly~ (or dynamicdsp~) object within which the voicedrive~ objects are hosted (in each voice).
- *	The trigger input causes a voice to be assigned with the given length and subsample offset (which must be known before the voice starts).
- *	The object keeps track of which voices are free at any one time, assuming the incoming data is passed on correctly to each voice.
- *	Outgoing triggers are then numbered according to voice, and can be tested using an audio rate comparison to derive triggers for individual voices.
+ *  Typically the voicemanager~ is located outside of a poly~ / dynamic~ host object.
+ *  The voicedrive~ objects are then hosted in each voice of the host object.
+ *
+ *	The trigger input causes a voice to be assigned with the given length and subsample offset.
+ *  These values must be known before the voice starts.
+ *	voicemanager~ keeps track of which voices are free/busy (assuming the output is passed on correctly).
+ *
+ *	Outgoing triggers are numbered according to voice.
+ *  These can be tested using an audio rate comparison to derive triggers for individual voices.
+ *
  *	See documentation for more info on limitations / implementation.
  *
  *  Copyright 2010-21 Alex Harker. All rights reserved.
@@ -19,10 +25,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
 
 // Globals and Object Structure
 
 t_class *this_class;
+
+constexpr long MAX_VOICES = 1000000;
 
 struct t_voicemanager
 {
@@ -86,14 +95,9 @@ void *voicemanager_new(t_atom_long max_voices)
 	outlet_new((t_object *)x, "signal");
 	outlet_new((t_object *)x, "signal");
 	
-	if (max_voices < 1) 
-		max_voices = 1;
-    if (max_voices > 1000000000)
-		max_voices = 1000000000;
-	
-	x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * max_voices));
-	x->max_voices = max_voices;
-	x->active_voices = max_voices;
+    x->max_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(max_voices), MAX_VOICES)));
+	x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->max_voices));
+	x->active_voices = x->max_voices;
 	x->reset = true;
 	
 	return x;
@@ -122,7 +126,7 @@ void voicemanager_active(t_voicemanager *x, t_symbol *msg, long argc, t_atom *ar
 	if (active > x->max_voices)
 		active = x->max_voices;
 	
-	x->active_voices = active;
+	x->active_voices = static_cast<long>(active);
 }
 
 // Perform
