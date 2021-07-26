@@ -95,6 +95,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B8C838AC26AEA36400A45FFF /* PBXTargetDependency */,
 				B82F775126AE169300D493D3 /* PBXTargetDependency */,
 				B8060D7026ADA1D000593106 /* PBXTargetDependency */,
 				B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */,
@@ -1073,6 +1074,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8C3050A12606AE500226E73;
 			remoteInfo = Both;
+		};
+		B8C838AB26AEA36400A45FFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0F291465F5A7007FAC6A /* voicemanager~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "voicemanager~";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2633,6 +2641,11 @@
 			isa = PBXTargetDependency;
 			name = Both;
 			targetProxy = B8C287A922781C5100F110B2 /* PBXContainerItemProxy */;
+		};
+		B8C838AC26AEA36400A45FFF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "voicemanager~";
+			targetProxy = B8C838AB26AEA36400A45FFF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
