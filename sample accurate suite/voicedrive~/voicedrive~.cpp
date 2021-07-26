@@ -41,15 +41,15 @@ struct t_voicedrive
 // Function Prototypes
 
 void *voicedrive_new(t_atom_long precision, t_atom_long interrupt_on);
-void voicedrive_free (t_voicedrive *x);
-void voicedrive_assist (t_voicedrive *x, void *b, long m, long a, char *s);
+void voicedrive_free(t_voicedrive *x);
+void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s);
 
-t_int *voicedrive_perform (t_int *w);
-t_int *voicedrive_perform_hr (t_int *w);
+t_int *voicedrive_perform(t_int *w);
+t_int *voicedrive_perform_hr(t_int *w);
 
-void voicedrive_perform64 (t_voicedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void voicedrive_dsp (t_voicedrive *x, t_signal **sp, short *count);
+void voicedrive_dsp(t_voicedrive *x, t_signal **sp, short *count);
 void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 // Main
@@ -108,7 +108,7 @@ void voicedrive_free(t_voicedrive *x)
 
 // Standard Perform Routine
 
-t_int *voicedrive_perform (t_int *w)
+t_int *voicedrive_perform(t_int *w)
 {	
 	// Set pointers
 	
@@ -193,7 +193,7 @@ t_int *voicedrive_perform (t_int *w)
 
 // High-Resolution Perform Routine
 
-t_int *voicedrive_perform_hr (t_int *w)
+t_int *voicedrive_perform_hr(t_int *w)
 {	
 	// Set pointers
 	

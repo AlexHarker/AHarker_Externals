@@ -91,7 +91,7 @@ void rdcblock_free(t_rdcblock *x)
 
 // Perform
 
-t_int *rdcblock_perform (t_int *w)
+t_int *rdcblock_perform(t_int *w)
 {		
 	float *in1 = (float *) w[2];
 	float *in2 = (float *) w[3];

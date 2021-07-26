@@ -52,8 +52,8 @@ void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s);
 t_int *chebyshape_perform_dynamic(t_int *w);
 t_int *chebyshape_perform(t_int *w);
 
-void chebyshape_perform_dynamic64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count);
 void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
