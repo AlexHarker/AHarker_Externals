@@ -106,7 +106,7 @@ void *voicemanager_new(t_atom_long max_voices)
 void voicemanager_free(t_voicemanager *x)
 {
 	dsp_free(&x->x_obj);
-	free (x->free_times);
+	free(x->free_times);
 }
 
 // Message Handlers
@@ -208,9 +208,9 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
 		
 		// Output parameters
 		
-		*out1++ = (float) voice_number;
-		*out2++ = (float) length;
-		*out3++ = (float) subsample_offset;
+		*out1++ = voice_number;
+		*out2++ = length;
+		*out3++ = subsample_offset;
 		
 		current_time += 1.0;
 	}
