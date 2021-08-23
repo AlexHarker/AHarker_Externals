@@ -28,6 +28,7 @@
 #include "dynamic_host.hpp"
 
 // TODO - check all poly CANT methods
+// TODO - change some items to attributes
 
 // FIX - threadsafety around alterations to the patch set vector
 
