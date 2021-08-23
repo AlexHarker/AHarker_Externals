@@ -13,6 +13,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B84613C926D3E13C00831079 /* PBXTargetDependency */,
+				B84613CB26D3E13C00831079 /* PBXTargetDependency */,
 			);
 			name = conversion;
 			productName = "All Externals";
@@ -48,6 +50,13 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B846140226D3E15100831079 /* PBXTargetDependency */,
+				B846140426D3E15100831079 /* PBXTargetDependency */,
+				B846140626D3E15100831079 /* PBXTargetDependency */,
+				B846140826D3E15100831079 /* PBXTargetDependency */,
+				B846140A26D3E15100831079 /* PBXTargetDependency */,
+				B846140C26D3E15100831079 /* PBXTargetDependency */,
+				B846140E26D3E15100831079 /* PBXTargetDependency */,
 			);
 			name = "dynamic suite";
 			productName = "All Externals";
@@ -95,7 +104,7 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B8C838AC26AEA36400A45FFF /* PBXTargetDependency */,
+				B8A3866E26AEA1170003FA46 /* PBXTargetDependency */,
 				B82F775126AE169300D493D3 /* PBXTargetDependency */,
 				B8060D7026ADA1D000593106 /* PBXTargetDependency */,
 				B80B9519183BDA0C0014C9C4 /* PBXTargetDependency */,
@@ -1019,6 +1028,69 @@
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "voicedrive~";
 		};
+		B84613C826D3E13C00831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DC01465F0BC007FAC6A /* valconvert.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = valconvert;
+		};
+		B84613CA26D3E13C00831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DC01465F0BC007FAC6A /* valconvert.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8C2E69C11C397E100A7E297;
+			remoteInfo = "valconvert~";
+		};
+		B846140126D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "dynamicdsp~";
+		};
+		B846140326D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8600FA812C22A6500864B9B;
+			remoteInfo = "dynamicserial~";
+		};
+		B846140526D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA01B0F0A578000B26D31;
+			remoteInfo = "dynamic.patch~";
+		};
+		B846140726D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8EC175E10836C3600316C82;
+			remoteInfo = "dynamic.this~";
+		};
+		B846140926D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B803276811CCFC69009E69AD;
+			remoteInfo = "dynamic.request~";
+		};
+		B846140B26D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA02C0F0A578900B26D31;
+			remoteInfo = "dynamic.in~";
+		};
+		B846140D26D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA03F0F0A57A800B26D31;
+			remoteInfo = "dynamic.out~";
+		};
 		B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
@@ -1068,19 +1140,19 @@
 			remoteGlobalIDString = B8ECA04E0F0A57A800B26D31;
 			remoteInfo = "dynamic.out~";
 		};
+		B8A3866D26AEA1170003FA46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0F291465F5A7007FAC6A /* voicemanager~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "voicemanager~";
+		};
 		B8C287A922781C5100F110B2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = B8C3050A12606AE500226E73;
 			remoteInfo = Both;
-		};
-		B8C838AB26AEA36400A45FFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0F291465F5A7007FAC6A /* voicemanager~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "voicemanager~";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1116,6 +1188,7 @@
 		B82F0F781465F674007FAC6A /* macaddress.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = macaddress.xcodeproj; path = utility/macaddress/macaddress.xcodeproj; sourceTree = "<group>"; };
 		B82F0F811465F67A007FAC6A /* recursivefolder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = recursivefolder.xcodeproj; path = utility/recursivefolder/recursivefolder.xcodeproj; sourceTree = "<group>"; };
 		B82F0FA31465F7F4007FAC6A /* - vMSP~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "- vMSP~.xcodeproj"; path = "vMSP/vMSP/- vMSP~.xcodeproj"; sourceTree = "<group>"; };
+		B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Denormals.h; sourceTree = "<group>"; };
 		B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_LTQ_Norm.h; sourceTree = "<group>"; };
 		B8A791341A1F610D007BDF82 /* AH_Random.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AH_Random.h; sourceTree = "<group>"; };
 		B8A7913A1A1F610D007BDF82 /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "dynamic~.hpp"; sourceTree = "<group>"; };
@@ -1579,6 +1652,7 @@
 			isa = PBXGroup;
 			children = (
 				B8E61D8222F7056D000A140C /* AH_Locks.hpp */,
+				B8A7912F1A1F610D007BDF82 /* AH_Denormals.h */,
 				B8A791301A1F610D007BDF82 /* AH_LTQ_Norm.h */,
 				B8A791341A1F610D007BDF82 /* AH_Random.h */,
 				B8A7913A1A1F610D007BDF82 /* dynamic~.hpp */,
@@ -2637,15 +2711,60 @@
 			name = "voicedrive~";
 			targetProxy = B82F775026AE169300D493D3 /* PBXContainerItemProxy */;
 		};
+		B84613C926D3E13C00831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = valconvert;
+			targetProxy = B84613C826D3E13C00831079 /* PBXContainerItemProxy */;
+		};
+		B84613CB26D3E13C00831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "valconvert~";
+			targetProxy = B84613CA26D3E13C00831079 /* PBXContainerItemProxy */;
+		};
+		B846140226D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamicdsp~";
+			targetProxy = B846140126D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140426D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamicserial~";
+			targetProxy = B846140326D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140626D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.patch~";
+			targetProxy = B846140526D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140826D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.this~";
+			targetProxy = B846140726D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140A26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.request~";
+			targetProxy = B846140926D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140C26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.in~";
+			targetProxy = B846140B26D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140E26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.out~";
+			targetProxy = B846140D26D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B8A3866E26AEA1170003FA46 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "voicemanager~";
+			targetProxy = B8A3866D26AEA1170003FA46 /* PBXContainerItemProxy */;
+		};
 		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Both;
 			targetProxy = B8C287A922781C5100F110B2 /* PBXContainerItemProxy */;
-		};
-		B8C838AC26AEA36400A45FFF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "voicemanager~";
-			targetProxy = B8C838AB26AEA36400A45FFF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

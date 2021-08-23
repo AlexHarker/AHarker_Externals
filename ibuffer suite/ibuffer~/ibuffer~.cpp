@@ -21,7 +21,6 @@
 
 #include "AudioFile/IAudioFile.h"
 
-#include <AH_Atomic.h>
 #include <ibuffer.hpp>
 
 

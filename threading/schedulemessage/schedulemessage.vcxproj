@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\..\AH_Max5_Support\c74support\max-includes\common\dllmain_win.c" />
-    <ClCompile Include="schedulemessage.c" />
+    <ClCompile Include="schedulemessage.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

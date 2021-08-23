@@ -27,17 +27,21 @@
 
 #include "dynamic_host.hpp"
 
-// FIX - gen~ loading issue - workaround in place
+// TODO - check all poly CANT methods
+// TODO - change some items to attributes
 
+// FIX - threadsafety around alterations to the patch set vector
+
+// TODO - Share threads between objects
+// TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
-// FIX - use an atomic counter for autoloadbalance to decrease thread sync costs??
-// FIX - allow patch crossfading
-// FIX - potential adc~ crashes / no audio - cannot get traction on this
-// FIX - patch serialisation
 
-/*****************************************/
+// FIX - potential adc~ crashes / no audio - cannot get traction on this
+
+// TODO - allow patch crossfading
+// TODO - patch serialisation
+
 // Global Varibles
-/*****************************************/
 
 t_class *this_class;
 
@@ -46,13 +50,10 @@ t_symbol *ps_declareio;
 
 static t_ptr_uint sig_size;
 
-#define MAX_ARGS 16
-#define MAX_IO 256
+constexpr int MAX_ARGS = 16;
+constexpr int MAX_IO = 256;
 
-
-/*****************************************/
-// Object structure
-/*****************************************/
+// Object Structure
 
 struct t_dynamicdsp
 {
@@ -93,10 +94,7 @@ struct t_dynamicdsp
     ThreadedPatchSet *patch_set;
 };
 
-
-/*****************************************/
 // Function Prototypes
-/*****************************************/
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv);
 void dynamicdsp_free(t_dynamicdsp *x);
@@ -119,10 +117,7 @@ bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
-
-/*****************************************/
 // Main
-/*****************************************/
 
 long poly_isparent(t_object *p, t_object *mightbeparent)
 {
@@ -267,10 +262,7 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
-/*****************************************/
-// Object Creation / Freeing / Assisstance
-/*****************************************/
+// New / Free / Assisstance
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 {	
@@ -457,9 +449,7 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 		sprintf(s,"Signal / Message In %ld", a + 1);
 }
 
-/*****************************************/
 // Patcher Loading
-/*****************************************/
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -514,10 +504,7 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 		object_error((t_object *) x, "no patch specified");
 }
 
-
-/*****************************************/
 // Multithreading Messages
-/*****************************************/
 
 void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -565,9 +552,7 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
     x->update_thread_map = 1;
 }
 
-/*****************************************/
 // Perform Routines
-/*****************************************/
 
 template <typename T>
 void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
@@ -605,7 +590,7 @@ void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long
     }
 }
 
-static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
+static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
 {
     // Tick the threads and process in this thread (the main audio thread)
     
@@ -747,10 +732,7 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 	dynamicdsp_perform_common(x, (void **) outs, vec_size);
 }
 
-/*****************************************/
 // DSP Routines
-/*****************************************/
-
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
 {	
