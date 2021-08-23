@@ -5,7 +5,7 @@ PRODUCT_NAME = $TARGET_NAME
 
 // Paths
 
-C74SUPPORT = $(SRCROOT)/../../../max-sdk-8.0.3/source/c74support
+C74SUPPORT = $(SRCROOT)/../../../max-sdk-base/c74support
 HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
@@ -13,7 +13,7 @@ FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-include
 
 SKIP_INSTALL = NO
 DEPLOYMENT_LOCATION = YES
-DSTROOT = ~/Documents/Max 8/Packages/AHarker/externals
+DSTROOT = $(SRCROOT)/../../AH_Externals_Package/AHarker_Externals/externals
 INSTALL_PATH = /
 COPY_PHASE_STRIP = NO
 
@@ -30,9 +30,9 @@ CLANG_CXX_LANGUAGE_STANDARD = c++14
 CLANG_CXX_LIBRARY = libc++
 CLANG_X86_VECTOR_INSTRUCTIONS = avx
 
-ARCHS = i386 x86_64 
+ARCHS = x86_64 arm64
 
-GCC_PREPROCESSOR_DEFINITIONS = DENORM_WANT_FIX=1 NO_TRANSLATION_SUPPORT=1
+GCC_PREPROCESSOR_DEFINITIONS = DENORM_WANT_FIX=1
 
 // Static Configuration (don't change these)
 

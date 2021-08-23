@@ -13,6 +13,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B84613C926D3E13C00831079 /* PBXTargetDependency */,
+				B84613CB26D3E13C00831079 /* PBXTargetDependency */,
 			);
 			name = conversion;
 			productName = "All Externals";
@@ -48,6 +50,13 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B846140226D3E15100831079 /* PBXTargetDependency */,
+				B846140426D3E15100831079 /* PBXTargetDependency */,
+				B846140626D3E15100831079 /* PBXTargetDependency */,
+				B846140826D3E15100831079 /* PBXTargetDependency */,
+				B846140A26D3E15100831079 /* PBXTargetDependency */,
+				B846140C26D3E15100831079 /* PBXTargetDependency */,
+				B846140E26D3E15100831079 /* PBXTargetDependency */,
 			);
 			name = "dynamic suite";
 			productName = "All Externals";
@@ -1018,6 +1027,69 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "voicedrive~";
+		};
+		B84613C826D3E13C00831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DC01465F0BC007FAC6A /* valconvert.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = valconvert;
+		};
+		B84613CA26D3E13C00831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DC01465F0BC007FAC6A /* valconvert.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8C2E69C11C397E100A7E297;
+			remoteInfo = "valconvert~";
+		};
+		B846140126D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "dynamicdsp~";
+		};
+		B846140326D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8600FA812C22A6500864B9B;
+			remoteInfo = "dynamicserial~";
+		};
+		B846140526D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA01B0F0A578000B26D31;
+			remoteInfo = "dynamic.patch~";
+		};
+		B846140726D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8EC175E10836C3600316C82;
+			remoteInfo = "dynamic.this~";
+		};
+		B846140926D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B803276811CCFC69009E69AD;
+			remoteInfo = "dynamic.request~";
+		};
+		B846140B26D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA02C0F0A578900B26D31;
+			remoteInfo = "dynamic.in~";
+		};
+		B846140D26D3E15100831079 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8ECA03F0F0A57A800B26D31;
+			remoteInfo = "dynamic.out~";
 		};
 		B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2638,6 +2710,51 @@
 			isa = PBXTargetDependency;
 			name = "voicedrive~";
 			targetProxy = B82F775026AE169300D493D3 /* PBXContainerItemProxy */;
+		};
+		B84613C926D3E13C00831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = valconvert;
+			targetProxy = B84613C826D3E13C00831079 /* PBXContainerItemProxy */;
+		};
+		B84613CB26D3E13C00831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "valconvert~";
+			targetProxy = B84613CA26D3E13C00831079 /* PBXContainerItemProxy */;
+		};
+		B846140226D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamicdsp~";
+			targetProxy = B846140126D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140426D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamicserial~";
+			targetProxy = B846140326D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140626D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.patch~";
+			targetProxy = B846140526D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140826D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.this~";
+			targetProxy = B846140726D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140A26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.request~";
+			targetProxy = B846140926D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140C26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.in~";
+			targetProxy = B846140B26D3E15100831079 /* PBXContainerItemProxy */;
+		};
+		B846140E26D3E15100831079 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "dynamic.out~";
+			targetProxy = B846140D26D3E15100831079 /* PBXContainerItemProxy */;
 		};
 		B8A3866E26AEA1170003FA46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
