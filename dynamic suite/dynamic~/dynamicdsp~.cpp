@@ -167,7 +167,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     char buf[1024];
     char subpatcher = false;
     
-    *title = NULL;
+    *title = nullptr;
     
     for (i = 0; i < x->patch_set->size(); i++)
     {
@@ -193,7 +193,7 @@ int C74_EXPORT main()
 								 (method)dynamicdsp_new, 
 								 (method)dynamicdsp_free, 
 								 sizeof(t_dynamicdsp), 
-								 NULL, 
+								 nullptr,
 								 A_GIMME, 
 								 0);
 	
@@ -265,7 +265,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 {	
 	t_dynamicdsp *x = (t_dynamicdsp *)object_alloc(this_class);
 	
-	t_symbol *patch_name_entered = NULL;
+	t_symbol *patch_name_entered = nullptr;
 	t_symbol *tempsym;
 	
 	long ac = 0;
@@ -378,14 +378,14 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 	x->sig_outs = (void **) malloc(num_sig_outs * sizeof(void *));
 	
 	for (long i = 0; i < num_sig_ins; i++)
-		x->sig_ins[i] = NULL;
+		x->sig_ins[i] = nullptr;
 	for (long i = 0; i < num_sig_outs; i++)
-		x->sig_outs[i] = NULL;
+		x->sig_outs[i] = nullptr;
 	
 	// Make non-signal outlets first
 	
     for (long i = num_outs - 1; i >= 0; i--)
-        outs[i] = outlet_new((t_object *)x, NULL);
+        outs[i] = outlet_new((t_object *)x, nullptr);
     
 	// Make signal ins
 	
@@ -450,7 +450,7 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 {
-    t_symbol *patch_name = NULL;
+    t_symbol *patch_name = nullptr;
     t_atom_long index = 0;
 	t_atom_long thread_request = -1;
 	
@@ -765,5 +765,5 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 	// Add to dsp if common routine successful
 	
 	if (!dynamicdsp_dsp_common(x, maxvectorsize, samplerate))
-		object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, nullptr);
 }

@@ -61,7 +61,7 @@ int C74_EXPORT main()
 						   (method) dynamic_request_new,
 						   (method) dynamic_request_free, 
 						   sizeof(t_dynamic_request), 
-						   NULL, 
+						   nullptr,
 						   A_DEFLONG, 
 						   0);
     
@@ -252,8 +252,8 @@ void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, 
     if (x->valid)
     {
         if (maxvectorsize > 4)
-            object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform64, 0, NULL);
+            object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform64, 0, nullptr);
         else
-            object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform_small64, 0, NULL);
+            object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform_small64, 0, nullptr);
     }
 }

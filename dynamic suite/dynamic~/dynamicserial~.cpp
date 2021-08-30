@@ -100,7 +100,7 @@ int C74_EXPORT main()
 								 (method) dynamicserial_new,
 								 (method) dynamicserial_free,
 								 sizeof(t_dynamicserial), 
-								 NULL, 
+								 nullptr, 
 								 A_GIMME, 
 								 0);
 	
@@ -354,7 +354,7 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-	t_symbol *patch_name = NULL;
+	t_symbol *patch_name = nullptr;
     t_atom_long index = 0;
 		
 	// Get requested patch index if there is one
@@ -501,5 +501,5 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 	// Add to dsp if common routine successful
 	
 	if (!dynamicserial_dsp_common(x, maxvectorsize, samplerate))
-		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, nullptr);
 }

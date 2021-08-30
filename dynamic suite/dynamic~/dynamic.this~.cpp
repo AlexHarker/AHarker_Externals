@@ -62,7 +62,7 @@ int C74_EXPORT main()
 						   (method) dynamic_this_new,
 						   (method) dynamic_this_free,
 						   sizeof(t_dynamic_this), 
-						   NULL, 
+						   nullptr, 
 						   A_DEFLONG,
 						   A_DEFLONG, 
 						   0);
