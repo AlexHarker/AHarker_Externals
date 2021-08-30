@@ -7,189 +7,191 @@
 
 // Thread Mac OS implementation
 
-Thread::Thread(ThreadFunctionType *threadFunction, void *arg) : mThreadFunction(threadFunction), mArg(arg), mValid(true)
+thread::thread(ThreadFunctionType *thread_function, void *arg)
+: m_thread_function(thread_function), m_arg(arg), m_valid(true)
 {
-    pthread_attr_t threadAttributes;
-    sched_param schedulingParameters;
-    
+    pthread_attr_t thread_attributes;
+    sched_param scheduling_parameters;
+
     // Get default attributes and scheduling parameters
-    
-    pthread_attr_init(&threadAttributes);
-    pthread_attr_getschedparam(&threadAttributes, &schedulingParameters);
-    
+
+    pthread_attr_init(&thread_attributes);
+    pthread_attr_getschedparam(&thread_attributes, &scheduling_parameters);
+
     // Set detach state and policy
-    
-    pthread_attr_setdetachstate(&threadAttributes, PTHREAD_CREATE_JOINABLE);
-    
+
+    pthread_attr_setdetachstate(&thread_attributes, PTHREAD_CREATE_JOINABLE);
+
     if (maxversion() >= 0x800)
-        pthread_attr_setschedpolicy(&threadAttributes, SCHED_RR);
+        pthread_attr_setschedpolicy(&thread_attributes, SCHED_RR);
     else
-        pthread_attr_setschedpolicy(&threadAttributes, SCHED_FIFO);
-    
+        pthread_attr_setschedpolicy(&thread_attributes, SCHED_FIFO);
+
     // Set the priority of the thread before we create it
-    
+
     if (maxversion() >= 0x800)
-        schedulingParameters.sched_priority = 43;
+        scheduling_parameters.sched_priority = 43;
     else
-        schedulingParameters.sched_priority = 63;
-    
+        scheduling_parameters.sched_priority = 63;
+
     // Set the scheduling attributes and create the thread
-    
-    pthread_attr_setschedparam(&threadAttributes, &schedulingParameters);
-    pthread_create(&mInternal, &threadAttributes, threadStart, this);
+
+    pthread_attr_setschedparam(&thread_attributes, &scheduling_parameters);
+    pthread_create(&m_internal, &thread_attributes, thread_start, this);
 }
 
-Thread::~Thread()
+thread::~thread()
 {
-    assert(!mValid && "Thread not closed before deletion");
+    assert(!m_valid && "Thread not closed before deletion");
 }
 
-void Thread::join()
+void thread::join()
 {
-    if (mValid)
+    if (m_valid)
     {
-        mValid = false;
+        m_valid = false;
         std::atomic_thread_fence(std::memory_order_seq_cst);
-        
+
         // Wait for thread to join before we allow the program to continue
-        
-        pthread_join(mInternal, nullptr);
+
+        pthread_join(m_internal, nullptr);
     }
 }
 
-void *Thread::threadStart(void *arg)
+void *thread::thread_start(void *arg)
 {
-    static_cast<Thread *>(arg)->call();
-    
+    static_cast<thread *>(arg)->call();
+
     return nullptr;
 }
 
 
 // Semaphore Mac OS implementation
 
-Semaphore::Semaphore(long maxCount) : mValid(true)
+semaphore::semaphore(long maxCount) : m_valid(true)
 {
-    semaphore_create(mach_task_self(), &mInternal, SYNC_POLICY_FIFO, 0);
+    semaphore_create(mach_task_self(), &m_internal, SYNC_POLICY_FIFO, 0);
 }
 
-Semaphore::~Semaphore()
+semaphore::~semaphore()
 {
-    assert(!mValid && "Semaphore not closed before deletion");
-    semaphore_destroy(mach_task_self(), mInternal);
+    assert(!m_valid && "Semaphore not closed before deletion");
+    semaphore_destroy(mach_task_self(), m_internal);
 }
 
-void Semaphore::close()
+void semaphore::close()
 {
-    if (mValid)
+    if (m_valid)
     {
-        mValid = false;
+        m_valid = false;
         std::atomic_thread_fence(std::memory_order_seq_cst);
-        semaphore_signal_all(mInternal);
+        semaphore_signal_all(m_internal);
     }
 }
 
-void Semaphore::signal(long n)
+void semaphore::signal(long n)
 {
     std::atomic_thread_fence(std::memory_order_seq_cst);
     for (long i = 0; i < n; i++)
-        semaphore_signal(mInternal);
+        semaphore_signal(m_internal);
 }
 
-bool Semaphore::wait()
+bool semaphore::wait()
 {
-    if (mValid)
-        semaphore_wait(mInternal);
-    
-    return mValid;
+    if (m_valid)
+        semaphore_wait(m_internal);
+
+    return m_valid;
 }
 
 #else
 
 // Thread Windows OS implementation
 
-Thread::Thread(ThreadFunctionType *threadFunction, void *arg) : mThreadFunction(threadFunction), mArg(arg), mValid(true)
+Thread::thread(ThreadFunctionType *thread_function, void *arg)
+: m_thread_function(thread_function), m_arg(arg), m_valid(true)
 {
     // Create thread
-    
-    mInternal = CreateThread(nullptr, 0, threadStart, this, 0, nullptr);
-    
+
+    m_internal = CreateThread(nullptr, 0, thread_start, this, 0, nullptr);
+
     // Set priority
-    
-   SetThreadPriority(mInternal, THREAD_PRIORITY_TIME_CRITICAL);
+
+   SetThreadPriority(m_internal, THREAD_PRIORITY_TIME_CRITICAL);
 }
 
-Thread::~Thread()
+thread::~thread()
 {
-    assert(!mValid && "Thread not closed before deletion");
-    CloseHandle(mInternal);
+    assert(!m_valid && "Thread not closed before deletion");
+    CloseHandle(m_internal);
 }
 
-void Thread::join()
+void thread::join()
 {
-    if (mValid)
+    if (m_valid)
     {
-        mValid = false;
+        m_valid = false;
         std::atomic_thread_fence(std::memory_order_seq_cst);
-        
+
         // Wait for thread to join before we allow the program to continue
-        
-        WaitForSingleObject(mInternal, INFINITE);
+
+        WaitForSingleObject(m_internal, INFINITE);
     }
 }
 
-DWORD WINAPI Thread::threadStart(LPVOID arg)
+DWORD WINAPI Thread::thread_start(LPVOID arg)
 {
-    static_cast<Thread *>(arg)->call();
-    
+    static_cast<thread *>(arg)->call();
+
     return 0;
 }
 
 
 // Semaphore Windows OS implementation
 
-Semaphore::Semaphore(long maxCount) : mValid(true)
+semaphore::semaphore(long max_count) : m_valid(true)
 {
-    mInternal.mHandle = CreateSemaphore(nullptr, 0, maxCount, nullptr);
-    mInternal.mMaxCount = maxCount;
+    mInternal.m_handle = CreateSemaphore(nullptr, 0, max_count, nullptr);
+    mInternal.m_max_count = max_count;
 }
 
-Semaphore::~Semaphore()
+semaphore::~semaphore()
 {
-    assert(!mValid && "Semaphore not closed before deletion");
+    assert(!m_valid && "Semaphore not closed before deletion");
     CloseHandle(mInternal.mHandle);
 }
 
-void Semaphore::close()
+void semaphore::close()
 {
-    if (mValid)
+    if (m_valid)
     {
-        mValid = false;
+        m_valid = false;
         std::atomic_thread_fence(std::memory_order_seq_cst);
-        
+
         // Signal maximum count to ensure all threads are released, and check for completion
-        
-        for (long n = mInternal.mMaxCount; n > 0; n--)
+
+        for (long n = m_internal.m_max_count; n > 0; n--)
         {
-            if (ReleaseSemaphore(mInternal.mHandle, n, nullptr))
+            if (ReleaseSemaphore(m_internal.m_handle, n, nullptr))
                 break;
         }
     }
 }
 
-void Semaphore::signal(long n)
+void semaphore::signal(long n)
 {
     // N.B. - signalling is unsafe after the semaphore has been closed
-    
+
     std::atomic_thread_fence(std::memory_order_seq_cst);
-    ReleaseSemaphore(mInternal.mHandle, n, nullptr);
+    ReleaseSemaphore(m_internal.mHandle, n, nullptr);
 }
 
-bool Semaphore::wait()
+bool semaphore::wait()
 {
-    if (mValid)
-        WaitForSingleObject(mInternal.mHandle, INFINITE);
-    
-    return mValid;
+    if (m_valid)
+        WaitForSingleObject(m_internal.mHandle, INFINITE);
+
+    return m_valid;
 }
 
 #endif
@@ -197,115 +199,115 @@ bool Semaphore::wait()
 
 // ThreadSet Class
 
-ThreadSet::ThreadSet(t_object *owner, procFunc *process, long numThreads, long numOuts)
-: mOwner(owner), mProcess(process)
-, mActive(std::max(1L, numThreads)), mVecSize(0), mBufferSize(0)
-, mSemaphore(mActive - 1), mThreadSlots(numThreads, ThreadSlot(this, numOuts))
+thread_set::thread_set(t_object *owner, ProcFunc *process, long num_threads, long num_outs)
+: m_owner(owner), m_process(process)
+, m_active(std::max(1L, num_threads)), m_vec_size(0), m_buffer_size(0)
+, m_semaphore(m_active - 1), m_thread_slots(num_threads, thread_slot(this, num_outs))
 {
     // Create threads
-    
-    for (long i = 0; i < numThreads - 1; i++)
-        mThreads.emplace_back(new Thread(&threadEntry, mThreadSlots.data() + i + 1));
+
+    for (long i = 0; i < num_threads - 1; i++)
+        m_threads.emplace_back(new thread(&thread_entry, m_thread_slots.data() + i + 1));
 }
 
-ThreadSet::~ThreadSet()
+thread_set::~thread_set()
 {
     // Close semaphore and join threads
-    
-    mSemaphore.close();
-    
-    for (auto it = mThreads.begin(); it != mThreads.end(); it++)
+
+    m_semaphore.close();
+
+    for (auto it = m_threads.begin(); it != m_threads.end(); it++)
         (*it)->join();
-    
+
     // Free temporary buffers
-    
-    for (auto it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
-        for (auto jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+
+    for (auto it = m_thread_slots.begin(); it != m_thread_slots.end(); it++)
+        for (auto jt = it->m_buffers.begin(); jt != it->m_buffers.end(); jt++)
             deallocate_aligned(*jt);
 }
 
-void ThreadSet::tick(long vecSize, long numThreads, void **outs)
+void thread_set::tick(long vec_size, long num_threads, void **outs)
 {
     // Set number active threads
-    
-    mActive = std::min(numThreads, getNumThreads());
-    mVecSize = vecSize;
-    
-    if (numThreads == 1)
+
+    m_active = std::min(num_threads, get_num_threads());
+    m_vec_size = vec_size;
+
+    if (num_threads == 1)
     {
-        mProcess(mOwner, outs, vecSize, 0, 1);
+        m_process(m_owner, outs, vec_size, 0, 1);
         return;
     }
-    
+
     // Set flags
-    
-    for (long i = 0; i < numThreads; i++)
-        mThreadSlots[i].mProcessed = 0;
-    
-    mSemaphore.signal(numThreads - 1);
-    
+
+    for (long i = 0; i < num_threads; i++)
+        m_thread_slots[i].m_processed = 0;
+
+    m_semaphore.signal(num_threads - 1);
+
     // Process thread
-    
-    mProcess(mOwner, mThreadSlots[0].getBuffers(), vecSize, 0, numThreads);
-    
+
+    m_process(m_owner, m_thread_slots[0].get_buffers(), vec_size, 0, num_threads);
+
     // Wait for all the other threads to return
-    
-    for (long i = 1; i < numThreads; i++)
-        while (mThreadSlots[i].mProcessed != 1);
+
+    for (long i = 1; i < num_threads; i++)
+        while (m_thread_slots[i].m_processed != 1);
 }
 
-bool ThreadSet::resizeBuffers(t_ptr_int size)
+bool thread_set::resize_buffers(t_ptr_int size)
 {
-    if (size != mBufferSize)
+    if (size != m_buffer_size)
     {
-        for (auto it = mThreadSlots.begin(); it != mThreadSlots.end(); it++)
+        for (auto it = m_thread_slots.begin(); it != m_thread_slots.end(); it++)
         {
-            for (auto jt = it->mBuffers.begin(); jt != it->mBuffers.end(); jt++)
+            for (auto jt = it->m_buffers.begin(); jt != it->m_buffers.end(); jt++)
             {
                 deallocate_aligned(*jt);
                 *jt = allocate_aligned<u_int8_t>(size);
                 if (!*jt)
                 {
-                    object_error((t_object *) mOwner, "not enough memory");
-                    mBufferSize = 0;
+                    object_error((t_object *) m_owner, "not enough memory");
+                    m_buffer_size = 0;
                     return true;
                 }
             }
         }
     }
-    
-    mBufferSize = size;
-    
+
+    m_buffer_size = size;
+
     return false;
 }
 
 // Main thread loop methods
 
-void ThreadSet::threadEntry(void *arg)
+void thread_set::thread_entry(void *arg)
 {
-    ThreadSet::ThreadSlot *slot = static_cast<ThreadSet::ThreadSlot *>(arg);
-    ThreadSet *set = static_cast<ThreadSet *>(slot->mOwner);
-    
-    set->processingLoop(slot - set->mThreadSlots.data());
+    thread_set::thread_slot *slot = static_cast<thread_set::thread_slot *>(arg);
+    thread_set *set = static_cast<thread_set *>(slot->m_owner);
+
+    set->processing_loop(slot - set->m_thread_slots.data());
 }
 
-void ThreadSet::processingLoop(long threadIdx)
+void thread_set::processing_loop(long thread_idx)
 {
-    while (mSemaphore.wait())
+    while (m_semaphore.wait())
     {
         // Loop through possible threads in case we are woken multiple times
-        
-        for (long i = threadIdx; i < threadIdx + mActive - 1; i++)
+
+        for (long i = thread_idx; i < thread_idx + m_active - 1; i++)
         {
             // N.B. Get values from thread each time in case they have been changed
-            
-            long idx = (i % (mActive - 1)) + 1;
+
+            long idx = (i % (m_active - 1)) + 1;
             int expected = 0;
-            
-            if (mThreadSlots[idx].mProcessed.compare_exchange_strong(expected, 2))
+
+            if (m_thread_slots[idx].m_processed.compare_exchange_strong(expected, 2))
             {
-                mProcess(mOwner, mThreadSlots[idx].getBuffers(), mVecSize, idx, mActive);
-                mThreadSlots[idx].mProcessed = 1;
+                m_process(m_owner, m_thread_slots[idx].get_buffers(), m_vec_size, idx, m_active);
+                m_thread_slots[idx].m_processed = 1;
             }
         }
     }

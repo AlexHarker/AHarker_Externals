@@ -90,7 +90,7 @@ struct t_dynamicdsp
 	
     // Thread Data / Patches
     
-    ThreadSet *threads;
+    thread_set *threads;
     threaded_patch_set *patch_set;
 };
 
@@ -408,7 +408,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup temporary memory / threads / slots
 	
-    x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
+    x->threads = new thread_set((t_object *) x, reinterpret_cast<thread_set::ProcFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
     x->patch_set = new threaded_patch_set((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
 	// Load patch
@@ -555,7 +555,7 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 // Perform Routines
 
 template <typename T>
-void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+void dynamicdsp_sum(thread_set *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
     const long max_simd_size = SIMDLimits<T>::max_size;
     
@@ -566,7 +566,7 @@ void dynamicdsp_sum(ThreadSet *threads, void **sig_outs, long num_sig_outs, long
         for (long j = 0; j < num_active_threads; j++)
         {
             T *io_pointer = (T *) sig_outs[i];
-            T *next_sig_pointer = threads->getThreadBuffer<T>(j, i);
+            T *next_sig_pointer = threads->get_thread_buffer<T>(j, i);
             
             if (next_sig_pointer)
             {
@@ -736,7 +736,7 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate)
 {	
-    bool mem_fail = x->threads->resizeBuffers(vec_size * sig_size);
+    bool mem_fail = x->threads->resize_buffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	
