@@ -18,11 +18,6 @@ struct atodb_functor
 {
     const static double atodb_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return a.mVal > 0.f ? nan_fixer()(20.f * log10f(a.mVal)) : -999.f;
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return a.mVal > 0.0 ? nan_fixer()(20.0 * log10(a.mVal)) : -999.0;
@@ -33,15 +28,6 @@ struct atodb_functor
         template <class T>
         T operator()(const T& a) { return and_not(a < T(0.0), a); }
     };
-    
-    template <int N>
-    static SIMDType<float, N> is_negative_inf(const SIMDType<float, N>& a)
-    {
-        const static uint32_t neg_inf_32 = 0xFF800000U;
-        const SIMDType<float, N> v_neg_inf_32 = *reinterpret_cast<const float *>(&neg_inf_32);
-        
-        return a == v_neg_inf_32;
-    }
     
     template <int N>
     static SIMDType<double, N> is_negative_inf(const SIMDType<double, N>& a)
@@ -77,7 +63,7 @@ struct atodb_functor
 
 const double atodb_functor::atodb_constant = 20.0 / log(10.0);
 
-typedef v_unary<atodb_functor, kVectorArray, kVectorArray> vatodb;
+typedef v_unary<atodb_functor, kVectorArray> vatodb;
 
 int C74_EXPORT main()
 {

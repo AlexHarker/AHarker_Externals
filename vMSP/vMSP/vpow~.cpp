@@ -16,11 +16,6 @@
 
 struct pow_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
-    {
-        return nan_fixer()(powf(b.mVal, a.mVal));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
         return nan_fixer()(pow(b.mVal, a.mVal));
@@ -60,7 +55,7 @@ struct pow_functor
     T operator()(const T a, const T b) { return a; }
 };
 
-typedef v_binary<pow_functor, kVectorArray, kVectorArray> vpow;
+typedef v_binary<pow_functor, kVectorArray> vpow;
 
 int C74_EXPORT main()
 {

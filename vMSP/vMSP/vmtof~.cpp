@@ -19,12 +19,6 @@ struct mtof_functor
     const static double mtof_mul_constant;
     const static double mtof_add_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        const float b = a.mVal * static_cast<float>(mtof_mul_constant);
-        return nan_fixer()(expf(b + static_cast<float>(mtof_add_constant)));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return nan_fixer()(exp(a.mVal * mtof_mul_constant + mtof_add_constant));
@@ -49,7 +43,7 @@ struct mtof_functor
 const double mtof_functor::mtof_mul_constant = log(2.0) / 12.0;
 const double mtof_functor::mtof_add_constant = log(440.0) - (log(2.0) * 69.0 / 12.0);
 
-typedef v_unary<mtof_functor, kVectorArray, kVectorArray> vmtof;
+typedef v_unary<mtof_functor, kVectorArray> vmtof;
 
 int C74_EXPORT main()
 {

@@ -13,12 +13,7 @@
 #include <SIMDExtended.hpp>
 
 struct acos_functor
-{
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return abs(a).mVal > 1.f ? 0.f : acosf(a.mVal);
-    }
-    
+{    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return abs(a).mVal > 1.0 ? 0.0 : acos(a.mVal);
@@ -43,7 +38,7 @@ struct acos_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<acos_functor, kVectorArray, kVectorArray> vacos;
+typedef v_unary<acos_functor, kVectorArray> vacos;
 
 int C74_EXPORT main()
 {
