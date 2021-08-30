@@ -279,7 +279,7 @@ public:
         // Use SIMD code where possible
         
         if (Vec64 != kScalar && ((maxvectorsize / simd_width) > 0))
-            routine += (Vec32 == kVectorOp) ? 3 : 6;
+            routine += (Vec64 == kVectorOp) ? 3 : 6;
         
         switch (routine)
         {
