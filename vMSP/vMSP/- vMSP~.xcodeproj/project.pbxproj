@@ -55,36 +55,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */; };
 		B8BFF9D410AED239008EB5B2 /* vminimum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */; };
-		B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */; };
 		B8BFFB9610AEF01E008EB5B2 /* vsinh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */; };
 		B8BFFB9810AEF02B008EB5B2 /* vcosh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */; };
@@ -96,47 +68,15 @@
 		B8BFFBBE10AEF053008EB5B2 /* vatanh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */; };
 		B8BFFBC410AEF07E008EB5B2 /* vsinx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */; };
 		B8BFFBC610AEF08B008EB5B2 /* vtanx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */; };
-		B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E3937E1095B8990081D095 /* vnotequals~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3937D1095B8990081D095 /* vnotequals~.cpp */; };
 		B8E393861095B8C10081D095 /* vequals~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492EE1095A30E00A88A63 /* vequals~.cpp */; };
 		B8E393921095B8E10081D095 /* vplus~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E81095A2FA00A88A63 /* vplus~.cpp */; };
-		B8E395661096138D0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39578109613900081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395A6109614350081D095 /* vabs~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E39595109613C90081D095 /* vabs~.cpp */; };
 		B8E395A71096143B0081D095 /* vcosx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3959A109613F40081D095 /* vcosx~.cpp */; };
-		B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39604109616B20081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39655109617FB0081D095 /* vlog~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.cpp */; };
 		B8E39656109618040081D095 /* vsqrt~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962D1096173F0081D095 /* vsqrt~.cpp */; };
 		B8E396571096180E0081D095 /* vtrunc~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E39627109617180081D095 /* vtrunc~.cpp */; };
 		B8E492E31095A2EA00A88A63 /* vtimes~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E21095A2EA00A88A63 /* vtimes~.cpp */; };
-		B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4954A1095AD4600A88A63 /* vdiv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493BF1095A73900A88A63 /* vdiv~.cpp */; };
 		B8E4954B1095AD4F00A88A63 /* vrdiv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */; };
 		B8E4954C1095AD5900A88A63 /* vminus~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CF1095A79000A88A63 /* vminus~.cpp */; };
@@ -146,17 +86,7 @@
 		B8E495501095AD8400A88A63 /* vgreaterthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */; };
 		B8E495511095AD8D00A88A63 /* vlessthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */; };
 		B8E8E6401098B8EA00C566B2 /* vmtof~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.cpp */; };
-		B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE3FA1109875BE00780AF9 /* vpow~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE3FA0109875BE00780AF9 /* vpow~.cpp */; };
-		B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE412010987B2000780AF9 /* vatodb~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40681098790500780AF9 /* vatodb~.cpp */; };
 		B8FE412110987B2900780AF9 /* vdbtoa~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40691098791600780AF9 /* vdbtoa~.cpp */; };
 		B8FE42E91098A7B300780AF9 /* vftom~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406E1098793200780AF9 /* vftom~.cpp */; };
@@ -411,31 +341,29 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
-		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1D995FF0A4BA74D00CE1530 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = nans.hpp; path = Base/nans.hpp; sourceTree = "<group>"; };
 		B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = v_binary.hpp; path = Base/v_binary.hpp; sourceTree = "<group>"; };
 		B83978C71FDF5A360004E515 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDExtended.hpp; path = ../../AH_MaxMSP_Headers/SIMDExtended.hpp; sourceTree = "<group>"; };
 		B866CA5922CEC513005A20C3 /* vector_loop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = vector_loop.hpp; path = Base/vector_loop.hpp; sourceTree = "<group>"; };
 		B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = precision_handlers.hpp; path = Base/precision_handlers.hpp; sourceTree = "<group>"; };
 		B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = conversions.hpp; path = Base/conversions.hpp; sourceTree = "<group>"; };
-		B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminimum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmaximum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8BFF98A10AED1BE008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFF99B10AED1C5008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vmaximum~.cpp"; sourceTree = "<group>"; };
 		B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vminimum~.cpp"; sourceTree = "<group>"; };
-		B8BFFA9810AEEE18008EB5B2 /* vsinx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsinx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFAAA10AEEE1C008EB5B2 /* vtanx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtanx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFABC10AEEE1F008EB5B2 /* vacos~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vacos~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFACE10AEEE21008EB5B2 /* vasin~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vasin~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFAE010AEEE62008EB5B2 /* vatan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB1010AEEE71008EB5B2 /* vcosh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vcosh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB2210AEEE71008EB5B2 /* vsinh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsinh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB3410AEEE71008EB5B2 /* vtanh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtanh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB4610AEEE77008EB5B2 /* vacosh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vacosh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB5810AEEE77008EB5B2 /* vasinh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vasinh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB6A10AEEE77008EB5B2 /* vatanh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatanh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFA9810AEEE18008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFAAA10AEEE1C008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFABC10AEEE1F008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFACE10AEEE21008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFAE010AEEE62008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB1010AEEE71008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB2210AEEE71008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB3410AEEE71008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB4610AEEE77008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB5810AEEE77008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8BFFB6A10AEEE77008EB5B2 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vtanh~.cpp"; sourceTree = "<group>"; };
 		B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vsinh~.cpp"; sourceTree = "<group>"; };
 		B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vcosh~.cpp"; sourceTree = "<group>"; };
@@ -449,23 +377,23 @@
 		B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vtanx~.cpp"; sourceTree = "<group>"; };
 		B8C4C21B1FDF10310062CC55 /* comparisons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = comparisons.hpp; path = Base/comparisons.hpp; sourceTree = "<group>"; };
 		B8DA7B631FDDBC520037D848 /* v_unary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = v_unary.hpp; path = Base/v_unary.hpp; sourceTree = "<group>"; };
-		B8E393761095B8640081D095 /* vnotequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vnotequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E393761095B8640081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E3937D1095B8990081D095 /* vnotequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vnotequals~.cpp"; sourceTree = "<group>"; };
-		B8E3956F1096138D0081D095 /* vcosx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vcosx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E39581109613900081D095 /* vabs~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vabs~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E3956F1096138D0081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E39581109613900081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39595109613C90081D095 /* vabs~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vabs~.cpp"; sourceTree = "<group>"; };
 		B8E3959A109613F40081D095 /* vcosx~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vcosx~.cpp"; sourceTree = "<group>"; };
-		B8E395FB109616AB0081D095 /* vlog~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlog~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E3960D109616B20081D095 /* vsqrt~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsqrt~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E39624109616ED0081D095 /* vtrunc~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtrunc~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E395FB109616AB0081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E3960D109616B20081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E39624109616ED0081D095 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39627109617180081D095 /* vtrunc~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vtrunc~.cpp"; sourceTree = "<group>"; };
 		B8E3962A1096172C0081D095 /* vlog~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlog~.cpp"; sourceTree = "<group>"; };
 		B8E3962D1096173F0081D095 /* vsqrt~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vsqrt~.cpp"; sourceTree = "<group>"; };
 		B8E492E21095A2EA00A88A63 /* vtimes~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vtimes~.cpp"; sourceTree = "<group>"; };
 		B8E492E81095A2FA00A88A63 /* vplus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vplus~.cpp"; sourceTree = "<group>"; };
 		B8E492EE1095A30E00A88A63 /* vequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vequals~.cpp"; sourceTree = "<group>"; };
-		B8E493021095A32500A88A63 /* vplus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vplus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E493131095A32800A88A63 /* vequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E493021095A32500A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E493131095A32800A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E493BF1095A73900A88A63 /* vdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vdiv~.cpp"; sourceTree = "<group>"; };
 		B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vgreaterthan~.cpp"; sourceTree = "<group>"; };
 		B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlessthan~.cpp"; sourceTree = "<group>"; };
@@ -474,25 +402,25 @@
 		B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vrdiv~.cpp"; sourceTree = "<group>"; };
 		B8E493F01095AA4000A88A63 /* vgreaterthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vgreaterthaneq~.cpp"; sourceTree = "<group>"; };
 		B8E493F31095AA4F00A88A63 /* vlessthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlessthaneq~.cpp"; sourceTree = "<group>"; };
-		B8E4943E1095AB2B00A88A63 /* vdiv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vdiv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E4944F1095AB2F00A88A63 /* vrdiv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vrdiv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494601095AB3200A88A63 /* vminus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494711095AB3700A88A63 /* vrminus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vrminus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494821095AB3C00A88A63 /* vgreaterthaneq~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vgreaterthaneq~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494931095AB4200A88A63 /* vlessthaneq~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlessthaneq~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494A41095AB4500A88A63 /* vgreaterthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vgreaterthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E494B51095AB4800A88A63 /* vlessthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlessthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8F11CDE1FDEBD55003EE53A /* SIMDSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDSupport.hpp; path = ../../AH_MaxMSP_Headers/SIMDSupport.hpp; sourceTree = "<group>"; };
-		B8FE3F931098759000780AF9 /* vpow~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vpow~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E4943E1095AB2B00A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E4944F1095AB2F00A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494601095AB3200A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494711095AB3700A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494821095AB3C00A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494931095AB4200A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494A41095AB4500A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E494B51095AB4800A88A63 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F11CDE1FDEBD55003EE53A /* SIMDSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDSupport.hpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/SIMDSupport.hpp; sourceTree = "<group>"; };
+		B8FE3F931098759000780AF9 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE3FA0109875BE00780AF9 /* vpow~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vpow~.cpp"; sourceTree = "<group>"; };
 		B8FE40681098790500780AF9 /* vatodb~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatodb~.cpp"; sourceTree = "<group>"; };
 		B8FE40691098791600780AF9 /* vdbtoa~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vdbtoa~.cpp"; sourceTree = "<group>"; };
 		B8FE406A1098792000780AF9 /* vmtof~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vmtof~.cpp"; sourceTree = "<group>"; };
 		B8FE406E1098793200780AF9 /* vftom~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vftom~.cpp"; sourceTree = "<group>"; };
-		B8FE40881098795600780AF9 /* vftom~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vftom~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8FE40991098795A00780AF9 /* vmtof~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmtof~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8FE40AA1098795D00780AF9 /* vatodb~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatodb~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8FE40BB1098795F00780AF9 /* vdbtoa~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vdbtoa~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8FE40881098795600780AF9 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8FE40991098795A00780AF9 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8FE40AA1098795D00780AF9 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8FE40BB1098795F00780AF9 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -500,8 +428,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,8 +435,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,8 +442,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,8 +449,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,8 +456,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,8 +463,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,8 +470,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,8 +477,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,8 +484,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,8 +491,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,8 +498,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,8 +505,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,8 +512,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,8 +519,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,8 +526,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */,
-				B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,8 +533,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395661096138D0081D095 /* Carbon.framework in Frameworks */,
-				B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,8 +540,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39578109613900081D095 /* Carbon.framework in Frameworks */,
-				B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,8 +547,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */,
-				B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,8 +554,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39604109616B20081D095 /* Carbon.framework in Frameworks */,
-				B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,8 +561,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */,
-				B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,8 +568,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */,
-				B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,8 +575,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */,
-				B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,8 +582,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,8 +589,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,8 +596,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */,
-				B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -725,8 +603,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */,
-				B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,8 +610,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */,
-				B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,8 +617,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */,
-				B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,8 +624,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */,
-				B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,8 +631,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */,
-				B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,8 +638,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */,
-				B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,8 +645,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,8 +652,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,8 +659,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,8 +666,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,29 +675,11 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */,
+				B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
-				089C167CFE841241C02AAC07 /* Resources */,
-				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
 			name = "plus~";
-			sourceTree = "<group>";
-		};
-		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				B10347B90AAAE41500981DE1 /* Accelerate.framework */,
-				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
-			);
-			name = "External Frameworks and Libraries";
-			sourceTree = "<group>";
-		};
-		089C167CFE841241C02AAC07 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		08FB77ADFE841716C02AAC07 /* Source */ = {
@@ -855,41 +695,41 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */,
-				B8E493021095A32500A88A63 /* vplus~.mxo */,
-				B8E493131095A32800A88A63 /* vequals~.mxo */,
-				B8E4943E1095AB2B00A88A63 /* vdiv~.mxo */,
-				B8E4944F1095AB2F00A88A63 /* vrdiv~.mxo */,
-				B8E494601095AB3200A88A63 /* vminus~.mxo */,
-				B8E494711095AB3700A88A63 /* vrminus~.mxo */,
-				B8E494821095AB3C00A88A63 /* vgreaterthaneq~.mxo */,
-				B8E494931095AB4200A88A63 /* vlessthaneq~.mxo */,
-				B8E494A41095AB4500A88A63 /* vgreaterthan~.mxo */,
-				B8E494B51095AB4800A88A63 /* vlessthan~.mxo */,
-				B8E393761095B8640081D095 /* vnotequals~.mxo */,
-				B8E3956F1096138D0081D095 /* vcosx~.mxo */,
-				B8E39581109613900081D095 /* vabs~.mxo */,
-				B8E395FB109616AB0081D095 /* vlog~.mxo */,
-				B8E3960D109616B20081D095 /* vsqrt~.mxo */,
-				B8E39624109616ED0081D095 /* vtrunc~.mxo */,
-				B8FE3F931098759000780AF9 /* vpow~.mxo */,
-				B8FE40881098795600780AF9 /* vftom~.mxo */,
-				B8FE40991098795A00780AF9 /* vmtof~.mxo */,
-				B8FE40AA1098795D00780AF9 /* vatodb~.mxo */,
-				B8FE40BB1098795F00780AF9 /* vdbtoa~.mxo */,
-				B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */,
-				B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */,
-				B8BFFA9810AEEE18008EB5B2 /* vsinx~.mxo */,
-				B8BFFAAA10AEEE1C008EB5B2 /* vtanx~.mxo */,
-				B8BFFABC10AEEE1F008EB5B2 /* vacos~.mxo */,
-				B8BFFACE10AEEE21008EB5B2 /* vasin~.mxo */,
-				B8BFFAE010AEEE62008EB5B2 /* vatan~.mxo */,
-				B8BFFB1010AEEE71008EB5B2 /* vcosh~.mxo */,
-				B8BFFB2210AEEE71008EB5B2 /* vsinh~.mxo */,
-				B8BFFB3410AEEE71008EB5B2 /* vtanh~.mxo */,
-				B8BFFB4610AEEE77008EB5B2 /* vacosh~.mxo */,
-				B8BFFB5810AEEE77008EB5B2 /* vasinh~.mxo */,
-				B8BFFB6A10AEEE77008EB5B2 /* vatanh~.mxo */,
+				B1D995FF0A4BA74D00CE1530 /* .bundle */,
+				B8E493021095A32500A88A63 /* .bundle */,
+				B8E493131095A32800A88A63 /* .bundle */,
+				B8E4943E1095AB2B00A88A63 /* .bundle */,
+				B8E4944F1095AB2F00A88A63 /* .bundle */,
+				B8E494601095AB3200A88A63 /* .bundle */,
+				B8E494711095AB3700A88A63 /* .bundle */,
+				B8E494821095AB3C00A88A63 /* .bundle */,
+				B8E494931095AB4200A88A63 /* .bundle */,
+				B8E494A41095AB4500A88A63 /* .bundle */,
+				B8E494B51095AB4800A88A63 /* .bundle */,
+				B8E393761095B8640081D095 /* .bundle */,
+				B8E3956F1096138D0081D095 /* .bundle */,
+				B8E39581109613900081D095 /* .bundle */,
+				B8E395FB109616AB0081D095 /* .bundle */,
+				B8E3960D109616B20081D095 /* .bundle */,
+				B8E39624109616ED0081D095 /* .bundle */,
+				B8FE3F931098759000780AF9 /* .bundle */,
+				B8FE40881098795600780AF9 /* .bundle */,
+				B8FE40991098795A00780AF9 /* .bundle */,
+				B8FE40AA1098795D00780AF9 /* .bundle */,
+				B8FE40BB1098795F00780AF9 /* .bundle */,
+				B8BFF98A10AED1BE008EB5B2 /* .bundle */,
+				B8BFF99B10AED1C5008EB5B2 /* .bundle */,
+				B8BFFA9810AEEE18008EB5B2 /* .bundle */,
+				B8BFFAAA10AEEE1C008EB5B2 /* .bundle */,
+				B8BFFABC10AEEE1F008EB5B2 /* .bundle */,
+				B8BFFACE10AEEE21008EB5B2 /* .bundle */,
+				B8BFFAE010AEEE62008EB5B2 /* .bundle */,
+				B8BFFB1010AEEE71008EB5B2 /* .bundle */,
+				B8BFFB2210AEEE71008EB5B2 /* .bundle */,
+				B8BFFB3410AEEE71008EB5B2 /* .bundle */,
+				B8BFFB4610AEEE77008EB5B2 /* .bundle */,
+				B8BFFB5810AEEE77008EB5B2 /* .bundle */,
+				B8BFFB6A10AEEE77008EB5B2 /* .bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1227,7 +1067,7 @@
 			name = "vtimes~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */;
+			productReference = B1D995FF0A4BA74D00CE1530 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFF97B10AED1BE008EB5B2 /* vminimum~ */ = {
@@ -1247,7 +1087,7 @@
 			name = "vminimum~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */;
+			productReference = B8BFF98A10AED1BE008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFF98C10AED1C5008EB5B2 /* vmaximum~ */ = {
@@ -1267,7 +1107,7 @@
 			name = "vmaximum~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */;
+			productReference = B8BFF99B10AED1C5008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFA8810AEEE18008EB5B2 /* vsinx~ */ = {
@@ -1287,7 +1127,7 @@
 			name = "vsinx~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFA9810AEEE18008EB5B2 /* vsinx~.mxo */;
+			productReference = B8BFFA9810AEEE18008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFA9A10AEEE1C008EB5B2 /* vtanx~ */ = {
@@ -1307,7 +1147,7 @@
 			name = "vtanx~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFAAA10AEEE1C008EB5B2 /* vtanx~.mxo */;
+			productReference = B8BFFAAA10AEEE1C008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFAAC10AEEE1F008EB5B2 /* vacos~ */ = {
@@ -1327,7 +1167,7 @@
 			name = "vacos~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFABC10AEEE1F008EB5B2 /* vacos~.mxo */;
+			productReference = B8BFFABC10AEEE1F008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFABE10AEEE21008EB5B2 /* vasin~ */ = {
@@ -1347,7 +1187,7 @@
 			name = "vasin~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFACE10AEEE21008EB5B2 /* vasin~.mxo */;
+			productReference = B8BFFACE10AEEE21008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFAD010AEEE62008EB5B2 /* vatan~ */ = {
@@ -1367,7 +1207,7 @@
 			name = "vatan~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFAE010AEEE62008EB5B2 /* vatan~.mxo */;
+			productReference = B8BFFAE010AEEE62008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB0010AEEE71008EB5B2 /* vcosh~ */ = {
@@ -1387,7 +1227,7 @@
 			name = "vcosh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB1010AEEE71008EB5B2 /* vcosh~.mxo */;
+			productReference = B8BFFB1010AEEE71008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB1210AEEE71008EB5B2 /* vsinh~ */ = {
@@ -1407,7 +1247,7 @@
 			name = "vsinh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB2210AEEE71008EB5B2 /* vsinh~.mxo */;
+			productReference = B8BFFB2210AEEE71008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB2410AEEE71008EB5B2 /* vtanh~ */ = {
@@ -1427,7 +1267,7 @@
 			name = "vtanh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB3410AEEE71008EB5B2 /* vtanh~.mxo */;
+			productReference = B8BFFB3410AEEE71008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB3610AEEE77008EB5B2 /* vacosh~ */ = {
@@ -1447,7 +1287,7 @@
 			name = "vacosh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB4610AEEE77008EB5B2 /* vacosh~.mxo */;
+			productReference = B8BFFB4610AEEE77008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB4810AEEE77008EB5B2 /* vasinh~ */ = {
@@ -1467,7 +1307,7 @@
 			name = "vasinh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB5810AEEE77008EB5B2 /* vasinh~.mxo */;
+			productReference = B8BFFB5810AEEE77008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8BFFB5A10AEEE77008EB5B2 /* vatanh~ */ = {
@@ -1487,7 +1327,7 @@
 			name = "vatanh~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8BFFB6A10AEEE77008EB5B2 /* vatanh~.mxo */;
+			productReference = B8BFFB6A10AEEE77008EB5B2 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E393671095B8640081D095 /* vnotequals~ */ = {
@@ -1507,7 +1347,7 @@
 			name = "vnotequals~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E393761095B8640081D095 /* vnotequals~.mxo */;
+			productReference = B8E393761095B8640081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E3955F1096138D0081D095 /* vcosx~ */ = {
@@ -1527,7 +1367,7 @@
 			name = "vcosx~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E3956F1096138D0081D095 /* vcosx~.mxo */;
+			productReference = B8E3956F1096138D0081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E39571109613900081D095 /* vabs~ */ = {
@@ -1547,7 +1387,7 @@
 			name = "vabs~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E39581109613900081D095 /* vabs~.mxo */;
+			productReference = B8E39581109613900081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E395EB109616AB0081D095 /* vlog~ */ = {
@@ -1567,7 +1407,7 @@
 			name = "vlog~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E395FB109616AB0081D095 /* vlog~.mxo */;
+			productReference = B8E395FB109616AB0081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E395FD109616B20081D095 /* vsqrt~ */ = {
@@ -1587,7 +1427,7 @@
 			name = "vsqrt~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E3960D109616B20081D095 /* vsqrt~.mxo */;
+			productReference = B8E3960D109616B20081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E39614109616ED0081D095 /* vtrunc~ */ = {
@@ -1607,7 +1447,7 @@
 			name = "vtrunc~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E39624109616ED0081D095 /* vtrunc~.mxo */;
+			productReference = B8E39624109616ED0081D095 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E492F31095A32500A88A63 /* vplus~ */ = {
@@ -1627,7 +1467,7 @@
 			name = "vplus~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E493021095A32500A88A63 /* vplus~.mxo */;
+			productReference = B8E493021095A32500A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E493041095A32800A88A63 /* vequals~ */ = {
@@ -1647,7 +1487,7 @@
 			name = "vequals~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E493131095A32800A88A63 /* vequals~.mxo */;
+			productReference = B8E493131095A32800A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E4942F1095AB2B00A88A63 /* vdiv~ */ = {
@@ -1667,7 +1507,7 @@
 			name = "vdiv~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E4943E1095AB2B00A88A63 /* vdiv~.mxo */;
+			productReference = B8E4943E1095AB2B00A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494401095AB2F00A88A63 /* vrdiv~ */ = {
@@ -1687,7 +1527,7 @@
 			name = "vrdiv~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E4944F1095AB2F00A88A63 /* vrdiv~.mxo */;
+			productReference = B8E4944F1095AB2F00A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494511095AB3200A88A63 /* vminus~ */ = {
@@ -1707,7 +1547,7 @@
 			name = "vminus~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494601095AB3200A88A63 /* vminus~.mxo */;
+			productReference = B8E494601095AB3200A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494621095AB3700A88A63 /* vrminus~ */ = {
@@ -1727,7 +1567,7 @@
 			name = "vrminus~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494711095AB3700A88A63 /* vrminus~.mxo */;
+			productReference = B8E494711095AB3700A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494731095AB3C00A88A63 /* vgreaterthaneq~ */ = {
@@ -1747,7 +1587,7 @@
 			name = "vgreaterthaneq~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494821095AB3C00A88A63 /* vgreaterthaneq~.mxo */;
+			productReference = B8E494821095AB3C00A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494841095AB4200A88A63 /* vlessthaneq~ */ = {
@@ -1767,7 +1607,7 @@
 			name = "vlessthaneq~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494931095AB4200A88A63 /* vlessthaneq~.mxo */;
+			productReference = B8E494931095AB4200A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494951095AB4500A88A63 /* vgreaterthan~ */ = {
@@ -1787,7 +1627,7 @@
 			name = "vgreaterthan~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494A41095AB4500A88A63 /* vgreaterthan~.mxo */;
+			productReference = B8E494A41095AB4500A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8E494A61095AB4800A88A63 /* vlessthan~ */ = {
@@ -1807,7 +1647,7 @@
 			name = "vlessthan~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8E494B51095AB4800A88A63 /* vlessthan~.mxo */;
+			productReference = B8E494B51095AB4800A88A63 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8FE3F841098759000780AF9 /* vpow~ */ = {
@@ -1827,7 +1667,7 @@
 			name = "vpow~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE3F931098759000780AF9 /* vpow~.mxo */;
+			productReference = B8FE3F931098759000780AF9 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8FE40791098795600780AF9 /* vftom~ */ = {
@@ -1847,7 +1687,7 @@
 			name = "vftom~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE40881098795600780AF9 /* vftom~.mxo */;
+			productReference = B8FE40881098795600780AF9 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8FE408A1098795A00780AF9 /* vmtof~ */ = {
@@ -1867,7 +1707,7 @@
 			name = "vmtof~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE40991098795A00780AF9 /* vmtof~.mxo */;
+			productReference = B8FE40991098795A00780AF9 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8FE409B1098795D00780AF9 /* vatodb~ */ = {
@@ -1887,7 +1727,7 @@
 			name = "vatodb~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE40AA1098795D00780AF9 /* vatodb~.mxo */;
+			productReference = B8FE40AA1098795D00780AF9 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 		B8FE40AC1098795F00780AF9 /* vdbtoa~ */ = {
@@ -1907,7 +1747,7 @@
 			name = "vdbtoa~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE40BB1098795F00780AF9 /* vdbtoa~.mxo */;
+			productReference = B8FE40BB1098795F00780AF9 /* .bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -2955,7 +2795,7 @@
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
@@ -2963,7 +2803,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
@@ -2971,7 +2811,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
 			};
