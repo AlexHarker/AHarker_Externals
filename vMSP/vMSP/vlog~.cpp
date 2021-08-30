@@ -19,12 +19,6 @@ struct log_functor
 {
     static const double min_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
-    {
-        float min_constant_f = static_cast<float>(min_constant);
-        return static_cast<float>(logf(a.mVal > 0.0 ? a.mVal : min_constant_f)) * update_base(b.mVal);
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
         return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
@@ -119,7 +113,7 @@ struct log_functor
 
 const double log_functor::min_constant = 0.0000000001;
 
-typedef v_binary<log_functor, kVectorArray, kVectorArray, true> vlog;
+typedef v_binary<log_functor, kVectorArray, true> vlog;
 
 int C74_EXPORT main()
 {

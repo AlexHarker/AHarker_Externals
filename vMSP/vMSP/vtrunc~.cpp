@@ -21,7 +21,7 @@ struct trunc_functor
     void operator()(double *o, double *i, long size) {}
 };
 
-typedef v_unary<trunc_functor, kVectorOp, kVectorOp> vtrunc;
+typedef v_unary<trunc_functor, kVectorOp> vtrunc;
 
 int C74_EXPORT main()
 {

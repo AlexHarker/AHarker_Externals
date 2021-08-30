@@ -18,11 +18,6 @@ struct dbtoa_functor
 {
     const static double dbtoa_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return nan_fixer()(expf(a.mVal * static_cast<float>(dbtoa_constant)));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return nan_fixer()(exp(a.mVal * dbtoa_constant));
@@ -46,7 +41,7 @@ struct dbtoa_functor
 
 const double dbtoa_functor::dbtoa_constant = log(10.0) / 20.0;
 
-typedef v_unary<dbtoa_functor, kVectorArray, kVectorArray> vdbtoa;
+typedef v_unary<dbtoa_functor, kVectorArray> vdbtoa;
 
 int C74_EXPORT main()
 {

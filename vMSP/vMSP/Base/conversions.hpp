@@ -43,4 +43,3 @@ void mul_add_const_array(T *io, long size, T mul, T add)
 {
     mul_add_const_array(io, io, size, mul, add);
 }
-

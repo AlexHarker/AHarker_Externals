@@ -13,12 +13,7 @@
 #include <SIMDExtended.hpp>
 
 struct atanh_functor
-{
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return abs(a).mVal >= 1.f ? 0.f : atanhf(a.mVal);
-    }
-    
+{    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return abs(a).mVal >= 1.0 ? 0.0 : atanh(a.mVal);
@@ -43,7 +38,7 @@ struct atanh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<atanh_functor, kVectorArray, kVectorArray> vatanh;
+typedef v_unary<atanh_functor, kVectorArray> vatanh;
 
 int C74_EXPORT main()
 {

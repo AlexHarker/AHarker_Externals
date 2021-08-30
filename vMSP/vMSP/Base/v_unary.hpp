@@ -6,13 +6,12 @@
 #include <string>
 
 #include "SIMDSupport.hpp"
-#include <AH_Denormals.h>
 
 enum CalculationType { kScalar, kVectorOp, kVectorArray };
 
 // Object structure
 
-template<typename Functor, CalculationType Vec32, CalculationType Vec64>
+template<typename Functor, CalculationType Vec64>
 class v_unary
 {
     
@@ -28,7 +27,6 @@ public:
         
         *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), NULL, 0);
         
-        class_addmethod(*C, (method)dsp<T>, "dsp", A_CANT, 0);
         class_addmethod(*C, (method)dsp64<T>, "dsp64", A_CANT, 0);
         class_addmethod(*C, (method)assist, "assist", A_CANT, 0);
         
@@ -60,78 +58,7 @@ public:
         
         return (x);
     }
-    
-    // 32 bit dsp routine
-    
-    template <class T>
-    static void dsp(T *x, t_signal **sp, short *count)
-    {
-        const static int simd_width = SIMDLimits<float>::max_size;
-        
-        // Default to scalar routine
-        
-        bool vector = (Vec32 != kScalar)  || ((sp[0]->s_n / simd_width) > 0);
-        method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1>>);
-        long vec_size_val = sp[0]->s_n;
-
-        // Use SIMD routines if possible
-        
-        if (vector)
-        {
-            // Check memory alignment of all relevant vectors
-            
-            if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
-                object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
-            else
-            {
-                vec_size_val /= simd_width;
-
-                if (Vec32 == kVectorArray)
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_array<T>>);
-                else
-                    current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
-            }
-        }
-        
-        dsp_add(denormals_perform, 5, current_perform_routine, sp[0]->s_vec, sp[1]->s_vec, vec_size_val, x);
-    }
-    
-    // 32 bit perform return wrapper
-    
-    template<void PerformRoutine(t_int *w)>
-    static t_int *perform(t_int *w)
-    {
-        PerformRoutine(w);
-        
-        return w + 6;
-    }
-    
-    // 32 bit perform routine (SIMD - array)
-    
-    template <class T>
-    static void perform_array(t_int *w)
-    {
-        T *x = reinterpret_cast<T *>(w[5]);
-
-        x->m_functor(reinterpret_cast<float *>(w[3]), reinterpret_cast<float *>(w[2]), static_cast<long>(w[4]));
-    }
-    
-    // 32 bit perform routine (SIMD - op)
-    
-    template <class T, int N>
-    static void perform_op(t_int *w)
-    {
-        SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
-        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        long vec_size = w[4];
-        T *x = reinterpret_cast<T *>(w[5]);
-
-        Functor &functor = x->m_functor;
-
-        while (vec_size--)
-            *out1++ = functor(*in1++);
-    }
-    
+   
     // 64 bit dsp routine
     
     template <class T>

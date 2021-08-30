@@ -21,7 +21,7 @@ struct abs_functor
     void operator()(double *o, double *i, long size) {}
 };
 
-typedef v_unary<abs_functor, kVectorOp, kVectorOp> vabs;
+typedef v_unary<abs_functor, kVectorOp> vabs;
 
 int C74_EXPORT main()
 {

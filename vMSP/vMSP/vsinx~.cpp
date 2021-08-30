@@ -13,7 +13,6 @@
 
 struct sinx_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return sinf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return sin(a.mVal); }
     
     template <class T>
@@ -25,7 +24,7 @@ struct sinx_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<sinx_functor, kVectorArray, kVectorArray> vsinx;
+typedef v_unary<sinx_functor, kVectorArray> vsinx;
 
 int C74_EXPORT main()
 {
