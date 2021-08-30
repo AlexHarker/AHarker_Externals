@@ -17,7 +17,7 @@ struct div_functor
     {
         const static T zero(static_cast<typename T::scalar_type>(0));
         
-        // N.B - the exact behaviour of div~ is different when a is aNaN and bis zero, but it uses a * (1/b)
+        // N.B - the exact behaviour of div~ is different when a is NaN and b is zero, but it uses a * (1/b)
         
         return sel(zero, a / b, b != zero);
     }
