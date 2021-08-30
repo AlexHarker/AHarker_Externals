@@ -1199,7 +1199,7 @@
 		B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "kernelmaker~.xcodeproj"; path = "convolution/kernelmaker~/kernelmaker~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "convolution/partconvolve~/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "convolution/timeconvolve~/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
-		B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config_AHarker_Externals.xcconfig; sourceTree = "<group>"; };
+		B8CF80541A169D3C005CC01B /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = "<group>"; };
 		B8E61D8222F7056D000A140C /* AH_Locks.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AH_Locks.hpp; sourceTree = "<group>"; };
 		B8F25E2C1FF162AE00245397 /* Interpolation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Interpolation.hpp; sourceTree = "<group>"; };
 		B8F25E2D1FF162AE00245397 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SIMDExtended.hpp; sourceTree = "<group>"; };
@@ -1671,7 +1671,7 @@
 		B8B56C141465ED1500FE85B0 = {
 			isa = PBXGroup;
 			children = (
-				B8CF80541A169D3C005CC01B /* Config_AHarker_Externals.xcconfig */,
+				B8CF80541A169D3C005CC01B /* Config_AH_Ext_Mac.xcconfig */,
 				B8A7912D1A1F610D007BDF82 /* AH_MaxMSP_Headers */,
 				B82F0DBF1465F0B0007FAC6A /* conversion */,
 				B8B56CC31465EFC100FE85B0 /* convolution */,
@@ -1917,574 +1917,595 @@
 		B80B8FC3183BCC730014C9C4 /* vabs~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vabs~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FC2183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FC5183BCC730014C9C4 /* vacos~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vacos~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FC4183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FC7183BCC730014C9C4 /* vacosh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vacosh~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FC6183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FC9183BCC730014C9C4 /* vasin~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vasin~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FC8183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FCB183BCC730014C9C4 /* vasinh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vasinh~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FCA183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FCD183BCC730014C9C4 /* vatanh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vatanh~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FCC183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FCF183BCC730014C9C4 /* vatan~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vatan~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FCE183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FD1183BCC730014C9C4 /* vatodb~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vatodb~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FD0183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FD3183BCC730014C9C4 /* vcosh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vcosh~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FD2183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FD5183BCC730014C9C4 /* vcosx~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vcosx~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FD4183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FD7183BCC730014C9C4 /* vdbtoa~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vdbtoa~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FD6183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FD9183BCC730014C9C4 /* vdiv~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vdiv~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FD8183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FDB183BCC730014C9C4 /* vequals~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vequals~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FDA183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FDD183BCC730014C9C4 /* vftom~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vftom~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FDC183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FDF183BCC730014C9C4 /* vgreaterthan~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vgreaterthan~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FDE183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FE1183BCC730014C9C4 /* vgreaterthaneq~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vgreaterthaneq~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FE0183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FE3183BCC730014C9C4 /* vlessthan~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vlessthan~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FE2183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FE5183BCC730014C9C4 /* vlessthaneq~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vlessthaneq~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FE4183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FE7183BCC730014C9C4 /* vlog~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vlog~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FE6183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FE9183BCC730014C9C4 /* vmaximum~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vmaximum~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FE8183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FEB183BCC730014C9C4 /* vminimum~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vminimum~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FEA183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FED183BCC730014C9C4 /* vminus~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vminus~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FEC183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FEF183BCC730014C9C4 /* vmtof~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vmtof~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FEE183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FF1183BCC730014C9C4 /* vnotequals~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vnotequals~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FF0183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FF3183BCC730014C9C4 /* vplus~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vplus~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FF2183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FF5183BCC730014C9C4 /* vpow~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vpow~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FF4183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FF7183BCC730014C9C4 /* vrdiv~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vrdiv~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FF6183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FF9183BCC730014C9C4 /* vrminus~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vrminus~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FF8183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FFB183BCC730014C9C4 /* vsinh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vsinh~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FFA183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FFD183BCC730014C9C4 /* vsinx~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vsinx~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FFC183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B8FFF183BCC730014C9C4 /* vsqrt~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vsqrt~.mxo";
+			path = .bundle;
 			remoteRef = B80B8FFE183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9001183BCC730014C9C4 /* vtanh~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vtanh~.mxo";
+			path = .bundle;
 			remoteRef = B80B9000183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9003183BCC730014C9C4 /* vtanx~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vtanx~.mxo";
+			path = .bundle;
 			remoteRef = B80B9002183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9005183BCC730014C9C4 /* vtimes~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vtimes~.mxo";
+			path = .bundle;
 			remoteRef = B80B9004183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9007183BCC730014C9C4 /* vtrunc~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "vtrunc~.mxo";
+			path = .bundle;
 			remoteRef = B80B9006183BCC730014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9084183BCD7A0014C9C4 /* recursivefolder.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = recursivefolder.mxo;
+			path = .bundle;
 			remoteRef = B80B9083183BCD7A0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B90DF183BCDB20014C9C4 /* macaddress.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = macaddress.mxo;
+			path = .bundle;
 			remoteRef = B80B90DE183BCDB20014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B90E7183BCDBC0014C9C4 /* depack.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = depack.mxo;
+			path = .bundle;
 			remoteRef = B80B90E6183BCDBC0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9113183BCE880014C9C4 /* denormkiller~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "denormkiller~.mxo";
+			path = .bundle;
 			remoteRef = B80B9112183BCE880014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9123183BCEE70014C9C4 /* getthread.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = getthread.mxo;
+			path = .bundle;
 			remoteRef = B80B9122183BCEE70014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9139183BCF220014C9C4 /* schedulemessage.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = schedulemessage.mxo;
+			path = .bundle;
 			remoteRef = B80B9138183BCF220014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9141183BCF320014C9C4 /* threadfilter.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = threadfilter.mxo;
+			path = .bundle;
 			remoteRef = B80B9140183BCF320014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B918A183BD0FD0014C9C4 /* ahnoise~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ahnoise~.mxo";
+			name = "ahnoise~.mxo";
+			path = .bundle;
 			remoteRef = B80B9189183BD0FD0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B919C183BD1170014C9C4 /* randomvals~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "randomvals~.mxo";
+			name = "randomvals~.mxo";
+			path = .bundle;
 			remoteRef = B80B919B183BD1170014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B919E183BD1170014C9C4 /* randomvals.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = randomvals.mxo;
+			name = randomvals.mxo;
+			path = .bundle;
 			remoteRef = B80B919D183BD1170014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B91B9183BD1370014C9C4 /* randfloats.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = randfloats.mxo;
+			name = randfloats.mxo;
+			path = .bundle;
 			remoteRef = B80B91B8183BD1370014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B91CE183BD1890014C9C4 /* ajh.wiiremote.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = ajh.wiiremote.mxo;
+			path = .bundle;
 			remoteRef = B80B91CD183BD1890014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B91D5183BD1930014C9C4 /* meandev.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = meandev.mxo;
+			path = .bundle;
 			remoteRef = B80B91D4183BD1930014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B92F7183BD52E0014C9C4 /* descriptors~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "descriptors~.mxo";
+			path = .bundle;
 			remoteRef = B80B92F6183BD52E0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B92F9183BD52E0014C9C4 /* descriptorsrt~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "descriptorsrt~.mxo";
+			path = .bundle;
 			remoteRef = B80B92F8183BD52E0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9302183BD53D0014C9C4 /* entrymatcher.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = entrymatcher.mxo;
+			path = .bundle;
 			remoteRef = B80B9301183BD53D0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9304183BD53D0014C9C4 /* entrymatcher~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "entrymatcher~.mxo";
+			path = .bundle;
 			remoteRef = B80B9303183BD53D0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9312183BD5640014C9C4 /* valconvert.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = valconvert.mxo;
+			path = .bundle;
 			remoteRef = B80B9311183BD5640014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9314183BD5640014C9C4 /* valconvert~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "valconvert~.mxo";
+			path = .bundle;
 			remoteRef = B80B9313183BD5640014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B940B183BD6C60014C9C4 /* gesture_maker.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = gesture_maker.mxo;
+			path = .bundle;
 			remoteRef = B80B940A183BD6C60014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9413183BD6CE0014C9C4 /* timefilter.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = timefilter.mxo;
+			path = .bundle;
 			remoteRef = B80B9412183BD6CE0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B941B183BD6D70014C9C4 /* timemap.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = timemap.mxo;
+			path = .bundle;
 			remoteRef = B80B941A183BD6D70014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B945C183BD7A10014C9C4 /* kernelmaker~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "kernelmaker~.mxo";
+			path = .bundle;
 			remoteRef = B80B945B183BD7A10014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9474183BD7BB0014C9C4 /* timeconvolve~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "timeconvolve~.mxo";
+			path = .bundle;
 			remoteRef = B80B9473183BD7BB0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94B8183BD8FB0014C9C4 /* partconvolve~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "partconvolve~.mxo";
+			path = .bundle;
 			remoteRef = B80B94B7183BD8FB0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94DD183BD98A0014C9C4 /* chebyshape~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "chebyshape~.mxo";
+			name = "chebyshape~.mxo";
+			path = .bundle;
 			remoteRef = B80B94DC183BD98A0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94E5183BD9950014C9C4 /* rbiquad~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "rbiquad~.mxo";
+			name = "rbiquad~.mxo";
+			path = .bundle;
 			remoteRef = B80B94E4183BD9950014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94F5183BD9B80014C9C4 /* rdcblock~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "rdcblock~.mxo";
+			name = "rdcblock~.mxo";
+			path = .bundle;
 			remoteRef = B80B94F4183BD9B80014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B94FD183BD9C10014C9C4 /* triggerlimit~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "triggerlimit~.mxo";
+			name = "triggerlimit~.mxo";
+			path = .bundle;
 			remoteRef = B80B94FC183BD9C10014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9505183BD9CA0014C9C4 /* tsah~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "tsah~.mxo";
+			name = "tsah~.mxo";
+			path = .bundle;
 			remoteRef = B80B9504183BD9CA0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B950D183BD9D30014C9C4 /* voicedrive~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "voicedrive~.mxo";
+			name = "voicedrive~.mxo";
+			path = .bundle;
 			remoteRef = B80B950C183BD9D30014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9515183BD9DF0014C9C4 /* voicemanager~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "voicemanager~.mxo";
+			name = "voicemanager~.mxo";
+			path = .bundle;
 			remoteRef = B80B9514183BD9DF0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9594183BDBAE0014C9C4 /* ibufconcatenate~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibufconcatenate~.mxo";
+			path = .bundle;
 			remoteRef = B80B9593183BDBAE0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B9598183BDBAE0014C9C4 /* ibufconcatedrive~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibufconcatedrive~.mxo";
+			path = .bundle;
 			remoteRef = B80B9597183BDBAE0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95A0183BDBB60014C9C4 /* ibuffer~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibuffer~.mxo";
+			path = .bundle;
 			remoteRef = B80B959F183BDBB60014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95A8183BDBC10014C9C4 /* ibuffermulti~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibuffermulti~.mxo";
+			path = .bundle;
 			remoteRef = B80B95A7183BDBC10014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95B1183BDBCE0014C9C4 /* ibufinfo~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibufinfo~.mxo";
+			name = "ibufinfo~.mxo";
+			path = .bundle;
 			remoteRef = B80B95B0183BDBCE0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95B9183BDBDA0014C9C4 /* ibufmultitable~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibufmultitable~.mxo";
+			name = "ibufmultitable~.mxo";
+			path = .bundle;
 			remoteRef = B80B95B8183BDBDA0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95C2183BDBE60014C9C4 /* ibufplayer~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibufplayer~.mxo";
+			path = .bundle;
 			remoteRef = B80B95C1183BDBE60014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B80B95CB183BDBEF0014C9C4 /* ibuftable~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "ibuftable~.mxo";
+			name = "ibuftable~.mxo";
+			path = .bundle;
 			remoteRef = B80B95CA183BDBEF0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758EC426A8DCD7001005A8 /* dynamicdsp~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamicdsp~.mxo";
+			name = "dynamicdsp~.mxo";
+			path = .bundle;
 			remoteRef = B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758EC626A8DCD7001005A8 /* dynamicserial~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamicserial~.mxo";
+			name = "dynamicserial~.mxo";
+			path = .bundle;
 			remoteRef = B8758EC526A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758EC826A8DCD7001005A8 /* dynamic.patch~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamic.patch~.mxo";
+			name = "dynamic.patch~.mxo";
+			path = .bundle;
 			remoteRef = B8758EC726A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758ECA26A8DCD7001005A8 /* dynamic.this~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamic.this~.mxo";
+			name = "dynamic.this~.mxo";
+			path = .bundle;
 			remoteRef = B8758EC926A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758ECC26A8DCD7001005A8 /* dynamic.request~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamic.request~.mxo";
+			name = "dynamic.request~.mxo";
+			path = .bundle;
 			remoteRef = B8758ECB26A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758ECE26A8DCD7001005A8 /* dynamic.in~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamic.in~.mxo";
+			name = "dynamic.in~.mxo";
+			path = .bundle;
 			remoteRef = B8758ECD26A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B8758ED026A8DCD7001005A8 /* dynamic.out~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "dynamic.out~.mxo";
+			name = "dynamic.out~.mxo";
+			path = .bundle;
 			remoteRef = B8758ECF26A8DCD7001005A8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
