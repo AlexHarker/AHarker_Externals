@@ -49,7 +49,7 @@ int C74_EXPORT main()
 				(method) triggerlimit_new,
 				(method) triggerlimit_free,
 				sizeof(t_triggerlimit), 
-				NULL, 
+				nullptr, 
 				A_DEFLONG, 
 				0);
 	
@@ -177,7 +177,7 @@ void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count)
 void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	x->count = 0; 
-	object_method(dsp64, gensym("dsp_add64"), x, triggerlimit_perform64, 0, NULL);
+	object_method(dsp64, gensym("dsp_add64"), x, triggerlimit_perform64, 0, nullptr);
 }
 
 // Assist

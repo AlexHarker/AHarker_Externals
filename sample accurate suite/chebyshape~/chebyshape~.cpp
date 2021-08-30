@@ -66,7 +66,7 @@ int C74_EXPORT main()
 				(method) chebyshape_new,
 				(method) chebyshape_free,
 				sizeof(t_chebyshape), 
-				NULL, 
+				nullptr,
 				A_DEFLONG, 
 				A_DEFLONG,
 				0);
@@ -480,7 +480,7 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 	// Add perform routine according to mode 
 	
 	if (!offset)
-		object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform64, 0, nullptr);
 	else 
 	{
 		if (offset + num_coeff - 1 <= num_sig_ins)
@@ -490,7 +490,7 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 				coeff_ins[i] = sig_ins[i + offset - 1];
 				coeff[i] = 0.;
 			}
-			object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform_dynamic64, 0, NULL);
+			object_method(dsp64, gensym("dsp_add64"), x, chebyshape_perform_dynamic64, 0, nullptr);
 		}
 	}
 }

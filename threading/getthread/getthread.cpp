@@ -42,9 +42,9 @@ int C74_EXPORT main()
 {
     this_class = class_new("getthread",
                           (method) getthread_new,
-                          (method) NULL,
+                          (method) nullptr,
                           sizeof(t_getthread),
-                          NULL,
+                          nullptr,
                           0);
     
     class_addmethod(this_class, (method) getthread_doit, "bang", 0);

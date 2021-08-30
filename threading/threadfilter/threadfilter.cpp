@@ -46,9 +46,9 @@ int C74_EXPORT main()
 {
     this_class = class_new("threadfilter",
                           (method) threadfilter_new,
-                          (method) NULL,
+                          (method) nullptr,
                           sizeof(t_threadfilter),
-                          NULL,
+                          nullptr,
                           0);
     
     class_addmethod(this_class, (method) threadfilter_int, "int", A_LONG, 0);

@@ -334,9 +334,9 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
 void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
     if (maxvectorsize >= SIMDLimits<double>::max_size)
-        object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform_SIMD64, 0, NULL);
+        object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform_SIMD64, 0, nullptr);
     else
-        object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform64, 0, NULL);
+        object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform64, 0, nullptr);
 }
 
 // Signal-specific Assist

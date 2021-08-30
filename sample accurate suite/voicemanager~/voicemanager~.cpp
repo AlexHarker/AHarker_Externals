@@ -72,7 +72,7 @@ int C74_EXPORT main()
 						   (method) voicemanager_new,
 						   (method) voicemanager_free,
 						   sizeof(t_voicemanager), 
-						   NULL, 
+						   nullptr,
 						   A_DEFLONG, 
 						   0);
 	
@@ -331,7 +331,7 @@ void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double
 	x->sr_val = samplerate / 1000.0;
 	x->active_connected = count[3];
 	
-	object_method(dsp64, gensym("dsp_add64"), x, voicemanager_perform64, 0, NULL);
+	object_method(dsp64, gensym("dsp_add64"), x, voicemanager_perform64, 0, nullptr);
 }
 
 // Assist
