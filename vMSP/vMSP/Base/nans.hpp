@@ -12,16 +12,6 @@
 template <bool FixInfs>
 struct nan_and_inf_fixer
 {
-    float operator()(const float a)
-    {
-        uint32_t a_int = *reinterpret_cast<const uint32_t *>(&a);
-        
-        if (FixInfs)
-            return ((a_int & 0x7F800000UL) == 0x7F800000UL) ? 0.f : a;
-        
-        return ((a_int & 0x7F800000UL) == 0x7F800000UL) && (a_int & 0x007FFFFFUL) ? 0.f : a;
-    }
-    
     double operator()(const double a)
     {
         uint64_t a_int = *reinterpret_cast<const uint64_t *>(&a);
@@ -32,7 +22,6 @@ struct nan_and_inf_fixer
         return ((a_int & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) && (a_int & 0x000FFFFFFFFFFFFFULL) ? 0.0 : a;
     }
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)       { return operator()(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)     { return operator()(a.mVal); }
     
     template <class T, int N>
