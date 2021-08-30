@@ -17,7 +17,6 @@ struct trunc_functor
     
     // Empty Implementations
     
-    void operator()(float *o, float *i, long size) {}
     void operator()(double *o, double *i, long size) {}
 };
 

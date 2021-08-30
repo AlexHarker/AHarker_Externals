@@ -17,7 +17,6 @@ struct maximum_functor
     
     // Empty Implementations
     
-    void operator()(float *o, float *i1, float *i2, long size, double val, InputType type) {}
     void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
 };
 
