@@ -24,9 +24,7 @@
 
 #include <SIMDSupport.hpp>
 
-#include "PatchSlot.hpp"
-#include "PatchSet.hpp"
-
+#include "patch_set.hpp"
 #include "dynamic_host.hpp"
 
 

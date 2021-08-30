@@ -10,6 +10,7 @@
 #include <memory>
 #include <vector>
 
+#include "patch_slot.hpp"
 
 // Attribute helper for dspchains
 

@@ -21,23 +21,20 @@
 #include <jpatcher_api.h>
 
 #include <dynamic~.hpp>
-#include "PatchSlot.hpp"
-#include "PatchSet.hpp"
-#include "ThreadSet.hpp"
 
+#include "patch_set.hpp"
+#include "thread_set.hpp"
 #include "dynamic_host.hpp"
 
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
 
 // FIX - threadsafety around alterations to the patch set vector
-
-// TODO - Share threads between objects
-// TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
-
 // FIX - potential adc~ crashes / no audio - cannot get traction on this
 
+// TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
+// TODO - share threads between objects
 // TODO - allow patch crossfading
 // TODO - patch serialisation
 
