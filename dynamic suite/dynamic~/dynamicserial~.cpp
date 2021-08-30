@@ -52,7 +52,7 @@ struct t_dynamicserial
 	
 	// Patch Data and Variables 
 	
-    PatchSet<PatchSlot> *patch_set;
+    patch_set<PatchSlot> *patch_set;
 			
 	long last_vec_size;
 	long last_samp_rate;
@@ -88,7 +88,7 @@ void dynamicserial_perform_denormal_handled(t_dynamicserial *x);
 t_int *dynamicserial_perform(t_int *w);
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate);
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate);
 void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -96,7 +96,7 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 
 int C74_EXPORT main()
 {
-    using handler = DynamicHost<t_dynamicserial>;
+    using handler = dynamic_host<t_dynamicserial>;
     
 	this_class = class_new("dynamicserial~",
 								 (method) dynamicserial_new,
@@ -296,7 +296,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 	// Setup slots
     
-    x->patch_set = new PatchSet<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new patch_set<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
     
 	// Load patch
     
@@ -457,13 +457,13 @@ void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, 
 
 // DSP
 
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate)
 {
 	bool mem_fail = false;
 			
 	// Do internal dsp compile
 	
-	x->patch_set->compileDSP(vec_size, samp_rate);
+	x->patch_set->compile_dsp(vec_size, sample_rate);
 	
 	for (long i = 0; i < x->num_temp_buffers; i++)
 	{
@@ -478,7 +478,7 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 	}
 		
 	x->last_vec_size = vec_size;
-	x->last_samp_rate = samp_rate;
+	x->last_samp_rate = sample_rate;
 	
 	return mem_fail;
 }

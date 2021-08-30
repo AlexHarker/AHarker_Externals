@@ -91,7 +91,7 @@ struct t_dynamicdsp
     // Thread Data / Patches
     
     ThreadSet *threads;
-    ThreadedPatchSet *patch_set;
+    threaded_patch_set *patch_set;
 };
 
 // Function Prototypes
@@ -113,7 +113,7 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate);
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -190,7 +190,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
 
 int C74_EXPORT main()
 {
-    using handler = DynamicHost<t_dynamicdsp>;
+    using handler = dynamic_host<t_dynamicdsp>;
 
 	this_class = class_new("dynamicdsp~",
 								 (method)dynamicdsp_new, 
@@ -409,7 +409,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Setup temporary memory / threads / slots
 	
     x->threads = new ThreadSet((t_object *) x, reinterpret_cast<ThreadSet::procFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
-    x->patch_set = new ThreadedPatchSet((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new threaded_patch_set((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
 	// Load patch
 	
@@ -493,9 +493,9 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
         if (thread_request && index >= 0)
         {
             if (thread_request > 0)
-                x->patch_set->requestThread(index, thread_request);
+                x->patch_set->request_thread(index, thread_request);
             else
-                x->patch_set->requestThread(index, index);
+                x->patch_set->request_thread(index, index);
             
             x->update_thread_map = 1;
         }
@@ -545,9 +545,9 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 		thread_request = atom_getlong(argv + 1) - 1;
     
 	if (thread_request >= 0)
-        x->patch_set->requestThread(index, thread_request);
+        x->patch_set->request_thread(index, thread_request);
     else
-        x->patch_set->requestThread(index, index);
+        x->patch_set->request_thread(index, index);
     
     x->update_thread_map = 1;
 }
@@ -626,7 +626,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     if (x->manual_threading)
     {
         for (long i = 1; i <= x->patch_set->size(); i++)
-            x->patch_set->processIfThreadMatches(i, sig_outs, thread_num, num_active_threads);
+            x->patch_set->process_if_thread_matches(i, sig_outs, thread_num, num_active_threads);
     }
     else
     {
@@ -637,7 +637,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
             if (++index > size)
                 index -= size;
             
-            x->patch_set->processIfUnprocessed(i, sig_outs);
+            x->patch_set->process_if_unprocessed(i, sig_outs);
         }
     }
     
@@ -665,12 +665,12 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     num_active_threads = !multithread_flag ? 1 : num_active_threads;
     
 	if (!x->manual_threading)
-        x->patch_set->resetProcessed();
+        x->patch_set->reset_processed();
 	
 	if (x->update_thread_map)
 	{
 		x->update_thread_map = 0;											
-		x->patch_set->updateThreads();
+        x->patch_set->update_threads();
 	}
     
 	// Do processing - the switch aims to get more speed from inlining a fixed loop size
@@ -734,16 +734,16 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 // DSP Routines
 
-bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long samp_rate)
+bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate)
 {	
     bool mem_fail = x->threads->resizeBuffers(vec_size * sig_size);
 	
 	// Do internal dsp compile (for each valid patch)
 	
-    x->patch_set->compileDSP(vec_size, samp_rate);
+    x->patch_set->compile_dsp(vec_size, sample_rate);
     
 	x->last_vec_size = vec_size;
-	x->last_samp_rate = samp_rate;
+	x->last_samp_rate = sample_rate;
 	
 	return mem_fail;
 }
