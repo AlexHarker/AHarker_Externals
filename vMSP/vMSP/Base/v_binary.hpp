@@ -17,7 +17,11 @@ enum CalculationType { kScalar, kVectorOp, kVectorArray };
 template<typename Functor, CalculationType Vec32, CalculationType Vec64, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
-    static float fix_denorm(const float a) { return AH_FIX_DENORM_FLOAT(a); }
+    static float fix_denorm(const float a)
+    {
+        float b = a;
+        return FIX_DENORM_FLOAT(b);
+    }
 
     template <class T>
     static T fix_denorm(const T a) { return a; }
