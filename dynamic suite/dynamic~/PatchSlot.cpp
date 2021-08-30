@@ -9,291 +9,291 @@
 #define snprintf _snprintf
 #endif
 
-struct SymbolBinding
+struct symbol_binding
 {
-    SymbolBinding(const char *str, void *item) : mSymbol(gensym(str)), mPrevious(mSymbol->s_thing)
+    symbol_binding(const char *str, void *item) : m_symbol(gensym(str)), m_previous(m_symbol->s_thing)
     {
-        mSymbol->s_thing = reinterpret_cast<t_object *>(item);
+        m_symbol->s_thing = reinterpret_cast<t_object *>(item);
     }
-    
-    ~SymbolBinding()
+
+    ~symbol_binding()
     {
-        mSymbol->s_thing = mPrevious;
+        m_symbol->s_thing = m_previous;
     }
-    
-    t_symbol *mSymbol;
-    t_object *mPrevious;
+
+    t_symbol *m_symbol;
+    t_object *m_previous;
 };
 
 // Deferred patch deletion
 
-void deletePatch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
+void delete_patch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
 {
     freeobject(patch);
 }
 
 // Set subpatcher association
 
-int setSubpatcherAssoc(t_patcher *p, t_object *x)
+int set_subpatcher_assoc(t_patcher *p, t_object *x)
 {
     t_object *assoc;
-    
+
     object_method(p, gensym("getassoc"), &assoc);
     if (!assoc)
         object_method(p, gensym("setassoc"), x);
-    
+
     return 0;
 }
 
 // Patcher Traversal
 
-template <void (PatchSlot::*Method)(t_patcher *p)>
-int PatchSlot::patcherTraverse(t_patcher *p, void *arg, t_object *owner)
+template <void (patch_slot::*Method)(t_patcher *p)>
+int patch_slot::patcher_traverse(t_patcher *p, void *arg, t_object *owner)
 {
     // Avoid recursion into a poly / pfft / dynamicdsp~
-    
+
     t_object *assoc = 0;
     object_method(p, gensym("getassoc"), &assoc);
     if (assoc && assoc != owner)
         return 0;
-    
+
     // Call function
-    
+
     (this->*Method)(p);
-    
+
     // Continue search for subpatchers and traverse them if found
-    
+
     for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
     {
         t_patcher *p2;
         long index = 0;
-        
+
         while (b && (p2 = reinterpret_cast<t_patcher *>(object_subpatcher(jbox_get_object(b), &index, arg))))
-            if (patcherTraverse<Method>(p2, arg, owner))
+            if (patcher_traverse<Method>(p2, arg, owner))
                 return 1;
     }
-    
+
     return 0;
 }
 
-PatchSlot::~PatchSlot()
+patch_slot::~patch_slot()
 {
-    freePatch();
+    free_patch();
 }
 
 // Loading
 
-PatchSlot::LoadError PatchSlot::load(t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate)
+patch_slot::LoadError patch_slot::load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
 {
     // Copy Arguments
-    
-    mPathSymbol = path;
-    mName = std::string(path->s_name);
-    mPath = 0;
-    mArgc = std::min(argc, (long) MAX_ARGS);
-    
-    std::copy_n(argv, mArgc, mArgv);
-    
+
+    m_path_symbol = path;
+    m_name = std::string(path->s_name);
+    m_path = 0;
+    m_argc = std::min(argc, (long) MAX_ARGS);
+
+    std::copy_n(argv, m_argc, m_argv);
+
     // Load
-    
-    return load(vecSize, samplingRate, true);
+
+    return load(vec_size, sampling_rate, true);
 }
 
-PatchSlot::LoadError PatchSlot::load(long vecSize, long samplingRate, bool initialise)
+patch_slot::LoadError patch_slot::load(long vec_size, long sampling_rate, bool initialise)
 {
     t_fourcc type;
-    t_fourcc validTypes[3];
-    
+    t_fourcc valid_types[3];
+
     // Set the valid types to test for
-    
-    validTypes[0] = FOUR_CHAR_CODE('maxb');
-    validTypes[1] = FOUR_CHAR_CODE('TEXT');
-    validTypes[2] = FOUR_CHAR_CODE('JSON');
-    
+
+    valid_types[0] = FOUR_CHAR_CODE('maxb');
+    valid_types[1] = FOUR_CHAR_CODE('TEXT');
+    valid_types[2] = FOUR_CHAR_CODE('JSON');
+
     // Set flags off / free old patch / set on ready to be changed at load time
-    
-    bool on = initialise ? true : mOn;
-    mValid = mBusy = mOn = false;
-    freePatch();
-    mOn = on;
-    
+
+    bool on = initialise ? true : m_on;
+    m_valid = m_busy = m_on = false;
+    free_patch();
+    m_on = on;
+
     // Try to locate a file of the given name that is of the correct type
-    
+
     char name[512];
-    strcpy(name, mName.c_str());
-    
-    if (locatefile_extended(name, &mPath, &type, validTypes, 3))
+    strcpy(name, m_name.c_str());
+
+    if (locatefile_extended(name, &m_path, &type, valid_types, 3))
         return kFileNotFound;
-    
+
     // Store the binding symbols with RAII to restore once done
-    
-    SymbolBinding owner("__dynamic.host_object__", mOwner);
-    SymbolBinding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
-    SymbolBinding PAT("#P", mParent);
+
+    symbol_binding owner("__dynamic.host_object__", m_owner);
+    symbol_binding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
+    symbol_binding PAT("#P", m_parent);
 
     // Load the patch (don't interrupt dsp and use )
-    
-    short savedLoadUpdate = dsp_setloadupdate(false);
+
+    short saved_loadupdate = dsp_setloadupdate(false);
     loadbang_suspend();
-    mPatch = reinterpret_cast<t_patcher *>(intload(name, mPath, 0 , mArgc, mArgv, false));
+    m_patch = reinterpret_cast<t_patcher *>(intload(name, m_path, 0 , m_argc, m_argv, false));
 
     // Check something has loaded and that it is a patcher
-    
-    if (!mPatch)
-        return loadFinished(kNothingLoaded, savedLoadUpdate);
-    
-    if (!ispatcher(reinterpret_cast<t_object *>(mPatch)))
-        return loadFinished(kNotPatcher, savedLoadUpdate);
+
+    if (!m_patch)
+        return load_finished(kNothingLoaded, saved_loadupdate);
+
+    if (!ispatcher(reinterpret_cast<t_object *>(m_patch)))
+        return load_finished(kNotPatcher, saved_loadupdate);
 
     // Use setclass to allow Modify Read-Only / Set associations
-    
+
     long result = 0;
-    object_method(mPatch, gensym("setclass"));
-    object_method(mPatch, gensym("traverse"), setSubpatcherAssoc, mOwner, &result);
+    object_method(m_patch, gensym("setclass"));
+    object_method(m_patch, gensym("traverse"), set_subpatcher_assoc, m_owner, &result);
 
     // Find ins and link outs
-    
-    patcherTraverse<&PatchSlot::findIns>(mPatch, nullptr, mOwner);
-    patcherTraverse<&PatchSlot::linkOutlets>(mPatch, nullptr, mOwner);
-    
+
+    patcher_traverse<&patch_slot::find_ins>(m_patch, nullptr, m_owner);
+    patcher_traverse<&patch_slot::link_outlets>(m_patch, nullptr, m_owner);
+
     // Set window name and compile DSP if the owning patch is on
-    
-    setWindowName();
-    
-    if (sys_getdspobjdspstate(mOwner))
-        compileDSP(vecSize, samplingRate, true);
-    
+
+    set_window_name();
+
+    if (sys_getdspobjdspstate(m_owner))
+        compile_dsp(vec_size, sampling_rate, true);
+
     // Finish loading (which fires loadbang and sets the valid flag)
-    
-    return loadFinished(kNone, savedLoadUpdate);
+
+    return load_finished(kNone, saved_loadupdate);
 }
 
-PatchSlot::LoadError PatchSlot::loadFinished(LoadError error, short savedLoadUpdate)
+patch_slot::LoadError patch_slot::load_finished(LoadError error, short saved_loadupdate)
 {
     loadbang_resume();
-    dsp_setloadupdate(savedLoadUpdate);
-    mValid = error == kNone ? true : false;
-    if (!mValid)
-        freePatch();
+    dsp_setloadupdate(saved_loadupdate);
+    m_valid = error == kNone ? true : false;
+    if (!m_valid)
+        free_patch();
     return error;
 }
 
 // Messages
 
-void PatchSlot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
+void patch_slot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
 {
-    if (inlet < 0 || inlet >= getNumIns())
+    if (inlet < 0 || inlet >= get_num_ins())
         return;
-    
-    for (std::vector<void *>::iterator it = mInTable[inlet].begin(); it != mInTable[inlet].end(); it++)
+
+    for (std::vector<void *>::iterator it = m_in_table[inlet].begin(); it != m_in_table[inlet].end(); it++)
         outlet_anything(*it, msg, argc, argv);
 }
 
 // Processing and DSP
 
-bool PatchSlot::process(void **outputs)
+bool patch_slot::process(void **outputs)
 {
-    if (mDSPChain && mValid && mOn)
+    if (m_dspchain && m_valid && m_on)
     {
-        mOutputs = outputs;
-        dspchain_tick(mDSPChain);
+        m_outputs = outputs;
+        dspchain_tick(m_dspchain);
         return true;
     }
-    
+
     return false;
 }
 
-void PatchSlot::compileDSP(long vecSize, long samplingRate, bool forceWhenInvalid)
+void patch_slot::compile_dsp(long vec_size, long sampling_rate, bool force_when_invalid)
 {
-    if (mValid || forceWhenInvalid)
+    if (m_valid || force_when_invalid)
     {
         // Free the old dspchain
-    
-        if (mDSPChain)
-            freeobject(reinterpret_cast<t_object *>(mDSPChain));
-    
+
+        if (m_dspchain)
+            freeobject(reinterpret_cast<t_object *>(m_dspchain));
+
         // Recompile
-    
-        mDSPChain = dspchain_compile(mPatch, vecSize, samplingRate);
-        
+
+        m_dspchain = dspchain_compile(m_patch, vec_size, sampling_rate);
+
         // This won't work for gen~ the first time round, so we have to check and compile again
         // Hopefully c74 will sort it, but this code needs to remain for old versions of Max
-        
-        if (mDSPChain && mDSPChain->c_broken)
+
+        if (m_dspchain && m_dspchain->c_broken)
         {
-            if (mDSPChain)
-                freeobject(reinterpret_cast<t_object *>(mDSPChain));
-            
-            mDSPChain = dspchain_compile(mPatch, vecSize, samplingRate);
+            if (m_dspchain)
+                freeobject(reinterpret_cast<t_object *>(m_dspchain));
+
+            m_dspchain = dspchain_compile(m_patch, vec_size, sampling_rate);
         }
     }
 }
 
 // State
 
-void PatchSlot::setOn(bool on)
+void patch_slot::set_on(bool on)
 {
-    mOn = on;
-    
-    if (getPatch())
+    m_on = on;
+
+    if (get_patch())
     {
-        for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+        for (auto it = m_state_listeners.begin(); it != m_state_listeners.end(); it++)
             object_method((*it), gensym("changeon"));
     }
 }
 
-void PatchSlot::setBusy(bool busy)
+void patch_slot::set_busy(bool busy)
 {
-    mBusy = busy;
-    
-    if (getPatch())
+    m_busy = busy;
+
+    if (get_patch())
     {
-        for (auto it = mStateListeners.begin(); it != mStateListeners.end(); it++)
+        for (auto it = m_state_listeners.begin(); it != m_state_listeners.end(); it++)
             object_method((*it), gensym("changebusy"));
     }
 }
 
 // Listeners
 
-void PatchSlot::registerListener(t_object *listener)
+void patch_slot::register_listener(t_object *listener)
 {
-    mStateListeners.push_back(listener);
+    m_state_listeners.push_back(listener);
 }
 
-void PatchSlot::unregisterListener(t_object *listener)
+void patch_slot::unregister_listener(t_object *listener)
 {
-    auto &v = mStateListeners;
+    auto &v = m_state_listeners;
     v.erase(std::remove(v.begin(), v.end(), listener), v.end());
 }
 
 // Window Management
 
-void PatchSlot::setWindowName()
+void patch_slot::set_window_name()
 {
-    char indexString[16];
-    
-    snprintf(indexString, 15, " (%ld)", mUserIndex);
-    
-    std::string windowName = std::string(mName);
-    windowName.append(indexString);
-    jpatcher_set_title(mPatch, gensym(windowName.c_str()));
+    char index_string[16];
+
+    snprintf(index_string, 15, " (%ld)", m_user_index);
+
+    std::string window_name = std::string(m_name);
+    window_name.append(index_string);
+    jpatcher_set_title(m_patch, gensym(window_name.c_str()));
 }
 
-void PatchSlot::openWindow() const
+void patch_slot::open_window() const
 {
-    if (mPatch)
-        object_method(mPatch, gensym("front"));
+    if (m_patch)
+        object_method(m_patch, gensym("front"));
 }
 
-void PatchSlot::closeWindow() const
+void patch_slot::close_window() const
 {
-    if (mPatch)
-        object_method(mPatch, gensym("wclose"));
+    if (m_patch)
+        object_method(m_patch, gensym("wclose"));
 }
 
 // Error strings
 
-const char *PatchSlot::getError(LoadError error)
+const char *patch_slot::get_error(LoadError error)
 {
     switch (error)
     {
@@ -306,65 +306,65 @@ const char *PatchSlot::getError(LoadError error)
 
 // Inlet linking and unlinking
 
-void PatchSlot::handleIO(t_patcher *p, const char *type, long maxIndex, std::function<void(IO *, long)> func)
+void patch_slot::handle_io(t_patcher *p, const char *type, long max_index, std::function<void(IO *, long)> func)
 {
     t_symbol *ps_io = gensym(type);
-    
+
     for (t_box *b = jpatcher_get_firstobject(p); b; b = jbox_get_nextobject(b))
     {
         if (jbox_get_maxclass(b) == ps_io)
         {
             IO *io = reinterpret_cast<IO *>(jbox_get_object(b));
             long index = io->s_index - 1;
-            if (index >= 0 && index < maxIndex)
+            if (index >= 0 && index < max_index)
                 func(io, index);
         }
     }
 }
 
-void PatchSlot::findIns(t_patcher *p)
+void patch_slot::find_ins(t_patcher *p)
 {
-    auto store = [&](IO *io, long index) { mInTable[index].push_back(io->s_obj.o_outlet); };
+    auto store = [&](IO *io, long index) { m_in_table[index].push_back(io->s_obj.o_outlet); };
 
-    handleIO(p, "in", getNumIns(), store);
+    handle_io(p, "in", get_num_ins(), store);
 }
 
-void PatchSlot::linkOutlets(t_patcher *p)
+void patch_slot::link_outlets(t_patcher *p)
 {
-    auto link = [&](IO *io, long index) { outlet_add(io->s_outlet, (*mOutTable)[index]); };
-    
-    handleIO(p, "out", getNumOuts(), link);
+    auto link = [&](IO *io, long index) { outlet_add(io->s_outlet, (*m_out_table)[index]); };
+
+    handle_io(p, "out", get_num_outs(), link);
 }
 
-void PatchSlot::unlinkOutlets(t_patcher *p)
+void patch_slot::unlink_outlets(t_patcher *p)
 {
-    auto unlink = [&](IO *io, long index) { outlet_rm(io->s_outlet, (*mOutTable)[index]); };
-    
-    handleIO(p, "out", getNumOuts(), unlink);
+    auto unlink = [&](IO *io, long index) { outlet_rm(io->s_outlet, (*m_out_table)[index]); };
+
+    handle_io(p, "out", get_num_outs(), unlink);
 }
 
 // Free patch
 
-void PatchSlot::freePatch()
+void patch_slot::free_patch()
 {
-    if (mDSPChain)
-        freeobject(reinterpret_cast<t_object *>(mDSPChain));
+    if (m_dspchain)
+        freeobject(reinterpret_cast<t_object *>(m_dspchain));
 
-    if (mPatch)
+    if (m_patch)
     {
         // Remove pointers to ins, unlink outlets, close window and free the patch
-        
-        for (std::vector< std::vector<void *> >::iterator it = mInTable.begin(); it != mInTable.end(); it++)
+
+        for (std::vector< std::vector<void *> >::iterator it = m_in_table.begin(); it != m_in_table.end(); it++)
             it->clear();
-        patcherTraverse<&PatchSlot::unlinkOutlets>(mPatch, NULL, mOwner);
-        closeWindow();
+        patcher_traverse<&patch_slot::unlink_outlets>(m_patch, nullptr, m_owner);
+        close_window();
 
         // Defer patch deletion for speed and safety
-        
-        defer(mPatch, (method) deletePatch, NULL, 0, NULL);
+
+        defer(m_patch, (method) delete_patch, nullptr, 0, nullptr);
     }
-    
-    mStateListeners.clear();
-    mPatch = nullptr;
-    mDSPChain = nullptr;
+
+    m_state_listeners.clear();
+    m_patch = nullptr;
+    m_dspchain = nullptr;
 }

@@ -56,12 +56,12 @@ public:
 
     static void do_open(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        slot_from_atom(argv)->openWindow();
+        slot_from_atom(argv)->open_window();
     }
 
     static void do_close(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        slot_from_atom(argv)->closeWindow();
+        slot_from_atom(argv)->close_window();
     }
 
     // Constructor
@@ -183,7 +183,7 @@ public:
 
         for (t_atom_long i = lo; i < hi; i++)
         {
-            if (m_slots[i] && m_slots[i]->getValid() && !m_slots[i]->getBusy())
+            if (m_slots[i] && m_slots[i]->get_valid() && !m_slots[i]->get_busy())
             {
                 m_target_index = i + 1;
                 return;
@@ -202,7 +202,7 @@ public:
 
     void compile_dsp(long vec_size, long sampling_rate)
     {
-        for_all_slots(&T::compileDSP, vec_size, sampling_rate, false);
+        for_all_slots(&T::compile_dsp, vec_size, sampling_rate, false);
     }
 
     // Window Management
@@ -229,29 +229,29 @@ public:
 
     void register_listener(t_ptr_int index, t_object *listener)
     {
-        slot_action(&T::registerListener, index, listener);
+        slot_action(&T::register_listener, index, listener);
     }
 
     void unregister_listener(t_ptr_int index, t_object *listener)
     {
-        slot_action(&T::unregisterListener, index, listener);
+        slot_action(&T::unregister_listener, index, listener);
     }
 
     // Queries
 
     void ***get_output_handle(t_ptr_int index)
     {
-        return slot_exists(index) ? m_slots[index - 1]->getOutputHandle() : nullptr;
+        return slot_exists(index) ? m_slots[index - 1]->get_output_handle() : nullptr;
     }
 
     bool get_on(t_ptr_int index)
     {
-        return slot_action_result(&T::getOn, index);
+        return slot_action_result(&T::get_on, index);
     }
 
     bool get_busy(t_ptr_int index)
     {
-        return slot_action_result(&T::getBusy, index);
+        return slot_action_result(&T::get_busy, index);
     }
 
     t_atom_long get_loading_index()
@@ -261,12 +261,12 @@ public:
 
     void set_on(t_ptr_int index, t_ptr_int state)
     {
-        slot_action(&T::setOn, index, state ? true : false);
+        slot_action(&T::set_on, index, state ? true : false);
     }
 
     void set_busy(t_ptr_int index, t_ptr_int state)
     {
-        slot_action(&T::setBusy, index, state ? true : false);
+        slot_action(&T::set_busy, index, state ? true : false);
     }
 
     // Update
@@ -277,7 +277,7 @@ public:
 
         for (auto it = m_slots.begin(); it != m_slots.end(); it++)
         {
-            if ((*it) && (*it)->getPatch() == p)
+            if ((*it) && (*it)->get_patch() == p)
             {
                 (*it)->load(vec_size, sampling_rate, false);
                 break;
@@ -290,8 +290,8 @@ public:
     t_atom_long patch_index(t_patcher *p)
     {
         for (auto it = m_slots.begin(); it != m_slots.end(); it++)
-            if ((*it) && (*it)->getPatch() == p)
-                return (*it)->getUserIndex();
+            if ((*it) && (*it)->get_patch() == p)
+                return (*it)->get_user_index();
 
         return -1;
     }
@@ -312,8 +312,8 @@ public:
         long count = 0;
 
         for (auto it = m_slots.begin(); it != m_slots.end(); it++)
-            if ((*it) && (*it)->getPatch() && count++ == index)
-                return (*it)->getPatch();
+            if ((*it) && (*it)->get_patch() && count++ == index)
+                return (*it)->get_patch();
 
         return nullptr;
     }
@@ -342,7 +342,7 @@ protected:
         if (error != T::LoadError::kNone)
         {
             m_slots[index - 1] = nullptr;
-            object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::getError(error));
+            object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::get_error(error));
         }
     }
 
@@ -363,7 +363,7 @@ protected:
 
     T *release(t_atom_long index)
     {
-        m_slots[index - 1]->setInvalid();
+        m_slots[index - 1]->set_invalid();
         return m_slots[index - 1].release();
     }
 
@@ -422,28 +422,28 @@ protected:
 
 // Class with threading additions
 
-struct threaded_patch_set : public patch_set<ThreadedPatchSlot>
+struct threaded_patch_set : public patch_set<threaded_patch_slot>
 {
     threaded_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
     : patch_set(x, parent, num_ins, num_outs, outs) {}
 
     bool process_if_thread_matches(t_atom_long index, void **outputs, long thread, long nThreads)
     {
-        return slot_action_result(&ThreadedPatchSlot::processIfThreadMatches, index, outputs, thread, nThreads);
+        return slot_action_result(&threaded_patch_slot::process_if_thread_matches, index, outputs, thread, nThreads);
     }
 
     bool process_if_unprocessed(t_atom_long index, void **outputs)
     {
-        return slot_action_result(&ThreadedPatchSlot::processIfUnprocessed, index, outputs);
+        return slot_action_result(&::threaded_patch_slot::process_if_unprocessed, index, outputs);
     }
 
     void request_thread(long index, long thread)
     {
-        slot_action(&ThreadedPatchSlot::requestThread, index, thread);
+        slot_action(&::threaded_patch_slot::request_thread, index, thread);
     }
 
-    void reset_processed()   { for_all_slots(&ThreadedPatchSlot::resetProcessed); }
-    void update_threads()    { for_all_slots(&ThreadedPatchSlot::updateThread); }
+    void reset_processed()   { for_all_slots(&::threaded_patch_slot::reset_processed); }
+    void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
 };
 
 #endif  /* _PATCHSET_H_ */

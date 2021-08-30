@@ -52,7 +52,7 @@ struct t_dynamicserial
 	
 	// Patch Data and Variables 
 	
-    patch_set<PatchSlot> *patch_set;
+    patch_set<patch_slot> *patch_set;
 			
 	long last_vec_size;
 	long last_samp_rate;
@@ -296,7 +296,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 	// Setup slots
     
-    x->patch_set = new patch_set<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new patch_set<patch_slot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
     
 	// Load patch
     

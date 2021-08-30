@@ -12,167 +12,167 @@
 #include <AH_Locks.hpp>
 
 
-// PatchSlot Class
+// patch_slot Class
 
-class PatchSlot
+class patch_slot
 {
     // Generic in/out structure
-    
+
     struct IO
     {
         t_object s_obj;
-        
+
         long s_index;
         void *s_outlet;
     };
-    
+
     enum { MAX_ARGS = 16 };
- 
+
 public:
-    
+
     enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
-    
-    PatchSlot(t_object *owner, t_object *parent, t_atom_long index, long numIns, std::vector<void *> *outTable)
-    : mPatch(nullptr), mDSPChain(nullptr), mPathSymbol(nullptr)
-    , mPath(0), mUserIndex(index), mArgc(0)
-    , mValid(false), mOn(false), mBusy(false)
-    , mOutputs(nullptr), mOutTable(outTable)
-    , mOwner(owner), mParent(parent)
+
+    patch_slot(t_object *owner, t_object *parent, t_atom_long index, long num_ins, std::vector<void *> *out_table)
+    : m_patch(nullptr), m_dspchain(nullptr), m_path_symbol(nullptr)
+    , m_path(0), m_user_index(index), m_argc(0)
+    , m_valid(false), m_on(false), m_busy(false)
+    , m_outputs(nullptr), m_out_table(out_table)
+    , m_owner(owner), m_parent(parent)
     {
-        mInTable.resize(numIns);
+        m_in_table.resize(num_ins);
     }
-    
-    ~PatchSlot();
-    
-    LoadError load(t_symbol *path, long argc, t_atom *argv, long vecSize, long samplingRate);
-    LoadError load(long vecSize, long samplingRate, bool initialise);
-    
+
+    ~patch_slot();
+
+    LoadError load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate);
+    LoadError load(long vec_size, long sampling_rate, bool initialise);
+
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
-    
-    void compileDSP(long vecSize, long samplingRate, bool forceWhenInvalid);
+
+    void compile_dsp(long vecSize, long sampling_rate, bool force_when_invalid);
     bool process(void **outputs);
-    
+
     // Getters
-       
-    t_patcher *getPatch() const         { return mPatch; }
-    t_atom_long getUserIndex() const    { return mUserIndex; }
-    bool getValid() const               { return mValid; }
-    bool getOn() const                  { return mOn; }
-    bool getBusy() const                { return mBusy; }
-    void ***getOutputHandle()           { return &mOutputs; }
-    
+
+    t_patcher *get_patch() const        { return m_patch; }
+    t_atom_long get_user_index() const  { return m_user_index; }
+    bool get_valid() const              { return m_valid; }
+    bool get_on() const                 { return m_on; }
+    bool get_busy() const               { return m_busy; }
+    void ***get_output_handle()         { return &m_outputs; }
+
     // Setters
-    
-    void setOn(bool on);
-    void setBusy(bool busy);
-    void setInvalid()           { mValid = false; }
+
+    void set_on(bool on);
+    void set_busy(bool busy);
+    void set_invalid()          { m_valid = false; }
 
     // Listeners
-    
-    void registerListener(t_object *listener);
-    void unregisterListener(t_object *listener);
-    
+
+    void register_listener(t_object *listener);
+    void unregister_listener(t_object *listener);
+
     // Number of ins and outs
-    
-    long getNumIns() const      { return mInTable.size(); }
-    long getNumOuts() const     { return mOutTable->size(); }
+
+    long get_num_ins() const    { return m_in_table.size(); }
+    long get_num_outs() const   { return m_out_table->size(); }
 
     // Windows Management
-    
-    void openWindow() const;
-    void closeWindow() const;
+
+    void open_window() const;
+    void close_window() const;
 
     // Error string
 
-    static const char *getError(LoadError error);
-    
+    static const char *get_error(LoadError error);
+
 private:
-    
-    template <void (PatchSlot::*Method)(t_patcher *p)>
-    int patcherTraverse(t_patcher *p, void *arg, t_object *owner);
-    
-    LoadError loadFinished(LoadError error, short savedLoadUpdate);
-    
-    void setWindowName();
-    void freePatch();
-    
-    void handleIO(t_patcher *p, const char *type, long maxIndex, std::function<void(IO*, long)> func);
-    
-    void findIns(t_patcher *p);
-    void linkOutlets(t_patcher *p);
-    void unlinkOutlets(t_patcher *p);
+
+    template <void (patch_slot::*Method)(t_patcher *p)>
+    int patcher_traverse(t_patcher *p, void *arg, t_object *owner);
+
+    LoadError load_finished(LoadError error, short saved_loadupdate);
+
+    void set_window_name();
+    void free_patch();
+
+    void handle_io(t_patcher *p, const char *type, long max_index, std::function<void(IO*, long)> func);
+
+    void find_ins(t_patcher *p);
+    void link_outlets(t_patcher *p);
+    void unlink_outlets(t_patcher *p);
 
     // Patch and variables / dspchain
-    
-    t_patcher *mPatch;
-    t_dspchain *mDSPChain;
-    t_symbol *mPathSymbol;
-    std::string mName;
-    short mPath;
-    long mUserIndex;
-    
+
+    t_patcher *m_patch;
+    t_dspchain *m_dspchain;
+    t_symbol *m_path_symbol;
+    std::string m_name;
+    short m_path;
+    long m_user_index;
+
     // Arguments (stored in case of reload / update)
-    
-    long mArgc;
-    t_atom mArgv[MAX_ARGS];
-    
+
+    long m_argc;
+    t_atom m_argv[MAX_ARGS];
+
     // Flags
-    
-    bool mValid;
-    bool mOn;
-    bool mBusy;
-    
+
+    bool m_valid;
+    bool m_on;
+    bool m_busy;
+
     // Pointer to Array of Audio Out Buffers (which are thread dependent)
-    
-    void **mOutputs;
-    
+
+    void **m_outputs;
+
     // Inlet and Outlet Communication
-    
-    std::vector<std::vector<void *>> mInTable;
-    std::vector<void *> *mOutTable;
-    
+
+    std::vector<std::vector<void *>> m_in_table;
+    std::vector<void *> *m_out_table;
+
     // State Listener Objects (need notifying)
-    
-    std::vector<t_object *> mStateListeners;
+
+    std::vector<t_object *> m_state_listeners;
 
     // Owner
-    
-    t_object *mOwner;
-    t_patcher *mParent;
+
+    t_object *m_owner;
+    t_patcher *m_parent;
 };
 
 
 // Class with threading additions
 
-class ThreadedPatchSlot : public PatchSlot
+class threaded_patch_slot : public patch_slot
 {
-    
+
 public:
-    
-    ThreadedPatchSlot(t_object *owner, t_patcher *parent, t_atom_long index, long numIns, std::vector<void *> *outTable)
-    : PatchSlot(owner, parent, index, numIns, outTable), mThreadCurrent(0), mThreadRequest(0) {}
-    
-    void requestThread(long thread)     { mThreadRequest = thread; }
-    void updateThread()                 { mThreadCurrent = mThreadRequest; }
-    void resetProcessed()               { mProcessingLock.release(); }
-    
-    bool processIfUnprocessed(void **outputs)
+
+    threaded_patch_slot(t_object *owner, t_patcher *parent, t_atom_long index, long numIns, std::vector<void *> *out_table)
+    : patch_slot(owner, parent, index, numIns, out_table), m_thread_current(0), m_thread_request(0) {}
+
+    void request_thread(long thread)    { m_thread_request = thread; }
+    void update_thread()                { m_thread_current = m_thread_request; }
+    void reset_processed()              { m_processing_lock.release(); }
+
+    bool process_if_unprocessed(void **outputs)
     {
-        return mProcessingLock.attempt() ? process(outputs) : false;
+        return m_processing_lock.attempt() ? process(outputs) : false;
     }
-    
-    bool processIfThreadMatches(void **outputs, long thread, long nThreads)
+
+    bool process_if_thread_matches(void **outputs, long thread, long n_threads)
     {
-        return ((mThreadCurrent % nThreads) == thread) ? process(outputs) : false;
+        return ((m_thread_current % n_threads) == thread) ? process(outputs) : false;
     }
 
 private:
 
     // Threading Variables
-    
-    thread_lock mProcessingLock;
-    long mThreadCurrent;
-    long mThreadRequest;
+
+    thread_lock m_processing_lock;
+    long m_thread_current;
+    long m_thread_request;
 };
 
 #endif  /* _PATCHSLOT_H_ */
