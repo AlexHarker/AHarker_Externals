@@ -53,7 +53,7 @@ int C74_EXPORT main()
 				(method) tsah_new,
 				(method) tsah_free,
 				sizeof(t_tsah), 
-                NULL,
+                nullptr,
 				A_DEFLONG, 
 				0);
 	
@@ -187,12 +187,12 @@ void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, lon
 	if (x->num_outlets > 1)
 	{
 		if (maxvectorsize >= 4)
-			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64_unroll, 0, NULL);
+			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64_unroll, 0, nullptr);
 		else
-			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64, 0, NULL);
+			object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64, 0, nullptr);
 	}
 	else
-		object_method(dsp64, gensym("dsp_add64"), x, tsah_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, tsah_perform64, 0, nullptr);
 }
 
 // Assist

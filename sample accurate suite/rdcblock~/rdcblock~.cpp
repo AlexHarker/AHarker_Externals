@@ -49,7 +49,7 @@ int C74_EXPORT main()
 				(method) rdcblock_new,
 				(method) rdcblock_free,
 				sizeof(t_rdcblock), 
-				NULL, 
+				nullptr, 
 				A_DEFLONG, 
 				0);
 	
@@ -172,9 +172,9 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
 	if (x->mode)
-		object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform_inval64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform_inval64, 0, nullptr);
 	else 
-		object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform64, 0, nullptr);
 }
 
 // Assist

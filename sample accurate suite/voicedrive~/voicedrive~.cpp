@@ -55,7 +55,7 @@ int C74_EXPORT main()
 						   (method) voicedrive_new,
 						   (method) voicedrive_free,
 						   sizeof(t_voicedrive), 
-						   NULL, 
+						   nullptr,
 						   A_DEFLONG, 
 						   A_DEFLONG, 
 						   0);
@@ -192,7 +192,7 @@ void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long n
 void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {			
 	x->sr_val = samplerate / 1000.0;
-	object_method(dsp64, gensym("dsp_add64"), x, voicedrive_perform64, 0, NULL);
+	object_method(dsp64, gensym("dsp_add64"), x, voicedrive_perform64, 0, nullptr);
 }
 
 // Assist

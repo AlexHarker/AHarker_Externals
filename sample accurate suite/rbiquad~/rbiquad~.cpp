@@ -46,7 +46,7 @@ int C74_EXPORT main()
 				(method) rbiquad_new,
 				(method) rbiquad_free,
 				sizeof(t_rbiquad), 
-				NULL, 
+				nullptr,
 				0);
 	
 	class_addmethod(this_class, (method) rbiquad_assist, "assist", A_CANT, 0);
@@ -146,7 +146,7 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
-	object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, NULL);
+	object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, nullptr);
 }
 
 // Assist
