@@ -11,7 +11,7 @@ enum class calculation_type { scalar, vector_op, vector_array };
 
 // Object structure
 
-template<typename Functor, calculation_type Vec64>
+template<typename Functor, calculation_type Type>
 class v_unary
 {
 public:
@@ -67,14 +67,14 @@ public:
         
         // Default to scalar routine
         
-        bool vector = !(Vec64 != calculation_type::scalar) || ((maxvectorsize / simd_width) > 0);
+        bool vector = !(Type != calculation_type::scalar) || ((maxvectorsize / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform64_op<T, 1>);
         
         // Use SIMD routines if possible
 
         if (vector)
         {
-            if (Vec64 == calculation_type::vector_array)
+            if (Type == calculation_type::vector_array)
                 current_perform_routine = reinterpret_cast<method>(perform64_array<T>);
             else
                 current_perform_routine = reinterpret_cast<method>(perform64_op<T, simd_width>);

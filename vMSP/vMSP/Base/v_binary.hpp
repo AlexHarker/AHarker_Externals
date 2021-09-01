@@ -13,7 +13,7 @@ enum class inputs { binary, scalar1, scalar2 };
 
 // Object structure
 
-template<typename Functor, calculation_type Vec64, bool FirstInputAlwaysSignal = false>
+template<typename Functor, calculation_type Type, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
     static float fix_denorm(const float a)
@@ -112,8 +112,8 @@ public:
         
         // Use SIMD code where possible
         
-        if (Vec64 != calculation_type::scalar && ((maxvectorsize / simd_width) > 0))
-            routine += (Vec64 == calculation_type::vector_op) ? 3 : 6;
+        if (Type != calculation_type::scalar && ((maxvectorsize / simd_width) > 0))
+            routine += (Type == calculation_type::vector_op) ? 3 : 6;
         
         switch (routine)
         {
