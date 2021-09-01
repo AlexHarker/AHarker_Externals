@@ -108,8 +108,8 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
         // Filter
         
         y = x0 - x1 + (0.99 * y1);
-        y = FIX_DENORM_DOUBLE(y);
-        
+        FIX_DENORM_DOUBLE(y);
+    
         // Shift memories
         
         x1 = x0;
@@ -151,7 +151,7 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
         // Filter and shift memory
         
         y = x0 - x1 + (0.99 * y1);
-        y = FIX_DENORM_DOUBLE(y);
+        FIX_DENORM_DOUBLE(y);
         
         // Shift memories
         

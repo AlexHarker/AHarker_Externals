@@ -19,7 +19,8 @@ class v_binary
     static float fix_denorm(const float a)
     {
         float b = a;
-        return FIX_DENORM_FLOAT(b);
+        FIX_DENORM_FLOAT(b);
+        return b;
     }
 
     template <class T>
