@@ -180,29 +180,35 @@ t_int *chebyshape_perform_dynamic(t_int *w)
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+1] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+2] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+3] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		for (;  i < max_cheby; i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		
-		*out++ = FIX_DENORM_FLOAT(out_val);
+        FIX_DENORM_FLOAT(out_val);
+		*out++ = (out_val);
 		j++;
 	}
 		
@@ -247,29 +253,35 @@ t_int *chebyshape_perform(t_int *w)
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+1][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+2][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+3][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		for (;  i < num_coeff;  i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		
-		*out++ = FIX_DENORM_FLOAT(out_val);
+        FIX_DENORM_FLOAT(out_val);
+		*out++ = out_val;
 		j++;
 	}
 				
@@ -339,29 +351,35 @@ void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+1] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+2] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i+3] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		for (;  i < max_cheby; i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff[i] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		
-		*out++ = FIX_DENORM_DOUBLE(out_val);
+        FIX_DENORM_DOUBLE(out_val);
+		*out++ = out_val;
 		j++;
 	}
 }
@@ -401,29 +419,35 @@ void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long n
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+			cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+1][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+2][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i+3][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		for (;  i < num_coeff;  i++)
 		{
 			current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
 			out_val += coeff_ins[i][j] * current_cheby;
 			cheby_mem2 = cheby_mem1;
-			cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
 		}
 		
-		*out++ = FIX_DENORM_DOUBLE(out_val);
+        FIX_DENORM_DOUBLE(out_val);
+		*out++ = out_val;
 		j++;
 	}
 }

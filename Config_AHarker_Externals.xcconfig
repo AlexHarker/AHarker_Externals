@@ -32,8 +32,6 @@ CLANG_X86_VECTOR_INSTRUCTIONS = avx
 
 ARCHS = x86_64 arm64
 
-GCC_PREPROCESSOR_DEFINITIONS = DENORM_WANT_FIX=1
-
 // Static Configuration (don't change these)
 
 WRAPPER_EXTENSION = mxo

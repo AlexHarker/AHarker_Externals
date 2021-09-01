@@ -120,14 +120,16 @@ t_int *rdcblock_perform(t_int *w)
 		// Filter 
 		
 		y = x0 - x1 + (0.99 * y1);
+        FIX_DENORM_DOUBLE(y);
         
         // Shift memories
 
 		x1 = x0;
-		y1 = FIX_DENORM_DOUBLE(y);
+		y1 = y;
         
         yf = (float) y;
-        *out++ = FIX_DENORM_FLOAT(yf);
+        FIX_DENORM_FLOAT(yf);
+        *out++ = yf;
     }
 	
 	// Store memory
@@ -170,14 +172,16 @@ t_int *rdcblock_perform_inval(t_int *w)
 		// Filter
 
 		y = x0 - x1 + (0.99 * y1);
+        FIX_DENORM_DOUBLE(y);
         
         // Shift memories
 
 		x1 = x0;
-		y1 = FIX_DENORM_DOUBLE(y);
+		y1 = y;
         
 		yf = (float) y;
-		*out++ = FIX_DENORM_FLOAT(yf);
+        FIX_DENORM_FLOAT(yf);
+		*out++ = yf;
 	}
 
 	// Store memory
@@ -212,7 +216,7 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
 		// Filter
 		
 		y = x0 - x1 + (0.99 * y1);
-        y = FIX_DENORM_DOUBLE(y);
+        FIX_DENORM_DOUBLE(y);
 
         // Shift memories
 
@@ -255,7 +259,7 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 		// Filter and shift memory
 		
 		y = x0 - x1 + (0.99 * y1);
-		y = FIX_DENORM_DOUBLE(y);
+		FIX_DENORM_DOUBLE(y);
         
         // Shift memories
         
