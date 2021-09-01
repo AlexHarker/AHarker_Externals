@@ -8,8 +8,8 @@
  *
  */
 
-#include "v_binary.hpp"
-#include "nans.hpp"
+#include "Base/v_binary.hpp"
+#include "Base/nans.hpp"
 
 struct times_functor
 {

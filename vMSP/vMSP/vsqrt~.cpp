@@ -8,8 +8,8 @@
  *
  */
 
-#include "v_unary.hpp"
-#include "nans.hpp"
+#include "Base/v_unary.hpp"
+#include "Base/nans.hpp"
 
 struct sqrt_functor
 {    

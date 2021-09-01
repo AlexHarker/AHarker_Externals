@@ -8,8 +8,8 @@
  *
  */
 
-#include "v_unary.hpp"
-#include "vector_loop.hpp"
+#include "Base/v_unary.hpp"
+#include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
 struct atanh_functor
