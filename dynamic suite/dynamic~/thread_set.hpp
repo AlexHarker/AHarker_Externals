@@ -145,7 +145,7 @@ public:
 
     long get_num_threads() const { return m_thread_slots.size(); }
 
-    void tick(long vecSize, long num_threads, void **outs);
+    void tick(long vec_size, long num_threads, void **outs);
     bool resize_buffers(t_ptr_int size);
 
     template <typename T>
@@ -158,7 +158,7 @@ public:
 
 private:
 
-    void processing_loop(long threadIdx);
+    void processing_loop(long thread_idx);
 
     t_object *m_owner;
     ProcFunc *m_process;

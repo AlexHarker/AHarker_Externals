@@ -68,7 +68,7 @@ void *thread::thread_start(void *arg)
 
 // Semaphore Mac OS implementation
 
-semaphore::semaphore(long maxCount) : m_valid(true)
+semaphore::semaphore(long max_count) : m_valid(true)
 {
     semaphore_create(mach_task_self(), &m_internal, SYNC_POLICY_FIFO, 0);
 }
@@ -108,7 +108,7 @@ bool semaphore::wait()
 
 // Thread Windows OS implementation
 
-Thread::thread(ThreadFunctionType *thread_function, void *arg)
+thread::thread(ThreadFunctionType *thread_function, void *arg)
 : m_thread_function(thread_function), m_arg(arg), m_valid(true)
 {
     // Create thread
@@ -151,14 +151,14 @@ DWORD WINAPI Thread::thread_start(LPVOID arg)
 
 semaphore::semaphore(long max_count) : m_valid(true)
 {
-    mInternal.m_handle = CreateSemaphore(nullptr, 0, max_count, nullptr);
-    mInternal.m_max_count = max_count;
+    m_internal.m_handle = CreateSemaphore(nullptr, 0, max_count, nullptr);
+    m_internal.m_max_count = max_count;
 }
 
 semaphore::~semaphore()
 {
     assert(!m_valid && "Semaphore not closed before deletion");
-    CloseHandle(mInternal.mHandle);
+    CloseHandle(m_internal.m_handle);
 }
 
 void semaphore::close()
@@ -183,13 +183,13 @@ void semaphore::signal(long n)
     // N.B. - signalling is unsafe after the semaphore has been closed
 
     std::atomic_thread_fence(std::memory_order_seq_cst);
-    ReleaseSemaphore(m_internal.mHandle, n, nullptr);
+    ReleaseSemaphore(m_internal.m_handle, n, nullptr);
 }
 
 bool semaphore::wait()
 {
     if (m_valid)
-        WaitForSingleObject(m_internal.mHandle, INFINITE);
+        WaitForSingleObject(m_internal.m_handle, INFINITE);
 
     return m_valid;
 }

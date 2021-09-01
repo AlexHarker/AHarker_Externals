@@ -49,7 +49,7 @@ public:
 
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
 
-    void compile_dsp(long vecSize, long sampling_rate, bool force_when_invalid);
+    void compile_dsp(long vec_size, long sampling_rate, bool force_when_invalid);
     bool process(void **outputs);
 
     // Getters

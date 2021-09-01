@@ -27,7 +27,7 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
     return MAX_ERR_NONE;
 }
 
-// PatchSet class
+// patch_set class
 
 // N.B. index counting is from 1 (0 means all or out of range)
 
@@ -428,9 +428,9 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
     threaded_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
     : patch_set(x, parent, num_ins, num_outs, outs) {}
 
-    bool process_if_thread_matches(t_atom_long index, void **outputs, long thread, long nThreads)
+    bool process_if_thread_matches(t_atom_long index, void **outputs, long thread, long n_threads)
     {
-        return slot_action_result(&threaded_patch_slot::process_if_thread_matches, index, outputs, thread, nThreads);
+        return slot_action_result(&threaded_patch_slot::process_if_thread_matches, index, outputs, thread, n_threads);
     }
 
     bool process_if_unprocessed(t_atom_long index, void **outputs)
