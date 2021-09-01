@@ -24,7 +24,7 @@ struct sinh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<sinh_functor, kVectorArray> vsinh;
+typedef v_unary<sinh_functor, calculation_type::vector_array> vsinh;
 
 int C74_EXPORT main()
 {

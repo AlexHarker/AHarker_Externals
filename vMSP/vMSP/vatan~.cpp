@@ -24,7 +24,7 @@ struct atan_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<atan_functor, kVectorArray> vatan;
+typedef v_unary<atan_functor, calculation_type::vector_array> vatan;
 
 int C74_EXPORT main()
 {

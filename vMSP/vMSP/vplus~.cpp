@@ -17,10 +17,10 @@ struct plus_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
+    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
-typedef v_binary<plus_functor, kVectorOp, kVectorOp> vplus;
+typedef v_binary<plus_functor, calculation_type::vector_op> vplus;
 
 int C74_EXPORT main()
 {

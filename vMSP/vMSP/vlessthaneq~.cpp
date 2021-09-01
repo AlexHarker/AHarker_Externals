@@ -16,7 +16,7 @@ struct less_eq
     template <class T> T operator()(const T a, const T b) { return a <= b; }
 };
 
-typedef v_binary<comparison_functor<less_eq>, kVectorOp, kVectorOp> vlessthaneq;
+typedef v_binary<comparison_functor<less_eq>, calculation_type::vector_op> vlessthaneq;
 
 int C74_EXPORT main()
 {

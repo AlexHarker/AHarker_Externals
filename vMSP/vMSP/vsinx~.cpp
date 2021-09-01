@@ -24,7 +24,7 @@ struct sinx_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<sinx_functor, kVectorArray> vsinx;
+typedef v_unary<sinx_functor, calculation_type::vector_array> vsinx;
 
 int C74_EXPORT main()
 {

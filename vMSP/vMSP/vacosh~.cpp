@@ -38,7 +38,7 @@ struct acosh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<acosh_functor, kVectorArray> vacosh;
+typedef v_unary<acosh_functor, calculation_type::vector_array> vacosh;
 
 int C74_EXPORT main()
 {

@@ -22,9 +22,9 @@
 
 #include <dynamic~.hpp>
 
-#include "patch_set.hpp"
-#include "thread_set.hpp"
-#include "dynamic_host.hpp"
+#include "Common/patch_set.hpp"
+#include "Common/thread_set.hpp"
+#include "Common/dynamic_host.hpp"
 
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes

@@ -38,7 +38,7 @@ struct atanh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<atanh_functor, kVectorArray> vatanh;
+typedef v_unary<atanh_functor, calculation_type::vector_array> vatanh;
 
 int C74_EXPORT main()
 {

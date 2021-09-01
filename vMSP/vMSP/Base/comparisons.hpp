@@ -15,7 +15,7 @@ struct comparison_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
+    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
 #endif

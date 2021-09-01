@@ -40,19 +40,19 @@ method free_routine = 0L;
 
 // Globals and Object Structure
 
-enum t_conversion_mode
+enum class conversion_mode
 {
-    CONVERT_NONE = 0,
-    CONVERT_LINEAR = 1,
-    CONVERT_LOG_IN = 2,
-    CONVERT_EXP_IN = 3,
+    none,
+    linear,
+    log_in,
+    exp_in,
 };
 
 struct t_valconvert
 {
     max_object_base a_obj;
     
-    t_conversion_mode mode;
+    conversion_mode mode;
     
     double mul;
     double sub;
@@ -153,7 +153,7 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 {
     t_valconvert *x = (t_valconvert *) object_alloc(this_class);
     
-    x->mode = CONVERT_NONE;
+    x->mode = conversion_mode::none;
     x->lo = 0.0;
     x->hi = 1.0;
     x->mul = 1.0;
@@ -215,22 +215,22 @@ void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long n
     
     switch (x->mode)
     {
-        case CONVERT_NONE:
+        case conversion_mode::none:
             while (vec_size--)
                 *out++ = *in++;
             break;
             
-        case CONVERT_LINEAR:
+        case conversion_mode::linear:
             while (vec_size--)
                 *out++ = clip((*in++ * mul) - sub, lo, hi);
             break;
             
-        case CONVERT_LOG_IN:
+        case conversion_mode::log_in:
             while (vec_size--)
                 *out++ = clip(exp((*in++ * mul) - sub), lo, hi);
             break;
             
-        case CONVERT_EXP_IN:
+        case conversion_mode::exp_in:
             while (vec_size--)
                 *out++ = clip((safe_log(*in++) * mul) - sub, lo, hi);
             break;
@@ -255,17 +255,17 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
     
     switch (x->mode)
     {
-        case CONVERT_NONE:
+        case conversion_mode::none:
             while (num_vecs--)
                 *out_vec++ = *in_vec++;
             break;
             
-        case CONVERT_LINEAR:
+        case conversion_mode::linear:
             while (num_vecs--)
                 *out_vec++ = min(max(lo, (*in_vec++ * mul) - sub), hi);
             break;
             
-        case CONVERT_LOG_IN:
+        case conversion_mode::log_in:
             for (long i = 0; i < num_vecs; i++)
                 out_vec[i] = (in_vec[i] * mul) - sub;
             exp_array(out, out, vec_size);
@@ -273,7 +273,7 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
                 out_vec[i] = min(max(lo, out_vec[i]), hi);
             break;
             
-        case CONVERT_EXP_IN:
+        case conversion_mode::exp_in:
             for (long i = 0; i < num_vecs; i++)
                 out_vec[i] = max(in_vec[i], double(0));
             log_array(out, out, vec_size);
@@ -309,10 +309,10 @@ double valconvert_scale(t_valconvert *x, double input)
 {
     switch (x->mode)
     {
-        case CONVERT_NONE:      return input;
-        case CONVERT_LINEAR:    return clip((input * x->mul) - x->sub, x->lo, x->hi);
-        case CONVERT_LOG_IN:    return clip(exp((input * x->mul) - x->sub), x->lo, x->hi);
-        case CONVERT_EXP_IN:    return clip((safe_log(input) * x->mul) - x->sub, x->lo, x->hi);
+        case conversion_mode::none:     return input;
+        case conversion_mode::linear:   return clip((input * x->mul) - x->sub, x->lo, x->hi);
+        case conversion_mode::log_in:   return clip(exp((input * x->mul) - x->sub), x->lo, x->hi);
+        case conversion_mode::exp_in:   return clip((safe_log(input) * x->mul) - x->sub, x->lo, x->hi);
     }
 }
 
@@ -370,7 +370,7 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
     
     if (msg == ps_none)
     {
-        x->mode = CONVERT_NONE;
+        x->mode = conversion_mode::none;
         return;
     }
     
@@ -386,14 +386,14 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
     double max_out = atom_getfloat(argv++);
     
     if (msg == ps_log || msg == ps_amp || msg == ps_pitch)
-        x->mode = CONVERT_LOG_IN;
+        x->mode = conversion_mode::log_in;
     else if (msg == ps_exp  || msg == ps_iamp || msg == ps_ipitch)
-        x->mode = CONVERT_EXP_IN;
+        x->mode = conversion_mode::exp_in;
     else
     {
         if (msg != ps_scale)
             object_error ((t_object *) x, "unknown conversion type - defaulting to scale");
-        x->mode = CONVERT_LINEAR;
+        x->mode = conversion_mode::linear;
     }
     
     if (msg == ps_amp)
@@ -408,9 +408,9 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
     x->lo = min_out < max_out ? min_out : max_out;
     x->hi = min_out < max_out ? max_out : min_out;
     
-    if (x->mode == CONVERT_LOG_IN)
+    if (x->mode == conversion_mode::log_in)
         convert_log(min_out, max_out);
-    else if (x->mode == CONVERT_EXP_IN)
+    else if (x->mode == conversion_mode::exp_in)
         convert_log(min_in, max_in);
     
     x->mul = (min_in == max_in) ? 0.0 : (max_out - min_out) / (max_in - min_in);

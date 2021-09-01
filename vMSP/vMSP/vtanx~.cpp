@@ -24,7 +24,7 @@ struct tanx_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<tanx_functor, kVectorArray> vtanx;
+typedef v_unary<tanx_functor, calculation_type::vector_array> vtanx;
 
 int C74_EXPORT main()
 {

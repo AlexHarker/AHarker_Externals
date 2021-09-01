@@ -18,10 +18,10 @@ struct rdiv_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
+    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
-typedef v_binary<rdiv_functor, kVectorOp, kVectorOp> vrdiv;
+typedef v_binary<rdiv_functor, calculation_type::vector_op> vrdiv;
 
 int C74_EXPORT main()
 {

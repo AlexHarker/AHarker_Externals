@@ -16,7 +16,7 @@ struct greater
     template <class T> T operator()(const T a, const T b) { return a > b; }
 };
 
-typedef v_binary<comparison_functor<greater>, kVectorOp, kVectorOp> vgreaterthan;
+typedef v_binary<comparison_functor<greater>, calculation_type::vector_op> vgreaterthan;
 
 int C74_EXPORT main()
 {

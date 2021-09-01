@@ -17,10 +17,10 @@ struct minus_functor
     
     // Empty Implementations
     
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
+    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
-typedef v_binary<minus_functor, kVectorOp, kVectorOp> vminus;
+typedef v_binary<minus_functor, calculation_type::vector_op> vminus;
 
 int C74_EXPORT main()
 {
