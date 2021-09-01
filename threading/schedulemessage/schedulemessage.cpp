@@ -54,9 +54,9 @@ int C74_EXPORT main()
 {
     this_class = class_new("schedulemessage",
                           (method) schedulemessage_new,
-                          (method) NULL,
+                          (method) nullptr,
                           sizeof(t_schedulemessage),
-                          NULL,
+                          nullptr,
                           A_DEFFLOAT,
                           0);
 
