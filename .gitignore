@@ -1,4 +1,4 @@
-
+﻿
 # Apple Finder Database
 
 .DS_Store
@@ -9,6 +9,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs/
 
 # XCode
 
