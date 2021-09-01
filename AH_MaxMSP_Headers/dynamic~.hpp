@@ -2,9 +2,9 @@
 /*
  *  dynamic~ header
  *
- *	This header provides an interface for querying and seting the state of a parent dynamic object.
- *	All communication with a host object should be done using this interface.
- *	For uage examples see the dynamic set of objects (dynamicdsp.in~ / dynamicdsp.out~ / dynamicdsp.this~ etc.).
+ *  This header provides an interface for querying and seting the state of a parent dynamic object.
+ *  All communication with a host object should be done using this interface.
+ *  For uage examples see the dynamic set of objects (dynamicdsp.in~ / dynamicdsp.out~ / dynamicdsp.this~ etc.).
  *
  *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
@@ -64,7 +64,7 @@ static inline long dynamic_get_patch_index(void *obj)
 {
     long index = 0;
     
-	if (dynamic_is_dynamic_host(obj))
+    if (dynamic_is_dynamic_host(obj))
     {
         object_method(obj, gensym("loading_index"), &index);
         
@@ -75,7 +75,7 @@ static inline long dynamic_get_patch_index(void *obj)
             index = std::max(0L, (long) object_method(obj,  gensym("getindex"), p));
         }
     }
-	
+
     return index;
 }
 
@@ -158,4 +158,4 @@ static inline void dynamic_unregister_listener(void *obj, long index, void *list
     dynamic_object_method(obj, "unregister_listener", index, listener);
 }
 
-#endif  /* _DYNAMIC_INTERFACE_	*/
+#endif  /* _DYNAMIC_INTERFACE_ */

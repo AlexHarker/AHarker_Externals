@@ -24,13 +24,11 @@
 
 #include <SIMDSupport.hpp>
 
-#include "PatchSlot.hpp"
-#include "PatchSet.hpp"
-
+#include "patch_set.hpp"
 #include "dynamic_host.hpp"
 
 
-// Global Varibles
+// Global Variables
 
 t_class *this_class;
 
@@ -39,8 +37,7 @@ t_symbol *ps_declareio;
 
 static t_ptr_uint sig_size;
 
-constexpr int MAX_ARGS = 16;
-constexpr int MAX_IO = 256;
+constexpr long max_args = patch_slot::max_args();
 
 // Object Structure
 
@@ -52,7 +49,7 @@ struct t_dynamicserial
 	
 	// Patch Data and Variables 
 	
-    PatchSet<PatchSlot> *patch_set;
+    patch_set<patch_slot> *patch_set;
 			
 	long last_vec_size;
 	long last_samp_rate;
@@ -88,7 +85,7 @@ void dynamicserial_perform_denormal_handled(t_dynamicserial *x);
 t_int *dynamicserial_perform(t_int *w);
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate);
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate);
 void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -96,13 +93,13 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 
 int C74_EXPORT main()
 {
-    using handler = DynamicHost<t_dynamicserial>;
+    using handler = dynamic_host<t_dynamicserial>;
     
 	this_class = class_new("dynamicserial~",
 								 (method) dynamicserial_new,
 								 (method) dynamicserial_free,
 								 sizeof(t_dynamicserial), 
-								 NULL, 
+								 nullptr, 
 								 A_GIMME, 
 								 0);
 	
@@ -163,15 +160,17 @@ int C74_EXPORT main()
 // New / Free / Assist
 
 void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
-{	
+{
+    constexpr long max_io = 256;
+
 	t_dynamicserial *x = (t_dynamicserial *) object_alloc(this_class);
     
 	t_symbol *patch_name_entered = nullptr;
 	t_symbol *tempsym;
 	
-    void *outs[MAX_IO];
+    void *outs[max_io];
 	long ac = 0;
-	t_atom av[MAX_ARGS];						
+	t_atom av[max_args];
 	
 	long num_sig_ins = 2;
 	long num_sig_outs = 2;
@@ -179,6 +178,14 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 	long num_outs = 2;	
     long num_temp_buffers = 0;
 	
+    auto set_io = [&](t_atom *arg)
+    {
+        t_atom_long N = atom_getlong(arg);
+        t_atom_long result = (N < 0 ? 2 : (N > max_io ? max_io : N));
+        
+        return static_cast<long>(result);
+    };
+    
 	// Check if there is a patch name given to load
 	
 	if (argc && atom_gettype(argv) == A_SYM && atom_getsym(argv) != ps_declareio)
@@ -198,26 +205,22 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_sig_ins = atom_getlong(argv);
+		num_sig_ins = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_sig_outs = atom_getlong(argv);
+		num_sig_outs = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_ins = atom_getlong(argv);
+		num_ins = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_outs = atom_getlong(argv);
+		num_outs = set_io(argv);
 		argc--; argv++;
 	}
 	
@@ -229,9 +232,8 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 		argc--; argv++;
 		if (tempsym == ps_args) 
 		{				
-			ac = argc;
-			if (ac > MAX_ARGS)
-				ac = MAX_ARGS;
+            ac = std::min(argc, max_args);
+
 			for (long i = 0; i < ac; i++, argv++)
 				av[i] = *argv;
 		}
@@ -296,7 +298,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 	// Setup slots
     
-    x->patch_set = new PatchSet<PatchSlot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new patch_set<patch_slot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
     
 	// Load patch
     
@@ -356,7 +358,7 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv)
 {
-	t_symbol *patch_name = NULL;
+	t_symbol *patch_name = nullptr;
     t_atom_long index = 0;
 		
 	// Get requested patch index if there is one
@@ -457,13 +459,13 @@ void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, 
 
 // DSP
 
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
+bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate)
 {
 	bool mem_fail = false;
 			
 	// Do internal dsp compile
 	
-	x->patch_set->compileDSP(vec_size, samp_rate);
+	x->patch_set->compile_dsp(vec_size, sample_rate);
 	
 	for (long i = 0; i < x->num_temp_buffers; i++)
 	{
@@ -478,7 +480,7 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long samp_rate)
 	}
 		
 	x->last_vec_size = vec_size;
-	x->last_samp_rate = samp_rate;
+	x->last_samp_rate = sample_rate;
 	
 	return mem_fail;
 }
@@ -503,5 +505,5 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 	// Add to dsp if common routine successful
 	
 	if (!dynamicserial_dsp_common(x, maxvectorsize, samplerate))
-		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, NULL);
+		object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, nullptr);
 }

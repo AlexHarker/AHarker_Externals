@@ -57,7 +57,7 @@ int C74_EXPORT main()
 						   (method) dynamic_patch_new,
 						   (method) dynamic_patch_free,
 						   sizeof(t_dynamic_patch), 
-						   NULL, 
+						   nullptr, 
 						   A_DEFLONG, 
 						   0);
 	
