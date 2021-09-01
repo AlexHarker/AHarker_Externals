@@ -11,17 +11,17 @@
 		B803276E11CCFC69009E69AD /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B803276F11CCFC69009E69AD /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B803279911CCFCB3009E69AD /* dynamic.request~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B803279811CCFCB3009E69AD /* dynamic.request~.cpp */; };
-		B85B63AE1CC4236600381391 /* ThreadSet.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85B63AC1CC4236600381391 /* ThreadSet.hpp */; };
-		B85B63AF1CC43A6100381391 /* ThreadSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85B63AB1CC4236600381391 /* ThreadSet.cpp */; };
+		B85B63AE1CC4236600381391 /* thread_set.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85B63AC1CC4236600381391 /* thread_set.hpp */; };
+		B85B63AF1CC43A6100381391 /* thread_set.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85B63AB1CC4236600381391 /* thread_set.cpp */; };
 		B8600FB412C22A6500864B9B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8600FB512C22A6500864B9B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
-		B872839A1CC39A5100A1C38E /* PatchSet.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B87283981CC39A5100A1C38E /* PatchSet.hpp */; };
+		B872839A1CC39A5100A1C38E /* patch_set.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B87283981CC39A5100A1C38E /* patch_set.hpp */; };
 		B8C35FAC19FA5B5200C04C8D /* dynamicdsp~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */; };
 		B8C35FAE19FA5F0C00C04C8D /* dynamicserial~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */; };
-		B8CD5C0E1CC2989200CE262E /* PatchSlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */; };
-		B8CD5C0F1CC2989200CE262E /* PatchSlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */; };
-		B8CD5C101CC2989200CE262E /* PatchSlot.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */; };
-		B8CD5C111CC2989200CE262E /* PatchSlot.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */; };
+		B8CD5C0E1CC2989200CE262E /* patch_slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */; };
+		B8CD5C0F1CC2989200CE262E /* patch_slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */; };
+		B8CD5C101CC2989200CE262E /* patch_slot.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */; };
+		B8CD5C111CC2989200CE262E /* patch_slot.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */; };
 		B8D6A6840ED6379E007C648E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
 		B8EC176510836C3600316C82 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
 		B8EC176610836C3600316C82 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8D6A6830ED6379E007C648E /* Accelerate.framework */; };
@@ -43,16 +43,16 @@
 		B803277711CCFC69009E69AD /* dynamic.request~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.request~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B803279811CCFCB3009E69AD /* dynamic.request~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.request~.cpp"; sourceTree = "<group>"; };
 		B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicdsp~.cpp"; sourceTree = "<group>"; };
-		B85B63AB1CC4236600381391 /* ThreadSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadSet.cpp; sourceTree = "<group>"; };
-		B85B63AC1CC4236600381391 /* ThreadSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ThreadSet.hpp; sourceTree = "<group>"; };
+		B85B63AB1CC4236600381391 /* thread_set.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thread_set.cpp; sourceTree = "<group>"; };
+		B85B63AC1CC4236600381391 /* thread_set.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = thread_set.hpp; sourceTree = "<group>"; };
 		B8600FBC12C22A6500864B9B /* dynamicserial~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamicserial~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicserial~.cpp"; sourceTree = "<group>"; };
 		B87283961CC38D2D00A1C38E /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = "dynamic~.hpp"; path = "../../AH_MaxMSP_Headers/dynamic~.hpp"; sourceTree = "<group>"; };
-		B87283981CC39A5100A1C38E /* PatchSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatchSet.hpp; sourceTree = "<group>"; };
+		B87283981CC39A5100A1C38E /* patch_set.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_set.hpp; sourceTree = "<group>"; };
 		B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dynamic_host.hpp; sourceTree = "<group>"; };
 		B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchSlot.cpp; sourceTree = "<group>"; };
-		B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatchSlot.hpp; sourceTree = "<group>"; };
+		B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = patch_slot.cpp; sourceTree = "<group>"; };
+		B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_slot.hpp; sourceTree = "<group>"; };
 		B8D6A6830ED6379E007C648E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B8EC176E10836C3600316C82 /* dynamic.this~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.this~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8EC17B31083727700316C82 /* dynamic.this~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.this~.cpp"; sourceTree = "<group>"; };
@@ -163,11 +163,11 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B85B63AC1CC4236600381391 /* ThreadSet.hpp */,
-				B85B63AB1CC4236600381391 /* ThreadSet.cpp */,
-				B8CD5C0D1CC2989200CE262E /* PatchSlot.hpp */,
-				B8CD5C0C1CC2989200CE262E /* PatchSlot.cpp */,
-				B87283981CC39A5100A1C38E /* PatchSet.hpp */,
+				B85B63AC1CC4236600381391 /* thread_set.hpp */,
+				B85B63AB1CC4236600381391 /* thread_set.cpp */,
+				B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */,
+				B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */,
+				B87283981CC39A5100A1C38E /* patch_set.hpp */,
 				B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */,
 				B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */,
 				B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */,
@@ -201,9 +201,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B872839A1CC39A5100A1C38E /* PatchSet.hpp in Headers */,
-				B85B63AE1CC4236600381391 /* ThreadSet.hpp in Headers */,
-				B8CD5C101CC2989200CE262E /* PatchSlot.hpp in Headers */,
+				B872839A1CC39A5100A1C38E /* patch_set.hpp in Headers */,
+				B85B63AE1CC4236600381391 /* thread_set.hpp in Headers */,
+				B8CD5C101CC2989200CE262E /* patch_slot.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +218,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8CD5C111CC2989200CE262E /* PatchSlot.hpp in Headers */,
+				B8CD5C111CC2989200CE262E /* patch_slot.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,8 +535,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8CD5C0E1CC2989200CE262E /* PatchSlot.cpp in Sources */,
-				B85B63AF1CC43A6100381391 /* ThreadSet.cpp in Sources */,
+				B8CD5C0E1CC2989200CE262E /* patch_slot.cpp in Sources */,
+				B85B63AF1CC43A6100381391 /* thread_set.cpp in Sources */,
 				B8C35FAC19FA5B5200C04C8D /* dynamicdsp~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,7 +553,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8CD5C0F1CC2989200CE262E /* PatchSlot.cpp in Sources */,
+				B8CD5C0F1CC2989200CE262E /* patch_slot.cpp in Sources */,
 				B8C35FAE19FA5F0C00C04C8D /* dynamicserial~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

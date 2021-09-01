@@ -25,7 +25,7 @@
 
 t_class *this_class;
 
-constexpr long MAX_COEFF = 32;
+constexpr long max_coeff = 32;
 
 struct t_chebyshape
 {
@@ -33,8 +33,8 @@ struct t_chebyshape
     
     long num_coeff;
     
-    void *coeff_ins[MAX_COEFF];
-    double coeff[MAX_COEFF];
+    void *coeff_ins[max_coeff];
+    double coeff[max_coeff];
     
     long offset;
     long num_sig_ins;
@@ -90,7 +90,7 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
     
     // Clip Number of coefficients / Mode
     
-    x->num_coeff = std::max(2L, std::min(static_cast<long>(num_coeff), MAX_COEFF));
+    x->num_coeff = std::max(2L, std::min(static_cast<long>(num_coeff), max_coeff));
     x->offset = std::max(0L, std::min(static_cast<long>(offset), x->num_sig_ins));
     
     if (!x->offset)

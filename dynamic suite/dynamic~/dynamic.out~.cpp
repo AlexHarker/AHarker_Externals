@@ -56,7 +56,7 @@ int C74_EXPORT main()
 						   (method) dynamic_out_new,
 						   (method) dynamic_out_free,
 						   sizeof(t_dynamic_out), 
-						   NULL, 
+						   nullptr, 
 						   A_DEFLONG, 
 						   0);
     
@@ -158,7 +158,7 @@ void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double s
     // Use SIMD routines where possible
     
     if (maxvectorsize >= simd_width)
-        object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform64, 0, NULL);
+        object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform64, 0, nullptr);
     else
-        object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform_scalar64, 0, NULL);
+        object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform_scalar64, 0, nullptr);
 }

@@ -53,7 +53,7 @@ int C74_EXPORT main()
 						   (method) dynamic_in_new,
 						   (method) dynamic_in_free, 
 						   sizeof(t_dynamic_in), 
-						   NULL, 
+						   nullptr,
 						   A_DEFLONG, 
 						   0);
     
@@ -127,5 +127,5 @@ void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long n
 
 void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-    object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, NULL);
+    object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, nullptr);
 }
