@@ -149,8 +149,8 @@ class threaded_patch_slot : public patch_slot
 
 public:
 
-    threaded_patch_slot(t_object *owner, t_patcher *parent, t_atom_long index, long numIns, std::vector<void *> *out_table)
-    : patch_slot(owner, parent, index, numIns, out_table), m_thread_current(0), m_thread_request(0) {}
+    threaded_patch_slot(t_object *owner, t_patcher *parent, t_atom_long index, long num_ins, std::vector<void *> *out_table)
+    : patch_slot(owner, parent, index, num_ins, out_table), m_thread_current(0), m_thread_request(0) {}
 
     void request_thread(long thread)    { m_thread_request = thread; }
     void update_thread()                { m_thread_current = m_thread_request; }
