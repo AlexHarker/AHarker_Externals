@@ -99,7 +99,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Max6_Support\c74support\max-includes\common\dllmain_win.c" />
     <ClCompile Include="recursivefolder.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

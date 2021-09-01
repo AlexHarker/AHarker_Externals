@@ -105,7 +105,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Max5_Support\c74support\max-includes\common\dllmain_win.c" />
     <ClCompile Include="entrymatcher~.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
