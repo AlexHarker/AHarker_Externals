@@ -8,9 +8,9 @@
  *
  */
 
-#include "v_binary.hpp"
-#include "conversions.hpp"
-#include "vector_loop.hpp"
+#include "Base/v_binary.hpp"
+#include "Base/conversions.hpp"
+#include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 #include <alloca.h>
 #include <limits>
