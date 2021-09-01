@@ -3,6 +3,7 @@
 #define _THREADSET_H_
 
 #include <atomic>
+#include <thread>
 #include <vector>
 
 #include <ext.h>
@@ -23,11 +24,6 @@ typedef pthread_t OSThreadType;
 typedef semaphore_t OSSemaphoreType;
 typedef void *OSThreadFunctionType(void *arg);
 
-struct NumProcessors
-{
-    unsigned long operator()() { return MPProcessors(); }
-};
-
 #else
 
 // Windows OS specific definitions
@@ -37,17 +33,6 @@ struct NumProcessors
 typedef HANDLE OSThreadType;
 using OSSemaphoreType = struct WinSemaphore { HANDLE m_handle; long m_max_count; };
 DWORD WINAPI OSThreadFunctionType(LPVOID arg);
-
-struct NumProcessors
-{
-    unsigned long operator()()
-    {
-        SYSTEM_INFO sysinfo;
-        GetSystemInfo(&sysinfo);
-
-        return sysinfo.dwNumberOfProcessors;
-    }
-};
 
 #endif
 
