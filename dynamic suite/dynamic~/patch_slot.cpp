@@ -45,7 +45,7 @@ int set_subpatcher_assoc(t_patcher *p, t_object *x)
     return 0;
 }
 
-// Patcher Traversal
+// Patcher traversal
 
 template <void (patch_slot::*Method)(t_patcher *p)>
 int patch_slot::patcher_traverse(t_patcher *p, void *arg, t_object *owner)
@@ -83,7 +83,7 @@ patch_slot::~patch_slot()
 
 // Loading
 
-patch_slot::LoadError patch_slot::load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+patch_slot::load_error patch_slot::load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
 {
     // Copy Arguments
 
@@ -99,7 +99,7 @@ patch_slot::LoadError patch_slot::load(t_symbol *path, long argc, t_atom *argv, 
     return load(vec_size, sampling_rate, true);
 }
 
-patch_slot::LoadError patch_slot::load(long vec_size, long sampling_rate, bool initialise)
+patch_slot::load_error patch_slot::load(long vec_size, long sampling_rate, bool initialise)
 {
     t_fourcc type;
     t_fourcc valid_types[3];
@@ -123,7 +123,7 @@ patch_slot::LoadError patch_slot::load(long vec_size, long sampling_rate, bool i
     strcpy(name, m_name.c_str());
 
     if (locatefile_extended(name, &m_path, &type, valid_types, 3))
-        return kFileNotFound;
+        return load_error::file_not_found;
 
     // Store the binding symbols with RAII to restore once done
 
@@ -140,10 +140,10 @@ patch_slot::LoadError patch_slot::load(long vec_size, long sampling_rate, bool i
     // Check something has loaded and that it is a patcher
 
     if (!m_patch)
-        return load_finished(kNothingLoaded, saved_loadupdate);
+        return load_finished(load_error::nothing_loaded, saved_loadupdate);
 
     if (!ispatcher(reinterpret_cast<t_object *>(m_patch)))
-        return load_finished(kNotPatcher, saved_loadupdate);
+        return load_finished(load_error::not_patcher, saved_loadupdate);
 
     // Use setclass to allow Modify Read-Only / Set associations
 
@@ -165,14 +165,14 @@ patch_slot::LoadError patch_slot::load(long vec_size, long sampling_rate, bool i
 
     // Finish loading (which fires loadbang and sets the valid flag)
 
-    return load_finished(kNone, saved_loadupdate);
+    return load_finished(load_error::nothing_loaded, saved_loadupdate);
 }
 
-patch_slot::LoadError patch_slot::load_finished(LoadError error, short saved_loadupdate)
+patch_slot::load_error patch_slot::load_finished(load_error error, short saved_loadupdate)
 {
     loadbang_resume();
     dsp_setloadupdate(saved_loadupdate);
-    m_valid = error == kNone ? true : false;
+    m_valid = error == load_error::none ? true : false;
     if (!m_valid)
         free_patch();
     return error;
@@ -266,7 +266,7 @@ void patch_slot::unregister_listener(t_object *listener)
     v.erase(std::remove(v.begin(), v.end(), listener), v.end());
 }
 
-// Window Management
+// Window management
 
 void patch_slot::set_window_name()
 {
@@ -293,14 +293,14 @@ void patch_slot::close_window() const
 
 // Error strings
 
-const char *patch_slot::get_error(LoadError error)
+const char *patch_slot::get_error(load_error error)
 {
     switch (error)
     {
-        case kNone:             return "";
-        case kFileNotFound:     return "file not found";
-        case kNothingLoaded:    return "nothing was loaded";
-        case kNotPatcher:       return "file is not a patcher";
+        case load_error::none:              return "";
+        case load_error::file_not_found:    return "file not found";
+        case load_error::nothing_loaded:    return "nothing was loaded";
+        case load_error::not_patcher:       return "file is not a patcher";
     }
 }
 

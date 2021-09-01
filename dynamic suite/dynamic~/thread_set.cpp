@@ -5,10 +5,10 @@
 
 #ifdef __APPLE__
 
-// Thread Mac OS implementation
+// Mac thread implementation
 
-thread::thread(ThreadFunctionType *thread_function, void *arg)
-: m_thread_function(thread_function), m_arg(arg), m_valid(true)
+thread::thread(thread_function *function, void *arg)
+: m_thread_function(function), m_arg(arg), m_valid(true)
 {
     pthread_attr_t thread_attributes;
     sched_param scheduling_parameters;
@@ -66,7 +66,7 @@ void *thread::thread_start(void *arg)
 }
 
 
-// Semaphore Mac OS implementation
+// Mac semaphore implementation
 
 semaphore::semaphore(long max_count) : m_valid(true)
 {
@@ -106,10 +106,10 @@ bool semaphore::wait()
 
 #else
 
-// Thread Windows OS implementation
+// Windows thread implementation
 
-thread::thread(ThreadFunctionType *thread_function, void *arg)
-: m_thread_function(thread_function), m_arg(arg), m_valid(true)
+thread::thread(thread_function *function, void *arg)
+: m_thread_function(function), m_arg(arg), m_valid(true)
 {
     // Create thread
 
@@ -146,8 +146,7 @@ DWORD WINAPI Thread::thread_start(LPVOID arg)
     return 0;
 }
 
-
-// Semaphore Windows OS implementation
+// Windows semaphore implementation
 
 semaphore::semaphore(long max_count) : m_valid(true)
 {
@@ -197,9 +196,9 @@ bool semaphore::wait()
 #endif
 
 
-// ThreadSet Class
+// thread_set class
 
-thread_set::thread_set(t_object *owner, ProcFunc *process, long num_threads, long num_outs)
+thread_set::thread_set(t_object *owner, process_function *process, long num_threads, long num_outs)
 : m_owner(owner), m_process(process)
 , m_active(std::max(1L, num_threads)), m_vec_size(0), m_buffer_size(0)
 , m_semaphore(m_active - 1), m_thread_slots(num_threads, thread_slot(this, num_outs))

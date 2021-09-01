@@ -20,9 +20,9 @@
 
 // Mac OS specific definitions
 
-typedef pthread_t OSThreadType;
-typedef semaphore_t OSSemaphoreType;
-typedef void *OSThreadFunctionType(void *arg);
+typedef pthread_t os_thread;
+typedef semaphore_t os_semaphore;
+typedef void *os_thread_function(void *arg);
 
 #else
 
@@ -30,9 +30,9 @@ typedef void *OSThreadFunctionType(void *arg);
 
 #include <windows.h>
 
-typedef HANDLE OSThreadType;
-using OSSemaphoreType = struct WinSemaphore { HANDLE m_handle; long m_max_count; };
-DWORD WINAPI OSThreadFunctionType(LPVOID arg);
+typedef HANDLE os_thread;
+using os_semaphore = struct win_semaphore { HANDLE m_handle; long m_max_count; };
+DWORD WINAPI os_thread_function(LPVOID arg);
 
 #endif
 
@@ -41,11 +41,11 @@ DWORD WINAPI OSThreadFunctionType(LPVOID arg);
 
 struct thread
 {
-    typedef void ThreadFunctionType(void *);
+    typedef void thread_function(void *);
 
 public:
 
-    thread(ThreadFunctionType *thread_function, void *arg);
+    thread(thread_function *function, void *arg);
     ~thread();
 
     // Non-copyable
@@ -57,21 +57,21 @@ public:
 
 private:
 
-    // threadStart is a quick OS-style wrapper to call the object which calls the relevant static function
+    // thread_start is a OS-specific wrapper to call the object which calls the relevant static function
 
-    static OSThreadFunctionType thread_start;
+    static os_thread_function thread_start;
     void call() { m_thread_function(m_arg); }
 
     // Data
 
-    OSThreadType m_internal;
-    ThreadFunctionType *m_thread_function;
+    os_thread m_internal;
+    thread_function *m_thread_function;
     void *m_arg;
     bool m_valid;
 };
 
 
-// Semaphore (note that you should most likely close() before the destructor is called
+// semaphore (note that you should most likely close() before the destructor is called
 
 class semaphore
 {
@@ -93,19 +93,19 @@ private:
 
     // Data
 
-    OSSemaphoreType m_internal;
+    os_semaphore m_internal;
     bool m_valid;
 };
 
 
-// ThreadSet class
+// thread_set class
 
 class thread_set
 {
 
 public:
 
-    typedef void ProcFunc(t_object *, void **, long, long, long);
+    typedef void process_function(t_object *, void **, long, long, long);
 
     struct thread_slot
     {
@@ -125,7 +125,7 @@ public:
         std::vector<void *> m_buffers;
     };
 
-    thread_set(t_object *owner, ProcFunc *process, long num_threads, long num_outs);
+    thread_set(t_object *owner, process_function *process, long num_threads, long num_outs);
     ~thread_set();
 
     long get_num_threads() const { return m_thread_slots.size(); }
@@ -146,7 +146,7 @@ private:
     void processing_loop(long thread_idx);
 
     t_object *m_owner;
-    ProcFunc *m_process;
+    process_function *m_process;
 
     long m_active;
     long m_vec_size;

@@ -12,8 +12,6 @@
 #include <AH_Locks.hpp>
 
 
-// patch_slot Class
-
 class patch_slot
 {
     // Generic in/out structure
@@ -30,7 +28,13 @@ class patch_slot
 
 public:
 
-    enum LoadError { kNone, kFileNotFound, kNothingLoaded, kNotPatcher };
+    enum class load_error
+    {
+        none,
+        file_not_found,
+        nothing_loaded,
+        not_patcher
+    };
 
     patch_slot(t_object *owner, t_object *parent, t_atom_long index, long num_ins, std::vector<void *> *out_table)
     : m_patch(nullptr), m_dspchain(nullptr), m_path_symbol(nullptr)
@@ -44,8 +48,8 @@ public:
 
     ~patch_slot();
 
-    LoadError load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate);
-    LoadError load(long vec_size, long sampling_rate, bool initialise);
+    load_error load(t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate);
+    load_error load(long vec_size, long sampling_rate, bool initialise);
 
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
 
@@ -77,21 +81,21 @@ public:
     long get_num_ins() const    { return m_in_table.size(); }
     long get_num_outs() const   { return m_out_table->size(); }
 
-    // Windows Management
+    // Windows management
 
     void open_window() const;
     void close_window() const;
 
     // Error string
 
-    static const char *get_error(LoadError error);
+    static const char *get_error(load_error error);
 
 private:
 
     template <void (patch_slot::*Method)(t_patcher *p)>
     int patcher_traverse(t_patcher *p, void *arg, t_object *owner);
 
-    LoadError load_finished(LoadError error, short saved_loadupdate);
+    load_error load_finished(load_error error, short saved_loadupdate);
 
     void set_window_name();
     void free_patch();
@@ -122,16 +126,16 @@ private:
     bool m_on;
     bool m_busy;
 
-    // Pointer to Array of Audio Out Buffers (which are thread dependent)
+    // Pointer to array of audio out buffers (which are thread dependent)
 
     void **m_outputs;
 
-    // Inlet and Outlet Communication
+    // Inlet and outlet communication
 
     std::vector<std::vector<void *>> m_in_table;
     std::vector<void *> *m_out_table;
 
-    // State Listener Objects (need notifying)
+    // State listener objects (need notifying)
 
     std::vector<t_object *> m_state_listeners;
 
@@ -168,7 +172,7 @@ public:
 
 private:
 
-    // Threading Variables
+    // Threading
 
     thread_lock m_processing_lock;
     long m_thread_current;

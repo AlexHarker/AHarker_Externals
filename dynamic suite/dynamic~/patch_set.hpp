@@ -27,7 +27,7 @@ static t_max_err patchset_get_ownsdspchain(t_object *pv, t_object *attr, long *a
     return MAX_ERR_NONE;
 }
 
-// patch_set class
+// Class
 
 // N.B. index counting is from 1 (0 means all or out of range)
 
@@ -121,7 +121,7 @@ public:
             defer_slot_action(i, (method) do_delete, &patch_set::release);
     }
 
-    // Message Communication
+    // Message communication
 
     void message_bang()
     {
@@ -147,7 +147,7 @@ public:
         send_message(s, argc, argv);
     }
 
-    // Target Methods
+    // Target methods
 
     void target(long argc, t_atom *argv)
     {
@@ -206,7 +206,7 @@ public:
         for_all_slots(&T::compile_dsp, vec_size, sampling_rate, false);
     }
 
-    // Window Management
+    // Window management
 
     bool open_window(t_atom_long index)
     {
@@ -340,7 +340,7 @@ protected:
 
         // If there is an error report and empty the slot
 
-        if (error != T::LoadError::kNone)
+        if (error != T::load_error::none)
         {
             m_slots[index - 1] = nullptr;
             object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::get_error(error));
