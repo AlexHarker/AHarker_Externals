@@ -31,7 +31,7 @@
 
 t_class *this_class;
 
-constexpr long MAX_VOICES = 1000000;
+constexpr long max_voices = 1000000;
 
 struct t_voicemanager
 {
@@ -42,7 +42,7 @@ struct t_voicemanager
 	double current_time;
 	double sr_val;
 	
-	long max_voices;
+	long num_voices;
 	long active_voices;
 	long active_connected;
     
@@ -51,7 +51,7 @@ struct t_voicemanager
 
 // Function Prototypes
 
-void *voicemanager_new(t_atom_long max_voices);
+void *voicemanager_new(t_atom_long num_voices);
 void voicemanager_free(t_voicemanager *x);
 void voicemanager_assist(t_voicemanager *x, void *b, long m, long a, char *s);
 
@@ -90,7 +90,7 @@ int C74_EXPORT main()
 
 // New / Free
 
-void *voicemanager_new(t_atom_long max_voices)
+void *voicemanager_new(t_atom_long num_voices)
 {
     t_voicemanager *x = (t_voicemanager *)object_alloc(this_class);
     
@@ -99,9 +99,9 @@ void *voicemanager_new(t_atom_long max_voices)
 	outlet_new((t_object *)x, "signal");
 	outlet_new((t_object *)x, "signal");
 	
-    x->max_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(max_voices), MAX_VOICES)));
-	x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->max_voices));
-	x->active_voices = x->max_voices;
+    x->num_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(num_voices), max_voices)));
+	x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->num_voices));
+	x->active_voices = x->num_voices;
 	x->reset = true;
 	
 	return x;
@@ -122,12 +122,12 @@ void voicemanager_reset(t_voicemanager *x)
 
 void voicemanager_active(t_voicemanager *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	long active = x->max_voices;
+	long active = x->num_voices;
 	
 	if (argc)
 		active = static_cast<long>(atom_getlong(argv));
 
-    x->active_voices = std::max(0L, std::min(x->max_voices, active));
+    x->active_voices = std::max(0L, std::min(x->num_voices, active));
 }
 
 // Perform
@@ -146,7 +146,7 @@ t_int *voicemanager_perform(t_int *w)
 	long vec_size = w[8];
     t_voicemanager *x = (t_voicemanager *) w[9];
 	
-	long max_voices = x->max_voices;
+	long num_voices = x->num_voices;
 	long active_voices = x->active_voices;
 	long active_connected = x->active_connected;
 	long voice_number;
@@ -163,7 +163,7 @@ t_int *voicemanager_perform(t_int *w)
 	
 	if (x->reset)
 	{
-		for (i = 0; i < max_voices; i++)
+		for (i = 0; i < num_voices; i++)
 			free_times[i] = current_time;
 		
 		current_time = 0.0;
@@ -181,7 +181,7 @@ t_int *voicemanager_perform(t_int *w)
 		subsample_offset = 0.0;
 		
 		active_voices = active_connected ? (long) *in4 : active_voices;
-		active_voices  = active_voices > max_voices ? max_voices : active_voices;
+		active_voices  = active_voices > num_voices ? num_voices : active_voices;
 		
 		if (*in1 && (*in3  < 1.0))
 		{
@@ -238,7 +238,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
 	double *out2 = outs[1];
 	double *out3 = outs[2];
 	
-	long max_voices = x->max_voices;
+	long num_voices = x->num_voices;
 	long active_voices = x->active_voices;
 	long active_connected = x->active_connected;
 	long voice_number;
@@ -255,7 +255,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
 	
 	if (x->reset)
 	{
-		for (i = 0; i < max_voices; i++)
+		for (i = 0; i < num_voices; i++)
 			free_times[i] = current_time;
 		
 		current_time = 0.0;
@@ -273,7 +273,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
 		subsample_offset = 0.0;
 		
 		active_voices = active_connected ? (long) *in4 : active_voices;
-		active_voices  = active_voices > max_voices ? max_voices : active_voices;
+		active_voices  = active_voices > num_voices ? num_voices : active_voices;
 		
 		if (*in1 && (*in3  < 1.0))
 		{

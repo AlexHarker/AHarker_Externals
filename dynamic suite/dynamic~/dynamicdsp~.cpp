@@ -38,7 +38,7 @@
 // TODO - allow patch crossfading
 // TODO - patch serialisation
 
-// Global Varibles
+// Global Variables
 
 t_class *this_class;
 
@@ -47,8 +47,7 @@ t_symbol *ps_declareio;
 
 static t_ptr_uint sig_size;
 
-constexpr int MAX_ARGS = 16;
-constexpr int MAX_IO = 256;
+constexpr long max_args = threaded_patch_slot::max_args();
 
 // Object Structure
 
@@ -262,16 +261,18 @@ int C74_EXPORT main()
 // New / Free / Assisstance
 
 void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
-{	
+{
+    constexpr long max_io = 256;
+
 	t_dynamicdsp *x = (t_dynamicdsp *)object_alloc(this_class);
 	
 	t_symbol *patch_name_entered = nullptr;
 	t_symbol *tempsym;
 	
 	long ac = 0;
-	t_atom av[MAX_ARGS];						
+	t_atom av[max_args];
 	
-    void *outs[MAX_IO];
+    void *outs[max_io];
     
 	long num_sig_ins = 2;
 	long num_sig_outs = 2;
@@ -279,6 +280,14 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     long num_outs = 2;
     long max_obj_threads = std::thread::hardware_concurrency();
 	
+    auto set_io = [&](t_atom *arg)
+    {
+        t_atom_long N = atom_getlong(arg);
+        t_atom_long result = (N < 0 ? 2 : (N > max_io ? max_io : N));
+
+        return static_cast<long>(result);
+    };
+    
 	// Check if there is a patch name given to load
 	
 	if (argc && atom_gettype(argv) == A_SYM && atom_getsym(argv) != ps_declareio)
@@ -298,26 +307,22 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_sig_ins = atom_getlong(argv);
+        num_sig_ins = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_sig_outs = atom_getlong(argv);
+		num_sig_outs = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_ins = atom_getlong(argv);
+		num_ins = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
 	{
-		if (atom_getlong(argv) >= 0 && atom_getlong(argv) < MAX_IO)
-			num_outs = atom_getlong(argv);
+		num_outs = set_io(argv);
 		argc--; argv++;
 	}
 	if (argc && atom_gettype(argv) == A_LONG)
@@ -339,9 +344,8 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
 		argc--; argv++;
 		if (tempsym == ps_args) 
 		{				
-			ac = argc;
-			if (ac > MAX_ARGS)
-				ac = MAX_ARGS;
+            ac = std::min(argc, max_args);
+            
 			for (long i = 0; i < ac; i++, argv++)
 				av[i] = *argv;
 		}

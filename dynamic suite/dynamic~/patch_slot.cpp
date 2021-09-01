@@ -90,7 +90,7 @@ patch_slot::load_error patch_slot::load(t_symbol *path, long argc, t_atom *argv,
     m_path_symbol = path;
     m_name = std::string(path->s_name);
     m_path = 0;
-    m_argc = std::min(argc, (long) MAX_ARGS);
+    m_argc = std::min(argc, max_args());
 
     std::copy_n(argv, m_argc, m_argv);
 

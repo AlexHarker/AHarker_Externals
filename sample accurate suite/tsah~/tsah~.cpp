@@ -19,16 +19,16 @@
 
 t_class *this_class;
 
-constexpr int MAXIMUM_NUM_OUTLETS = 64;
+constexpr int max_outlets = 64;
 
 struct t_tsah
 {
     t_pxobject x_obj;
 	
-	float *sig_ins[MAXIMUM_NUM_OUTLETS];
-	float *sig_outs[MAXIMUM_NUM_OUTLETS];
+	float *sig_ins[max_outlets];
+	float *sig_outs[max_outlets];
 	
-	double last_outputs[MAXIMUM_NUM_OUTLETS];
+	double last_outputs[max_outlets];
 	
 	long num_outlets;
 };
@@ -81,10 +81,10 @@ void *tsah_new(t_atom_long num_outlets)
     
 	num_outlets = num_outlets < 1 ? 1 : num_outlets;
     
-    if (num_outlets > MAXIMUM_NUM_OUTLETS)
+    if (num_outlets > max_outlets)
     {
-        object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
-        num_outlets = MAXIMUM_NUM_OUTLETS;
+        object_error((t_object *) x, "the maximum number of outlets is %ld", max_outlets);
+        num_outlets = max_outlets;
     }
 	
 	dsp_setup((t_pxobject *)x, num_outlets + 1);

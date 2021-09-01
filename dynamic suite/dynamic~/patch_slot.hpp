@@ -24,10 +24,12 @@ class patch_slot
         void *s_outlet;
     };
 
-    enum { MAX_ARGS = 16 };
+    enum { max_num_args = 16 };
 
 public:
 
+    static constexpr long max_args() { return max_num_args; }
+    
     enum class load_error
     {
         none,
@@ -118,7 +120,7 @@ private:
     // Arguments (stored in case of reload / update)
 
     long m_argc;
-    t_atom m_argv[MAX_ARGS];
+    t_atom m_argv[max_num_args];
 
     // Flags
 
