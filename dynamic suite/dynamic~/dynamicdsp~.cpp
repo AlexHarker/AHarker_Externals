@@ -405,7 +405,8 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup temporary memory / threads / slots
 	
-    x->threads = new thread_set((t_object *) x, reinterpret_cast<thread_set::ProcFunc *>(&dynamicdsp_threadprocess), max_obj_threads, num_sig_outs);
+    auto process = reinterpret_cast<thread_set::process_function *>(&dynamicdsp_threadprocess);
+    x->threads = new thread_set((t_object *) x, process, max_obj_threads, num_sig_outs);
     x->patch_set = new threaded_patch_set((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
 	
 	// Load patch
