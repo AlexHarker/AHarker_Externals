@@ -163,12 +163,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B85B63AC1CC4236600381391 /* thread_set.hpp */,
-				B85B63AB1CC4236600381391 /* thread_set.cpp */,
-				B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */,
-				B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */,
-				B87283981CC39A5100A1C38E /* patch_set.hpp */,
-				B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */,
+				B879300426DFC55A00EF8C56 /* Common */,
 				B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */,
 				B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */,
 				B8EC17B31083727700316C82 /* dynamic.this~.cpp */,
@@ -192,6 +187,19 @@
 				B8600FBC12C22A6500864B9B /* dynamicserial~.mxo */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B879300426DFC55A00EF8C56 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				B85B63AC1CC4236600381391 /* thread_set.hpp */,
+				B85B63AB1CC4236600381391 /* thread_set.cpp */,
+				B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */,
+				B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */,
+				B87283981CC39A5100A1C38E /* patch_set.hpp */,
+				B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
