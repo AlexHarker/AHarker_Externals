@@ -77,7 +77,7 @@ struct atodb_functor
 
 const double atodb_functor::atodb_constant = 20.0 / log(10.0);
 
-typedef v_unary<atodb_functor, kVectorArray, kVectorArray> vatodb;
+typedef v_unary<atodb_functor, calculation_type::vector_array, calculation_type::vector_array> vatodb;
 
 int C74_EXPORT main()
 {

@@ -22,7 +22,7 @@ struct sqrt_functor
     void operator()(double *o, double *i, long size) {}
 };
 
-typedef v_unary<sqrt_functor, kVectorOp, kVectorOp> vsqrt;
+typedef v_unary<sqrt_functor, calculation_type::vector_op, calculation_type::vector_op> vsqrt;
 
 int C74_EXPORT main()
 {

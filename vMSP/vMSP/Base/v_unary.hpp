@@ -8,11 +8,11 @@
 #include "SIMDSupport.hpp"
 #include <AH_Denormals.h>
 
-enum CalculationType { kScalar, kVectorOp, kVectorArray };
+enum class calculation_type { scalar, vector_op, vector_array };
 
 // Object structure
 
-template<typename Functor, CalculationType Vec32, CalculationType Vec64>
+template<typename Functor, calculation_type Vec32, calculation_type Vec64>
 class v_unary
 {
     
@@ -70,7 +70,7 @@ public:
         
         // Default to scalar routine
         
-        bool vector = (Vec32 != kScalar)  || ((sp[0]->s_n / simd_width) > 0);
+        bool vector = (Vec32 != calculation_type::scalar)  || ((sp[0]->s_n / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1>>);
         long vec_size_val = sp[0]->s_n;
 
@@ -86,7 +86,7 @@ public:
             {
                 vec_size_val /= simd_width;
 
-                if (Vec32 == kVectorArray)
+                if (Vec32 == calculation_type::vector_array)
                     current_perform_routine = reinterpret_cast<method>(perform<perform_array<T>>);
                 else
                     current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
@@ -141,14 +141,14 @@ public:
         
         // Default to scalar routine
         
-        bool vector = !(Vec64 != kScalar) || ((maxvectorsize / simd_width) > 0);
+        bool vector = !(Vec64 != calculation_type::scalar) || ((maxvectorsize / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform64_op<T, 1>);
         
         // Use SIMD routines if possible
 
         if (vector)
         {
-            if (Vec64 == kVectorArray)
+            if (Vec64 == calculation_type::vector_array)
                 current_perform_routine = reinterpret_cast<method>(perform64_array<T>);
             else
                 current_perform_routine = reinterpret_cast<method>(perform64_op<T, simd_width>);

@@ -25,7 +25,7 @@ struct cosh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<cosh_functor, kVectorArray, kVectorArray> vcosh;
+typedef v_unary<cosh_functor, calculation_type::vector_array, calculation_type::vector_array> vcosh;
 
 int C74_EXPORT main()
 {

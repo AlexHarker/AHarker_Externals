@@ -27,11 +27,11 @@ struct pow_functor
     }
  
     template <class T>
-    void operator()(T *o, T *i1, T *i2, long size, double val, InputType type)
+    void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
         switch (type)
         {
-            case kScalar1:
+            case inputs::scalar1:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, val);
@@ -39,7 +39,7 @@ struct pow_functor
                 break;
             }
                 
-            case kScalar2:
+            case inputs::scalar2:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, val);
@@ -47,7 +47,7 @@ struct pow_functor
                 break;
             }
                 
-            case kBinary:
+            case inputs::binary:
                 pow_array(o, i1, i2, size);
                 break;
         }
@@ -60,7 +60,7 @@ struct pow_functor
     T operator()(const T a, const T b) { return a; }
 };
 
-typedef v_binary<pow_functor, kVectorArray, kVectorArray> vpow;
+typedef v_binary<pow_functor, calculation_type::vector_array, calculation_type::vector_array> vpow;
 
 int C74_EXPORT main()
 {

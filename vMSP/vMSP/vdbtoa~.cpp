@@ -46,7 +46,7 @@ struct dbtoa_functor
 
 const double dbtoa_functor::dbtoa_constant = log(10.0) / 20.0;
 
-typedef v_unary<dbtoa_functor, kVectorArray, kVectorArray> vdbtoa;
+typedef v_unary<dbtoa_functor, calculation_type::vector_array, calculation_type::vector_array> vdbtoa;
 
 int C74_EXPORT main()
 {

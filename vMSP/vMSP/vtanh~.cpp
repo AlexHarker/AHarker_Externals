@@ -25,7 +25,7 @@ struct tanh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<tanh_functor, kVectorArray, kVectorArray> vtanh;
+typedef v_unary<tanh_functor, calculation_type::vector_array, calculation_type::vector_array> vtanh;
 
 int C74_EXPORT main()
 {

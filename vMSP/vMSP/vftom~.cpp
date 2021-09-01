@@ -49,7 +49,7 @@ struct ftom_functor
 const double ftom_functor::ftom_mul_constant = 12.0 / log(2.0);
 const double ftom_functor::ftom_add_constant = ((log(2.0) * 69.0 / 12.0) - log(440.0)) * ftom_mul_constant;
 
-typedef v_unary<ftom_functor, kVectorArray, kVectorArray> vftom;
+typedef v_unary<ftom_functor, calculation_type::vector_array, calculation_type::vector_array> vftom;
 
 int C74_EXPORT main()
 {

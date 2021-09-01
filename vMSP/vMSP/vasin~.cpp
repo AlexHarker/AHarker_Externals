@@ -43,7 +43,7 @@ struct asin_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<asin_functor, kVectorArray, kVectorArray> vasin;
+typedef v_unary<asin_functor, calculation_type::vector_array, calculation_type::vector_array> vasin;
 
 int C74_EXPORT main()
 {

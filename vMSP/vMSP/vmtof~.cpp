@@ -49,7 +49,7 @@ struct mtof_functor
 const double mtof_functor::mtof_mul_constant = log(2.0) / 12.0;
 const double mtof_functor::mtof_add_constant = log(440.0) - (log(2.0) * 69.0 / 12.0);
 
-typedef v_unary<mtof_functor, kVectorArray, kVectorArray> vmtof;
+typedef v_unary<mtof_functor, calculation_type::vector_array, calculation_type::vector_array> vmtof;
 
 int C74_EXPORT main()
 {

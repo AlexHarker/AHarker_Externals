@@ -25,7 +25,7 @@ struct asinh_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<asinh_functor, kVectorArray, kVectorArray> vasinh;
+typedef v_unary<asinh_functor, calculation_type::vector_array, calculation_type::vector_array> vasinh;
 
 int C74_EXPORT main()
 {

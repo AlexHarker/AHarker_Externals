@@ -63,7 +63,7 @@ struct log_functor
     };
     
     template <class T>
-    void operator()(T *o, T *i1, T *i2, long size, double val, InputType type)
+    void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
         const int simd_width = SIMDLimits<T>::max_size;
         
@@ -71,8 +71,8 @@ struct log_functor
         {
             // N.B. - there is no signal/float input for log~ so if there's only one connection we take this route
                 
-            case kScalar1:
-            case kScalar2:
+            case inputs::scalar1:
+            case inputs::scalar2:
             {
                 const T mul = static_cast<T>(update_base(val));
                 
@@ -82,7 +82,7 @@ struct log_functor
                 break;
             }
                 
-            case kBinary:
+            case inputs::binary:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
 
@@ -119,7 +119,7 @@ struct log_functor
 
 const double log_functor::min_constant = 0.0000000001;
 
-typedef v_binary<log_functor, kVectorArray, kVectorArray, true> vlog;
+typedef v_binary<log_functor, calculation_type::vector_array, calculation_type::vector_array, true> vlog;
 
 int C74_EXPORT main()
 {

@@ -17,11 +17,11 @@ struct rminus_functor
     
     // Empty Implementations
     
-    void operator()(float *o, float *i1, float *i2, long size, double val, InputType type) {}
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
+    void operator()(float *o, float *i1, float *i2, long size, double val, inputs type) {}
+    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
-typedef v_binary<rminus_functor, kVectorOp, kVectorOp> vrminus;
+typedef v_binary<rminus_functor, calculation_type::vector_op, calculation_type::vector_op> vrminus;
 
 int C74_EXPORT main()
 {

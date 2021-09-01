@@ -43,7 +43,7 @@ struct acos_functor
     T operator()(const T a) { return a; }
 };
 
-typedef v_unary<acos_functor, kVectorArray, kVectorArray> vacos;
+typedef v_unary<acos_functor, calculation_type::vector_array, calculation_type::vector_array> vacos;
 
 int C74_EXPORT main()
 {
