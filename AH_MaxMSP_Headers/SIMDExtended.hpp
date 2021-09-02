@@ -188,7 +188,7 @@ static inline void pow_array(float *out, const float *in1, const float *in2, lon
 
 #else
 
-#include <mkl_vml_functions.h>
+#include <mkl_vml.h>
 
 static inline void sin_array(double *out, const double *in, long length)
 {
@@ -202,7 +202,7 @@ static inline void cos_array(double *out, const double *in, long length)
 
 static inline void tan_array(double *out, const double *in, long length)
 {
-    vdTan(length, in out);
+    vdTan(length, in, out);
 }
 
 static inline void sinh_array(double *out, const double *in, long length)
@@ -327,7 +327,7 @@ static inline void atanh_array(float *out, const float *in, long length)
 
 static inline void log_array(float *out, const float *in, long length)
 {
-    vsLog(length, in, out);
+    vsLn(length, in, out);
 }
 
 static inline void exp_array(float *out, const float *in, long length)
