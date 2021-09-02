@@ -139,7 +139,7 @@ void thread::join()
     }
 }
 
-DWORD WINAPI Thread::thread_start(LPVOID arg)
+DWORD WINAPI thread::thread_start(LPVOID arg)
 {
     static_cast<thread *>(arg)->call();
 
@@ -264,7 +264,7 @@ bool thread_set::resize_buffers(t_ptr_int size)
             for (auto jt = it->m_buffers.begin(); jt != it->m_buffers.end(); jt++)
             {
                 deallocate_aligned(*jt);
-                *jt = allocate_aligned<u_int8_t>(size);
+                *jt = allocate_aligned<uint8_t>(size);
                 if (!*jt)
                 {
                     object_error((t_object *) m_owner, "not enough memory");

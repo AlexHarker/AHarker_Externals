@@ -472,8 +472,8 @@ bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rat
 		deallocate_aligned(x->temp_buffers1[i]);
 		deallocate_aligned(x->temp_buffers2[i]);
 		
-		x->temp_buffers1[i] = allocate_aligned<u_int8_t>(sig_size * vec_size);
-		x->temp_buffers2[i] = allocate_aligned<u_int8_t>(sig_size * vec_size);
+		x->temp_buffers1[i] = allocate_aligned<uint8_t>(sig_size * vec_size);
+		x->temp_buffers2[i] = allocate_aligned<uint8_t>(sig_size * vec_size);
 		
 		if (!x->temp_buffers1[i] || !x->temp_buffers2[i])
 			mem_fail = true;
