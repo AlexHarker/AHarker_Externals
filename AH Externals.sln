@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ibuffer suite", "ibuffer suite", "{3F56F5B7-2954-4965-B06E-D95589E70699}"
 EndProject
@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "convolution", "convolution"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "descriptors", "descriptors", "{B091C69C-E366-4E1F-A2F4-015605A74ACE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dynamicdsp suite", "dynamicdsp suite", "{2EA86082-B5F4-4717-A941-9CD92F507E99}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dynamic suite", "dynamic suite", "{2EA86082-B5F4-4717-A941-9CD92F507E99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "miscellaneous", "miscellaneous", "{F8625B17-6B60-47C7-B2ED-FC2B15358F3F}"
 EndProject
@@ -89,19 +89,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rdcblock~", "sample accurat
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rbiquad~", "sample accurate suite\rbiquad~\rbiquad~.vcxproj", "{6E8A11EA-2409-48C8-8301-0E83E537F228}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicdsp~", "dynamicdsp suite\dynamicdsp~\dynamicdsp~.vcxproj", "{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicdsp~", "dynamic suite\dynamic~\dynamicdsp~.vcxproj", "{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicserial~", "dynamicdsp suite\dynamicdsp~\dynamicserial~.vcxproj", "{C2763BF4-A91C-473D-A833-547FCDADD624}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicserial~", "dynamic suite\dynamic~\dynamicserial~.vcxproj", "{C2763BF4-A91C-473D-A833-547FCDADD624}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.this~", "dynamicdsp suite\dynamicdsp~\dynamic.this~.vcxproj", "{E436D27C-0FE8-4977-B405-2A95186689B2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.this~", "dynamic suite\dynamic~\dynamic.this~.vcxproj", "{E436D27C-0FE8-4977-B405-2A95186689B2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.patch~", "dynamicdsp suite\dynamicdsp~\dynamic.patch~.vcxproj", "{6B5FC5C2-416E-48AD-98E0-06736022F4FE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.patch~", "dynamic suite\dynamic~\dynamic.patch~.vcxproj", "{6B5FC5C2-416E-48AD-98E0-06736022F4FE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.in~", "dynamicdsp suite\dynamicdsp~\dynamic.in~.vcxproj", "{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.in~", "dynamic suite\dynamic~\dynamic.in~.vcxproj", "{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.out~", "dynamicdsp suite\dynamicdsp~\dynamic.out~.vcxproj", "{7B3FA083-3B7C-4676-8528-4F4046676B65}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.out~", "dynamic suite\dynamic~\dynamic.out~.vcxproj", "{7B3FA083-3B7C-4676-8528-4F4046676B65}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.request~", "dynamicdsp suite\dynamicdsp~\dynamic.request~.vcxproj", "{876BE8F8-D655-4D0F-82A7-70C540FE714F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.request~", "dynamic suite\dynamic~\dynamic.request~.vcxproj", "{876BE8F8-D655-4D0F-82A7-70C540FE714F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuftable~", "ibuffer suite\ibuftable~\ibuftable~.vcxproj", "{C881C0CC-4846-4EF3-9CD5-198D6489B696}"
 EndProject
@@ -282,6 +282,7 @@ Global
 		{EA83F1B2-51D4-419F-8330-932072DAEEBE}.Release|x64.ActiveCfg = Release|x64
 		{EA83F1B2-51D4-419F-8330-932072DAEEBE}.Release|x64.Build.0 = Release|x64
 		{7139094B-1DBE-463A-94F3-47FBD2AE384D}.Debug|x64.ActiveCfg = Debug|x64
+		{7139094B-1DBE-463A-94F3-47FBD2AE384D}.Debug|x64.Build.0 = Debug|x64
 		{7139094B-1DBE-463A-94F3-47FBD2AE384D}.Release|x64.ActiveCfg = Release|x64
 		{7139094B-1DBE-463A-94F3-47FBD2AE384D}.Release|x64.Build.0 = Release|x64
 		{3AEDB326-B5B9-42E3-BCE9-71FA129B80B9}.Debug|x64.ActiveCfg = Debug|x64
@@ -320,20 +321,34 @@ Global
 		{6E8A11EA-2409-48C8-8301-0E83E537F228}.Debug|x64.Build.0 = Debug|x64
 		{6E8A11EA-2409-48C8-8301-0E83E537F228}.Release|x64.ActiveCfg = Release|x64
 		{6E8A11EA-2409-48C8-8301-0E83E537F228}.Release|x64.Build.0 = Release|x64
-		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Debug|x64.ActiveCfg = Debug|Win32
-		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Release|x64.ActiveCfg = Release|Win32
-		{C2763BF4-A91C-473D-A833-547FCDADD624}.Debug|x64.ActiveCfg = Debug|Win32
-		{C2763BF4-A91C-473D-A833-547FCDADD624}.Release|x64.ActiveCfg = Release|Win32
-		{E436D27C-0FE8-4977-B405-2A95186689B2}.Debug|x64.ActiveCfg = Debug|Win32
-		{E436D27C-0FE8-4977-B405-2A95186689B2}.Release|x64.ActiveCfg = Release|Win32
-		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Debug|x64.ActiveCfg = Debug|Win32
-		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Release|x64.ActiveCfg = Release|Win32
-		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Debug|x64.ActiveCfg = Debug|Win32
-		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Release|x64.ActiveCfg = Release|Win32
-		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Debug|x64.ActiveCfg = Debug|Win32
-		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Release|x64.ActiveCfg = Release|Win32
-		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Debug|x64.ActiveCfg = Debug|Win32
-		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Release|x64.ActiveCfg = Release|Win32
+		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Debug|x64.ActiveCfg = Debug|x64
+		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Debug|x64.Build.0 = Debug|x64
+		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Release|x64.ActiveCfg = Release|x64
+		{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}.Release|x64.Build.0 = Release|x64
+		{C2763BF4-A91C-473D-A833-547FCDADD624}.Debug|x64.ActiveCfg = Debug|x64
+		{C2763BF4-A91C-473D-A833-547FCDADD624}.Debug|x64.Build.0 = Debug|x64
+		{C2763BF4-A91C-473D-A833-547FCDADD624}.Release|x64.ActiveCfg = Release|x64
+		{C2763BF4-A91C-473D-A833-547FCDADD624}.Release|x64.Build.0 = Release|x64
+		{E436D27C-0FE8-4977-B405-2A95186689B2}.Debug|x64.ActiveCfg = Debug|x64
+		{E436D27C-0FE8-4977-B405-2A95186689B2}.Debug|x64.Build.0 = Debug|x64
+		{E436D27C-0FE8-4977-B405-2A95186689B2}.Release|x64.ActiveCfg = Release|x64
+		{E436D27C-0FE8-4977-B405-2A95186689B2}.Release|x64.Build.0 = Release|x64
+		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Debug|x64.ActiveCfg = Debug|x64
+		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Debug|x64.Build.0 = Debug|x64
+		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Release|x64.ActiveCfg = Release|x64
+		{6B5FC5C2-416E-48AD-98E0-06736022F4FE}.Release|x64.Build.0 = Release|x64
+		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Debug|x64.ActiveCfg = Debug|x64
+		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Debug|x64.Build.0 = Debug|x64
+		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Release|x64.ActiveCfg = Release|x64
+		{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}.Release|x64.Build.0 = Release|x64
+		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Debug|x64.ActiveCfg = Debug|x64
+		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Debug|x64.Build.0 = Debug|x64
+		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Release|x64.ActiveCfg = Release|x64
+		{7B3FA083-3B7C-4676-8528-4F4046676B65}.Release|x64.Build.0 = Release|x64
+		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Debug|x64.ActiveCfg = Debug|x64
+		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Debug|x64.Build.0 = Debug|x64
+		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Release|x64.ActiveCfg = Release|x64
+		{876BE8F8-D655-4D0F-82A7-70C540FE714F}.Release|x64.Build.0 = Release|x64
 		{C881C0CC-4846-4EF3-9CD5-198D6489B696}.Debug|x64.ActiveCfg = Debug|x64
 		{C881C0CC-4846-4EF3-9CD5-198D6489B696}.Debug|x64.Build.0 = Debug|x64
 		{C881C0CC-4846-4EF3-9CD5-198D6489B696}.Release|x64.ActiveCfg = Release|x64
