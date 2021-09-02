@@ -20,9 +20,9 @@
 
 // Mac OS specific definitions
 
-typedef pthread_t os_thread;
-typedef semaphore_t os_semaphore;
-typedef void *os_thread_function(void *arg);
+using os_thread = pthread_t;
+using os_semaphore = semaphore_t;
+using os_thread_function = void *(void *arg);
 
 #else
 
@@ -30,9 +30,9 @@ typedef void *os_thread_function(void *arg);
 
 #include <windows.h>
 
-typedef HANDLE os_thread;
+using os_thread = HANDLE;
 using os_semaphore = struct win_semaphore { HANDLE m_handle; long m_max_count; };
-DWORD WINAPI os_thread_function(LPVOID arg);
+using os_thread_function = DWORD WINAPI(LPVOID arg);
 
 #endif
 
