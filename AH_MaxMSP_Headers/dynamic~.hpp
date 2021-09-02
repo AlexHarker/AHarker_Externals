@@ -72,7 +72,8 @@ static inline long dynamic_get_patch_index(void *obj)
         {
             t_object *p = dynamic_traverse_assoc(gensym("#P")->s_thing, nullptr);
             p = dynamic_traverse_assoc(p, obj);
-            index = std::max(0L, (long) object_method(obj,  gensym("getindex"), p));
+            t_ptr_int idx = reinterpret_cast<t_ptr_int>(object_method(obj,  gensym("getindex"), p));
+            index = std::max(0L, static_cast<long>(idx));
         }
     }
 
@@ -90,8 +91,10 @@ void dynamic_object_method(void *obj, const char *str, void *ptr1, void *ptr2 = 
 template <typename T>
 void dynamic_object_method(void *obj, const char *str, long index, T value)
 {
-    if (index > 0)
-        dynamic_object_method(obj, str, reinterpret_cast<void *>(index), reinterpret_cast<void *>(value));
+    t_ptr_int idx = index;
+    
+    if (idx > 0)
+        dynamic_object_method(obj, str, reinterpret_cast<void *>(idx), reinterpret_cast<void *>(value));
 }
 
 template <typename T, typename... Args>
