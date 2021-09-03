@@ -24,11 +24,10 @@
 #include <string>
 #include <vector>
 
+#ifdef MSP_VERSION
 #include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
 
-
-#ifdef MSP_VERSION
 using max_object_base = t_pxobject;
 const char *object_name = "valconvert~";
 method free_routine = (method) dsp_free;

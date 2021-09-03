@@ -12,8 +12,14 @@
 #include "Base/conversions.hpp"
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
-#include <alloca.h>
 #include <limits>
+
+#ifdef __APPLE__
+#include <alloca.h>
+#else
+#include <malloc.h>
+#endif 
+
 
 struct log_functor
 {
