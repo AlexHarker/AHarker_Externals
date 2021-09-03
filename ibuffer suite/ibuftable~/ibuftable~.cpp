@@ -51,7 +51,7 @@ int C74_EXPORT main()
 						   (method)ibuftable_new,
 						   (method)ibuftable_free,
 						   sizeof(t_ibuftable), 
-						   NULL, 
+						   nullptr, 
 						   A_GIMME,
 						   0);
 	
@@ -95,7 +95,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
 	
 	// Default variables
 	
-    t_symbol *buffer_name = NULL;
+    t_symbol *buffer_name = nullptr;
     t_atom_long start_samp = 0;
     t_atom_long end_samp = 512;
     t_atom_long chan = 1;

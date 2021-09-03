@@ -146,7 +146,7 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 			freeobject(static_cast<t_object *>(force_load));
 	}
     
-	// Return a properly allocated object (may still return NULL if the .mxo is not present)
+	// Return a properly allocated object (may still return null if the .mxo is not present)
 	
     void *object_untyped = object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, nullptr);
 	t_object *current_buffer = reinterpret_cast<t_object *>(object_untyped);
