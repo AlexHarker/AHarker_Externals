@@ -725,7 +725,7 @@ template <int N> SIMDType<double, N> abs(const SIMDType<double, N> a)
 template <int N> SIMDType<float, N> abs(const SIMDType<float, N> a)
 {
     const static uint32_t bit_mask_32 = 0x7FFFFFFFU;
-    const float bit_mask_32f = *(reinterpret_cast<const double *>(&bit_mask_32));
+    const float bit_mask_32f = *(reinterpret_cast<const float *>(&bit_mask_32));
     
     return a & SIMDType<float, N>(bit_mask_32f);
 }
