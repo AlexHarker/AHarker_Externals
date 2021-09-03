@@ -14,7 +14,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
@@ -43,9 +42,6 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s);
 
-t_int *ibufmultitable_perform(t_int *w);
-void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count);
-
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -62,7 +58,6 @@ int C74_EXPORT main()
 	
 	class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibufmultitable_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)ibufmultitable_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufmultitable_dsp64, "dsp64", A_CANT, 0);
 	
     // Add Attributes
@@ -108,7 +103,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     
     // Arguments
     
-    long non_attr_argc = attr_args_offset(argc, argv);
+    long non_attr_argc = attr_args_offset(static_cast<short>(argc), argv);
     
     x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
     x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
@@ -119,7 +114,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
 	
 	return x;
 }
@@ -189,9 +184,10 @@ void perform_positions(T *positions, T *in, T *offset_in, long num_samps, const 
     }
 }
 
-long clip(const long in, const long max)
+template <typename T>
+T clip(const t_ptr_int in, const t_ptr_int max)
 {
-    return std::min(max, std::max(0L, in));
+    return static_cast<T>(std::min(max, std::max(t_ptr_int(0), in)));
 }
 
 template <class T>
@@ -201,10 +197,10 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
     
     ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
-    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
-    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
-    double last_samp = buffer.get_length() - 1;
+    double start_samp = clip<double>(x->start_samp, buffer.get_length() - 1);
+    double end_samp = clip<double>(x->end_samp, buffer.get_length() - 1);
+    long chan = clip<long>(x->chan - 1, buffer.get_num_chans() - 1);
+    double last_samp = static_cast<double>(buffer.get_length() - 1);
     
     // Calculate output
     
@@ -227,37 +223,7 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
         std::fill_n(out, vec_size, 0);
 }
 
-// Perform and DSP for 32-bit signals
-
-t_int *ibufmultitable_perform(t_int *w)
-{
-    // Ignore the copy of this function pointer (due to denormal fixer)
-    
-    // Set pointers
-    
-    float *in = (float *) w[2];
-    float *offset_in = (float *) w[3];
-    float *out = (float *)(w[4]);
-    long vec_size = w[5];
-    t_ibufmultitable *x = (t_ibufmultitable *) w[6];
-    
-    if (!x->x_obj.z_disabled)
-        perform_core(x, in, offset_in, out, vec_size);
-    
-    return w + 7;
-}
-
-void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count)
-{
-    // Set buffer again in case it is no longer valid / extant
-    
-    ibufmultitable_set_internal(x, x->buffer_name);
-    
-    if (count[0] && count[1])
-        dsp_add(denormals_perform, 6, ibufmultitable_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
+// Perform and DSP
 
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {

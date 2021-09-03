@@ -14,7 +14,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
@@ -43,9 +42,6 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 void ibuftable_set(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
 void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
 
-t_int *ibuftable_perform(t_int *w);
-void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count);
-
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -61,7 +57,6 @@ int C74_EXPORT main()
 	
 	class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)ibuftable_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
 	
     // Add Attributes
@@ -107,7 +102,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
     
 	// Arguments
 	
-    long non_attr_argc = attr_args_offset(argc, argv);
+    long non_attr_argc = attr_args_offset(static_cast<short>(argc), argv);
     
     x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
     x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
@@ -118,7 +113,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
 	
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
     
 	return x;
 }
@@ -168,9 +163,10 @@ void perform_positions(T *positions, T *in, long n_vecs, double start_samp, doub
         v_positions[i] = (mul * min(one, max(zero, *v_in++))) + add;
 }
 
-long clip(const long in, const long max)
+template <typename T>
+T clip(const t_ptr_int in, const t_ptr_int max)
 {
-    return std::min(max, std::max(0L, in));
+    return static_cast<T>(std::min(max, std::max(t_ptr_int(0), in)));
 }
 
 template <class T>
@@ -180,9 +176,9 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
     
     ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
-    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
-    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
+    const double start_samp = clip<double>(x->start_samp, buffer.get_length() - 1);
+    const double end_samp = clip<double>(x->end_samp, buffer.get_length() - 1);
+    long chan = clip<long>(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
 
@@ -205,36 +201,8 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
         std::fill_n(out, vec_size, 0);
 }
 
-// Perform and DSP for 32-bit signals
 
-t_int *ibuftable_perform(t_int *w)
-{	
-	// Ignore the copy of this function pointer (due to denormal fixer)
-	
-	// Set pointers
-	
-	float *in = (float *) w[2];
-	float *out = (float *)(w[3]);
-	long vec_size = w[4];
-    t_ibuftable *x = (t_ibuftable *) w[5];
-		
-	if (!x->x_obj.z_disabled)
-        perform_core(x, in, out, vec_size);
-
-	return w + 6;
-}
-
-void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
-{
-	// Set buffer again in case it is no longer valid / extant
-
-	ibuftable_set_internal(x, x->buffer_name);
-	
-	if (count[0] && count[1])
-        dsp_add(denormals_perform, 5, ibuftable_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
+// Perform and DSP
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	

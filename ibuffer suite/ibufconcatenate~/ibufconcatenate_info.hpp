@@ -120,7 +120,7 @@ private:
     
     long size() const
     {
-        return timings.size();
+        return static_cast<long>(timings.size());
     }
     
     double get_max_end() const

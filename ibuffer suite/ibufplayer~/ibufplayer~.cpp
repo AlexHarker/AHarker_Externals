@@ -17,7 +17,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
@@ -34,7 +33,7 @@ enum t_transport_flag
     FLAG_STOP,
 };
 
-const int max_num_chans = 64;
+constexpr int max_num_chans = 64;
 
 // Main object struct
 
@@ -122,9 +121,6 @@ void ibufplayer_stop(t_ibufplayer *x);
 
 void ibufplayer_done_bang(t_ibufplayer *x);
 
-t_int *ibufplayer_perform(t_int *w);
-void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
-
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -144,7 +140,6 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)ibufplayer_play, "play", A_GIMME, 0);
 	class_addmethod(this_class, (method)ibufplayer_stop, "stop", 0);
 	class_addmethod(this_class, (method)ibufplayer_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)ibufplayer_dsp, "dsp", A_CANT, 0);
 	class_addmethod(this_class, (method)ibufplayer_dsp64, "dsp64", A_CANT, 0);
 	
     // Add Attributes
@@ -163,7 +158,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     
     // Arguments
     
-    long non_attr_argc = attr_args_offset(argc, argv);
+    long non_attr_argc = attr_args_offset(static_cast<short>(argc), argv);
     
     t_atom_long obj_n_chans = non_attr_argc > 0 ? atom_getlong(argv + 0) : 1;
     obj_n_chans = std::min(static_cast<t_atom_long>(max_num_chans), std::max(static_cast<t_atom_long>(1), obj_n_chans));
@@ -189,7 +184,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 	x->playing = false;
 	x->input_connected = false;
     x->transport_flag = FLAG_NONE;
-	x->obj_n_chans = obj_n_chans;
+	x->obj_n_chans = static_cast<long>(obj_n_chans);
 	x->buffer_name = NULL;
 	
     for (long i = 0 ; i < max_num_chans; i++)
@@ -201,7 +196,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
     
 	return x;
 }
@@ -475,45 +470,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     x->transport_flag = FLAG_NONE;
 }
 
-// Perform and DSP for 32-bit signals
-
-t_int *ibufplayer_perform(t_int *w)
-{		
-	// Ignore the copy of this function pointer (due to denormal fixer)
-	
-	// Set pointers
-	
-	float *in = reinterpret_cast<float *>(w[2]);
-	float **outs = reinterpret_cast<float **>(w[3]);
-    float *phase_out = reinterpret_cast<float *>(w[4]);
-	long vec_size = w[5];
-    t_ibufplayer *x = reinterpret_cast<t_ibufplayer *>(w[6]);
-
-    if (!x->x_obj.z_disabled)
-        perform_core(x, in, outs, phase_out, NULL, vec_size);
-    
-	return w + 7;
-}
-
-void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
-{
-	x->sr_div = 1.0 / sp[0]->s_sr;
-	
-	// Set buffer again in case it is no longer valid / extant
-	
-	ibufplayer_set_internal(x, x->buffer_name);
-
-	// Check if input is connected
-	
-	x->input_connected = count[0];
-	
-    for (long i = 0; i < x->obj_n_chans; i++)
-        x->float_outs[i] = reinterpret_cast<float *>(sp[i + 1]->s_vec);
-    
-	dsp_add(denormals_perform, 6, ibufplayer_perform, sp[0]->s_vec, x->float_outs, sp[x->obj_n_chans]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
+// Perform and DSP
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {

@@ -219,7 +219,7 @@ void form_os_name(char *filename, char *foldname, char *fullname)
 #else
 void form_os_name(char *filename, char *foldname, char *fullname)
 {
-    long offset = strlen(foldname);;
+    size_t offset = strlen(foldname);;
 
     // Copy folder name, add a slash seperator and then copy the file name
 
@@ -379,7 +379,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 			// Free temp memory and store relevant variables
 			
 			free(load_temp);
-			x->channels = channel_order.size();
+			x->channels = static_cast<long>(channel_order.size());
 		}
 		
 		// If the samples are in the wrong endianness then reverse the byte order for each sample 
