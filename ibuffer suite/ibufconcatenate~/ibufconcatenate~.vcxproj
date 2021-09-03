@@ -48,8 +48,8 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.c" />
-    <ClCompile Include="ibufconcatenate~.c" />
+    <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.cpp" />
+    <ClCompile Include="ibufconcatenate~.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -51,21 +51,22 @@
     <ClCompile>
       <AdditionalIncludeDirectories>libsndfile_win\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>libsndfile_win\libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>libsndfile_win\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>libsndfile_win\libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Max5_Support\c74support\max-includes\common\dllmain_win.c" />
-    <ClCompile Include="ibuffer~.c" />
+    <ClCompile Include="AudioFile\BaseAudioFile.cpp" />
+    <ClCompile Include="AudioFile\IAudioFile.cpp" />
+    <ClCompile Include="ibuffer~.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioFile\BaseAudioFile.h" />
+    <ClInclude Include="AudioFile\IAudioFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
