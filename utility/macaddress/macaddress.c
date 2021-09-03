@@ -145,8 +145,8 @@ void macaddress_bang(t_macaddress *x)
 	unsigned int found = 0;
 	unsigned int i = 0;
 		
-	IP_ADAPTER_ADDRESSES addresses = NULL;
-	IP_ADAPTER_ADDRESSES current_address = NULL;
+	IP_ADAPTER_ADDRESSES *addresses = NULL;
+	IP_ADAPTER_ADDRESSES *current_address = NULL;
 	ULONG outBufLen = 15000;
 	
 	mac_address[0] = 0;
@@ -193,9 +193,9 @@ void macaddress_bang(t_macaddress *x)
 		free(addresses);
 		
 	if (found)
-		outlet_anything(x->output, gensym((char *)mac_address), 0, NIL);
+		outlet_anything(x->output, gensym(mac_address), 0, NULL);
 	else
-		outlet_anything(x->output, ps_failed, 0, NIL);
+		outlet_anything(x->output, ps_failed, 0, NULL);
 }
 
 #endif

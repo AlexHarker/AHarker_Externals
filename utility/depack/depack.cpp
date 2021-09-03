@@ -4,7 +4,7 @@
  *
  *	depack is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -13,27 +13,27 @@
 #include <ext_obex.h>
 
 
-const static int maximum_outlets = 256;
+constexpr int max_outlets = 256;
 
 
 t_class *this_class;
 
 
-typedef struct depack{
+struct t_depack
+{
     
 	t_object a_obj;
 	
 	long num_outlets;
     
-	void *outlet_array[maximum_outlets];
-		
-} t_depack;
+	void *outlet_array[max_outlets];
+};
 
 
 void *depack_new(t_atom_long num_outlets);
 void depack_free(t_depack *x);
 
-void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset);
+void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset);
 
 void depack_int(t_depack *x, t_atom_long value);
 void depack_float(t_depack *x, double value);
@@ -47,9 +47,9 @@ int C74_EXPORT main()
 {	
 	this_class = class_new("depack", 
 							(method) depack_new, 
-							(method) depack_free, 
+							nullptr,
 							sizeof(t_depack), 
-							NULL, 
+							nullptr,
 							A_DEFLONG,
 							0);
 	
@@ -64,15 +64,9 @@ int C74_EXPORT main()
 	return 0;
 }
 
-void depack_free(t_depack *x)
-{
-}
-
 void *depack_new(t_atom_long num_outlets)
 {
     t_depack *x = (t_depack *) object_alloc(this_class);
-	void **outlet_array;
-	long i;
 	
 	if (num_outlets < 1)
     {
@@ -80,31 +74,28 @@ void *depack_new(t_atom_long num_outlets)
         num_outlets = 1;
     }
     
-	if (num_outlets > maximum_outlets)
+	if (num_outlets > max_outlets)
     {
-        object_error((t_object *) x, "the maximum number of outlets is %ld", maximum_outlets);
-        num_outlets = maximum_outlets;
+        object_error((t_object *) x, "the maximum number of outlets is %ld", max_outlets);
+        num_outlets = max_outlets;
     }
 	
-	x->num_outlets = num_outlets;
-	
-	outlet_array = x->outlet_array;
-	
-	for (i = num_outlets - 1; i >= 0; i--)
-		outlet_array[i] = outlet_new(x, 0);
+	x->num_outlets = static_cast<long>(num_outlets);
+		
+	for (long i = x->num_outlets - 1; i >= 0; i--)
+		x->outlet_array[i] = outlet_new(x, 0);
 	
     return x;
 }
 
-void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset)
+void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset)
 {
-	long i;
 	long num_outlets = x->num_outlets;
 	void **outlet_array = x->outlet_array;
 	
 	if (argc > num_outlets - offset) argc = num_outlets - offset;
 	
-	for (i = argc - 1; i >= 0; i--)
+	for (long i = argc - 1; i >= 0; i--)
 	{
 		switch (atom_gettype(argv + i))
 		{

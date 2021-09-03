@@ -6,7 +6,7 @@
  *	
  *	Based on folder from the Max SDK examples.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -14,29 +14,35 @@
 #include <ext.h>
 #include <ext_obex.h>
 
+#include <algorithm>
+
 
 t_class *this_class;
 
 
-#define MAXTYPES 128
+constexpr long max_types = 128;
+
+t_symbol *ps_folder;
+t_symbol *ps_start;
+t_symbol *ps_end;
+t_symbol *ps_empty;
 
 
-typedef struct _recursive_folder 
+struct t_recursive_folder
 {
 	t_object f_ob;
 	
 	t_filepath f_path;
 	t_symbol *f_input;
 	
-	t_fourcc f_types[MAXTYPES];
+	t_fourcc f_types[max_types];
 	
 	t_atom_long f_recursion;
 	long f_numtypes;
 	
 	void *f_countout;
 	long f_outcount;
-	
-} t_recursive_folder;
+};
 
 
 void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv);
@@ -49,9 +55,6 @@ void recursive_folder_lookup(t_recursive_folder *x);
 short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_symbol *f_name, t_atom_long recursion);
 
 void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv);
-
-
-t_symbol *ps_folder, *ps_start, *ps_end, *ps_empty;
 
 int C74_EXPORT main()
 {
@@ -79,10 +82,8 @@ int C74_EXPORT main()
 
 
 void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
-{
-	t_recursive_folder *x;
-	
-	x = object_alloc (this_class);
+{	
+	t_recursive_folder *x = (t_recursive_folder *) object_alloc(this_class);
 	
 	x->f_countout = intout((t_object *)x);
 	outlet_new((t_object *)x,0);
@@ -130,7 +131,7 @@ void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, cha
 }
 
 
-// call search
+// Call search
 
 void recursive_folder_bang(t_recursive_folder *x)
 {
@@ -138,7 +139,7 @@ void recursive_folder_bang(t_recursive_folder *x)
 }
 
 
-// set folder name and search
+// Set folder name and search
 
 void recursive_folder_anything(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -148,7 +149,7 @@ void recursive_folder_anything(t_recursive_folder *x, t_symbol *s, long argc, t_
 }
 
 
-// if the folder name has changed confirm that it exists - then search it recursively
+// If the folder name has changed confirm that it exists - then search it recursively
 
 void recursive_folder_action(t_recursive_folder *x)
 {
@@ -185,27 +186,29 @@ void recursive_folder_action(t_recursive_folder *x)
 }
 
 
-// enumerate the items in a folder - matching to types - if a folder is found and recursion depth has not been reached then enumerate that folder also
+// Enumerate the items in a folder - matching to types
+// If a folder is found and recursion depth has not been reached then enumerate that folder also
 
 short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_symbol *f_name, t_atom_long recursion)
 {
-	bool match;
-	t_fourcc type;
-	long i;
-	char fullname[2048];
+    t_filepath new_path = 0;
+    t_fileinfo info;
+    t_fourcc type;
+
+    t_atom out_atom[2];
+    
+    bool match;
+	
+    char fullname[2048];
 	char tempname[2048];
 	char name[512];
-	t_filepath new_path = 0;
-	short started = 0;
-	t_fileinfo info;
-	t_atom out_atom[2];
 	
-	void *fold;
-	
+    short started = 0;
+		
 	if (!f_path)
 		return 0;
 	
-	fold = path_openfolder(f_path);
+	void *fold = path_openfolder(f_path);
 	
 	if (!fold)
 		return 0;
@@ -230,7 +233,7 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
 				else 
 					type = 0;
 			}
-			for (i = 0; i < x->f_numtypes; i++) 
+			for (long i = 0; i < x->f_numtypes; i++)
 			{
 				if (type == x->f_types[i]) 
 				{
@@ -251,6 +254,7 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
 			x->f_outcount++;
 			started |= 2;
 		}
+        
 		if (type == 'fold' && (!x->f_recursion || x->f_recursion - 1 > recursion)) 
 		{						
 			if (!started)
@@ -282,24 +286,25 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
 }
 
 
-// set types to search for
+// Set types to search for
 
 void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv)
 {
-	t_uint8 type[4];
-	long len = 0;
-	long i;
+	uint8_t type[4];
 	
 	x->f_numtypes = 0;
+    
+    argc = std::max(argc, max_types);
+    
 	while (argc--)
 	{
 		if (atom_gettype(argv) == A_SYM)
 		{
-			len = strlen(atom_getsym(argv)->s_name);
-			for (i = 0; i < 4; i++) 
+			size_t len = strlen(atom_getsym(argv)->s_name);
+			for (long i = 0; i < 4; i++)
 				type[i] = (i >= len) ? ' ' : atom_getsym(argv)->s_name[i];
 			STR_TO_FOURCC(*((t_fourcc *)type));
-			sysmem_copyptr(type,&x->f_types[x->f_numtypes++], 4L);
+			sysmem_copyptr(type, &x->f_types[x->f_numtypes++], 4L);
 		}
 		argv++;
 	}
