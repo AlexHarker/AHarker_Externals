@@ -4,7 +4,7 @@
  *
  *	macaddress is an object for obtaining the MAC address of a computer's wireless hardware, for use as a unique identifier.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -24,13 +24,12 @@
 t_class *this_class;
 
 
-typedef struct macaddress{
-	
+struct t_macaddress
+{
 	t_object a_obj;
 	
-    void *output;
-	
-} t_macaddress;
+    void *output;	
+};
 
 
 t_symbol *ps_failed;
@@ -95,7 +94,7 @@ void macaddress_bang(t_macaddress *x)
 	
 	for (i = 0; i < loop; i++)
 	{
-		next_interface = CFArrayGetValueAtIndex(interface_array, i);
+		next_interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
 		interface_type = SCNetworkInterfaceGetInterfaceType(next_interface);
         /*
         CFStringRef interface_bsd_name = SCNetworkInterfaceGetBSDName(next_interface);
@@ -125,10 +124,10 @@ void macaddress_bang(t_macaddress *x)
 	if (mac_address)
 	{
 		mac_address_str = CFStringGetCStringPtr(mac_address, CFStringGetFastestEncoding(mac_address));
-		outlet_anything(x->output, gensym((char *)mac_address_str), 0, NIL);
+		outlet_anything(x->output, gensym(mac_address_str), 0, NULL);
 	}
 	else
-		outlet_anything(x->output, ps_failed, 0, NIL);
+		outlet_anything(x->output, ps_failed, 0, NULL);
     
     // We need to release anything that is created via copy...
     
