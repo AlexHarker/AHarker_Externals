@@ -128,7 +128,7 @@ public:
     thread_set(t_object *owner, process_function *process, long num_threads, long num_outs);
     ~thread_set();
 
-    long get_num_threads() const { return m_thread_slots.size(); }
+    long get_num_threads() const { return static_cast<long>(m_thread_slots.size()); }
 
     void tick(long vec_size, long num_threads, void **outs);
     bool resize_buffers(t_ptr_int size);

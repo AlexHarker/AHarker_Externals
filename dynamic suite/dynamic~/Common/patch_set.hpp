@@ -75,7 +75,7 @@ public:
 
     // Size
 
-    long size() const { return m_slots.size(); }
+    long size() const { return static_cast<long>(m_slots.size()); }
 
     // Load / Remove / Clear
 
@@ -104,7 +104,7 @@ public:
         for (long i = 0; i < argc; i++)
             deferred_args[i + 4] = argv[i];
 
-        defer(m_owner, (method) deferred_load, path, argc + 4, deferred_args.data());
+        defer(m_owner, (method) deferred_load, path, static_cast<short>(argc + 4), deferred_args.data());
 
         return index;
     }
@@ -153,7 +153,7 @@ public:
     {
         t_atom_long index = argc ? atom_getlong(argv) : 0;
 
-        m_target_index = (index >= 0 && index <= m_slots.size()) ? index : -1;
+        m_target_index = slot_exists(index) ? index : -1;
     }
 
     void target_free(long argc, t_atom *argv)
@@ -323,7 +323,7 @@ protected:
 
     bool slot_exists(t_atom_long index)
     {
-        return index >= 1 && index <= m_slots.size() && m_slots[index - 1];
+        return index >= 1 && index <= size() && m_slots[index - 1];
     }
 
     void do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
@@ -413,7 +413,7 @@ protected:
     t_patcher *m_parent;
 
     t_atom_long m_loading_index;
-    long m_target_index;
+    t_atom_long m_target_index;
     long m_num_ins;
 
     std::vector<void *> m_out_table;
@@ -438,7 +438,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
         return slot_action_result(&::threaded_patch_slot::process_if_unprocessed, index, outputs);
     }
 
-    void request_thread(long index, long thread)
+    void request_thread(t_atom_long index, long thread)
     {
         slot_action(&::threaded_patch_slot::request_thread, index, thread);
     }

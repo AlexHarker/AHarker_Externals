@@ -135,7 +135,7 @@ patch_slot::load_error patch_slot::load(long vec_size, long sampling_rate, bool 
 
     short saved_loadupdate = dsp_setloadupdate(false);
     loadbang_suspend();
-    m_patch = reinterpret_cast<t_patcher *>(intload(name, m_path, 0 , m_argc, m_argv, false));
+    m_patch = reinterpret_cast<t_patcher *>(intload(name, m_path, 0 , static_cast<short>(m_argc), m_argv, false));
 
     // Check something has loaded and that it is a patcher
 
@@ -186,7 +186,7 @@ void patch_slot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
         return;
 
     for (std::vector<void *>::iterator it = m_in_table[inlet].begin(); it != m_in_table[inlet].end(); it++)
-        outlet_anything(*it, msg, argc, argv);
+        outlet_anything(*it, msg, static_cast<short>(argc), argv);
 }
 
 // Processing and DSP
@@ -272,7 +272,7 @@ void patch_slot::set_window_name()
 {
     char index_string[16];
 
-    snprintf(index_string, 15, " (%ld)", m_user_index);
+    snprintf(index_string, 15, " (%lld)", m_user_index);
 
     std::string window_name = std::string(m_name);
     window_name.append(index_string);
@@ -297,10 +297,10 @@ const char *patch_slot::get_error(load_error error)
 {
     switch (error)
     {
-        case load_error::none:              return "";
         case load_error::file_not_found:    return "file not found";
         case load_error::nothing_loaded:    return "nothing was loaded";
         case load_error::not_patcher:       return "file is not a patcher";
+        default:                            return "";
     }
 }
 

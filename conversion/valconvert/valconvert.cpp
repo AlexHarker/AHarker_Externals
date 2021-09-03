@@ -311,7 +311,7 @@ double valconvert_scale(t_valconvert *x, double input)
         case conversion_mode::linear:   return clip((input * x->mul) - x->sub, x->lo, x->hi);
         case conversion_mode::log_in:   return clip(exp((input * x->mul) - x->sub), x->lo, x->hi);
         case conversion_mode::exp_in:   return clip((safe_log(input) * x->mul) - x->sub, x->lo, x->hi);
-        default:    return input;
+        default:                        return input;
     }
 }
 
