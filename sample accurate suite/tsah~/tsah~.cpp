@@ -81,19 +81,19 @@ void *tsah_new(t_atom_long num_outlets)
         object_error((t_object *) x, "the maximum number of outlets is %ld", max_outlets);
         num_outlets = max_outlets;
     }
-    
-    dsp_setup((t_pxobject *)x, num_outlets + 1);
-    
-    for (i = 0; i < num_outlets; i++)
-    {
-        outlet_new((t_object *)x, "signal");
-        x->last_outputs[i] = 0.;
-    }
-    
-    x->x_obj.z_misc = Z_NO_INPLACE;        // due to working method!!
-    x->num_outlets = num_outlets;
-    
-    return x;
+	
+	dsp_setup((t_pxobject *)x, static_cast<long>(num_outlets + 1));
+
+	for (i = 0; i < num_outlets; i++)
+	{
+		outlet_new((t_object *)x, "signal");
+		x->last_outputs[i] = 0.;
+	}
+	
+	x->x_obj.z_misc = Z_NO_INPLACE;		// due to working method!!
+	x->num_outlets = static_cast<long>(num_outlets);
+	
+	return x;
 }
 
 void tsah_free(t_tsah *x)

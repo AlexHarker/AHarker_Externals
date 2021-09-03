@@ -308,10 +308,10 @@ double valconvert_scale(t_valconvert *x, double input)
 {
     switch (x->mode)
     {
-        case conversion_mode::none:     return input;
         case conversion_mode::linear:   return clip((input * x->mul) - x->sub, x->lo, x->hi);
         case conversion_mode::log_in:   return clip(exp((input * x->mul) - x->sub), x->lo, x->hi);
         case conversion_mode::exp_in:   return clip((safe_log(input) * x->mul) - x->sub, x->lo, x->hi);
+        default:    return input;
     }
 }
 
@@ -322,7 +322,7 @@ void valconvert_float(t_valconvert *x, double f_in)
 
 void valconvert_int(t_valconvert *x, t_atom_long l_in)
 {
-    outlet_float(x->the_outlet, valconvert_scale(x, l_in));
+    outlet_float(x->the_outlet, valconvert_scale(x, static_cast<double>(l_in)));
 }
 
 void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
@@ -332,7 +332,7 @@ void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
     for (long i = 0; i < argc; i++)
         atom_setfloat(list.data() + i ,valconvert_scale(x, atom_getfloat(argv++)));
     
-    outlet_list(x->the_outlet, ps_list, argc, list.data());
+    outlet_list(x->the_outlet, ps_list, static_cast<short>(argc), list.data());
 }
 
 // Message Assist
