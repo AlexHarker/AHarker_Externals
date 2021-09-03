@@ -231,7 +231,7 @@ void form_os_name(char *filename, char *foldname, char *fullname)
 
 void ibuffer_switch_endianness(t_ibuffer *x)
 {
-    UInt8 *data = (UInt8 *)x->samples;
+    uint8_t *data = (uint8_t*)x->samples;
             
     if (x->format == PCM_INT_16)
     {
@@ -351,8 +351,8 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             
             // Here we load in chunks to some temporary memory and then copy out ony the relevant channels
 
-            UInt8 *data = (UInt8 *) x->samples;
-			UInt8 *load_temp = (UInt8 *) malloc(default_work_chunk * sample_size * x->channels);
+			uint8_t *data = (uint8_t *) x->samples;
+			uint8_t *load_temp = (uint8_t *) malloc(default_work_chunk * sample_size * x->channels);
 
 			if (!load_temp) 
 			{
@@ -369,7 +369,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 				
 				// Copy channels
 				
-                UInt8 *channels_swap = load_temp;
+				uint8_t*channels_swap = load_temp;
                 
 				for (long j = 0; j < work_chunk; j++, channels_swap += x->channels * sample_size)
 					for (long k = 0; k < channel_order.size(); k++, data += sample_size)
