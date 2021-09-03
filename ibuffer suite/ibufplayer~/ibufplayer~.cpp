@@ -131,7 +131,7 @@ int C74_EXPORT main()
 							(method) ibufplayer_new, 
 							(method) ibufplayer_free, 
 							sizeof (t_ibufplayer), 
-							NULL, 
+							nullptr, 
 							A_GIMME,
 							0);
 	
@@ -185,7 +185,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 	x->input_connected = false;
     x->transport_flag = FLAG_NONE;
 	x->obj_n_chans = static_cast<long>(obj_n_chans);
-	x->buffer_name = NULL;
+	x->buffer_name = nullptr;
 	
     for (long i = 0 ; i < max_num_chans; i++)
         x->vols[i] = 1.0;
@@ -252,7 +252,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
 	}
 	else 
 	{
-		x->buffer_name = NULL;
+		x->buffer_name = nullptr;
 		if (s)
 			object_error((t_object *)x, "no buffer %s", s->s_name);
 	}

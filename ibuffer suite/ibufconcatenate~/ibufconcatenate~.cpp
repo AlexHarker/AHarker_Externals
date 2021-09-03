@@ -437,5 +437,5 @@ void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **i
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
     if (!x->max_mode)
-        object_method(dsp64, gensym("dsp_add64"), x, ibufconcatenate_perform64, 0, NULL);
+        object_method(dsp64, gensym("dsp_add64"), x, ibufconcatenate_perform64, 0, nullptr);
 }
