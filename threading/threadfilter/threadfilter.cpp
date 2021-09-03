@@ -104,9 +104,9 @@ void threadfilter_bang(t_threadfilter *x)
 void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (isr())
-        outlet_anything(x->message_out_hi, msg, argc, argv);
+        outlet_anything(x->message_out_hi, msg, static_cast<short>(argc), argv);
     else
-        outlet_anything(x->message_out_lo, msg, argc, argv);
+        outlet_anything(x->message_out_lo, msg, static_cast<short>(argc), argv);
 }
 
 // Assist

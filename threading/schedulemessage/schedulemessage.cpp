@@ -115,7 +115,7 @@ void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_at
         return;
     }
     
-    outlet_anything(x->message_out, msg, argc, argv);
+    outlet_anything(x->message_out, msg, static_cast<short>(argc), argv);
 }
 
 void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
@@ -146,7 +146,7 @@ void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_
     double delay = x->delay;
     
     if (!isr() || delay > 0)
-        schedule_fdelay(x, (method) schedulemessage_output, delay, msg, argc, argv);
+        schedule_fdelay(x, (method) schedulemessage_output, delay, msg, static_cast<short>(argc), argv);
     else
         schedulemessage_output(x, msg, argc, argv);
 }

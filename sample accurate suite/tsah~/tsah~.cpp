@@ -87,7 +87,7 @@ void *tsah_new(t_atom_long num_outlets)
         num_outlets = max_outlets;
     }
 	
-	dsp_setup((t_pxobject *)x, num_outlets + 1);
+	dsp_setup((t_pxobject *)x, static_cast<long>(num_outlets + 1));
 
 	for (i = 0; i < num_outlets; i++)
 	{
@@ -96,7 +96,7 @@ void *tsah_new(t_atom_long num_outlets)
 	}
 	
 	x->x_obj.z_misc = Z_NO_INPLACE;		// due to working method!!
-	x->num_outlets = num_outlets;
+	x->num_outlets = static_cast<long>(num_outlets);
 	
 	return x;
 }
