@@ -123,7 +123,7 @@ public:
     {
         SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
         SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        long vec_size = w[4];
+        long vec_size = static_cast<long>(w[4]);
         T *x = reinterpret_cast<T *>(w[5]);
 
         Functor &functor = x->m_functor;
