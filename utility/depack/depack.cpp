@@ -4,7 +4,7 @@
  *
  *	depack is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -13,21 +13,21 @@
 #include <ext_obex.h>
 
 
-const static int maximum_outlets = 256;
+constexpr int max_outlets = 256;
 
 
 t_class *this_class;
 
 
-typedef struct depack{
+struct t_depack
+{
     
 	t_object a_obj;
 	
 	long num_outlets;
     
-	void *outlet_array[maximum_outlets];
-		
-} t_depack;
+	void *outlet_array[max_outlets];
+};
 
 
 void *depack_new(t_atom_long num_outlets);
@@ -47,9 +47,9 @@ int C74_EXPORT main()
 {	
 	this_class = class_new("depack", 
 							(method) depack_new, 
-							(method) depack_free, 
+							nullptr,
 							sizeof(t_depack), 
-							NULL, 
+							nullptr,
 							A_DEFLONG,
 							0);
 	
@@ -64,10 +64,6 @@ int C74_EXPORT main()
 	return 0;
 }
 
-void depack_free(t_depack *x)
-{
-}
-
 void *depack_new(t_atom_long num_outlets)
 {
     t_depack *x = (t_depack *) object_alloc(this_class);
@@ -80,10 +76,10 @@ void *depack_new(t_atom_long num_outlets)
         num_outlets = 1;
     }
     
-	if (num_outlets > maximum_outlets)
+	if (num_outlets > max_outlets)
     {
-        object_error((t_object *) x, "the maximum number of outlets is %ld", maximum_outlets);
-        num_outlets = maximum_outlets;
+        object_error((t_object *) x, "the maximum number of outlets is %ld", max_outlets);
+        num_outlets = max_outlets;
     }
 	
 	x->num_outlets = num_outlets;
