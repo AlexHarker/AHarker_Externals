@@ -80,8 +80,8 @@ public:
 
     // Number of ins and outs
 
-    long get_num_ins() const    { return m_in_table.size(); }
-    long get_num_outs() const   { return m_out_table->size(); }
+    long get_num_ins() const    { return static_cast<long>(m_in_table.size()); }
+    long get_num_outs() const   { return static_cast<long>(m_out_table->size()); }
 
     // Windows management
 
@@ -115,7 +115,7 @@ private:
     t_symbol *m_path_symbol;
     std::string m_name;
     short m_path;
-    long m_user_index;
+    t_atom_long m_user_index;
 
     // Arguments (stored in case of reload / update)
 

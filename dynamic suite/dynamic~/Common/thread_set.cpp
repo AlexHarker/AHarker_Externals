@@ -287,7 +287,7 @@ void thread_set::thread_entry(void *arg)
     thread_set::thread_slot *slot = static_cast<thread_set::thread_slot *>(arg);
     thread_set *set = static_cast<thread_set *>(slot->m_owner);
 
-    set->processing_loop(slot - set->m_thread_slots.data());
+    set->processing_loop(static_cast<long>(slot - set->m_thread_slots.data()));
 }
 
 void thread_set::processing_loop(long thread_idx)
