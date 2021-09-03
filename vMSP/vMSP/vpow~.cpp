@@ -11,8 +11,13 @@
 #include "Base/v_binary.hpp"
 #include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
-#include <alloca.h>
 #include <algorithm>
+
+#ifdef __APPLE__
+#include <alloca.h>
+#else
+#include <malloc.h>
+#endif 
 
 struct pow_functor
 {
