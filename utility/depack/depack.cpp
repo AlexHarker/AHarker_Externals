@@ -33,7 +33,7 @@ struct t_depack
 void *depack_new(t_atom_long num_outlets);
 void depack_free(t_depack *x);
 
-void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset);
+void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset);
 
 void depack_int(t_depack *x, t_atom_long value);
 void depack_float(t_depack *x, double value);
@@ -67,8 +67,6 @@ int C74_EXPORT main()
 void *depack_new(t_atom_long num_outlets)
 {
     t_depack *x = (t_depack *) object_alloc(this_class);
-	void **outlet_array;
-	long i;
 	
 	if (num_outlets < 1)
     {
@@ -82,25 +80,22 @@ void *depack_new(t_atom_long num_outlets)
         num_outlets = max_outlets;
     }
 	
-	x->num_outlets = num_outlets;
-	
-	outlet_array = x->outlet_array;
-	
-	for (i = num_outlets - 1; i >= 0; i--)
-		outlet_array[i] = outlet_new(x, 0);
+	x->num_outlets = static_cast<long>(num_outlets);
+		
+	for (long i = x->num_outlets - 1; i >= 0; i--)
+		x->outlet_array[i] = outlet_new(x, 0);
 	
     return x;
 }
 
-void depack_do_args(t_depack *x, short argc, t_atom *argv, long offset)
+void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset)
 {
-	long i;
 	long num_outlets = x->num_outlets;
 	void **outlet_array = x->outlet_array;
 	
 	if (argc > num_outlets - offset) argc = num_outlets - offset;
 	
-	for (i = argc - 1; i >= 0; i--)
+	for (long i = argc - 1; i >= 0; i--)
 	{
 		switch (atom_gettype(argv + i))
 		{

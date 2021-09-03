@@ -48,17 +48,13 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_Max6_Support\c74support\max-includes;..\..\AH_Max6_Support\c74support\msp-includes</AdditionalIncludeDirectories>
-    </ClCompile>
+    <ClCompile />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_Max6_Support\c74support\max-includes;..\..\AH_Max6_Support\c74support\msp-includes</AdditionalIncludeDirectories>
-    </ClCompile>
+    <ClCompile />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="recursivefolder.c" />
+    <ClCompile Include="recursivefolder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
