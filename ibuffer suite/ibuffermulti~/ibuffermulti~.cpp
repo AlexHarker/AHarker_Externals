@@ -2,9 +2,9 @@
 /*
  *  ibuffermulti~
  *
- *	ibuffermulti~ can be used to dynamically load audio files into multiple ibuffer~s.
+ *  ibuffermulti~ can be used to dynamically load audio files into multiple ibuffer~s.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -24,11 +24,11 @@ t_class *this_class;
 typedef struct _ibuffermulti
 {
     t_pxobject x_obj;
-	
+    
     std::vector<t_object *> buffers;
-	
-	void *number_out;	
-	
+    
+    void *number_out;
+    
 } t_ibuffermulti;
 
 
@@ -51,30 +51,30 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 
 int C74_EXPORT main()
 {
-	this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, sizeof(t_ibuffermulti), 0L, 0);
-	
-	class_addmethod (this_class, (method)ibuffermulti_user_clear, "clear", 0);
-	class_addmethod (this_class, (method)ibuffermulti_user_load, "load", A_GIMME, 0);
-	class_addmethod (this_class, (method)ibuffermulti_assist, "assist", A_CANT, 0);
-	
-	class_dspinit(this_class);
-	class_register(CLASS_BOX, this_class);
-	
-	ps_set = gensym("set");
-	ps_replace = gensym("replace");
-	ps_valid = gensym("valid");
-	
-	return 0;
+    this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, sizeof(t_ibuffermulti), 0L, 0);
+    
+    class_addmethod (this_class, (method)ibuffermulti_user_clear, "clear", 0);
+    class_addmethod (this_class, (method)ibuffermulti_user_load, "load", A_GIMME, 0);
+    class_addmethod (this_class, (method)ibuffermulti_assist, "assist", A_CANT, 0);
+    
+    class_dspinit(this_class);
+    class_register(CLASS_BOX, this_class);
+    
+    ps_set = gensym("set");
+    ps_replace = gensym("replace");
+    ps_valid = gensym("valid");
+    
+    return 0;
 }
 
 void *ibuffermulti_new()
-{	
+{
     t_ibuffermulti *x = (t_ibuffermulti *) object_alloc (this_class);
-	
-	dsp_setup((t_pxobject *)x, 0);
-	
+    
+    dsp_setup((t_pxobject *)x, 0);
+    
     x->number_out = intout(x);
-	
+    
     // Call constructor for vector
     
     new(&x->buffers) std::vector<t_object *>();
@@ -85,7 +85,7 @@ void *ibuffermulti_new()
 void ibuffermulti_free(t_ibuffermulti *x)
 {
     dsp_free(&x->x_obj);
-	ibuffermulti_clear(x);
+    ibuffermulti_clear(x);
     
     // Deconstruct vector
     
@@ -94,19 +94,19 @@ void ibuffermulti_free(t_ibuffermulti *x)
 
 void ibuffermulti_assist(t_ibuffermulti *x, void *b, long m, long a, char *s)
 {
-    if (m == ASSIST_OUTLET) 
-	{
-		sprintf(s,"Num of Buffers Loaded");
-	}
-    else 
-	{
-		sprintf(s,"File Operations");
+    if (m == ASSIST_OUTLET)
+    {
+        sprintf(s,"Num of Buffers Loaded");
+    }
+    else
+    {
+        sprintf(s,"File Operations");
     }
 }
 
 void ibuffermulti_user_clear(t_ibuffermulti *x)
 {
-	defer(x, (method) ibuffermulti_deferred_clear, 0, 0, 0);
+    defer(x, (method) ibuffermulti_deferred_clear, 0, 0, 0);
 }
 
 void ibuffermulti_deferred_clear(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
@@ -118,9 +118,9 @@ void ibuffermulti_deferred_clear(t_ibuffermulti *x, t_symbol *s, short argc, t_a
 
 void ibuffermulti_clear(t_ibuffermulti *x)
 {
-	for (long i = 0; i < x->buffers.size(); i++)
+    for (long i = 0; i < x->buffers.size(); i++)
         defer(x->buffers[i], (method) ibuffermulti_deferred_delete, 0, 0, 0);
-	
+    
     x->buffers.clear();
 }
 
@@ -131,44 +131,44 @@ void ibuffermulti_deferred_delete(t_object *x, t_symbol *s, short argc, t_atom *
 
 void ibuffermulti_user_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {
-	if (argc)
-		defer(x, (method) ibuffermulti_load, s, argc, argv);
+    if (argc)
+        defer(x, (method) ibuffermulti_load, s, argc, argv);
 }
 
 void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {
-	// First make sure the ibuffer object is loaded
-	
-	if (!class_findbyname(CLASS_BOX, gensym("ibuffer~")))
-	{
-		void *force_load = newinstance(gensym("ibuffer~"), 0, 0);
-		if (force_load)
-			freeobject(static_cast<t_object *>(force_load));
-	}
+    // First make sure the ibuffer object is loaded
     
-	// Return a properly allocated object (may still return NULL if the .mxo is not present)
-	
+    if (!class_findbyname(CLASS_BOX, gensym("ibuffer~")))
+    {
+        void *force_load = newinstance(gensym("ibuffer~"), 0, 0);
+        if (force_load)
+            freeobject(static_cast<t_object *>(force_load));
+    }
+    
+    // Return a properly allocated object (may still return NULL if the .mxo is not present)
+    
     void *object_untyped = object_new_typed(CLASS_BOX, gensym("ibuffer~"), 0, nullptr);
-	t_object *current_buffer = reinterpret_cast<t_object *>(object_untyped);
+    t_object *current_buffer = reinterpret_cast<t_object *>(object_untyped);
     
     bool buffer_loaded = false;
-
-	// Now load the buffer 
-	
-	if (current_buffer && argc > 1 && atom_gettype(argv) == A_SYM && atom_gettype(argv + 1) == A_SYM)
-	{
+    
+    // Now load the buffer
+    
+    if (current_buffer && argc > 1 && atom_gettype(argv) == A_SYM && atom_gettype(argv + 1) == A_SYM)
+    {
         t_atom return_val;
-
-		// Set name, then load file - finally check validity
-		
-		object_method_typed(current_buffer, ps_set, 1, argv, &return_val);
-		object_method_typed(current_buffer, ps_replace, argc - 1, argv + 1, &return_val);		
-		long *valid_val = (long *) object_method(current_buffer, ps_valid);
-		
-		if (valid_val && *valid_val)
+        
+        // Set name, then load file - finally check validity
+        
+        object_method_typed(current_buffer, ps_set, 1, argv, &return_val);
+        object_method_typed(current_buffer, ps_replace, argc - 1, argv + 1, &return_val);
+        long *valid_val = (long *) object_method(current_buffer, ps_valid);
+        
+        if (valid_val && *valid_val)
             buffer_loaded = true;
-	}
-	
+    }
+    
     if (buffer_loaded)
         x->buffers.push_back(current_buffer);
     else
@@ -177,5 +177,5 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
         object_free(current_buffer);
     }
     
-	outlet_int(x->number_out, x->buffers.size());
+    outlet_int(x->number_out, x->buffers.size());
 }

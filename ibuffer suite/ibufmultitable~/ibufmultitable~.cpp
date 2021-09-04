@@ -2,11 +2,11 @@
 /*
  *  ibufmultitable~
  *
- *	ibufmultitable~ is an efficient object designed for table lookup (for window functions etc.) with multiple functions stored in a single buffer. It is an extended version of the ibufmultitable~ object.
+ *  ibufmultitable~ is an efficient object designed for table lookup (for window functions etc.) with multiple functions stored in a single buffer. It is an extended version of the ibufmultitable~ object.
  *
- *	ibufmultitable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.
+ *  ibufmultitable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -25,14 +25,14 @@ t_class *this_class;
 struct t_ibufmultitable
 {
     t_pxobject x_obj;
-	
-	t_symbol *buffer_name;
-	
+    
+    t_symbol *buffer_name;
+    
     InterpType interp_type;
-
+    
     t_atom_long chan;
-	t_atom_long start_samp;
-	t_atom_long end_samp;
+    t_atom_long start_samp;
+    t_atom_long end_samp;
 };
 
 
@@ -51,22 +51,22 @@ void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, do
 
 
 int C74_EXPORT main()
-{	
-	this_class = class_new("ibufmultitable~",
-						   (method)ibufmultitable_new,
-						   (method)ibufmultitable_free,
-						   sizeof(t_ibufmultitable), 
-						   NULL, 
-						   A_GIMME, 
-						   0);
-	
-	class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);
-	class_addmethod(this_class, (method)ibufmultitable_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)ibufmultitable_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)ibufmultitable_dsp64, "dsp64", A_CANT, 0);
-	
+{
+    this_class = class_new("ibufmultitable~",
+                           (method)ibufmultitable_new,
+                           (method)ibufmultitable_free,
+                           sizeof(t_ibufmultitable),
+                           NULL,
+                           A_GIMME,
+                           0);
+    
+    class_addmethod(this_class, (method)ibufmultitable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method)ibufmultitable_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method)ibufmultitable_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method)ibufmultitable_dsp64, "dsp64", A_CANT, 0);
+    
     // Add Attributes
-
+    
     add_ibuffer_interp_attribute<t_ibufmultitable, kInterpLinear>(this_class, "interp");
     
     CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibufmultitable, chan);
@@ -86,10 +86,10 @@ int C74_EXPORT main()
     CLASS_ATTR_ORDER(this_class, "startsamp", 0L, "3");
     CLASS_ATTR_ORDER(this_class, "endsamp", 0L, "4");
     
-	class_dspinit(this_class);
-	class_register(CLASS_BOX, this_class);
-		
-	return 0;
+    class_dspinit(this_class);
+    class_register(CLASS_BOX, this_class);
+    
+    return 0;
 }
 
 void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
@@ -97,8 +97,8 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     t_ibufmultitable *x = (t_ibufmultitable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 2);
-	outlet_new((t_object *)x, "signal");
-	
+    outlet_new((t_object *)x, "signal");
+    
     // Default variables
     
     t_symbol *buffer_name = NULL;
@@ -120,39 +120,39 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     // Set attributes from arguments
     
     attr_args_process(x, argc, argv);
-	
-	return x;
+    
+    return x;
 }
 
 void ibufmultitable_free(t_ibufmultitable *x)
 {
-	dsp_free(&x->x_obj);
+    dsp_free(&x->x_obj);
 }
 
 void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
-	{
-		sprintf(s,"(signal) Output");
-	}
-	else 
-	{
-		switch (a)
-		{
-			case 0:
-				sprintf(s,"(signal) Position Input (0-1)");
-				break;
-				
-			case 1:
-				sprintf(s,"(signal) Sample Offset");
-				break;
-		}
-	}
+    {
+        sprintf(s,"(signal) Output");
+    }
+    else
+    {
+        switch (a)
+        {
+            case 0:
+                sprintf(s,"(signal) Position Input (0-1)");
+                break;
+                
+            case 1:
+                sprintf(s,"(signal) Sample Offset");
+                break;
+        }
+    }
 }
 
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	ibufmultitable_set_internal(x, argc ? atom_getsym(argv) : 0);
+    ibufmultitable_set_internal(x, argc ? atom_getsym(argv) : 0);
 }
 
 void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
@@ -215,12 +215,12 @@ void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_siz
         const int N = SIMDLimits<T>::max_size;
         const long v_count = vec_size / N;
         const long S = v_count * N;
-
+        
         // Read from buffer
-
+        
         perform_positions<N>(out + 0, in + 0, offset_in + 0, v_count, start_samp, end_samp, last_samp);
         perform_positions<1>(out + S, in + S, offset_in + S, (v_count - S), start_samp, end_samp, last_samp);
-
+        
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else

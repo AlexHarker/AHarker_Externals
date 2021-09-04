@@ -2,11 +2,11 @@
 /*
  *  ibuftable~
  *
- *	ibuftable~ is an efficient object designed for table lookup (for window functions etc.).
+ *  ibuftable~ is an efficient object designed for table lookup (for window functions etc.).
  *
- *	ibuftable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.)
+ *  ibuftable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.)
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -25,14 +25,14 @@ t_class *this_class;
 struct t_ibuftable
 {
     t_pxobject x_obj;
-		
-	t_symbol *buffer_name;
-
+    
+    t_symbol *buffer_name;
+    
     InterpType interp_type;
-
+    
     t_atom_long chan;
-	t_atom_long start_samp;
-	t_atom_long end_samp;
+    t_atom_long start_samp;
+    t_atom_long end_samp;
 };
 
 
@@ -50,20 +50,20 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 int C74_EXPORT main()
-{	
-	this_class = class_new("ibuftable~",
-						   (method)ibuftable_new,
-						   (method)ibuftable_free,
-						   sizeof(t_ibuftable), 
-						   NULL, 
-						   A_GIMME,
-						   0);
-	
-	class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);
-	class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)ibuftable_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
-	
+{
+    this_class = class_new("ibuftable~",
+                           (method)ibuftable_new,
+                           (method)ibuftable_free,
+                           sizeof(t_ibuftable),
+                           NULL,
+                           A_GIMME,
+                           0);
+    
+    class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method)ibuftable_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
+    
     // Add Attributes
     
     add_ibuffer_interp_attribute<t_ibuftable, kInterpLinear>(this_class, "interp");
@@ -85,10 +85,10 @@ int C74_EXPORT main()
     CLASS_ATTR_ORDER(this_class, "startsamp", 0L, "3");
     CLASS_ATTR_ORDER(this_class, "endsamp", 0L, "4");
     
-	class_dspinit(this_class);
-	class_register(CLASS_BOX, this_class);
-		
-	return 0;
+    class_dspinit(this_class);
+    class_register(CLASS_BOX, this_class);
+    
+    return 0;
 }
 
 void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
@@ -96,49 +96,49 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
     t_ibuftable *x = (t_ibuftable *)object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 1);
-	outlet_new((t_object *)x, "signal");
-	
-	// Default variables
-	
+    outlet_new((t_object *)x, "signal");
+    
+    // Default variables
+    
     t_symbol *buffer_name = NULL;
     t_atom_long start_samp = 0;
     t_atom_long end_samp = 512;
     t_atom_long chan = 1;
     
-	// Arguments
-	
+    // Arguments
+    
     long non_attr_argc = attr_args_offset(argc, argv);
     
     x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
     x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
     x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
-	x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
+    x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
     
-	x->interp_type = kInterpLinear;
-	
+    x->interp_type = kInterpLinear;
+    
     // Set attributes from arguments
     
     attr_args_process(x, argc, argv);
     
-	return x;
+    return x;
 }
 
 void ibuftable_free(t_ibuftable *x)
 {
-	dsp_free(&x->x_obj);
+    dsp_free(&x->x_obj);
 }
 
 void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
-		sprintf(s,"(signal) Output");
-	else 
+        sprintf(s,"(signal) Output");
+    else
         sprintf(s,"(signal) Position Input (0-1)");
 }
 
 void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
-{	
-	ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
+{
+    ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
 }
 
 void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
@@ -185,7 +185,7 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
     long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
-
+    
     if (buffer.get_length())
     {
         // Positions
@@ -196,7 +196,7 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
         
         perform_positions<N>(out + 0, in + 0, v_count, start_samp, end_samp);
         perform_positions<1>(out + S, in + S, (vec_size - S), start_samp, end_samp);
-
+        
         // Read from buffer
         
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
@@ -208,45 +208,45 @@ void perform_core(t_ibuftable *x, T *in, T *out, long vec_size)
 // Perform and DSP for 32-bit signals
 
 t_int *ibuftable_perform(t_int *w)
-{	
-	// Ignore the copy of this function pointer (due to denormal fixer)
-	
-	// Set pointers
-	
-	float *in = (float *) w[2];
-	float *out = (float *)(w[3]);
-	long vec_size = w[4];
+{
+    // Ignore the copy of this function pointer (due to denormal fixer)
+    
+    // Set pointers
+    
+    float *in = (float *) w[2];
+    float *out = (float *)(w[3]);
+    long vec_size = w[4];
     t_ibuftable *x = (t_ibuftable *) w[5];
-		
-	if (!x->x_obj.z_disabled)
+    
+    if (!x->x_obj.z_disabled)
         perform_core(x, in, out, vec_size);
-
-	return w + 6;
+    
+    return w + 6;
 }
 
 void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
 {
-	// Set buffer again in case it is no longer valid / extant
-
-	ibuftable_set_internal(x, x->buffer_name);
-	
-	if (count[0] && count[1])
+    // Set buffer again in case it is no longer valid / extant
+    
+    ibuftable_set_internal(x, x->buffer_name);
+    
+    if (count[0] && count[1])
         dsp_add(denormals_perform, 5, ibuftable_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
 // Perform and DSP for 64-bit signals
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
-	perform_core(x, ins[0], outs[0], vec_size);
+{
+    perform_core(x, ins[0], outs[0], vec_size);
 }
 
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-	// Set buffer again in case it is no longer valid / extant
-	
-	ibuftable_set_internal(x, x->buffer_name);
-	
-	if (count[0] && count[1])
+    // Set buffer again in case it is no longer valid / extant
+    
+    ibuftable_set_internal(x, x->buffer_name);
+    
+    if (count[0] && count[1])
         object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform64);
 }
