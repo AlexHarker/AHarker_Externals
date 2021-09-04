@@ -2,9 +2,9 @@
 /*
  *  denormkiller~
  *
- *	denormkiller~ is an audio object that turns off denormals on the vector unit (which is also used for most scalar fp maths under OS X).
- *	
- *	This object can remedy problems with third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
+ *  denormkiller~ is an audio object that turns off denormals on the vector unit (which is also used for most scalar fp maths under OS X).
+ *
+ *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
  *
  *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
@@ -34,47 +34,46 @@ void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double
 
 int C74_EXPORT main()
 {
-	this_class = class_new("denormkiller~",
-							(method)denormkiller_new,
-							(method)dsp_free,
-							sizeof(t_denormkiller),
-							NULL, 
-							0);	
-	
-	class_addmethod(this_class, (method)denormkiller_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)denormkiller_dsp64, "dsp64", A_CANT, 0);
-	
+    this_class = class_new("denormkiller~",
+                           (method)denormkiller_new,
+                           (method)dsp_free,
+                           sizeof(t_denormkiller),
+                           nullptr,
+                           0);
+    
+    class_addmethod(this_class, (method)denormkiller_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method)denormkiller_dsp64, "dsp64", A_CANT, 0);
+    
     class_dspinit(this_class);
-	
-	class_register(CLASS_BOX, this_class);
-	
-	return 0;
+    
+    class_register(CLASS_BOX, this_class);
+    
+    return 0;
 }
 
 void *denormkiller_new()
 {
     t_denormkiller *x = (t_denormkiller *) object_alloc (this_class);
-	
+    
     dsp_setup((t_pxobject *)x, 0);
-	
+    
     return x;
 }
 
 void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
 {
-	if (m == ASSIST_INLET) 
+    if (m == ASSIST_INLET)
         sprintf(s, "Dummy");
 }
 
-
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
+{
     // replace the old MXCSR setting with the same, except set DAZ and FZ bits to flush denormals to zero
-
-	_mm_setcsr(_mm_getcsr() | 0x8040);
+    
+    _mm_setcsr(_mm_getcsr() | 0x8040);
 }
 
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-    object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, NULL);
+    object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, nullptr);
 }
