@@ -41,7 +41,7 @@ int C74_EXPORT main()
 							(method)denormkiller_new,
 							(method)dsp_free,
 							sizeof(t_denormkiller),
-							NULL, 
+							nullptr,
 							0);	
 	
 	class_addmethod(this_class, (method)denormkiller_assist, "assist", A_CANT, 0);
@@ -93,5 +93,5 @@ void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, lo
 
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-    object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, NULL);
+    object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, nullptr);
 }

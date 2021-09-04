@@ -48,7 +48,7 @@ int C74_EXPORT main()
 							(method)macaddress_new,
 							(method)macaddress_free,
 							(short) sizeof(t_macaddress), 
-							NULL,
+							nullptr,
 							0);	
 	
 	class_addmethod (this_class, (method)macaddress_bang, "bang", 0);
@@ -79,7 +79,7 @@ void macaddress_free(t_macaddress *x)
 
 void macaddress_bang(t_macaddress *x)
 {
-	CFStringRef mac_address = NULL;
+	CFStringRef mac_address = nullptr;
     
     CFStringRef interface_type;
 	CFArrayRef interface_array;
@@ -99,15 +99,15 @@ void macaddress_bang(t_macaddress *x)
         /*
         CFStringRef interface_bsd_name = SCNetworkInterfaceGetBSDName(next_interface);
         
-        if (interface_bsd_name != NULL)
+        if (interface_bsd_name != nullptr)
             object_post((t_object *)x, "BSD Name %s", CFStringGetCStringPtr(interface_bsd_name, CFStringGetFastestEncoding(interface_bsd_name)));
         else
-            object_post((t_object *)x, "NULL BSD Name");
+            object_post((t_object *)x, "No BSD Name");
         
-        if (interface_type != NULL)
+        if (interface_type != nullptr)
             object_post((t_object *)x, "Interface Type %s", CFStringGetCStringPtr(interface_type, CFStringGetFastestEncoding(interface_type)));
         else
-            object_post((t_object *)x, "NULL Interface type");
+            object_post((t_object *)x, "No Interface type");
         */
         
 		if(!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0))
@@ -124,10 +124,10 @@ void macaddress_bang(t_macaddress *x)
 	if (mac_address)
 	{
 		mac_address_str = CFStringGetCStringPtr(mac_address, CFStringGetFastestEncoding(mac_address));
-		outlet_anything(x->output, gensym(mac_address_str), 0, NULL);
+		outlet_anything(x->output, gensym(mac_address_str), 0, nullptr);
 	}
 	else
-		outlet_anything(x->output, ps_failed, 0, NULL);
+		outlet_anything(x->output, ps_failed, 0, nullptr);
     
     // We need to release anything that is created via copy...
     
@@ -144,8 +144,8 @@ void macaddress_bang(t_macaddress *x)
 	unsigned int found = 0;
 	unsigned int i = 0;
 		
-	IP_ADAPTER_ADDRESSES *addresses = NULL;
-	IP_ADAPTER_ADDRESSES *current_address = NULL;
+	IP_ADAPTER_ADDRESSES *addresses = nullptr;
+	IP_ADAPTER_ADDRESSES *current_address = nullptr;
 	ULONG outBufLen = 15000;
 	
 	mac_address[0] = 0;
@@ -153,16 +153,16 @@ void macaddress_bang(t_macaddress *x)
 	for (i = 0; i < 2; i++)
 	{
 		addresses = (IP_ADAPTER_ADDRESSES *) malloc(outBufLen);
-		if (addresses == NULL)
+		if (addresses == nullptr)
 			break;
 		
-		ret_val = GetAdaptersAddresses(AF_INET, GAA_FLAG_INCLUDE_PREFIX, NULL, addresses, &outBufLen);
+		ret_val = GetAdaptersAddresses(AF_INET, GAA_FLAG_INCLUDE_PREFIX, nullptr, addresses, &outBufLen);
 		
 		if (ret_val == NO_ERROR)
 			break;
 
 		free(addresses);
-		addresses = NULL; 
+		addresses = nullptr;
 	} 
 		
 	if (ret_val == NO_ERROR) 
@@ -192,9 +192,9 @@ void macaddress_bang(t_macaddress *x)
 		free(addresses);
 		
 	if (found)
-		outlet_anything(x->output, gensym(mac_address), 0, NULL);
+		outlet_anything(x->output, gensym(mac_address), 0, nullptr);
 	else
-		outlet_anything(x->output, ps_failed, 0, NULL);
+		outlet_anything(x->output, ps_failed, 0, nullptr);
 }
 
 #endif
