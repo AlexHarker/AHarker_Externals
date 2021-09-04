@@ -29,8 +29,7 @@ struct t_ibufinfo
 void *ibufinfo_new(t_symbol *buffer_name);
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s);
 
-void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv);
-void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name);
+void ibufinfo_set(t_ibufinfo *x, t_symbol *name);
 void ibufinfo_bang(t_ibufinfo *x);
 
 int C74_EXPORT main()
@@ -43,7 +42,7 @@ int C74_EXPORT main()
                             A_DEFSYM,
                             0);
     
-    class_addmethod(this_class, (method)ibufinfo_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method)ibufinfo_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method)ibufinfo_bang, "bang", 0);
     
     class_addmethod(this_class, (method)ibufinfo_assist, "assist", A_CANT, 0);
@@ -91,15 +90,10 @@ void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s)
 
 void ibufinfo_bang(t_ibufinfo *x)
 {
-    ibufinfo_set_internal(x, x->name);
+    ibufinfo_set(x, x->name);
 }
 
-void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibufinfo_set_internal(x, argc ? atom_getsym(argv) : nullptr);
-}
-
-void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
+void ibufinfo_set(t_ibufinfo *x, t_symbol *name)
 {
     x->name = name;
     

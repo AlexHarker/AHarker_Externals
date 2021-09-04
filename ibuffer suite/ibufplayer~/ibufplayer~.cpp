@@ -113,8 +113,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_free(t_ibufplayer *x);
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s);
 
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv);
-void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s);
+void ibufplayer_set(t_ibufplayer *x, t_symbol *s);
 void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_stop(t_ibufplayer *x);
@@ -135,7 +134,7 @@ int C74_EXPORT main()
                             A_GIMME,
                             0);
     
-    class_addmethod(this_class, (method)ibufplayer_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method)ibufplayer_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method)ibufplayer_vols, "vols", A_GIMME, 0);
     class_addmethod(this_class, (method)ibufplayer_play, "play", A_GIMME, 0);
     class_addmethod(this_class, (method)ibufplayer_stop, "stop", 0);
@@ -234,12 +233,7 @@ void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
     }
 }
 
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibufplayer_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
+void ibufplayer_set(t_ibufplayer *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
     
@@ -253,8 +247,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
     else
     {
         x->buffer_name = nullptr;
-        if (s)
-            object_error((t_object *)x, "no buffer %s", s->s_name);
+        object_error((t_object *)x, "no buffer %s", s->s_name);
     }
 }
 
@@ -288,7 +281,7 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
     
     if (argc && atom_gettype(argv) == A_SYM)
     {
-        ibufplayer_set_internal(x, atom_getsym(argv++));
+        ibufplayer_set(x, atom_getsym(argv++));
         argc--;
     }
     
@@ -483,7 +476,7 @@ void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sam
     
     // Set buffer again in case it is no longer valid / extant
     
-    ibufplayer_set_internal(x, x->buffer_name);
+    ibufplayer_set(x, x->buffer_name);
     
     // Check if input is connected
     

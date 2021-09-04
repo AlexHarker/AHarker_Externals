@@ -39,8 +39,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv);
 void ibuftable_free(t_ibuftable *x);
 void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 
-void ibuftable_set(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
-void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
+void ibuftable_set(t_ibuftable *x, t_symbol *s);
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
@@ -55,7 +54,7 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)ibuftable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method)ibuftable_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
     
@@ -132,12 +131,7 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
         sprintf(s,"(signal) Position Input (0-1)");
 }
 
-void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
+void ibuftable_set(t_ibuftable *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
     
