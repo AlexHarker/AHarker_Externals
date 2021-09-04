@@ -228,7 +228,7 @@ void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, do
 {
     // Set buffer again in case it is no longer valid / extant
     
-    ibufmultitable_set_internal(x, x->buffer_name);
+    ibufmultitable_set(x, x->buffer_name);
     
     if (count[0] && count[1])
         object_method(dsp64, gensym("dsp_add64"), x, ibufmultitable_perform64);
