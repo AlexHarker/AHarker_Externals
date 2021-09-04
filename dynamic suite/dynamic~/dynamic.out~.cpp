@@ -2,9 +2,9 @@
 /*
  *  dynamic.out~
  *
- *	dynamic.out~ acts like out~ but for patchers loaded inside a dynamicdsp~ object.
- *	
- *	Unlike out~ you can change the signal outlet which the object refers to by sending an int to the object.
+ *  dynamic.out~ acts like out~ but for patchers loaded inside a dynamicdsp~ object.
+ *
+ *  Unlike out~ you can change the signal outlet which the object refers to by sending an int to the object.
  *
  *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
@@ -27,12 +27,12 @@ t_class *this_class;
 struct t_dynamic_out
 {
     t_pxobject x_obj;
-	
-	void ***out_handle;
-	long num_sig_outs;
-	
-	t_atom_long outlet_num;
-	
+    
+    void ***out_handle;
+    long num_sig_outs;
+    
+    t_atom_long outlet_num;
+    
 };
 
 // Function prototypes
@@ -52,24 +52,24 @@ void dynamic_out_dsp64 (t_dynamic_out *x, t_object *dsp64, short *count, double 
 
 int C74_EXPORT main()
 {
-	this_class = class_new("dynamic.out~",
-						   (method) dynamic_out_new,
-						   (method) dynamic_out_free,
-						   sizeof(t_dynamic_out), 
-						   nullptr, 
-						   A_DEFLONG, 
-						   0);
+    this_class = class_new("dynamic.out~",
+                           (method) dynamic_out_new,
+                           (method) dynamic_out_free,
+                           sizeof(t_dynamic_out),
+                           nullptr,
+                           A_DEFLONG,
+                           0);
     
     class_addmethod(this_class, (method) dynamic_out_int, "int", A_LONG, 0);
     
-	class_addmethod(this_class, (method) dynamic_out_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_out_dsp64, "dsp64", A_CANT, 0);
     class_addmethod(this_class, (method) dynamic_out_assist, "assist", A_CANT, 0);
+
+    class_dspinit(this_class);
     
-	class_dspinit(this_class);
-	
-	class_register(CLASS_BOX, this_class);
-	
-	return 0;
+    class_register(CLASS_BOX, this_class);
+    
+    return 0;
 }
 
 // New / Free / Assist
@@ -77,13 +77,13 @@ int C74_EXPORT main()
 void *dynamic_out_new(t_atom_long outlet_num)
 {
     t_dynamic_out *x = (t_dynamic_out *)object_alloc(this_class);
-	void *dynamicdsp_parent = dynamic_get_parent();
-	
-	x->out_handle = dynamic_get_sig_out_handle(dynamicdsp_parent, dynamic_get_patch_index(dynamicdsp_parent));
-	x->num_sig_outs = dynamic_get_num_sig_outs(dynamicdsp_parent);
-	
-	x->outlet_num = outlet_num;
-		
+    void *dynamicdsp_parent = dynamic_get_parent();
+    
+    x->out_handle = dynamic_get_sig_out_handle(dynamicdsp_parent, dynamic_get_patch_index(dynamicdsp_parent));
+    x->num_sig_outs = dynamic_get_num_sig_outs(dynamicdsp_parent);
+    
+    x->outlet_num = outlet_num;
+    
     dsp_setup((t_pxobject *)x, 1);
     
     return x;
@@ -103,7 +103,7 @@ void dynamic_out_assist(t_dynamic_out *x, void *b, long m, long a, char *s)
 
 void dynamic_out_int (t_dynamic_out *x, t_atom_long intin)
 {
-	x->outlet_num = intin;
+    x->outlet_num = intin;
 }
 
 // Perform
@@ -121,7 +121,7 @@ void dynamic_out_perform(t_dynamic_out *x, T *in, long N)
     
     if (!out_handle || !*out_handle)
         return;
-
+    
     if (outlet_num >= 1 && outlet_num <= num_sig_outs)
     {
         if ((io_pointer = (*out_handle)[outlet_num - 1]))
@@ -145,7 +145,7 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
 {
     using SIMD = SIMDType<double, SIMDLimits<double>::max_size>;
     SIMD *in = (SIMD *) ins[0];
-	
+    
     dynamic_out_perform(x, in, vec_size /  SIMDLimits<double>::max_size);
 }
 

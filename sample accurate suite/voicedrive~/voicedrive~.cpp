@@ -250,4 +250,3 @@ void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s)
         }
     }
 }
-
