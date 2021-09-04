@@ -11,6 +11,7 @@
 #ifdef __APPLE__
 #include <SystemConfiguration/SystemConfiguration.h>
 #include <CoreFoundation/CoreFoundation.h>
+#include <string>
 #else
 #include <winsock2.h>
 #include <iphlpapi.h>
@@ -23,20 +24,35 @@
 
 t_class *this_class;
 
+enum class match_type
+{
+    wifi,
+    ethernet,
+    bsd_name
+};
 
 struct t_macaddress
 {
     t_object a_obj;
     
+    match_type mode;
+    t_symbol *bsd_name;
+    
     void *output;
 };
 
 
+t_symbol *ps_empty;
 t_symbol *ps_failed;
+t_symbol *ps_wifi;
+t_symbol *ps_ethernet;
 
 
-void *macaddress_new();
+void *macaddress_new(t_symbol *sym);
 void macaddress_bang(t_macaddress *x);
+void macaddress_set(t_macaddress *x, t_symbol *sym);
+
+void macaddress_set_internal(t_macaddress *x, t_symbol *sym);
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
@@ -48,28 +64,74 @@ int C74_EXPORT main()
                             nullptr,
                             (short) sizeof(t_macaddress),
                             nullptr,
+                            A_DEFSYM,
                             0);
     
     class_addmethod (this_class, (method)macaddress_bang, "bang", 0);
+    class_addmethod (this_class, (method)macaddress_set, "set", A_SYM, 0);
     class_addmethod (this_class, (method)macaddress_assist, "assist", A_CANT, 0);
     
     class_register (CLASS_BOX, this_class);
     
+    ps_empty = gensym("");
     ps_failed = gensym("failed");
-    
+    ps_wifi = gensym("wifi");
+    ps_ethernet = gensym("ethernet");
+
     return 0;
 }
 
-void *macaddress_new()
+void *macaddress_new(t_symbol *sym)
 {
     t_macaddress *x = (t_macaddress *) object_alloc(this_class);
     
     x->output = outlet_new(x, 0);
+    macaddress_set_internal(x, sym);
     
     return x;
 }
 
+void macaddress_set(t_macaddress *x, t_symbol *sym)
+{
+    macaddress_set_internal(x, sym);
+    macaddress_bang(x);
+}
+
+void macaddress_set_internal(t_macaddress *x, t_symbol *sym)
+{
+    auto set_type = [&](match_type mode)
+    {
+        x->mode = mode;
+        x->bsd_name = nullptr;
+    };
+    
+    // Replace empty string
+    
+    if (sym == ps_empty)
+        sym = ps_wifi;
+    
+    // Set mode and object variables
+    
+    if (sym == ps_wifi)
+        set_type(match_type::wifi);
+    else if (sym == ps_ethernet)
+        set_type(match_type::ethernet);
+    else
+    {
+        x->mode = match_type::bsd_name;
+        x->bsd_name = sym;
+    }
+}
+
 #ifdef __APPLE__
+
+std::string get_string(CFStringRef str)
+{
+    char cString[(CFStringGetLength(str) * 4) + 1];
+    CFStringGetCString(str, cString, sizeof(cString), kCFStringEncodingUTF8);
+    
+    return cString;
+}
 
 void macaddress_bang(t_macaddress *x)
 {
@@ -82,22 +144,27 @@ void macaddress_bang(t_macaddress *x)
     for (unsigned long i = 0; i < num_interfaces; i++)
     {
         SCNetworkInterfaceRef next_interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
-        CFStringRef interface_type = SCNetworkInterfaceGetInterfaceType(next_interface);
-        /*
-         CFStringRef interface_bsd_name = SCNetworkInterfaceGetBSDName(next_interface);
-         
-         if (interface_bsd_name != nullptr)
-         object_post((t_object *)x, "BSD Name %s", CFStringGetCStringPtr(interface_bsd_name, CFStringGetFastestEncoding(interface_bsd_name)));
-         else
-         object_post((t_object *)x, "No BSD Name");
-         
-         if (interface_type != nullptr)
-         object_post((t_object *)x, "Interface Type %s", CFStringGetCStringPtr(interface_type, CFStringGetFastestEncoding(interface_type)));
-         else
-         object_post((t_object *)x, "No Interface type");
-         */
         
-        if (!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0))
+        CFStringRef compare1 = nullptr;
+        CFStringRef compare2 = nullptr;
+
+        if (x->mode == match_type::bsd_name)
+        {
+            compare1 = SCNetworkInterfaceGetBSDName(next_interface);
+            compare2 = CFStringCreateWithCString(kCFAllocatorDefault, x->bsd_name->s_name, kCFStringEncodingUTF8);
+        }
+        else
+        {
+            compare1 = SCNetworkInterfaceGetInterfaceType(next_interface);
+
+            switch (x->mode)
+            {
+                case match_type::wifi:      compare2 = kSCNetworkInterfaceTypeIEEE80211;    break;
+                default:                    compare2 = kSCNetworkInterfaceTypeEthernet;
+            }
+        }
+        
+        if (!CFStringCompare(compare1, compare2, 0))
         {
             found_interface = next_interface;
             break;
@@ -108,10 +175,7 @@ void macaddress_bang(t_macaddress *x)
         mac_address = SCNetworkInterfaceGetHardwareAddressString(found_interface);
     
     if (mac_address)
-    {
-        const char *mac_address_str = CFStringGetCStringPtr(mac_address, CFStringGetFastestEncoding(mac_address));
-        outlet_anything(x->output, gensym(mac_address_str), 0, nullptr);
-    }
+        outlet_anything(x->output, gensym(get_string(mac_address).c_str()), 0, nullptr);
     else
         outlet_anything(x->output, ps_failed, 0, nullptr);
     
