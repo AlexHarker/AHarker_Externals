@@ -27,11 +27,11 @@
 t_class *this_class;
 
 
-enum t_transport_flag
+enum class transport_flag
 {
-    FLAG_NONE,
-    FLAG_PLAY,
-    FLAG_STOP,
+    none,
+    play,
+    stop,
 };
 
 const int max_num_chans = 64;
@@ -44,7 +44,7 @@ struct t_ibufplayer
     
     t_symbol *buffer_name;
     
-    t_transport_flag transport_flag;
+    transport_flag mode_flag;
     
     InterpType interp_type;
     
@@ -188,7 +188,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     x->sig_control = false;
     x->playing = false;
     x->input_connected = false;
-    x->transport_flag = FLAG_NONE;
+    x->mode_flag = transport_flag::none;
     x->obj_n_chans = obj_n_chans;
     x->buffer_name = NULL;
     
@@ -271,7 +271,7 @@ void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 
 void ibufplayer_stop(t_ibufplayer *x)
 {
-    x->transport_flag = FLAG_STOP;
+    x->mode_flag = transport_flag::stop;
 }
 
 double ibuffer_sample_rate(t_symbol *name)
@@ -345,7 +345,7 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
     }
     
     x->sig_control = sig_control ? true : false;
-    x->transport_flag = FLAG_PLAY;
+    x->mode_flag = transport_flag::play;
 }
 
 void ibufplayer_done_bang(t_ibufplayer *x)
@@ -405,10 +405,10 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
         
         phase_info info(x->sig_control, per_samp, x->start_samp, x->min_samp, x->max_samp, buffer.get_length());
         
-        if (x->transport_flag == FLAG_PLAY)
+        if (x->mode_flag == transport_flag::play)
             x->drive = x->start_samp;
         
-        if (x->transport_flag == FLAG_STOP)
+        if (x->mode_flag == transport_flag::stop)
             x->drive = -1.0;
         
         if (!info.out_of_range(x->drive))
@@ -472,7 +472,7 @@ void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positi
     if (!playing && x->playing)
         clock_delay (x->done_clock, 0);
     x->playing = playing;
-    x->transport_flag = FLAG_NONE;
+    x->mode_flag = transport_flag::none;
 }
 
 // Perform and DSP for 32-bit signals
