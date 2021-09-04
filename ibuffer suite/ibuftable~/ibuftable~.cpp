@@ -209,6 +209,5 @@ void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sampl
     
     ibuftable_set(x, x->buffer_name);
     
-    if (count[0] && count[1])
-        object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform64);
+    object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform64);
 }
