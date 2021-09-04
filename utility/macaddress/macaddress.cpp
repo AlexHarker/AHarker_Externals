@@ -36,7 +36,6 @@ t_symbol *ps_failed;
 
 
 void *macaddress_new();
-void macaddress_free(t_macaddress *x);
 void macaddress_bang(t_macaddress *x);
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
@@ -46,7 +45,7 @@ int C74_EXPORT main()
 {
     this_class = class_new ("macaddress",
                             (method)macaddress_new,
-                            (method)macaddress_free,
+                            nullptr,
                             (short) sizeof(t_macaddress),
                             nullptr,
                             0);
@@ -68,11 +67,6 @@ void *macaddress_new()
     x->output = outlet_new(x, 0);
     
     return x;
-    
-}
-
-void macaddress_free(t_macaddress *x)
-{
 }
 
 #ifdef __APPLE__
@@ -80,22 +74,15 @@ void macaddress_free(t_macaddress *x)
 void macaddress_bang(t_macaddress *x)
 {
     CFStringRef mac_address = nullptr;
+    SCNetworkInterfaceRef found_interface = nullptr;
+        
+    CFArrayRef interface_array = SCNetworkInterfaceCopyAll();
+    unsigned long num_interfaces = CFArrayGetCount(interface_array);
     
-    CFStringRef interface_type;
-    CFArrayRef interface_array;
-    SCNetworkInterfaceRef next_interface, found_interface;
-    
-    char const *mac_address_str;
-    unsigned long found = 0;
-    unsigned long i, loop;
-    
-    interface_array = SCNetworkInterfaceCopyAll();
-    loop = CFArrayGetCount(interface_array);
-    
-    for (i = 0; i < loop; i++)
+    for (unsigned long i = 0; i < num_interfaces; i++)
     {
-        next_interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
-        interface_type = SCNetworkInterfaceGetInterfaceType(next_interface);
+        SCNetworkInterfaceRef next_interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
+        CFStringRef interface_type = SCNetworkInterfaceGetInterfaceType(next_interface);
         /*
          CFStringRef interface_bsd_name = SCNetworkInterfaceGetBSDName(next_interface);
          
@@ -110,20 +97,19 @@ void macaddress_bang(t_macaddress *x)
          object_post((t_object *)x, "No Interface type");
          */
         
-        if(!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0))
+        if (!CFStringCompare(interface_type, kSCNetworkInterfaceTypeIEEE80211, 0))
         {
-            found = 1;
             found_interface = next_interface;
             break;
         }
     }
     
-    if (found)
+    if (found_interface)
         mac_address = SCNetworkInterfaceGetHardwareAddressString(found_interface);
     
     if (mac_address)
     {
-        mac_address_str = CFStringGetCStringPtr(mac_address, CFStringGetFastestEncoding(mac_address));
+        const char *mac_address_str = CFStringGetCStringPtr(mac_address, CFStringGetFastestEncoding(mac_address));
         outlet_anything(x->output, gensym(mac_address_str), 0, nullptr);
     }
     else
@@ -141,7 +127,7 @@ void macaddress_bang(t_macaddress *x)
     char mac_address[32];
     char temp_string[32];
     DWORD ret_val = 0;
-    unsigned int found = 0;
+    bool found = false;
     unsigned int i = 0;
     
     IP_ADAPTER_ADDRESSES *addresses = nullptr;
@@ -181,7 +167,7 @@ void macaddress_bang(t_macaddress *x)
                         sprintf(temp_string, "%.2x:",(int) current_address->PhysicalAddress[i]);
                     strcat(mac_address, temp_string);
                 }
-                found = 1;
+                found = true;
                 break;
             }
             current_address = current_address->Next;
