@@ -142,19 +142,19 @@ void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s)
 // State
 
 void dynamic_this_busy(t_dynamic_this *x, t_atom_long value)
-{	
+{
     dynamic_set_patch_busy(x->dynamic_parent, x->index, value);
 }
 
 void dynamic_this_mute(t_dynamic_this *x, t_atom_long value)
 {
-	dynamic_set_patch_on(x->dynamic_parent, x->index, !value);
+    dynamic_set_patch_on(x->dynamic_parent, x->index, !value);
 }
 
 void dynamic_this_flags(t_dynamic_this *x, t_atom_long value)
 {
     dynamic_set_patch_busy(x->dynamic_parent, x->index, value);
-	dynamic_set_patch_on(x->dynamic_parent, x->index, value);
+    dynamic_set_patch_on(x->dynamic_parent, x->index, value);
 }
 
 // Get State
