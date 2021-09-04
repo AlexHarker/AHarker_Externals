@@ -2,19 +2,19 @@
 /*
  *  ibufconcatenate~
  *
- *    The ibufconcatenate~ object is used to handle data to do with sections of a buffer.
+ *  The ibufconcatenate~ object is used to handle data to do with sections of a buffer.
  *
- *    It can be used in one of two ways:
+ *  It can be used in one of two ways:
  *
- *        1 - entries - store start and end points for items in a buffer by entering them manually.
- *        2 - concatenation - concatenate multiple msp buffers into one buffer, storing start and end points.
+ *      1 - entries - store start and end points for items in a buffer by entering them manually.
+ *      2 - concatenation - concatenate multiple msp buffers into one buffer, storing start and end points.
  *
- *    The bounds of each chunk can be retrieved either as a message, or as a signal in a sample-accurate manner, according to the mode of the object.
- *    The ibufconcatedrive~ object can also be used to give sample-accurate playback of only one item at a time.
+ *  The bounds of each chunk can be retrieved either as a message, or as a signal in a sample-accurate manner, according to the mode of the object.
+ *  The ibufconcatedrive~ object can also be used to give sample-accurate playback of only one item at a time.
  *
- *    See the helpfile documentation for more on how this object can be used in practice.
+ *  See the helpfile documentation for more on how this object can be used in practice.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
