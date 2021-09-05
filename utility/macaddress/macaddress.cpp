@@ -191,22 +191,23 @@ void macaddress_bang(t_macaddress *x)
     char mac_address[32];
     char temp_string[32];
     DWORD ret_val = 0;
-    bool found = false;
-    unsigned int i = 0;
     
     IP_ADAPTER_ADDRESSES *addresses = nullptr;
     IP_ADAPTER_ADDRESSES *current_address = nullptr;
-    ULONG outBufLen = 15000;
+    IP_ADAPTER_ADDRESSES *found_address = nullptr;
+    ULONG out_buf_length = 15000;
     
     mac_address[0] = 0;
     
-    for (i = 0; i < 2; i++)
+    // If out_buf_length is insufficient then the second call should function correctly
+
+    for (int i = 0; i < 2; i++)
     {
-        addresses = (IP_ADAPTER_ADDRESSES *) malloc(outBufLen);
+        addresses = (IP_ADAPTER_ADDRESSES *) malloc(out_buf_length);
         if (addresses == nullptr)
             break;
         
-        ret_val = GetAdaptersAddresses(AF_INET, GAA_FLAG_INCLUDE_PREFIX, nullptr, addresses, &outBufLen);
+        ret_val = GetAdaptersAddresses(AF_INET, GAA_FLAG_INCLUDE_PREFIX, nullptr, addresses, &out_buf_length);
         
         if (ret_val == NO_ERROR)
             break;
@@ -216,32 +217,46 @@ void macaddress_bang(t_macaddress *x)
     }
     
     if (ret_val == NO_ERROR)
-    {
-        current_address = addresses;
-        
-        while (current_address)
+    {        
+        for (current_address = addresses; current_address; current_address = current_address->Next)
         {
-            if (current_address->PhysicalAddressLength && current_address->IfType == IF_TYPE_IEEE80211)
+            if (current_address->PhysicalAddressLength)
             {
-                for (i = 0; i < current_address->PhysicalAddressLength; i++)
+                bool found = false;
+
+                switch (x->mode)
                 {
-                    if (i == (current_address->PhysicalAddressLength - 1))
-                        sprintf(temp_string, "%.2x", (int) current_address->PhysicalAddress[i]);
-                    else
-                        sprintf(temp_string, "%.2x:",(int) current_address->PhysicalAddress[i]);
-                    strcat(mac_address, temp_string);
+                    case match_type::wifi:      found = current_address->IfType == IF_TYPE_IEEE80211;           break;
+                    case match_type::ethernet:  found = current_address->IfType == IF_TYPE_ETHERNET_CSMACD;     break;
+                    default:
+                        object_post((t_object *)x, "bsd_name %s", current_address->AdapterName);
                 }
-                found = true;
-                break;
+
+                if (found)
+                {
+                    found_address = current_address;
+                    break;
+                }
             }
-            current_address = current_address->Next;
         }
     }
     
+    if (found_address)
+    {
+        for (unsigned long i = 0; i < current_address->PhysicalAddressLength; i++)
+        {
+            if (i == (current_address->PhysicalAddressLength - 1))
+                sprintf(temp_string, "%.2x", (int)current_address->PhysicalAddress[i]);
+            else
+                sprintf(temp_string, "%.2x:", (int)current_address->PhysicalAddress[i]);
+            strcat(mac_address, temp_string);
+        }
+    }
+
     if (addresses)
         free(addresses);
     
-    if (found)
+    if (found_address)
         outlet_anything(x->output, gensym(mac_address), 0, nullptr);
     else
         outlet_anything(x->output, ps_failed, 0, nullptr);
