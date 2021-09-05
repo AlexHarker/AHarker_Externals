@@ -26,9 +26,10 @@ t_class *this_class;
 
 enum class match_type
 {
+    any,
     wifi,
     ethernet,
-    bsd_name
+    name
 };
 
 struct t_macaddress
@@ -36,7 +37,7 @@ struct t_macaddress
     t_object a_obj;
     
     match_type mode;
-    t_symbol *bsd_name;
+    t_symbol *name;
     
     void *output;
 };
@@ -44,6 +45,7 @@ struct t_macaddress
 
 t_symbol *ps_empty;
 t_symbol *ps_failed;
+t_symbol *ps_any;
 t_symbol *ps_wifi;
 t_symbol *ps_ethernet;
 
@@ -75,6 +77,7 @@ int C74_EXPORT main()
     
     ps_empty = gensym("");
     ps_failed = gensym("failed");
+    ps_failed = gensym("any");
     ps_wifi = gensym("wifi");
     ps_ethernet = gensym("ethernet");
 
@@ -102,7 +105,7 @@ void macaddress_set_internal(t_macaddress *x, t_symbol *sym)
     auto set_type = [&](match_type mode)
     {
         x->mode = mode;
-        x->bsd_name = nullptr;
+        x->name = nullptr;
     };
     
     // Replace empty string
@@ -112,14 +115,16 @@ void macaddress_set_internal(t_macaddress *x, t_symbol *sym)
     
     // Set mode and object variables
     
-    if (sym == ps_wifi)
+    if (sym == ps_any)
+        set_type(match_type::any);
+    else if (sym == ps_wifi)
         set_type(match_type::wifi);
     else if (sym == ps_ethernet)
         set_type(match_type::ethernet);
     else
     {
-        x->mode = match_type::bsd_name;
-        x->bsd_name = sym;
+        x->mode = match_type::name;
+        x->name = sym;
     }
 }
 
@@ -143,32 +148,47 @@ void macaddress_bang(t_macaddress *x)
     
     for (unsigned long i = 0; i < num_interfaces; i++)
     {
-        SCNetworkInterfaceRef next_interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
+        SCNetworkInterfaceRef interface = (SCNetworkInterfaceRef) CFArrayGetValueAtIndex(interface_array, i);
         
-        CFStringRef compare1 = nullptr;
-        CFStringRef compare2 = nullptr;
+        CFStringRef str1 = nullptr;
+        CFStringRef str2 = nullptr;
 
-        if (x->mode == match_type::bsd_name)
+        auto match = [&](CFStringRef comparison)
         {
-            compare1 = SCNetworkInterfaceGetBSDName(next_interface);
-            compare2 = CFStringCreateWithCString(kCFAllocatorDefault, x->bsd_name->s_name, kCFStringEncodingUTF8);
+            if (!CFStringCompare(str1, comparison, 0))
+                found_interface = interface;
+                
+            return found_interface;
+        };
+        
+        if (x->mode == match_type::name)
+        {
+            // Compare to BSD name and then display name
+            
+            str1 = CFStringCreateWithCString(kCFAllocatorDefault, x->name->s_name, kCFStringEncodingUTF8);
+            str2 = SCNetworkInterfaceGetBSDName(interface);
+
+            if (!match(str2))
+                match(SCNetworkInterfaceGetLocalizedDisplayName(interface));
+            
+            CFRelease(str1);
         }
         else
         {
-            compare1 = SCNetworkInterfaceGetInterfaceType(next_interface);
+            // Compare type
+            
+            str1 = SCNetworkInterfaceGetInterfaceType(interface);
 
             switch (x->mode)
             {
-                case match_type::wifi:      compare2 = kSCNetworkInterfaceTypeIEEE80211;    break;
-                default:                    compare2 = kSCNetworkInterfaceTypeEthernet;
+                case match_type::wifi:          match(kSCNetworkInterfaceTypeIEEE80211);    break;
+                case match_type::ethernet:      match(kSCNetworkInterfaceTypeEthernet);     break;
+                default:                        found_interface = interface;
             }
         }
         
-        if (!CFStringCompare(compare1, compare2, 0))
-        {
-            found_interface = next_interface;
+        if (found_interface)
             break;
-        }
     }
     
     if (found_interface)
