@@ -11,16 +11,17 @@
 #ifdef __APPLE__
 #include <SystemConfiguration/SystemConfiguration.h>
 #include <CoreFoundation/CoreFoundation.h>
-#include <string>
 #else
 #include <winsock2.h>
 #include <iphlpapi.h>
-#include <stdio.h>
+#include <cstring>
+#include <vector>
 #endif
 
 #include <ext.h>
 #include <ext_obex.h>
 
+#include <string>
 
 t_class *this_class;
 
@@ -129,7 +130,6 @@ void macaddress_set_internal(t_macaddress *x, t_symbol *sym)
 }
 
 #ifdef __APPLE__
-
 std::string get_string(CFStringRef str)
 {
     char cString[(CFStringGetLength(str) * 4) + 1];
@@ -203,8 +203,20 @@ void macaddress_bang(t_macaddress *x)
     
     CFRelease(interface_array);
 }
-
 #else
+std::string UTF16ToUTF8(const std::wstring& wstr)
+{
+    int requiredSize = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+
+    if (requiredSize > 0)
+    {
+        std::vector<char> buffer(requiredSize);
+        if (WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &buffer[0], requiredSize, NULL, NULL))
+            return buffer.data();
+    }
+
+    return "";
+}
 
 void macaddress_bang(t_macaddress *x)
 {
@@ -246,10 +258,13 @@ void macaddress_bang(t_macaddress *x)
 
                 switch (x->mode)
                 {
+                    case match_type::any:       found = true;                                                   break;
                     case match_type::wifi:      found = current_address->IfType == IF_TYPE_IEEE80211;           break;
                     case match_type::ethernet:  found = current_address->IfType == IF_TYPE_ETHERNET_CSMACD;     break;
                     default:
-                        object_post((t_object *)x, "bsd_name %s", current_address->AdapterName);
+                        if (!strcmp(x->name->s_name, UTF16ToUTF8(current_address->FriendlyName).c_str()) ||
+                            !strcmp(x->name->s_name, current_address->AdapterName))
+                            found = true;
                 }
 
                 if (found)
@@ -281,7 +296,6 @@ void macaddress_bang(t_macaddress *x)
     else
         outlet_anything(x->output, ps_failed, 0, nullptr);
 }
-
 #endif
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s)
