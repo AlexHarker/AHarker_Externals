@@ -258,9 +258,22 @@ void macaddress_bang(t_macaddress *x)
 
                 switch (x->mode)
                 {
-                    case match_type::any:       found = true;                                                   break;
-                    case match_type::wifi:      found = current_address->IfType == IF_TYPE_IEEE80211;           break;
-                    case match_type::ethernet:  found = current_address->IfType == IF_TYPE_ETHERNET_CSMACD;     break;
+                    case match_type::any:
+                        found = true;
+                        break;
+                        
+                    case match_type::wifi:
+                        found = current_address->IfType == IF_TYPE_IEEE80211;
+                        break;
+                        
+                    case match_type::ethernet:
+                        found = current_address->IfType == IF_TYPE_ETHERNET_CSMACD ||
+                                current_address->IfType == IF_TYPE_ETHERNET_3MBIT ||
+                                current_address->IfType == IF_TYPE_FASTETHER ||
+                                current_address->IfType == IF_TYPE_FASTETHER_FX ||
+                                current_address->IfType == IF_TYPE_GIGABITETHERNET;
+                        break;
+                        
                     default:
                         if (!strcmp(x->name->s_name, UTF16ToUTF8(current_address->FriendlyName).c_str()) ||
                             !strcmp(x->name->s_name, current_address->AdapterName))
@@ -305,4 +318,3 @@ void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"MAC Address");
 }
-
