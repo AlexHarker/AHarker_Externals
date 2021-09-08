@@ -2,7 +2,7 @@
 #ifndef NANS_H
 #define NANS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <limits>
 
 #include "vector_loop.hpp"
