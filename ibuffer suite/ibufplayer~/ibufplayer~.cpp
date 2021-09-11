@@ -431,7 +431,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
             else
             {
                 to_do = info.fixed_speed_loop_size(drive, vec_size);
-                const long v_count = ((t_ptr_uint) positions % 16 || (t_ptr_uint) phase_out % 16) ? 0 : to_do / N;
+                const long v_count = to_do / N;
                 const long S = v_count * N;
                 
                 ibufplayer_phase_fixed<N>(positions + 0, phase_out + 0, drive, info, v_count);
