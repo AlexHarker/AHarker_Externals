@@ -81,10 +81,12 @@ struct phase_info
     
     long fixed_speed_loop_size(double drive, long n_samps) const
     {
-        if (m_speed > 0)
-            return ((n_samps * m_speed) + drive > m_max) ? (m_max - drive) / m_speed : n_samps;
+        const double end_point = (n_samps * m_speed) + drive;
         
-        return ((n_samps * m_speed) + drive < m_min) ? (m_min - drive) / m_speed : n_samps;
+        if (m_speed > 0)
+            return (end_point > m_max) ? static_cast<long>((m_max - drive) / m_speed) : n_samps;
+        
+        return (end_point < m_min) ? static_cast<long>((m_min - drive) / m_speed) : n_samps;
     }
     
     bool speed_is_int() const { return m_speed == std::round(m_speed) && !m_sig_control; }
