@@ -403,9 +403,10 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
     
     if (buffer.get_length())
     {
-        double per_samp = x->speed * buffer.get_sample_rate() * x->sr_div;
+        const double per_samp = x->speed * buffer.get_sample_rate() * x->sr_div;
+        const double length = static_cast<double>(buffer.get_length());
         
-        phase_info info(x->sig_control, per_samp, x->start_samp, x->min_samp, x->max_samp, buffer.get_length());
+        phase_info info(x->sig_control, per_samp, x->start_samp, x->min_samp, x->max_samp, length);
         
         if (x->mode_flag == transport_flag::play)
             x->drive = x->start_samp;
