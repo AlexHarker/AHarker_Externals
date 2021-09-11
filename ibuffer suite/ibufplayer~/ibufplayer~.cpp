@@ -146,6 +146,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method)ibufplayer_vols, "vols", A_GIMME, 0);
     class_addmethod(this_class, (method)ibufplayer_play, "play", A_GIMME, 0);
     class_addmethod(this_class, (method)ibufplayer_stop, "stop", 0);
+    
     class_addmethod(this_class, (method)ibufplayer_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method)ibufplayer_dsp64, "dsp64", A_CANT, 0);
     
