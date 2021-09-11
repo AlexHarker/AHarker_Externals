@@ -386,7 +386,7 @@ void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const pha
 }
 
 template <class T>
-void perform_core(t_ibufplayer *x, T *in, T **outs, T *phase_out, double *positions, long vec_size)
+void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *positions, long vec_size)
 {
     const int N = SIMDLimits<double>::max_size;
     
@@ -485,7 +485,7 @@ t_int *ibufplayer_perform(t_int *w)
     
     // Set pointers
     
-    float *in = reinterpret_cast<float *>(w[2]);
+    const float *in = reinterpret_cast<float *>(w[2]);
     float **outs = reinterpret_cast<float **>(w[3]);
     float *phase_out = reinterpret_cast<float *>(w[4]);
     long vec_size = w[5];

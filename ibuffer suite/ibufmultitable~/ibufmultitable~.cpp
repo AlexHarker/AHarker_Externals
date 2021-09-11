@@ -168,11 +168,11 @@ void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 // Core Perform Routine
 
 template <int N, class T>
-void perform_positions(T *positions, T *in, T *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
+void perform_positions(T *positions, const T *in, const T *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
 {
     SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
-    SIMDType<T, N> *v_in = reinterpret_cast<SIMDType<T, N> *>(in);
-    SIMDType<T, N> *v_offset_in = reinterpret_cast<SIMDType<T, N> *>(offset_in);
+    const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
+    const SIMDType<T, N> *v_offset_in = reinterpret_cast<const SIMDType<T, N> *>(offset_in);
     
     const SIMDType<T, N> mul(end_samp - start_samp);
     const SIMDType<T, N> add(start_samp);
@@ -195,7 +195,7 @@ long clip(const long in, const long max)
 }
 
 template <class T>
-void perform_core(t_ibufmultitable *x, T *in, T *offset_in, T *out, long vec_size)
+void perform_core(t_ibufmultitable *x, const T *in, const T *offset_in, T *out, long vec_size)
 {
     // Check if the buffer is set / valid and get the length information
     
@@ -235,8 +235,8 @@ t_int *ibufmultitable_perform(t_int *w)
     
     // Set pointers
     
-    float *in = (float *) w[2];
-    float *offset_in = (float *) w[3];
+    const float *in = (float *) w[2];
+    const float *offset_in = (float *) w[3];
     float *out = (float *)(w[4]);
     long vec_size = w[5];
     t_ibufmultitable *x = (t_ibufmultitable *) w[6];
