@@ -24,6 +24,12 @@
 #include <limits>
 #include <algorithm>
 
+#ifdef __APPLE__
+#include <alloca.h>
+#else
+#include <malloc.h>
+#endif 
+
 t_class *this_class;
 
 
@@ -492,8 +498,10 @@ t_int *ibufplayer_perform(t_int *w)
     long vec_size = w[5];
     t_ibufplayer *x = reinterpret_cast<t_ibufplayer *>(w[6]);
     
+    double *positions = reinterpret_cast<double *>(alloca(sizeof(double) * vec_size));
+    
     if (!x->x_obj.z_disabled)
-        perform_core(x, in, outs, phase_out, NULL, vec_size);
+        perform_core(x, in, outs, phase_out, positions, vec_size);
     
     return w + 7;
 }
