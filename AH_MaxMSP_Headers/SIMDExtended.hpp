@@ -8,181 +8,181 @@
 
 static inline void sin_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvsin(out, in, &pass_length);
 }
 
 static inline void cos_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvcos(out, in, &pass_length);
 }
 
 static inline void tan_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvtan(out, in, &pass_length);
 }
 
 static inline void sinh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvsinh(out, in, &pass_length);
 }
 
 static inline void cosh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvcosh(out, in, &pass_length);
 }
 
 static inline void tanh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvtanh(out, in, &pass_length);
 }
 
 static inline void asin_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvasin(out, in, &pass_length);
 }
 
 static inline void acos_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvacos(out, in, &pass_length);
 }
 
 static inline void atan_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvatan(out, in, &pass_length);
 }
 
 static inline void asinh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvasinh(out, in, &pass_length);
 }
 
 static inline void acosh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvacosh(out, in, &pass_length);
 }
 
 static inline void atanh_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvatanh(out, in, &pass_length);
 }
 
 static inline void log_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvlog(out, in, &pass_length);
 }
 
 static inline void exp_array(double *out, const double *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvexp(out, in, &pass_length);
 }
 
 static inline void pow_array(double *out, const double *in1, const double *in2, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvpow(out, in1, in2, &pass_length);
 }
 
 static inline void sin_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvsinf(out, in, &pass_length);
 }
 
 static inline void cos_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvcosf(out, in, &pass_length);
 }
 
 static inline void tan_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvtanf(out, in, &pass_length);
 }
 
 static inline void sinh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvsinhf(out, in, &pass_length);
 }
 
 static inline void cosh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvcoshf(out, in, &pass_length);
 }
 
 static inline void tanh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvtanhf(out, in, &pass_length);
 }
 
 static inline void asin_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvasinf(out, in, &pass_length);
 }
 
 static inline void acos_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvacosf(out, in, &pass_length);
 }
 
 static inline void atan_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvatanf(out, in, &pass_length);
 }
 
 static inline void asinh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvasinhf(out, in, &pass_length);
 }
 
 static inline void acosh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvacoshf(out, in, &pass_length);
 }
 
 static inline void atanh_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvatanhf(out, in, &pass_length);
 }
 
 static inline void log_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvlogf(out, in, &pass_length);
 }
 
 static inline void exp_array(float *out, const float *in, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvexpf(out, in, &pass_length);
 }
 
 static inline void pow_array(float *out, const float *in1, const float *in2, long length)
 {
-    int pass_length = length;
+    int pass_length = static_cast<int>(length);
     vvpowf(out, in1, in2, &pass_length);
 }
 
