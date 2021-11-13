@@ -4,7 +4,7 @@
  *
  *  ahnoise~ is a high quality noise generator with random time seeding.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -15,6 +15,7 @@
 
 #include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
+
 
 // Globals and Object Structure
 
@@ -129,3 +130,4 @@ void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s)
         sprintf(s,"(signal) Dummy");
     }
 }
+
