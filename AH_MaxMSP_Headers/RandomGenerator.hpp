@@ -14,7 +14,7 @@ namespace random_generators
 // Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
 // See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm
 
-// The memory requirement is currently 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
+// The memory requirement is 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
 // The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
 
 // N.B. CMWC_LAG_SIZE must be a power of two
@@ -36,9 +36,9 @@ namespace random_generators
             uint64_t t;
             
             i = (i + 1) & (CMWC_LAG_SIZE - 1);
-            t = (uint64_t) CMWC_A_VALUE * m_state[i] + c;
+            t = CMWC_A_VALUE * m_state[i] + c;
             c = (t >> 32);
-            x = (uint32_t) ((t + c) & 0xFFFFFFFF);
+            x = static_cast<uint32_t>((t + c) & 0xFFFFFFFF);
             
             if (x < c)
             {
