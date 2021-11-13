@@ -145,6 +145,8 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
     
     long num_params = argc / 3;
     
+    num_params = std::min(num_params, 64L);
+    
     if (!num_params)
         return;
     
