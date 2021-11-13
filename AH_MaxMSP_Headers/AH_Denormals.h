@@ -23,8 +23,10 @@ t_int *denormals_perform (t_int *w)
 {	
 	// Replace the old MXCSR setting with the same, except set DAZ and FZ bits
 	
+#if !defined(__arm__) && !defined(__arm64)
 	_mm_setcsr(_mm_getcsr() | 0x8040);
-	
+#endif
+    
 	// Swap this routine for the correct one, and then call the correct perform routine
 	
 	w[0] = w[1];										
