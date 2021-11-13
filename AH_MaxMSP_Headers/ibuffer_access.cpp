@@ -95,7 +95,7 @@ void ibuffer_data::release()
     samples = NULL;
     length = 0;
     num_chans = 0;
-    format = 0,
+    format = 0;
     sample_rate = 0.0;
     buffer_object = NULL;
 }
