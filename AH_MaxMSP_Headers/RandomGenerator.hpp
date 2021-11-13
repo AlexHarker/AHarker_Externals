@@ -10,15 +10,15 @@ namespace random_generators
 {
     // Basic CMWC Generator
 
-// A complementary modulo with carry algorithm (proposed by George Marsaglia)
-// Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
-// See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm
+    // A complementary modulo with carry algorithm (proposed by George Marsaglia)
+    // Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
+    // See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm
 
-// The memory requirement is 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
-// The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
+    // The memory requirement is 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
+    // The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
 
-// N.B. CMWC_LAG_SIZE must be a power of two
-// N.B. CMWC_A_VALUE should be a suitable value according to CMWC_LAG_SIZE
+    // N.B. CMWC_LAG_SIZE must be a power of two
+    // N.B. CMWC_A_VALUE should be a suitable value according to CMWC_LAG_SIZE
 
     class cmwc
     {
@@ -110,16 +110,13 @@ public:
         
         windowed_gaussian_params(double mean, double dev) : m_mean(mean), m_dev(dev)
         {
-            //lo_bound = erf(-mean / (dev * sqrt(2.0)));
-            //hi_bound = erf((1.0 - mean) / (dev * sqrt(2.0)));
-            
             constexpr double inf = HUGE_VAL;
 
-            double dev_recip = 1.0 / (dev * sqrt(2.0));
-            double mmean_t_dev = -mean * dev_recip;
+            const double a = 1.0 / (dev * sqrt(2.0));
+            const double b = -mean * a;
                    
-            m_lo = erf(mmean_t_dev);
-            m_hi = erf(dev_recip + mmean_t_dev);
+            m_lo = erf(b);
+            m_hi = erf(a + b);
             
             // N.B. inf is fine as an input, but nan is not...
             
