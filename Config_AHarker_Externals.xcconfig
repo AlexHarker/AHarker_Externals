@@ -25,7 +25,7 @@ INFOPLIST_FILE = ../../AH_Externals_Info.plist
 
 // Per architecture and deployment settings
 
-MACOSX_DEPLOYMENT_TARGET = 10.7
+MACOSX_DEPLOYMENT_TARGET = 10.11
 CLANG_CXX_LANGUAGE_STANDARD = c++14
 CLANG_CXX_LIBRARY = libc++
 CLANG_X86_VECTOR_INSTRUCTIONS = avx
@@ -49,9 +49,13 @@ OTHER_CFLAGS = -std=gnu89
 
 C74_SYM_LINKER_FLAGS = @$(C74SUPPORT)/max-includes/c74_linker_flags.txt
 
-OTHER_LDFLAGS = -framework MaxAudioAPI -framework JitterAPI $(C74_SYM_LINKER_FLAGS)
+OTHER_LDFLAGS = -framework MaxAudioAPI -framework JitterAPI -framework Accelerate $(C74_SYM_LINKER_FLAGS)
 
 // hide all symbols by default
 // mark a function to be exported with the C74_EXPORT macro -- most likely this will only apply to the main() function
 
 OTHER_CFLAGS = -fvisibility=hidden
+
+// Avoid XCode warning for deprecated feature
+
+ALWAYS_SEARCH_USER_PATHS = NO
