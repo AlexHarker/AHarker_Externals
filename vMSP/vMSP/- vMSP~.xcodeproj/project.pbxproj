@@ -55,36 +55,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */; };
 		B8BFF9D410AED239008EB5B2 /* vminimum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */; };
-		B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */; };
 		B8BFFB9610AEF01E008EB5B2 /* vsinh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */; };
 		B8BFFB9810AEF02B008EB5B2 /* vcosh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */; };
@@ -96,47 +68,15 @@
 		B8BFFBBE10AEF053008EB5B2 /* vatanh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */; };
 		B8BFFBC410AEF07E008EB5B2 /* vsinx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */; };
 		B8BFFBC610AEF08B008EB5B2 /* vtanx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */; };
-		B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E3937E1095B8990081D095 /* vnotequals~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3937D1095B8990081D095 /* vnotequals~.cpp */; };
 		B8E393861095B8C10081D095 /* vequals~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492EE1095A30E00A88A63 /* vequals~.cpp */; };
 		B8E393921095B8E10081D095 /* vplus~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E81095A2FA00A88A63 /* vplus~.cpp */; };
-		B8E395661096138D0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39578109613900081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E395A6109614350081D095 /* vabs~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E39595109613C90081D095 /* vabs~.cpp */; };
 		B8E395A71096143B0081D095 /* vcosx~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3959A109613F40081D095 /* vcosx~.cpp */; };
-		B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E39604109616B20081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E39655109617FB0081D095 /* vlog~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962A1096172C0081D095 /* vlog~.cpp */; };
 		B8E39656109618040081D095 /* vsqrt~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E3962D1096173F0081D095 /* vsqrt~.cpp */; };
 		B8E396571096180E0081D095 /* vtrunc~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E39627109617180081D095 /* vtrunc~.cpp */; };
 		B8E492E31095A2EA00A88A63 /* vtimes~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E492E21095A2EA00A88A63 /* vtimes~.cpp */; };
-		B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8E4954A1095AD4600A88A63 /* vdiv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493BF1095A73900A88A63 /* vdiv~.cpp */; };
 		B8E4954B1095AD4F00A88A63 /* vrdiv~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */; };
 		B8E4954C1095AD5900A88A63 /* vminus~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CF1095A79000A88A63 /* vminus~.cpp */; };
@@ -146,17 +86,7 @@
 		B8E495501095AD8400A88A63 /* vgreaterthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */; };
 		B8E495511095AD8D00A88A63 /* vlessthan~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */; };
 		B8E8E6401098B8EA00C566B2 /* vmtof~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406A1098792000780AF9 /* vmtof~.cpp */; };
-		B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE3FA1109875BE00780AF9 /* vpow~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE3FA0109875BE00780AF9 /* vpow~.cpp */; };
-		B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
-		B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
-		B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10347B90AAAE41500981DE1 /* Accelerate.framework */; };
 		B8FE412010987B2000780AF9 /* vatodb~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40681098790500780AF9 /* vatodb~.cpp */; };
 		B8FE412110987B2900780AF9 /* vdbtoa~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE40691098791600780AF9 /* vdbtoa~.cpp */; };
 		B8FE42E91098A7B300780AF9 /* vftom~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8FE406E1098793200780AF9 /* vftom~.cpp */; };
@@ -411,8 +341,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
-		B10347B90AAAE41500981DE1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
 		B1D995FF0A4BA74D00CE1530 /* vtimes~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtimes~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = nans.hpp; path = Base/nans.hpp; sourceTree = "<group>"; };
 		B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = v_binary.hpp; path = Base/v_binary.hpp; sourceTree = "<group>"; };
@@ -500,8 +428,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
-				B10347BA0AAAE41500981DE1 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,8 +435,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFF98110AED1BE008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF98410AED1BE008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,8 +442,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFF99210AED1C5008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFF99510AED1C5008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -527,8 +449,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFA8F10AEEE18008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFA9210AEEE18008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,8 +456,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAA110AEEE1C008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAA410AEEE1C008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,8 +463,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAB310AEEE1F008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAB610AEEE1F008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,8 +470,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAC510AEEE21008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFAC810AEEE21008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,8 +477,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFAD710AEEE62008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFADA10AEEE62008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,8 +484,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB0710AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB0A10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,8 +491,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB1910AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB1C10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,8 +498,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB2B10AEEE71008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB2E10AEEE71008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,8 +505,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB3D10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB4010AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,8 +512,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB4F10AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB5210AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,8 +519,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFFB6110AEEE77008EB5B2 /* Carbon.framework in Frameworks */,
-				B8BFFB6410AEEE77008EB5B2 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,8 +526,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E3936D1095B8640081D095 /* Carbon.framework in Frameworks */,
-				B8E393701095B8640081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,8 +533,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395661096138D0081D095 /* Carbon.framework in Frameworks */,
-				B8E395691096138D0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,8 +540,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39578109613900081D095 /* Carbon.framework in Frameworks */,
-				B8E3957B109613900081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,8 +547,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E395F2109616AB0081D095 /* Carbon.framework in Frameworks */,
-				B8E395F5109616AB0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -662,8 +554,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39604109616B20081D095 /* Carbon.framework in Frameworks */,
-				B8E39607109616B20081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,8 +561,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E3961B109616ED0081D095 /* Carbon.framework in Frameworks */,
-				B8E3961E109616ED0081D095 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,8 +568,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E492F91095A32500A88A63 /* Carbon.framework in Frameworks */,
-				B8E492FC1095A32500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,8 +575,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4930A1095A32800A88A63 /* Carbon.framework in Frameworks */,
-				B8E4930D1095A32800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -698,8 +582,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494351095AB2B00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494381095AB2B00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,8 +589,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494461095AB2F00A88A63 /* Carbon.framework in Frameworks */,
-				B8E494491095AB2F00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,8 +596,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494571095AB3200A88A63 /* Carbon.framework in Frameworks */,
-				B8E4945A1095AB3200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -725,8 +603,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494681095AB3700A88A63 /* Carbon.framework in Frameworks */,
-				B8E4946B1095AB3700A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,8 +610,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494791095AB3C00A88A63 /* Carbon.framework in Frameworks */,
-				B8E4947C1095AB3C00A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,8 +617,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4948A1095AB4200A88A63 /* Carbon.framework in Frameworks */,
-				B8E4948D1095AB4200A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,8 +624,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E4949B1095AB4500A88A63 /* Carbon.framework in Frameworks */,
-				B8E4949E1095AB4500A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,8 +631,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E494AC1095AB4800A88A63 /* Carbon.framework in Frameworks */,
-				B8E494AF1095AB4800A88A63 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,8 +638,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE3F8A1098759000780AF9 /* Carbon.framework in Frameworks */,
-				B8FE3F8D1098759000780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,8 +645,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE407F1098795600780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40821098795600780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,8 +652,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40901098795A00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40931098795A00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,8 +659,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40A11098795D00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40A41098795D00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,8 +666,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8FE40B21098795F00780AF9 /* Carbon.framework in Frameworks */,
-				B8FE40B51098795F00780AF9 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,27 +677,9 @@
 			children = (
 				B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
-				089C167CFE841241C02AAC07 /* Resources */,
-				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
 			name = "plus~";
-			sourceTree = "<group>";
-		};
-		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				B10347B90AAAE41500981DE1 /* Accelerate.framework */,
-				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
-			);
-			name = "External Frameworks and Libraries";
-			sourceTree = "<group>";
-		};
-		089C167CFE841241C02AAC07 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		08FB77ADFE841716C02AAC07 /* Source */ = {
@@ -1916,16 +1756,18 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 1310;
 			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "- vMSP~" */;
 			compatibilityVersion = "Xcode 2.4";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				Base,
+				de,
+				fr,
+				ja,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
@@ -2932,7 +2774,7 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 			};
@@ -2941,7 +2783,7 @@
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
 			name = Deployment;
@@ -2949,6 +2791,7 @@
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
 			name = Default;
@@ -2957,7 +2800,36 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Development;
 		};
@@ -2965,7 +2837,34 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 			};
 			name = Deployment;
 		};
@@ -2973,14 +2872,41 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AHarker_Externals.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 			};
 			name = Default;
 		};
 		B8BFF98710AED1BE008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -2990,7 +2916,7 @@
 		B8BFF98810AED1BE008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -2999,6 +2925,7 @@
 		B8BFF98910AED1BE008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3007,7 +2934,7 @@
 		B8BFF99810AED1C5008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3017,7 +2944,7 @@
 		B8BFF99910AED1C5008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3026,6 +2953,7 @@
 		B8BFF99A10AED1C5008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3034,7 +2962,7 @@
 		B8BFFA9510AEEE18008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3044,7 +2972,7 @@
 		B8BFFA9610AEEE18008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3053,6 +2981,7 @@
 		B8BFFA9710AEEE18008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3061,7 +2990,7 @@
 		B8BFFAA710AEEE1C008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3071,7 +3000,7 @@
 		B8BFFAA810AEEE1C008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3080,6 +3009,7 @@
 		B8BFFAA910AEEE1C008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3088,7 +3018,7 @@
 		B8BFFAB910AEEE1F008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3098,7 +3028,7 @@
 		B8BFFABA10AEEE1F008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3107,6 +3037,7 @@
 		B8BFFABB10AEEE1F008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3115,7 +3046,7 @@
 		B8BFFACB10AEEE21008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3125,7 +3056,7 @@
 		B8BFFACC10AEEE21008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3134,6 +3065,7 @@
 		B8BFFACD10AEEE21008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3142,7 +3074,7 @@
 		B8BFFADD10AEEE62008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3152,7 +3084,7 @@
 		B8BFFADE10AEEE62008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3161,6 +3093,7 @@
 		B8BFFADF10AEEE62008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3169,7 +3102,7 @@
 		B8BFFB0D10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3179,7 +3112,7 @@
 		B8BFFB0E10AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3188,6 +3121,7 @@
 		B8BFFB0F10AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3196,7 +3130,7 @@
 		B8BFFB1F10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3206,7 +3140,7 @@
 		B8BFFB2010AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3215,6 +3149,7 @@
 		B8BFFB2110AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3223,7 +3158,7 @@
 		B8BFFB3110AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3233,7 +3168,7 @@
 		B8BFFB3210AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3242,6 +3177,7 @@
 		B8BFFB3310AEEE71008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3250,7 +3186,7 @@
 		B8BFFB4310AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3260,7 +3196,7 @@
 		B8BFFB4410AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3269,6 +3205,7 @@
 		B8BFFB4510AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3277,7 +3214,7 @@
 		B8BFFB5510AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3287,7 +3224,7 @@
 		B8BFFB5610AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3296,6 +3233,7 @@
 		B8BFFB5710AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3304,7 +3242,7 @@
 		B8BFFB6710AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3314,7 +3252,7 @@
 		B8BFFB6810AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3323,6 +3261,7 @@
 		B8BFFB6910AEEE77008EB5B2 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3331,7 +3270,7 @@
 		B8E393731095B8640081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3341,7 +3280,7 @@
 		B8E393741095B8640081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3350,6 +3289,7 @@
 		B8E393751095B8640081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3358,7 +3298,7 @@
 		B8E3956C1096138D0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3368,7 +3308,7 @@
 		B8E3956D1096138D0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3377,6 +3317,7 @@
 		B8E3956E1096138D0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3385,7 +3326,7 @@
 		B8E3957E109613900081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = YES;
@@ -3395,7 +3336,7 @@
 		B8E3957F109613900081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = YES;
 			};
@@ -3404,6 +3345,7 @@
 		B8E39580109613900081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = YES;
 			};
@@ -3412,7 +3354,7 @@
 		B8E395F8109616AB0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3422,7 +3364,7 @@
 		B8E395F9109616AB0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3431,6 +3373,7 @@
 		B8E395FA109616AB0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3439,7 +3382,7 @@
 		B8E3960A109616B20081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3449,7 +3392,7 @@
 		B8E3960B109616B20081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3458,6 +3401,7 @@
 		B8E3960C109616B20081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3466,7 +3410,7 @@
 		B8E39621109616ED0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3476,7 +3420,7 @@
 		B8E39622109616ED0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3485,6 +3429,7 @@
 		B8E39623109616ED0081D095 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3493,7 +3438,7 @@
 		B8E492FF1095A32500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3503,7 +3448,7 @@
 		B8E493001095A32500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3512,6 +3457,7 @@
 		B8E493011095A32500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3520,7 +3466,7 @@
 		B8E493101095A32800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3530,7 +3476,7 @@
 		B8E493111095A32800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3539,6 +3485,7 @@
 		B8E493121095A32800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3547,26 +3494,28 @@
 		B8E493441095A43200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Development;
 		};
 		B8E493451095A43200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Deployment;
 		};
 		B8E493461095A43200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Default;
 		};
 		B8E4943B1095AB2B00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3576,7 +3525,7 @@
 		B8E4943C1095AB2B00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
 			name = Deployment;
@@ -3584,6 +3533,7 @@
 		B8E4943D1095AB2B00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3592,7 +3542,7 @@
 		B8E4944C1095AB2F00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3602,7 +3552,7 @@
 		B8E4944D1095AB2F00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3611,6 +3561,7 @@
 		B8E4944E1095AB2F00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3619,7 +3570,7 @@
 		B8E4945D1095AB3200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3629,7 +3580,7 @@
 		B8E4945E1095AB3200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3638,6 +3589,7 @@
 		B8E4945F1095AB3200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3646,7 +3598,7 @@
 		B8E4946E1095AB3700A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3656,7 +3608,7 @@
 		B8E4946F1095AB3700A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3665,6 +3617,7 @@
 		B8E494701095AB3700A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3673,7 +3626,7 @@
 		B8E4947F1095AB3C00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3683,7 +3636,7 @@
 		B8E494801095AB3C00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3692,6 +3645,7 @@
 		B8E494811095AB3C00A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3700,7 +3654,7 @@
 		B8E494901095AB4200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3710,7 +3664,7 @@
 		B8E494911095AB4200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3719,6 +3673,7 @@
 		B8E494921095AB4200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3727,7 +3682,7 @@
 		B8E494A11095AB4500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3737,7 +3692,7 @@
 		B8E494A21095AB4500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3746,6 +3701,7 @@
 		B8E494A31095AB4500A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3754,7 +3710,7 @@
 		B8E494B21095AB4800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3764,7 +3720,7 @@
 		B8E494B31095AB4800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3773,6 +3729,7 @@
 		B8E494B41095AB4800A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3781,7 +3738,7 @@
 		B8FE3F901098759000780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3791,7 +3748,7 @@
 		B8FE3F911098759000780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3800,6 +3757,7 @@
 		B8FE3F921098759000780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3808,7 +3766,7 @@
 		B8FE40851098795600780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3818,7 +3776,7 @@
 		B8FE40861098795600780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3827,6 +3785,7 @@
 		B8FE40871098795600780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3835,7 +3794,7 @@
 		B8FE40961098795A00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3845,7 +3804,7 @@
 		B8FE40971098795A00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3854,6 +3813,7 @@
 		B8FE40981098795A00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3862,7 +3822,7 @@
 		B8FE40A71098795D00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3872,7 +3832,7 @@
 		B8FE40A81098795D00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3881,6 +3841,7 @@
 		B8FE40A91098795D00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3889,7 +3850,7 @@
 		B8FE40B81098795F00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_UNROLL_LOOPS = NO;
@@ -3899,7 +3860,7 @@
 		B8FE40B91098795F00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
@@ -3908,6 +3869,7 @@
 		B8FE40BA1098795F00780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_UNROLL_LOOPS = NO;
 			};
