@@ -19,17 +19,18 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include <AH_Random.h>
-
-void *this_class;
-
-
-typedef enum {kScaleNone, kScale, kScaleLog, kScaleExp, kScaleDiv} t_scale_mode;
-typedef enum {kStreamNone, kStreamAdditive, kStreamMultiplicative} t_stream_mode;
+#include <AH_Lifecycle.hpp>
+#include <RandomGenerator.hpp>
 
 
-typedef struct timemap {
-	
+t_class *this_class;
+
+enum t_scale_mode { kScaleNone, kScale, kScaleLog, kScaleExp, kScaleDiv };
+enum t_stream_mode { kStreamNone, kStreamAdditive, kStreamMultiplicative };
+
+
+struct t_timemap
+{
     t_object a_obj;
     
     double rand_amount; 
@@ -52,21 +53,20 @@ typedef struct timemap {
     
     bool random_order;
 	
-    t_rand_gen gen;
+    random_generator<> gen;
     
     void *thelistout;
-    
-} t_timemap;
+};
 
 void timemap_free(t_timemap *x);
 void *timemap_new(double rand_amount, double centre, double warp);
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 
-static __inline double timemap_value(t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
+static __inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
 void timemap_calculate(t_timemap *x, t_atom_long num_points);
 double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max);
 
-bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound);
+bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound);
 
 void timemap_rand_amount(t_timemap *x, double rand_amount);
 void timemap_centre(t_timemap *x, double centre);
@@ -116,6 +116,7 @@ int C74_EXPORT main()
 
 void timemap_free(t_timemap *x)
 {
+    destroy_object(x->gen);
 }
 
 
@@ -153,7 +154,7 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	timemap_scaling(x, gensym("none"), 0, 1);
 	timemap_stream(x, 0, 0, 0, 1);
     
-    rand_seed(&x->gen);
+    create_object(x->gen);
 	
     return x;
 }
@@ -198,7 +199,7 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-static __inline double timemap_value(t_rand_gen *gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
+static __inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
 {
     // Start with equally spaced values (in the range 0 to 1)
     
@@ -206,7 +207,7 @@ static __inline double timemap_value(t_rand_gen *gen, long i, double points_reci
     
     // Interpolate with a random value (0 to 1) by the random amount
     
-    new_val = new_val - (rand_amount * (new_val -  rand_double(gen)));
+    new_val = new_val - (rand_amount * (new_val -  gen.rand_double()));
     
     // Now warp around the centre value, according to the warp factor (using a pow operation)
     
@@ -297,11 +298,11 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			
 			if (random_order)
 			{                
-                division_pos = rand_int_n(&x->gen, num_points - (list_length + 1));
+                division_pos = x->gen.rand_int(static_cast<uint32_t>(num_points - (list_length + 1)));
 				division = divisions[division_pos];
 			}
 			
-			new_val = timemap_value(&x->gen, division, points_recip, rand_amount, centre, centre_compliment, warp);
+			new_val = timemap_value(x->gen, division, points_recip, rand_amount, centre, centre_compliment, warp);
 			
 			// Scale if relevant
 			
@@ -311,7 +312,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			// If the value is good then keep it, increase list_length and replace the division we have just used with the one we would have used if working in order
 			// This maintains a valid list of unused divisions for the next time
 			
-			if (check_and_insert(&x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
+			if (check_and_insert(x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
 			{
 				suitable_val = true;
 				list_length++;
@@ -404,7 +405,7 @@ double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, dou
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
+bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
 {
 	// Find Position for New Value 
 	
@@ -417,7 +418,7 @@ bool check_and_insert(t_rand_gen *gen, double new_val, float *vals, double min_d
 	// If the order is random then pick randomly, otherwise insert into the list in the correct place
     
 	if (random_order)
-        new_pos = rand_int_n(gen, list_length);
+        new_pos = gen.rand_int(static_cast<uint32_t>(list_length));
 	else
 	{
 		for (j = 0; j < list_length; j++)

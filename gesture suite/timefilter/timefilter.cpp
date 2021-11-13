@@ -17,30 +17,29 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include <AH_Random.h>
-
-void *this_class;
-
-
-typedef enum {kOrderAscending, kOrderRandom, kOrderMaintain} t_ordering_mode;
+#include <AH_Lifecycle.hpp>
+#include <RandomGenerator.hpp>
 
 
-typedef struct timefilter{
+t_class *this_class;
 
+enum t_ordering_mode { kOrderAscending, kOrderRandom, kOrderMaintain };
+
+struct t_timefilter
+{
     t_object a_obj;
     
     float stored_list[1024];
 	long stored_list_length;
 	
-    t_rand_gen gen;
+    random_generator<> gen;
     t_ordering_mode ordering;
 	
 	float filter;
 	float randfilter;
 	
     void *the_list_outlet;
-    
-} t_timefilter;
+};
 
 
 void timefilter_free(t_timefilter *x);
@@ -56,7 +55,7 @@ void timefilter_ordering(t_timefilter *x, t_atom_long ordering);
 void timefilter_reset(t_timefilter *x);
 
 void combsort(float *vals, long num_points);
-void randomsort(t_rand_gen *gen, float *vals, long num_points);
+void randomsort(random_generator<>& gen, float *vals, long num_points);
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +87,7 @@ int C74_EXPORT main()
 
 void timefilter_free(t_timefilter *x)
 {
+    destroy_object(x->gen);
 }
 
 
@@ -102,7 +102,7 @@ void *timefilter_new()
 	x->randfilter = 0.;
 	x->ordering = kOrderAscending;
 	
-    rand_seed(&x->gen);
+    create_object(x->gen);
     
     return x;
 }
@@ -167,7 +167,7 @@ void timefilter_bang(t_timefilter *x)
 			combsort(temp_vals, stored_list_length);
 			break;
 		case kOrderRandom:
-			randomsort(&x->gen, temp_vals, stored_list_length);
+			randomsort(x->gen, temp_vals, stored_list_length);
 			break;
         case kOrderMaintain:
 			break;
@@ -181,12 +181,12 @@ void timefilter_bang(t_timefilter *x)
 		
 		// Check if we are keeping this value
 		
-		if ((rand_double(&x->gen) > randfilter) && fabs(new_val - last_val) >= filter)
+		if ((x->gen.rand_double() > randfilter) && fabs(new_val - last_val) >= filter)
 		{
 			// If this value is within the filter distance of the next value, we randomly decide which one to lose and skip ahead if we choose this one 
 			// This way the filtering works on distance, regardless of ordering...
 			
-			if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && rand_int_n(&x->gen, 1))
+			if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && x->gen.rand_int(1))
 			{
 				new_val = *temp_vals++;
 				output_list_length--;
@@ -258,7 +258,6 @@ void combsort(float *vals, long num_points)
 	long swaps = 1;
 	long i;
 	
-	
 	while (gap > 1 || swaps)
 	{
 		if (gap > 1)
@@ -282,18 +281,16 @@ void combsort(float *vals, long num_points)
 }
 
 
-void randomsort(t_rand_gen *gen, float *vals, long num_points)
+void randomsort(random_generator<>& gen, float *vals, long num_points)
 {
 	// Put the input in a random order
 	
 	float f_temp;
-	long pos;
-	long i;
 	
-	for (i = 0; i < num_points - 1; i++)
+	for (long i = 0; i < num_points - 1; i++)
 	{
 		f_temp = vals[i];
-        pos = rand_int_n(gen, (num_points - (i + 1))) + i;
+        long pos = gen.rand_int(num_points - (i + 1)) + i;
 		vals[i] = vals[pos];
 		vals[pos] = f_temp;
 	}
