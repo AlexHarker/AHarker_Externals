@@ -267,4 +267,3 @@ void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
     }
     
 }
-

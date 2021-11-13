@@ -110,4 +110,3 @@ void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s)
         sprintf(s,"(signal) Dummy");
     }
 }
-
