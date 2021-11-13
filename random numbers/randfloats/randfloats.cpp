@@ -251,4 +251,3 @@ double erf_weighting(double mean, double dev)
     
     return erf(Y) - erf(Z);
 }
-
