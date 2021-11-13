@@ -19,22 +19,21 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Random.h>
+#include <AH_Lifecycle.hpp>
+#include <RandomGenerator.hpp>
 
 
-void *this_class;
+t_class *this_class;
 
-
-typedef struct _randomvals
+struct t_randomvals
 {
-	
 #ifdef MSP_VERSION
 	t_pxobject a_obj;
 #else
 	t_object a_obj;
 #endif
 	
-	t_rand_gen gen;
+	random_generator<> gen;
 	
 	double means[64];
 	double devs[64];
@@ -45,9 +44,7 @@ typedef struct _randomvals
 	long num_params;
 	
 	void *the_outlet;
-	
-} t_randomvals;
-
+};
 
 void *randomvals_new ();
 void randomvals_free (t_randomvals *x);
@@ -78,7 +75,7 @@ int C74_EXPORT main()
 						   (method)randomvals_new,
 						   (method)randomvals_free,
 						   sizeof(t_randomvals), 
-						   NULL, 
+						   nullptr,
 						   A_DEFLONG, 
 						   0);
 	
@@ -93,7 +90,7 @@ int C74_EXPORT main()
 						   (method)randomvals_new,
 						   (method)randomvals_free,
 						   sizeof(t_randomvals), 
-						   NULL, 
+                           nullptr,
 						   A_DEFLONG, 
 						   0);
 	
@@ -110,42 +107,40 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
 void *randomvals_new()
 {
     t_randomvals *x = (t_randomvals *)object_alloc(this_class);
 
-	t_atom list_atoms[3];
+    create_object(x->gen);
+
 #ifdef MSP_VERSION
     dsp_setup((t_pxobject *)x, 1);
 	outlet_new((t_object *)x, "signal");
 #else
 	x->the_outlet = floatout(x);
 #endif
-	
-	rand_seed(&x->gen);
-	
+		
+    t_atom list_atoms[3];
+
 	atom_setfloat(list_atoms + 0, 0.5);
 	atom_setfloat(list_atoms + 1, 1.);
 	atom_setfloat(list_atoms + 2, 1.);	
 	
 	randomvals_list(x, gensym("list"), 3, list_atoms);
 	
-	return (x);
+	return x;
 }
-
 
 void randomvals_free(t_randomvals *x)
 {
-	
 #ifdef MSP_VERSION	
 	dsp_free(&x->a_obj);
 #endif
-	
+    destroy_object(x->gen);
 }
 
 
-void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
+void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	double *means = x->means;
 	double *devs = x->devs;
@@ -208,7 +203,7 @@ void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 
 #ifdef MSP_VERSION
 
-t_int *randomvals_perform (t_int *w)
+t_int *randomvals_perform(t_int *w)
 {	
 	// Set pointers
 	
@@ -217,8 +212,7 @@ t_int *randomvals_perform (t_int *w)
 	long vec_size = w[3];
 	t_randomvals *x = (t_randomvals *) w[4];
 	
-	
-	t_rand_gen *gen = &x->gen;
+	random_generator<>& gen = x->gen;
 	
 	double *means = x->means;
 	double *devs = x->devs;
@@ -242,7 +236,7 @@ t_int *randomvals_perform (t_int *w)
 				
 				// Choose a mean and dev pair based on weighting
 				
-				randval = rand_double_n(gen, weights[num_params - 1]);
+				randval = gen.rand_double(weights[num_params - 1]);
 				
 				for (i = 0; i < num_params - 1; i++)
 					if (randval < weights[i])
@@ -255,7 +249,7 @@ t_int *randomvals_perform (t_int *w)
 				lo_bound = lo_bounds[i];
 				hi_bound = hi_bounds[i];
 				
-				randval =  ltqnorm(0.5 + 0.5 * rand_double_range(gen, lo_bound, hi_bound)) * dev + mean;
+				randval = ltqnorm(0.5 + 0.5 * gen.rand_double(lo_bound, hi_bound)) * dev + mean;
 				if (randval > 1.)
 					randval = 1.;
 				if (randval < 0.)
@@ -265,14 +259,14 @@ t_int *randomvals_perform (t_int *w)
 			{
 				// Generate a flat distribution random number between 0 and 1
 				
-				randval = rand_double(gen);
+				randval = gen.rand_double();
 			}
 		}
 		else
 		{
 			// Output zeros
 			
-			randval = 0;
+			randval = 0.f;
 		}
 		
 		*out++ = randval;
@@ -288,15 +282,15 @@ void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count)
 }
 
 
-void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {	
 	// Set pointers
 	
 	double *in = ins[0];
 	double *out = outs[0];	
 	
-	t_rand_gen *gen = &x->gen;
-	
+    random_generator<>& gen = x->gen;
+
 	double *means = x->means;
 	double *devs = x->devs;
 	double *weights = x->weights;
@@ -319,7 +313,7 @@ void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long 
 				
 				// Choose a mean and dev pair based on weighting
 				
-				randval = rand_double_n(gen, weights[num_params - 1]);
+				randval = gen.rand_double(weights[num_params - 1]);
 				
 				for (i = 0; i < num_params - 1; i++)
 					if (randval < weights[i])
@@ -332,7 +326,7 @@ void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long 
 				lo_bound = lo_bounds[i];
 				hi_bound = hi_bounds[i];
 				
-				randval =  ltqnorm(0.5 + 0.5 * rand_double_range(gen, lo_bound, hi_bound)) * dev + mean;
+				randval = ltqnorm(0.5 + 0.5 * gen.rand_double(lo_bound, hi_bound)) * dev + mean;
 				if (randval > 1.)
 					randval = 1.;
 				if (randval < 0.)
@@ -342,14 +336,14 @@ void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long 
 			{
 				// Generate a flat distribution random number between 0 and 1
 				
-				randval = rand_double(gen);
+				randval = gen.rand_double();
 			}
 		}
 		else
 		{
 			// Output zeros
 			
-			randval = 0;
+			randval = 0.0;
 		}
 		
 		*out++ = randval;
@@ -359,12 +353,12 @@ void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long 
 
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
-	object_method(dsp64, gensym("dsp_add64"), x, randomvals_perform64, 0, NULL);
+	object_method(dsp64, gensym("dsp_add64"), x, randomvals_perform64, 0, nullptr);
 }
 
 #else
 
-void randomvals_int (t_randomvals *x, t_atom_long value)
+void randomvals_int(t_randomvals *x, t_atom_long value)
 {		
 	t_rand_gen *gen = &x->gen;
 	
@@ -428,6 +422,3 @@ void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 	}
 	
 }
-
-
-

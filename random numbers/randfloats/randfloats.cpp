@@ -19,28 +19,27 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Random.h>
+#include <AH_Lifecycle.hpp>
+#include <RandomGenerator.hpp>
 
 #include <algorithm>
 
 
 t_class *this_class;
 
-
-typedef struct _randfloats
+struct t_randfloats
 {
 	t_object a_obj;
 	
-	t_rand_gen gen;
+	random_generator<> gen;
+    
 	double params[12];
 	
 	long f_inletNumber;
 	void *f_proxies[2];	
 	
 	void *the_outlet;
-	
-} t_randfloats;
-
+};
 
 void *randfloats_new();
 void randfloats_free(t_randfloats *x);
@@ -55,7 +54,7 @@ void randfloats_bang(t_randfloats *x);
 double clip(double value, double min_val, double max_val);
 void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv);
 
-double triple_gauss_rand(t_rand_gen *gen, double *params);
+double triple_gauss_rand(random_generator<>& gen, double *params);
 double erf_weighting(double mean, double dev);
 
 int C74_EXPORT main()
@@ -64,7 +63,7 @@ int C74_EXPORT main()
 						   (method)randfloats_new,
 						   (method)randfloats_free,
 						   sizeof(t_randfloats), 
-						   NULL, 
+                           nullptr,
 						   0);
 	
 	class_addmethod(this_class, (method)randfloats_bang, "bang", 0);
@@ -80,41 +79,39 @@ int C74_EXPORT main()
 
 void *randfloats_new()
 {
-	long i;
-	
 	t_randfloats *x = (t_randfloats *)object_alloc(this_class);
 
-	double *params = x->params;
+    create_object(x->gen);
 
-	// Make Proxies
+	// Make Proxies and outlet
 	
-    for (i = 2; i > 0; i--)												
+    for (int i = 2; i > 0; i--)
         x->f_proxies[i - 1] = proxy_new(x, i ,&x->f_inletNumber);
 	
 	x->the_outlet = floatout(x);
-	
-	rand_seed(&x->gen);
-
+	    
 	// Default parameters
 	
-	for (i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		params[4 * i + 0] = 0.5;
-		params[4 * i + 1] = 1.0;
-		params[4 * i + 2] = 1.0;
-		params[4 * i + 3] = params[4 * i + 2] * params[4 * i + 1];
+        x->params[4 * i + 0] = 0.5;
+        x->params[4 * i + 1] = 1.0;
+        x->params[4 * i + 2] = 1.0;
+        x->params[4 * i + 3] = x->params[4 * i + 2] * x->params[4 * i + 1];
 	}
 	
-	params[11] = (params[11] + params[7] + params[3]);
-	params[7] += params[3];
+    x->params[11] = x->params[11] + x->params[7] + x->params[3];
+    x->params[7] += x->params[3];
 	
-    return (x);
+    return x;
 }
 
 void randfloats_free(t_randfloats *x)
 {
     for (long i = 0; i < 2; i++)
         freeobject((t_object *)x->f_proxies[i]);
+    
+    destroy_object(x->gen);
 }
 
 void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s)
@@ -142,11 +139,11 @@ double randfloats_input(t_randfloats *x)
 {
     switch (proxy_getinlet((t_object *)x))
     {
-        case 1:     return rand_windgauss(&x->gen, x->params[0], x->params[1]);
-        case 2:     return triple_gauss_rand(&x->gen, x->params);
+        case 1:     return x->gen.rand_windowed_gaussian(x->params[0], x->params[1]);
+        case 2:     return triple_gauss_rand(x->gen, x->params);
             
         default:
-            return rand_double(&x->gen);
+            return x->gen.rand_double();
     }
 }
 
@@ -179,17 +176,17 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 	{
 		// If there are enough arguments to set all three gaussian paramters
 		
-		for (long i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			// Get mean/dev/weight check they are within bounds
 
-			x->params[4 * i + 0] = clip(atom_getfloat(argv + (3 * i + 0)), 0.0, 1.0);
-            x->params[4 * i + 1] = clip(atom_getfloat(argv + (3 * i + 1)), 0.0, max_dev);
-            x->params[4 * i + 2] = std::max(0.0, static_cast<double>(atom_getfloat(argv + (3 * i + 2))));
+			params[4 * i + 0] = clip(atom_getfloat(argv + (3 * i + 0)), 0.0, 1.0);
+            params[4 * i + 1] = clip(atom_getfloat(argv + (3 * i + 1)), 0.0, max_dev);
+            params[4 * i + 2] = std::max(0.0, static_cast<double>(atom_getfloat(argv + (3 * i + 2))));
 
 			// Adjusted weight
 			
-			x->params[4 * i + 3] = params[4 * i + 2] * params[4 * i + 1] * erf_weighting(params[4 * i], params[4 * i + 1]);
+			params[4 * i + 3] = params[4 * i + 2] * params[4 * i + 1] * erf_weighting(params[4 * i], params[4 * i + 1]);
 		}
 	}
 	else
@@ -215,20 +212,20 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
     params[7] += params[3];
 }
 
-double triple_gauss_rand(t_rand_gen *gen, double *params)
+double triple_gauss_rand(random_generator<>& gen, double *params)
 {
     // Choose which of the three sets of parameters to use
     
-	double R = rand_double_n(gen, params[11]);
+	double R = gen.rand_double(params[11]);
 	
     // Get a random windowed gaussian number according to the retrived mean and dev
 
 	if (R < params[3])
-        return rand_windgauss(gen,  params[0], params[1]);
+        return gen.rand_windowed_gaussian(params[0], params[1]);
 	else if (R < params[7])
-        return rand_windgauss(gen,  params[4], params[5]);
+        return gen.rand_windowed_gaussian(params[4], params[5]);
     else
-        return rand_windgauss(gen,  params[8], params[9]);
+        return gen.rand_windowed_gaussian(params[8], params[9]);
 }
 
 double erf_weighting(double mean, double dev)
