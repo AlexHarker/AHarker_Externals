@@ -2,15 +2,14 @@
 /*
  *  randfloats
  *
- *	randfloats is an object for generating high quality random numbers (either 0-1 or 0-n) using either flat or windowed gaussian distributions.
- *	Three gaussian functions may also be used simultaneously to create a more complex distribution, with weighting values used to randomly determine which is used.
+ *  randfloats is an object for generating high quality random numbers (either 0-1 or 0-n).
+ *  The object can use either flat or windowed gaussian distributions.
+ *  Three gaussian functions may also be combined to create a more complex distribution.
  *
- *	This object is now somewhat superseeded by randomvals, although it may be simpler in some situations.
- *	The weighting used here is different to (and more complex than) that used in the randomvals(~) objects. 
- *	It is an updated version of the previous randfloats object submitted as part of my MPhil thesis at the University of Birmingham.
- *	This version uses much higher quality RNG and the code is simplified here, because the detail is now relocated in AH_Random.h
+ *  This object is less fully featured than randomvals, although it may be simpler in some situations.
+ *  The weighting used here is different to (and more complex than) that used in the randomvals(~) objects.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -24,6 +23,8 @@
 
 #include <algorithm>
 
+
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -41,6 +42,8 @@ struct t_randfloats
 	void *the_outlet;
 };
 
+// Function Prototypes
+
 void *randfloats_new();
 void randfloats_free(t_randfloats *x);
 void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s);
@@ -56,6 +59,8 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv);
 
 double triple_gauss_rand(random_generator<>& gen, double *params);
 double erf_weighting(double mean, double dev);
+
+// Main
 
 int C74_EXPORT main()
 {	
@@ -76,6 +81,8 @@ int C74_EXPORT main()
 	
 	return 0;
 }
+
+// New / Free / Assist
 
 void *randfloats_new()
 {
@@ -135,12 +142,14 @@ void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s)
     }	
 }
 
+// Input Methods
+
 double randfloats_input(t_randfloats *x)
 {
     switch (proxy_getinlet((t_object *)x))
     {
-        case 1:     return x->gen.rand_windowed_gaussian(x->params[0], x->params[1]);
-        case 2:     return triple_gauss_rand(x->gen, x->params);
+        case 1: return x->gen.rand_windowed_gaussian(x->params[0], x->params[1]);
+        case 2: return triple_gauss_rand(x->gen, x->params);
             
         default:
             return x->gen.rand_double();
@@ -161,6 +170,8 @@ void randfloats_bang(t_randfloats *x)
 {
 	outlet_float(x->the_outlet, randfloats_input(x));
 }
+
+// Parameter Settings
 
 double clip(double value, double min_val, double max_val)
 {
@@ -211,6 +222,8 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
     params[11] = (params[11] + params[7] + params[3]);
     params[7] += params[3];
 }
+
+// Helpers
 
 double triple_gauss_rand(random_generator<>& gen, double *params)
 {
