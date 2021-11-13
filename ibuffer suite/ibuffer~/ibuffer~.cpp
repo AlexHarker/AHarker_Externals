@@ -50,6 +50,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method)ibuffer_name, "set", A_GIMME, 0);
     class_addmethod(this_class, (method)ibuffer_load, "open", A_GIMME, 0);
     class_addmethod(this_class, (method)ibuffer_load, "replace", A_GIMME, 0);
+    
     class_addmethod(this_class, (method)ibuffer_valid, "valid", A_CANT, 0);
     class_addmethod(this_class, (method)ibuffer_assist, "assist", A_CANT, 0);
     
@@ -341,7 +342,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             return;
         }
         
-        // Load the audio data raw and close the file
+        // Load the raw audio data and close the file
         
         if (!channel_order.size())
             file.readRaw(x->samples, x->frames);
