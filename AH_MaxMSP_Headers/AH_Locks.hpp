@@ -1,6 +1,6 @@
 
-#ifndef AH_LOCKS_H
-#define AH_LOCKS_H
+#ifndef _AH_LOCKS_HPP_
+#define _AH_LOCKS_HPP_
 
 #include <algorithm>
 #include <atomic>
@@ -164,7 +164,5 @@ private:
 using spin_lock_hold = lock_hold<thread_lock, &thread_lock::acquire, &thread_lock::release>;
 using read_lock_hold = lock_hold<read_write_lock, &read_write_lock::acquire_read, &read_write_lock::release_read>;
 using write_lock_hold = lock_hold<read_write_lock, &read_write_lock::acquire_write, &read_write_lock::release_write>;
-
-
 
 #endif

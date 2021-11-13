@@ -13,10 +13,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
-
-#include <new>
-
 
 // Globals and Object Structure
 
@@ -68,7 +66,7 @@ void *ahnoise_new()
     dsp_setup((t_pxobject *)x, 0);
     outlet_new((t_object *)x, "signal");
 
-    new(&x->gen) random_generator<>();
+    create_object(x->gen);
     
     return x;
 }
@@ -76,7 +74,7 @@ void *ahnoise_new()
 void ahnoise_free(t_ahnoise *x)
 {
     dsp_free(&x->a_obj);
-    x->gen.~random_generator<>();
+    destroy_object(x->gen);
 }
 
 // Perform
