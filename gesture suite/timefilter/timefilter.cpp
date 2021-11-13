@@ -20,6 +20,8 @@
 #include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
 
+#include <algorithm>
+
 
 t_class *this_class;
 
@@ -41,7 +43,6 @@ struct t_timefilter
     void *the_list_outlet;
 };
 
-
 void timefilter_free(t_timefilter *x);
 void *timefilter_new();
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s);
@@ -57,11 +58,9 @@ void timefilter_reset(t_timefilter *x);
 void combsort(float *vals, long num_points);
 void randomsort(random_generator<>& gen, float *vals, long num_points);
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 int C74_EXPORT main()
 {
@@ -69,7 +68,7 @@ int C74_EXPORT main()
 						   (method)timefilter_new, 
 						   (method)timefilter_free, 
 						   sizeof(t_timefilter), 
-						   NULL, 
+						   nullptr,
 						   0);
 	
 	class_addmethod(this_class, (method)timefilter_bang, "bang", 0);
@@ -90,7 +89,6 @@ void timefilter_free(t_timefilter *x)
     destroy_object(x->gen);
 }
 
-
 void *timefilter_new()
 {
 	t_timefilter *x = (t_timefilter *)object_alloc(this_class);
@@ -107,7 +105,6 @@ void *timefilter_new()
     return x;
 }
 
-
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_INLET) 
@@ -121,11 +118,9 @@ void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////// List storage and filtering ////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -142,7 +137,6 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 		
 	x->stored_list_length = stored_list_length;
 }
-
 
 void timefilter_bang(t_timefilter *x)
 {
@@ -211,23 +205,19 @@ void timefilter_bang(t_timefilter *x)
 	x->stored_list_length = 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// Various routines for setting the filtering parameters ///////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void timefilter_float(t_timefilter *x, double filter)
 {
 	x->filter = fabs(filter);
 }
 
-
 void timefilter_randfilter(t_timefilter *x, double randfilter)
 {
 	x->randfilter = randfilter;
 }
-
 
 void timefilter_ordering(t_timefilter *x, t_atom_long ordering)
 {
@@ -239,24 +229,19 @@ void timefilter_ordering(t_timefilter *x, t_atom_long ordering)
     x->ordering = mode;
 }
 
-
 void timefilter_reset(t_timefilter *x)
 {
 	x->stored_list_length = 0;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////// Sorting functions ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 void combsort(float *vals, long num_points)
 {
-	float f_temp;
 	long gap = num_points;
-	long swaps = 1;
-	long i;
+	bool swaps = true;
 	
 	while (gap > 1 || swaps)
 	{
@@ -267,31 +252,24 @@ void combsort(float *vals, long num_points)
 			if (gap < 1) gap = 1;
 		}
 		
-		for (i = 0, swaps = 0; i + gap < num_points; i++)
+		for (long i = 0, swaps = 0; i + gap < num_points; i++)
 		{
 			if (vals[i] > vals[i + gap])
 			{
-				f_temp = vals[i];
-				vals[i] = vals[i + gap];
-				vals[i + gap] = f_temp;
-				swaps = 1;	
+                std::swap(vals[i], vals[i + gap]);
+				swaps = true;
 			}
 		}
 	}
 }
 
-
 void randomsort(random_generator<>& gen, float *vals, long num_points)
 {
 	// Put the input in a random order
 	
-	float f_temp;
-	
 	for (long i = 0; i < num_points - 1; i++)
 	{
-		f_temp = vals[i];
         long pos = gen.rand_int(num_points - (i + 1)) + i;
-		vals[i] = vals[pos];
-		vals[pos] = f_temp;
+		std::swap(vals[i], vals[pos]);
 	}
 }

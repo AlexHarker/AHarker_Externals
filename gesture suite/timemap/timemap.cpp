@@ -28,7 +28,6 @@ t_class *this_class;
 enum t_scale_mode { kScaleNone, kScale, kScaleLog, kScaleExp, kScaleDiv };
 enum t_stream_mode { kStreamNone, kStreamAdditive, kStreamMultiplicative };
 
-
 struct t_timemap
 {
     t_object a_obj;
@@ -78,11 +77,9 @@ void timemap_random_order(t_timemap *x, t_atom_long random_order);
 void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val);
 void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound);
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 int C74_EXPORT main()
 {
@@ -90,7 +87,7 @@ int C74_EXPORT main()
 						   (method)timemap_new, 
 						   (method)timemap_free, 
 						   sizeof(t_timemap), 
-						   NULL, 
+						   nullptr, 
 						   A_DEFFLOAT, 
 						   A_DEFFLOAT, 
 						   A_DEFFLOAT,
@@ -113,12 +110,10 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
 void timemap_free(t_timemap *x)
 {
     destroy_object(x->gen);
 }
-
 
 void *timemap_new(double rand_amount, double centre, double warp)
 {
@@ -159,7 +154,6 @@ void *timemap_new(double rand_amount, double centre, double warp)
     return x;
 }
 
-
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_INLET) 
@@ -193,11 +187,9 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////// Calculation routines ///////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 static __inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
 {
@@ -218,7 +210,6 @@ static __inline double timemap_value(random_generator<>& gen, long i, double poi
     
     return new_val;
 }
-
 
 void timemap_calculate(t_timemap *x, t_atom_long num_points)
 {
@@ -368,7 +359,6 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	outlet_list(x->thelistout, 0L, list_length, output_list);
 }
 
-
 double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max)
 {
 	// Apply the appropriate scaling
@@ -399,11 +389,9 @@ double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, dou
 	return new_val;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////// Sorting function/ ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
 {
@@ -507,11 +495,9 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// Various routines for setting the mapping parameters ////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void timemap_rand_amount(t_timemap *x, double rand_amount)
 {
@@ -522,7 +508,6 @@ void timemap_rand_amount(t_timemap *x, double rand_amount)
 	x->rand_amount = rand_amount;
 }
 
-
 void timemap_centre(t_timemap *x, double centre)
 {
 	if (centre > 1.)
@@ -532,36 +517,30 @@ void timemap_centre(t_timemap *x, double centre)
 	x->centre = centre;
 }
 
-
 void timemap_warp(t_timemap *x, double warp)
 {
     x->warp = (warp < 0.) ? 1.0 : warp;
 }
-
 
 void timemap_min_dist(t_timemap *x, double min_dist)
 {
 	x->min_dist = fabs(min_dist);
 }
 
-
 void timemap_max_dist(t_timemap *x, double max_dist)
 {
 	x->max_dist = fabs(max_dist);
 }
-
 
 void timemap_max_retries(t_timemap *x, t_atom_long max_retries)
 {
     x->max_retries = (max_retries < 0) ? 0 : max_retries;
 }
 
-
 void timemap_random_order(t_timemap *x, t_atom_long random_order)
 {
     x->random_order = random_order ? true : false;
 }
-
 
 void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val)
 {
@@ -617,11 +596,9 @@ void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, dou
 	x->max_val = max_val;
 }
 
-
 void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound)
 {
     t_stream_mode mode;
-    
     
     mode = (stream_mode == 1) ? kStreamAdditive : kStreamNone;
     mode = (stream_mode > 1) ? kStreamMultiplicative : mode;
@@ -631,4 +608,3 @@ void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, doub
 	x->min_sbound = min_sbound;
 	x->max_sbound = max_sbound;
 }
-
