@@ -29,6 +29,8 @@
 
 t_class *this_class;
 
+using window_gauss_params = random_generator<>::windowed_gaussian_params;
+
 struct t_randomvals
 {
 #ifdef MSP_VERSION
@@ -39,11 +41,8 @@ struct t_randomvals
     
     random_generator<> gen;
     
-    double means[64];
-    double devs[64];
+    window_gauss_params params[64];
     double weights[64];
-    double lo_bounds[64];
-    double hi_bounds[64];
     
     long num_params;
     
@@ -141,7 +140,6 @@ void randomvals_free(t_randomvals *x)
 void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 {
     double weight_val = 0.0;
-    double inf = HUGE_VAL;
     
     long num_params = argc / 3;
     
@@ -152,22 +150,13 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
     
     for (int i = 0; i < num_params; i++)
     {
-        double mean, dev;
-        
         // Calculate parameters to store
         
-        x->means[i] = mean = std::max(0.0, std::min(1.0, atom_getfloat(argv++)));
-        x->devs[i] = dev = std::max(0.0, atom_getfloat(argv++));;
+        const double mean = std::max(0.0, std::min(1.0, atom_getfloat(argv++)));
+        const double dev = std::max(0.0, atom_getfloat(argv++));;
+        const double weight = std::max(0.0, atom_getfloat(argv++));
         
-        double weight = std::max(0.0, atom_getfloat(argv++));
-        
-        double lo_bound = erf(-mean / (dev * sqrt(2.0)));
-        double hi_bound = erf((1.0 - mean) / (dev * sqrt(2.0)));
-        
-        // N.B. inf is fine as an input, but nan is not...
-        
-        x->lo_bounds[i] = std::isnan(lo_bound) ? erf(-inf) : lo_bound;;
-        x->hi_bounds[i] = std::isnan(hi_bound) ? erf( inf) : hi_bound;
+        x->params[i] = window_gauss_params(mean, dev);
         
         weight_val += weight;
         x->weights[i] = weight_val;
@@ -178,7 +167,7 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 
 // Core generation routine
 
-double randomvals_generate(random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, bool gauss)
+double randomvals_generate(random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, bool gauss)
 {
     if (gauss)
     {
@@ -191,13 +180,12 @@ double randomvals_generate(random_generator<>& gen, double *means, double *devs,
         long i = 0;
         
         for (; i < num_params - 1; i++)
-            if (a < weights[i])
+            if (a <= weights[i])
                 break;
         
         // Generate a windowed gaussian number (between 0 and 1) using a fast implementation
         
-        const double r = ltqnorm(0.5 + 0.5 * gen.rand_double(lo[i], hi[i])) * devs[i] + means[i];
-        return std::max(0.0, std::min(1.0, r));
+        return gen.rand_windowed_gaussian(params[i]);
     }
     
     // Generate a flat distribution random number between 0 and 1
@@ -210,7 +198,7 @@ double randomvals_generate(random_generator<>& gen, double *means, double *devs,
 // Perform (MSP version)
 
 template <typename T>
-void perform_core(const T* in, T *out, random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, long vec_size)
+void perform_core(const T* in, T *out, random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, long vec_size)
 {
     while (vec_size--)
     {
@@ -220,7 +208,7 @@ void perform_core(const T* in, T *out, random_generator<>& gen, double *means, d
         if (t >= 1)
         {
             const bool gauss = t >= 2;
-            r = static_cast<T>(randomvals_generate(gen, means, devs, weights, lo, hi, num_params, gauss));
+            r = static_cast<T>(randomvals_generate(gen, params, weights, num_params, gauss));
         }
         
         *out++ = r;
@@ -229,7 +217,7 @@ void perform_core(const T* in, T *out, random_generator<>& gen, double *means, d
 
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    perform_core(ins[0], outs[0], x->gen, x->means, x->devs, x->weights, x->lo_bounds, x->hi_bounds, x->num_params, vec_size);
+    perform_core(ins[0], outs[0], x->gen, x->params, x->weights, x->num_params, vec_size);
 }
 
 // DSP
@@ -246,9 +234,8 @@ void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sam
 void randomvals_int(t_randomvals *x, t_atom_long value)
 {
     const bool gauss = value >= 2;
-    const double r = randomvals_generate(x->gen, x->means, x->devs, x->weights, x->lo_bounds, x->hi_bounds, x->num_params, gauss);
-    
-    outlet_float(x->the_outlet, r);
+
+    outlet_float(x->the_outlet, randomvals_generate(x->gen, x->params, x->weights, x->num_params, gauss));
 }
 
 #endif

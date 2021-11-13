@@ -2,123 +2,9 @@
 #ifndef _RANDOMGENERATOR_HPP_
 #define _RANDOMGENERATOR_HPP_
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
-
-// This is adapted from http://home.online.no/~pjacklam/notes/invnorm/impl/sprouse/ltqnorm.c
-
-
-/*
- * Lower tail quantile for standard normal distribution function.
- *
- * This function returns an approximation of the inverse cumulative
- * standard normal distribution function.  I.e., given P, it returns
- * an approximation to the X satisfying P = Pr{Z <= X} where Z is a
- * random variable from the standard normal distribution.
- *
- * The algorithm uses a minimax approximation by rational functions
- * and the result has a relative error whose absolute value is less
- * than 1.15e-9.
- *
- * Author:      Peter J. Acklam
- * Time-stamp:  2002-06-09 18:45:44 +0200
- * E-mail:      jacklam@math.uio.no
- * WWW URL:     http://www.math.uio.no/~jacklam
- *
- * C implementation adapted from Peter's Perl version
- */
-
-
-static inline double ltqnorm(double p)
-{
-    /* Coefficients in rational approximations. */
-
-    static const double a[] =
-    {
-        -3.969683028665376e+01,
-        2.209460984245205e+02,
-        -2.759285104469687e+02,
-        1.383577518672690e+02,
-        -3.066479806614716e+01,
-        2.506628277459239e+00
-    };
-
-    static const double b[] =
-    {
-        -5.447609879822406e+01,
-        1.615858368580409e+02,
-        -1.556989798598866e+02,
-        6.680131188771972e+01,
-        -1.328068155288572e+01
-    };
-
-    static const double c[] =
-    {
-        -7.784894002430293e-03,
-        -3.223964580411365e-01,
-        -2.400758277161838e+00,
-        -2.549732539343734e+00,
-        4.374664141464968e+00,
-        2.938163982698783e+00
-    };
-
-    static const double d[] =
-    {
-        7.784695709041462e-03,
-        3.224671290700398e-01,
-        2.445134137142996e+00,
-        3.754408661907416e+00
-    };
-
-    const double LOW = 0.02425;
-    const double HIGH = 0.97575;
-    
-    double q, r;
-    
-    errno = 0;
-    
-    if (p < 0 || p > 1)
-    {
-        errno = EDOM;
-        return 0.0;
-    }
-    else if (p == 0)
-    {
-        errno = ERANGE;
-        return -HUGE_VAL    /* minus "infinity" */;
-    }
-    else if (p == 1)
-    {
-        errno = ERANGE;
-        return HUGE_VAL        /* "infinity" */;
-    }
-    else if (p < LOW)
-    {
-        /* Rational approximation for lower region */
-        
-        q = sqrt(-2*log(p));
-        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-        ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
-    }
-    else if (p > HIGH)
-    {
-        /* Rational approximation for upper region */
-        
-        q  = sqrt(-2*log(1-p));
-        return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-        ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
-    }
-    else
-    {
-        /* Rational approximation for central region */
-        
-        q = p - 0.5;
-        r = q*q;
-        return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q /
-        (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
-    }
-}
-
 
 namespace random_generators
 {
@@ -215,6 +101,42 @@ template <typename Generator = random_generators::cmwc>
 class random_generator
 {
 public:
+
+    class windowed_gaussian_params
+    {
+        friend random_generator;
+        
+    public:
+        
+        windowed_gaussian_params(double mean, double dev) : m_mean(mean), m_dev(dev)
+        {
+            //lo_bound = erf(-mean / (dev * sqrt(2.0)));
+            //hi_bound = erf((1.0 - mean) / (dev * sqrt(2.0)));
+            
+            constexpr double inf = HUGE_VAL;
+
+            double dev_recip = 1.0 / (dev * sqrt(2.0));
+            double mmean_t_dev = -mean * dev_recip;
+                   
+            m_lo = erf(mmean_t_dev);
+            m_hi = erf(dev_recip + mmean_t_dev);
+            
+            // N.B. inf is fine as an input, but nan is not...
+            
+            m_lo = std::isnan(m_lo) ? erf(-inf) : m_lo;
+            m_hi = std::isnan(m_hi) ? erf( inf) : m_hi;
+        };
+        
+        double mean() const { return m_mean; }
+        double dev() const  { return m_dev; }
+
+    private:
+        
+        double m_mean;
+        double m_dev;
+        double m_lo;
+        double m_hi;
+    };
     
     random_generator()                  { m_generator.rand_seed(); }
     random_generator(uint32_t *init)    { m_generator.seed(init); }
@@ -283,12 +205,16 @@ public:
         y *= R;
     }
     
+    double rand_windowed_gaussian(const windowed_gaussian_params& params)
+    {
+        const double r = ltqnorm(0.5 + 0.5 * rand_double(params.m_lo, params.m_hi)) * params.dev() + params.mean();
+        return std::max(0.0, std::min(1.0, r));
+    }
+    
     double rand_windowed_gaussian(double mean, double dev)
     {
-        double dev_recip = 1. / (dev * sqrt(2.));
-        double mmean_t_dev = -mean * dev_recip;
-               
-        return ltqnorm(0.5 + 0.5 * rand_double(erf(mmean_t_dev), erf(dev_recip + mmean_t_dev))) * dev + mean;
+        const windowed_gaussian_params params(mean, dev);
+        return rand_windowed_gaussian(params);
     }
     
 private:
@@ -311,6 +237,116 @@ private:
         R = sqrt((-2.0 * log(R)) / R);
     }
     
+    // This is adapted from http://home.online.no/~pjacklam/notes/invnorm/impl/sprouse/ltqnorm.c
+
+    /*
+     * Lower tail quantile for standard normal distribution function.
+     *
+     * This function returns an approximation of the inverse cumulative
+     * standard normal distribution function.  I.e., given P, it returns
+     * an approximation to the X satisfying P = Pr{Z <= X} where Z is a
+     * random variable from the standard normal distribution.
+     *
+     * The algorithm uses a minimax approximation by rational functions
+     * and the result has a relative error whose absolute value is less
+     * than 1.15e-9.
+     *
+     * Author:      Peter J. Acklam
+     * Time-stamp:  2002-06-09 18:45:44 +0200
+     * E-mail:      jacklam@math.uio.no
+     * WWW URL:     http://www.math.uio.no/~jacklam
+     *
+     */
+
+    double ltqnorm(double p)
+    {
+        /* Coefficients in rational approximations. */
+
+        constexpr double a[] =
+        {
+            -3.969683028665376e+01,
+            2.209460984245205e+02,
+            -2.759285104469687e+02,
+            1.383577518672690e+02,
+            -3.066479806614716e+01,
+            2.506628277459239e+00
+        };
+
+        constexpr double b[] =
+        {
+            -5.447609879822406e+01,
+            1.615858368580409e+02,
+            -1.556989798598866e+02,
+            6.680131188771972e+01,
+            -1.328068155288572e+01
+        };
+
+        constexpr double c[] =
+        {
+            -7.784894002430293e-03,
+            -3.223964580411365e-01,
+            -2.400758277161838e+00,
+            -2.549732539343734e+00,
+            4.374664141464968e+00,
+            2.938163982698783e+00
+        };
+
+        constexpr double d[] =
+        {
+            7.784695709041462e-03,
+            3.224671290700398e-01,
+            2.445134137142996e+00,
+            3.754408661907416e+00
+        };
+
+        constexpr double low = 0.02425;
+        constexpr double high = 0.97575;
+        
+        double q, r;
+        
+        errno = 0;
+        
+        if (p < 0 || p > 1)
+        {
+            errno = EDOM;
+            return 0.0;
+        }
+        else if (p == 0)
+        {
+            errno = ERANGE;
+            return -HUGE_VAL    /* minus "infinity" */;
+        }
+        else if (p == 1)
+        {
+            errno = ERANGE;
+            return HUGE_VAL        /* "infinity" */;
+        }
+        else if (p < low)
+        {
+            /* Rational approximation for lower region */
+            
+            q = sqrt(-2.0*log(p));
+            return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+            ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+        }
+        else if (p > high)
+        {
+            /* Rational approximation for upper region */
+            
+            q  = sqrt(-2.0*log(1-p));
+            return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+            ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+        }
+        else
+        {
+            /* Rational approximation for central region */
+            
+            q = p - 0.5;
+            r = q*q;
+            return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q /
+            (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+        }
+    }
     // State
     
     Generator m_generator;
