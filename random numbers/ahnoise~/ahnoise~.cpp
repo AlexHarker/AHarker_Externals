@@ -35,9 +35,6 @@ void *ahnoise_new();
 void ahnoise_free(t_ahnoise *x);
 void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s);
 
-t_int *ahnoise_perform(t_int *w);
-void ahnoise_dsp(t_ahnoise *x, t_signal **sp, short *count);
-
 void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -52,7 +49,6 @@ int C74_EXPORT main()
                            nullptr,
                            0);
     
-    class_addmethod(this_class, (method)ahnoise_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method)ahnoise_dsp64, "dsp64", A_CANT, 0);
     class_addmethod(this_class, (method)ahnoise_assist, "assist", A_CANT, 0);
     
@@ -85,33 +81,17 @@ void ahnoise_free(t_ahnoise *x)
 
 // Perform
 
-template <class T>
-void perform_core(T *out, long vec_size, random_generator<> *gen)
+void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
+    double *out = outs[0];
+    
     // Get random values and convert from [0 to 1] to [-1.0 to 1.0]
 
     while (vec_size--)
-        *out++ = static_cast<T>((gen->rand_double() * 2.0) - 1.0);
-}
-
-t_int *ahnoise_perform(t_int *w)
-{
-    perform_core(reinterpret_cast<float *>(w[1]), static_cast<long>(w[2]), reinterpret_cast<random_generator<> *>(w[3]));
-        
-    return w + 4;
-}
-
-void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    perform_core(outs[0], vec_size, &x->gen);
+        *out++ = (x->gen.rand_double() * 2.0) - 1.0;
 }
 
 // DSP
-
-void ahnoise_dsp(t_ahnoise *x, t_signal **sp, short *count)
-{
-    dsp_add(ahnoise_perform, 3, sp[0]->s_vec, sp[0]->s_n, &x->gen);
-}
 
 void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
