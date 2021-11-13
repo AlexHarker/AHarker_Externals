@@ -2,15 +2,14 @@
 /*
  *  randomvals and randomvals~
  *
- *	randomvals and its audio rate counterpart (randomvals~) generate high-quality pseudorandom numbers of a flat or gaussian-based distribution between 0 and 1.
+ *  randomvals / randomvals~ generate pseudorandom numbers of a flat or gaussian-based distribution between 0 and 1.
  *
- *	The audio rate version requires triggering to cause output in order to conserve CPU (it is intended for sample-accurate control, rather than noise generation).
- *	The gaussian mode allows for the combination of multiple curves, each with its own parameters for mean (between 0 and 1), deviation and weight.
- *	The implementation here is agnostic in relation to the underlying pseudorandom number generator (which is dealt with in AH_Random.h>.
- *	It is expected however, that the underlying generator be of high quality, with a reasonably small state (only a handful of bytes), and a long cycle.
- *	More distributions may be added at a later stage.
+ *  The audio rate version requires triggering to cause output.
+ *  It is intended for sample-accurate control, rather than noise generation and this conserves CPU.
+ *  The gaussian mode allows the user to combine multiple curves, each with its own parameters for mean (0-1), deviation and weight.
+ *  The RNG implementation is expected be of high quality, with a reasonably small state (only a handful of bytes), and a long cycle.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -22,6 +21,11 @@
 #include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
 
+#include <algorithm>
+#include <cmath>
+
+
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -46,31 +50,29 @@ struct t_randomvals
 	void *the_outlet;
 };
 
+// Function Prototypes
+
 void *randomvals_new ();
 void randomvals_free (t_randomvals *x);
 void randomvals_assist (t_randomvals *x, void *b, long m, long a, char *s);
 void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
 
+double randomvals_generate(random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, bool gauss);
+
 #ifdef MSP_VERSION
-
-void randomvals_dsp (t_randomvals *x, t_signal **sp, short *count);
-t_int *randomvals_perform (t_int *w);
-
+t_int *randomvals_perform(t_int *w);
 void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count);
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
-
 #else
-
 void randomvals_int (t_randomvals *x, t_atom_long value);
-
 #endif
 
+// Main
 
 int C74_EXPORT main()
 {
-	
 #ifdef MSP_VERSION
-	
 	this_class = class_new("randomvals~",
 						   (method)randomvals_new,
 						   (method)randomvals_free,
@@ -83,9 +85,7 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method)randomvals_dsp64, "dsp64", A_CANT, 0);
 	
 	class_dspinit(this_class);
-	
 #else
-	
 	this_class = class_new("randomvals",
 						   (method)randomvals_new,
 						   (method)randomvals_free,
@@ -95,17 +95,17 @@ int C74_EXPORT main()
 						   0);
 	
 	class_addmethod(this_class, (method)randomvals_int, "int", A_LONG, 0);
-	
 #endif
 	
 	class_addmethod(this_class, (method)randomvals_list, "list", A_GIMME, 0);
 	class_addmethod(this_class, (method)randomvals_assist, "assist", A_CANT, 0);
 	
-	
 	class_register(CLASS_BOX, this_class);
 	
 	return 0;
 }
+
+// New / Free
 
 void *randomvals_new()
 {
@@ -123,8 +123,8 @@ void *randomvals_new()
     t_atom list_atoms[3];
 
 	atom_setfloat(list_atoms + 0, 0.5);
-	atom_setfloat(list_atoms + 1, 1.);
-	atom_setfloat(list_atoms + 2, 1.);	
+	atom_setfloat(list_atoms + 1, 1.0);
+	atom_setfloat(list_atoms + 2, 1.0);
 	
 	randomvals_list(x, gensym("list"), 3, list_atoms);
 	
@@ -139,18 +139,11 @@ void randomvals_free(t_randomvals *x)
     destroy_object(x->gen);
 }
 
+// List method (parameter setting)
 
 void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 {
-	double *means = x->means;
-	double *devs = x->devs;
-	double *weights = x->weights;
-	double *lo_bounds = x->lo_bounds;
-	double *hi_bounds = x->hi_bounds;
-	int i;
-	
-	double mean, dev, weight, lo_bound, hi_bound;
-	double weight_val = 0;
+	double weight_val = 0.0;
 	double inf = HUGE_VAL;
 	
 	long num_params = argc / 3;
@@ -158,198 +151,108 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 	if (!num_params)
 		return;
 	
-	for (i = 0; i < num_params; i++)
+	for (int i = 0; i < num_params; i++)
 	{
-		// Calculate parameters to store
+        double mean, dev;
+        
+        // Calculate parameters to store
 		
-		mean = atom_getfloat(argv++);
-		if (mean < 0) 
-			mean = 0;
-		if (mean > 1)
-			mean = 1;
+        x->means[i] = mean = std::max(0.0, std::min(1.0, atom_getfloat(argv++)));
+        x->devs[i] = dev = std::max(0.0, atom_getfloat(argv++));;
 		
-		means[i] = mean;
+		double weight = std::max(0.0, atom_getfloat(argv++));
 		
-		dev = atom_getfloat(argv++);
-		if (dev < 0)
-			dev = 0;
-		
-		devs[i] = dev;
-		
-		weight = atom_getfloat(argv++);
-		if (weight < 0)
-			weight = 0;
-		
-		lo_bound = erf(-mean / (dev * sqrt(2.)));
-		hi_bound = erf((1.- mean) / (dev * sqrt(2.)));
+        double lo_bound = erf(-mean / (dev * sqrt(2.0)));
+        double hi_bound = erf((1.0 - mean) / (dev * sqrt(2.0)));
 		
 		// N.B. inf is fine as an input, but nan is not...
 		
-		if (lo_bound != lo_bound)
-			lo_bound = erf(-inf);
-		if (hi_bound != hi_bound)
-			hi_bound = erf(inf);
-		
-		lo_bounds[i] = lo_bound;
-		hi_bounds[i] = hi_bound;
+        x->lo_bounds[i] = std::isnan(lo_bound) ? erf(-inf) : lo_bound;;
+		x->hi_bounds[i] = std::isnan(hi_bound) ? erf( inf) : hi_bound;
 		
 		weight_val += weight;
-		weights[i] = weight_val;
+		x->weights[i] = weight_val;
 	}
 	
 	x->num_params = num_params;
 }
 
+// Core generation routine
+
+double randomvals_generate(random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, bool gauss)
+{
+    if (gauss)
+    {
+        // Summed windowed gaussians random distribution
+                
+        const double a = gen.rand_double(weights[num_params - 1]);
+        
+        // Choose a mean and dev pair based on weighting
+
+        long i = 0;
+        
+        for (; i < num_params - 1; i++)
+            if (a < weights[i])
+                break;
+        
+        // Generate a windowed gaussian number (between 0 and 1) using a fast implementation
+        
+        const double r = ltqnorm(0.5 + 0.5 * gen.rand_double(lo[i], hi[i])) * devs[i] + means[i];
+        return std::max(0.0, std::min(1.0, r));
+    }
+    
+    // Generate a flat distribution random number between 0 and 1
+        
+    return gen.rand_double();
+}
 
 #ifdef MSP_VERSION
+
+// Perform (MSP version)
+
+template <typename T>
+void perform_core(const T* in, T *out, random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, long vec_size)
+{
+    while (vec_size--)
+    {
+        T t = *in++;
+        double r = T(0);
+        
+        if (t >= 1)
+        {
+            const bool gauss = t >= 2;
+            r = static_cast<T>(randomvals_generate(gen, means, devs, weights, lo, hi, num_params, gauss));
+        }
+        
+        *out++ = r;
+    }
+}
 
 t_int *randomvals_perform(t_int *w)
 {	
 	// Set pointers
 	
-	float *in = (float *) w[1];
-	float *out = (float *) w[2];
-	long vec_size = w[3];
-	t_randomvals *x = (t_randomvals *) w[4];
+	float *in = reinterpret_cast<float *>(w[1]);
+	float *out = reinterpret_cast<float *>(w[2]);
+	long vec_size = static_cast<long>(w[3]);
+	t_randomvals *x = reinterpret_cast<t_randomvals *>(w[4]);
 	
-	random_generator<>& gen = x->gen;
-	
-	double *means = x->means;
-	double *devs = x->devs;
-	double *weights = x->weights;
-	double *lo_bounds = x->lo_bounds;
-	double *hi_bounds = x->hi_bounds;
-	
-	double randval, mean, dev, lo_bound, hi_bound;
-	long test, i;
-	long num_params = x->num_params;
-	
-	while (vec_size--) 
-	{
-		test = *in++;
-		
-		if (test >= 1)
-		{
-			if (test >= 2)
-			{
-				// Summed windowed gaussians random distribution
-				
-				// Choose a mean and dev pair based on weighting
-				
-				randval = gen.rand_double(weights[num_params - 1]);
-				
-				for (i = 0; i < num_params - 1; i++)
-					if (randval < weights[i])
-						break;
-				
-				// Generate a windowed gaussian number (between 0 and 1) using a fast implementation
-				
-				mean = means[i];
-				dev = devs[i];
-				lo_bound = lo_bounds[i];
-				hi_bound = hi_bounds[i];
-				
-				randval = ltqnorm(0.5 + 0.5 * gen.rand_double(lo_bound, hi_bound)) * dev + mean;
-				if (randval > 1.)
-					randval = 1.;
-				if (randval < 0.)
-					randval = 0.;
-			}
-			else 
-			{
-				// Generate a flat distribution random number between 0 and 1
-				
-				randval = gen.rand_double();
-			}
-		}
-		else
-		{
-			// Output zeros
-			
-			randval = 0.f;
-		}
-		
-		*out++ = randval;
-	}
-	
-	return w + 5;
+    perform_core(in, out, x->gen, x->means, x->devs, x->weights, x->lo_bounds, x->hi_bounds, x->num_params, vec_size);
+    
+    return w + 5;
 }
-
-
-void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count)
-{				
-	dsp_add(randomvals_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
 
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
-	// Set pointers
-	
-	double *in = ins[0];
-	double *out = outs[0];	
-	
-    random_generator<>& gen = x->gen;
-
-	double *means = x->means;
-	double *devs = x->devs;
-	double *weights = x->weights;
-	double *lo_bounds = x->lo_bounds;
-	double *hi_bounds = x->hi_bounds;
-	
-	double randval, mean, dev, lo_bound, hi_bound;
-	long test, i;
-	long num_params = x->num_params;
-	
-	while (vec_size--) 
-	{
-		test = *in++;
-		
-		if (test >= 1)
-		{
-			if (test >= 2)
-			{
-				// Summed windowed gaussians random distribution
-				
-				// Choose a mean and dev pair based on weighting
-				
-				randval = gen.rand_double(weights[num_params - 1]);
-				
-				for (i = 0; i < num_params - 1; i++)
-					if (randval < weights[i])
-						break;
-				
-				// Generate a windowed gaussian number (between 0 and 1) using a fast implementation
-				
-				mean = means[i];
-				dev = devs[i];
-				lo_bound = lo_bounds[i];
-				hi_bound = hi_bounds[i];
-				
-				randval = ltqnorm(0.5 + 0.5 * gen.rand_double(lo_bound, hi_bound)) * dev + mean;
-				if (randval > 1.)
-					randval = 1.;
-				if (randval < 0.)
-					randval = 0.;
-			}
-			else 
-			{
-				// Generate a flat distribution random number between 0 and 1
-				
-				randval = gen.rand_double();
-			}
-		}
-		else
-		{
-			// Output zeros
-			
-			randval = 0.0;
-		}
-		
-		*out++ = randval;
-	}
+{
+    perform_core(ins[0], outs[0], x->gen, x->means, x->devs, x->weights, x->lo_bounds, x->hi_bounds, x->num_params, vec_size);
 }
 
+// DSP
+
+void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count)
+{
+    dsp_add(randomvals_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
+}
 
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {				
@@ -358,57 +261,19 @@ void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sam
 
 #else
 
+// Int operation (Max version)
+
 void randomvals_int(t_randomvals *x, t_atom_long value)
-{		
-	t_rand_gen *gen = &x->gen;
+{
+    const bool gauss = value >= 2;
+    const double r = randomvals_generate(x->gen, x->means, x->devs, x->weights, x->lo_bounds, x->hi_bounds, x->num_params, gauss);
 	
-	double *means = x->means;
-	double *devs = x->devs;
-	double *weights = x->weights;
-	double *lo_bounds = x->lo_bounds;
-	double *hi_bounds = x->hi_bounds;
-	
-	double randval, mean, dev, lo_bound, hi_bound;
-	long i;
-	long num_params = x->num_params;
-	
-	if (value >= 2)
-	{
-		// Summed windowed gaussians random distribution
-		
-		// Choose a mean and dev pair based on weighting
-		
-		randval = rand_double_n(gen, weights[num_params - 1]);
-		
-		for (i = 0; i < num_params - 1; i++)
-			if (randval < weights[i])
-				break;
-		
-		// Generate a windowed gaussian number (between 0 and 1) using a fast implementation
-		
-		mean = means[i];
-		dev = devs[i];
-		lo_bound = lo_bounds[i];
-		hi_bound = hi_bounds[i];
-		
-		randval =  ltqnorm(0.5 + 0.5 * rand_double_range(gen, lo_bound, hi_bound)) * dev + mean;
-		if (randval > 1.)
-			randval = 1.;
-		if (randval < 0.)
-			randval = 0.;
-	}
-	else 
-	{
-		// Generate a flat distribution random number between 0 and 1
-		
-		randval = rand_double(gen);
-	}
-	
-	outlet_float(x->the_outlet, randval);	
+	outlet_float(x->the_outlet, r);
 }
 
 #endif
 
+// Assist
 
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {
