@@ -2,16 +2,20 @@
 /*
  *  timemap
  *
- *	Originally intended to create lists representing timing values as part of a system of gestural representation , timemap is an object that creates random lists of values with definable characteristics.
+ *  timemap is an object that creates randomised lists of values with definable characteristics.
  *
- *	The basic principle to start with a list of equidistant values (between 0 and 1 - and subsequently scaled if desired) and through randomisation and warping reach the values in the final list.
- *	The intention is to allow the creation of lists with shapes and charateritics that are to some extent determinate, but randomised within the given parameters.
- *	The values can either be generated independently, or in "streams", where the generated values are accumulated through addition or multiplication.
- *	A number of scalings are supported, appropriate to a range of musical parameters.
+ *  timemap was iriginally intended to create lists representing timing values as part of a system of gestural representation.
+ *  The basic principle to start with a list of equidistant values (between 0 and 1) and operate on it to create the final list.
+ *  The list is randomised and warped and scaled to create the final list.
+ *  A number of scalings are supported, appropriate to a range of musical parameters (as in the valconvert object).
+ *  This results in randomised lists with shapes and charateristics that can be pre-determined by setting the parameters.
+ *	The values can be generated directly or alternateively in "streams".
+ *  When in a streaming mode the generated values are accumulated through addition or multiplication from an initial value.
  *
- *	The exact functioning of the timemap object is fairly involved and best understood in practice. See the MaxMSP documentation for further information on its use.
+ *  The exact functioning of the timemap object is fairly involved and best understood in practice.
+ *  See the MaxMSP documentation for further information on its use.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -24,6 +28,8 @@
 
 #include <algorithm>
 
+
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -80,9 +86,9 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 
 void timemap_calculate(t_timemap *x, t_atom_long num_points);
 
-inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
-double scale_val(double new_val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max);
-bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound);
+inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double warp);
+double timemap_scale(double val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max);
+bool check_and_insert(random_generator<>& gen, double new_val, double *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound);
 
 void timemap_rand_amount(t_timemap *x, double rand_amount);
 void timemap_centre(t_timemap *x, double centre);
@@ -205,44 +211,32 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
 void timemap_calculate(t_timemap *x, t_atom_long num_points)
 {
 	t_atom output_list[1024];
-	float temp_vals[1024];
-	long divisions[1024];
+	double vals[1024];
+	long items[1024];
 	
-	double init_val = x->init_val;
-	double scale_val1 = x->scale_val1;
-	double scale_val2 = x->scale_val2;
-	double min_val = x->min_val;
-	double max_val = x->max_val;
-	double min_sbound = x->min_sbound;
-	double max_sbound = x->max_sbound;
+    const double init_val = x->init_val;
+    const double scale_val1 = x->scale_val1;
+    const double scale_val2 = x->scale_val2;
+    const double min_val = x->min_val;
+    const double max_val = x->max_val;
+    const double min_sbound = x->min_sbound;
+    const double max_sbound = x->max_sbound;
 	
-	double centre = x->centre;
-	double rand_amount = x->rand_amount;
-	double warp = x->warp;
-	double min_dist = x->min_dist;
-	double max_dist = x->max_dist;
+	const double centre = x->centre;
+    const double rand_amount = x->rand_amount;
+    const double warp = x->warp;
+    const double min_dist = x->min_dist;
+    const double max_dist = x->max_dist;
 	
-	t_atom_long max_retries = x->max_retries;
+	const t_atom_long max_retries = x->max_retries;
 
-    streaming_mode stream_mode = x->stream_mode;
-	scaling_mode scale_mode = x->scale_mode;
+    const streaming_mode stream_mode = x->stream_mode;
+	const scaling_mode scale_mode = x->scale_mode;
 
-    bool random_order = x->random_order;
-
-	double centre_compliment = 1. - centre;
-	double new_val;
-	double cumulate;
-	double points_recip;
-	
-    t_atom_long retries = 0;
+    const bool random_order = x->random_order;
 
     long list_length = 0;
-	long division;
-	long division_pos = 0;
-	long i;
 	
-    bool suitable_val;
-    
     if (num_points < 1)
     {
         object_error((t_object *)x, "requested number of values must be a positive integer");
@@ -258,48 +252,56 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	if (stream_mode != streaming_mode::none)
 		num_points--;
 
-	points_recip = 1. / (double) (num_points + 1);
+	const double points_recip = 1.0 / (double) (num_points + 1);
 
 	// If the ordering is to be random start with a list of potential divisions (0 to num_points - 1)
 	
 	if (random_order)
 	{
-		for (i = 0; i < num_points; i++)
-			divisions[i] = i;
+		for (long i = 0; i < num_points; i++)
+            items[i] = i;
 	}
 	
 	// Generate each value in turn
 	
-	for (i = 0; i < num_points; i++)
+	for (long i = 0; i < num_points; i++)
 	{
+        long item = i;
+        long item_pos = 0;
+        t_atom_long retries = 0;
+        
 		// Loop until a suitable value is found (or we reach the maximum number of retries)
 		
-		for (suitable_val = false, retries = 0, division = i; !suitable_val && retries < max_retries; retries++)
+		for (bool suitable = false; !suitable && retries < max_retries; retries++)
 		{
 			// Choose which of the remaining divisions to do if the order is random
 			
 			if (random_order)
 			{                
-                division_pos = x->gen.rand_int(static_cast<uint32_t>(num_points - (list_length + 1)));
-				division = divisions[division_pos];
+                item_pos = x->gen.rand_int(static_cast<uint32_t>(num_points - (list_length + 1)));
+                item = items[item_pos];
 			}
 			
-			new_val = timemap_value(x->gen, division, points_recip, rand_amount, centre, centre_compliment, warp);
+            // Generate a new value
+            
+			double val = timemap_value(x->gen, item, points_recip, rand_amount, centre, warp);
 			
 			// Scale if relevant
 			
 			if (scale_mode != scaling_mode::none)
-				new_val = scale_val(new_val, scale_mode, scale_val1, scale_val2, min_val, max_val);
+                val = timemap_scale(val, scale_mode, scale_val1, scale_val2, min_val, max_val);
 			
-			// If the value is good then keep it, increase list_length and replace the division we have just used with the one we would have used if working in order
-			// This maintains a valid list of unused divisions for the next time
-			
-			if (check_and_insert(x->gen, new_val, temp_vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
+			// If the value is good then keep it and increase list_length
+            			
+			if (check_and_insert(x->gen, val, vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
 			{
-				suitable_val = true;
+				suitable = true;
 				list_length++;
+                
+                // Maintains a valid list of unused items by replacing the used one with the one used if working in order
+
 				if (random_order) 
-					divisions[division_pos] = divisions[num_points - list_length];
+					items[item_pos] = items[num_points - list_length];
 			}
 		}
 	}
@@ -309,42 +311,31 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	switch (stream_mode)
 	{
         case streaming_mode::none:
-			
-			// Stream mode off (use values as they are)
-			
-			for (i = 0; i < list_length; i++)
-				atom_setfloat(output_list + i, temp_vals[i]);
+			for (long i = 0; i < list_length; i++)
+				atom_setfloat(output_list + i, vals[i]);
 			break;
 			
         case streaming_mode::additive:
-			
-			// Accumulate the values through addition
-			
+        {
+            double cumulate = init_val;
 			list_length++;
-			atom_setfloat(output_list, init_val);
-			cumulate = init_val;
+			atom_setfloat(output_list, cumulate);
             
-			for (i = 1; i < list_length; i++)
-			{
-				cumulate = temp_vals[i - 1] + cumulate;
-				atom_setfloat(output_list + i, cumulate);
-			}
+			for (long i = 1; i < list_length; i++)
+				atom_setfloat(output_list + i, (cumulate += vals[i - 1]));
 			break;
-			
+        }
+            
         case streaming_mode::multiplicative:
-			
-			// Accumulate the values through multiplication
-			
+        {
+            double cumulate = init_val;
 			list_length++;
-			atom_setfloat(output_list, init_val);
-			cumulate = init_val;
+			atom_setfloat(output_list, cumulate);
             
-			for (i = 1; i < list_length; i++)
-			{
-				cumulate = temp_vals[i - 1] * cumulate;
-				atom_setfloat(output_list + i, cumulate);
-			}
+			for (long i = 1; i < list_length; i++)
+				atom_setfloat(output_list + i, (cumulate *= vals[i - 1]));
 			break;
+        }
 	}
 	
 	outlet_list(x->thelistout, 0L, list_length, output_list);
@@ -352,108 +343,91 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 
 // Value Generation
 
-inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
+inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double warp)
 {
     // Start with equally spaced values (in the range 0 to 1)
     
-    double new_val = (i + 1) * points_recip;
+    double val = (i + 1) * points_recip;
     
     // Interpolate with a random value (0 to 1) by the random amount
     
-    new_val = new_val - (rand_amount * (new_val -  gen.rand_double()));
+    val = val - (rand_amount * (val -  gen.rand_double()));
     
     // Now warp around the centre value, according to the warp factor (using a pow operation)
     
-    if (new_val > centre)
-        new_val = centre + (centre_compliment * pow((new_val - centre) / centre_compliment, warp));
+    if (val > centre)
+        return centre + ((1.0 - centre) * pow((val - centre) / (1.0 - centre), warp));
     else
-        new_val = centre - (centre * pow((centre - new_val) / centre, warp));
-    
-    return new_val;
+        return centre - (centre * pow((centre - val) / centre, warp));
 }
 
+// Value Scaling (applies scaling for modes other than none)
 
-// Value Scaling
-
-double scale_val(double new_val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max)
+double timemap_scale(double val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max)
 {
-	// Apply the appropriate scaling
-	
 	bool reciprocal = false;
 	
-	if (mode == scaling_mode::div && new_val < 0.5)
+	if (mode == scaling_mode::div && val < 0.5)
 	{
 		reciprocal = true;
-		new_val = 1.0 - new_val;
+        val = 1.0 - val;
 	}
 	
-	new_val = new_val * scale_val1 + scale_val2;
+    val = val * scale_val1 + scale_val2;
 	
 	if (mode == scaling_mode::log)
-		new_val = exp(new_val);
+        val = exp(val);
 	if (mode == scaling_mode::exp)
-		new_val = log(new_val);
+        val = log(val);
 	
-    new_val = clip (new_val, min, max);
+    val = clip (val, min, max);
 	
 	if (reciprocal)
-        new_val = 1.0 / new_val;
+        val = 1.0 / val;
 	
-	return new_val;
+	return val;
 }
 
 // Sorting function
 
-bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound)
+bool check_and_insert(random_generator<>& gen, double val, double *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound)
 {
-	// Find Position for New Value 
-	
-	bool suitable_val = true;
-	long new_pos, i, j;
-	
-	double test_val;
-	double cumulate;
-	
-	// If the order is random then pick randomly, otherwise insert into the list in the correct place
+    long pos;
+		
+	// Find Position for New Value (if order is random then pick randomly, otherwise find thex correct place)
     
 	if (random_order)
-        new_pos = gen.rand_int(static_cast<uint32_t>(list_length));
+        pos = gen.rand_int(static_cast<uint32_t>(list_length));
 	else
 	{
-		for (j = 0; j < list_length; j++)
-			if (new_val < vals[j]) 
+        long j = 0;
+        
+		for (; j < list_length; j++)
+			if (val < vals[j])
 				break;
 		
-		new_pos = j;
+		pos = j;
 	}
 	
-	// Check suitability (according to the minimum and maximum allowable distances
-	
-	// For the preceding value
-	
-	if (new_pos)
+	// Check suitability according to the minimum and maximum allowable distances - check for preceding and subsequent values
+		
+	if (pos)
 	{
-		test_val = fabs(new_val - vals[new_pos - 1]);
-		suitable_val = ((test_val >= min_dist) && (test_val <= max_dist));
+		const double test = fabs(val - vals[pos - 1]);
+		if ((test < min_dist) || (test > max_dist))
+            return false;
 	}
 	
-	if (!suitable_val) 
-		return false;
-	
-	// For the subsequent value
-
-	if (new_pos < list_length)
+	if (pos < list_length)
 	{
-		test_val = fabs(vals[new_pos] - new_val);
-		suitable_val = ((test_val >= min_dist) && (test_val <= max_dist));
+        const double test = fabs(vals[pos] - val);
+        if ((test < min_dist) || (test > max_dist))
+            return false;
 	}
-	
-	if (!suitable_val) 
-		return false;
 	
 	// If we are in stream mode then check that this value will not result in output exceeding the stream bounds
 	
-	cumulate = init_val;
+	double cumulate = init_val;
 		
     switch (stream_mode)
     {
@@ -462,14 +436,15 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
             
         case streaming_mode::additive:
             
-            for (i = 0; i < new_pos; i++)
+            for (long i = 0; i < pos; i++)
                 cumulate += vals[i];
             
-            cumulate += new_val;
+            cumulate += val;
+            
             if (cumulate < min_sbound || cumulate > max_sbound) 
                 return false;
             
-            for (i = new_pos; i < list_length; i++)
+            for (long i = pos; i < list_length; i++)
             {
                 cumulate += vals[i];
                 if (cumulate < min_sbound || cumulate > max_sbound) 
@@ -479,15 +454,15 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
         
         case streaming_mode::multiplicative:
             
-            for (i = 0; i < new_pos; i++)
+            for (long i = 0; i < pos; i++)
                 cumulate *= vals[i];
             
-            cumulate *= new_val;
+            cumulate *= val;
 
             if (cumulate < min_sbound || cumulate > max_sbound) 
                 return false;
             
-            for (i = new_pos; i < list_length; i++)
+            for (long i = pos; i < list_length; i++)
             {
                 cumulate *= vals[i];
                 if (cumulate < min_sbound || cumulate > max_sbound) 
@@ -498,10 +473,10 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
 	
 	// If the value is suitable then here we insert the value
 	
-	for (j = list_length; j > new_pos; j--) 
+	for (long j = list_length; j > pos; j--)
 		vals[j] = vals[j - 1];
 	
-	vals[new_pos] = new_val;
+	vals[pos] = val;
 	
 	return true;
 }
