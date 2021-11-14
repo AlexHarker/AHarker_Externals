@@ -49,7 +49,7 @@ struct t_timefilter
     double filter;
     double rand_filter;
     
-    void *the_list_outlet;
+    void *list_outlet;
 };
 
 // Function Prototypes
@@ -99,7 +99,7 @@ void *timefilter_new()
 {
     t_timefilter *x = (t_timefilter *)object_alloc(this_class);
     
-    x->the_list_outlet = listout(x);
+    x->list_outlet = listout(x);
     x->stored_list_length = 0;
         
     x->filter = 0.0;
@@ -154,10 +154,10 @@ void timefilter_bang(t_timefilter *x)
     t_atom output_list[1024];
     t_atom *list_pointer = output_list;
 
-    double *temp_vals = x->stored_list;
+    double *vals_pointer = x->stored_list;
     double rand_filter = x->rand_filter;
     double filter = x->filter;
-    double last_val = -HUGE_VAL
+    double last_val = -HUGE_VAL;
     
     long stored_list_length = x->stored_list_length;
     long output_list_length = stored_list_length;
@@ -166,36 +166,36 @@ void timefilter_bang(t_timefilter *x)
     
     switch (x->ordering)
     {
-        case ordering_mode::ascending:      combsort(temp_vals, stored_list_length);            break;
-        case ordering_mode::random:         randomsort(x->gen, temp_vals, stored_list_length);  break;
-        case ordering_mode::maintain:                                                           break;
+        case ordering_mode::ascending:      combsort(vals_pointer, stored_list_length);             break;
+        case ordering_mode::random:         randomsort(x->gen, vals_pointer, stored_list_length);   break;
+        case ordering_mode::maintain:                                                               break;
     }
     
     // Filtering is done here
         
     for (long i = 0; i < stored_list_length; i++)
     {
-        new_val = *temp_vals++;
+        double val = *vals_pointer++;
         
         // Check if we are keeping this value (if not decrease output count)
         
-        if ((x->gen.rand_double() > rand_filter) && fabs(new_val - last_val) >= filter)
+        if ((x->gen.rand_double() > rand_filter) && fabs(val - last_val) >= filter)
         {
             // If this value is within the filter distance of the next value  randomly decide which one to lose
             
-            if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && x->gen.rand_int(1))
+            if (i < output_list_length - 1 && fabs(*vals_pointer - val) < filter && x->gen.rand_int(1))
             {
                 // Skip ahead if we choose to lose this value so that the filtering works on distance, regardless of ordering...
                 
                 // FIX - need to check for distance with previous value also?
                 
-                new_val = *temp_vals++;
+                val = *vals_pointer++;
                 output_list_length--;
                 i++;
             }
             
-            atom_setfloat(list_pointer++, new_val);
-            last_val = new_val;
+            atom_setfloat(list_pointer++, val);
+            last_val = val;
         }
         else
             output_list_length--;
@@ -203,7 +203,7 @@ void timefilter_bang(t_timefilter *x)
     
     // Output and clear stored list
     
-    outlet_list(x->the_list_outlet, 0L, output_list_length, output_list);
+    outlet_list(x->list_outlet, 0L, output_list_length, output_list);
     x->stored_list_length = 0;
 }
 
