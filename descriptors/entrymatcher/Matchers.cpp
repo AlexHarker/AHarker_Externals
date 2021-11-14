@@ -261,7 +261,7 @@ void Matchers::addTarget(double value)
 void Matchers::addTarget(t_symbol *value)
 {
     if (mMatchers.size())
-        mMatchers.back().mValues.push_back(value);;
+        mMatchers.back().mValues.push_back(value);
 }
 
 void Matchers::addMatcher(TestType type, long column, double scale)

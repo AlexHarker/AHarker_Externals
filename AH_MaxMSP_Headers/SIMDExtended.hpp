@@ -272,7 +272,7 @@ static inline void sin_array(float *out, const float *in, long length)
 
 static inline void cos_array(float *out, const float *in, long length)
 {
-    vsCos(length, in, out);;
+    vsCos(length, in, out);
 }
 
 static inline void tan_array(float *out, const float *in, long length)

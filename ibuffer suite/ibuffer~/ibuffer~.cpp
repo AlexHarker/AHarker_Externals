@@ -220,7 +220,7 @@ void form_os_name(char *filename, char *foldname, char *fullname)
 #else
 void form_os_name(char *filename, char *foldname, char *fullname)
 {
-    long offset = strlen(foldname);;
+    long offset = strlen(foldname);
     
     // Copy folder name, add a slash seperator and then copy the file name
     

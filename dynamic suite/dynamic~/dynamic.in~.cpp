@@ -78,7 +78,7 @@ void *dynamic_in_new(t_atom_long inlet_num)
     t_dynamic_in *x = (t_dynamic_in *) object_alloc(this_class);
     void *dynamic_parent = dynamic_get_parent();
     
-    x->num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);;
+    x->num_sig_ins = dynamic_get_num_sig_ins(dynamic_parent);
     x->sig_ins = dynamic_get_sig_in_ptrs(dynamic_parent);
     x->inlet_num = -1;
     x->valid = false;

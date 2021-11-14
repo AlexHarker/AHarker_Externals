@@ -120,7 +120,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
     
-    x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));;
+    x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));
     x->ratio_kept = 1.0;
     x->n_limit = 0;
     
