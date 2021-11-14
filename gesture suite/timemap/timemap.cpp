@@ -384,7 +384,7 @@ double timemap_scale(double val, const scaling_parameters& params)
     if (params.mode == scaling_mode::exp)
         val = log(val);
     
-    val = clip (val, params.min_val, params.max_val);
+    val = clip(val, params.min_val, params.max_val);
     
     if (reciprocal)
         val = 1.0 / val;
@@ -534,15 +534,15 @@ void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, dou
     if (scale_mode_sym == gensym("amp"))
     {
         mode = scaling_mode::log;
-        scale_min = pow(10, scale_min / 20.0);
-        scale_max = pow(10, scale_max / 20.0);
+        scale_min = min_val = pow(10, scale_min / 20.0);
+        scale_max = max_val = pow(10, scale_max / 20.0);
     }
     
     if (scale_mode_sym == gensym("pitch"))
     {
         mode = scaling_mode::log;
-        scale_min = pow(2, scale_min / 12.0);
-        scale_max = pow(2, scale_max / 12.0);
+        scale_min = min_val = pow(2, scale_min / 12.0);
+        scale_max = max_val = pow(2, scale_max / 12.0);
     }
     
     if (scale_mode_sym == gensym("log"))
