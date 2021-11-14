@@ -264,6 +264,8 @@ void randomvals_int(t_randomvals *x, t_atom_long value)
 
 // Assist
 
+// FIX - better labels?
+
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)

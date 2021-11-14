@@ -54,7 +54,6 @@ void randfloats_int(t_randfloats *x, t_atom_long value);
 void randfloats_float(t_randfloats *x, double value);
 void randfloats_bang(t_randfloats *x);
 
-double clip(double value, double min_val, double max_val);
 void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv);
 
 double triple_gauss_rand(random_generator<>& gen, double *params);

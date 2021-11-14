@@ -54,8 +54,8 @@ struct t_timefilter
 
 // Function Prototypes
 
-void timefilter_free(t_timefilter *x);
 void *timefilter_new();
+void timefilter_free(t_timefilter *x);
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s);
 
 void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv);
