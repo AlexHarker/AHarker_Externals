@@ -51,18 +51,18 @@ struct t_randomvals
 
 // Function Prototypes
 
-void *randomvals_new ();
-void randomvals_free (t_randomvals *x);
-void randomvals_assist (t_randomvals *x, void *b, long m, long a, char *s);
-void randomvals_list (t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
+void *randomvals_new();
+void randomvals_free(t_randomvals *x);
+void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s);
+void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
 
-double randomvals_generate(random_generator<>& gen, double *means, double *devs, double *weights, double *lo, double *hi, long num_params, bool gauss);
+double randomvals_generate(random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, bool gauss);
 
 #ifdef MSP_VERSION
-void randomvals_perform64 (t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 #else
-void randomvals_int (t_randomvals *x, t_atom_long value);
+void randomvals_int(t_randomvals *x, t_atom_long value);
 #endif
 
 // Main
@@ -241,6 +241,8 @@ void randomvals_int(t_randomvals *x, t_atom_long value)
 #endif
 
 // Assist
+
+// FIX - better labels?
 
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {

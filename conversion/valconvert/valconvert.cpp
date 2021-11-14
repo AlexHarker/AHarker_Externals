@@ -183,10 +183,9 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 
 // Clip Helper
 
-double clip(double x, double lo, double hi)
+double clip(double value, double min_val, double max_val)
 {
-    x = (x > hi ? hi : x);
-    return (x < lo ? lo : x);
+    return std::max(min_val, std::min(max_val, value));
 }
 
 // Log Helper
