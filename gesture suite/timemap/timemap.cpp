@@ -272,7 +272,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 
     const double points_recip = 1.0 / (double) (num_points + 1);
 
-    // If the ordering is to be random start with a list of potential divisions (0 to num_points - 1)
+    // If the ordering is to be random start with a list of potential items (0 to num_points - 1)
     
     if (random_order)
     {
@@ -316,7 +316,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
                 suitable = true;
                 list_length++;
                 
-                // Maintains a valid list of unused items by replacing the used one with the one used if working in order
+                // Maintains a valid list of unused items by replacing the used one with the one about to fall out of the list
 
                 if (random_order)
                     items[item_pos] = items[num_points - list_length];
