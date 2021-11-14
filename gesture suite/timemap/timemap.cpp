@@ -56,12 +56,15 @@ struct t_timemap
     double rand_amount; 
 	double centre; 
 	double warp;
-	double min_dist;
-	double max_dist;
-	double scale_val1;
+    
+    double scale_val1;
 	double scale_val2;
 	double min_val;
 	double max_val;
+    
+    double min_dist;
+    double max_dist;
+    
 	double min_sbound;
 	double max_sbound;
 	double init_val;
@@ -75,7 +78,7 @@ struct t_timemap
 	
     random_generator<> gen;
     
-    void *thelistout;
+    void *list_outlet;
 };
 
 // Function Prototypes
@@ -146,7 +149,7 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	
     create_object(x->gen);
 
-    x->thelistout = listout(x);
+    x->list_outlet = listout(x);
 	intin(x, 6);
 	floatin(x, 5);
 	floatin(x, 4);
@@ -338,7 +341,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
         }
 	}
 	
-	outlet_list(x->thelistout, 0L, list_length, output_list);
+	outlet_list(x->list_outlet, 0L, list_length, output_list);
 }
 
 // Value Generation
