@@ -4,7 +4,7 @@
  *
  *  timefilter is an object for filtering and reordering values in a list of numbers.
  *
- *  timefilter was riginally intended for use with lists representing time values as part of a system of gestural representation,
+ *  timefilter was originally intended for use with lists representing time values as part of a system of gestural representation,
  *  The stored list is first sorted (if desired) either into ascending order or a random order.
  *  Values may then either be thinned (filterd) randomly and/or according to a minimum required distance between values.
  *  The original intention was to originally to avoid events timed too closely together.
@@ -157,8 +157,7 @@ void timefilter_bang(t_timefilter *x)
     double *temp_vals = x->stored_list;
     double rand_filter = x->rand_filter;
     double filter = x->filter;
-    double last_val = -FLT_MAX;
-    double new_val;
+    double last_val = -HUGE_VAL
     
     long stored_list_length = x->stored_list_length;
     long output_list_length = stored_list_length;
