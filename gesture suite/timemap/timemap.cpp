@@ -22,11 +22,26 @@
 #include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
 
+#include <algorithm>
+
 
 t_class *this_class;
 
-enum t_scale_mode { kScaleNone, kScale, kScaleLog, kScaleExp, kScaleDiv };
-enum t_stream_mode { kStreamNone, kStreamAdditive, kStreamMultiplicative };
+enum class scaling_mode
+{
+    none,
+    scale,
+    log,
+    exp,
+    div
+};
+
+enum class streaming_mode
+{
+    none,
+    additive,
+    multiplicative
+};
 
 struct t_timemap
 {
@@ -47,8 +62,8 @@ struct t_timemap
 	
 	t_atom_long max_retries;
 	
-    t_scale_mode scale_mode;
-    t_stream_mode stream_mode;
+    scaling_mode scale_mode;
+    streaming_mode stream_mode;
     
     bool random_order;
 	
@@ -57,15 +72,17 @@ struct t_timemap
     void *thelistout;
 };
 
-void timemap_free(t_timemap *x);
+// Function Prototypes
+
 void *timemap_new(double rand_amount, double centre, double warp);
+void timemap_free(t_timemap *x);
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 
-static __inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
 void timemap_calculate(t_timemap *x, t_atom_long num_points);
-double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max);
 
-bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound);
+inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp);
+double scale_val(double new_val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max);
+bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound);
 
 void timemap_rand_amount(t_timemap *x, double rand_amount);
 void timemap_centre(t_timemap *x, double centre);
@@ -77,9 +94,14 @@ void timemap_random_order(t_timemap *x, t_atom_long random_order);
 void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val);
 void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Clip Helper
+
+double clip(double value, double min_val, double max_val)
+{
+    return std::max(min_val, std::min(max_val, value));
+}
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -110,15 +132,14 @@ int C74_EXPORT main()
 	return 0;
 }
 
-void timemap_free(t_timemap *x)
-{
-    destroy_object(x->gen);
-}
+// New / Free / Assist
 
 void *timemap_new(double rand_amount, double centre, double warp)
 {
 	t_timemap *x = (t_timemap *)object_alloc(this_class);
 	
+    create_object(x->gen);
+
     x->thelistout = listout(x);
 	intin(x, 6);
 	floatin(x, 5);
@@ -127,31 +148,23 @@ void *timemap_new(double rand_amount, double centre, double warp)
 	floatin(x, 2);
 	floatin(x, 1);
 	
-	if (centre > 1.) 
-		centre = 1.;
-	if (centre < 0.) 
-		centre = 0.;
-	if (rand_amount > 1.) 
-		rand_amount = 1.;
-	if (rand_amount < 0) 
-		rand_amount = 0.;
-	if (warp <= 0.) 
-		warp = 1.;
-	
-	x->centre = centre;
-	x->rand_amount = rand_amount;
-	x->warp = warp;
-	x->min_dist = 0.;
-	x->max_dist = 1.;
+    x->centre = clip(centre, 0.0, 1.0);
+    x->rand_amount = clip(rand_amount, 0.0, 1.0);
+    x->warp = (warp <= 0.) ? 1.0 : warp;
+	x->min_dist = 0.0;
+	x->max_dist = 1.0;
 	x->max_retries = 10;
 	x->random_order = false;
 	
 	timemap_scaling(x, gensym("none"), 0, 1);
 	timemap_stream(x, 0, 0, 0, 1);
-    
-    create_object(x->gen);
-	
+    	
     return x;
+}
+
+void timemap_free(t_timemap *x)
+{
+    destroy_object(x->gen);
 }
 
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
@@ -187,29 +200,7 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////// Calculation routines ///////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-static __inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
-{
-    // Start with equally spaced values (in the range 0 to 1)
-    
-    double new_val = (i + 1) * points_recip;
-    
-    // Interpolate with a random value (0 to 1) by the random amount
-    
-    new_val = new_val - (rand_amount * (new_val -  gen.rand_double()));
-    
-    // Now warp around the centre value, according to the warp factor (using a pow operation)
-    
-    if (new_val > centre)
-        new_val = centre + (centre_compliment * pow((new_val - centre) / centre_compliment, warp));
-    else
-        new_val = centre - (centre * pow((centre - new_val) / centre, warp));
-    
-    return new_val;
-}
+// Calculation Method
 
 void timemap_calculate(t_timemap *x, t_atom_long num_points)
 {
@@ -233,8 +224,8 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	
 	t_atom_long max_retries = x->max_retries;
 
-    t_stream_mode stream_mode = x->stream_mode;
-	t_scale_mode scale_mode = x->scale_mode;
+    streaming_mode stream_mode = x->stream_mode;
+	scaling_mode scale_mode = x->scale_mode;
 
     bool random_order = x->random_order;
 
@@ -264,7 +255,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 		num_points = 1024;
     }
     
-	if (stream_mode != kStreamNone)
+	if (stream_mode != streaming_mode::none)
 		num_points--;
 
 	points_recip = 1. / (double) (num_points + 1);
@@ -297,7 +288,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			
 			// Scale if relevant
 			
-			if (scale_mode != kScaleNone)
+			if (scale_mode != scaling_mode::none)
 				new_val = scale_val(new_val, scale_mode, scale_val1, scale_val2, min_val, max_val);
 			
 			// If the value is good then keep it, increase list_length and replace the division we have just used with the one we would have used if working in order
@@ -317,7 +308,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	
 	switch (stream_mode)
 	{
-		case kStreamNone:
+        case streaming_mode::none:
 			
 			// Stream mode off (use values as they are)
 			
@@ -325,7 +316,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 				atom_setfloat(output_list + i, temp_vals[i]);
 			break;
 			
-		case kStreamAdditive:
+        case streaming_mode::additive:
 			
 			// Accumulate the values through addition
 			
@@ -340,7 +331,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 			}
 			break;
 			
-		case kStreamMultiplicative:
+        case streaming_mode::multiplicative:
 			
 			// Accumulate the values through multiplication
 			
@@ -359,13 +350,38 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 	outlet_list(x->thelistout, 0L, list_length, output_list);
 }
 
-double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, double scale_val2, double min, double max)
+// Value Generation
+
+inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double centre_compliment, double warp)
+{
+    // Start with equally spaced values (in the range 0 to 1)
+    
+    double new_val = (i + 1) * points_recip;
+    
+    // Interpolate with a random value (0 to 1) by the random amount
+    
+    new_val = new_val - (rand_amount * (new_val -  gen.rand_double()));
+    
+    // Now warp around the centre value, according to the warp factor (using a pow operation)
+    
+    if (new_val > centre)
+        new_val = centre + (centre_compliment * pow((new_val - centre) / centre_compliment, warp));
+    else
+        new_val = centre - (centre * pow((centre - new_val) / centre, warp));
+    
+    return new_val;
+}
+
+
+// Value Scaling
+
+double scale_val(double new_val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max)
 {
 	// Apply the appropriate scaling
 	
 	bool reciprocal = false;
 	
-	if (scale_mode == kScaleDiv && new_val < 0.5)
+	if (mode == scaling_mode::div && new_val < 0.5)
 	{
 		reciprocal = true;
 		new_val = 1.0 - new_val;
@@ -373,27 +389,22 @@ double scale_val(double new_val, t_scale_mode scale_mode, double scale_val1, dou
 	
 	new_val = new_val * scale_val1 + scale_val2;
 	
-	if (scale_mode == 2) 
+	if (mode == scaling_mode::log)
 		new_val = exp(new_val);
-	if (scale_mode == 3) 
+	if (mode == scaling_mode::exp)
 		new_val = log(new_val);
 	
-	if (new_val > max) 
-		new_val = max;
-	if (new_val < min) 
-		new_val = min;
+    new_val = clip (new_val, min, max);
 	
 	if (reciprocal)
-        new_val = 1. / new_val;
+        new_val = 1.0 / new_val;
 	
 	return new_val;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////// Sorting function/ ////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Sorting function
 
-bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, t_stream_mode stream_mode, double init_val, double min_sbound, double max_sbound)
+bool check_and_insert(random_generator<>& gen, double new_val, float *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound)
 {
 	// Find Position for New Value 
 	
@@ -446,10 +457,10 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
 		
     switch (stream_mode)
     {
-        case kStreamNone:
+        case streaming_mode::none:
             break;
             
-        case kStreamAdditive:
+        case streaming_mode::additive:
             
             for (i = 0; i < new_pos; i++)
                 cumulate += vals[i];
@@ -466,7 +477,7 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
             }
             break;
         
-        case kStreamMultiplicative:
+        case streaming_mode::multiplicative:
             
             for (i = 0; i < new_pos; i++)
                 cumulate *= vals[i];
@@ -495,31 +506,21 @@ bool check_and_insert(random_generator<>& gen, double new_val, float *vals, doub
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// Various routines for setting the mapping parameters ////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Mapping Parameter Methods
 
 void timemap_rand_amount(t_timemap *x, double rand_amount)
 {
-	if (rand_amount > 1.)
-        rand_amount = 1.;
-	if (rand_amount < 0.)
-        rand_amount = 0.;
-	x->rand_amount = rand_amount;
+	x->rand_amount = clip(rand_amount, 0.0, 1.0);
 }
 
 void timemap_centre(t_timemap *x, double centre)
 {
-	if (centre > 1.)
-        centre = 1.;
-	if (centre < 0.)
-        centre = 0.;
-	x->centre = centre;
+    x->centre = clip(centre, 0.0, 1.0);;
 }
 
 void timemap_warp(t_timemap *x, double warp)
 {
-    x->warp = (warp < 0.) ? 1.0 : warp;
+    x->warp = (warp < 0.0) ? 1.0 : warp;
 }
 
 void timemap_min_dist(t_timemap *x, double min_dist)
@@ -542,54 +543,57 @@ void timemap_random_order(t_timemap *x, t_atom_long random_order)
     x->random_order = random_order ? true : false;
 }
 
+// Mode Methods
+
 void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val)
 {
-	t_scale_mode scale_mode = kScaleNone;
+    scaling_mode mode = scaling_mode::none;
+    
 	double scale_min = min_val;
 	double scale_max = max_val;
 	
 	if (scale_mode_sym == gensym("scale")) 
-		scale_mode = kScale;
+        mode = scaling_mode::scale;
 	
 	if (scale_mode_sym == gensym("amp"))
 	{
-		scale_mode = kScaleLog;
-		scale_min = pow(10, scale_min / 20.);
-		scale_max = pow(10, scale_max / 20.);
+        mode = scaling_mode::log;
+		scale_min = pow(10, scale_min / 20.0);
+		scale_max = pow(10, scale_max / 20.0);
 	}
 	
 	if (scale_mode_sym == gensym("pitch"))
 	{
-		scale_mode = kScaleLog;
-		scale_min = pow(2, scale_min / 12.);
-		scale_max = pow(2, scale_max / 12.);
+        mode = scaling_mode::log;
+		scale_min = pow(2, scale_min / 12.0);
+		scale_max = pow(2, scale_max / 12.0);
 	}
 	
 	if (scale_mode_sym == gensym("log")) 
-		scale_mode = kScaleLog;
+        mode = scaling_mode::log;
     
 	if (scale_mode_sym == gensym("exp")) 
-		scale_mode = kScaleExp;
+        mode = scaling_mode::exp;
 	
 	if (scale_mode_sym == gensym("div"))
 	{
-		scale_mode = kScaleDiv;
-		scale_min = max_val - (2 * (max_val - min_val));
+        mode = scaling_mode::div;
+		scale_min = max_val - (2.0 * (max_val - min_val));
 	}
-	
-	if (scale_mode == kScaleLog)
+    
+    if (mode == scaling_mode::log)
 	{
 		scale_min = log(scale_min);
 		scale_max = log(scale_max);
 	}
 	
-	if (scale_mode == kScaleExp)
+    if (mode == scaling_mode::exp)
 	{
 		scale_min = exp(scale_min);
 		scale_max = exp(scale_max);
 	}
 	
-	x->scale_mode = scale_mode;
+	x->scale_mode = mode;
 	x->scale_val1 = scale_max - scale_min;
 	x->scale_val2 = scale_min;
 	x->min_val = min_val;
@@ -598,10 +602,10 @@ void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, dou
 
 void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound)
 {
-    t_stream_mode mode;
+    streaming_mode mode;
     
-    mode = (stream_mode == 1) ? kStreamAdditive : kStreamNone;
-    mode = (stream_mode > 1) ? kStreamMultiplicative : mode;
+    mode = (stream_mode == 1) ? streaming_mode::additive : streaming_mode::none;
+    mode = (stream_mode > 1) ? streaming_mode::multiplicative : mode;
     
 	x->stream_mode = mode;
 	x->init_val = init_val;
