@@ -536,7 +536,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 			F32_VEC_LOG_ARRAY(log_amplitudes, log_amplitudes, fft_size_halved);
 #else
 			for (i = 0; i < fft_size_halved; i++)
-				log_amplitudes[i] = log((sq_amplitudes[i] < POW_MIN) ? POW_MIN : sq_amplitudes[i]) * 0.5;;
+				log_amplitudes[i] = log((sq_amplitudes[i] < POW_MIN) ? POW_MIN : sq_amplitudes[i]) * 0.5;
 #endif
 #endif
 			

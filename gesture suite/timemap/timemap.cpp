@@ -491,7 +491,7 @@ void timemap_rand_amount(t_timemap *x, double rand_amount)
 
 void timemap_centre(t_timemap *x, double centre)
 {
-    x->centre = clip(centre, 0.0, 1.0);;
+    x->centre = clip(centre, 0.0, 1.0);
 }
 
 void timemap_warp(t_timemap *x, double warp)

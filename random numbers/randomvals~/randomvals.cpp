@@ -153,7 +153,7 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
         // Calculate parameters to store
         
         const double mean = std::max(0.0, std::min(1.0, atom_getfloat(argv++)));
-        const double dev = std::max(0.0, atom_getfloat(argv++));;
+        const double dev = std::max(0.0, atom_getfloat(argv++));
         const double weight = std::max(0.0, atom_getfloat(argv++));
         
         x->params[i] = window_gauss_params(mean, dev);
