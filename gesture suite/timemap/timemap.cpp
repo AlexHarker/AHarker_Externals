@@ -27,6 +27,7 @@
 #include <RandomGenerator.hpp>
 
 #include <algorithm>
+#include <functional>
 
 
 // Globals and Object Structure
@@ -49,6 +50,25 @@ enum class streaming_mode
     multiplicative
 };
 
+struct scaling_parameters
+{
+    double scale_val1;
+    double scale_val2;
+    double min_val;
+    double max_val;
+    
+    scaling_mode mode;
+};
+
+struct streaming_parameters
+{
+    double init_val;
+    double min_val;
+    double max_val;
+    
+    streaming_mode mode;
+};
+
 struct t_timemap
 {
     t_object a_obj;
@@ -57,23 +77,14 @@ struct t_timemap
     double centre;
     double warp;
     
-    double scale_val1;
-    double scale_val2;
-    double min_val;
-    double max_val;
-    
     double min_dist;
     double max_dist;
     
-    double min_sbound;
-    double max_sbound;
-    double init_val;
+    scaling_parameters scale_params;
+    streaming_parameters stream_params;
     
     t_atom_long max_retries;
-    
-    scaling_mode scale_mode;
-    streaming_mode stream_mode;
-    
+
     bool random_order;
     
     random_generator<> gen;
@@ -90,8 +101,8 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 void timemap_calculate(t_timemap *x, t_atom_long num_points);
 
 inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double warp);
-double timemap_scale(double val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max);
-bool check_and_insert(random_generator<>& gen, double new_val, double *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound);
+double timemap_scale(double val, const scaling_parameters& params);
+bool check_and_insert(random_generator<>& gen, double val, double *vals, long N, double min_dist, double max_dist, bool randomise, const streaming_parameters& stream_params);
 
 void timemap_rand_amount(t_timemap *x, double rand_amount);
 void timemap_centre(t_timemap *x, double centre);
@@ -101,7 +112,7 @@ void timemap_max_dist(t_timemap *x, double max_dist);
 void timemap_max_retries(t_timemap *x, t_atom_long max_retries);
 void timemap_random_order(t_timemap *x, t_atom_long random_order);
 void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, double max_val);
-void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound);
+void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_val, double max_val);
 
 // Clip Helper
 
@@ -209,6 +220,18 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
+// Streaming Template
+
+template <typename T>
+void timemap_do_stream(t_atom *output_list, double *vals, double cumulate, long& N, T op)
+{
+    N++;
+    atom_setfloat(output_list, cumulate);
+    
+    for (long i = 1; i < N; i++)
+        atom_setfloat(output_list + i, (cumulate = op(cumulate, vals[i - 1])));
+}
+
 // Calculation Method
 
 void timemap_calculate(t_timemap *x, t_atom_long num_points)
@@ -217,14 +240,9 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     double vals[1024];
     long items[1024];
     
-    const double init_val = x->init_val;
-    const double scale_val1 = x->scale_val1;
-    const double scale_val2 = x->scale_val2;
-    const double min_val = x->min_val;
-    const double max_val = x->max_val;
-    const double min_sbound = x->min_sbound;
-    const double max_sbound = x->max_sbound;
-    
+    const scaling_parameters scale_params = x->scale_params;
+    const streaming_parameters stream_params = x->stream_params;
+
     const double centre = x->centre;
     const double rand_amount = x->rand_amount;
     const double warp = x->warp;
@@ -232,9 +250,6 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     const double max_dist = x->max_dist;
     
     const t_atom_long max_retries = x->max_retries;
-
-    const streaming_mode stream_mode = x->stream_mode;
-    const scaling_mode scale_mode = x->scale_mode;
 
     const bool random_order = x->random_order;
 
@@ -252,7 +267,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
         num_points = 1024;
     }
     
-    if (stream_mode != streaming_mode::none)
+    if (stream_params.mode != streaming_mode::none)
         num_points--;
 
     const double points_recip = 1.0 / (double) (num_points + 1);
@@ -291,12 +306,12 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
             
             // Scale if relevant
             
-            if (scale_mode != scaling_mode::none)
-                val = timemap_scale(val, scale_mode, scale_val1, scale_val2, min_val, max_val);
+            if (scale_params.mode != scaling_mode::none)
+                val = timemap_scale(val, scale_params);
             
             // If the value is good then keep it and increase list_length
                         
-            if (check_and_insert(x->gen, val, vals, min_dist, max_dist, list_length, random_order, stream_mode, init_val, min_sbound, max_sbound))
+            if (check_and_insert(x->gen, val, vals, list_length, min_dist, max_dist, random_order, stream_params))
             {
                 suitable = true;
                 list_length++;
@@ -311,7 +326,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     
     // Do stream mode
     
-    switch (stream_mode)
+    switch (stream_params.mode)
     {
         case streaming_mode::none:
             for (long i = 0; i < list_length; i++)
@@ -319,26 +334,12 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
             break;
             
         case streaming_mode::additive:
-        {
-            double cumulate = init_val;
-            list_length++;
-            atom_setfloat(output_list, cumulate);
-            
-            for (long i = 1; i < list_length; i++)
-                atom_setfloat(output_list + i, (cumulate += vals[i - 1]));
+            timemap_do_stream(output_list, vals, stream_params.init_val, list_length, std::plus<double>());
             break;
-        }
             
         case streaming_mode::multiplicative:
-        {
-            double cumulate = init_val;
-            list_length++;
-            atom_setfloat(output_list, cumulate);
-            
-            for (long i = 1; i < list_length; i++)
-                atom_setfloat(output_list + i, (cumulate *= vals[i - 1]));
+            timemap_do_stream(output_list, vals, stream_params.init_val, list_length, std::multiplies<double>());
             break;
-        }
     }
     
     outlet_list(x->list_outlet, 0L, list_length, output_list);
@@ -366,24 +367,24 @@ inline double timemap_value(random_generator<>& gen, long i, double points_recip
 
 // Value Scaling (applies scaling for modes other than none)
 
-double timemap_scale(double val, scaling_mode mode, double scale_val1, double scale_val2, double min, double max)
+double timemap_scale(double val, const scaling_parameters& params)
 {
     bool reciprocal = false;
     
-    if (mode == scaling_mode::div && val < 0.5)
+    if (params.mode == scaling_mode::div && val < 0.5)
     {
         reciprocal = true;
         val = 1.0 - val;
     }
     
-    val = val * scale_val1 + scale_val2;
+    val = val * params.scale_val1 + params.scale_val2;
     
-    if (mode == scaling_mode::log)
+    if (params.mode == scaling_mode::log)
         val = exp(val);
-    if (mode == scaling_mode::exp)
+    if (params.mode == scaling_mode::exp)
         val = log(val);
     
-    val = clip (val, min, max);
+    val = clip (val, params.min_val, params.max_val);
     
     if (reciprocal)
         val = 1.0 / val;
@@ -391,21 +392,46 @@ double timemap_scale(double val, scaling_mode mode, double scale_val1, double sc
     return val;
 }
 
-// Sorting function
+// Sorting and Checking Functions
 
-bool check_and_insert(random_generator<>& gen, double val, double *vals, double min_dist, double max_dist, long list_length, bool random_order, streaming_mode stream_mode, double init_val, double min_sbound, double max_sbound)
+template <typename T>
+bool check_stream(double *vals, long pos, long N, double val, double cumulate, double min_val, double max_val, T op)
 {
+    for (long i = 0; i < pos; i++)
+        cumulate = op(vals[i], cumulate);
+    
+    cumulate = op(val, cumulate);
+
+    if (cumulate < min_val || cumulate > max_val)
+        return false;
+    
+    for (long i = pos; i < N; i++)
+    {
+        cumulate = op(vals[i], cumulate);
+        if (cumulate < min_val || cumulate > max_val)
+            return false;
+    }
+    
+    return true;
+}
+
+bool check_and_insert(random_generator<>& gen, double val, double *vals, long N, double min_dist, double max_dist, bool randomise, const streaming_parameters& stream_params)
+{
+    const double& init_val = stream_params.init_val;
+    const double& min_val = stream_params.min_val;
+    const double& max_val = stream_params.max_val;
+    
     long pos;
         
     // Find Position for New Value (if order is random then pick randomly, otherwise find thex correct place)
     
-    if (random_order)
-        pos = gen.rand_int(static_cast<uint32_t>(list_length));
+    if (randomise)
+        pos = gen.rand_int(static_cast<uint32_t>(N));
     else
     {
         long j = 0;
         
-        for (; j < list_length; j++)
+        for (; j < N; j++)
             if (val < vals[j])
                 break;
         
@@ -421,62 +447,34 @@ bool check_and_insert(random_generator<>& gen, double val, double *vals, double 
             return false;
     }
     
-    if (pos < list_length)
+    if (pos < N)
     {
         const double test = fabs(vals[pos] - val);
         if ((test < min_dist) || (test > max_dist))
             return false;
     }
-    
+
     // If we are in stream mode then check that this value will not result in output exceeding the stream bounds
-    
-    double cumulate = init_val;
-        
-    switch (stream_mode)
+            
+    switch (stream_params.mode)
     {
         case streaming_mode::none:
             break;
             
         case streaming_mode::additive:
-            
-            for (long i = 0; i < pos; i++)
-                cumulate += vals[i];
-            
-            cumulate += val;
-            
-            if (cumulate < min_sbound || cumulate > max_sbound)
+            if (!check_stream(vals, pos, N, val, init_val, min_val, max_val, std::plus<double>()))
                 return false;
-            
-            for (long i = pos; i < list_length; i++)
-            {
-                cumulate += vals[i];
-                if (cumulate < min_sbound || cumulate > max_sbound)
-                    return false;
-            }
             break;
         
         case streaming_mode::multiplicative:
-            
-            for (long i = 0; i < pos; i++)
-                cumulate *= vals[i];
-            
-            cumulate *= val;
-
-            if (cumulate < min_sbound || cumulate > max_sbound)
+            if (!check_stream(vals, pos, N, val, init_val, min_val, max_val, std::multiplies<double>()))
                 return false;
-            
-            for (long i = pos; i < list_length; i++)
-            {
-                cumulate *= vals[i];
-                if (cumulate < min_sbound || cumulate > max_sbound)
-                    return false;
-            }
             break;
     }
     
     // If the value is suitable then here we insert the value
     
-    for (long j = list_length; j > pos; j--)
+    for (long j = N; j > pos; j--)
         vals[j] = vals[j - 1];
     
     vals[pos] = val;
@@ -571,22 +569,15 @@ void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, dou
         scale_max = exp(scale_max);
     }
     
-    x->scale_mode = mode;
-    x->scale_val1 = scale_max - scale_min;
-    x->scale_val2 = scale_min;
-    x->min_val = min_val;
-    x->max_val = max_val;
+    x->scale_params = scaling_parameters { scale_max - scale_min, scale_min, min_val, max_val, mode };
 }
 
-void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_sbound, double max_sbound)
+void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_val, double max_val)
 {
     streaming_mode mode;
     
     mode = (stream_mode == 1) ? streaming_mode::additive : streaming_mode::none;
     mode = (stream_mode > 1) ? streaming_mode::multiplicative : mode;
     
-    x->stream_mode = mode;
-    x->init_val = init_val;
-    x->min_sbound = min_sbound;
-    x->max_sbound = max_sbound;
+    x->stream_params = streaming_parameters { init_val, min_val, max_val, mode };
 }
