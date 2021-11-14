@@ -2,14 +2,16 @@
 /*
  *  timefilter
  *
- *	Originally intended for use with lists representing time values as part of a system of gestural representation, timefilter is an object for filtering and reordering values in a list of numbers.
+ *  timefilter is an object for filtering and reordering values in a list of numbers.
  *
- *	The stored list is first sorted (if desired) either into ascending order or randomly.
- *	Values may then either be filtered randomly, or according to a minimum required distance between values (originally to avoid events timed too closely together), or a combination of the two.
+ *  timefilter was riginally intended for use with lists representing time values as part of a system of gestural representation,
+ *  The stored list is first sorted (if desired) either into ascending order or a random order.
+ *  Values may then either be thinned (filterd) randomly and/or according to a minimum required distance between values.
+ *  The original intention was to originally to avoid events timed too closely together.
  *	
- *	The object may obviously be used on lists representing any parameter and in various other scenarios than the one from which it takes its name.
+ *  The object may be used on lists representing any parameter / in other scenarios than the one from which it takes its name.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-21 Alex Harker. All rights reserved.
  *
  */
 
@@ -23,25 +25,34 @@
 #include <algorithm>
 
 
+// Globals and Object Structure
+
 t_class *this_class;
 
-enum t_ordering_mode { kOrderAscending, kOrderRandom, kOrderMaintain };
+enum class ordering_mode
+{
+    ascending,
+    random,
+    maintain
+};
 
 struct t_timefilter
 {
     t_object a_obj;
     
-    float stored_list[1024];
+    double stored_list[1024];
 	long stored_list_length;
 	
     random_generator<> gen;
-    t_ordering_mode ordering;
+    ordering_mode ordering;
 	
-	float filter;
-	float randfilter;
+	double filter;
+	double rand_filter;
 	
     void *the_list_outlet;
 };
+
+// Function Prototypes
 
 void timefilter_free(t_timefilter *x);
 void *timefilter_new();
@@ -51,16 +62,14 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv);
 void timefilter_bang(t_timefilter *x);
 
 void timefilter_float(t_timefilter *x, double filter);
-void timefilter_randfilter(t_timefilter *x, double randfilter);
+void timefilter_randfilter(t_timefilter *x, double rand_filter);
 void timefilter_ordering(t_timefilter *x, t_atom_long ordering);
 void timefilter_reset(t_timefilter *x);
 
-void combsort(float *vals, long num_points);
-void randomsort(random_generator<>& gen, float *vals, long num_points);
+void combsort(double *vals, long num_points);
+void randomsort(random_generator<>& gen, double *vals, long num_points);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Main
 
 int C74_EXPORT main()
 {
@@ -84,10 +93,7 @@ int C74_EXPORT main()
 	return 0;
 }
 
-void timefilter_free(t_timefilter *x)
-{
-    destroy_object(x->gen);
-}
+// New / Free / Assist
 
 void *timefilter_new()
 {
@@ -96,13 +102,18 @@ void *timefilter_new()
     x->the_list_outlet = listout(x);
 	x->stored_list_length = 0;
 		
-	x->filter = 0.;
-	x->randfilter = 0.;
-	x->ordering = kOrderAscending;
+	x->filter = 0.0;
+	x->rand_filter = 0.0;
+	x->ordering = ordering_mode::ascending;
 	
     create_object(x->gen);
     
     return x;
+}
+
+void timefilter_free(t_timefilter *x)
+{
+    destroy_object(x->gen);
 }
 
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
@@ -118,15 +129,13 @@ void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////// List storage and filtering ////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// List storage
 
 void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	// Store an input list
 	
-	float *stored_list = x->stored_list;
+	double *stored_list = x->stored_list;
 	long stored_list_length = x->stored_list_length;
 	
     if (argc > 1024)
@@ -138,65 +147,59 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 	x->stored_list_length = stored_list_length;
 }
 
+// Filtering
+
 void timefilter_bang(t_timefilter *x)
 {
 	t_atom output_list[1024];
 	t_atom *list_pointer = output_list;
 
-	float *temp_vals = x->stored_list;
-	float randfilter = x->randfilter;
-	float filter = x->filter;
-	float last_val = -FLT_MAX;
-	float new_val;
+    double *temp_vals = x->stored_list;
+	double rand_filter = x->rand_filter;
+    double filter = x->filter;
+    double last_val = -FLT_MAX;
+    double new_val;
 	
 	long stored_list_length = x->stored_list_length;
 	long output_list_length = stored_list_length;
-	long i;
 	
 	// Sort the input
 	
 	switch (x->ordering)
 	{
-		case kOrderAscending:
-			combsort(temp_vals, stored_list_length);
-			break;
-		case kOrderRandom:
-			randomsort(x->gen, temp_vals, stored_list_length);
-			break;
-        case kOrderMaintain:
-			break;
+        case ordering_mode::ascending:      combsort(temp_vals, stored_list_length);            break;
+        case ordering_mode::random:         randomsort(x->gen, temp_vals, stored_list_length);  break;
+        case ordering_mode::maintain:                                                           break;
 	}
 	
 	// Filtering is done here
 		
-	for (i = 0; i < stored_list_length; i++)
+	for (long i = 0; i < stored_list_length; i++)
 	{
 		new_val = *temp_vals++;
 		
-		// Check if we are keeping this value
+		// Check if we are keeping this value (if not decrease output count)
 		
-		if ((x->gen.rand_double() > randfilter) && fabs(new_val - last_val) >= filter)
+		if ((x->gen.rand_double() > rand_filter) && fabs(new_val - last_val) >= filter)
 		{
-			// If this value is within the filter distance of the next value, we randomly decide which one to lose and skip ahead if we choose this one 
-			// This way the filtering works on distance, regardless of ordering...
+			// If this value is within the filter distance of the next value  randomly decide which one to lose
 			
 			if (i < output_list_length - 1 && fabs(*temp_vals - new_val) < filter && x->gen.rand_int(1))
 			{
+                // Skip ahead if we choose to lose this value so that the filtering works on distance, regardless of ordering...
+                
+                // FIX - need to check for distance with previous value also?
+                
 				new_val = *temp_vals++;
 				output_list_length--;
 				i++;
 			}
 			
-			atom_setfloat(list_pointer, new_val);
-			list_pointer++;
+			atom_setfloat(list_pointer++, new_val);
 			last_val = new_val;
 		}
 		else 
-		{
-			// If we aren't keeping it then the output size is one less
-			
-			output_list_length--;
-		}
+            output_list_length--;
 	}
 	
 	// Output and clear stored list
@@ -205,26 +208,24 @@ void timefilter_bang(t_timefilter *x)
 	x->stored_list_length = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////// Various routines for setting the filtering parameters ///////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Filering Parameters
 
 void timefilter_float(t_timefilter *x, double filter)
 {
 	x->filter = fabs(filter);
 }
 
-void timefilter_randfilter(t_timefilter *x, double randfilter)
+void timefilter_randfilter(t_timefilter *x, double rand_filter)
 {
-	x->randfilter = randfilter;
+	x->rand_filter = rand_filter;
 }
 
 void timefilter_ordering(t_timefilter *x, t_atom_long ordering)
 {
-    t_ordering_mode mode;
+    ordering_mode mode;
     
-    mode = (ordering == 1) ? kOrderRandom : kOrderAscending;
-    mode = (ordering > 1) ? kOrderMaintain : mode;
+    mode = (ordering == 1) ? ordering_mode::random : ordering_mode::ascending;
+    mode = (ordering > 1) ? ordering_mode::maintain : mode;
     
     x->ordering = mode;
 }
@@ -234,11 +235,9 @@ void timefilter_reset(t_timefilter *x)
 	x->stored_list_length = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////// Sorting functions ////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Sorting functions
 
-void combsort(float *vals, long num_points)
+void combsort(double *vals, long num_points)
 {
 	long gap = num_points;
 	bool swaps = true;
@@ -263,13 +262,13 @@ void combsort(float *vals, long num_points)
 	}
 }
 
-void randomsort(random_generator<>& gen, float *vals, long num_points)
+void randomsort(random_generator<>& gen, double *vals, long num_points)
 {
 	// Put the input in a random order
 	
 	for (long i = 0; i < num_points - 1; i++)
 	{
-        long pos = gen.rand_int(num_points - (i + 1)) + i;
+        long pos = gen.rand_int(static_cast<uint32>(num_points - (i + 1))) + i;
 		std::swap(vals[i], vals[pos]);
 	}
 }
