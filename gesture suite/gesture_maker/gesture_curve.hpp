@@ -4,36 +4,46 @@
 
 #include <ext.h>
 
+// Curvature Class
+
 class gesture_curve
 {
+    // Curve Type
+    
     enum class curve_type
     {
         power_sin_forward,
         power_sin_reverse,
-        power_recip_sin_reverse,
-        power_recip_sin_forward,
+        recip_sin_reverse,
+        recip_sin_forward,
         power_asin_forward,
         power_asin_reverse,
-        power_recip_asin_reverse,
-        power_recip_asin_forward
+        recip_asin_reverse,
+        recip_asin_forward
     };
     
 public:
     
-    void reset();
+    // Main Methods
     
-    double operator()(double val);
+    gesture_curve() : power_val(1.0), scurve_val(0.0), type(curve_type::power_sin_forward) {}
+    
+    void reset() { *this = gesture_curve(); }
+    
+    double operator()(double val) const;
 
     void params(t_atom *specifiers);
     
 private:
     
-    curve_type get_type(int band);
+    // Helpers
+    
+    curve_type get_type(int band) const;
     
     double scurve_sin(double val) const;
     double scurve_asin(double val) const;
 
-    // Curve values
+    // Curvature Values
     
     double power_val;
     double scurve_val;

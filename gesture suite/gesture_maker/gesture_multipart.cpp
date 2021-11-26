@@ -14,6 +14,7 @@
 #include "gesture_kernel.hpp"
 #include "gesture_multipart.hpp"
 
+#include <algorithm>
 
 // Reset the multipart structure to default values
 
@@ -33,6 +34,8 @@ void gesture_multipart::reset()
     kernel.reset();
 }
 
+// Set the Initial Values
+
 void gesture_multipart::initial(double val)
 {
     kernel.initial(val);
@@ -43,28 +46,24 @@ void gesture_multipart::initial_specifier(t_atom *specifier)
     kernel.initial_specifier(specifier);
 }
 
-// Set the parameters
+// Set Parameters
 
 void gesture_multipart::params(long argc, t_atom *argv)
 {
-	t_atom *parameters = kernel_params + (MAX_NUM_KERNEL_PARAMS * num_kernels);
-		
 	if (argc && num_kernels < MAX_NUM_KERNELS)
 	{
-		if (argc > MAX_NUM_KERNEL_PARAMS)
-			argc = MAX_NUM_KERNEL_PARAMS;
-		
-		kernel_param_count[num_kernels] = argc;
-		
-		while (argc--)
-			*parameters++ = *argv++;
+        t_atom *parameters = kernel_params + (MAX_NUM_KERNEL_PARAMS * num_kernels);
+        argc = std::min(argc, MAX_NUM_KERNEL_PARAMS);
+				
+        for (long i = 0; i < kernel_param_count[num_kernels]; i++)
+			parameters[i] = *argv++;
 		
 		num_kernels++;
 		force_output = true;
 	}
 }
 
-// Set the timings at which each new inflection gesture starts
+// Set the Timings
 
 void gesture_multipart::timings(long argc, t_atom *argv)
 {
@@ -76,7 +75,7 @@ void gesture_multipart::timings(long argc, t_atom *argv)
 	force_output = true;
 }
 
-// This function takes in the overall gesture phase, updates the inflection gesture (if needed) and returns the inflection gesture phase
+// Calculate the output from an input phase
 
 double gesture_multipart::operator()(double phase)
 {
@@ -89,7 +88,7 @@ double gesture_multipart::operator()(double phase)
 	for (; search_kernel < num_splits && phase >= split_points[search_kernel]; search_kernel++);
 	
 	// Get the current values and update the inflection gesture parameters
-	// Note (as stated above) that the parameters will cycle round if there are not as many sets of parameters as inflections
+	// Note that the parameters will cycle round if there are not as many sets of parameters as splits
 	
 	if ((current_kernel != search_kernel || force_output))
 	{
@@ -111,12 +110,7 @@ double gesture_multipart::operator()(double phase)
 
 	// Calculate and clip inflection phase
 	
-	double kernel_phase = (phase - lo_val) * range_recip;
-	
-	if (kernel_phase > 1.0)
-        kernel_phase = 1.0;
-	if (kernel_phase < 0.0)
-        kernel_phase = 0.0;
+	const double kernel_phase = std::max(0.0, std::min(1.0, (phase - lo_val) * range_recip));
 	
 	return kernel(kernel_phase);
 }

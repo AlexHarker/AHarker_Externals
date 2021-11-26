@@ -14,6 +14,7 @@
 #include "gesture_kernel.hpp"
 #include "gesture_random.hpp"
 
+
 // Symbols
 
 t_symbol *ps_flat;
@@ -132,12 +133,7 @@ void gesture_kernel::initial_specifier(t_atom *specifier)
     last_val = params_val(specifier, last_val);
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////// Parameter Routines //////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// Parameter Methods
 
 // Parameter storage relating to the resolution of random bands
 
@@ -186,12 +182,7 @@ gesture_kernel::gesture_type gesture_kernel::get_type(t_symbol *type)
 
 double gesture_kernel::params_time(t_atom *specifier, bool reverse)
 {
-	double time_val = 0.0;
-	
-	if (atom_gettype(specifier) == A_FLOAT)
-        time_val = atom_getfloat(specifier);
-	else
-		time_val = time_params.band_to_val(random_band(specifier));
+	double time_val = time_params.specifier_to_val(specifier);
 	
 	if (reverse)
 		time_val = 1.0 - time_val;
@@ -203,13 +194,10 @@ double gesture_kernel::params_time(t_atom *specifier, bool reverse)
 
 double gesture_kernel::params_val(t_atom *specifier, double last_val)
 {
-	if (atom_gettype(specifier) == A_FLOAT)
-		return atom_getfloat(specifier);
-	
-	if (atom_gettype(specifier) == A_SYM && atom_getsym(specifier) == ps_last)
-		return last_val;
-	
-	return val_params.band_to_val(random_band(specifier));
+    if (atom_gettype(specifier) == A_SYM && atom_getsym(specifier) == ps_last)
+        return last_val;
+    
+    return val_params.specifier_to_val(specifier);
 }
 
 // Set all the kernel parameters based on the given input atoms

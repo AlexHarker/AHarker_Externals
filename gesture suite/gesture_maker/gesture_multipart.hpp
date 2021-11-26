@@ -13,17 +13,20 @@
 #define _GESTURE_MULTIPART_HPP_
 
 #include <ext.h>
-#include <ext_obex.h>
 
-//  Multipart structure
+// FIX - defines
 
-#define MAX_NUM_KERNEL_PARAMS   16
+#define MAX_NUM_KERNEL_PARAMS   16L
 #define MAX_NUM_KERNELS         64
 #define MAX_NUM_SPLITS          63
+
+// Multipart Class
 
 class gesture_multipart
 {
 public:
+    
+    // Main Methods
     
     void reset();
     
@@ -36,6 +39,8 @@ public:
     double operator()(double phase);
     
 private:
+    
+    // Variables
     
     gesture_kernel kernel;
 

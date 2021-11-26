@@ -4,16 +4,27 @@
 
 #include <ext.h>
 
+// Random Band (from specifier)
+
+int random_band(t_atom *specifier);
+
+
 class gesture_random
 {
 public:
     
     constexpr gesture_random(int n_bands, double lo, double hi, double end)
-    : num_bands(n_bands), lo_val(lo), hi_val(hi), end_ratio(end)
+    : num_bands(n_bands)
+    , lo_val(lo)
+    , hi_val(hi)
+    , end_ratio(end)
+    , band_space(num_bands - 2.0 + (2.0 * end_ratio))
+    , convert_val((hi_val - lo_val) / band_space)
     {}
     
     double band_to_val(int band_in) const;
-    
+    double specifier_to_val(t_atom *specifier) const;
+
     int n_bands() const { return num_bands; }
     
 private:
@@ -23,8 +34,8 @@ private:
     const double lo_val;
     const double hi_val;
     const double end_ratio;
+    const double band_space;
+    const double convert_val;
 };
-
-int random_band(t_atom *specifier);
 
 #endif /* _GESTURE_RANDOM_HPP_ */

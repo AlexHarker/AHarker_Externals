@@ -17,8 +17,12 @@
 #include "gesture_curve.hpp"
 
 
+// Kernel Class
+
 class gesture_kernel
 {
+    // Gesture Type
+    
     enum class gesture_type
     {
         flat,
@@ -35,6 +39,8 @@ class gesture_kernel
 
 public:
     
+    // Main Methods
+    
     static void setup();
 
     void reset();
@@ -46,6 +52,8 @@ public:
     double operator()(double val);
 
 private:
+    
+    // Helpers
     
     gesture_type get_type(t_symbol *type);
 
@@ -64,11 +72,11 @@ private:
 	double val3;
 	double val4;
 	
-    // Curve values
+    // Curve Values
 	
     gesture_curve curves[3];
 
-    // Last value
+    // Last Value
     
     double last_val;
 };
