@@ -38,8 +38,8 @@ double gesture_random::band_to_val(int band_in) const
     constexpr double width_val = 0.55;
     
     const double band = band_in - 0.5;
-    const double lo = std::max(0.0, std::min(band_space, band - width_val + end_ratio));
-    const double hi = std::max(0.0, std::min(band_space, band + width_val + end_ratio));
+    const double lo = std::max(0.0, std::min(m_band_space, band - width_val + m_end_ratio));
+    const double hi = std::max(0.0, std::min(m_band_space, band + width_val + m_end_ratio));
     
     // Interpolate a random value into bandspace
     
@@ -47,7 +47,7 @@ double gesture_random::band_to_val(int band_in) const
     
     // Complete conversion to final value
     
-    return r * convert_val + lo_val;
+    return r * m_convert_val + m_lo;
 }
 
 double gesture_random::specifier_to_val(t_atom *specifier) const

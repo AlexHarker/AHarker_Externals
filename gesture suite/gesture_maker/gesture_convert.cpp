@@ -47,23 +47,15 @@ void gesture_convert::setup()
 
 // Scale a value accoring to the range and scaling specified
 
-double gesture_convert::operator()(double input)
+double gesture_convert::operator()(double val)
 {
-    auto clip = [&](double x)
-    {
-        return std::max(min, std::min(max, x));
-    };
+    auto clip = [&](double x) { return std::max(m_min, std::min(m_max, x)); };
     
-	switch (mode)
+	switch (m_mode)
 	{
-        case conversion_mode::none:
-			return input;
-			
-        case conversion_mode::linear:
-			return clip((input * mult) - subtract);
-    
-        case conversion_mode::log_in:
-            return clip(exp(input * mult - subtract));
+        case conversion_mode::none:         return val;
+        case conversion_mode::linear:       return clip((val * m_mult) - m_subtract);
+        case conversion_mode::log_in:       return clip(exp(val * m_mult - m_subtract));
 	}
 }
 
@@ -71,87 +63,62 @@ double gesture_convert::operator()(double input)
 
 void gesture_convert::params(t_object *x, long argc, t_atom *argv)
 {
-	double min_in;
-	double max_in;
-	double min_out;
-	double max_out;
-		
-	t_symbol *mode_sym;
-
 	if (argc < 1)
 		return;
 	
-	mode_sym = atom_getsym(argv++);
+    t_symbol *mode_sym = atom_getsym(argv++);
 	
-	if (mode_sym == ps_none || mode_sym == ps_None)
+	if (mode_sym == ps_none || mode_sym == ps_None || argc < 3)
 	{
-		mode = conversion_mode::none;
-		return;
-	}
-	
-	if (argc < 3)
-	{
-		object_error(x, "not enough values for conversion parameter change");
+        if (argc < 3)
+            object_error(x, "not enough values for conversion parameter change");
+
+        *this = gesture_convert();
 		return;
 	}
 	
 	// Here we convert captialised symbols, so as to allow capitalisation (which is needed for backward compatibility)
 	
-	if (mode_sym == ps_Scale) 
-		mode_sym = ps_scale;
-	if (mode_sym == ps_Log) 
-		mode_sym = ps_log;
-	if (mode_sym == ps_Amp) 
-		mode_sym = ps_amp;
-	if (mode_sym == ps_Pitch) 
-		mode_sym = ps_pitch;
+    mode_sym = (mode_sym == ps_Scale) ? ps_scale : mode_sym;
+    mode_sym = (mode_sym == ps_Log)   ? ps_log   : mode_sym;
+    mode_sym = (mode_sym == ps_Amp)   ? ps_amp   : mode_sym;
+    mode_sym = (mode_sym == ps_Pitch) ? ps_pitch : mode_sym;
 
 	// We can either just specify min and max out, or also specify input range (again for backwards compatibility)
 	
-	if (argc < 5)
-	{
-		min_in = 0;
-		max_in = 1;
-		min_out = atom_getfloat(argv++);
-		max_out = atom_getfloat(argv++);
-	}
-	else
-	{
-		min_in = atom_getfloat(argv++);
-		max_in = atom_getfloat(argv++);
-		min_out = atom_getfloat(argv++);
-		max_out = atom_getfloat(argv++);
-	}
+	const double min_in = (argc < 5) ? 0.0 : atom_getfloat(argv++);
+    const double max_in = (argc < 5) ? 1.0 : atom_getfloat(argv++);
+    double min_out = atom_getfloat(argv++);
+    double max_out = atom_getfloat(argv++);
 
 	if (mode_sym == ps_log || mode_sym == ps_amp || mode_sym == ps_pitch)
-		mode = conversion_mode::log_in;
+		m_mode = conversion_mode::log_in;
     else
-        mode = conversion_mode::linear;
+        m_mode = conversion_mode::linear;
 	
 	if (mode_sym == ps_amp)
 	{
 		min_out = pow(10.0, min_out / 20.0);
 		max_out = pow(10.0, max_out / 20.0);
 	}
-
-	if (mode_sym == ps_pitch)
+	else if (mode_sym == ps_pitch)
 	{
 		min_out = pow(2.0, min_out / 12.0);
 		max_out = pow(2.0, max_out / 12.0);
 	}	
 	
-	min = min_out;
-	max = max_out;
+	m_min = min_out;
+	m_max = max_out;
 	
-	if (mode == conversion_mode::log_in)
+	if (m_mode == conversion_mode::log_in)
 	{
 		min_out = log(min_out);
 		max_out = log(max_out);
 	}
 	
-	mult = (max_out - min_out) / (max_in - min_in);
-	subtract = (min_in * mult) - min_out;
+	m_mult = (max_out - min_out) / (max_in - min_in);
+	m_subtract = (min_in * m_mult) - min_out;
 	
-	if (mode == conversion_mode::linear && mode_sym != ps_scale)
+	if (m_mode == conversion_mode::linear && mode_sym != ps_scale)
 		object_error(x, "gesture_maker: unknown conversion type - defaulting to scale");
 }

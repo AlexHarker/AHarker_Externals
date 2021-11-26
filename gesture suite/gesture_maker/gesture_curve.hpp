@@ -26,7 +26,7 @@ public:
     
     // Main Methods
     
-    gesture_curve() : power_val(1.0), scurve_val(0.0), type(curve_type::power_sin_forward) {}
+    gesture_curve() : m_power(1.0), m_scurve(0.0), m_type(curve_type::power_sin_forward) {}
     
     void reset() { *this = gesture_curve(); }
     
@@ -45,9 +45,9 @@ private:
 
     // Curvature Values
     
-    double power_val;
-    double scurve_val;
-    curve_type type;
+    double m_power;
+    double m_scurve;
+    curve_type m_type;
 };
 
 #endif /* _GESTURE_CURVE_HPP_ */

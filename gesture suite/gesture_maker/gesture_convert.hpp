@@ -29,20 +29,21 @@ public:
     
     static void setup();
 
-    gesture_convert(): mode(conversion_mode::none), mult(1.0), subtract(0.0), min(0.0), max(1.0) {}
+    gesture_convert()
+    : m_mode(conversion_mode::none), m_mult(1.0), m_subtract(0.0), m_min(0.0), m_max(1.0) {}
         
-    double operator()(double input);
+    double operator()(double val);
 
     void params(t_object *x, long argc, t_atom *argv);
     
 private:
     
-    conversion_mode mode;
+    conversion_mode m_mode;
     
-    double mult;
-    double subtract;
-    double min;
-    double max;
+    double m_mult;
+    double m_subtract;
+    double m_min;
+    double m_max;
 };
 
 #endif /* _GESTURE_CONVERT_HPP_ */

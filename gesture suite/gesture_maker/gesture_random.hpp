@@ -8,34 +8,35 @@
 
 int random_band(t_atom *specifier);
 
+// Random Class (deals with banding)
 
 class gesture_random
 {
 public:
     
-    constexpr gesture_random(int n_bands, double lo, double hi, double end)
-    : num_bands(n_bands)
-    , lo_val(lo)
-    , hi_val(hi)
-    , end_ratio(end)
-    , band_space(num_bands - 2.0 + (2.0 * end_ratio))
-    , convert_val((hi_val - lo_val) / band_space)
+    constexpr gesture_random(int num_bands, double lo, double hi, double end_ratio)
+    : m_num_bands(num_bands)
+    , m_lo(lo)
+    , m_hi(hi)
+    , m_end_ratio(end_ratio)
+    , m_band_space(num_bands - 2.0 + (2.0 * end_ratio))
+    , m_convert_val((m_hi - m_lo) / m_band_space)
     {}
     
     double band_to_val(int band_in) const;
     double specifier_to_val(t_atom *specifier) const;
 
-    int n_bands() const { return num_bands; }
+    int num_bands() const { return m_num_bands; }
     
 private:
     
-    const int num_bands;
+    const int m_num_bands;
     
-    const double lo_val;
-    const double hi_val;
-    const double end_ratio;
-    const double band_space;
-    const double convert_val;
+    const double m_lo;
+    const double m_hi;
+    const double m_end_ratio;
+    const double m_band_space;
+    const double m_convert_val;
 };
 
 #endif /* _GESTURE_RANDOM_HPP_ */
