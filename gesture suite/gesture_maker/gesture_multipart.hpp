@@ -2,8 +2,8 @@
 /*
  *  gesture_maker_multipart.h
  *
- *	A header file for the multipart section of the gesture_maker object.
- *	This code deals with the multipart nature of the inflection kernel.
+ *  A header file for the multipart section of the gesture_maker object.
+ *  This code deals with the multipart nature of the inflection kernel.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
@@ -57,26 +57,26 @@ private:
 
     // Split Values
     
-	double m_split_points[MAX_NUM_SPLITS];
+    double m_split_points[MAX_NUM_SPLITS];
     long m_num_splits;
     
     // Kernel Parameters
     
     t_atom m_kernel_params[MAX_NUM_KERNELS * MAX_NUM_KERNEL_PARAMS];
-	long m_kernel_param_count[MAX_NUM_KERNELS];
+    long m_kernel_param_count[MAX_NUM_KERNELS];
     long m_num_kernels;
     long m_current_kernel;
     
     // Current Phase
     
-	double m_lo_phase;
+    double m_lo_phase;
     double m_hi_phase;
-	double m_range_recip;
-	double m_last_phase;
-	
+    double m_range_recip;
+    double m_last_phase;
+    
     // Force Reset
     
-	bool m_force_update;
+    bool m_force_update;
 };
 
 #endif /* _GESTURE_MULTIPART_HPP_ */

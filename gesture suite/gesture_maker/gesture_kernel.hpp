@@ -2,8 +2,8 @@
 /*
  *  gesture_maker_kernel.h
  *
- *	A header file for the kernel section of the gesture_maker object.
- *	This code deals with storing gestures, resolving variable parameters and calculating output values for either the main or inflection gestures.
+ *  A header file for the kernel section of the gesture_maker object.
+ *  This code deals with storing gestures, resolving variable parameters and calculating output values for either the main or inflection gestures.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
@@ -73,20 +73,20 @@ private:
     
     double calc(double val, double t1, double t2, double v1, double v2, gesture_curve& curve);
     
-	// Time Points
-	
-	double m_time1;
-	double m_time2;
+    // Time Points
+    
+    double m_time1;
+    double m_time2;
     
     // Values
     
-	double m_val1;
-	double m_val2;
-	double m_val3;
-	double m_val4;
-	
+    double m_val1;
+    double m_val2;
+    double m_val3;
+    double m_val4;
+    
     // Curve Values
-	
+    
     gesture_curve m_curves[3];
 
     // Last Value
