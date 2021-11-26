@@ -2,9 +2,9 @@
 /*
  *  gesture_maker_multipart.c
  *
- *	This code deals with multipart gestures that are made up of chained kernels.
- *	Note that the inflection kernel parameters will cycle round if there are not as many sets of parameters as inflections.
- *	Note also that each inflection gesture is resolved in realtime, so if values are specified as variable, each realisation will be different, even in the case of parameter cycling.
+ *  This code deals with multipart gestures that are made up of chained kernels.
+ *  Note that the inflection kernel parameters will cycle round if there are not as many sets of parameters as inflections.
+ *  Note also that each inflection gesture is resolved in realtime, so if values are specified as variable, each realisation will be different, even in the case of parameter cycling.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
@@ -65,29 +65,29 @@ double gesture_multipart::operator()(double phase)
 
 void gesture_multipart::params(long argc, t_atom *argv)
 {
-	if (argc && m_num_kernels < MAX_NUM_KERNELS)
-	{
+    if (argc && m_num_kernels < MAX_NUM_KERNELS)
+    {
         t_atom *parameters = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * m_num_kernels);
         argc = std::min(argc, MAX_NUM_KERNEL_PARAMS);
-				
+                
         for (long i = 0; i < m_kernel_param_count[m_num_kernels]; i++)
-			parameters[i] = *argv++;
-		
-		m_num_kernels++;
+            parameters[i] = *argv++;
+        
+        m_num_kernels++;
         m_force_update = true;
-	}
+    }
 }
 
 // Set the Timings
 
 void gesture_multipart::timings(long argc, t_atom *argv)
 {
-	m_num_splits = argc > MAX_NUM_SPLITS ? MAX_NUM_SPLITS : argc;
-	
+    m_num_splits = argc > MAX_NUM_SPLITS ? MAX_NUM_SPLITS : argc;
+    
     // There may be a better way to do this that brings us closer to the desired value
     
     for (long i = 0; i < m_num_splits; i++)
-		m_split_points[i] = nextafter(atom_getfloat(argv++), -1.0);
+        m_split_points[i] = nextafter(atom_getfloat(argv++), -1.0);
 
     m_force_update = true;
 }
