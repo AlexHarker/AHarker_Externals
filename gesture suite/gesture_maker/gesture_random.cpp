@@ -5,6 +5,7 @@
 
 #include <algorithm>
 
+
 // Random number generator
 
 random_generator<> rand_gen;
@@ -53,7 +54,7 @@ double gesture_random::band_to_val(int band_in) const
 double gesture_random::specifier_to_val(t_atom *specifier) const
 {
     if (atom_gettype(specifier) == A_FLOAT)
-        return  atom_getfloat(specifier);
+        return atom_getfloat(specifier);
     else
         return band_to_val(random_band(specifier));
 }

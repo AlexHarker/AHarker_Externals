@@ -14,6 +14,13 @@
 #include "gesture_kernel.hpp"
 #include "gesture_random.hpp"
 
+#include <algorithm>
+
+
+// Random Band Parameters for Times / Values
+
+constexpr gesture_random time_params(15, 0.0, 1.0, 0.2);
+constexpr gesture_random val_params(11, 0.0, 1.0, 0.2);
 
 // Symbols
 
@@ -30,115 +37,35 @@ t_symbol *ps_general;
 
 t_symbol *ps_last;
 
-// Reset the kernel parameters to defaults
+// Calculate one part of a kernel
 
-void gesture_kernel::reset()
-{	
-	time1 = 0.0;
-	time2 = 1.0;
-
-    val1 = 0.0;
-	val2 = 0.0;
-	val3 = 1.0;
-	val4 = 1.0;
+double gesture_kernel::calc(double phase, double t1, double t2, double v1, double v2, gesture_curve& curve)
+{
+    // Calculate and clip the linear time value (0 to 1) within the current curve
     
-    curves[0].reset();
-    curves[1].reset();
-    curves[2].reset();
-	
-    last_val = 0.0;
-}
+    double val = (t1 == t2) ? 0.0 : std::max(0.0, std::min(1.0, (phase - t1) / (t2 - t1)));
+    
+    // The linear time value is now curved and inearly interpolate between the two output values
+        
+    return (m_last_val = v1 + curve(val) * (v2 - v1));
+};
 
 // Calculate the kernel value for a given phase
 
 double gesture_kernel::operator()(double val)
 {
-	double time_lo = 0.0;
-	double time_hi = 1.0;
-	double v1 = 0.0;
-	double v2 = 1.0;
-	
-	int curve_idx = 0;
-	
-	// Calculate which of the 3 curves needs to be calculated
-	
-	if (val > time1)
-        curve_idx = 1;
-	if (val > time2)
-        curve_idx = 2;
-	
-	// Get the values for the correct curve
-	
-	switch (curve_idx)
-	{
-		case 0:
-			
-			time_lo = 0.0;
-			time_hi = time1;
-			v1 = val1;
-			v2 = val2;
-			break;
-			
-		case 1:
-		
-			time_lo = time1;
-			time_hi = time2;
-			v1 = val2;
-			v2 = val3;
-			break;
-			
-		case 2:
-		
-            // N.B. Reversals
-            
-            time_lo = 1.0;
-			time_hi = time2;
-			v1 = val4;
-			v2 = val3;
-			break;
-	}
-	
-	// Calculate and clip the linear time value (0 to 1) within the current curve
-	
-	if (time_lo == time_hi)
-		val = 0.0;
-	else 
-		val = (val - time_lo) / (time_hi - time_lo);
-	
-	val = val < 0.0 ? 0.0 : val;
-	val = val > 1.0 ? 1.0 : val;
-	
-	// The linear time value is now curved
-	
-	val = curves[curve_idx](val);
-	
-	// Linearly interpolate between the two output values using the time value to generate the normalised output value
+    // Test which curve to use (reverse order) - note reversals for the final curve
     
-    last_val = (v2 == v1) ? v2 : v1 + val * (v2 - v1);
-	
-	return last_val;
-}
-
-// Set the initial value for the kernel
-
-void gesture_kernel::initial(double val)
-{
-	last_val = val;
-}
-
-// Set the initial value for the kernel from a specifier (including a random band)
-
-void gesture_kernel::initial_specifier(t_atom *specifier)
-{
-    last_val = params_val(specifier, last_val);
+    if (val > m_time2)
+        return calc(val, 1.0, m_time2, m_val4, m_val3, m_curves[2]);
+    
+	if (val > m_time1)
+        return calc(val, m_time1, m_time2, m_val2, m_val3, m_curves[1]);
+    
+    return calc(val, 0.0, m_time1, m_val1, m_val2, m_curves[0]);
 }
 
 // Parameter Methods
-
-// Parameter storage relating to the resolution of random bands
-
-constexpr gesture_random time_params(15, 0.0, 1.0, 0.2);
-constexpr gesture_random val_params(11, 0.0, 1.0, 0.2);
 
 // Setup symbols, and the random band parameters for each relevant variable
 
@@ -180,22 +107,17 @@ gesture_kernel::gesture_type gesture_kernel::get_type(t_symbol *type)
 
 // Return a time value from a specifier
 
-double gesture_kernel::params_time(t_atom *specifier, bool reverse)
+double gesture_kernel::params_time(t_atom *specifier)
 {
-	double time_val = time_params.specifier_to_val(specifier);
-	
-	if (reverse)
-		time_val = 1.0 - time_val;
-	
-	return time_val;
+    return time_params.specifier_to_val(specifier);
 }
 
 // Return an output value (0 to 1) from a specifier
 
-double gesture_kernel::params_val(t_atom *specifier, double last_val)
+double gesture_kernel::params_val(t_atom *specifier)
 {
     if (atom_gettype(specifier) == A_SYM && atom_getsym(specifier) == ps_last)
-        return last_val;
+        return m_last_val;
     
     return val_params.specifier_to_val(specifier);
 }
@@ -214,9 +136,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
         
     // Curve 1
     
-    curves[0].reset();
-    curves[1].reset();
-    curves[2].reset();
+    m_curves[0].reset();
+    m_curves[1].reset();
+    m_curves[2].reset();
 	
 	// Get the gesture type
 	
@@ -235,10 +157,10 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 1)
 				return;
 			
-            val1 = params_val(argv++, last_val);
-            val2 = val1;
-            val3 = val1;
-            val4 = val1;
+            m_val1 = params_val(argv++);
+            m_val2 = m_val1;
+            m_val3 = m_val1;
+            m_val4 = m_val1;
 			break;
 					
         case gesture_type::line:
@@ -246,13 +168,12 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 2)
 				return;
             
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val2;
-            val4 = val2;
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val2;
+            m_val4 = m_val2;
 
-			if (argc >= 5)
-                curves[0].params(argv);
+            m_curves[0].params(argv, argc - 2);
 			break;
 
 			
@@ -261,15 +182,14 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 3)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
+			atom_setfloat(output_params + 0, params_time(argv++));
 			
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val2;
-            val4 = val2;
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val2;
+            m_val4 = m_val2;
             
-			if (argc >= 6)
-                curves[0].params(argv);
+            m_curves[0].params(argv, argc - 3);
 			break;
 					
         case gesture_type::flat_line:
@@ -277,16 +197,15 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 3)
                 return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
+			atom_setfloat(output_params + 0, params_time(argv++));
 			atom_setfloat(output_params + 1, 1.0 - atom_getfloat(output_params));
             
-            val1 = params_val(argv++, last_val);
-            val2 = val1;
-            val3 = val1;
-            val4 = params_val(argv++, last_val);
+            m_val1 = params_val(argv++);
+            m_val2 = m_val1;
+            m_val3 = m_val1;
+            m_val4 = params_val(argv++);
             
-            if (argc >= 6)
-                curves[2].params(argv);
+            m_curves[2].params(argv, argc - 3);
 			break;
 			
         case gesture_type::triangle_return:
@@ -294,18 +213,16 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 3)
 				return;
 			
-            atom_setfloat(output_params + 0, params_time(argv++, false));
+            atom_setfloat(output_params + 0, params_time(argv++));
             atom_setfloat(output_params + 1, 1.0 - atom_getfloat(output_params));
             
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val2;
-            val4 = val1;
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val2;
+            m_val4 = m_val1;
             
-			if (argc >= 6)
-                curves[0].params(argv);
-			if (argc >= 9)
-                curves[2].params(argv + 3);
+            m_curves[0].params(argv, argc - 3);
+            m_curves[2].params(argv, argc - 6);
 			break;
 						
         case gesture_type::triangle:
@@ -313,18 +230,16 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 4)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
+			atom_setfloat(output_params + 0, params_time(argv++));
 			atom_setfloat(output_params + 1, 1.0 - atom_getfloat(output_params));
 			
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val1;
-            val4 = params_val(argv++, last_val);
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val1;
+            m_val4 = params_val(argv++);
             
-            if (argc >= 7)
-                curves[0].params(argv);
-            if (argc >= 10)
-                curves[2].params(argv + 3);
+            m_curves[0].params(argv, argc - 4);
+            m_curves[2].params(argv, argc - 7);
 			break;
 				
         case gesture_type::plateau_return:
@@ -332,18 +247,16 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 4)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
-			atom_setfloat(output_params + 1, params_time(argv++, true));
+			atom_setfloat(output_params + 0, params_time(argv++));
+			atom_setfloat(output_params + 1, 1.0 - params_time(argv++));
             
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val2;
-            val4 = val1;
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val2;
+            m_val4 = m_val1;
 			
-            if (argc >= 7)
-                curves[0].params(argv);
-			if (argc >= 10)
-                curves[2].params(argv + 3);
+            m_curves[0].params(argv, argc - 4);
+            m_curves[2].params(argv, argc - 7);
 			break;
 			
         case gesture_type::plateau:
@@ -351,18 +264,16 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 5)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
-			atom_setfloat(output_params + 1, params_time(argv++, true));
+			atom_setfloat(output_params + 0, params_time(argv++));
+			atom_setfloat(output_params + 1, 1.0 - params_time(argv++));
 			
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = val2;
-            val4 = params_val(argv++, last_val);
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = m_val2;
+            m_val4 = params_val(argv++);
 			
-            if (argc >= 8)
-                curves[0].params(argv);
-			if (argc >= 11)
-                curves[2].params(argv + 3);
+            m_curves[0].params(argv, argc - 5);
+            m_curves[2].params(argv, argc - 8);
 			break;
 						
         case gesture_type::general_return:
@@ -370,20 +281,17 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 5)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
-			atom_setfloat(output_params + 1, params_time(argv++, true));
+			atom_setfloat(output_params + 0, params_time(argv++));
+			atom_setfloat(output_params + 1, 1.0 - params_time(argv++));
             
-            val1 = params_val(argv++, last_val);
-			val2 = params_val(argv++, last_val);
-            val3 = params_val(argv++, last_val);
-            val4 = val1;
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = params_val(argv++);
+            m_val4 = m_val1;
             
-            if (argc >= 8)
-                curves[0].params(argv);
-            if (argc >= 11)
-                curves[1].params(argv + 3);
-            if (argc >= 14)
-                curves[2].params(argv + 6);
+            m_curves[0].params(argv, argc - 5);
+            m_curves[1].params(argv, argc - 8);
+            m_curves[2].params(argv, argc - 11);
 			break;
 					
         case gesture_type::general:
@@ -391,20 +299,17 @@ void gesture_kernel::params(long argc, t_atom *argv)
 			if (argc < 6)
 				return;
             
-			atom_setfloat(output_params + 0, params_time(argv++, false));
-			atom_setfloat(output_params + 1, params_time(argv++, true));
+			atom_setfloat(output_params + 0, params_time(argv++));
+			atom_setfloat(output_params + 1, 1.0 - params_time(argv++));
 		
-            val1 = params_val(argv++, last_val);
-            val2 = params_val(argv++, last_val);
-            val3 = params_val(argv++, last_val);
-            val4 = params_val(argv++, last_val);
+            m_val1 = params_val(argv++);
+            m_val2 = params_val(argv++);
+            m_val3 = params_val(argv++);
+            m_val4 = params_val(argv++);
             
-			if (argc >= 9)
-                curves[0].params(argv);
-			if (argc >= 12)
-                curves[1].params(argv + 3);
-			if (argc >= 15)
-                curves[2].params(argv + 6);
+            m_curves[0].params(argv, argc - 6);
+            m_curves[1].params(argv, argc - 9);
+            m_curves[2].params(argv, argc - 12);
 			break;
 	}
 	
@@ -421,6 +326,6 @@ void gesture_kernel::params(long argc, t_atom *argv)
 	
 	// Final manipulations and range checking applied to internal parameters to make them ready for direct use
 	
-	time1 = atom_getfloat(output_params + 0);
-	time2 = 1.0 - atom_getfloat(output_params + 1);
+	m_time1 = atom_getfloat(output_params + 0);
+	m_time2 = 1.0 - atom_getfloat(output_params + 1);
 }

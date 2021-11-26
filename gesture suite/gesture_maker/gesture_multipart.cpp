@@ -16,50 +16,65 @@
 
 #include <algorithm>
 
+
 // Reset the multipart structure to default values
 
 void gesture_multipart::reset()
 {
-	num_kernels = 0;
-	num_splits = 0;
-	current_kernel = 0;
-	
-	lo_val = 0.0;
-    hi_val = 1.0;
-	range_recip = 1.0;
-	last_phase = 1.0;
-	
-    force_output = true;
+    *this = gesture_multipart();
+    m_kernel.reset();
+}
+
+// Calculate the output from an input phase
+
+double gesture_multipart::operator()(double phase)
+{
+    // If gesture has been re-triggered reset to the beginning, then search for the current split
+
+    long search_kernel = (phase < m_last_phase) ? 0 : m_current_kernel;
+        
+    for (; search_kernel < m_num_splits && phase >= m_split_points[search_kernel]; search_kernel++);
     
-    kernel.reset();
-}
+    // Get the current values and update the kernel parameters
+    // Note that the parameters will cycle round if there are not as many sets of parameters as splits
+    
+    if ((m_current_kernel != search_kernel || m_force_update))
+    {
+        m_lo_phase = !search_kernel ? 0.0 : m_split_points[search_kernel - 1];
+        m_hi_phase = (search_kernel >= m_num_splits) ? 1.0 : m_split_points[search_kernel];
+        m_range_recip = 1.0 / (m_hi_phase - m_lo_phase);
 
-// Set the Initial Values
+        if (m_num_kernels)
+        {
+            long output_kernel = search_kernel % m_num_kernels;
+            t_atom *output_params = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * output_kernel);
+            m_kernel.params(m_kernel_param_count[output_kernel], output_params);
+        }
+    }
+    
+    m_last_phase = phase;
+    m_current_kernel = search_kernel;
+    m_force_update = false;
 
-void gesture_multipart::initial(double val)
-{
-    kernel.initial(val);
-}
-
-void gesture_multipart::initial_specifier(t_atom *specifier)
-{
-    kernel.initial_specifier(specifier);
+    // Calculate and clip inflection phase and then calculate the output
+    
+    return m_kernel(std::max(0.0, std::min(1.0, (phase - m_lo_phase) * m_range_recip)));
 }
 
 // Set Parameters
 
 void gesture_multipart::params(long argc, t_atom *argv)
 {
-	if (argc && num_kernels < MAX_NUM_KERNELS)
+	if (argc && m_num_kernels < MAX_NUM_KERNELS)
 	{
-        t_atom *parameters = kernel_params + (MAX_NUM_KERNEL_PARAMS * num_kernels);
+        t_atom *parameters = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * m_num_kernels);
         argc = std::min(argc, MAX_NUM_KERNEL_PARAMS);
 				
-        for (long i = 0; i < kernel_param_count[num_kernels]; i++)
+        for (long i = 0; i < m_kernel_param_count[m_num_kernels]; i++)
 			parameters[i] = *argv++;
 		
-		num_kernels++;
-		force_output = true;
+		m_num_kernels++;
+        m_force_update = true;
 	}
 }
 
@@ -67,50 +82,12 @@ void gesture_multipart::params(long argc, t_atom *argv)
 
 void gesture_multipart::timings(long argc, t_atom *argv)
 {
-	num_splits = argc > MAX_NUM_SPLITS ? MAX_NUM_SPLITS : argc;
+	m_num_splits = argc > MAX_NUM_SPLITS ? MAX_NUM_SPLITS : argc;
 	
-    for (long i = 0; i < num_splits; i++)
-		split_points[i] = nextafterf(atom_getfloat(argv++), -1.0);		// There may be a better way to do this that brings us closer to the desired value
+    // There may be a better way to do this that brings us closer to the desired value
+    
+    for (long i = 0; i < m_num_splits; i++)
+		m_split_points[i] = nextafter(atom_getfloat(argv++), -1.0);
 
-	force_output = true;
-}
-
-// Calculate the output from an input phase
-
-double gesture_multipart::operator()(double phase)
-{
-    // If gesture has been re-triggered, so reset to the beginning
-
-    long search_kernel = (phase < last_phase) ? 0 : current_kernel;
-	
-	// Search forward to find the current inflection gesture
-	
-	for (; search_kernel < num_splits && phase >= split_points[search_kernel]; search_kernel++);
-	
-	// Get the current values and update the inflection gesture parameters
-	// Note that the parameters will cycle round if there are not as many sets of parameters as splits
-	
-	if ((current_kernel != search_kernel || force_output))
-	{
-        lo_val = !search_kernel ? 0.0 : split_points[search_kernel - 1];
-        hi_val = (search_kernel >= num_splits) ? 1.0 : split_points[search_kernel];
-		range_recip = 1.0 / (hi_val - lo_val);
-
-		if (num_kernels)
-		{
-            long output_kernel = search_kernel % num_kernels;
-			t_atom *output_params = kernel_params + (MAX_NUM_KERNEL_PARAMS * output_kernel);
-            kernel.params(kernel_param_count[output_kernel], output_params);
-		}
-	}
-	
-	last_phase = phase;
-	current_kernel = search_kernel;
-	force_output = false;
-
-	// Calculate and clip inflection phase
-	
-	const double kernel_phase = std::max(0.0, std::min(1.0, (phase - lo_val) * range_recip));
-	
-	return kernel(kernel_phase);
+    m_force_update = true;
 }

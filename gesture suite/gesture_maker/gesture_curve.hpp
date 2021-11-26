@@ -32,7 +32,7 @@ public:
     
     double operator()(double val) const;
 
-    void params(t_atom *specifiers);
+    void params(t_atom *specifiers, long argc);
     
 private:
     

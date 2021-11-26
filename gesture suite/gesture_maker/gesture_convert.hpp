@@ -16,8 +16,12 @@
 #include <ext.h>
 
 
+// Conversion Class
+
 class gesture_convert
 {
+    // Conversion Mode
+    
     enum class conversion_mode
     {
         none = 0,
@@ -26,6 +30,8 @@ class gesture_convert
     };
     
 public:
+    
+    // Main Methods
     
     static void setup();
 
@@ -37,6 +43,8 @@ public:
     void params(t_object *x, long argc, t_atom *argv);
     
 private:
+    
+    // Variables
     
     conversion_mode m_mode;
     

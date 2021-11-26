@@ -28,36 +28,55 @@ public:
     
     // Main Methods
     
+    gesture_multipart()
+    : m_num_splits(0)
+    , m_num_kernels(0)
+    , m_current_kernel(0)
+    , m_lo_phase(0.0)
+    , m_hi_phase(1.0)
+    , m_range_recip(1.0)
+    , m_last_phase(1.0)
+    , m_force_update(true)
+    {}
+    
     void reset();
     
-    void initial(double val);
-    void initial_specifier(t_atom *specifier);
-    
-    void params(long argc, t_atom *argv);
-    void timings(long argc, t_atom *argv);
+    void initial(double val)                    { m_kernel.initial(val); }
+    void initial_specifier(t_atom *specifier)   { m_kernel.initial_specifier(specifier); }
     
     double operator()(double phase);
-    
+
+    void params(long argc, t_atom *argv);
+    void timings(long argc, t_atom *argv);
+        
 private:
     
-    // Variables
+    // Kernel
     
-    gesture_kernel kernel;
+    gesture_kernel m_kernel;
 
-	double split_points[MAX_NUM_SPLITS];
-    long num_splits;
+    // Split Values
     
-    t_atom kernel_params[MAX_NUM_KERNELS * MAX_NUM_KERNEL_PARAMS];
-	long kernel_param_count[MAX_NUM_KERNELS];
-    long num_kernels;
-    long current_kernel;
+	double m_split_points[MAX_NUM_SPLITS];
+    long m_num_splits;
     
-	double lo_val;
-    double hi_val;
-	double range_recip;
-	double last_phase;
+    // Kernel Parameters
+    
+    t_atom m_kernel_params[MAX_NUM_KERNELS * MAX_NUM_KERNEL_PARAMS];
+	long m_kernel_param_count[MAX_NUM_KERNELS];
+    long m_num_kernels;
+    long m_current_kernel;
+    
+    // Current Phase
+    
+	double m_lo_phase;
+    double m_hi_phase;
+	double m_range_recip;
+	double m_last_phase;
 	
-	bool force_output;
+    // Force Reset
+    
+	bool m_force_update;
 };
 
 #endif /* _GESTURE_MULTIPART_HPP_ */
