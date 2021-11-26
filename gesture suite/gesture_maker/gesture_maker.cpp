@@ -33,23 +33,21 @@
 #include "gesture_maker_convert.h"
 #include "gesture_maker_multipart.h"
 
+
 #define MUX_NUM_EVENTS  256
 
-void *this_class;
+t_class *this_class;
     
-
-typedef struct gesture_maker
+struct t_gesture_maker
 {
     t_object a_obj;
 	
-	t_gesture_kernel kernel_main;
-	t_gesture_kernel kernel_inflections;
-	
-	t_gesture_maker_convert convert_main;
-	t_gesture_maker_convert convert_inflections;
-	
-	t_gesture_multipart multipart_inflections;
-	
+	gesture_kernel kernel_main;
+    gesture_multipart multipart_inflections;
+
+	gesture_maker_convert convert_main;
+	gesture_maker_convert convert_inflections;
+		
 	double event_times[MUX_NUM_EVENTS];
 	double grain_time;
 	
@@ -64,8 +62,7 @@ typedef struct gesture_maker
 	void *gesture_drive_out;
 	void *gesture_done_out;
 	void *gesture_vals_out;
-    
-} t_gesture_maker;
+};
 
 
 t_symbol *ps_list;
@@ -73,21 +70,20 @@ t_symbol *ps_list;
 
 void gesture_maker_free(t_gesture_maker *x);
 void *gesture_maker_new();
-void gesture_maker_init(t_gesture_maker *x);
 
 void gesture_maker_stop(t_gesture_maker *x);
 void gesture_maker_doclock(t_gesture_maker *x);
 void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
-void gesture_maker_drive(t_gesture_maker *x, double in_val);
+void gesture_maker_drive(t_gesture_maker *x, double val);
 void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time);
-void gesture_maker_graintime(t_gesture_maker *x, double in_val);
+void gesture_maker_graintime(t_gesture_maker *x, double val);
 
 void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 
-void gesture_maker_initial_main(t_gesture_maker *x, double in_val);
-void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val);
+void gesture_maker_initial_main(t_gesture_maker *x, double val);
+void gesture_maker_initial_inflections(t_gesture_maker *x, double val);
 
 void gesture_maker_start_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
 void gesture_maker_start_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv);
@@ -101,8 +97,6 @@ void gesture_maker_reset(t_gesture_maker *x);
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s);
 
-
-void gesture_maker_fixit(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv){}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,8 +136,8 @@ int C74_EXPORT main()
 	
 	ps_list = gensym("list");
 	
-	gesture_maker_convert_setup();
-	gesture_maker_kernel_params_setup();
+    gesture_kernel::setup();
+	gesture_maker_convert::setup();
 		
 	return 0;
 }
@@ -164,14 +158,17 @@ void *gesture_maker_new()
 	
 	inlet_new(x, "list");
 	
-	gesture_maker_init(x);
-	gesture_maker_kernel_reset(&x->kernel_main);
-	gesture_maker_kernel_reset(&x->kernel_inflections);
-	gesture_maker_multipart_reset(&x->multipart_inflections);
-	gesture_maker_convert_init(&x->convert_main);
-	gesture_maker_convert_init(&x->convert_inflections);
+    // Set some default values
+    
+    x->gesture_clock = clock_new(x, (method) gesture_maker_doclock);
+    x->grain_time = 20.;
+    
+    gesture_maker_stop(x);
+    gesture_maker_reset(x);
+    x->convert_main = gesture_maker_convert();
+    x->convert_inflections = gesture_maker_convert();
 	
-    return (x);
+    return x;
 }
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
@@ -208,23 +205,12 @@ void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
 ////////////////////////////////////////////////////////////// Initialisation routines //////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void gesture_maker_init(t_gesture_maker *x)
-{
-	// Set some default values
-	
-	x->gesture_clock = clock_new(x, (method) gesture_maker_doclock);
-	x->grain_time = 20.;
-	
-	gesture_maker_stop(x);
-}
-
 void gesture_maker_reset(t_gesture_maker *x)
 {
 	// Reset the gesture_maker object
 	
-	gesture_maker_kernel_reset(&x->kernel_main);
-	gesture_maker_kernel_reset(&x->kernel_inflections);
-	gesture_maker_multipart_reset(&x->multipart_inflections);
+    x->kernel_main.reset();
+    x->multipart_inflections.reset();
 }
 
 void gesture_maker_stop(t_gesture_maker *x)
@@ -259,8 +245,8 @@ void gesture_maker_doclock(t_gesture_maker *x)
 	long current_event = x->current_event;
 	long num_events = x->num_events;
 	
-	if (gesture_time < 0.)
-		gesture_time = 0.;
+	if (gesture_time < 0.0)
+		gesture_time = 0.0;
 	
 	// Determine the time until the next output
 	
@@ -322,117 +308,107 @@ void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *ar
 	clock_fdelay(x->gesture_clock, 0);
 }
 
-void gesture_maker_drive(t_gesture_maker *x, double in_val)
+void gesture_maker_drive(t_gesture_maker *x, double val)
 {
 	// Trigger the gesture in drive mode (regular output)
 	
-	in_val = fabs(in_val);
+	val = fabs(val);
 	
 	gesture_maker_stop(x);
 	
-	x->gesture_length = in_val;
-	x->gesture_time = in_val;
+	x->gesture_length = val;
+	x->gesture_time = val;
 	
 	clock_fdelay(x->gesture_clock, 0);
 }
 
 void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	double phase;
-	double grain_time;
-	
 	if (argc < 2)
 		return;
 	
 	// The list input is for accepting phase and grain_time input, typically for use when chaining objects together for parallel operation
 	
-	phase = atom_getfloat(argv++);
-	grain_time = atom_getfloat(argv++);
+    const double phase = atom_getfloat(argv++);
+    const double grain_time = atom_getfloat(argv++);
 	
 	gesture_maker_calc(x, phase, grain_time);
 }
 
 void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
 {
-	double main_val, multiphase, inflection_val;
 	t_atom output_list[2];
 	atom_setfloat(output_list, phase);
 	atom_setfloat(output_list + 1, grain_time);
 
 	outlet_list(x->gesture_drive_out, ps_list, 2, output_list);
 	
-	// get the main gesture value, update the inflection gesture and calculate the inflection value
+	// Calculate the main gesture value and the inflection value
 	
-	main_val = gesture_maker_kernel_calc(&x->kernel_main, phase);
-	multiphase = gesture_maker_multipart_phase(&x->multipart_inflections, &x->kernel_inflections, phase);
-	inflection_val = gesture_maker_kernel_calc(&x->kernel_inflections, multiphase);
+    double main_val = x->kernel_main(phase);
+    double inflection_val = x->multipart_inflections(phase);
 	
 	// Convert and combine
 	
-	main_val = gesture_maker_convert_scale(&x->convert_main, main_val);
-	inflection_val = gesture_maker_convert_scale(&x->convert_inflections, inflection_val);
+	main_val = x->convert_main(main_val);
+	inflection_val = x->convert_inflections(inflection_val);
 	
 	atom_setfloat(output_list, main_val * inflection_val);
 	
 	outlet_list(x->gesture_vals_out, ps_list, 2, output_list);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// Various routines for setting the gesture parameters ////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Methods for setting the gesture parameters
 
-void gesture_maker_graintime(t_gesture_maker *x, double in_val)
+void gesture_maker_graintime(t_gesture_maker *x, double val)
 {
-	if (in_val)
-		x->grain_time = fabs(in_val);
+	if (val)
+		x->grain_time = fabs(val);
 }
 
 void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	gesture_maker_kernel_params(&x->kernel_main, argc, argv);
+    x->kernel_main.params(argc, argv);
 }
 
 void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	gesture_maker_multipart_params(&x->multipart_inflections, argc, argv);
-
+    x->multipart_inflections.params(argc, argv);
 }	
 
-void gesture_maker_initial_main(t_gesture_maker *x, double in_val)
+void gesture_maker_initial_main(t_gesture_maker *x, double val)
 {
-	gesture_maker_kernel_initial(&x->kernel_main, in_val);
+    x->kernel_main.initial(val);
 }
 
-void gesture_maker_initial_inflections(t_gesture_maker *x, double in_val)
+void gesture_maker_initial_inflections(t_gesture_maker *x, double val)
 {
-	gesture_maker_kernel_initial(&x->kernel_inflections, in_val);
+    x->multipart_inflections.initial(val);
 }
 
 void gesture_maker_start_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (argc)
-        gesture_maker_kernel_initial_specifier(&x->kernel_main, argv);
+        x->kernel_main.initial_specifier(argv);
 }
 
 void gesture_maker_start_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (argc)
-        gesture_maker_kernel_initial_specifier(&x->kernel_inflections, argv);
+        x->multipart_inflections.initial_specifier(argv);
 }
 
 void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	gesture_maker_multipart_timings(&x->multipart_inflections, argc, argv);
+    x->multipart_inflections.timings(argc, argv);
 }
 
 void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	gesture_maker_convert_params(&x->convert_main, argc, argv);
+    x->convert_main.params((t_object *) x, argc, argv);
 }
 
 void gesture_maker_scaling_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-	gesture_maker_convert_params(&x->convert_inflections, argc, argv);
+    x->convert_inflections.params((t_object *) x, argc, argv);
 }
-
-

@@ -19,8 +19,24 @@
 #define MAX_NUM_KERNELS         64
 #define MAX_NUM_SPLITS          63
 
-typedef struct gesture_multipart
+class gesture_multipart
 {
+public:
+    
+    void reset();
+    
+    void initial(double val);
+    void initial_specifier(t_atom *specifier);
+    
+    void params(long argc, t_atom *argv);
+    void timings(long argc, t_atom *argv);
+    
+    double operator()(double phase);
+    
+private:
+    
+    gesture_kernel kernel;
+
 	double split_points[MAX_NUM_SPLITS];
     long num_splits;
     
@@ -30,16 +46,9 @@ typedef struct gesture_multipart
     long current_kernel;
     
 	double lo_val;
+    double hi_val;
 	double range_recip;
 	double last_phase;
 	
 	bool force_output;
-    
-} t_gesture_multipart;
-
-// Function protypes
-
-void gesture_maker_multipart_reset(t_gesture_multipart *x);
-void gesture_maker_multipart_params(t_gesture_multipart *x, long argc, t_atom *argv);
-void gesture_maker_multipart_timings(t_gesture_multipart *x, long argc, t_atom *argv);
-double gesture_maker_multipart_phase(t_gesture_multipart *x, t_gesture_kernel *gesture_kernel, double in_val);
+};

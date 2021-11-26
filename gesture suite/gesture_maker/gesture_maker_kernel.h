@@ -13,57 +13,85 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-// PI defines
-
-#define PI			3.14159265358979323846
-#define PI_RECIP	0.31830988618379067154
-
 // Curve Types
 
-enum t_gesture_type
+class curve_parameters
 {
-    GESTURE_FLAT,
-    GESTURE_LINE,
-    GESTURE_LINE_FLAT,
-    GESTURE_FLAT_LINE,
-    GESTURE_TRIANGLE_RETURN,
-    GESTURE_TRIANGLE,
-    GESTURE_PLATEAU_RETURN,
-    GESTURE_PLATEAU,
-    GESTURE_RETURN,
-    GESTURE_GENERAL
-};
+    enum class curve_type
+    {
+        power_sin_forward,
+        power_sin_reverse,
+        power_recip_sin_reverse,
+        power_recip_sin_forward,
+        power_asin_forward,
+        power_asin_reverse,
+        power_recip_asin_reverse,
+        power_recip_asin_forward
+    };
+    
+public:
+    
+    void reset();
+    
+    double operator()(double val);
 
-enum t_curve_type
-{
-    CURVE_POWER_SIN_FORWARD,
-    CURVE_POWER_SIN_REVERSE,
-    CURVE_POWER_RECIP_SIN_REVERSE,
-    CURVE_POWER_RECIP_SIN_FORWARD,
-    CURVE_POWER_ASIN_FORWARD,
-    CURVE_POWER_ASIN_REVERSE,
-    CURVE_POWER_RECIP_ASIN_REVERSE,
-    CURVE_POWER_RECIP_ASIN_FORWARD
-};
+    void params(t_atom *specifiers);
 
-typedef struct curve_params
-{
+private:
+    
+    curve_type get_type(t_atom *specifier);
+    
     // Curve values
     
     double power_val;
     double scurve_val;
-    enum t_curve_type curve_type;
-    
-} t_curve_params;
+    curve_type type;
+};
 
 // Kernel structure
 
-typedef struct gesture_kernel
+class gesture_kernel
 {
+    enum class gesture_type
+    {
+        flat,
+        line,
+        line_flat,
+        flat_line,
+        triangle_return,
+        triangle,
+        plateau_return,
+        plateau,
+        general_return,
+        general
+    };
+
+public:
+    
+    static void setup();
+
+    void reset();
+
+    void initial(double val);
+    void initial_specifier(t_atom *specifier);
+    void params(long argc, t_atom *argv);
+    
+    double operator()(double val);
+
+private:
+    
+    double params_val(t_atom *specifier, double last_val);
+    double params_time(t_atom *specifier, bool reverse);
+    
+    gesture_type get_type(t_symbol *type);
+    
 	// Time Points
 	
 	double time1;
 	double time2;
+    
+    // Values
+    
 	double val1;
 	double val2;
 	double val3;
@@ -71,17 +99,16 @@ typedef struct gesture_kernel
 	
     // Curve values
 	
-    t_curve_params curve_params[3];
+    curve_parameters curve_params[3];
 
     // Last value
     
     double last_val;
-    
-} t_gesture_kernel;
+};
 
 // Struture to hold the parameters relating to random bands
 
-typedef struct rand_banding_params
+struct band_parameters
 {
 	double num_bands;
 	double lo_val;
@@ -89,14 +116,6 @@ typedef struct rand_banding_params
 	double gauss_dev;
 	double width_val;
 	double end_ratio;
-	
-} t_band_params;
-
-// Function protypes
-
-void gesture_maker_kernel_reset(t_gesture_kernel *x);
-double gesture_maker_kernel_calc(t_gesture_kernel *x, double in_val);
-void gesture_maker_kernel_initial(t_gesture_kernel *x, double in_val);
-void gesture_maker_kernel_initial_specifier(t_gesture_kernel *x, t_atom *specifier);
-void gesture_maker_kernel_params(t_gesture_kernel *x, long argc, t_atom *argv);
-void gesture_maker_kernel_params_setup();
+    
+    double band_to_val(int band_in);
+};

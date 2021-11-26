@@ -11,6 +11,9 @@
 
 #include "gesture_maker_convert.h"
 
+#include <algorithm>
+
+
 // Symbols
 
 t_symbol *ps_scale;
@@ -27,7 +30,7 @@ t_symbol *ps_None;
 
 // Setup the symbol variables
 
-void gesture_maker_convert_setup()
+void gesture_maker_convert::setup()
 {
 	ps_scale = gensym("scale");
 	ps_log = gensym("log");
@@ -42,73 +45,37 @@ void gesture_maker_convert_setup()
 	ps_None = gensym("None");
 }
 
-// Initialise the convertor to default values
-
-void gesture_maker_convert_init(t_gesture_maker_convert *x)
-{
-	x->mode = 0;
-	x->min = 0;
-	x->max = 1;
-	x->mult = 1;
-	x->subtract = 0;
-}
-
 // Scale a value accoring to the range and scaling specified
 
-double gesture_maker_convert_scale(t_gesture_maker_convert *x, double input)
+double gesture_maker_convert::operator()(double input)
 {
-	double scaled = 0.;
-	double max = x->max;
-	double min = x->min;
-	
-	switch (x->mode)
+    auto clip = [&](double x)
+    {
+        return std::max(min, std::min(max, x));
+    };
+    
+	switch (mode)
 	{
-		case CONVERT_NONE:
-			
-			// No scaling
-			
+        case conversion_mode::none:
 			return input;
 			
-		case CONVERT_LINEAR:
-			
-			// Linear scaling
-			
-			scaled = (input * x->mult) - x->subtract;
-			break;
-			
-		case CONVERT_LOG_IN:
-			
-			// Exponential scaling (for a logarithmic input scaling)
-			
-			scaled = exp(input * x->mult - x->subtract);
-			break;
+        case conversion_mode::linear:
+			return clip((input * mult) - subtract);
+    
+        case conversion_mode::log_in:
+            return clip(exp(input * mult - subtract));
 	}
-	
-	// Clip output
-	
-	if (scaled > max)
-		scaled = max;
-	if (scaled < min)
-		scaled = min;
-	
-	return scaled;
 }
 
 // Routine for setting the parameters of the conversion
 
-void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom *argv)
+void gesture_maker_convert::params(t_object *x, long argc, t_atom *argv)
 {
 	double min_in;
 	double max_in;
 	double min_out;
 	double max_out;
-	double subtract;
-	double mult;
-	double min;
-	double max;
-	
-	t_conversion_mode mode = CONVERT_LINEAR;
-	
+		
 	t_symbol *mode_sym;
 
 	if (argc < 1)
@@ -118,13 +85,13 @@ void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom 
 	
 	if (mode_sym == ps_none || mode_sym == ps_None)
 	{
-		x->mode = CONVERT_NONE;
+		mode = conversion_mode::none;
 		return;
 	}
 	
 	if (argc < 3)
 	{
-		object_error((t_object *)x, "not enough values for conversion parameter change");
+		object_error(x, "not enough values for conversion parameter change");
 		return;
 	}
 	
@@ -157,24 +124,26 @@ void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom 
 	}
 
 	if (mode_sym == ps_log || mode_sym == ps_amp || mode_sym == ps_pitch)
-		mode = CONVERT_LOG_IN;
+		mode = conversion_mode::log_in;
+    else
+        mode = conversion_mode::linear;
 	
 	if (mode_sym == ps_amp)
 	{
-		min_out = pow(10, min_out / 20.);
-		max_out = pow(10, max_out / 20.);
+		min_out = pow(10.0, min_out / 20.0);
+		max_out = pow(10.0, max_out / 20.0);
 	}
 
 	if (mode_sym == ps_pitch)
 	{
-		min_out = pow(2, min_out / 12.);
-		max_out = pow(2, max_out / 12.);
+		min_out = pow(2.0, min_out / 12.0);
+		max_out = pow(2.0, max_out / 12.0);
 	}	
 	
 	min = min_out;
 	max = max_out;
 	
-	if (mode == CONVERT_LOG_IN)
+	if (mode == conversion_mode::log_in)
 	{
 		min_out = log(min_out);
 		max_out = log(max_out);
@@ -183,13 +152,6 @@ void gesture_maker_convert_params(t_gesture_maker_convert *x, long argc, t_atom 
 	mult = (max_out - min_out) / (max_in - min_in);
 	subtract = (min_in * mult) - min_out;
 	
-	if (mode == CONVERT_LINEAR && mode_sym != ps_scale)
-		object_error((t_object *)x, "gesture_maker: unknown conversion type - defaulting to scale");
-
-	x->mode = mode;
-	x->mult = mult;
-	x->min = min;
-	x->max = max;
-	x->subtract = subtract;
+	if (mode == conversion_mode::linear && mode_sym != ps_scale)
+		object_error(x, "gesture_maker: unknown conversion type - defaulting to scale");
 }
-
