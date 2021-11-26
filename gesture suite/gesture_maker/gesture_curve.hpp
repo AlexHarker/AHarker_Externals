@@ -25,13 +25,14 @@ public:
     double operator()(double val);
 
     void params(t_atom *specifiers);
-
-    static void params_curve(t_atom *curve_params, t_atom *specifiers);
     
 private:
     
-    curve_type get_type(t_atom *specifier);
+    curve_type get_type(int band);
     
+    double scurve_sin(double val) const;
+    double scurve_asin(double val) const;
+
     // Curve values
     
     double power_val;

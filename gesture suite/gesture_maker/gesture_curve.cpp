@@ -2,14 +2,10 @@
 #include "gesture_curve.hpp"
 #include "gesture_random.hpp"
 
+#include <algorithm>
 #include <cmath>
 
-// PI defines
-
-#define PI          3.14159265358979323846
-#define PI_RECIP    0.31830988618379067154
-
-// N.B the limits for the pow_curve params are og(1.0) and log(15.0)
+// N.B the limits for the pow_curve params are log(1.0) and log(15.0)
 
 const gesture_random pow_curve_params(5, std::log(1.0), std::log(15.0), 0.6);
 //constexpr band_parameters pow_curve_params(5, 0.0, std::log(15.0), 0.6);
@@ -22,10 +18,8 @@ void gesture_curve::reset()
     type = curve_type::power_sin_forward;
 }
 
-gesture_curve::curve_type gesture_curve::get_type(t_atom *specifier)
+gesture_curve::curve_type gesture_curve::get_type(int type)
 {
-    t_atom_long type = atom_getlong(specifier);
-    
     switch (type)
     {
         case 1:     return curve_type::power_sin_reverse;
@@ -41,55 +35,57 @@ gesture_curve::curve_type gesture_curve::get_type(t_atom *specifier)
 
 void gesture_curve::params(t_atom *specifiers)
 {
-    power_val = atom_getfloat(specifiers + 0);
-    power_val = power_val < 1.0 ? 1.0 : power_val;
-    
-    scurve_val = atom_getfloat(specifiers + 1);
-    scurve_val = scurve_val < 0.0 ? 0.0 : scurve_val;
-    scurve_val = scurve_val > 1.0 ? 1.0 : scurve_val;
-    scurve_val = pow(scurve_val, 0.35);
-    
-    type = get_type(specifiers + 2);
-}
-
-// Calculate curve parameters based on given specifiers
-
-void gesture_curve::params_curve(t_atom *curve_params, t_atom *specifiers)
-{
-    int band_alter = 0;
+    double s = 0.0;
     
     if (atom_gettype(specifiers + 1) == A_FLOAT)
-        curve_params[1] = specifiers[1];
+        s = atom_getfloat(specifiers + 1);
     else
-        atom_setfloat(curve_params + 1, scurve_params.band_to_val(random_band(specifiers + 1)));
+        s = scurve_params.band_to_val(random_band(specifiers + 1));
     
+    scurve_val = pow(std::max(0.0, std::min(1.0, s)), 0.35);
+
     if (atom_gettype(specifiers + 2) == A_FLOAT)
     {
-        curve_params[0] = specifiers[2];
-        atom_setlong(curve_params + 2, random_band(specifiers));
+        power_val = std::max(1.0, atom_getfloat(specifiers + 2));
+        type = get_type(random_band(specifiers));
     }
     else
     {
         // Get band
         
         int band = random_band(specifiers + 2) - (pow_curve_params.n_bands() - 1);
-        
+        int band_alter = 0;
+
         if (band > 0)
             band_alter = 1;
         
         band = abs(band) - band_alter;
         
-        atom_setfloat(curve_params, exp(pow_curve_params.band_to_val(band)));
-        atom_setlong(curve_params + 2, random_band(specifiers) * 2 + band_alter);
+        power_val = std::max(1.0, exp(pow_curve_params.band_to_val(band)));
+        type = get_type(random_band(specifiers) * 2 + band_alter);
     }
+}
+
+double gesture_curve::scurve_sin(double val) const
+{
+    const double s = 0.5 + 0.5 * (sin(M_PI * (val - 0.5)));
+    
+    return val + (scurve_val * (s - val));
+}
+
+double gesture_curve::scurve_asin(double val) const
+{
+    constexpr double PI_RECIP = 0.31830988618379067154;
+
+    const double s = 0.5 + ((asin(2.0 * (val - 0.5))) * PI_RECIP);
+    
+    return val + (scurve_val * (s - val));
 }
 
 // Apply curvature to one of the three parts of the gesture kernel
 
 double gesture_curve::operator()(double val)
 {
-    double power_curve, scurve;
-        
     // Calculate the curved value
     // There are 3 basic mode options, each with two choices
     //
@@ -102,43 +98,27 @@ double gesture_curve::operator()(double val)
     switch (type)
     {
         case curve_type::power_sin_forward:
-            power_curve = pow(val, power_val);
-            scurve =  0.5 + 0.5 * (sin(PI * (power_curve - 0.5)));
-            return power_curve + (scurve_val * (scurve - power_curve));
+            return scurve_sin(pow(val, power_val));
             
         case curve_type::power_sin_reverse:
-            power_curve = pow((1.0 - val), power_val);
-            scurve =  0.5 + 0.5 * (sin(PI * (power_curve - 0.5)));
-            return 1.0 - (power_curve + (scurve_val * (scurve - power_curve)));
-            
+            return 1.0 - scurve_sin(pow((1.0 - val), power_val));
+
         case curve_type::power_recip_sin_reverse:
-            power_curve = pow((1.0 - val), 1.0 / power_val);
-            scurve =  0.5 + 0.5 * (sin(PI * (power_curve - 0.5)));
-            return 1.0 - (power_curve + (scurve_val * (scurve - power_curve)));
-            
+            return 1.0 - scurve_sin(pow((1.0 - val), 1.0 / power_val));
+
         case curve_type::power_recip_sin_forward:
-            power_curve = pow(val, 1.0 / power_val);
-            scurve =  0.5 + 0.5 * (sin(PI * (power_curve - 0.5)));
-            return power_curve + (scurve_val * (scurve - power_curve));
-            
+            return scurve_sin(pow(val, 1.0 / power_val));
+
         case curve_type::power_asin_forward:
-            power_curve = pow(val, power_val);
-            scurve =  0.5 + ((asin(2 * (power_curve - 0.5))) * PI_RECIP);
-            return power_curve + (scurve_val * (scurve - power_curve));
-            
+            return scurve_asin(pow(val, power_val));
+
         case curve_type::power_asin_reverse:
-            power_curve = pow((1.0 - val), power_val);
-            scurve =  0.5 + ((asin(2 * (power_curve - 0.5))) * PI_RECIP);
-            return 1.0 - (power_curve + (scurve_val * (scurve - power_curve)));
-            
+            return 1.0 - scurve_asin(pow((1.0 - val), power_val));
+
         case curve_type::power_recip_asin_reverse:
-            power_curve = pow((1.0 - val), 1.0 / power_val);
-            scurve =  0.5 + ((asin(2 * (power_curve - 0.5))) * PI_RECIP);
-            return 1.0 - (power_curve + (scurve_val * (scurve - power_curve)));
-            
+            return 1.0 - scurve_asin(pow((1.0 - val), 1.0 / power_val));
+
         case curve_type::power_recip_asin_forward:
-            power_curve = pow(val, 1.0 / power_val);
-            scurve =  0.5 + ((asin(2 * (power_curve - 0.5))) * PI_RECIP);
-            return power_curve + (scurve_val * (scurve - power_curve));
+            return scurve_asin(pow(val, 1.0 / power_val));
     }
 }
