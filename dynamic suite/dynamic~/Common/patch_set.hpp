@@ -1,6 +1,6 @@
 
-#ifndef _PATCHSET_H_
-#define _PATCHSET_H_
+#ifndef _PATCHSET_HPP_
+#define _PATCHSET_HPP_
 
 #include <ext.h>
 #include <jpatcher_api.h>
@@ -447,4 +447,4 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
     void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
 };
 
-#endif  /* _PATCHSET_H_ */
+#endif  /* _PATCHSET_HPP_ */
