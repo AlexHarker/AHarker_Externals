@@ -11,18 +11,18 @@
 
 // N.B the limits for the pow_curve params are og(1.0) and log(15.0)
 
-const band_parameters pow_curve_params(5, std::log(1.0), std::log(15.0), 0.6);
+const gesture_random pow_curve_params(5, std::log(1.0), std::log(15.0), 0.6);
 //constexpr band_parameters pow_curve_params(5, 0.0, std::log(15.0), 0.6);
-constexpr band_parameters scurve_params(5, 0.0, 1.0, 0.1);
+constexpr gesture_random scurve_params(5, 0.0, 1.0, 0.1);
 
-void curve_parameters::reset()
+void gesture_curve::reset()
 {
     power_val = 1.0;
     scurve_val = 0.0;
     type = curve_type::power_sin_forward;
 }
 
-curve_parameters::curve_type curve_parameters::get_type(t_atom *specifier)
+gesture_curve::curve_type gesture_curve::get_type(t_atom *specifier)
 {
     t_atom_long type = atom_getlong(specifier);
     
@@ -39,7 +39,7 @@ curve_parameters::curve_type curve_parameters::get_type(t_atom *specifier)
     }
 }
 
-void curve_parameters::params(t_atom *specifiers)
+void gesture_curve::params(t_atom *specifiers)
 {
     power_val = atom_getfloat(specifiers + 0);
     power_val = power_val < 1.0 ? 1.0 : power_val;
@@ -54,7 +54,7 @@ void curve_parameters::params(t_atom *specifiers)
 
 // Calculate curve parameters based on given specifiers
 
-void curve_parameters::params_curve(t_atom *curve_params, t_atom *specifiers)
+void gesture_curve::params_curve(t_atom *curve_params, t_atom *specifiers)
 {
     int band_alter = 0;
     
@@ -86,7 +86,7 @@ void curve_parameters::params_curve(t_atom *curve_params, t_atom *specifiers)
 
 // Apply curvature to one of the three parts of the gesture kernel
 
-double curve_parameters::operator()(double val)
+double gesture_curve::operator()(double val)
 {
     double power_curve, scurve;
         

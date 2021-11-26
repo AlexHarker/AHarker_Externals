@@ -1,6 +1,6 @@
 
 /*
- *  gesture_maker_kernel.c
+ *  gesture_kernel.c
  *
  *	This code deals with storing gestures, resolving variable parameters and calculating output values for either the main or inflection gestures.
  *	A kernel has up to 3 parts, each of which is first calculated as curve between the given output parameters.
@@ -11,7 +11,7 @@
  */
 
 
-#include "gesture_maker_kernel.hpp"
+#include "gesture_kernel.hpp"
 #include "gesture_random.hpp"
 
 // Symbols
@@ -41,9 +41,9 @@ void gesture_kernel::reset()
 	val3 = 1.0;
 	val4 = 1.0;
     
-    curve_params[0].reset();
-    curve_params[1].reset();
-    curve_params[2].reset();
+    curves[0].reset();
+    curves[1].reset();
+    curves[2].reset();
 	
     last_val = 0.0;
 }
@@ -109,7 +109,7 @@ double gesture_kernel::operator()(double val)
 	
 	// The linear time value is now curved
 	
-	val = curve_params[curve_idx](val);
+	val = curves[curve_idx](val);
 	
 	// Linearly interpolate between the two output values using the time value to generate the normalised output value
     
@@ -141,8 +141,8 @@ void gesture_kernel::initial_specifier(t_atom *specifier)
 
 // Parameter storage relating to the resolution of random bands
 
-band_parameters time_params(15, 0.0, 1.0, 0.2);
-band_parameters val_params(11, 0.0, 1.0, 0.2);
+constexpr gesture_random time_params(15, 0.0, 1.0, 0.2);
+constexpr gesture_random val_params(11, 0.0, 1.0, 0.2);
 
 // Setup symbols, and the random band parameters for each relevant variable
 
@@ -285,7 +285,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = val2;
 
 			if (argc >= 5)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			break;
 
 			
@@ -302,7 +302,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = val2;
             
 			if (argc >= 6)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			break;
 					
         case gesture_type::flat_line:
@@ -319,7 +319,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = params_val(argv++, last_val);
             
             if (argc >= 6)
-                curve_parameters::params_curve(output_params + 12, argv);
+                gesture_curve::params_curve(output_params + 12, argv);
 			break;
 			
         case gesture_type::triangle_return:
@@ -336,9 +336,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = val1;
             
 			if (argc >= 6)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 9)
-                curve_parameters::params_curve(output_params + 12, argv + 3);
+                gesture_curve::params_curve(output_params + 12, argv + 3);
 			break;
 						
         case gesture_type::triangle:
@@ -355,9 +355,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = params_val(argv++, last_val);
             
 			if (argc >= 7)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 10)
-                curve_parameters::params_curve(output_params + 12, argv + 3);
+                gesture_curve::params_curve(output_params + 12, argv + 3);
 			break;
 				
         case gesture_type::plateau_return:
@@ -374,9 +374,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = val1;
 			
             if (argc >= 7)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 10)
-                curve_parameters::params_curve(output_params + 12, argv + 3);
+                gesture_curve::params_curve(output_params + 12, argv + 3);
 			break;
 			
         case gesture_type::plateau:
@@ -393,9 +393,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = params_val(argv++, last_val);
 			
             if (argc >= 8)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 11)
-                curve_parameters::params_curve(output_params + 12, argv + 3);
+                gesture_curve::params_curve(output_params + 12, argv + 3);
 			break;
 						
         case gesture_type::general_return:
@@ -412,11 +412,11 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = val1;
             
 			if (argc >= 8)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 11)
-                curve_parameters::params_curve(output_params + 9, argv + 3);
+                gesture_curve::params_curve(output_params + 9, argv + 3);
 			if (argc >= 14)
-                curve_parameters::params_curve(output_params + 12, argv + 6);
+                gesture_curve::params_curve(output_params + 12, argv + 6);
 			break;
 					
         case gesture_type::general:
@@ -433,11 +433,11 @@ void gesture_kernel::params(long argc, t_atom *argv)
             val4 = params_val(argv++, last_val);
             
 			if (argc >= 9)
-                curve_parameters::params_curve(output_params + 6, argv);
+                gesture_curve::params_curve(output_params + 6, argv);
 			if (argc >= 12)
-                curve_parameters::params_curve(output_params + 9, argv + 3);
+                gesture_curve::params_curve(output_params + 9, argv + 3);
 			if (argc >= 15)
-                curve_parameters::params_curve(output_params + 12, argv + 6);
+                gesture_curve::params_curve(output_params + 12, argv + 6);
 			break;
 	}
 	
@@ -459,7 +459,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
 	
     // Store curve parameters
     
-    curve_params[0].params(output_params + 6);
-    curve_params[1].params(output_params + 9);
-    curve_params[2].params(output_params + 12);
+    curves[0].params(output_params + 6);
+    curves[1].params(output_params + 9);
+    curves[2].params(output_params + 12);
 }

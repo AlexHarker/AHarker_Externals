@@ -9,7 +9,7 @@
  */
 
 
-#include "gesture_maker_convert.hpp"
+#include "gesture_convert.hpp"
 
 #include <algorithm>
 
@@ -30,7 +30,7 @@ t_symbol *ps_None;
 
 // Setup the symbol variables
 
-void gesture_maker_convert::setup()
+void gesture_convert::setup()
 {
 	ps_scale = gensym("scale");
 	ps_log = gensym("log");
@@ -47,7 +47,7 @@ void gesture_maker_convert::setup()
 
 // Scale a value accoring to the range and scaling specified
 
-double gesture_maker_convert::operator()(double input)
+double gesture_convert::operator()(double input)
 {
     auto clip = [&](double x)
     {
@@ -69,7 +69,7 @@ double gesture_maker_convert::operator()(double input)
 
 // Routine for setting the parameters of the conversion
 
-void gesture_maker_convert::params(t_object *x, long argc, t_atom *argv)
+void gesture_convert::params(t_object *x, long argc, t_atom *argv)
 {
 	double min_in;
 	double max_in;

@@ -4,7 +4,7 @@
 
 #include <ext.h>
 
-class curve_parameters
+class gesture_curve
 {
     enum class curve_type
     {

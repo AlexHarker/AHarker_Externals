@@ -11,8 +11,8 @@
  */
 
 
-#include "gesture_maker_kernel.hpp"
-#include "gesture_maker_multipart.hpp"
+#include "gesture_kernel.hpp"
+#include "gesture_multipart.hpp"
 
 
 // Reset the multipart structure to default values

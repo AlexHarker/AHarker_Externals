@@ -4,11 +4,11 @@
 
 #include <ext.h>
 
-class band_parameters
+class gesture_random
 {
 public:
     
-    constexpr band_parameters (int n_bands, double lo, double hi, double end)
+    constexpr gesture_random(int n_bands, double lo, double hi, double end)
     : num_bands(n_bands), lo_val(lo), hi_val(hi), end_ratio(end)
     {}
     

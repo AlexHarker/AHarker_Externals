@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _GESTURE_MAKER_KERNEL_HPP_
-#define _GESTURE_MAKER_KERNEL_HPP_
+#ifndef _GESTURE_KERNEL_HPP_
+#define _GESTURE_KERNEL_HPP_
 
 #include <ext.h>
 
@@ -66,11 +66,11 @@ private:
 	
     // Curve values
 	
-    curve_parameters curve_params[3];
+    gesture_curve curves[3];
 
     // Last value
     
     double last_val;
 };
 
-#endif /* _GESTURE_MAKER_KERNEL_HPP_ */
+#endif /* _GESTURE_KERNEL_HPP_ */

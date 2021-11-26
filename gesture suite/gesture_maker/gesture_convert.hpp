@@ -1,6 +1,6 @@
 
 /*
- *  gesture_maker_convert.h
+ *  gesture_convert.h
  *
  *	A header file for the value conversion section of the gesture_maker object.
  *	This code deals with converting the output of each kernel from values normalised 0 to 1 to the final output range and scaling.
@@ -9,14 +9,14 @@
  *
  */
 
-#ifndef _GESTURE_MAKER_CONVERT_HPP_
-#define _GESTURE_MAKER_CONVERT_HPP_
+#ifndef _GESTURE_CONVERT_HPP_
+#define _GESTURE_CONVERT_HPP_
 
 
 #include <ext.h>
 
 
-class gesture_maker_convert
+class gesture_convert
 {
     enum class conversion_mode
     {
@@ -29,7 +29,7 @@ public:
     
     static void setup();
 
-    gesture_maker_convert(): mode(conversion_mode::none), mult(1.0), subtract(0.0), min(0.0), max(1.0) {}
+    gesture_convert(): mode(conversion_mode::none), mult(1.0), subtract(0.0), min(0.0), max(1.0) {}
         
     double operator()(double input);
 
@@ -45,4 +45,4 @@ private:
     double max;
 };
 
-#endif /* _GESTURE_MAKER_CONVERT_HPP_ */
+#endif /* _GESTURE_CONVERT_HPP_ */

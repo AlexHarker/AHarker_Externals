@@ -29,9 +29,9 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "gesture_maker_kernel.hpp"
-#include "gesture_maker_convert.hpp"
-#include "gesture_maker_multipart.hpp"
+#include "gesture_kernel.hpp"
+#include "gesture_convert.hpp"
+#include "gesture_multipart.hpp"
 
 
 #define MUX_NUM_EVENTS  256
@@ -45,8 +45,8 @@ struct t_gesture_maker
 	gesture_kernel kernel_main;
     gesture_multipart multipart_inflections;
 
-	gesture_maker_convert convert_main;
-	gesture_maker_convert convert_inflections;
+	gesture_convert convert_main;
+	gesture_convert convert_inflections;
 		
 	double event_times[MUX_NUM_EVENTS];
 	double grain_time;
@@ -137,7 +137,7 @@ int C74_EXPORT main()
 	ps_list = gensym("list");
 	
     gesture_kernel::setup();
-	gesture_maker_convert::setup();
+	gesture_convert::setup();
 		
 	return 0;
 }
@@ -165,8 +165,8 @@ void *gesture_maker_new()
     
     gesture_maker_stop(x);
     gesture_maker_reset(x);
-    x->convert_main = gesture_maker_convert();
-    x->convert_inflections = gesture_maker_convert();
+    x->convert_main = gesture_convert();
+    x->convert_inflections = gesture_convert();
 	
     return x;
 }

@@ -9,7 +9,7 @@ random_generator<> rand_gen;
 
 // Calculate an exact value from a given band and a set of band parameters
 
-double band_parameters::band_to_val(int band_in) const
+double gesture_random::band_to_val(int band_in) const
 {
     constexpr double gauss_dev = 0.33;
     constexpr double width_val = 0.55;
