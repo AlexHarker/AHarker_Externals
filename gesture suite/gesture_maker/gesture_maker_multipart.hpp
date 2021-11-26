@@ -9,6 +9,8 @@
  *
  */
 
+#ifndef _GESTURE_MULTIPART_HPP_
+#define _GESTURE_MULTIPART_HPP_
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -52,3 +54,5 @@ private:
 	
 	bool force_output;
 };
+
+#endif /* _GESTURE_MULTIPART_HPP_ */

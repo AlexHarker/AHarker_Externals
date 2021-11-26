@@ -29,9 +29,9 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "gesture_maker_kernel.h"
-#include "gesture_maker_convert.h"
-#include "gesture_maker_multipart.h"
+#include "gesture_maker_kernel.hpp"
+#include "gesture_maker_convert.hpp"
+#include "gesture_maker_multipart.hpp"
 
 
 #define MUX_NUM_EVENTS  256

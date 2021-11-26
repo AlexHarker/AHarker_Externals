@@ -9,9 +9,12 @@
  *
  */
 
+#ifndef _GESTURE_MAKER_CONVERT_HPP_
+#define _GESTURE_MAKER_CONVERT_HPP_
+
 
 #include <ext.h>
-#include <ext_obex.h>
+
 
 class gesture_maker_convert
 {
@@ -42,3 +45,4 @@ private:
     double max;
 };
 
+#endif /* _GESTURE_MAKER_CONVERT_HPP_ */

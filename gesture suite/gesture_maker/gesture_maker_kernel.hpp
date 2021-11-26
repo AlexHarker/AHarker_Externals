@@ -9,46 +9,13 @@
  *
  */
 
+#ifndef _GESTURE_MAKER_KERNEL_HPP_
+#define _GESTURE_MAKER_KERNEL_HPP_
 
 #include <ext.h>
-#include <ext_obex.h>
 
-// Curve Types
+#include "gesture_curve.hpp"
 
-class curve_parameters
-{
-    enum class curve_type
-    {
-        power_sin_forward,
-        power_sin_reverse,
-        power_recip_sin_reverse,
-        power_recip_sin_forward,
-        power_asin_forward,
-        power_asin_reverse,
-        power_recip_asin_reverse,
-        power_recip_asin_forward
-    };
-    
-public:
-    
-    void reset();
-    
-    double operator()(double val);
-
-    void params(t_atom *specifiers);
-
-private:
-    
-    curve_type get_type(t_atom *specifier);
-    
-    // Curve values
-    
-    double power_val;
-    double scurve_val;
-    curve_type type;
-};
-
-// Kernel structure
 
 class gesture_kernel
 {
@@ -80,10 +47,10 @@ public:
 
 private:
     
+    gesture_type get_type(t_symbol *type);
+
     double params_val(t_atom *specifier, double last_val);
     double params_time(t_atom *specifier, bool reverse);
-    
-    gesture_type get_type(t_symbol *type);
     
 	// Time Points
 	
@@ -106,16 +73,4 @@ private:
     double last_val;
 };
 
-// Struture to hold the parameters relating to random bands
-
-struct band_parameters
-{
-	double num_bands;
-	double lo_val;
-	double hi_val;
-	double gauss_dev;
-	double width_val;
-	double end_ratio;
-    
-    double band_to_val(int band_in);
-};
+#endif /* _GESTURE_MAKER_KERNEL_HPP_ */
