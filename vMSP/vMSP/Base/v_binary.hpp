@@ -73,7 +73,7 @@ public:
         
         x->m_val = double_val;
 
-        return (x);
+        return x;
     }
     
     // Float input routine
