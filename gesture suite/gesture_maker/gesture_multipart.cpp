@@ -68,7 +68,7 @@ void gesture_multipart::params(long argc, t_atom *argv)
     if (argc && m_num_kernels < MAX_NUM_KERNELS)
     {
         t_atom *parameters = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * m_num_kernels);
-        argc = std::min(argc, MAX_NUM_KERNEL_PARAMS);
+        m_kernel_param_count[m_num_kernels] = std::min(argc, MAX_NUM_KERNEL_PARAMS);
         
         for (long i = 0; i < m_kernel_param_count[m_num_kernels]; i++)
             parameters[i] = *argv++;
@@ -82,7 +82,7 @@ void gesture_multipart::params(long argc, t_atom *argv)
 
 void gesture_multipart::timings(long argc, t_atom *argv)
 {
-    m_num_splits = argc > MAX_NUM_SPLITS ? MAX_NUM_SPLITS : argc;
+    m_num_splits = std::min(argc, MAX_NUM_SPLITS);
     
     // There may be a better way to do this that brings us closer to the desired value
     

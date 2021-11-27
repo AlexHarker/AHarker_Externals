@@ -18,7 +18,7 @@
 
 #define MAX_NUM_KERNEL_PARAMS   16L
 #define MAX_NUM_KERNELS         64
-#define MAX_NUM_SPLITS          63
+#define MAX_NUM_SPLITS          63L
 
 // Multipart Class
 
