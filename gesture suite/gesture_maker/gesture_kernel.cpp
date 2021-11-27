@@ -69,10 +69,8 @@ double gesture_kernel::operator()(double val)
 
 // Returns the specified gesture type according to the given symbol
 
-gesture_kernel::gesture_type gesture_kernel::get_type(t_symbol *type)
-{
-    // FIX errors??
-    
+gesture_kernel::gesture_type gesture_kernel::get_type(t_object *x, t_symbol *type)
+{    
     if (type == ps_flat)                return gesture_type::flat;
     if (type == ps_line)                return gesture_type::line;
     if (type == ps_line_flat)           return gesture_type::line_flat;
@@ -89,24 +87,24 @@ gesture_kernel::gesture_type gesture_kernel::get_type(t_symbol *type)
 
 // Return a time value from a specifier
 
-double gesture_kernel::params_time(t_atom *specifier)
+double gesture_kernel::params_time(t_object *x, t_atom *specifier)
 {
-    return time_params.specifier_to_val(specifier);
+    return time_params.specifier_to_val(x, specifier);
 }
 
 // Return an output value (0 to 1) from a specifier
 
-double gesture_kernel::params_val(t_atom *specifier)
+double gesture_kernel::params_val(t_object *x, t_atom *specifier)
 {
     if (atom_gettype(specifier) == A_SYM && atom_getsym(specifier) == ps_last)
         return m_last_val;
     
-    return val_params.specifier_to_val(specifier);
+    return val_params.specifier_to_val(x, specifier);
 }
 
 // Set all the kernel parameters based on the given input atoms
 
-void gesture_kernel::params(long argc, t_atom *argv)
+void gesture_kernel::params(t_object *x, long argc, t_atom *argv)
 {
     // Resets
     
@@ -116,7 +114,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
     
     // Get the gesture type
  
-    gesture_type type = argc ? get_type(atom_getsym(argv++)) : gesture_type::flat;
+    gesture_type type = argc ? get_type(x, atom_getsym(argv++)) : gesture_type::flat;
 
     // Check the number of arguments
     
@@ -148,119 +146,119 @@ void gesture_kernel::params(long argc, t_atom *argv)
         case gesture_type::flat:
             
             m_time1 = m_time2 = 1.0;
-            m_val1 = m_val2 = m_val3 = m_val4 = params_val(argv++);
+            m_val1 = m_val2 = m_val3 = m_val4 = params_val(x, argv++);
             break;
             
         case gesture_type::line:
             
             m_time1 = m_time2 = 1.0;
 
-            m_val1 = params_val(argv++);
-            m_val2 = m_val3 = m_val4 = params_val(argv++);
+            m_val1 = params_val(x, argv++);
+            m_val2 = m_val3 = m_val4 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
+            m_curves[0].params(x, argc, argv);
             break;
             
             
         case gesture_type::line_flat:
             
-            m_time1 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
             m_time2 = 1.0;
                          
-            m_val1 = params_val(argv++);
-            m_val2 = m_val3 = m_val4 = params_val(argv++);
+            m_val1 = params_val(x, argv++);
+            m_val2 = m_val3 = m_val4 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
+            m_curves[0].params(x, argc, argv);
             break;
             
         case gesture_type::flat_line:
             
-            m_time1 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
             m_time2 = m_time1;
             
-            m_val1 = m_val2 = m_val3 = params_val(argv++);
-            m_val4 = params_val(argv++);
+            m_val1 = m_val2 = m_val3 = params_val(x, argv++);
+            m_val4 = params_val(x, argv++);
             
-            m_curves[2].params(argv, argc);
+            m_curves[2].params(x, argc, argv);
             break;
             
         case gesture_type::triangle_return:
             
-            m_time1 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
             m_time2 = m_time1;
             
-            m_val1 = m_val4 = params_val(argv++);
-            m_val2 = m_val3 = params_val(argv++);
+            m_val1 = m_val4 = params_val(x, argv++);
+            m_val2 = m_val3 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[2].params(argv, argc - 3);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[2].params(x, argc - 3, argv + 3);
             break;
             
         case gesture_type::triangle:
             
-            m_time1 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
             m_time2 = m_time1;
             
-            m_val1 = params_val(argv++);
-            m_val2 = m_val3 = params_val(argv++);
-            m_val4 = params_val(argv++);
+            m_val1 = params_val(x, argv++);
+            m_val2 = m_val3 = params_val(x, argv++);
+            m_val4 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[2].params(argv, argc - 3);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[2].params(x, argc - 3, argv + 3);
             break;
             
         case gesture_type::plateau_return:
             
-            m_time1 = params_time(argv++);
-            m_time2 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
+            m_time2 = params_time(x, argv++);
             
-            m_val1 = m_val4 = params_val(argv++);
-            m_val2 = m_val3 = params_val(argv++);
+            m_val1 = m_val4 = params_val(x, argv++);
+            m_val2 = m_val3 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[2].params(argv, argc - 3);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[2].params(x, argc - 3, argv + 3);
             break;
             
         case gesture_type::plateau:
             
-            m_time1 = params_time(argv++);
-            m_time2 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
+            m_time2 = params_time(x, argv++);
             
-            m_val1 = params_val(argv++);
-            m_val2 = m_val3 = params_val(argv++);
-            m_val4 = params_val(argv++);
+            m_val1 = params_val(x, argv++);
+            m_val2 = m_val3 = params_val(x, argv++);
+            m_val4 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[2].params(argv, argc - 3);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[2].params(x, argc - 3, argv + 3);
             break;
             
         case gesture_type::general_return:
             
-            m_time1 = params_time(argv++);
-            m_time2 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
+            m_time2 = params_time(x, argv++);
             
-            m_val1 = m_val4 = params_val(argv++);
-            m_val2 = params_val(argv++);
-            m_val3 = params_val(argv++);
+            m_val1 = m_val4 = params_val(x, argv++);
+            m_val2 = params_val(x, argv++);
+            m_val3 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[1].params(argv, argc - 3);
-            m_curves[2].params(argv, argc - 6);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[1].params(x, argc - 3, argv + 3);
+            m_curves[2].params(x, argc - 6, argv + 6);
             break;
             
         case gesture_type::general:
             
-            m_time1 = params_time(argv++);
-            m_time2 = params_time(argv++);
+            m_time1 = params_time(x, argv++);
+            m_time2 = params_time(x, argv++);
             
-            m_val1 = params_val(argv++);
-            m_val2 = params_val(argv++);
-            m_val3 = params_val(argv++);
-            m_val4 = params_val(argv++);
+            m_val1 = params_val(x, argv++);
+            m_val2 = params_val(x, argv++);
+            m_val3 = params_val(x, argv++);
+            m_val4 = params_val(x, argv++);
             
-            m_curves[0].params(argv, argc);
-            m_curves[1].params(argv, argc - 3);
-            m_curves[2].params(argv, argc - 6);
+            m_curves[0].params(x, argc - 0, argv + 0);
+            m_curves[1].params(x, argc - 3, argv + 3);
+            m_curves[2].params(x, argc - 6, argv + 6);
             break;
     }
     

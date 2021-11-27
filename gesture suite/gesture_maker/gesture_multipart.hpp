@@ -41,13 +41,13 @@ public:
     
     void reset();
     
-    void initial(double val)                    { m_kernel.initial(val); }
-    void initial_specifier(t_atom *specifier)   { m_kernel.initial_specifier(specifier); }
+    void initial(double val)                                    { m_kernel.initial(val); }
+    void initial_specifier(t_object *x, t_atom *specifier)      { m_kernel.initial_specifier(x, specifier); }
     
-    double operator()(double phase);
+    double operator()(t_object *x, double phase);
     
-    void params(long argc, t_atom *argv);
-    void timings(long argc, t_atom *argv);
+    void params(t_object *x, long argc, t_atom *argv);
+    void timings(t_object *x, long argc, t_atom *argv);
         
 private:
     

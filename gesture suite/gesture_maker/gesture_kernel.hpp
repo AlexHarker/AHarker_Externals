@@ -53,10 +53,10 @@ public:
     
     void reset() { *this = gesture_kernel(); }
     
-    void initial(double val)                    { m_last_val = val; };
-    void initial_specifier(t_atom *specifier)   { m_last_val = params_val(specifier); }
+    void initial(double val)                                 { m_last_val = val; };
+    void initial_specifier(t_object *x, t_atom *specifier)   { m_last_val = params_val(x, specifier); }
     
-    void params(long argc, t_atom *argv);
+    void params(t_object *x, long argc, t_atom *argv);
     
     double operator()(double val);
     
@@ -64,10 +64,10 @@ private:
     
     // Helpers
     
-    gesture_type get_type(t_symbol *type);
+    gesture_type get_type(t_object *x, t_symbol *type);
     
-    double params_time(t_atom *specifier);
-    double params_val(t_atom *specifier);
+    double params_time(t_object *x, t_atom *specifier);
+    double params_val(t_object *x, t_atom *specifier);
     
     double calc(double val, double t1, double t2, double v1, double v2, gesture_curve& curve);
     

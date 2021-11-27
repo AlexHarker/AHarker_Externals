@@ -27,7 +27,7 @@ void gesture_multipart::reset()
 
 // Calculate the output from an input phase
 
-double gesture_multipart::operator()(double phase)
+double gesture_multipart::operator()(t_object *x, double phase)
 {
     // If gesture has been re-triggered reset to the beginning, then search for the current split
     
@@ -48,7 +48,7 @@ double gesture_multipart::operator()(double phase)
         {
             long output_kernel = search_kernel % m_num_kernels;
             t_atom *output_params = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * output_kernel);
-            m_kernel.params(m_kernel_param_count[output_kernel], output_params);
+            m_kernel.params(x, m_kernel_param_count[output_kernel], output_params);
         }
     }
     
@@ -63,7 +63,7 @@ double gesture_multipart::operator()(double phase)
 
 // Set Parameters
 
-void gesture_multipart::params(long argc, t_atom *argv)
+void gesture_multipart::params(t_object *x, long argc, t_atom *argv)
 {
     if (argc && m_num_kernels < MAX_NUM_KERNELS)
     {
@@ -80,7 +80,7 @@ void gesture_multipart::params(long argc, t_atom *argv)
 
 // Set the Timings
 
-void gesture_multipart::timings(long argc, t_atom *argv)
+void gesture_multipart::timings(t_object *x, long argc, t_atom *argv)
 {
     m_num_splits = std::min(argc, MAX_NUM_SPLITS);
     

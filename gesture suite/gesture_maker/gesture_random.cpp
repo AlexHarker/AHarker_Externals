@@ -12,7 +12,7 @@ random_generator<> rand_gen;
 
 // Return a band number from a specifing atom (choosing randomly when a range is given)
 
-int random_band(t_atom *specifier)
+int random_band(t_object *x, t_atom *specifier)
 {
     // N.B. - we avoid values that we know are out of range here - just in case
     
@@ -33,7 +33,7 @@ int random_band(t_atom *specifier)
 
 // Calculate an exact value from a given band and a set of band parameters
 
-double gesture_random::band_to_val(int band_in) const
+double gesture_random::band_to_val(t_object *x, int band_in) const
 {
     constexpr double gauss_dev = 0.33;
     constexpr double width_val = 0.55;
@@ -51,10 +51,10 @@ double gesture_random::band_to_val(int band_in) const
     return r * m_convert_val + m_lo;
 }
 
-double gesture_random::specifier_to_val(t_atom *specifier) const
+double gesture_random::specifier_to_val(t_object *x, t_atom *specifier) const
 {
     if (atom_gettype(specifier) == A_FLOAT)
         return atom_getfloat(specifier);
     else
-        return band_to_val(random_band(specifier));
+        return band_to_val(x, random_band(x, specifier));
 }

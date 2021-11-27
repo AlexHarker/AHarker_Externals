@@ -343,7 +343,7 @@ void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
     // Calculate the main gesture value and the inflection value
     
     double main_val = x->kernel_main(phase);
-    double inflection_val = x->multipart_inflections(phase);
+    double inflection_val = x->multipart_inflections((t_object*) x, phase);
     
     // Convert and combine
     
@@ -365,12 +365,12 @@ void gesture_maker_graintime(t_gesture_maker *x, double val)
 
 void gesture_maker_gesture_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->kernel_main.params(argc, argv);
+    x->kernel_main.params((t_object *) x, argc, argv);
 }
 
 void gesture_maker_gesture_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->multipart_inflections.params(argc, argv);
+    x->multipart_inflections.params((t_object *) x, argc, argv);
 }
 
 void gesture_maker_initial_main(t_gesture_maker *x, double val)
@@ -386,18 +386,18 @@ void gesture_maker_initial_inflections(t_gesture_maker *x, double val)
 void gesture_maker_start_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (argc)
-        x->kernel_main.initial_specifier(argv);
+        x->kernel_main.initial_specifier((t_object *) x, argv);
 }
 
 void gesture_maker_start_inflections(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (argc)
-        x->multipart_inflections.initial_specifier(argv);
+        x->multipart_inflections.initial_specifier((t_object *) x, argv);
 }
 
 void gesture_maker_timings(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
-    x->multipart_inflections.timings(argc, argv);
+    x->multipart_inflections.timings((t_object *) x, argc, argv);
 }
 
 void gesture_maker_scaling_main(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)

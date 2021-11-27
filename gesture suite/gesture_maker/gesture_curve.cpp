@@ -69,30 +69,30 @@ gesture_curve::curve_type gesture_curve::get_type(int type) const
     }
 }
 
-void gesture_curve::params(t_atom *specifiers, long argc)
+void gesture_curve::params(t_object *x, long argc, t_atom *argv)
 {
     if (argc < 3)
         return;
     
-    const double s = scurve_params.specifier_to_val(specifiers + 1);
+    const double s = scurve_params.specifier_to_val(x, argv + 1);
     
     m_scurve = pow(std::max(0.0, std::min(1.0, s)), 0.35);
     
-    if (atom_gettype(specifiers + 2) == A_FLOAT)
+    if (atom_gettype(argv + 2) == A_FLOAT)
     {
-        m_power = std::max(1.0, atom_getfloat(specifiers + 2));
-        m_type = get_type(random_band(specifiers));
+        m_power = std::max(1.0, atom_getfloat(argv + 2));
+        m_type = get_type(random_band(x, argv));
     }
     else
     {
         // Get band
         
-        int band = random_band(specifiers + 2) - (pow_curve_params.num_bands() - 1);
+        int band = random_band(x, argv + 2) - (pow_curve_params.num_bands() - 1);
         int band_alter = band > 0 ? 1 : 0;
         
         band = abs(band) - band_alter;
         
-        m_power = std::max(1.0, exp(pow_curve_params.band_to_val(band)));
-        m_type = get_type(random_band(specifiers) * 2 + band_alter);
+        m_power = std::max(1.0, exp(pow_curve_params.band_to_val(x, band)));
+        m_type = get_type(random_band(x, argv) * 2 + band_alter);
     }
 }

@@ -6,7 +6,7 @@
 
 // Random Band (from specifier)
 
-int random_band(t_atom *specifier);
+int random_band(t_object *x, t_atom *specifier);
 
 // Random Class (deals with banding)
 
@@ -23,8 +23,8 @@ public:
     , m_convert_val((m_hi - m_lo) / m_band_space)
     {}
     
-    double band_to_val(int band_in) const;
-    double specifier_to_val(t_atom *specifier) const;
+    double band_to_val(t_object *x, int band_in) const;
+    double specifier_to_val(t_object *x, t_atom *specifier) const;
     
     int num_bands() const { return m_num_bands; }
     
