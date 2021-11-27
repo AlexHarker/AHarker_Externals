@@ -47,7 +47,7 @@ double gesture_multipart::operator()(t_object *x, double phase)
         if (m_num_kernels)
         {
             long output_kernel = search_kernel % m_num_kernels;
-            t_atom *output_params = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * output_kernel);
+            t_atom *output_params = m_kernel_params + (max_params * output_kernel);
             m_kernel.params(x, m_kernel_param_count[output_kernel], output_params);
         }
     }
@@ -65,10 +65,10 @@ double gesture_multipart::operator()(t_object *x, double phase)
 
 void gesture_multipart::params(t_object *x, long argc, t_atom *argv)
 {
-    if (argc && m_num_kernels < MAX_NUM_KERNELS)
+    if (argc && m_num_kernels < max_kernels)
     {
-        t_atom *parameters = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * m_num_kernels);
-        m_kernel_param_count[m_num_kernels] = std::min(argc, MAX_NUM_KERNEL_PARAMS);
+        t_atom *parameters = m_kernel_params + (max_params * m_num_kernels);
+        m_kernel_param_count[m_num_kernels] = std::min(argc, max_params);
         
         for (long i = 0; i < m_kernel_param_count[m_num_kernels]; i++)
             parameters[i] = *argv++;
@@ -82,7 +82,7 @@ void gesture_multipart::params(t_object *x, long argc, t_atom *argv)
 
 void gesture_multipart::timings(t_object *x, long argc, t_atom *argv)
 {
-    m_num_splits = std::min(argc, MAX_NUM_SPLITS);
+    m_num_splits = std::min(argc, max_kernels - 1);
     
     // There may be a better way to do this that brings us closer to the desired value
     

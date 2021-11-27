@@ -14,11 +14,9 @@
 
 #include <ext.h>
 
-// FIX - defines
 
-#define MAX_NUM_KERNEL_PARAMS   16L
-#define MAX_NUM_KERNELS         64
-#define MAX_NUM_SPLITS          63L
+static constexpr long max_params = 16;
+static constexpr long max_kernels = 64;
 
 // Multipart Class
 
@@ -57,13 +55,13 @@ private:
     
     // Split Values
     
-    double m_split_points[MAX_NUM_SPLITS];
+    double m_split_points[max_kernels - 1];
     long m_num_splits;
     
     // Kernel Parameters
     
-    t_atom m_kernel_params[MAX_NUM_KERNELS * MAX_NUM_KERNEL_PARAMS];
-    long m_kernel_param_count[MAX_NUM_KERNELS];
+    t_atom m_kernel_params[max_kernels * max_params];
+    long m_kernel_param_count[max_kernels];
     long m_num_kernels;
     long m_current_kernel;
     
