@@ -26,7 +26,7 @@ public:
         t_class **C = getClassPointer<T>();
         *accessClassName<T>() = object_name;
         
-        *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), NULL, 0);
+        *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), nullptr, 0);
         
         class_addmethod(*C, (method)dsp<T>, "dsp", A_CANT, 0);
         class_addmethod(*C, (method)dsp64<T>, "dsp64", A_CANT, 0);

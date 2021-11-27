@@ -1,6 +1,6 @@
 
-#ifndef DYNAMIC_HOST_H
-#define DYNAMIC_HOST_H
+#ifndef _DYNAMIC_HOST_HPP_
+#define _DYNAMIC_HOST_HPP_
 
 // These are the common handlers for dynamic host objects
 // The object is expected to have a member called patch_set
@@ -166,4 +166,4 @@ struct dynamic_host
     }
 };
 
-#endif /* DYNAMIC_HOST_H */
+#endif /* _DYNAMIC_HOST_HPP_ */

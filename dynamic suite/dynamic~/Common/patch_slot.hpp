@@ -1,6 +1,6 @@
 
-#ifndef _PATCHSLOT_H_
-#define _PATCHSLOT_H_
+#ifndef _PATCHSLOT_HPP_
+#define _PATCHSLOT_HPP_
 
 #include <ext.h>
 #include <z_dsp.h>
@@ -181,4 +181,4 @@ private:
     long m_thread_request;
 };
 
-#endif  /* _PATCHSLOT_H_ */
+#endif  /* _PATCHSLOT_HPP_ */
