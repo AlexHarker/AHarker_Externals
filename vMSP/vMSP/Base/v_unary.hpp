@@ -58,7 +58,7 @@ public:
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 1);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
         
-        return (x);
+        return x;
     }
     
     // 32 bit dsp routine
