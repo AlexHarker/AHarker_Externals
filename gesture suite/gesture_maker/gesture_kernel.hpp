@@ -40,9 +40,7 @@ class gesture_kernel
 public:
     
     // Main Methods
-    
-    static void setup();
-    
+        
     gesture_kernel()
     : m_time1(0.0)
     , m_time2(1.0)

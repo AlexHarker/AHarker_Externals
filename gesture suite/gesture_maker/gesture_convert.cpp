@@ -16,34 +16,17 @@
 
 // Symbols
 
-t_symbol *ps_scale;
-t_symbol *ps_log;
-t_symbol *ps_amp;
-t_symbol *ps_pitch;
-t_symbol *ps_none;
+t_symbol *ps_scale = gensym("scale");
+t_symbol *ps_log = gensym("log");;
+t_symbol *ps_amp = gensym("amp");;
+t_symbol *ps_pitch = gensym("pitch");;
+t_symbol *ps_none = gensym("none");;
 
-t_symbol *ps_Scale;
-t_symbol *ps_Log;
-t_symbol *ps_Amp;
-t_symbol *ps_Pitch;
-t_symbol *ps_None;
-
-// Setup the symbol variables
-
-void gesture_convert::setup()
-{
-    ps_scale = gensym("scale");
-    ps_log = gensym("log");
-    ps_amp = gensym("amp");
-    ps_pitch = gensym("pitch");
-    ps_none = gensym("none");
-    
-    ps_Scale = gensym("Scale");
-    ps_Log = gensym("Log");
-    ps_Amp = gensym("Amp");
-    ps_Pitch = gensym("Pitch");
-    ps_None = gensym("None");
-}
+t_symbol *ps_Scale = gensym("Scale");
+t_symbol *ps_Log = gensym("Log");
+t_symbol *ps_Amp = gensym("Amp");
+t_symbol *ps_Pitch = gensym("Pitch");
+t_symbol *ps_None = gensym("None");
 
 // Scale a value accoring to the range and scaling specified
 

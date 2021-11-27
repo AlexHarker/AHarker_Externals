@@ -31,9 +31,7 @@ class gesture_convert
 public:
     
     // Main Methods
-    
-    static void setup();
-    
+        
     gesture_convert()
     : m_mode(conversion_mode::none), m_mult(1.0), m_subtract(0.0), m_min(0.0), m_max(1.0) {}
     

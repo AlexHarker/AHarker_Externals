@@ -24,18 +24,18 @@ constexpr gesture_random val_params(11, 0.0, 1.0, 0.2);
 
 // Symbols
 
-t_symbol *ps_flat;
-t_symbol *ps_line;
-t_symbol *ps_line_flat;
-t_symbol *ps_flat_line;
-t_symbol *ps_triangle_return;
-t_symbol *ps_triangle;
-t_symbol *ps_plateau_return;
-t_symbol *ps_plateau;
-t_symbol *ps_return;
-t_symbol *ps_general;
+t_symbol *ps_line = gensym("line");
+t_symbol *ps_flat = gensym("flat");
+t_symbol *ps_line_flat = gensym("line_flat");
+t_symbol *ps_flat_line = gensym("flat_line");
+t_symbol *ps_triangle_return = gensym("triangle_return");
+t_symbol *ps_triangle = gensym("triangle");
+t_symbol *ps_plateau_return = gensym("plateau_return");
+t_symbol *ps_plateau = gensym("plateau");
+t_symbol *ps_return = gensym("return");
+t_symbol *ps_general = gensym("general");
 
-t_symbol *ps_last;
+t_symbol *ps_last = gensym("last");
 
 // Calculate one part of a kernel
 
@@ -66,24 +66,6 @@ double gesture_kernel::operator()(double val)
 }
 
 // Parameter Methods
-
-// Setup symbols, and the random band parameters for each relevant variable
-
-void gesture_kernel::setup()
-{
-    ps_line = gensym("line");
-    ps_flat = gensym("flat");
-    ps_line_flat = gensym("line_flat");
-    ps_flat_line = gensym("flat_line");
-    ps_triangle_return = gensym("triangle_return");
-    ps_triangle = gensym("triangle");
-    ps_plateau_return = gensym("plateau_return");
-    ps_plateau = gensym("plateau");
-    ps_return = gensym("return");
-    ps_general = gensym("general");
-    
-    ps_last = gensym("last");
-}
 
 // Returns the specified gesture type according to the given symbol
 

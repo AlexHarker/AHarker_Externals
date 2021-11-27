@@ -135,10 +135,7 @@ int C74_EXPORT main()
     class_register(CLASS_BOX, this_class);
     
     ps_list = gensym("list");
-    
-    gesture_kernel::setup();
-    gesture_convert::setup();
-    
+        
     return 0;
 }
 
