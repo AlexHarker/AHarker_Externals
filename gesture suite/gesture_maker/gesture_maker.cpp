@@ -41,10 +41,10 @@ t_class *this_class;
 struct t_gesture_maker
 {
     t_object a_obj;
-
+    
     gesture_kernel kernel_main;
     gesture_multipart multipart_inflections;
-
+    
     gesture_convert convert_main;
     gesture_convert convert_inflections;
         
@@ -127,11 +127,11 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method)gesture_maker_scaling_main, "scaling_main", A_GIMME,  0);
     class_addmethod(this_class, (method)gesture_maker_scaling_inflections, "scaling_inflections", A_GIMME,  0);
     class_addmethod(this_class, (method)gesture_maker_reset, "reset",  0);
-        
+    
     class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);
-
+    
     class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);
-
+    
     class_register(CLASS_BOX, this_class);
     
     ps_list = gensym("list");
@@ -241,15 +241,15 @@ void gesture_maker_doclock(t_gesture_maker *x)
     double gesture_time = x->gesture_time;
     double gesture_length = x->gesture_length;
     double phase = (gesture_length - gesture_time) / gesture_length;
-
+    
     long current_event = x->current_event;
     long num_events = x->num_events;
     
     if (gesture_time < 0.0)
         gesture_time = 0.0;
-
+    
     // Determine the time until the next output
-
+    
     if (current_event == -1)
     {
         if (clock_time > gesture_time)
@@ -269,7 +269,7 @@ void gesture_maker_doclock(t_gesture_maker *x)
     gesture_maker_calc(x, phase, grain_time);
     
     // If the gesture is over then bang the done outlet, otherwise set the clock for the next output
-
+    
     if (gesture_time == 0.0 || (current_event != -1 && current_event > num_events))
         outlet_bang(x->gesture_done_out);
     else
@@ -286,14 +286,14 @@ void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *ar
     double total_time = 0.;
     
     // Set the object going in events mode, storing the relevant timings and variables first
-
+    
     if (argc > MUX_NUM_EVENTS)
         argc = MUX_NUM_EVENTS;
-
+    
     gesture_maker_stop(x);
-
+    
     x->num_events = argc;
-
+    
     while (argc--)
     {
         event_time = fabs(atom_getfloat(argv++));
@@ -352,9 +352,9 @@ void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
     
     main_val = x->convert_main(main_val);
     inflection_val = x->convert_inflections(inflection_val);
-
+    
     atom_setfloat(output_list, main_val * inflection_val);
-
+    
     outlet_list(x->gesture_vals_out, ps_list, 2, output_list);
 }
 

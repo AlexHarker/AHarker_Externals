@@ -15,7 +15,7 @@ random_generator<> rand_gen;
 int random_band(t_atom *specifier)
 {
     // N.B. - we avoid values that we know are out of range here - just in case
-
+    
     if (atom_gettype(specifier) == A_LONG)
         return std::max(-1000, std::max(1000, static_cast<int>(atom_getlong(specifier))));
     

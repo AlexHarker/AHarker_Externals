@@ -72,7 +72,7 @@ void gesture_convert::params(t_object *x, long argc, t_atom *argv)
     {
         if (argc < 3)
             object_error(x, "not enough values for conversion parameter change");
-
+        
         *this = gesture_convert();
         return;
     }
@@ -83,14 +83,14 @@ void gesture_convert::params(t_object *x, long argc, t_atom *argv)
     mode_sym = (mode_sym == ps_Log)   ? ps_log   : mode_sym;
     mode_sym = (mode_sym == ps_Amp)   ? ps_amp   : mode_sym;
     mode_sym = (mode_sym == ps_Pitch) ? ps_pitch : mode_sym;
-
+    
     // We can either just specify min and max out, or also specify input range (again for backwards compatibility)
     
     const double min_in = (argc < 5) ? 0.0 : atom_getfloat(argv++);
     const double max_in = (argc < 5) ? 1.0 : atom_getfloat(argv++);
     double min_out = atom_getfloat(argv++);
     double max_out = atom_getfloat(argv++);
-
+    
     if (mode_sym == ps_log || mode_sym == ps_amp || mode_sym == ps_pitch)
         m_mode = conversion_mode::log_in;
     else

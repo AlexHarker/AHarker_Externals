@@ -31,7 +31,7 @@ public:
     void reset() { *this = gesture_curve(); }
     
     double operator()(double val) const;
-
+    
     void params(t_atom *specifiers, long argc);
     
 private:
@@ -42,7 +42,7 @@ private:
     
     double scurve_sin(double val) const;
     double scurve_asin(double val) const;
-
+    
     // Curvature Values
     
     double m_power;

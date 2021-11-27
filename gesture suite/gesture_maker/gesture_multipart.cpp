@@ -30,7 +30,7 @@ void gesture_multipart::reset()
 double gesture_multipart::operator()(double phase)
 {
     // If gesture has been re-triggered reset to the beginning, then search for the current split
-
+    
     long search_kernel = (phase < m_last_phase) ? 0 : m_current_kernel;
         
     for (; search_kernel < m_num_splits && phase >= m_split_points[search_kernel]; search_kernel++);
@@ -43,7 +43,7 @@ double gesture_multipart::operator()(double phase)
         m_lo_phase = !search_kernel ? 0.0 : m_split_points[search_kernel - 1];
         m_hi_phase = (search_kernel >= m_num_splits) ? 1.0 : m_split_points[search_kernel];
         m_range_recip = 1.0 / (m_hi_phase - m_lo_phase);
-
+        
         if (m_num_kernels)
         {
             long output_kernel = search_kernel % m_num_kernels;
@@ -55,7 +55,7 @@ double gesture_multipart::operator()(double phase)
     m_last_phase = phase;
     m_current_kernel = search_kernel;
     m_force_update = false;
-
+    
     // Calculate and clip inflection phase and then calculate the output
     
     return m_kernel(std::max(0.0, std::min(1.0, (phase - m_lo_phase) * m_range_recip)));
@@ -69,7 +69,7 @@ void gesture_multipart::params(long argc, t_atom *argv)
     {
         t_atom *parameters = m_kernel_params + (MAX_NUM_KERNEL_PARAMS * m_num_kernels);
         argc = std::min(argc, MAX_NUM_KERNEL_PARAMS);
-                
+        
         for (long i = 0; i < m_kernel_param_count[m_num_kernels]; i++)
             parameters[i] = *argv++;
         
@@ -88,6 +88,6 @@ void gesture_multipart::timings(long argc, t_atom *argv)
     
     for (long i = 0; i < m_num_splits; i++)
         m_split_points[i] = nextafter(atom_getfloat(argv++), -1.0);
-
+    
     m_force_update = true;
 }

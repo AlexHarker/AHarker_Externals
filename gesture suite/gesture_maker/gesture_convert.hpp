@@ -12,7 +12,6 @@
 #ifndef _GESTURE_CONVERT_HPP_
 #define _GESTURE_CONVERT_HPP_
 
-
 #include <ext.h>
 
 
@@ -34,12 +33,12 @@ public:
     // Main Methods
     
     static void setup();
-
+    
     gesture_convert()
     : m_mode(conversion_mode::none), m_mult(1.0), m_subtract(0.0), m_min(0.0), m_max(1.0) {}
-        
+    
     double operator()(double val);
-
+    
     void params(t_object *x, long argc, t_atom *argv);
     
 private:

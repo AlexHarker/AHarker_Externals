@@ -45,7 +45,7 @@ public:
     void initial_specifier(t_atom *specifier)   { m_kernel.initial_specifier(specifier); }
     
     double operator()(double phase);
-
+    
     void params(long argc, t_atom *argv);
     void timings(long argc, t_atom *argv);
         
@@ -54,7 +54,7 @@ private:
     // Kernel
     
     gesture_kernel m_kernel;
-
+    
     // Split Values
     
     double m_split_points[MAX_NUM_SPLITS];

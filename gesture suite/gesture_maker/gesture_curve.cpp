@@ -23,7 +23,7 @@ double gesture_curve::scurve_sin(double val) const
 double gesture_curve::scurve_asin(double val) const
 {
     constexpr double PI_RECIP = 0.31830988618379067154;
-
+    
     const double s = 0.5 + ((asin(2.0 * (val - 0.5))) * PI_RECIP);
     
     return val + (m_scurve * (s - val));
@@ -77,7 +77,7 @@ void gesture_curve::params(t_atom *specifiers, long argc)
     const double s = scurve_params.specifier_to_val(specifiers + 1);
     
     m_scurve = pow(std::max(0.0, std::min(1.0, s)), 0.35);
-
+    
     if (atom_gettype(specifiers + 2) == A_FLOAT)
     {
         m_power = std::max(1.0, atom_getfloat(specifiers + 2));
@@ -89,7 +89,7 @@ void gesture_curve::params(t_atom *specifiers, long argc)
         
         int band = random_band(specifiers + 2) - (pow_curve_params.num_bands() - 1);
         int band_alter = band > 0 ? 1 : 0;
-
+        
         band = abs(band) - band_alter;
         
         m_power = std::max(1.0, exp(pow_curve_params.band_to_val(band)));

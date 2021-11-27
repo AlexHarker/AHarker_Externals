@@ -25,7 +25,7 @@ public:
     
     double band_to_val(int band_in) const;
     double specifier_to_val(t_atom *specifier) const;
-
+    
     int num_bands() const { return m_num_bands; }
     
 private:

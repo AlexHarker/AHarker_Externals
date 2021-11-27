@@ -42,7 +42,7 @@ public:
     // Main Methods
     
     static void setup();
-
+    
     gesture_kernel()
     : m_time1(0.0)
     , m_time2(1.0)
@@ -53,21 +53,21 @@ public:
     , m_last_val(0.0)
     {}
     
-    void reset()  { *this = gesture_kernel(); }
-
+    void reset() { *this = gesture_kernel(); }
+    
     void initial(double val)                    { m_last_val = val; };
     void initial_specifier(t_atom *specifier)   { m_last_val = params_val(specifier); }
     
     void params(long argc, t_atom *argv);
     
     double operator()(double val);
-
+    
 private:
     
     // Helpers
     
     gesture_type get_type(t_symbol *type);
-
+    
     double params_time(t_atom *specifier);
     double params_val(t_atom *specifier);
     
@@ -88,7 +88,7 @@ private:
     // Curve Values
     
     gesture_curve m_curves[3];
-
+    
     // Last Value
     
     double m_last_val;

@@ -46,7 +46,7 @@ double gesture_kernel::calc(double phase, double t1, double t2, double v1, doubl
     double val = (t1 == t2) ? 0.0 : std::max(0.0, std::min(1.0, (phase - t1) / (t2 - t1)));
     
     // The linear time value is now curved and inearly interpolate between the two output values
-        
+    
     return (m_last_val = v1 + curve(val) * (v2 - v1));
 };
 
@@ -147,7 +147,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
     
     // Check the number of arguments
     
-    long required_argc =  0;
+    long required_argc = 0;
     
     switch (type)
     {
@@ -171,21 +171,21 @@ void gesture_kernel::params(long argc, t_atom *argv)
     switch (type)
     {
         case gesture_type::flat:
-                        
+            
             m_val1 = m_val2 = m_val3 = m_val4 = params_val(argv++);
             break;
-                    
+            
         case gesture_type::line:
             
             m_val1 = params_val(argv++);
             m_val2 = m_val3 = m_val4 = params_val(argv++);
-
+            
             m_curves[0].params(argv, argc - 2);
             break;
-
+            
             
         case gesture_type::line_flat:
-                        
+            
             m_time1 = params_time(argv++);
             
             m_val1 = params_val(argv++);
@@ -193,12 +193,12 @@ void gesture_kernel::params(long argc, t_atom *argv)
             
             m_curves[0].params(argv, argc - 3);
             break;
-                    
+            
         case gesture_type::flat_line:
-
+            
             m_time1 = params_time(argv++);
             m_time2 = m_time1;
-
+            
             m_val1 = m_val2 = m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
@@ -216,7 +216,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_curves[0].params(argv, argc - 3);
             m_curves[2].params(argv, argc - 6);
             break;
-                        
+            
         case gesture_type::triangle:
             
             m_time1 = params_time(argv++);
@@ -243,7 +243,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             break;
             
         case gesture_type::plateau:
-                        
+            
             m_time1 = params_time(argv++);
             m_time2 = params_time(argv++);
             
@@ -254,9 +254,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_curves[0].params(argv, argc - 5);
             m_curves[2].params(argv, argc - 8);
             break;
-                        
+            
         case gesture_type::general_return:
-           
+            
             m_time1 = params_time(argv++);
             m_time2 = params_time(argv++);
             
@@ -268,17 +268,17 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_curves[1].params(argv, argc - 8);
             m_curves[2].params(argv, argc - 11);
             break;
-                    
+            
         case gesture_type::general:
             
             m_time1 = params_time(argv++);
             m_time2 = params_time(argv++);
-        
+            
             m_val1 = params_val(argv++);
             m_val2 = params_val(argv++);
             m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
-
+            
             m_curves[0].params(argv, argc - 6);
             m_curves[1].params(argv, argc - 9);
             m_curves[2].params(argv, argc - 12);
@@ -286,7 +286,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
     }
     
     // Correct time ordering if necessary
-        
+    
     if (m_time1 > m_time2)
         std::swap(m_time1, m_time2);
 }
+
