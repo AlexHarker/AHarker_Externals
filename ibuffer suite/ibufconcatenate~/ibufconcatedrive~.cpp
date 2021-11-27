@@ -55,7 +55,7 @@ int C74_EXPORT main()
                            (method)ibufconcatedrive_new,
                            (method)ibufconcatedrive_free,
                            sizeof(t_ibufconcatedrive),
-                           NULL,
+                           nullptr,
                            A_SYM,
                            A_DEFFLOAT,
                            0);
@@ -221,7 +221,7 @@ void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count)
 void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
     x->sr_const = 1000. / samplerate;
-    object_method(dsp64, gensym("dsp_add64"), x, ibufconcatedrive_perform64, 0, NULL);
+    object_method(dsp64, gensym("dsp_add64"), x, ibufconcatedrive_perform64, 0, nullptr);
 }
 
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s)

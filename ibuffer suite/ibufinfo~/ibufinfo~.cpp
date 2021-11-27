@@ -37,9 +37,9 @@ int C74_EXPORT main()
 {
     this_class = class_new ("ibufinfo~",
                             (method) ibufinfo_new,
-                            NULL,
+                            nullptr,
                             sizeof (t_ibufinfo),
-                            NULL,
+                            nullptr,
                             A_DEFSYM,
                             0);
     
@@ -96,7 +96,7 @@ void ibufinfo_bang(t_ibufinfo *x)
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    ibufinfo_set_internal(x, argc ? atom_getsym(argv) : NULL);
+    ibufinfo_set_internal(x, argc ? atom_getsym(argv) : nullptr);
 }
 
 void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
