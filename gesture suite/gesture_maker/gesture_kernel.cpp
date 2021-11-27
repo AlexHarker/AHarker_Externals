@@ -130,7 +130,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
     
     // Resets
     
-    m_time1 = 0.0;
+    m_time1 = 1.0;
     m_time2 = 1.0;
      
     m_curves[0].reset();
@@ -222,8 +222,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_time1 = params_time(argv++);
             m_time2 = m_time1;
             
-            m_val1 = m_val3 = params_val(argv++);
-            m_val2 = params_val(argv++);
+            m_val1 = params_val(argv++);
+            m_val2 = m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
             m_curves[0].params(argv, argc - 4);
