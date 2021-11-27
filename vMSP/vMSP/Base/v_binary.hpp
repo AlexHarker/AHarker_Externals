@@ -97,7 +97,7 @@ public:
     template <class T>
     static void dsp(T *x, t_signal **sp, short *count)
     {
-        const static int simd_width = SIMDLimits<float>::max_size;
+        constexpr int simd_width = SIMDLimits<float>::max_size;
 
         long routine = 0;
         long vec_size_val = sp[0]->s_n;
@@ -263,7 +263,7 @@ public:
     {
         method perform_routine = (method) perform64_op<T, 1>;
         long routine = 0;
-        const static int simd_width = SIMDLimits<double>::max_size;
+        constexpr int simd_width = SIMDLimits<double>::max_size;
         
         // If nothing is connected then don't do anything here....
             

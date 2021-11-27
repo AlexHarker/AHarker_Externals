@@ -118,6 +118,20 @@
                ReferencedContainer = "container:AH Externals.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F116B1465F961007FAC6A"
+               BuildableName = "gesture suite"
+               BlueprintName = "gesture suite"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

@@ -16,8 +16,8 @@
 
 struct mtof_functor
 {
-    const static double mtof_mul_constant;
-    const static double mtof_add_constant;
+    static const double mtof_mul_constant;
+    static const double mtof_add_constant;
     
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {

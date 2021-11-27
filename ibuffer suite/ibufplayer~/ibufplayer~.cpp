@@ -40,7 +40,7 @@ enum class transport_flag
     stop,
 };
 
-const int max_num_chans = 64;
+constexpr int max_num_chans = 64;
 
 // Main object struct
 
@@ -394,7 +394,7 @@ void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const pha
 template <class T>
 void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *positions, long vec_size)
 {
-    const int N = SIMDLimits<double>::max_size;
+    constexpr int N = SIMDLimits<double>::max_size;
     
     ibuffer_data buffer(x->buffer_name);
     
