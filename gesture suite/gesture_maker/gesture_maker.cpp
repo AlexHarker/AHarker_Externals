@@ -34,7 +34,7 @@
 #include "gesture_multipart.hpp"
 
 
-#define MUX_NUM_EVENTS  256
+constexpr int max_num_events = 256;
 
 t_class *this_class;
     
@@ -50,7 +50,7 @@ struct t_gesture_maker
     gesture_convert convert_main;
     gesture_convert convert_inflections;
         
-    double event_times[MUX_NUM_EVENTS];
+    double event_times[max_num_events];
     double grain_time;
     
     long num_events;
@@ -150,7 +150,7 @@ void *gesture_maker_new()
     // Set some default values
     
     x->gesture_clock = clock_new(x, (method) gesture_maker_doclock);
-    x->grain_time = 20.;
+    x->grain_time = 20.0;
     
     gesture_maker_stop(x);
     gesture_maker_reset(x);
@@ -208,7 +208,8 @@ void gesture_maker_reset(t_gesture_maker *x)
 
 void gesture_maker_stop(t_gesture_maker *x)
 {
-    // The stop routine is used internally and by users to cancel any gesture that is currently executing (this will *not* cause a bang message to be sent out of the done outlet)
+    // Used internally and by users to cancel any gesture that is currently executing
+    // NOte that this will *not* cause a bang message to be sent out of the done outlet
     
     clock_unset(x->gesture_clock);
     
@@ -223,7 +224,7 @@ void gesture_maker_stop(t_gesture_maker *x)
 
 void gesture_maker_doclock(t_gesture_maker *x)
 {
-    // This routine is the clock routine which is called when the internal drive determines that the output should be calculated
+    // Called when the internal drive determines that the output should be calculated
     
     double *event_times = x->event_times;
     
@@ -236,8 +237,7 @@ void gesture_maker_doclock(t_gesture_maker *x)
     long current_event = x->current_event;
     long num_events = x->num_events;
     
-    if (gesture_time < 0.0)
-        gesture_time = 0.0;
+    gesture_time = (gesture_time < 0.0) ? 0.0 : gesture_time;
     
     // Determine the time until the next output
     
@@ -278,8 +278,7 @@ void gesture_maker_events(t_gesture_maker *x, t_symbol *s, long argc, t_atom *ar
     
     // Set the object going in events mode, storing the relevant timings and variables first
     
-    if (argc > MUX_NUM_EVENTS)
-        argc = MUX_NUM_EVENTS;
+    argc = (argc > max_num_events) ? max_num_events : argc;
     
     gesture_maker_stop(x);
     
@@ -318,7 +317,7 @@ void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv
     if (argc < 2)
         return;
     
-    // The list input is for accepting phase and grain_time input, typically for use when chaining objects together for parallel operation
+    // Accepts phase and grain_time input, typically for use when chaining objects together for parallel operation
     
     const double phase = atom_getfloat(argv++);
     const double grain_time = atom_getfloat(argv++);
