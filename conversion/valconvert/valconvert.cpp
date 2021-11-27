@@ -114,7 +114,7 @@ int C74_EXPORT main()
                           (method) valconvert_new,
                           free_routine,
                           sizeof(t_valconvert),
-                          NULL,
+                          nullptr,
                           A_GIMME,
                           0);
     

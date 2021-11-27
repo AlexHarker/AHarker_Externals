@@ -206,12 +206,12 @@ void macaddress_bang(t_macaddress *x)
 #else
 std::string UTF16ToUTF8(const std::wstring& wstr)
 {
-    int requiredSize = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+    int requiredSize = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
 
     if (requiredSize > 0)
     {
         std::vector<char> buffer(requiredSize);
-        if (WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &buffer[0], requiredSize, NULL, NULL))
+        if (WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &buffer[0], requiredSize, nullptr, nullptr))
             return buffer.data();
     }
 

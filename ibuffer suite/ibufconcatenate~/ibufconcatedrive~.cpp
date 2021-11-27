@@ -183,7 +183,6 @@ void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count
 {
     x->sr_const = 1000. / samplerate;
     object_method(dsp64, gensym("dsp_add64"), x, ibufconcatedrive_perform64, 0, nullptr);
-    
 }
 
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s)

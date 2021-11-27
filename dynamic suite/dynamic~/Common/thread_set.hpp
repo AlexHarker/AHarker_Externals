@@ -1,6 +1,6 @@
 
-#ifndef _THREADSET_H_
-#define _THREADSET_H_
+#ifndef _THREADSET_HPP_
+#define _THREADSET_HPP_
 
 #include <atomic>
 #include <thread>
@@ -157,4 +157,4 @@ private:
     std::vector<thread_slot> m_thread_slots;
 };
 
-#endif  /* _THREADSET_H_ */
+#endif  /* _THREADSET_HPP_ */

@@ -41,7 +41,7 @@ struct t_timefilter
     t_object a_obj;
     
     double stored_list[1024];
-    long stored_list_length;
+    long stored_length;
     
     random_generator<> gen;
     ordering_mode ordering;
@@ -100,7 +100,7 @@ void *timefilter_new()
     t_timefilter *x = (t_timefilter *)object_alloc(this_class);
     
     x->list_outlet = listout(x);
-    x->stored_list_length = 0;
+    x->stored_length = 0;
         
     x->filter = 0.0;
     x->rand_filter = 0.0;
@@ -136,7 +136,7 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
     // Store an input list
     
     double *stored_list = x->stored_list;
-    long stored_list_length = x->stored_list_length;
+    long stored_list_length = x->stored_length;
     
     if (argc > 1024)
         object_error((t_object *)x, "maximum list length is 1024 items");
@@ -144,7 +144,7 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
     while (argc-- && stored_list_length < 1024)
         stored_list[stored_list_length++] = atom_getfloat(argv++);
         
-    x->stored_list_length = stored_list_length;
+    x->stored_length = stored_list_length;
 }
 
 // Filtering
@@ -152,59 +152,58 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 void timefilter_bang(t_timefilter *x)
 {
     t_atom output_list[1024];
-    t_atom *list_pointer = output_list;
 
     double *vals_pointer = x->stored_list;
     double rand_filter = x->rand_filter;
     double filter = x->filter;
     double last_val = -HUGE_VAL;
     
-    long stored_list_length = x->stored_list_length;
-    long output_list_length = stored_list_length;
+    long stored_length = x->stored_length;
+    long output_length = 0;
     
     // Sort the input
     
     switch (x->ordering)
     {
-        case ordering_mode::ascending:      combsort(vals_pointer, stored_list_length);             break;
-        case ordering_mode::random:         randomsort(x->gen, vals_pointer, stored_list_length);   break;
-        case ordering_mode::maintain:                                                               break;
+        case ordering_mode::ascending:      combsort(vals_pointer, stored_length);              break;
+        case ordering_mode::random:         randomsort(x->gen, vals_pointer, stored_length);    break;
+        case ordering_mode::maintain:                                                           break;
     }
     
     // Filtering is done here
         
-    for (long i = 0; i < stored_list_length; i++)
+    for (long i = 0; i < stored_length; i++)
     {
         double val = *vals_pointer++;
         
-        // Check if we are keeping this value (if not decrease output count)
+        // Check if we are keeping this value
         
         if ((x->gen.rand_double() > rand_filter) && fabs(val - last_val) >= filter)
         {
-            // If this value is within the filter distance of the next value  randomly decide which one to lose
+            // If this value is within the filter distance of the next value randomly decide which one to lose
             
-            if (i < output_list_length - 1 && fabs(*vals_pointer - val) < filter && x->gen.rand_int(1))
+            if (i < stored_length - 1 && fabs(*vals_pointer - val) < filter && x->gen.rand_int(1))
             {
-                // Skip ahead if we choose to lose this value so that the filtering works on distance, regardless of ordering...
+                // Check that the new value is not too close to the last value (if so keep the current value)
                 
-                // FIX - need to check for distance with previous value also?
+                if (!output_length || fabs(*vals_pointer - last_val) >= filter)
+                {
+                    // Skip ahead if we choose to lose this value so that the filtering works on distance, regardless of ordering...
                 
-                val = *vals_pointer++;
-                output_list_length--;
-                i++;
+                    val = *vals_pointer++;
+                    i++;
+                }
             }
             
-            atom_setfloat(list_pointer++, val);
+            atom_setfloat(output_list + output_length++, val);
             last_val = val;
         }
-        else
-            output_list_length--;
     }
     
     // Output and clear stored list
     
-    outlet_list(x->list_outlet, 0L, output_list_length, output_list);
-    x->stored_list_length = 0;
+    outlet_list(x->list_outlet, 0L, output_length, output_list);
+    x->stored_length = 0;
 }
 
 // Filering Parameters
@@ -231,7 +230,7 @@ void timefilter_ordering(t_timefilter *x, t_atom_long ordering)
 
 void timefilter_reset(t_timefilter *x)
 {
-    x->stored_list_length = 0;
+    x->stored_length = 0;
 }
 
 // Sorting functions

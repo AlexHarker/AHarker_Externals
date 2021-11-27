@@ -36,7 +36,7 @@ public:
         t_class **C = getClassPointer<T>();
         *accessClassName<T>() = object_name;
         
-        *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), NULL, A_DEFFLOAT, 0);
+        *C = class_new (object_name, (method)new_object<T>, (method)free_object<T>, sizeof(T), nullptr, A_DEFFLOAT, 0);
         
         class_addmethod(*C, (method)float_in<T>, "float", A_FLOAT, 0);
         class_addmethod(*C, (method)int_in<T>, "int", A_LONG, 0);
@@ -71,7 +71,7 @@ public:
         
         x->m_val = double_val;
 
-        return (x);
+        return x;
     }
     
     // Float input routine

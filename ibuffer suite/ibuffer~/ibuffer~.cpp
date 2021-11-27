@@ -95,7 +95,7 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
         ibuffer_load(x, 0, 1, &temp_atom);
     }
     
-    return (x);
+    return x;
 }
 
 void ibuffer_free(t_ibuffer *x)

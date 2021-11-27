@@ -62,7 +62,7 @@ void *ibufinfo_new(t_symbol *buffer_name)
     
     x->name = buffer_name;
     
-    return (x);
+    return x;
 }
 
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s)
