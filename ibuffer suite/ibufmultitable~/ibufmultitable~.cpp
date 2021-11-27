@@ -212,7 +212,8 @@ void perform_core(t_ibufmultitable *x, const T *in, const T *offset_in, T *out, 
     {
         // Positions
         
-        const int N = SIMDLimits<T>::max_size;
+        constexpr int N = SIMDLimits<T>::max_size;
+        
         const long v_count = vec_size / N;
         const long S = v_count * N;
         
