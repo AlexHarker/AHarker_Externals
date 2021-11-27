@@ -108,45 +108,38 @@ double gesture_kernel::params_val(t_atom *specifier)
 
 void gesture_kernel::params(long argc, t_atom *argv)
 {
-    gesture_type type = gesture_type::flat;
-    
     // Resets
     
-    m_time1 = 1.0;
-    m_time2 = 1.0;
-     
     m_curves[0].reset();
     m_curves[1].reset();
     m_curves[2].reset();
     
     // Get the gesture type
-    
-    if (argc)
-    {
-        type = get_type(atom_getsym(argv++));
-        argc--;
-    }
-    
+ 
+    gesture_type type = argc ? get_type(atom_getsym(argv++)) : gesture_type::flat;
+
     // Check the number of arguments
     
     long required_argc = 0;
     
     switch (type)
     {
-        case gesture_type::flat:                required_argc = 1;      break;
-        case gesture_type::line:                required_argc = 2;      break;
-        case gesture_type::line_flat:           required_argc = 3;      break;
-        case gesture_type::flat_line:           required_argc = 3;      break;
-        case gesture_type::triangle_return:     required_argc = 3;      break;
-        case gesture_type::triangle:            required_argc = 4;      break;
-        case gesture_type::plateau_return:      required_argc = 4;      break;
-        case gesture_type::plateau:             required_argc = 5;      break;
-        case gesture_type::general_return:      required_argc = 5;      break;
-        case gesture_type::general:             required_argc = 6;      break;
+        case gesture_type::flat:                required_argc = 2;      break;
+        case gesture_type::line:                required_argc = 3;      break;
+        case gesture_type::line_flat:           required_argc = 4;      break;
+        case gesture_type::flat_line:           required_argc = 4;      break;
+        case gesture_type::triangle_return:     required_argc = 4;      break;
+        case gesture_type::triangle:            required_argc = 5;      break;
+        case gesture_type::plateau_return:      required_argc = 5;      break;
+        case gesture_type::plateau:             required_argc = 6;      break;
+        case gesture_type::general_return:      required_argc = 6;      break;
+        case gesture_type::general:             required_argc = 7;      break;
     }
     
     if (argc < required_argc)
         return;
+    
+    argc -= required_argc;
     
     // Set the internal parameters based on the given gesture type
     
@@ -154,26 +147,30 @@ void gesture_kernel::params(long argc, t_atom *argv)
     {
         case gesture_type::flat:
             
+            m_time1 = m_time2 = 1.0;
             m_val1 = m_val2 = m_val3 = m_val4 = params_val(argv++);
             break;
             
         case gesture_type::line:
             
+            m_time1 = m_time2 = 1.0;
+
             m_val1 = params_val(argv++);
             m_val2 = m_val3 = m_val4 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 2);
+            m_curves[0].params(argv, argc);
             break;
             
             
         case gesture_type::line_flat:
             
             m_time1 = params_time(argv++);
-            
+            m_time2 = 1.0;
+                         
             m_val1 = params_val(argv++);
             m_val2 = m_val3 = m_val4 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 3);
+            m_curves[0].params(argv, argc);
             break;
             
         case gesture_type::flat_line:
@@ -184,7 +181,7 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val1 = m_val2 = m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
-            m_curves[2].params(argv, argc - 3);
+            m_curves[2].params(argv, argc);
             break;
             
         case gesture_type::triangle_return:
@@ -195,8 +192,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val1 = m_val4 = params_val(argv++);
             m_val2 = m_val3 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 3);
-            m_curves[2].params(argv, argc - 6);
+            m_curves[0].params(argv, argc);
+            m_curves[2].params(argv, argc - 3);
             break;
             
         case gesture_type::triangle:
@@ -208,8 +205,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val2 = m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 4);
-            m_curves[2].params(argv, argc - 7);
+            m_curves[0].params(argv, argc);
+            m_curves[2].params(argv, argc - 3);
             break;
             
         case gesture_type::plateau_return:
@@ -220,8 +217,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val1 = m_val4 = params_val(argv++);
             m_val2 = m_val3 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 4);
-            m_curves[2].params(argv, argc - 7);
+            m_curves[0].params(argv, argc);
+            m_curves[2].params(argv, argc - 3);
             break;
             
         case gesture_type::plateau:
@@ -233,8 +230,8 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val2 = m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 5);
-            m_curves[2].params(argv, argc - 8);
+            m_curves[0].params(argv, argc);
+            m_curves[2].params(argv, argc - 3);
             break;
             
         case gesture_type::general_return:
@@ -246,9 +243,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val2 = params_val(argv++);
             m_val3 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 5);
-            m_curves[1].params(argv, argc - 8);
-            m_curves[2].params(argv, argc - 11);
+            m_curves[0].params(argv, argc);
+            m_curves[1].params(argv, argc - 3);
+            m_curves[2].params(argv, argc - 6);
             break;
             
         case gesture_type::general:
@@ -261,9 +258,9 @@ void gesture_kernel::params(long argc, t_atom *argv)
             m_val3 = params_val(argv++);
             m_val4 = params_val(argv++);
             
-            m_curves[0].params(argv, argc - 6);
-            m_curves[1].params(argv, argc - 9);
-            m_curves[2].params(argv, argc - 12);
+            m_curves[0].params(argv, argc);
+            m_curves[1].params(argv, argc - 3);
+            m_curves[2].params(argv, argc - 6);
             break;
     }
     
@@ -272,4 +269,3 @@ void gesture_kernel::params(long argc, t_atom *argv)
     if (m_time1 > m_time2)
         std::swap(m_time1, m_time2);
 }
-
