@@ -153,7 +153,7 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
 
 void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-    const static int simd_width = SIMDLimits<double>::max_size;
+    constexpr int simd_width = SIMDLimits<double>::max_size;
     
     // Use SIMD routines where possible
     

@@ -180,7 +180,7 @@ double clip(double value, double min_val, double max_val)
 void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 {
     double *params = x->params;
-    const static double max_dev = 1000000.0;
+    constexpr double max_dev = 1000000.0;
     
     if (argc >= 9)
     {

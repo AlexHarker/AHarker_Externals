@@ -32,7 +32,7 @@
 t_class *this_class;
 
 
-const int BUFFER_GROW_SIZE = 1048576;
+constexpr int BUFFER_GROW_SIZE = 1048576;
 
 
 struct t_ibufconcatenate

@@ -63,7 +63,7 @@ public:
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
     {
-        const static int simd_width = SIMDLimits<double>::max_size;
+        constexpr int simd_width = SIMDLimits<double>::max_size;
         
         // Default to scalar routine
         

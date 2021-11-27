@@ -16,7 +16,7 @@
 
 struct atodb_functor
 {
-    const static double atodb_constant;
+    static const double atodb_constant;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
@@ -32,7 +32,7 @@ struct atodb_functor
     template <int N>
     static SIMDType<double, N> is_negative_inf(const SIMDType<double, N>& a)
     {
-        const static uint64_t neg_inf_64 = 0xFFF0000000000000U;
+        constexpr uint64_t neg_inf_64 = 0xFFF0000000000000U;
         const SIMDType<double, N> v_neg_inf_64 = *reinterpret_cast<const double *>(&neg_inf_64);
         
         return a == v_neg_inf_64;

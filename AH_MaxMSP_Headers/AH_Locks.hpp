@@ -41,7 +41,7 @@ struct thread_lock
     void acquire_periodic_sleep()
     {
         using namespace std::chrono_literals;
-        const int max_iter = thread_lock::max_iter_before_sleep;
+        constexpr int max_iter = thread_lock::max_iter_before_sleep;
         bool acquired = false;
         
         for (int i = 0; !acquired; i = std::min(i++, max_iter))
@@ -89,7 +89,7 @@ struct read_write_lock
     void promote()
     {
         using namespace std::chrono_literals;
-        const int max_iter = thread_lock::max_iter_before_sleep;
+        constexpr int max_iter = thread_lock::max_iter_before_sleep;
         bool acquired = false;
         
         for (int i = 0; !acquired; i = std::min(i++, max_iter))

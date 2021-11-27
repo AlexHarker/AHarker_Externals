@@ -559,7 +559,7 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 template <typename T>
 void dynamicdsp_sum(thread_set *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
 {
-    const long max_simd_size = SIMDLimits<T>::max_size;
+    constexpr long max_simd_size = SIMDLimits<T>::max_size;
     
     // Sum output of threads for each signal outlet
     

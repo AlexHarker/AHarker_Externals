@@ -15,7 +15,7 @@ struct div_functor
     template <class T>
     T operator()(const T a, const T b)
     {
-        const static T zero(static_cast<typename T::scalar_type>(0));
+        static const T zero(static_cast<typename T::scalar_type>(0));
         
         // N.B - the exact behaviour of div~ is different when a is NaN and b is zero, but it uses a * (1/b)
         

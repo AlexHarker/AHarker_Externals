@@ -16,7 +16,7 @@
 
 struct dbtoa_functor
 {
-    const static double dbtoa_constant;
+    static const double dbtoa_constant;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {

@@ -181,7 +181,8 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
     {
         // Positions
         
-        const int N = SIMDLimits<T>::max_size;
+        constexpr int N = SIMDLimits<T>::max_size;
+        
         const long v_count = vec_size / N;
         const long S = v_count * N;
         

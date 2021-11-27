@@ -16,8 +16,8 @@
 
 struct ftom_functor
 {
-    const static double ftom_mul_constant;
-    const static double ftom_add_constant;
+    static const double ftom_mul_constant;
+    static const double ftom_add_constant;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {

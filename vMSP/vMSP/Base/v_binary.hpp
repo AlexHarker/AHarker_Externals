@@ -97,7 +97,7 @@ public:
     {
         method perform_routine = (method) perform64_op<T, 1>;
         long routine = 0;
-        const static int simd_width = SIMDLimits<double>::max_size;
+        constexpr int simd_width = SIMDLimits<double>::max_size;
         
         // If nothing is connected then don't do anything here....
             

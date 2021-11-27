@@ -23,7 +23,7 @@
 
 struct log_functor
 {
-    static const double min_constant;
+    static constexpr double min_constant = 0.0000000001;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
@@ -65,7 +65,7 @@ struct log_functor
     template <class T>
     void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
-        const int simd_width = SIMDLimits<T>::max_size;
+        constexpr int simd_width = SIMDLimits<T>::max_size;
         
         switch (type)
         {
@@ -114,10 +114,6 @@ struct log_functor
     double m_base = 1.0;
     double m_base_mul = 0.0;
 };
-
-// Initialise constants
-
-const double log_functor::min_constant = 0.0000000001;
 
 typedef v_binary<log_functor, calculation_type::vector_array, true> vlog;
 

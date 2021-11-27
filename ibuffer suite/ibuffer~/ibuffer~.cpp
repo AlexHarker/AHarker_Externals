@@ -348,7 +348,7 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
             file.readRaw(x->samples, x->frames);
         else
         {
-            const static t_ptr_int default_work_chunk = 8192;
+            constexpr t_ptr_int default_work_chunk = 8192;
             
             // Here we load in chunks to some temporary memory and then copy out ony the relevant channels
             
