@@ -38,6 +38,8 @@
 
 t_class *this_class;
     
+t_symbol *ps_list;
+
 struct t_gesture_maker
 {
     t_object a_obj;
@@ -64,9 +66,7 @@ struct t_gesture_maker
     void *gesture_vals_out;
 };
 
-
-t_symbol *ps_list;
-
+// Function Prototypes
 
 void gesture_maker_free(t_gesture_maker *x);
 void *gesture_maker_new();
@@ -97,11 +97,7 @@ void gesture_maker_reset(t_gesture_maker *x);
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s);
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// Basic object routines (main / new / free / assist) /////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Main
 
 int C74_EXPORT main()
 {
@@ -109,7 +105,7 @@ int C74_EXPORT main()
                             (method)gesture_maker_new,
                             (method)gesture_maker_free,
                             sizeof(t_gesture_maker),
-                            NULL,
+                            nullptr,
                             0);
     
     class_addmethod(this_class, (method)gesture_maker_drive, "drive", A_FLOAT, 0);
@@ -139,11 +135,7 @@ int C74_EXPORT main()
     return 0;
 }
 
-void gesture_maker_free(t_gesture_maker *x)
-{
-    if (x->gesture_clock)
-        freeobject((t_object *)x->gesture_clock);
-}
+// New / Free / Assist
 
 void *gesture_maker_new()
 {
@@ -166,6 +158,12 @@ void *gesture_maker_new()
     x->convert_inflections = gesture_convert();
     
     return x;
+}
+
+void gesture_maker_free(t_gesture_maker *x)
+{
+    if (x->gesture_clock)
+        freeobject((t_object *)x->gesture_clock);
 }
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
@@ -198,9 +196,7 @@ void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////// Initialisation routines //////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Initialisation Methods
 
 void gesture_maker_reset(t_gesture_maker *x)
 {
@@ -223,9 +219,7 @@ void gesture_maker_stop(t_gesture_maker *x)
     x->gesture_time = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////// Timing and calculation routines //////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Timing and Calculation Methods
 
 void gesture_maker_doclock(t_gesture_maker *x)
 {
@@ -355,7 +349,7 @@ void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
     outlet_list(x->gesture_vals_out, ps_list, 2, output_list);
 }
 
-// Methods for setting the gesture parameters
+// Methods for Setting Gesture Parameters
 
 void gesture_maker_graintime(t_gesture_maker *x, double val)
 {
