@@ -14,16 +14,16 @@ namespace random_generators
     // Details can be found in Marsaglia, G. (2003). "Random number generators". Journal of Modern Applied Statistical Methods 2
     // See - http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm
 
-    // The memory requirement is 34 unsigned 32 bit integers (can be altered using CMWC_LAG_SIZE)
+    // The memory requirement is 34 unsigned 32 bit integers (can be altered using cmwc_lag_size)
     // The period length is currently circa 2^1054 - 1 which shold be more than adequate for most purposes
 
-    // N.B. CMWC_LAG_SIZE must be a power of two
-    // N.B. CMWC_A_VALUE should be a suitable value according to CMWC_LAG_SIZE
+    // N.B. cmwc_lag_size must be a power of two
+    // N.B. cmwc_a_value should be a suitable value according to cmwc_lag_size
 
     class cmwc
     {
-        static const uint32_t CMWC_LAG_SIZE = 32;
-        static const uint64_t CMWC_A_VALUE = 987655670LL;
+        static constexpr uint32_t cmwc_lag_size = 32;
+        static constexpr uint64_t cmwc_a_value = 987655670LL;
         
     public:
         
@@ -35,8 +35,8 @@ namespace random_generators
             
             uint64_t t;
             
-            i = (i + 1) & (CMWC_LAG_SIZE - 1);
-            t = CMWC_A_VALUE * m_state[i] + c;
+            i = (i + 1) & (cmwc_lag_size - 1);
+            t = cmwc_a_value * m_state[i] + c;
             c = (t >> 32);
             x = static_cast<uint32_t>((t + c) & 0xFFFFFFFF);
             
@@ -57,27 +57,27 @@ namespace random_generators
         
         void seed(uint32_t *init)
         {
-            m_increment = (CMWC_LAG_SIZE - 1);
+            m_increment = (cmwc_lag_size - 1);
             m_carry = 123;
             
-            for (uint32_t i = 0; i < CMWC_LAG_SIZE; i++)
+            for (uint32_t i = 0; i < cmwc_lag_size; i++)
                 m_state[i] = init[i];
         }
         
         void rand_seed()
         {
-            uint32_t seeds[CMWC_LAG_SIZE];
+            uint32_t seeds[cmwc_lag_size];
             
         #ifdef __APPLE__
-            for (uint32_t i = 0; i < CMWC_LAG_SIZE; i++)
+            for (uint32_t i = 0; i < cmwc_lag_size; i++)
                 seeds[i] = arc4random();
         #elif defined (__linux__)
             srandom(time(nullptr));
-            for (uint32_t i = 0; i < CMWC_LAG_SIZE; i++)
+            for (uint32_t i = 0; i < cmwc_lag_size; i++)
                 seeds[i] = random();
         #else
             HCRYPTPROV hProvider = 0;
-            const DWORD dwLength = 4 * CMWC_LAG_SIZE;
+            const DWORD dwLength = 4 * cmwc_lag_size;
             BYTE *pbBuffer = (BYTE *) seeds;
             
             if (!CryptAcquireContextW(&hProvider, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
@@ -93,7 +93,7 @@ namespace random_generators
         
         uint32_t m_increment;
         uint32_t m_carry;
-        uint32_t m_state[CMWC_LAG_SIZE];
+        uint32_t m_state[cmwc_lag_size];
     };
 }
 
@@ -140,7 +140,7 @@ public:
 
     // Seeding (specific / random values)
     
-    void seed(uint32_t *init)   { m_generator,seed(init); }
+    void seed(uint32_t *init)   { m_generator.seed(init); }
     void rand_seed()            { m_generator.rand_seed(); }
     
     // Generate a Single Pseudo-random Unsigned Integer (full range /  in the range [0, n] / in the range [lo, hi])
