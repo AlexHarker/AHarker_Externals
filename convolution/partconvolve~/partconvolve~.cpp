@@ -394,7 +394,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         for (long i = 0; i < fft_size; i++)
             window_gain += (double) (window[i] * window[i]);
         
-        window_scale = sqrt (1. / (4.0 * window_gain));
+        window_scale = sqrt(1. / (4.0 * window_gain));
         
         for (long i = 0; i < fft_size; i++)
             window[i] *= window_scale;
