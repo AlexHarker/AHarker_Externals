@@ -719,15 +719,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         // Load input into buffer (twice) and output from the output buffer
         
         std::copy_n(in, loop_size, fft_buffers[0] + rw_counter);
-                
-        if ((hi_counter + loop_size) > fft_size)
-        {
-            long hi_loop = fft_size - hi_counter;
-            std::copy_n(in, hi_loop, fft_buffers[1] + hi_counter);
-            std::copy_n(in + hi_loop, (loop_size - hi_loop), fft_buffers[0]);
-        }
-        else
-            std::copy_n(in, loop_size, fft_buffers[1] + hi_counter);
+        std::copy_n(in, loop_size, fft_buffers[1] + hi_counter);
 
         std::copy_n(fft_buffers[3] + rw_counter, loop_size, out);
         
