@@ -204,7 +204,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
         if (length && impulse_length < length)
             object_error ((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
         
-        std::min(std::max(impulse_length, static_cast<t_ptr_int>(0)), static_cast<t_ptr_int>(2044));
+        impulse_length = std::min(std::max(impulse_length, static_cast<t_ptr_int>(0)), static_cast<t_ptr_int>(2044));
         
         if (impulse_length)
         {
