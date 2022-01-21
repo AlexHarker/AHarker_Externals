@@ -42,9 +42,34 @@ void update_split_complex_pointers(FFT_SPLIT_COMPLEX_F &complex1, const FFT_SPLI
     complex1.imagp = complex2.imagp + offset;
 }
 
+long int_log2(long long in, long *inexact)
+{
+    long long temp = in;
+    long out = 0;
+    
+    if (in <= 0)
+        return - 1;
+    
+    while (temp)
+    {
+        temp >>= 1;
+        out++;
+    }
+    
+    if (in == 1 << (out - 1))
+    {
+        out--;
+        *inexact = 0;
+    }
+    else
+        *inexact = 1;
+    
+    return out;
+}
+
+// Class pointer and structure
 
 t_class *this_class;
-
 
 struct t_partconvolve
 {
@@ -97,33 +122,6 @@ struct t_partconvolve
     bool direct_flag;                // do not perform fft on impulse when partioning (direct/eq mode)
     bool eq_flag;                    // eq_flag mode on/off
 };
-
-
-long int_log2(long long in, long *inexact)
-{
-    long long temp = in;
-    long out = 0;
-    
-    if (in <= 0)
-        return - 1;
-    
-    while (temp)
-    {
-        temp >>= 1;
-        out++;
-    }
-    
-    if (in == 1 << (out - 1))
-    {
-        out--;
-        *inexact = 0;
-    }
-    else
-        *inexact = 1;
-    
-    return out;
-}
-
 
 void partconvolve_free(t_partconvolve *x);
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
@@ -304,7 +302,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
     
-    x->memory_flag = 1 && x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
+    x->memory_flag = x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
     
     // Set attributes from arguments
     
