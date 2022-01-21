@@ -18,25 +18,27 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#ifdef __APPLE__
-#include <Accelerate/Accelerate.h>
-#endif
-
 #include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
+#ifdef __APPLE__
+#include <Accelerate/Accelerate.h>
+#endif
+
 #include <algorithm>
 
+#ifdef __APPLE__
 t_ptr_int pad_length(t_ptr_int length)
 {
-#ifdef __APPLE__
     return length;
-#else
-    return ((length + 15) >> 4) << 4;
-#endif
 }
-
+#else
+t_ptr_int pad_length(t_ptr_int length)
+{
+    return ((length + 15) >> 4) << 4;
+}
+#endif
 
 t_class *this_class;
 
