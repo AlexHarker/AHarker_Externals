@@ -785,7 +785,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[4]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    *v_fft_input++ *= *v_fft_buffer++;
+                    (*v_fft_input++) *= (*v_fft_buffer++);
             }
             
             // Do the fft and put into the input buffer
@@ -815,9 +815,9 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer  = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size_halved / VecType::size); i++)
-                    *v_fft_output1++ += *v_fft_buffer++ * *v_fft_window++;
+                    (*v_fft_output1++) += (*v_fft_buffer++) * (*v_fft_window++);
                 for (long i = 0; i < (fft_size_halved / VecType::size); i++)
-                    *v_fft_output2++  = *v_fft_buffer++ * *v_fft_window++;
+                    (*v_fft_output2++)  = (*v_fft_buffer++) * (*v_fft_window++);
             }
             else
             {
@@ -828,7 +828,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    *v_fft_output++ = *v_fft_buffer++ * v_scale_mult;
+                    (*v_fft_output++) = (*v_fft_buffer++) * v_scale_mult;
             }
             
             // Clear accumulation buffer
