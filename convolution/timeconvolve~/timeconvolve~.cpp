@@ -28,6 +28,10 @@
 
 #include <algorithm>
 
+// Utility
+
+using VecType = SIMDType<float, 4>;
+
 #ifdef __APPLE__
 t_ptr_int pad_length(t_ptr_int length)
 {
@@ -72,7 +76,7 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv);
 
 void time_domain_convolve_scalar(float *in, float *impulse, float *output, long N, long L);
-void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L);
+void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L);
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
 t_int *timeconvolve_perform(t_int *w);
@@ -226,9 +230,9 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 }
 
 #ifndef __APPLE__
-void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
+void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
 {
-    SIMDType<float, 4> output_accum;
+    VecType output_accum;
     float *input;
     float results[4];
         
@@ -236,20 +240,20 @@ void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output,
                    
     for (long i = 0; i < N; i++)
     {
-        output_accum = SIMDType<float, 4>(0.f);
+        output_accum = VecType(0.f);
         input = in - L + 1 + i;
         
         for (long j = 0; j < L >> 2; j += 4)
         {
             // Load vals
             
-            output_accum += impulse[j + 0] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 0] * VecType(input);
             input += 4;
-            output_accum += impulse[j + 1] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 1] * VecType(input);
             input += 4;
-            output_accum += impulse[j + 2] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 2] * VecType(input);
             input += 4;
-            output_accum += impulse[j + 3] * SIMDType<float, 4>(input);
+            output_accum += impulse[j + 3] * VecType(input);
             input += 4;
         }
         
@@ -259,7 +263,7 @@ void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output,
     }
 }
 #else
-void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
+void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
 {
     vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
 }
@@ -286,7 +290,7 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
     
     // Do convolution
 
-    time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (SIMDType<float, 4> *) impulse_buffer, out, vec_size, impulse_length);
+    time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (VecType *) impulse_buffer, out, vec_size, impulse_length);
 }
 
 t_int *timeconvolve_perform(t_int *w)
