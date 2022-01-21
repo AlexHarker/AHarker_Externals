@@ -785,7 +785,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[4]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    v_fft_input[i] *= v_fft_buffer[i];
+                    *v_fft_input++ *= *v_fft_buffer++;
             }
             
             // Do the fft and put into the input buffer
