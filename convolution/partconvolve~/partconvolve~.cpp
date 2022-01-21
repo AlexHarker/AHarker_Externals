@@ -72,9 +72,9 @@ typedef struct _partconvolve
     float *fft_buffers[5];
     
     FFT_SPLIT_COMPLEX_F impulse_buffer;
-    FFT_SPLIT_COMPLEX_F    input_buffer;
-    FFT_SPLIT_COMPLEX_F    accum_buffer;
-    FFT_SPLIT_COMPLEX_F    partition_temp;
+    FFT_SPLIT_COMPLEX_F input_buffer;
+    FFT_SPLIT_COMPLEX_F accum_buffer;
+    FFT_SPLIT_COMPLEX_F partition_temp;
     
     long max_impulse_length;
     
@@ -92,7 +92,7 @@ typedef struct _partconvolve
     
     bool reset_flag;                // reset fft data on next perform call
     bool memory_flag;                // memory was allocated correctly
-    bool direct_flag;                // do not perform fft on impulse when partioning - assume that this has already been done (or we are in eq_flag mode)
+    bool direct_flag;                // do not perform fft on impulse when partioning (direct/eq mode)
     bool eq_flag;                    // eq_flag mode on/off
     
 } t_partconvolve;
@@ -389,7 +389,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         // Make a hann window (and sqrt for overlap 2)
         
         for (long i = 0; i < fft_size; i++)
-            window[i] = sqrt (0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) fft_size))));
+            window[i] = sqrt(0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) fft_size))));
         
         // Calculate the gain of the window and the appropriate scaling and apply
         // Note that the scaling is split between input and output windowing for ease
@@ -600,7 +600,7 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
     SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
     
-    //    Do Nyquist Calculation and then zero these bins
+    // Do Nyquist Calculation and then zero these bins
     
     float nyquist1 = in1.imagp[0];
     float nyquist2 = in2.imagp[0];
@@ -668,7 +668,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     float **fft_buffers = x->fft_buffers;
     
     long fft_size = x->fft_size;
-    long fft_size_halved = x->fft_size >> 1 ;
+    long fft_size_halved = x->fft_size >> 1;
     long fft_size_log2 = x->fft_size_log2;
     
     long rw_counter = x->rw_counter;
