@@ -2,12 +2,12 @@
 /*
  *  timeconvolve~
  *
- *	timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
- *	
- *	Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
+ *    timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
+ *
+ *    Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
  *  timeconvolve~ alone is limited to a maximum IR size of 2044 samples.
- *	The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
- *	Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
+ *    The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *    Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
  *
  *  Copyright 2010-2022 Alex Harker. All rights reserved.
  *
@@ -46,24 +46,24 @@ t_class *this_class;
 typedef struct _timeconvolve
 {
     t_pxobject x_obj;
-	
-	// Internal buffers
-	
-	float *impulse_buffer;
-	float *input_buffer;
-	float *output_buffer;
-	
-	long input_position;
-	long impulse_length;
-	
-	// Attributes
-	
-	t_atom_long chan;
-	t_atom_long offset;
-	t_atom_long length;
-	
-	bool memory_flag;
-	
+    
+    // Internal buffers
+    
+    float *impulse_buffer;
+    float *input_buffer;
+    float *output_buffer;
+    
+    long input_position;
+    long impulse_length;
+    
+    // Attributes
+    
+    t_atom_long chan;
+    t_atom_long offset;
+    t_atom_long length;
+    
+    bool memory_flag;
+    
 } t_timeconvolve;
 
 
@@ -87,24 +87,24 @@ void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
 int C74_EXPORT main()
 {
-	this_class = class_new("timeconvolve~",
-						   (method)timeconvolve_new, 
-						   (method)timeconvolve_free, 
-						   sizeof(t_timeconvolve), 
-						   NULL, 
-						   A_GIMME,
-						   0);
-	
-	class_addmethod(this_class, (method)timeconvolve_set, "set", A_GIMME, 0);
-	
+    this_class = class_new("timeconvolve~",
+                           (method)timeconvolve_new,
+                           (method)timeconvolve_free,
+                           sizeof(t_timeconvolve),
+                           NULL,
+                           A_GIMME,
+                           0);
+    
+    class_addmethod(this_class, (method)timeconvolve_set, "set", A_GIMME, 0);
+    
     class_addmethod(this_class, (method)timeconvolve_assist, "assist", A_CANT, 0);
-	class_addmethod(this_class, (method)timeconvolve_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)timeconvolve_dsp64, "dsp64", A_CANT, 0);
-	
-	class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
-	
-	// Add Attributes
-			
+    class_addmethod(this_class, (method)timeconvolve_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method)timeconvolve_dsp64, "dsp64", A_CANT, 0);
+    
+    class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
+    
+    // Add Attributes
+            
     CLASS_ATTR_LONG(this_class, "length", 0L, t_timeconvolve, length);
     CLASS_ATTR_FILTER_CLIP(this_class, "length", 0, 2044);
     CLASS_ATTR_LABEL(this_class, "length", 0L, "Impulse Length");
@@ -112,100 +112,100 @@ int C74_EXPORT main()
     CLASS_ATTR_LONG(this_class, "offset", 0L, t_timeconvolve, offset);
     CLASS_ATTR_FILTER_MIN(this_class, "offset", 0);
     CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
-	
+    
     CLASS_ATTR_LONG(this_class, "chan", 0L, t_timeconvolve, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
 
-	// Add dsp and register 
-	
-	class_dspinit(this_class);
-	class_register(CLASS_BOX, this_class);
-		
-	return 0;
+    // Add dsp and register
+    
+    class_dspinit(this_class);
+    class_register(CLASS_BOX, this_class);
+        
+    return 0;
 }
 
 void timeconvolve_free(t_timeconvolve *x)
 {
-	dsp_free(&x->x_obj);
+    dsp_free(&x->x_obj);
     deallocate_aligned(x->impulse_buffer);
-	deallocate_aligned(x->input_buffer);
+    deallocate_aligned(x->input_buffer);
 }
 
 void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
-	// Setup the object and make inlets / outlets
-	
+    // Setup the object and make inlets / outlets
+    
     t_timeconvolve *x = (t_timeconvolve *) object_alloc(this_class);
     
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
-	
-	// Set default initial attributes and variables
-	
-	x->offset = 0;
-	x->length = 0;
-	x->chan = 1;
-	
-	x->input_position = 0;
-	x->impulse_length = 0;
-	
-	// Set attributes from arguments
-	
-	attr_args_process(x, argc, argv);
-	
-	// Allocate impulse buffer and input buffer
-	
-	x->impulse_buffer = allocate_aligned<float>(2048);
-	x->input_buffer = allocate_aligned<float>(8192);
-	
+    
+    // Set default initial attributes and variables
+    
+    x->offset = 0;
+    x->length = 0;
+    x->chan = 1;
+    
+    x->input_position = 0;
+    x->impulse_length = 0;
+    
+    // Set attributes from arguments
+    
+    attr_args_process(x, argc, argv);
+    
+    // Allocate impulse buffer and input buffer
+    
+    x->impulse_buffer = allocate_aligned<float>(2048);
+    x->input_buffer = allocate_aligned<float>(8192);
+    
     std::fill_n(x->impulse_buffer, 2048, 0.f);
     std::fill_n(x->input_buffer, 8192, 0.f);
 
-	x->memory_flag = (x->impulse_buffer && x->input_buffer);
-	
-	if (!x->memory_flag)
-		object_error ((t_object *) x, "couldn't allocate enough memory.....");
-	
-	return x;
+    x->memory_flag = (x->impulse_buffer && x->input_buffer);
+    
+    if (!x->memory_flag)
+        object_error ((t_object *) x, "couldn't allocate enough memory.....");
+    
+    return x;
 }
 
 void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 {
-	// Standard ibuffer variables
-	
-	t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
+    // Standard ibuffer variables
+    
+    t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
     
     ibuffer_data buffer(buffer_name);
-	
-	// Attributes
-	
-	t_atom_long chan = x->chan - 1;
-	t_atom_long offset = x->offset;
-	t_atom_long length = x->length;
-	
-	float *impulse_buffer = x->impulse_buffer;
     
-	t_ptr_int impulse_length;
-	
-	if (!x->memory_flag)
-		return;
-	
-	if (buffer.get_length())
-	{
-		if (buffer.get_num_chans() < chan + 1)
-			chan = chan % buffer.get_num_chans();
-		
-		// Calculate impulse length
-		
+    // Attributes
+    
+    t_atom_long chan = x->chan - 1;
+    t_atom_long offset = x->offset;
+    t_atom_long length = x->length;
+    
+    float *impulse_buffer = x->impulse_buffer;
+    
+    t_ptr_int impulse_length;
+    
+    if (!x->memory_flag)
+        return;
+    
+    if (buffer.get_length())
+    {
+        if (buffer.get_num_chans() < chan + 1)
+            chan = chan % buffer.get_num_chans();
+        
+        // Calculate impulse length
+        
         impulse_length = buffer.get_length() - offset;
-		if (length && length < impulse_length)
-			impulse_length = length;
-		if (length && impulse_length < length)
-			object_error ((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
-		
+        if (length && length < impulse_length)
+            impulse_length = length;
+        if (length && impulse_length < length)
+            object_error ((t_object *) x, "buffer is shorter than requested length (after offset has been applied)");
+        
         std::min(std::max(impulse_length, static_cast<t_ptr_int>(0)), static_cast<t_ptr_int>(2044));
-		
+        
         if (impulse_length)
         {
             // Padding is used to simplify processing under windows
@@ -214,50 +214,50 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
             std::fill_n(impulse_buffer, impulse_offset, 0.f);
             ibuffer_get_samps(buffer, impulse_buffer + impulse_offset, offset, impulse_length, chan, true);
         }
-		
+        
         x->impulse_length = (long) impulse_length;
-	}
-	else
-	{
+    }
+    else
+    {
         x->impulse_length = 0;
 
-		if (buffer.get_type() == kBufferNone && buffer_name)
-			object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
-	}
+        if (buffer.get_type() == kBufferNone && buffer_name)
+            object_error ((t_object *) x, "%s is not a valid buffer", buffer_name->s_name);
+    }
 }
 
 #ifndef __APPLE__
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
 {
     SIMDType<float, 4> output_accum;
-	float *input;
-	float results[4];
-		
-	L = pad_length(L);
-				   
-	for (long i = 0; i < N; i++)
-	{
-		output_accum = SIMDType<float, 4>(0.f);
-		input = in - L + 1 + i;
-		
-		for (long j = 0; j < L >> 2; j += 4)
-		{
-			// Load vals
-			
-			output_accum += impulse[j + 0] * SIMDType<float, 4>(input);
-			input += 4;
+    float *input;
+    float results[4];
+        
+    L = pad_length(L);
+                   
+    for (long i = 0; i < N; i++)
+    {
+        output_accum = SIMDType<float, 4>(0.f);
+        input = in - L + 1 + i;
+        
+        for (long j = 0; j < L >> 2; j += 4)
+        {
+            // Load vals
+            
+            output_accum += impulse[j + 0] * SIMDType<float, 4>(input);
+            input += 4;
             output_accum += impulse[j + 1] * SIMDType<float, 4>(input);
-			input += 4;
+            input += 4;
             output_accum += impulse[j + 2] * SIMDType<float, 4>(input);
             input += 4;
             output_accum += impulse[j + 3] * SIMDType<float, 4>(input);
-			input += 4;
-		}
-		
+            input += 4;
+        }
+        
         output_accum.store(results);
-		
-		*output++ = results[0] + results[1] + results[2] + results[3];
-	}
+        
+        *output++ = results[0] + results[1] + results[2] + results[3];
+    }
 }
 #else
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L)
@@ -268,24 +268,24 @@ void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output,
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size)
 {
-	float *impulse_buffer = x->impulse_buffer;
-	float *input_buffer = x->input_buffer;
-	long input_position = x->input_position;
-	long impulse_length = x->impulse_length;
-	
-	// Copy input twice (allows us to read input out in one go)
-	
+    float *impulse_buffer = x->impulse_buffer;
+    float *input_buffer = x->input_buffer;
+    long input_position = x->input_position;
+    long impulse_length = x->impulse_length;
+    
+    // Copy input twice (allows us to read input out in one go)
+    
     std::copy_n(in, vec_size, input_buffer + input_position);
     std::copy_n(in, vec_size, input_buffer + input_position + 4096);
    
-	// Advance pointer 
-	
-	input_position += vec_size;
-	if (input_position >= 4096) 
-		input_position = 0;
-	x->input_position = input_position;
-	
-	// Do convolution
+    // Advance pointer
+    
+    input_position += vec_size;
+    if (input_position >= 4096)
+        input_position = 0;
+    x->input_position = input_position;
+    
+    // Do convolution
 
     time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (SIMDType<float, 4> *) impulse_buffer, out, vec_size, impulse_length);
 }
@@ -331,7 +331,7 @@ void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
-		sprintf(s,"(signal) Convolved Output");
-	else 
+        sprintf(s,"(signal) Convolved Output");
+    else
         sprintf(s,"(signal) Input");
 }
