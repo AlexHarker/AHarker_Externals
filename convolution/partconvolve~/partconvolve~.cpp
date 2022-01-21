@@ -18,21 +18,25 @@
 #include <z_dsp.h>
 
 #include <AH_Denormals.h>
-#include <AH_Random.h>
+#include <HISSTools_FFT/HISSTools_FFT.h>
+#include <RandomGenerator.hpp>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
-#include <HISSTools_FFT/HISSTools_FFT.h>
-
 #include <algorithm>
 
-#define MIN_FFT_SIZE_LOG2                    5
-#define MAX_FFT_SIZE_LOG2                    20
-#define DEFAULT_MAX_FFT_SIZE_LOG2            16;
-#define BUFFER_SIZE_DEFAULT                    1323000                            // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
+constexpr static int MIN_FFT_SIZE_LOG2          = 5;
+constexpr static int MAX_FFT_SIZE_LOG2          = 20;
+constexpr static int DEFAULT_MAX_FFT_SIZE_LOG2  = 16;
+constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
 
-#define FFTW_TWOPI                            6.28318530717958647692
+// Random number generator
 
+random_generator<> rand_gen;
+
+// Utility
+
+using VecType = SIMDType<float, 4>;
 
 void update_split_complex_pointers(FFT_SPLIT_COMPLEX_F &complex1, const FFT_SPLIT_COMPLEX_F complex2, long offset)
 {
@@ -40,11 +44,36 @@ void update_split_complex_pointers(FFT_SPLIT_COMPLEX_F &complex1, const FFT_SPLI
     complex1.imagp = complex2.imagp + offset;
 }
 
+long int_log2(long long in, long *inexact)
+{
+    long long temp = in;
+    long out = 0;
+    
+    if (in <= 0)
+        return - 1;
+    
+    while (temp)
+    {
+        temp >>= 1;
+        out++;
+    }
+    
+    if (in == 1 << (out - 1))
+    {
+        out--;
+        *inexact = 0;
+    }
+    else
+        *inexact = 1;
+    
+    return out;
+}
+
+// Class pointer and structure
 
 t_class *this_class;
 
-
-typedef struct _partconvolve
+struct t_partconvolve
 {
     t_pxobject x_obj;
     
@@ -72,9 +101,9 @@ typedef struct _partconvolve
     float *fft_buffers[5];
     
     FFT_SPLIT_COMPLEX_F impulse_buffer;
-    FFT_SPLIT_COMPLEX_F    input_buffer;
-    FFT_SPLIT_COMPLEX_F    accum_buffer;
-    FFT_SPLIT_COMPLEX_F    partition_temp;
+    FFT_SPLIT_COMPLEX_F input_buffer;
+    FFT_SPLIT_COMPLEX_F accum_buffer;
+    FFT_SPLIT_COMPLEX_F partition_temp;
     
     long max_impulse_length;
     
@@ -92,39 +121,9 @@ typedef struct _partconvolve
     
     bool reset_flag;                // reset fft data on next perform call
     bool memory_flag;                // memory was allocated correctly
-    bool direct_flag;                // do not perform fft on impulse when partioning - assume that this has already been done (or we are in eq_flag mode)
+    bool direct_flag;                // do not perform fft on impulse when partioning (direct/eq mode)
     bool eq_flag;                    // eq_flag mode on/off
-    
-    float *safe_signal;                // for Max5 (fix for memory alignment issue pre 5.1.3)
-    
-} t_partconvolve;
-
-
-long int_log2(long long in, long *inexact)
-{
-    long long temp = in;
-    long out = 0;
-    
-    if (in <= 0)
-        return - 1;
-    
-    while (temp)
-    {
-        temp >>= 1;
-        out++;
-    }
-    
-    if (in == 1 << (out - 1))
-    {
-        out--;
-        *inexact = 0;
-    }
-    else
-        *inexact = 1;
-    
-    return out;
-}
-
+};
 
 void partconvolve_free(t_partconvolve *x);
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
@@ -146,7 +145,6 @@ void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, long vec_size);
 
 t_int *partconvolve_perform(t_int *w);
-t_int *partconvolve_perform_mem_alignment(t_int *w);
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count);
 
 void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -162,7 +160,7 @@ int C74_EXPORT main()
                            (method)partconvolve_new,
                            (method)partconvolve_free,
                            sizeof(t_partconvolve),
-                           NULL,
+                           nullptr,
                            A_GIMME,
                            0);
     
@@ -181,7 +179,7 @@ int C74_EXPORT main()
     // Add Attributes
     
     CLASS_ATTR_LONG(this_class, "fftsize", 0L, t_partconvolve, fft_size);
-    CLASS_ATTR_ACCESSORS(this_class, "fftsize", NULL, partconvolve_fft_size_set);
+    CLASS_ATTR_ACCESSORS(this_class, "fftsize", nullptr, partconvolve_fft_size_set);
     CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
     
     CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
@@ -200,10 +198,6 @@ int C74_EXPORT main()
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
-        
-    // Seed the random fft offset generator
-    
-    srand(rand_int_os());
     
     return 0;
 }
@@ -214,7 +208,6 @@ void partconvolve_free(t_partconvolve *x)
     hisstools_destroy_setup(x->fft_setup_real);
     deallocate_aligned(x->impulse_buffer.realp);
     deallocate_aligned(x->fft_buffers[0]);
-    deallocate_aligned(x->safe_signal);
 }
 
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
@@ -225,9 +218,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     // Setup the object and make inlets / outlets
     
     t_partconvolve *x = (t_partconvolve *)object_alloc(this_class);
-    
-    x->safe_signal = NULL;
-    
+        
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
     
@@ -238,7 +229,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     x->max_fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
     x->max_fft_size = 1 << x->max_fft_size_log2;
     
-    x->buffer_name = NULL;
+    x->buffer_name = nullptr;
     
     x->fft_size_log2 = 0;
     x->fft_size = 0;
@@ -309,7 +300,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
     
-    x->memory_flag = 1 && x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
+    x->memory_flag = x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
     
     // Set attributes from arguments
     
@@ -395,7 +386,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         // Make a hann window (and sqrt for overlap 2)
         
         for (long i = 0; i < fft_size; i++)
-            window[i] = sqrt (0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) fft_size))));
+            window[i] = sqrt(0.5 - (0.5 * cos(M_PI * 2.0 * ((double) i / (double) fft_size))));
         
         // Calculate the gain of the window and the appropriate scaling and apply
         // Note that the scaling is split between input and output windowing for ease
@@ -458,17 +449,17 @@ t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, 
 
 void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, false);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, true, false);
 }
 
 void partconvolve_eq(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, true);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, true, true);
 }
 
 void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, false, false);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, false, false);
 }
 
 void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
@@ -599,14 +590,14 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 
 void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
-    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
-    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
-    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
-    SIMDType<float, 4> *in_imag2 = reinterpret_cast<SIMDType<float, 4> *>(in2.imagp);
-    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
-    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
+    VecType *in_real1 = reinterpret_cast<VecType *>(in1.realp);
+    VecType *in_imag1 = reinterpret_cast<VecType *>(in1.imagp);
+    VecType *in_real2 = reinterpret_cast<VecType *>(in2.realp);
+    VecType *in_imag2 = reinterpret_cast<VecType *>(in2.imagp);
+    VecType *out_real = reinterpret_cast<VecType *>(out.realp);
+    VecType *out_imag = reinterpret_cast<VecType *>(out.imagp);
     
-    //    Do Nyquist Calculation and then zero these bins
+    // Do Nyquist Calculation and then zero these bins
     
     float nyquist1 = in1.imagp[0];
     float nyquist2 = in2.imagp[0];
@@ -616,7 +607,7 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     
     out.imagp[0] += nyquist1 * nyquist2;
     
-    long num_vecs = vec_size / SIMDType<float, 4>::size;
+    long num_vecs = vec_size / VecType::size;
     
     // Do other bins
     
@@ -634,13 +625,13 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 
 void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
-    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
-    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
-    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
-    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
-    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
+    VecType *in_real1 = reinterpret_cast<VecType *>(in1.realp);
+    VecType *in_imag1 = reinterpret_cast<VecType *>(in1.imagp);
+    VecType *in_real2 = reinterpret_cast<VecType *>(in2.realp);
+    VecType *out_real = reinterpret_cast<VecType *>(out.realp);
+    VecType *out_imag = reinterpret_cast<VecType *>(out.imagp);
     
-    long num_vecs = vec_size / SIMDType<float, 4>::size;
+    long num_vecs = vec_size / VecType::size;
     
     for (long i = 0; i < num_vecs; i++)
     {
@@ -674,7 +665,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     float **fft_buffers = x->fft_buffers;
     
     long fft_size = x->fft_size;
-    long fft_size_halved = x->fft_size >> 1 ;
+    long fft_size_halved = x->fft_size >> 1;
     long fft_size_log2 = x->fft_size_log2;
     
     long rw_counter = x->rw_counter;
@@ -701,7 +692,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         
         // Reset fft offset (randomly)
         
-        while (fft_size_halved <= (rw_counter = rand() / (RAND_MAX / fft_size_halved)));
+        rw_counter = static_cast<long>(rand_gen.rand_int(static_cast<uint32_t>(fft_size_halved - 1)));
         
         // Reset scheduling variables
         
@@ -727,18 +718,18 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         
         // Load input into buffer (twice) and output from the output buffer
         
-        memcpy(fft_buffers[0] + rw_counter, in, loop_size * sizeof(float));
-        
+        std::copy_n(in, loop_size, fft_buffers[0] + rw_counter);
+                
         if ((hi_counter + loop_size) > fft_size)
         {
             long hi_loop = fft_size - hi_counter;
-            memcpy(fft_buffers[1] + hi_counter, in, hi_loop * sizeof(float));
-            memcpy(fft_buffers[1], in + hi_loop, (loop_size - hi_loop) * sizeof(float));
+            std::copy_n(in, hi_loop, fft_buffers[1] + hi_counter);
+            std::copy_n(in + hi_loop, (loop_size - hi_loop), fft_buffers[0]);
         }
         else
-            memcpy(fft_buffers[1] + hi_counter, in, loop_size * sizeof(float));
-        
-        memcpy(out, fft_buffers[3] + rw_counter, loop_size * sizeof(float));
+            std::copy_n(in, loop_size, fft_buffers[1] + hi_counter);
+
+        std::copy_n(fft_buffers[3] + rw_counter, loop_size, out);
         
         // Update pointers and counters
         
@@ -750,7 +741,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         bool fft_now = !(rw_counter & hop_mask);
         
         // Work loop and scheduling - this is where most of the convolution is done
-        // How many partitions to do this vector (make sure that all partitions are done before we need to do the next fft)?
+        // Calculate ow many partitions to do this loop
+        // (We must make sure that all partitions are done before we need to do the next fft)
         
         if (fft_now)
             num_partitions_to_do = (valid_partitions - partitions_done) - 1;
@@ -759,7 +751,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         
         while (num_partitions_to_do > 0)
         {
-            // Calculate buffer wraparounds (if wraparound is in the middle of this set of partitions this loop will run again)
+            // Calculate buffer wraparounds
+            // (If wraparound is in the middle of this set of partitions this loop will run again)
             
             next_partition = (last_partition < num_partitions) ? last_partition : 0;
             last_partition = (next_partition + num_partitions_to_do) > num_partitions ? num_partitions : next_partition + num_partitions_to_do;
@@ -781,14 +774,13 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             }
         }
         
-        // FFT processing - this is where we deal with the fft, any windowing, the first partition and overlapping
-        // First check that there is a new FFTs worth of buffer
+        // FFT processing - deal with the fft, any windowing, the first partition and overlapping
         
         if (fft_now)
         {
             bool fft_offset = rw_counter == fft_size_halved;
             
-            // Calculate the position to do the fft from/ to and calculate relevant pointers
+            // Calculate the position to do the fft from/to and calculate relevant pointers
             
             float *fft_input = ((!eq_flag) != fft_offset) ? fft_buffers[1] : fft_buffers[0];
             update_split_complex_pointers(buffer_temp, input_buffer, input_position * fft_size_halved);
@@ -797,10 +789,10 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             if (eq_flag)
             {
-                SIMDType<float, 4> *v_fft_input = reinterpret_cast<SIMDType<float, 4> *>(fft_input);
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
+                VecType *v_fft_input = reinterpret_cast<VecType *>(fft_input);
+                VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[4]);
                 
-                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size / VecType::size); i++)
                     v_fft_input[i] *= v_fft_buffer[i];
             }
             
@@ -825,25 +817,25 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             {
                 // Window and overlap-add into output buffer
                 
-                SIMDType<float, 4> *v_fft_window = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
-                SIMDType<float, 4> *v_fft_output1 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
-                SIMDType<float, 4> *v_fft_output2 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? 0 : fft_size_halved));
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+                VecType *v_fft_window  = reinterpret_cast<VecType *>(fft_buffers[4]);
+                VecType *v_fft_output1 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
+                VecType *v_fft_output2 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? 0 : fft_size_halved));
+                VecType *v_fft_buffer  = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
-                for (long i = 0; i < (fft_size_halved / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size_halved / VecType::size); i++)
                     v_fft_output1[i] += v_fft_buffer[i] * v_fft_window[i];
-                for (long i = (fft_size_halved / SIMDType<float, 4>::size); i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = (fft_size_halved / VecType::size); i < (fft_size / VecType::size); i++)
                     v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
             }
             else
             {
                 // Scale and store into output buffer (overlap-save)
                 
-                SIMDType<float, 4> v_scale_mult((float) (1.0 / (double) (fft_size << 2)));
-                SIMDType<float, 4> *v_fft_output = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+                VecType v_scale_mult((float) (1.0 / (double) (fft_size << 2)));
+                VecType *v_fft_output = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
+                VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
-                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size / VecType::size); i++)
                     v_fft_output[i] = v_fft_buffer[i] * v_scale_mult;
             }
             
@@ -883,27 +875,9 @@ t_int *partconvolve_perform(t_int *w)
     return w + 6;
 }
 
-t_int *partconvolve_perform_mem_alignment(t_int *w)
-{
-    std::copy(reinterpret_cast<float *>(w[1]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]));
-    return w + 4;
-}
-
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
 {
-    // Make sure that the signals are sixteen byte aligned - if not then assign a safe buffer and read in/out of it during perform
-    
-    if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
-    {
-        deallocate_aligned(x->safe_signal);
-        x->safe_signal = allocate_aligned<float>(sp[0]->s_n);
-        
-        dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, sp[0]->s_vec + sp[0]->s_n, x->safe_signal);
-        dsp_add(denormals_perform, 5, partconvolve_perform, x->safe_signal, x->safe_signal, sp[0]->s_n, x);
-        dsp_add(partconvolve_perform_mem_alignment, 3, x->safe_signal, x->safe_signal + sp[0]->s_n, sp[1]->s_vec);
-    }
-    else
-        dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
+    dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
 template<class T, class U>
@@ -947,4 +921,3 @@ void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Input");
 }
-
