@@ -43,7 +43,7 @@ t_ptr_int pad_length(t_ptr_int length)
 t_class *this_class;
 
 
-typedef struct _timeconvolve
+struct t_timeconvolve
 {
     t_pxobject x_obj;
     
@@ -63,8 +63,7 @@ typedef struct _timeconvolve
     t_atom_long length;
     
     bool memory_flag;
-    
-} t_timeconvolve;
+};
 
 
 void timeconvolve_free(t_timeconvolve *x);
@@ -91,7 +90,7 @@ int C74_EXPORT main()
                            (method)timeconvolve_new,
                            (method)timeconvolve_free,
                            sizeof(t_timeconvolve),
-                           NULL,
+                           nullptr,
                            A_GIMME,
                            0);
     
