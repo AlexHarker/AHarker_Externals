@@ -30,8 +30,6 @@ constexpr static int MAX_FFT_SIZE_LOG2          = 20;
 constexpr static int DEFAULT_MAX_FFT_SIZE_LOG2  = 16;
 constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
 
-#define FFTW_TWOPI                            6.28318530717958647692
-
 // Random number generator
 
 random_generator<> rand_gen;
@@ -388,7 +386,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         // Make a hann window (and sqrt for overlap 2)
         
         for (long i = 0; i < fft_size; i++)
-            window[i] = sqrt(0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) fft_size))));
+            window[i] = sqrt(0.5 - (0.5 * cos(M_PI * 2.0 * ((double) i / (double) fft_size))));
         
         // Calculate the gain of the window and the appropriate scaling and apply
         // Note that the scaling is split between input and output windowing for ease
