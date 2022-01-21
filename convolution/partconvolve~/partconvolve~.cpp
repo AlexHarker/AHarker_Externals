@@ -19,6 +19,7 @@
 
 #include <AH_Denormals.h>
 #include <HISSTools_FFT/HISSTools_FFT.h>
+#include <RandomGenerator.hpp>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
@@ -31,6 +32,9 @@ constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30
 
 #define FFTW_TWOPI                            6.28318530717958647692
 
+// Random number generator
+
+random_generator<> rand_gen;
 
 // Utility
 
@@ -196,10 +200,6 @@ int C74_EXPORT main()
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
-        
-    // Seed the random fft offset generator
-    
-    srand(rand_int_os());
     
     return 0;
 }
@@ -694,7 +694,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         
         // Reset fft offset (randomly)
         
-        while (fft_size_halved <= (rw_counter = rand() / (RAND_MAX / fft_size_halved)));
+        rw_counter = static_cast<long>(rand_gen.rand_int(static_cast<uint32_t>(fft_size_halved - 1)));
         
         // Reset scheduling variables
         
