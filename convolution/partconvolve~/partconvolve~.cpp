@@ -95,8 +95,6 @@ typedef struct _partconvolve
     bool direct_flag;                // do not perform fft on impulse when partioning - assume that this has already been done (or we are in eq_flag mode)
     bool eq_flag;                    // eq_flag mode on/off
     
-    float *safe_signal;                // for Max5 (fix for memory alignment issue pre 5.1.3)
-    
 } t_partconvolve;
 
 
@@ -213,7 +211,6 @@ void partconvolve_free(t_partconvolve *x)
     hisstools_destroy_setup(x->fft_setup_real);
     deallocate_aligned(x->impulse_buffer.realp);
     deallocate_aligned(x->fft_buffers[0]);
-    deallocate_aligned(x->safe_signal);
 }
 
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
@@ -224,9 +221,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     // Setup the object and make inlets / outlets
     
     t_partconvolve *x = (t_partconvolve *)object_alloc(this_class);
-    
-    x->safe_signal = NULL;
-    
+        
     dsp_setup((t_pxobject *)x, 1);
     outlet_new((t_object *)x,"signal");
     
