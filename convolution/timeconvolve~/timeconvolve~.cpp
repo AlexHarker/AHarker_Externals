@@ -18,7 +18,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
@@ -76,9 +75,6 @@ void time_domain_convolve_scalar(float *in, float *impulse, float *output, long 
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L);
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
-t_int *timeconvolve_perform(t_int *w);
-void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count);
-
 void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -98,7 +94,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method)timeconvolve_set, "set", A_GIMME, 0);
     
     class_addmethod(this_class, (method)timeconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)timeconvolve_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method)timeconvolve_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
@@ -288,20 +283,6 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
     // Do convolution
 
     time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (SIMDType<float, 4> *) impulse_buffer, out, vec_size, impulse_length);
-}
-
-t_int *timeconvolve_perform(t_int *w)
-{
-    // Miss perform routine for denormal handling (w[2] onwards)
-    
-    timeconvolve_perform_internal((t_timeconvolve *)(w[5]), (float *)(w[2]), (float *)(w[3]), (long) (w[4]));
-    
-    return w + 6;
-}
-
-void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
-{
-    dsp_add(denormals_perform, 5, timeconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
 template<class T, class U>
