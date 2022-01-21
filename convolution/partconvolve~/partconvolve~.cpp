@@ -558,11 +558,11 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
             std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
             impulse_length -= fft_size_halved;
             
-            // Get imag values (zero pad if not enough data)
+            // Get imag values (zero pad if not enough data - note also the loop decrement to impulse_length)
             
             n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
-            std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
+            std::fill_n(buffer_temp2.imagp + n_samps, fft_size_halved - n_samps, 0.f);
             
             update_split_complex_pointers(buffer_temp2, buffer_temp2, fft_size_halved);
         }
@@ -807,7 +807,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             if (eq_flag)
             {
-                // Window and overlap-add into output buffer
+                // Window and overlap-add into output buffer (add first half, and owerwrite second)
                 
                 VecType *v_fft_window  = reinterpret_cast<VecType *>(fft_buffers[4]);
                 VecType *v_fft_output1 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
@@ -815,9 +815,9 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer  = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size_halved / VecType::size); i++)
-                    v_fft_output1[i] += v_fft_buffer[i] * v_fft_window[i];
-                for (long i = (fft_size_halved / VecType::size); i < (fft_size / VecType::size); i++)
-                    v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
+                    *v_fft_output1++ += *v_fft_buffer++ * *v_fft_window++;
+                for (long i = 0; i < (fft_size_halved / VecType::size); i++)
+                    *v_fft_output2++  = *v_fft_buffer++ * *v_fft_window++;
             }
             else
             {
@@ -828,7 +828,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    v_fft_output[i] = v_fft_buffer[i] * v_scale_mult;
+                    *v_fft_output++ = *v_fft_buffer++ * v_scale_mult;
             }
             
             // Clear accumulation buffer
