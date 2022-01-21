@@ -741,7 +741,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         bool fft_now = !(rw_counter & hop_mask);
         
         // Work loop and scheduling - this is where most of the convolution is done
-        // How many partitions to do this vector (make sure that all partitions are done before we need to do the next fft)?
+        // Calculate ow many partitions to do this loop
+        // (We must make sure that all partitions are done before we need to do the next fft)
         
         if (fft_now)
             num_partitions_to_do = (valid_partitions - partitions_done) - 1;
@@ -750,7 +751,8 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         
         while (num_partitions_to_do > 0)
         {
-            // Calculate buffer wraparounds (if wraparound is in the middle of this set of partitions this loop will run again)
+            // Calculate buffer wraparounds
+            // (If wraparound is in the middle of this set of partitions this loop will run again)
             
             next_partition = (last_partition < num_partitions) ? last_partition : 0;
             last_partition = (next_partition + num_partitions_to_do) > num_partitions ? num_partitions : next_partition + num_partitions_to_do;
@@ -772,14 +774,13 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             }
         }
         
-        // FFT processing - this is where we deal with the fft, any windowing, the first partition and overlapping
-        // First check that there is a new FFTs worth of buffer
+        // FFT processing - deal with the fft, any windowing, the first partition and overlapping
         
         if (fft_now)
         {
             bool fft_offset = rw_counter == fft_size_halved;
             
-            // Calculate the position to do the fft from/ to and calculate relevant pointers
+            // Calculate the position to do the fft from/to and calculate relevant pointers
             
             float *fft_input = ((!eq_flag) != fft_offset) ? fft_buffers[1] : fft_buffers[0];
             update_split_complex_pointers(buffer_temp, input_buffer, input_position * fft_size_halved);
