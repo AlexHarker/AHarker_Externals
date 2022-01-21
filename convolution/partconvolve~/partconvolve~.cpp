@@ -32,6 +32,10 @@ constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30
 #define FFTW_TWOPI                            6.28318530717958647692
 
 
+// Utility
+
+using VecType = SIMDType<float, 4>;
+
 void update_split_complex_pointers(FFT_SPLIT_COMPLEX_F &complex1, const FFT_SPLIT_COMPLEX_F complex2, long offset)
 {
     complex1.realp = complex2.realp + offset;
@@ -590,12 +594,12 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
 
 void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
-    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
-    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
-    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
-    SIMDType<float, 4> *in_imag2 = reinterpret_cast<SIMDType<float, 4> *>(in2.imagp);
-    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
-    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
+    VecType *in_real1 = reinterpret_cast<VecType *>(in1.realp);
+    VecType *in_imag1 = reinterpret_cast<VecType *>(in1.imagp);
+    VecType *in_real2 = reinterpret_cast<VecType *>(in2.realp);
+    VecType *in_imag2 = reinterpret_cast<VecType *>(in2.imagp);
+    VecType *out_real = reinterpret_cast<VecType *>(out.realp);
+    VecType *out_imag = reinterpret_cast<VecType *>(out.imagp);
     
     // Do Nyquist Calculation and then zero these bins
     
@@ -607,7 +611,7 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
     
     out.imagp[0] += nyquist1 * nyquist2;
     
-    long num_vecs = vec_size / SIMDType<float, 4>::size;
+    long num_vecs = vec_size / VecType::size;
     
     // Do other bins
     
@@ -625,13 +629,13 @@ void partconvolve_perform_partition(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 
 void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, FFT_SPLIT_COMPLEX_F out, long vec_size)
 {
-    SIMDType<float, 4> *in_real1 = reinterpret_cast<SIMDType<float, 4> *>(in1.realp);
-    SIMDType<float, 4> *in_imag1 = reinterpret_cast<SIMDType<float, 4> *>(in1.imagp);
-    SIMDType<float, 4> *in_real2 = reinterpret_cast<SIMDType<float, 4> *>(in2.realp);
-    SIMDType<float, 4> *out_real = reinterpret_cast<SIMDType<float, 4> *>(out.realp);
-    SIMDType<float, 4> *out_imag = reinterpret_cast<SIMDType<float, 4> *>(out.imagp);
+    VecType *in_real1 = reinterpret_cast<VecType *>(in1.realp);
+    VecType *in_imag1 = reinterpret_cast<VecType *>(in1.imagp);
+    VecType *in_real2 = reinterpret_cast<VecType *>(in2.realp);
+    VecType *out_real = reinterpret_cast<VecType *>(out.realp);
+    VecType *out_imag = reinterpret_cast<VecType *>(out.imagp);
     
-    long num_vecs = vec_size / SIMDType<float, 4>::size;
+    long num_vecs = vec_size / VecType::size;
     
     for (long i = 0; i < num_vecs; i++)
     {
@@ -789,10 +793,10 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             if (eq_flag)
             {
-                SIMDType<float, 4> *v_fft_input = reinterpret_cast<SIMDType<float, 4> *>(fft_input);
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
+                VecType *v_fft_input = reinterpret_cast<VecType *>(fft_input);
+                VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[4]);
                 
-                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size / VecType::size); i++)
                     v_fft_input[i] *= v_fft_buffer[i];
             }
             
@@ -817,25 +821,25 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             {
                 // Window and overlap-add into output buffer
                 
-                SIMDType<float, 4> *v_fft_window = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[4]);
-                SIMDType<float, 4> *v_fft_output1 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
-                SIMDType<float, 4> *v_fft_output2 = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? 0 : fft_size_halved));
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+                VecType *v_fft_window  = reinterpret_cast<VecType *>(fft_buffers[4]);
+                VecType *v_fft_output1 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
+                VecType *v_fft_output2 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? 0 : fft_size_halved));
+                VecType *v_fft_buffer  = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
-                for (long i = 0; i < (fft_size_halved / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size_halved / VecType::size); i++)
                     v_fft_output1[i] += v_fft_buffer[i] * v_fft_window[i];
-                for (long i = (fft_size_halved / SIMDType<float, 4>::size); i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = (fft_size_halved / VecType::size); i < (fft_size / VecType::size); i++)
                     v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
             }
             else
             {
                 // Scale and store into output buffer (overlap-save)
                 
-                SIMDType<float, 4> v_scale_mult((float) (1.0 / (double) (fft_size << 2)));
-                SIMDType<float, 4> *v_fft_output = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
-                SIMDType<float, 4> *v_fft_buffer = reinterpret_cast<SIMDType<float, 4> *>(fft_buffers[2]);
+                VecType v_scale_mult((float) (1.0 / (double) (fft_size << 2)));
+                VecType *v_fft_output = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
+                VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
-                for (long i = 0; i < (fft_size / SIMDType<float, 4>::size); i++)
+                for (long i = 0; i < (fft_size / VecType::size); i++)
                     v_fft_output[i] = v_fft_buffer[i] * v_scale_mult;
             }
             
