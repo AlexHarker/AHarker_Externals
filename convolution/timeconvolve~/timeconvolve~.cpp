@@ -70,18 +70,15 @@ typedef struct _timeconvolve
 void timeconvolve_free(t_timeconvolve *x);
 void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
-void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv);
+void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv);
 
 void time_domain_convolve_scalar(float *in, float *impulse, float *output, long N, long L);
 void time_domain_convolve(float *in, SIMDType<float, 4> *impulse, float *output, long N, long L);
 
-void timeconvolve_perform_scalar_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
-t_int *timeconvolve_perform_scalar(t_int *w);
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
 t_int *timeconvolve_perform(t_int *w);
 void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count);
 
-void timeconvolve_perform_scalar64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -173,7 +170,7 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 	return x;
 }
 
-void timeconvolve_set(t_timeconvolve *x, t_symbol *msg, long argc, t_atom *argv)
+void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 {
 	// Standard ibuffer variables
 	
