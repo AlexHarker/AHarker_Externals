@@ -2,13 +2,13 @@
 /*
  *  partconvolve~
  *
- *    partconvolve~ copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution.
- *    It can also be used to perform a simple static FFT-based FIR filter on an incoming signal.
+ *  partconvolve~ copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution.
+ *  It can also be used to perform a simple static FFT-based FIR filter on an incoming signal.
  *
- *    Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
- *    The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *  Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
+ *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-2022 Alex Harker. All rights reserved.
  *
  */
 
