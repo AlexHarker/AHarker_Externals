@@ -26,10 +26,10 @@
 
 #include <algorithm>
 
-#define MIN_FFT_SIZE_LOG2                    5
-#define MAX_FFT_SIZE_LOG2                    20
-#define DEFAULT_MAX_FFT_SIZE_LOG2            16;
-#define BUFFER_SIZE_DEFAULT                    1323000                            // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
+constexpr static int MIN_FFT_SIZE_LOG2          = 5;
+constexpr static int MAX_FFT_SIZE_LOG2          = 20;
+constexpr static int DEFAULT_MAX_FFT_SIZE_LOG2  = 16;
+constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
 
 #define FFTW_TWOPI                            6.28318530717958647692
 
@@ -44,7 +44,7 @@ void update_split_complex_pointers(FFT_SPLIT_COMPLEX_F &complex1, const FFT_SPLI
 t_class *this_class;
 
 
-typedef struct _partconvolve
+struct t_partconvolve
 {
     t_pxobject x_obj;
     
@@ -94,8 +94,7 @@ typedef struct _partconvolve
     bool memory_flag;                // memory was allocated correctly
     bool direct_flag;                // do not perform fft on impulse when partioning (direct/eq mode)
     bool eq_flag;                    // eq_flag mode on/off
-    
-} t_partconvolve;
+};
 
 
 long int_log2(long long in, long *inexact)
@@ -159,7 +158,7 @@ int C74_EXPORT main()
                            (method)partconvolve_new,
                            (method)partconvolve_free,
                            sizeof(t_partconvolve),
-                           NULL,
+                           nullptr,
                            A_GIMME,
                            0);
     
@@ -178,7 +177,7 @@ int C74_EXPORT main()
     // Add Attributes
     
     CLASS_ATTR_LONG(this_class, "fftsize", 0L, t_partconvolve, fft_size);
-    CLASS_ATTR_ACCESSORS(this_class, "fftsize", NULL, partconvolve_fft_size_set);
+    CLASS_ATTR_ACCESSORS(this_class, "fftsize", nullptr, partconvolve_fft_size_set);
     CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
     
     CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
@@ -232,7 +231,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     x->max_fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
     x->max_fft_size = 1 << x->max_fft_size_log2;
     
-    x->buffer_name = NULL;
+    x->buffer_name = nullptr;
     
     x->fft_size_log2 = 0;
     x->fft_size = 0;
@@ -452,17 +451,17 @@ t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, 
 
 void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, false);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, true, false);
 }
 
 void partconvolve_eq(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, true, true);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, true, true);
 }
 
 void partconvolve_set(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    partconvolve_set_internal(x, argc ? atom_getsym(argv) : NULL, false, false);
+    partconvolve_set_internal(x, argc ? atom_getsym(argv) : nullptr, false, false);
 }
 
 void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag, bool eq_flag)
