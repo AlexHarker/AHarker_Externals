@@ -4,11 +4,12 @@
  *
  *	timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
  *	
- *	Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses (timeconvolve use apple's vDSP and the IR length is limited to 2044 samples).
+ *	Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
+ *  timeconvolve~ alone is limited to a maximum IR size of 2044 samples.
  *	The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
  *	Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-2022 Alex Harker. All rights reserved.
  *
  */
 
