@@ -146,7 +146,6 @@ void partconvolve_perform_equaliser(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F
 void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, long vec_size);
 
 t_int *partconvolve_perform(t_int *w);
-t_int *partconvolve_perform_mem_alignment(t_int *w);
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count);
 
 void partconvolve_perform64 (t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -883,27 +882,9 @@ t_int *partconvolve_perform(t_int *w)
     return w + 6;
 }
 
-t_int *partconvolve_perform_mem_alignment(t_int *w)
-{
-    std::copy(reinterpret_cast<float *>(w[1]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]));
-    return w + 4;
-}
-
 void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
 {
-    // Make sure that the signals are sixteen byte aligned - if not then assign a safe buffer and read in/out of it during perform
-    
-    if ((long) sp[0]->s_vec % 16 || (long) sp[1]->s_vec % 16)
-    {
-        deallocate_aligned(x->safe_signal);
-        x->safe_signal = allocate_aligned<float>(sp[0]->s_n);
-        
-        dsp_add(partconvolve_perform_mem_alignment, 3, sp[0]->s_vec, sp[0]->s_vec + sp[0]->s_n, x->safe_signal);
-        dsp_add(denormals_perform, 5, partconvolve_perform, x->safe_signal, x->safe_signal, sp[0]->s_n, x);
-        dsp_add(partconvolve_perform_mem_alignment, 3, x->safe_signal, x->safe_signal + sp[0]->s_n, sp[1]->s_vec);
-    }
-    else
-        dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
+    dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
 template<class T, class U>
@@ -947,4 +928,3 @@ void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Input");
 }
-
