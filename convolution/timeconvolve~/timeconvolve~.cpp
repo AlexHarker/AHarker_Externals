@@ -62,7 +62,7 @@ typedef struct _timeconvolve
 	t_atom_long offset;
 	t_atom_long length;
 	
-	char memory_flag;
+	bool memory_flag;
 	
 } t_timeconvolve;
 
@@ -278,9 +278,9 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
 	
 	// Copy input twice (allows us to read input out in one go)
 	
-	memcpy(input_buffer + input_position, in, sizeof(float) * vec_size);
-	memcpy(input_buffer + 4096 + input_position, in, sizeof(float) * vec_size);
-	
+    std::copy_n(in, vec_size, input_buffer + input_position);
+    std::copy_n(in, vec_size, input_buffer + input_position + 4096);
+   
 	// Advance pointer 
 	
 	input_position += vec_size;
