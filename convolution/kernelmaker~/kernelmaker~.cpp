@@ -25,22 +25,16 @@
 
 t_class *this_class;
 
-
-typedef struct _kernelmaker
+struct t_kernelmaker
 {
     t_pxobject x_obj;
 	
-	t_ptr_int fades;
-	
-} t_kernelmaker;
-
+    t_atom_long fades;
+};
 
 t_symbol *ps_dirty;
 
-
-
 void *kernelmaker_new(t_atom_long fades);
-void kernelmaker_free(t_kernelmaker *x);
 void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s);
 
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades);
@@ -62,7 +56,7 @@ int C74_EXPORT main()
 {
     this_class = class_new("kernelmaker~",
 							(method) kernelmaker_new, 
-							(method)kernelmaker_free, 
+							(method) nullptr,
 							sizeof(t_kernelmaker), 
 							0L, 
 							A_DEFLONG, 
@@ -82,34 +76,25 @@ int C74_EXPORT main()
 	return 0;
 }
 
-
 void *kernelmaker_new(t_atom_long fades)
 {
     t_kernelmaker *x = (t_kernelmaker *)object_alloc (this_class);
 	
 	x->fades = !fades ? 40 : fades;
 	
-	return(x);
+	return x;
 }
-
-
-void kernelmaker_free(t_kernelmaker *x)
-{
-}
-
 
 void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s)
 {
 	sprintf(s,"Instructions To Build Kernel");
 }
 
-
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades)
 {
 	if (fades >= 0) 
 		x->fades = fades;
 }
-
 
 // A kernel windowed by a function stored in a second buffer
 
@@ -120,7 +105,6 @@ void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv
 
 	kernelmaker_normal_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
-
 
 void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int length)
 {
@@ -192,7 +176,6 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 	}
 }
 
-
 // Create a kernel windowed by a function stored in another buffer and using an envelope derived from lowpass filtering the absolute vals of a third buffer
 
 void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
@@ -202,7 +185,6 @@ void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 	
 	kernelmaker_env_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
-
 
 void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int slide)
 {
