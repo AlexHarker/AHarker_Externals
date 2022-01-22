@@ -8,7 +8,7 @@
  *  In this mode the coefficients may be updated sample-accurately directly from the inputs to the host object.
  *  This is an efficient alternative to the normal mode, which updates coefficients every sample.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <dynamic~.hpp>
+
 
 // Globals and Object Structure
 

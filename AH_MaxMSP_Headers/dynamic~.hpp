@@ -6,7 +6,7 @@
  *  All communication with a host object should be done using this interface.
  *  For uage examples see the dynamic set of objects (dynamicdsp.in~ / dynamicdsp.out~ / dynamicdsp.this~ etc.).
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

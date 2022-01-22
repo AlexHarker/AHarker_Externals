@@ -9,7 +9,7 @@
  *  dynamic.this~ has a more similar functionality to thispoly~.
  *  It also allows more flexible control over audio muting and voice busy state.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

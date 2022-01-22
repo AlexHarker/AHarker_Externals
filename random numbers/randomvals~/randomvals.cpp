@@ -9,7 +9,7 @@
  *  The gaussian mode allows the user to combine multiple curves, each with its own parameters for mean (0-1), deviation and weight.
  *  The RNG implementation is expected be of high quality, with a reasonably small state (only a handful of bytes), and a long cycle.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

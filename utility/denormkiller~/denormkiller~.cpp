@@ -6,7 +6,7 @@
  *
  *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

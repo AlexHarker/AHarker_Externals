@@ -15,7 +15,7 @@
  *  The exact functioning of the timemap object is fairly involved and best understood in practice.
  *  See the MaxMSP documentation for further information on its use.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -5,7 +5,7 @@
  *  A header file for the multipart section of the gesture_maker object.
  *  This code deals with the multipart nature of the inflection kernel.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

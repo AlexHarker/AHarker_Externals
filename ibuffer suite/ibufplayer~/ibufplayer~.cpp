@@ -8,7 +8,7 @@
  *  It is also features three different kinds of cubic interpolation which can be requested as desired.
  *  It should at least (roughly) as fast as groove~ for worst case scenarios, and faster in various other situations.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

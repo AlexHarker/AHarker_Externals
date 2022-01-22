@@ -4,7 +4,7 @@
  *
  *  ahnoise~ is a high quality noise generator with random time seeding.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

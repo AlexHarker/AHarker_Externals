@@ -6,7 +6,7 @@
  *  A kernel has up to 3 parts, each of which is first calculated as curve between the given output parameters.
  *  Kernel parameters may either be specified directly, or with a certain degree of "random" variability.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

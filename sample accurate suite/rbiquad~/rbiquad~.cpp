@@ -5,7 +5,7 @@
  *  rbiquad~ is a biquad filter that accepts only signal rate coefficients.
  *  The memory can be cleared on a sample accurate basis, using a dedicated reset input.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

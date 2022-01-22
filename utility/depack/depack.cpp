@@ -4,7 +4,7 @@
  *
  *  depack is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -6,7 +6,7 @@
  *  Note that the inflection kernel parameters will cycle round if there are not as many sets of parameters as inflections.
  *  Note also that each inflection gesture is resolved in realtime, so if values are specified as variable, each realisation will be different, even in the case of parameter cycling.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
