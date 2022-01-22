@@ -62,12 +62,12 @@ int C74_EXPORT main()
 							A_DEFLONG, 
 							0);
 	
-	class_addmethod(this_class, (method)kernelmaker_int, "int", A_LONG, 0L);
-	class_addmethod(this_class, (method)kernelmaker_normal, "makekernel_wind", A_GIMME, 0L);
-	class_addmethod(this_class, (method)kernelmaker_env, "makekernel_env", A_GIMME, 0L);
-	class_addmethod(this_class, (method)kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0L);
-	class_addmethod(this_class, (method)kernelmaker_trap, "makekernel_trap", A_GIMME, 0L);
-    class_addmethod(this_class, (method)kernelmaker_assist, "assist", A_CANT, 0L);
+	class_addmethod(this_class, (method) kernelmaker_int, "int", A_LONG, 0L);
+	class_addmethod(this_class, (method) kernelmaker_normal, "makekernel_wind", A_GIMME, 0L);
+	class_addmethod(this_class, (method) kernelmaker_env, "makekernel_env", A_GIMME, 0L);
+	class_addmethod(this_class, (method) kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0L);
+	class_addmethod(this_class, (method) kernelmaker_trap, "makekernel_trap", A_GIMME, 0L);
+    class_addmethod(this_class, (method) kernelmaker_assist, "assist", A_CANT, 0L);
 	
 	class_register(CLASS_BOX, this_class);
 		

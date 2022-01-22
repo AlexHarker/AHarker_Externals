@@ -74,19 +74,19 @@ void randomsort(random_generator<>& gen, double *vals, long num_points);
 int C74_EXPORT main()
 {
     this_class = class_new("timefilter",
-                           (method)timefilter_new,
-                           (method)timefilter_free,
+                           (method) timefilter_new,
+                           (method) timefilter_free,
                            sizeof(t_timefilter),
                            nullptr,
                            0);
     
-    class_addmethod(this_class, (method)timefilter_bang, "bang", 0);
-    class_addmethod(this_class, (method)timefilter_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timefilter_reset, "reset", 0);
-    class_addmethod(this_class, (method)timefilter_randfilter, "randfilter", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timefilter_ordering, "ordering", A_LONG, 0);
-    class_addmethod(this_class, (method)timefilter_list, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)timefilter_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) timefilter_bang, "bang", 0);
+    class_addmethod(this_class, (method) timefilter_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timefilter_reset, "reset", 0);
+    class_addmethod(this_class, (method) timefilter_randfilter, "randfilter", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timefilter_ordering, "ordering", A_LONG, 0);
+    class_addmethod(this_class, (method) timefilter_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) timefilter_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
 

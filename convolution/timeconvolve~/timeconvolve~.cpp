@@ -46,7 +46,6 @@ t_ptr_int pad_length(t_ptr_int length)
 
 t_class *this_class;
 
-
 struct t_timeconvolve
 {
     t_pxobject x_obj;
@@ -69,7 +68,6 @@ struct t_timeconvolve
     bool memory_flag;
 };
 
-
 void timeconvolve_free(t_timeconvolve *x);
 void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
@@ -87,24 +85,23 @@ void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, doubl
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
-
 int C74_EXPORT main()
 {
     this_class = class_new("timeconvolve~",
-                           (method)timeconvolve_new,
-                           (method)timeconvolve_free,
+                           (method) timeconvolve_new,
+                           (method) timeconvolve_free,
                            sizeof(t_timeconvolve),
                            nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)timeconvolve_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) timeconvolve_set, "set", A_GIMME, 0);
     
-    class_addmethod(this_class, (method)timeconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)timeconvolve_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)timeconvolve_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) timeconvolve_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) timeconvolve_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) timeconvolve_dsp64, "dsp64", A_CANT, 0);
     
-    class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
+    class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
     
     // Add Attributes
             

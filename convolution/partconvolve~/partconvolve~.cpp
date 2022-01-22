@@ -153,28 +153,27 @@ void partconvolve_dsp64 (t_partconvolve *x, t_object *dsp64, short *count, doubl
 void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s);
 void partconvolve_memoryusage(t_partconvolve *x);
 
-
 int C74_EXPORT main()
 {
     this_class = class_new("partconvolve~",
-                           (method)partconvolve_new,
-                           (method)partconvolve_free,
+                           (method) partconvolve_new,
+                           (method) partconvolve_free,
                            sizeof(t_partconvolve),
                            nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)partconvolve_set, "set", A_GIMME, 0);
-    class_addmethod(this_class, (method)partconvolve_direct, "direct", A_GIMME, 0);
-    class_addmethod(this_class, (method)partconvolve_eq, "eq", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_direct, "direct", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_eq, "eq", A_GIMME, 0);
     
-    class_addmethod(this_class, (method)partconvolve_memoryusage, "memoryusage", 0);
-    class_addmethod(this_class, (method)partconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)partconvolve_notify, "notify", A_CANT, 0);
-    class_addmethod(this_class, (method)partconvolve_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)partconvolve_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_memoryusage, "memoryusage", 0);
+    class_addmethod(this_class, (method) partconvolve_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_notify, "notify", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_dsp64, "dsp64", A_CANT, 0);
     
-    class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
+    class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
     
     // Add Attributes
     
