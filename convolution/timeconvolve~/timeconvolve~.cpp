@@ -2,14 +2,14 @@
 /*
  *  timeconvolve~
  *
- *    timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
+ *  timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
  *
- *    Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
+ *  Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
  *  timeconvolve~ alone is limited to a maximum IR size of 2044 samples.
- *    The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
- *    Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
+ *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *  Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
  *
- *  Copyright 2010-2022 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -45,7 +45,6 @@ t_ptr_int pad_length(t_ptr_int length)
 
 t_class *this_class;
 
-
 struct t_timeconvolve
 {
     t_pxobject x_obj;
@@ -68,7 +67,6 @@ struct t_timeconvolve
     bool memory_flag;
 };
 
-
 void timeconvolve_free(t_timeconvolve *x);
 void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
@@ -83,23 +81,22 @@ void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, doubl
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
-
 int C74_EXPORT main()
 {
     this_class = class_new("timeconvolve~",
-                           (method)timeconvolve_new,
-                           (method)timeconvolve_free,
+                           (method) timeconvolve_new,
+                           (method) timeconvolve_free,
                            sizeof(t_timeconvolve),
                            nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)timeconvolve_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) timeconvolve_set, "set", A_GIMME, 0);
     
-    class_addmethod(this_class, (method)timeconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)timeconvolve_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) timeconvolve_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) timeconvolve_dsp64, "dsp64", A_CANT, 0);
     
-    class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
+    class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
     
     // Add Attributes
             

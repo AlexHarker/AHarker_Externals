@@ -126,8 +126,8 @@ double clip(double value, double min_val, double max_val)
 int C74_EXPORT main()
 {
     this_class = class_new("timemap",
-                           (method)timemap_new,
-                           (method)timemap_free,
+                           (method) timemap_new,
+                           (method) timemap_free,
                            sizeof(t_timemap),
                            nullptr,
                            A_DEFFLOAT,
@@ -135,17 +135,17 @@ int C74_EXPORT main()
                            A_DEFFLOAT,
                            0);
     
-    class_addmethod(this_class, (method)timemap_calculate, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)timemap_rand_amount, "ft1", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timemap_centre, "ft2", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timemap_warp, "ft3", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timemap_min_dist, "ft4", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timemap_max_dist, "ft5", A_FLOAT, 0);
-    class_addmethod(this_class, (method)timemap_max_retries, "in6", A_LONG, 0);
-    class_addmethod(this_class, (method)timemap_random_order, "random_order", A_LONG, 0);
-    class_addmethod(this_class, (method)timemap_scaling, "scaling", A_SYM, A_DEFFLOAT, A_DEFFLOAT, 0);
-    class_addmethod(this_class, (method)timemap_stream, "stream", A_DEFLONG, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
-    class_addmethod(this_class, (method)timemap_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) timemap_calculate, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) timemap_rand_amount, "ft1", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timemap_centre, "ft2", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timemap_warp, "ft3", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timemap_min_dist, "ft4", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timemap_max_dist, "ft5", A_FLOAT, 0);
+    class_addmethod(this_class, (method) timemap_max_retries, "in6", A_LONG, 0);
+    class_addmethod(this_class, (method) timemap_random_order, "random_order", A_LONG, 0);
+    class_addmethod(this_class, (method) timemap_scaling, "scaling", A_SYM, A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addmethod(this_class, (method) timemap_stream, "stream", A_DEFLONG, A_DEFFLOAT, A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addmethod(this_class, (method) timemap_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     

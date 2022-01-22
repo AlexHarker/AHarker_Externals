@@ -2,13 +2,13 @@
 /*
  *  partconvolve~
  *
- *    partconvolve~ copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution.
- *    It can also be used to perform a simple static FFT-based FIR filter on an incoming signal.
+ *  partconvolve~ copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution.
+ *  It can also be used to perform a simple static FFT-based FIR filter on an incoming signal.
  *
- *    Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
- *    The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *  Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
+ *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-2022 Alex Harker. All rights reserved.
  *
  */
 
@@ -149,27 +149,26 @@ void partconvolve_dsp64 (t_partconvolve *x, t_object *dsp64, short *count, doubl
 void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s);
 void partconvolve_memoryusage(t_partconvolve *x);
 
-
 int C74_EXPORT main()
 {
     this_class = class_new("partconvolve~",
-                           (method)partconvolve_new,
-                           (method)partconvolve_free,
+                           (method) partconvolve_new,
+                           (method) partconvolve_free,
                            sizeof(t_partconvolve),
                            nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)partconvolve_set, "set", A_GIMME, 0);
-    class_addmethod(this_class, (method)partconvolve_direct, "direct", A_GIMME, 0);
-    class_addmethod(this_class, (method)partconvolve_eq, "eq", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_direct, "direct", A_GIMME, 0);
+    class_addmethod(this_class, (method) partconvolve_eq, "eq", A_GIMME, 0);
     
-    class_addmethod(this_class, (method)partconvolve_memoryusage, "memoryusage", 0);
-    class_addmethod(this_class, (method)partconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)partconvolve_notify, "notify", A_CANT, 0);
-    class_addmethod(this_class, (method)partconvolve_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_memoryusage, "memoryusage", 0);
+    class_addmethod(this_class, (method) partconvolve_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_notify, "notify", A_CANT, 0);
+    class_addmethod(this_class, (method) partconvolve_dsp64, "dsp64", A_CANT, 0);
     
-    class_addmethod(this_class, (method)object_obex_quickref, "quickref", A_CANT, 0);
+    class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
     
     // Add Attributes
     
@@ -389,7 +388,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         for (long i = 0; i < fft_size; i++)
             window_gain += (double) (window[i] * window[i]);
         
-        window_scale = sqrt (1. / (4.0 * window_gain));
+        window_scale = sqrt(1. / (4.0 * window_gain));
         
         for (long i = 0; i < fft_size; i++)
             window[i] *= window_scale;
@@ -553,11 +552,11 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
             std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
             impulse_length -= fft_size_halved;
             
-            // Get imag values (zero pad if not enough data)
+            // Get imag values (zero pad if not enough data - note also the loop decrement to impulse_length)
             
             n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp2.imagp, buffer_pos + fft_size_halved, n_samps, chan);
-            std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
+            std::fill_n(buffer_temp2.imagp + n_samps, fft_size_halved - n_samps, 0.f);
             
             update_split_complex_pointers(buffer_temp2, buffer_temp2, fft_size_halved);
         }
@@ -714,15 +713,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
         // Load input into buffer (twice) and output from the output buffer
         
         std::copy_n(in, loop_size, fft_buffers[0] + rw_counter);
-                
-        if ((hi_counter + loop_size) > fft_size)
-        {
-            long hi_loop = fft_size - hi_counter;
-            std::copy_n(in, hi_loop, fft_buffers[1] + hi_counter);
-            std::copy_n(in + hi_loop, (loop_size - hi_loop), fft_buffers[0]);
-        }
-        else
-            std::copy_n(in, loop_size, fft_buffers[1] + hi_counter);
+        std::copy_n(in, loop_size, fft_buffers[1] + hi_counter);
 
         std::copy_n(fft_buffers[3] + rw_counter, loop_size, out);
         
@@ -788,7 +779,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[4]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    v_fft_input[i] *= v_fft_buffer[i];
+                    (*v_fft_input++) *= (*v_fft_buffer++);
             }
             
             // Do the fft and put into the input buffer
@@ -810,7 +801,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             if (eq_flag)
             {
-                // Window and overlap-add into output buffer
+                // Window and overlap-add into output buffer (add first half, and owerwrite second)
                 
                 VecType *v_fft_window  = reinterpret_cast<VecType *>(fft_buffers[4]);
                 VecType *v_fft_output1 = reinterpret_cast<VecType *>(fft_buffers[3] + (fft_offset ? fft_size_halved : 0));
@@ -818,9 +809,9 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer  = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size_halved / VecType::size); i++)
-                    v_fft_output1[i] += v_fft_buffer[i] * v_fft_window[i];
-                for (long i = (fft_size_halved / VecType::size); i < (fft_size / VecType::size); i++)
-                    v_fft_output2[i] = v_fft_buffer[i] * v_fft_window[i];
+                    (*v_fft_output1++) += (*v_fft_buffer++) * (*v_fft_window++);
+                for (long i = 0; i < (fft_size_halved / VecType::size); i++)
+                    (*v_fft_output2++)  = (*v_fft_buffer++) * (*v_fft_window++);
             }
             else
             {
@@ -831,7 +822,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
                 VecType *v_fft_buffer = reinterpret_cast<VecType *>(fft_buffers[2]);
                 
                 for (long i = 0; i < (fft_size / VecType::size); i++)
-                    v_fft_output[i] = v_fft_buffer[i] * v_scale_mult;
+                    (*v_fft_output++) = (*v_fft_buffer++) * v_scale_mult;
             }
             
             // Clear accumulation buffer

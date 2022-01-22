@@ -108,25 +108,25 @@ int C74_EXPORT main()
                             nullptr,
                             0);
     
-    class_addmethod(this_class, (method)gesture_maker_drive, "drive", A_FLOAT, 0);
-    class_addmethod(this_class, (method)gesture_maker_events, "events", A_GIMME, 0);
-    class_addmethod(this_class, (method)gesture_maker_stop, "stop", 0);
-    class_addmethod(this_class, (method)gesture_maker_graintime, "graintime", A_FLOAT,  0);
-    class_addmethod(this_class, (method)gesture_maker_list, "list", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_gesture_main, "gesture_main", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_gesture_inflections, "gesture_inflections", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_initial_main, "initial_main", A_FLOAT,  0);
-    class_addmethod(this_class, (method)gesture_maker_initial_inflections, "initial_inflections", A_FLOAT,  0);
-    class_addmethod(this_class, (method)gesture_maker_start_main, "start_main", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_start_inflections, "start_inflections", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_timings, "timings", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_scaling_main, "scaling_main", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_scaling_inflections, "scaling_inflections", A_GIMME,  0);
-    class_addmethod(this_class, (method)gesture_maker_reset, "reset",  0);
+    class_addmethod(this_class, (method) gesture_maker_drive, "drive", A_FLOAT, 0);
+    class_addmethod(this_class, (method) gesture_maker_events, "events", A_GIMME, 0);
+    class_addmethod(this_class, (method) gesture_maker_stop, "stop", 0);
+    class_addmethod(this_class, (method) gesture_maker_graintime, "graintime", A_FLOAT,  0);
+    class_addmethod(this_class, (method) gesture_maker_list, "list", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_gesture_main, "gesture_main", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_gesture_inflections, "gesture_inflections", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_initial_main, "initial_main", A_FLOAT,  0);
+    class_addmethod(this_class, (method) gesture_maker_initial_inflections, "initial_inflections", A_FLOAT,  0);
+    class_addmethod(this_class, (method) gesture_maker_start_main, "start_main", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_start_inflections, "start_inflections", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_timings, "timings", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_scaling_main, "scaling_main", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_scaling_inflections, "scaling_inflections", A_GIMME,  0);
+    class_addmethod(this_class, (method) gesture_maker_reset, "reset",  0);
     
-    class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) gesture_maker_assist, "assist", A_CANT, 0);
     
-    class_addmethod(this_class, (method)gesture_maker_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) gesture_maker_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
