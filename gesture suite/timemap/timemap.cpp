@@ -342,7 +342,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
             break;
     }
     
-    outlet_list(x->list_outlet, 0L, list_length, output_list);
+    outlet_list(x->list_outlet, 0L, static_cast<short>(list_length), output_list);
 }
 
 // Value Generation

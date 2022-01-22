@@ -137,7 +137,7 @@ void kernelmaker_window(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv
     kernelmaker_window_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
-void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length)
+void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length)
 {
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
