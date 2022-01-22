@@ -266,7 +266,7 @@ void randomsort(random_generator<>& gen, double *vals, long num_points)
     
     for (long i = 0; i < num_points - 1; i++)
     {
-        long pos = gen.rand_int(static_cast<uint32>(num_points - (i + 1))) + i;
+        long pos = gen.rand_int(static_cast<uint32_t>(num_points - (i + 1))) + i;
         std::swap(vals[i], vals[pos]);
     }
 }
