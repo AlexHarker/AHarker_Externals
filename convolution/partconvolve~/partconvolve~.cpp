@@ -8,7 +8,7 @@
  *  Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
  *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
  *
- *  Copyright 2010-2022 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

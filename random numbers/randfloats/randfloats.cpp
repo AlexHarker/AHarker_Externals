@@ -9,7 +9,7 @@
  *  This object is less fully featured than randomvals, although it may be simpler in some situations.
  *  The weighting used here is different to (and more complex than) that used in the randomvals(~) objects.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

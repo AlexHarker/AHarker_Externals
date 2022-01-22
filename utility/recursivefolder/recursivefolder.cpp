@@ -6,7 +6,7 @@
  *
  *  Based on folder from the Max SDK examples.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

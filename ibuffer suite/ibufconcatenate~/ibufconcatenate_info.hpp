@@ -5,7 +5,7 @@
  *  A header file containing the ibufconcatenate_info object.
  *  At it is small this is compiled into objects using it to avoid an extra object file
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

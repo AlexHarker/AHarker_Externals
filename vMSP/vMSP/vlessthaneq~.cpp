@@ -4,7 +4,7 @@
  *
  *  vlessthaneq~ is a vectorised version of lessthaneq~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -4,7 +4,7 @@
  *
  *  vatan~ is a vectorised version of atan~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -8,7 +8,7 @@
  *  It supports 16, 24 and 32 integer formats, as well as 32 bit float and can load either all channels or specified channels.
  *  There are a corresponding set of playback and other objects that will also function with standard MSP buffers.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

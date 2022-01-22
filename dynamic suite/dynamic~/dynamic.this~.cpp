@@ -8,7 +8,7 @@
  *  It can also be used to safely delete the patch it exists in (without interrupting other audio processing).
  *  Finally, it is the mechanism for determining which slot of the host object the patch is loaded into.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -10,7 +10,7 @@
  *  It can also be used for other sample-accurate timing purposes such as random length ramping.
  *  See documentation for more info on implementation.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

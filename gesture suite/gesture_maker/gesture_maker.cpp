@@ -21,7 +21,7 @@
  *  The details of the gesture_maker object are fairly involved, and the concepts are easier to understand in practice, rather than in verbal form.
  *  For this reason - it is probably best to look at the helpfile documentation for further information (it may be wise to do so before examining this code in detail).
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

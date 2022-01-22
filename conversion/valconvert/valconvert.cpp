@@ -11,7 +11,7 @@
  *  E.g. the log setting treats the input as logarithmic and scales exponentially (e.g to control frequency).
  *  See the documentation for more detail on other modes.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

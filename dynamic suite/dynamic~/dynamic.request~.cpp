@@ -8,7 +8,7 @@
  *  The value is then held until a new trigger is received.
  *  This allows efficient parameter updating for sample accurate processing.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

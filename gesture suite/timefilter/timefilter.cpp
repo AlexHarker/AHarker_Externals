@@ -11,7 +11,7 @@
  *
  *  The object may be used on lists representing any parameter / in other scenarios than the one from which it takes its name.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

@@ -7,7 +7,7 @@
  *
  *  The most obvious use of threadfilter is to avoid threading issues, especially in the case of global code.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
