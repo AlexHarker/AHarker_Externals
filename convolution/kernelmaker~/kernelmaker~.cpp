@@ -96,6 +96,26 @@ void kernelmaker_int(t_kernelmaker *x, t_atom_long fades)
 		x->fades = fades;
 }
 
+// Normalisation utility
+
+void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, double peak_amp, t_ptr_int fades)
+{
+    if (peak_amp)
+    {
+        const double amp_recip = 1.0 / peak_amp;
+        const double fade_recip = amp_recip / ((fades > 0) ? fades : 1);
+
+        t_ptr_int i;
+
+        for (i = 0; i < fades; i++)
+            out_samps[i * num_chans] *= fade_recip * i;
+        for (; i < length - fades; i++)
+            out_samps[i * num_chans] *= amp_recip;
+        for (; i < length; i++)
+            out_samps[i * num_chans] *= fade_recip * (length - i);
+    }
+}
+
 // A kernel windowed by a function stored in a second buffer
 
 void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
@@ -156,25 +176,16 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 				peak_amp = current_samp;
 		}
 		
-		// Now normalise the kernel
+		// Now normalise the kernel and set the buffer as dirty
 		
-		if (peak_amp)
-		{
-			const double amp_recip = 1.0 / peak_amp;
-            
-			for (t_ptr_int i = 0; i < length; i ++)
-				out_samps[i * target.get_num_chans()] *= amp_recip;
-		}
-		
-		// Set the buffer as dirty
-		
-        target.set_dirty();
+		normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, 0);
+		target.set_dirty();
 	}
 }
 
 // Create a kernel windowed by a function stored in another buffer and using an envelope derived from lowpass filtering the absolute vals of a third buffer
 
-void kernelmaker_env (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 5)
 		error ("kernelmaker~: not enough argments to message makekernel_env");
@@ -226,26 +237,9 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
             peak_amp = std::max(peak_amp, fabs(current_samp));
 		}
 		
-		// Now normalise the kernel
-		
-		if (peak_amp)
-		{
-            t_ptr_int fades = x->fades;
-            t_ptr_int i;
-            
-            const double amp_recip = 1.0 / peak_amp;
-            const double fade_recip = amp_recip / fades;
-			
-			for (i = 0; i < fades; i++)
-				out_samps[i * target.get_num_chans()] *= fade_recip * i;
-			for (; i < length - fades; i++)
-				out_samps[i * target.get_num_chans()] *= amp_recip;
-			for (; i < length; i++)
-				out_samps[i * target.get_num_chans()] *= fade_recip * (length - i);
-		}
-		
-		// Set the buffer as dirty
-		
+        // Now normalise the kernel and set the buffer as dirty
+        
+        normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, x->fades);
         target.set_dirty();
 	}
 }
@@ -292,26 +286,9 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
             peak_amp = std::max(peak_amp, fabs(current_samp));
 		}
 		
-		// Now normalise and fade the kernel
-		
-		if (peak_amp)
-		{
-            t_ptr_int fades = x->fades;
-            t_ptr_int i;
-
-            const double amp_recip = 1.0 / peak_amp;
-            const double fade_recip = amp_recip / fades;
-
-			for (i = 0; i < fades; i++)
-				out_samps[i * target.get_num_chans()] *= fade_recip * i;
-			for (; i < length - fades; i++)
-				out_samps[i * target.get_num_chans()] *= amp_recip;
-			for (; i < length; i++)
-				out_samps[i * target.get_num_chans()] *= fade_recip * (length - i);
-		}
-		
-		// Set the buffer as dirty
-		
+        // Now normalise the kernel and set the buffer as dirty
+        
+        normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, x->fades);
         target.set_dirty();
 	}
 }
