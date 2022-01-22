@@ -288,10 +288,10 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 	}
 }
 
+// FIX - check if this is correct!!!!!
+// Create a kernel windowed by a function stored in another buffer and ring modulated using a third buffer
 
-// Create a kernel windowed by a function stored in anohter buffer and ring modulated using a third buffer
-
-void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
 	if (argc < 4)
 		error ("kernelmaker~: not enough argments to message makekernel_ring");
@@ -299,69 +299,54 @@ void kernelmaker_ring_mod (t_kernelmaker *x, t_symbol *msg, long argc, t_atom *a
 	kernelmaker_ring_mod_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3));
 }
 
-
 void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset)
 {
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
     ibuffer_data window(window_name);
-    
-	float *out_samps;
-	
-	t_ptr_int fades = x->fades;
-	t_ptr_int length;
-	
-	double current_samp;
-	double peak_amp = 0.;
-	
+    		
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
 	{
-		out_samps = (float *)target.get_samples();
+        float *out_samps = reinterpret_cast<float *>(target.get_samples());
 		
-		if (offset < 0) 
-			offset = 0;
+        offset = (offset < 0) ? 0 : offset;
 		
-        length = window.get_length();
+        // Calculate and Clip Length
+
+        t_ptr_int length = window.get_length();
+        length = std::min(length, target.get_length());
+        length = std::min(length, source.get_length() - offset);
+		
+        double peak_amp = 0.0;
         
-        if (target.get_length() < length)
-            length = target.get_length();
-        if (source.get_length() < offset + length)
-            length = source.get_length() - offset;
-		
 		for (t_ptr_int i = 0; i < length; i++)
 		{
-            current_samp = ibuffer_get_samp(source, i + offset, 0);
-			
-			// Ring modulate the next sample
-			
-			current_samp *= ibuffer_get_samp(window, i, 0);
-			
-			// Store the result
-			
-			out_samps[i * target.get_num_chans()] = current_samp;
-			
+            // Ring modulate the two inputs sample and store the result
+
+            double current_samp = ibuffer_get_samp(source, i + offset, 0) * ibuffer_get_samp(window, i, 0);
+            out_samps[i * target.get_num_chans()] = current_samp;
+
 			// Store the peak abs sample value
 			
-			current_samp = fabs(current_samp);
-			if (current_samp > peak_amp) 
-				peak_amp = current_samp;
+            peak_amp = std::max(peak_amp, fabs(current_samp));
 		}
 		
-		// Now normalise the kernel
+		// Now normalise and fade the kernel
 		
 		if (peak_amp)
 		{
+            t_ptr_int fades = x->fades;
             t_ptr_int i;
-            
+
 			double amp_recip = 1.0f / peak_amp;
-			double faderecip = amp_recip / fades;
-			
+			double fade_recip = amp_recip / fades;
+
 			for (i = 0; i < fades; i++)
-				out_samps[i * target.get_num_chans()] *= faderecip * i;
+				out_samps[i * target.get_num_chans()] *= fade_recip * i;
 			for (; i < length - fades; i++)
 				out_samps[i * target.get_num_chans()] *= amp_recip;
 			for (; i < length; i++)
-				out_samps[i * target.get_num_chans()] *= faderecip * (length - i);
+				out_samps[i * target.get_num_chans()] *= fade_recip * (length - i);
 		}
 		
 		// Set the buffer as dirty
