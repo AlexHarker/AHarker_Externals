@@ -355,9 +355,9 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
 	}
 }
 
-
-// Create a of a trapezioid shape with amplitude 1. with points at each of the normalised samples (0-1) given
-// This mode is used to create simple bandpass filter kernels for driving partconvolve~ in eq mode
+// Create a of a trapezioid shape with amplitude 1
+// Points are set using the range 0-1 which is scaled over the length of the kernel
+// This mode is intended to be used to create simple bandpass filter kernels for driving partconvolve~ in eq mode
 
 void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -370,14 +370,7 @@ void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_ptr_int length)
 {
     ibuffer_data target(target_name);
-
-	double scaleval;
-	double lengthrecip;
-	
-	t_ptr_int i;
-	
-	float *out_samps;	
-	
+			
 	if (target.get_type() == kBufferMaxBuffer)
 	{
 		if (target.get_length() < length)
@@ -386,39 +379,29 @@ void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double e
 		if (length < 1)
             return;
 		
-        out_samps = (float *)target.get_samples();
+        float *out_samps = reinterpret_cast<float *>(target.get_samples());
 
-		if (env1 > 1.)
-			env1 = 1.f;
-		if (env2 > 1.)
-			env2 = 1.f;
-		if (env2 < env1)
-			env2 = env1;
-		if (env3 > 1.)
-			env3 = 1.f;
-		if (env3 < env2)
-			env3 = env2;
-		if (env4 > 1.)
-			env4 = 1.f;
-		if (env4 < env3)
-			env4 = env3;
+        // Clip envelope points and make sure they are correctly ordered
+        
+        env1 = std::min(env1, 1.0);
+        env2 = std::min(std::max(env2, env1), 1.0);
+        env3 = std::min(std::max(env3, env2), 1.0);
+        env4 = std::min(std::max(env4, env3), 1.0);
 		
-		lengthrecip = 1. / length;
-		
+        // Create trapezoid
+        
+        double length_recip = 1.0 / length;
+        t_ptr_int i;
+
 		for (i = 0; i < env1 * length; i++)
 			out_samps[i * target.get_num_chans()] = 0.f;
-		
-		scaleval = env2 - env1;
 		for (; i < env2 * length; i++)
-			out_samps[i * target.get_num_chans()] = ((i * lengthrecip) - env1) / scaleval;
-		
+			out_samps[i * target.get_num_chans()] = ((i * length_recip) - env1) / (env2 - env1);
 		for (; i < env3 * length; i++)
 			out_samps[i * target.get_num_chans()] = 1.f;
-		
-		scaleval = env4 - env3;
 		for (; i < env4 * length; i++)
-			out_samps[i * target.get_num_chans()] = 1.f - ((i * lengthrecip) - env3) / scaleval;
-		
+			out_samps[i * target.get_num_chans()] = 1.f - ((i * length_recip) - env3) / (env4 - env3);
+
 		for (; i < length; i++)
 			out_samps[i * target.get_num_chans()] = 0.f;
 		
