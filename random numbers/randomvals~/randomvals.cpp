@@ -211,7 +211,7 @@ void perform_core(const T* in, T *out, random_generator<>& gen, window_gauss_par
             r = static_cast<T>(randomvals_generate(gen, params, weights, num_params, gauss));
         }
         
-        *out++ = r;
+        *out++ = static_cast<T>(r);
     }
 }
 

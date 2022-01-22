@@ -39,16 +39,16 @@ void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s);
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades);
 
 void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int length);
+void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length);
 
 void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int slide);
+void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long slide);
 
 void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset);
+void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset);
 
 void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_ptr_int length);
+void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_atom_long length);
 
 int C74_EXPORT main()
 {
@@ -96,7 +96,7 @@ void kernelmaker_int(t_kernelmaker *x, t_atom_long fades)
 
 // Normalisation utility
 
-void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, double peak_amp, t_ptr_int fades)
+void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, double peak_amp, t_atom_long fades)
 {
     if (peak_amp)
     {
@@ -106,11 +106,11 @@ void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, d
         t_ptr_int i;
 
         for (i = 0; i < fades; i++)
-            out_samps[i * num_chans] *= fade_recip * i;
+            out_samps[i * num_chans] *= static_cast<float>(fade_recip * i);
         for (; i < length - fades; i++)
-            out_samps[i * num_chans] *= amp_recip;
+            out_samps[i * num_chans] *= static_cast<float>(amp_recip);
         for (; i < length; i++)
-            out_samps[i * num_chans] *= fade_recip * (length - i);
+            out_samps[i * num_chans] *= static_cast<float>(fade_recip * (length - i));
     }
 }
 
@@ -124,7 +124,7 @@ void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv
     kernelmaker_normal_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
-void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int length)
+void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length)
 {
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
@@ -165,7 +165,7 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -191,7 +191,7 @@ void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
     kernelmaker_env_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
-void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset, t_ptr_int slide)
+void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long slide)
 {
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
@@ -228,7 +228,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -252,7 +252,7 @@ void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *ar
     kernelmaker_ring_mod_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3));
 }
 
-void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_ptr_int offset)
+void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset)
 {
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
@@ -277,7 +277,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
             // Ring modulate the two inputs sample and store the result
 
             double current_samp = ibuffer_get_samp(source, i + offset, 0) * ibuffer_get_samp(window, i, 0);
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
 
             // Store the peak abs sample value
             
@@ -303,7 +303,7 @@ void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
     kernelmaker_trap_internal(x, atom_getsym(argv + 0), atom_getfloat(argv + 1), atom_getfloat(argv + 2), atom_getfloat(argv + 3), atom_getfloat(argv + 4), atom_getlong(argv + 5));
 }
 
-void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_ptr_int length)
+void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_atom_long length)
 {
     ibuffer_data target(target_name);
             
@@ -332,11 +332,11 @@ void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double e
         for (i = 0; i < env1 * length; i++)
             out_samps[i * target.get_num_chans()] = 0.f;
         for (; i < env2 * length; i++)
-            out_samps[i * target.get_num_chans()] = ((i * length_recip) - env1) / (env2 - env1);
+            out_samps[i * target.get_num_chans()] = static_cast<float>(((i * length_recip) - env1) / (env2 - env1));
         for (; i < env3 * length; i++)
             out_samps[i * target.get_num_chans()] = 1.f;
         for (; i < env4 * length; i++)
-            out_samps[i * target.get_num_chans()] = 1.f - ((i * length_recip) - env3) / (env4 - env3);
+            out_samps[i * target.get_num_chans()] = static_cast<float>(1.f - ((i * length_recip) - env3) / (env4 - env3));
 
         for (; i < length; i++)
             out_samps[i * target.get_num_chans()] = 0.f;

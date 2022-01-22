@@ -48,8 +48,7 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Max5_Support\c74support\max-includes\common\dllmain_win.c" />
-    <ClCompile Include="ahnoise~.c" />
+    <ClCompile Include="ahnoise~.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
