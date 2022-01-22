@@ -2,14 +2,14 @@
 /*
  *  kernelmaker~
  *
- *	kernelmaker~ copies samples from a buffer, in some kind of combination with samples from (an)other buffer(s) acting as modifiers (window functions etc.).
- *	kernelmaker~ can also be used to create simple bandpass filter kernels for partconvolve~'s eq mode - more shapes may be added later.
+ *  kernelmaker~ copies samples from a buffer modifying them by samples from another buffer (window functions etc.).
+ *  kernelmaker~ can also be used to create simple bandpass filter kernels for partconvolve~'s eq mode.
  *
- *	This is intended to allow the creation of small convolution kernels or impulse responses which can then be used with timeconvolve~ and/or partconvolve~.
- *	Because those externals copy the input of the buffer, you can dispose of the buffer, or change it once setting the convolution externals impulse response.
- *	In practice this means you can repeatedly use the same kernelmaker~ object, and buffer for creating impulses.
+ *  It is intended to create short impulse responses to be used with timeconvolve~ and/or partconvolve~.
+ *  Those externals copy the buffer so you can dispose of the buffer / reuse it once setting the impulse response.
+ *  This means you can repeatedly use the same kernelmaker~ object and buffer for creating impulses.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
