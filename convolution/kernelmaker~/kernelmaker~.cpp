@@ -255,8 +255,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 	}
 }
 
-// FIX - check if this is correct!!!!!
-// Create a kernel windowed by a function stored in another buffer and ring modulated using a third buffer
+// Create a kernel from a buffer ring modulated using a second buffer
 
 void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
