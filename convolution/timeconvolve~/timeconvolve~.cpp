@@ -54,7 +54,6 @@ struct t_timeconvolve
     
     float *impulse_buffer;
     float *input_buffer;
-    float *output_buffer;
     
     long input_position;
     long impulse_length;
@@ -229,21 +228,15 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 #ifndef __APPLE__
 void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
 {
-    VecType output_accum;
-    float *input;
-    float results[4];
-        
     L = pad_length(L);
                    
     for (long i = 0; i < N; i++)
     {
-        output_accum = VecType(0.f);
-        input = in - L + 1 + i;
+        VecType output_accum = VecType(0.f);
+        float *input = in - L + 1 + i;
         
         for (long j = 0; j < L >> 2; j += 4)
-        {
-            // Load vals
-            
+        {            
             output_accum += impulse[j + 0] * VecType(input);
             input += 4;
             output_accum += impulse[j + 1] * VecType(input);
@@ -254,8 +247,8 @@ void time_domain_convolve(float *in, VecType *impulse, float *output, long N, lo
             input += 4;
         }
         
+        float results[4];
         output_accum.store(results);
-        
         *output++ = results[0] + results[1] + results[2] + results[3];
     }
 }
