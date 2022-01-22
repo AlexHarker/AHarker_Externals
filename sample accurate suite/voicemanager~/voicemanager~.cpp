@@ -16,7 +16,7 @@
  *
  *  See documentation for more info on limitations / implementation.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

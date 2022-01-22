@@ -6,7 +6,7 @@
  *
  *  ibuftable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.)
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

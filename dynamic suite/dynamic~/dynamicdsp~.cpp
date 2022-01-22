@@ -10,7 +10,7 @@
  *
  *  See the helpfile documentation for further details of functionality.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

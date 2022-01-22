@@ -49,6 +49,8 @@ double gesture_curve::operator()(double val) const
         case curve_type::power_asin_reverse:    return 1.0 - scurve_asin(pow((1.0 - val), m_power));
         case curve_type::recip_asin_reverse:    return 1.0 - scurve_asin(pow((1.0 - val), 1.0 / m_power));
         case curve_type::recip_asin_forward:    return scurve_asin(pow(val, 1.0 / m_power));
+        
+        default:                                return val;
     }
 }
 

@@ -5,7 +5,7 @@
  *  tsah~ is like sah~ but the output value is updated whenever the trigger input is non-zero.
  *  This means that the output can be updated once per sample if desired.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

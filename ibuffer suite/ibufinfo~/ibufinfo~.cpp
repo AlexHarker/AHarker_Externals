@@ -4,7 +4,7 @@
  *
  *  Returns length, sample rate and number of channels for ibuffer~ or buffer~ objects.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

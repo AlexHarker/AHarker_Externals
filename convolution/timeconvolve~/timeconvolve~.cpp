@@ -2,12 +2,12 @@
 /*
  *  timeconvolve~
  *
- *  timeconvolve~ copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution.
+ *  timeconvolve~ copies an impulse response from a buffer to use in real-time zero latency time-based convolution.
  *
- *  Typically timeconvolve~ is suitable for use in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
+ *  Typically timeconvolve~ is used in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
  *  timeconvolve~ alone is limited to a maximum IR size of 2044 samples.
  *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
- *  Note that in fact the algorithms perform correlation with reversed impulse response coeffients - which is equivalent to convolution.
+ *  Note that the algorithms perform correlation with reversed impulse response coeffients (equivalent to convolution).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -53,7 +53,6 @@ struct t_timeconvolve
     
     float *impulse_buffer;
     float *input_buffer;
-    float *output_buffer;
     
     long input_position;
     long impulse_length;
@@ -224,21 +223,15 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 #ifndef __APPLE__
 void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
 {
-    VecType output_accum;
-    float *input;
-    float results[4];
-        
     L = pad_length(L);
                    
     for (long i = 0; i < N; i++)
     {
-        output_accum = VecType(0.f);
-        input = in - L + 1 + i;
+        VecType output_accum = VecType(0.f);
+        float *input = in - L + 1 + i;
         
         for (long j = 0; j < L >> 2; j += 4)
-        {
-            // Load vals
-            
+        {            
             output_accum += impulse[j + 0] * VecType(input);
             input += 4;
             output_accum += impulse[j + 1] * VecType(input);
@@ -249,8 +242,8 @@ void time_domain_convolve(float *in, VecType *impulse, float *output, long N, lo
             input += 4;
         }
         
+        float results[4];
         output_accum.store(results);
-        
         *output++ = results[0] + results[1] + results[2] + results[3];
     }
 }

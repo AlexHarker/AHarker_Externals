@@ -4,7 +4,7 @@
  *
  *  macaddress is an object for obtaining the MAC address of a computer's wireless hardware, for use as a unique identifier.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

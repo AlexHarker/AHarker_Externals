@@ -6,7 +6,7 @@
  *
  *  Unlike out~ you can change the signal outlet which the object refers to by sending an int to the object.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

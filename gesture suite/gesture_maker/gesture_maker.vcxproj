@@ -48,12 +48,19 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\erf.c" />
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\nextafterf.c" />
-    <ClCompile Include="gesture_maker.c" />
-    <ClCompile Include="gesture_maker_convert.c" />
-    <ClCompile Include="gesture_maker_kernel.c" />
-    <ClCompile Include="gesture_maker_multipart.c" />
+    <ClCompile Include="gesture_curve.cpp" />
+    <ClCompile Include="gesture_maker.cpp" />
+    <ClCompile Include="gesture_convert.cpp" />
+    <ClCompile Include="gesture_kernel.cpp" />
+    <ClCompile Include="gesture_multipart.cpp" />
+    <ClCompile Include="gesture_random.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gesture_convert.hpp" />
+    <ClInclude Include="gesture_curve.hpp" />
+    <ClInclude Include="gesture_kernel.hpp" />
+    <ClInclude Include="gesture_multipart.hpp" />
+    <ClInclude Include="gesture_random.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

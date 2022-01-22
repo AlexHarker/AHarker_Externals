@@ -5,7 +5,7 @@
  *  A header file for the kernel section of the gesture_maker object.
  *  This code deals with storing gestures, resolving variable parameters and calculating output values for either the main or inflection gestures.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 

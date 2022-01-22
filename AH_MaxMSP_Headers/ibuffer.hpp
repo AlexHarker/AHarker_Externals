@@ -6,7 +6,7 @@
  *  However, in most cases, the best method to retrieve data from an ibuffer is to use ibuffer_access.cpp.
  *  ibuffer_access.cpp can also be used to access standard Max buffers.
  *
- *  Copyright 2010-20 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
