@@ -117,7 +117,7 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 	float *out_samps;
 	
 	double lower, upper, pos, fract;
-	double current_samp, length_recip, amp_recip;
+	double current_samp, length_recip;
 	double peak_amp = 0.;
 	
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
@@ -165,7 +165,8 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 		
 		if (peak_amp)
 		{
-			amp_recip = 1.0f / peak_amp;
+			const double amp_recip = 1.0 / peak_amp;
+            
 			for (t_ptr_int i = 0; i < length; i ++)
 				out_samps[i * target.get_num_chans()] *= amp_recip;
 		}
@@ -285,7 +286,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
 		
         offset = (offset < 0) ? 0 : offset;
 		
-        // Calculate and Clip Length
+        // Calculate and clip length
 
         t_ptr_int length = window.get_length();
         length = std::min(length, target.get_length());
@@ -312,8 +313,8 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
             t_ptr_int fades = x->fades;
             t_ptr_int i;
 
-			double amp_recip = 1.0f / peak_amp;
-			double fade_recip = amp_recip / fades;
+            const double amp_recip = 1.0 / peak_amp;
+            const double fade_recip = amp_recip / fades;
 
 			for (i = 0; i < fades; i++)
 				out_samps[i * target.get_num_chans()] *= fade_recip * i;
