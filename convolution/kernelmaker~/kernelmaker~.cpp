@@ -18,6 +18,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
+
 #include <ibuffer_access.hpp>
 
 
