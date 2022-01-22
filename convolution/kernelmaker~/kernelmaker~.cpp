@@ -111,43 +111,38 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
     ibuffer_data window(window_name);
-    
-    t_ptr_int ipos;
-	
-	float *out_samps;
-	
-	double lower, upper, pos, fract;
-	double current_samp, length_recip;
-	double peak_amp = 0.;
-	
+            
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
 	{
-        out_samps = (float *)target.get_samples();
+        float *out_samps = reinterpret_cast<float *>(target.get_samples());
 
-		if (offset < 0) 
-			offset = 0;
+        offset = (offset < 0) ? 0 : offset;
+        
+        // Calculate and clip length
+
+        length = std::min(length, target.get_length());
+        length = std::min(length, source.get_length() - offset);
+        
+        // Zero length if the window is shorter than 513 samples
+        
+        length = (window.get_length() < 513) ? 0 : length;
 		
-		if (target.get_length() < length)
-			length = target.get_length();
-		if (source.get_length() < offset + length)
-			length = source.get_length() - offset;
-		if (window.get_length() < 513)
-			length = 0;
+		const double length_recip = 512.0 / length;
 		
-		length_recip = 512.0 / length;
-		
+        double peak_amp = 0.0;
+
 		for (t_ptr_int i = 0; i < length; i++)
 		{
-			current_samp = ibuffer_get_samp(source, i + offset, 0);
+			double current_samp = ibuffer_get_samp(source, i + offset, 0);
 			
 			// Window the next sample
 			
-			pos = i * length_recip;
-			ipos = (t_ptr_int) pos;
-			fract = pos - ipos;
+            const double pos = i * length_recip;
+			const t_ptr_int ipos = (t_ptr_int) pos;
+            const double fract = pos - ipos;
 			
-			lower = ibuffer_get_samp(window, ipos, 0);
-			upper = ibuffer_get_samp(window, ipos + 1, 0);
+            const double lower = ibuffer_get_samp(window, ipos, 0);
+            const double upper = ibuffer_get_samp(window, ipos + 1, 0);
 			current_samp *= lower - (fract * (lower - upper));
 			
 			// Store the result
