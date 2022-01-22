@@ -191,47 +191,37 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
     ibuffer_data target(target_name);
     ibuffer_data source(source_name);
     ibuffer_data window(window_name);
-	
-	float *out_samps;
-	
-	double slide_register = 0.0;
-	double slide_up_recip;
-	double slide_down_recip;
-	
-	double current_samp, wind_val;
-	double peak_amp = 0.;
-	
-    t_ptr_int length;
-	t_ptr_int fades = x->fades;
-	
-	if (slide < 1)
-		slide = 1;
-
-	slide_up_recip = 1.0 / (double) slide;		// slideup;
-	slide_down_recip = 1.0 / (double) slide;		// slidedown;
-
+		
 	if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
-    	out_samps = (float *)target.get_samples();
+        float *out_samps = reinterpret_cast<float *>(target.get_samples());
+        
+        offset = (offset < 0) ? 0 : offset;
+        
+        // Calculate and clip length
+
+        t_ptr_int length = window.get_length();
+        length = std::min(length, target.get_length());
+        length = std::min(length, source.get_length() - offset);
 		
-		if (offset < 0) 
-			offset = 0;
-		
-		length = window.get_length();
-		
-		if (target.get_length() < length)
-			length = target.get_length();
-		if (source.get_length() < offset + length)
-			length = source.get_length() - offset;
-		
+        double peak_amp = 0.;
+        double slide_register = 0.0;
+       
+        if (slide < 1)
+            slide = 1;
+
+        const double slide_up_recip = 1.0 / (double) slide;        // slideup;
+        const double slide_down_recip = 1.0 / (double) slide;        // slidedown;
+        
 		for (t_ptr_int i = 0; i < length; i++)
 		{
-            current_samp = ibuffer_get_samp(source, i + offset, 0);
+            // Get samples from the buffers
+            
+            double current_samp = ibuffer_get_samp(source, i + offset, 0);
+            double wind_val = fabs(ibuffer_get_samp(window, i, 0));
+			
+            // Window the sample (using slide filter on the window buffer)
 
-			// Window the next sample (using slide filter on the window buffer)
-			
-			wind_val = fabs(ibuffer_get_samp(window, i, 0));
-			
 			if (wind_val >= slide_register) 
 				slide_register += slide_up_recip * (wind_val - slide_register);
 			else 
@@ -243,27 +233,27 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 			
 			out_samps[i * target.get_num_chans()] = current_samp;
 			
-			// Store the peak abs sample value
-			
-			current_samp = fabs(current_samp);
-			if (current_samp > peak_amp) 
-				peak_amp = current_samp;
+            // Store the peak abs sample value
+            
+            peak_amp = std::max(peak_amp, fabs(current_samp));
 		}
 		
 		// Now normalise the kernel
 		
 		if (peak_amp)
 		{
+            t_ptr_int fades = x->fades;
             t_ptr_int i;
-            double amp_recip = 1.0f / peak_amp;
-			double faderecip = amp_recip / fades;
+            
+            const double amp_recip = 1.0 / peak_amp;
+            const double fade_recip = amp_recip / fades;
 			
 			for (i = 0; i < fades; i++)
-				out_samps[i * target.get_num_chans()] *= faderecip * i;
+				out_samps[i * target.get_num_chans()] *= fade_recip * i;
 			for (; i < length - fades; i++)
 				out_samps[i * target.get_num_chans()] *= amp_recip;
 			for (; i < length; i++)
-				out_samps[i * target.get_num_chans()] *= faderecip * (length - i);
+				out_samps[i * target.get_num_chans()] *= fade_recip * (length - i);
 		}
 		
 		// Set the buffer as dirty
