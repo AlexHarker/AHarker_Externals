@@ -22,6 +22,7 @@
 #include <AH_Denormals.h>
 #include <dynamic~.hpp>
 
+
 // Globals and Object Structure
 
 t_class *this_class;

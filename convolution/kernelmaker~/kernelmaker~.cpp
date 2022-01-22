@@ -22,6 +22,9 @@
 
 #include <ibuffer_access.hpp>
 
+
+// Globals and Object Structure
+
 t_class *this_class;
 
 struct t_kernelmaker
@@ -33,13 +36,15 @@ struct t_kernelmaker
 
 t_symbol *ps_dirty;
 
+// Function Protoypes
+
 void *kernelmaker_new(t_atom_long fades);
 void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s);
 
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades);
 
-void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length);
+void kernelmaker_window(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length);
 
 void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
 void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long slide);
@@ -49,6 +54,8 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
 
 void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
 void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_atom_long length);
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -61,7 +68,7 @@ int C74_EXPORT main()
                             0);
     
     class_addmethod(this_class, (method) kernelmaker_int, "int", A_LONG, 0L);
-    class_addmethod(this_class, (method) kernelmaker_normal, "makekernel_wind", A_GIMME, 0L);
+    class_addmethod(this_class, (method) kernelmaker_window, "makekernel_wind", A_GIMME, 0L);
     class_addmethod(this_class, (method) kernelmaker_env, "makekernel_env", A_GIMME, 0L);
     class_addmethod(this_class, (method) kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0L);
     class_addmethod(this_class, (method) kernelmaker_trap, "makekernel_trap", A_GIMME, 0L);
@@ -73,6 +80,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Assist
 
 void *kernelmaker_new(t_atom_long fades)
 {
@@ -88,13 +97,15 @@ void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s)
     sprintf(s,"Instructions To Build Kernel");
 }
 
+// Int (set fades)
+
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades)
 {
     if (fades >= 0)
         x->fades = fades;
 }
 
-// Normalisation utility
+// Normalisation Utility
 
 void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, double peak_amp, t_atom_long fades)
 {
@@ -114,14 +125,16 @@ void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, d
     }
 }
 
+// Window Method (makekernel_wind)
+
 // A kernel windowed by a function stored in a second buffer
 
-void kernelmaker_normal(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_window(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (argc < 5)
-        error ("kernelmaker~: not enough argments to message makekernel_env");
+        error ("kernelmaker~: not enough argments to message makekernel_wind");
 
-    kernelmaker_normal_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
+    kernelmaker_window_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
 void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length)
@@ -181,7 +194,9 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
     }
 }
 
-// Create a kernel windowed by a function stored in another buffer and using an envelope derived from lowpass filtering the absolute vals of a third buffer
+// Envelope Method (makekernel_env)
+
+// Create a kernel windowed by an envelope derived from lowpass filtering the absolute vals of another buffer
 
 void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -242,6 +257,8 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
     }
 }
 
+// Ring Modulated Method (makekernel_ring)
+
 // Create a kernel from a buffer ring modulated using a second buffer
 
 void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
@@ -290,6 +307,8 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
         target.set_dirty();
     }
 }
+
+// Trapezoid Method (makekernel_trap)
 
 // Create a of a trapezioid shape with amplitude 1
 // Points are set using the range 0-1 which is scaled over the length of the kernel
