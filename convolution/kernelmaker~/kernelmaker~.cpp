@@ -106,11 +106,11 @@ void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, d
         t_ptr_int i;
 
         for (i = 0; i < fades; i++)
-            out_samps[i * num_chans] *= fade_recip * i;
+            out_samps[i * num_chans] *= static_cast<float>(fade_recip * i);
         for (; i < length - fades; i++)
-            out_samps[i * num_chans] *= amp_recip;
+            out_samps[i * num_chans] *= static_cast<float>(amp_recip);
         for (; i < length; i++)
-            out_samps[i * num_chans] *= fade_recip * (length - i);
+            out_samps[i * num_chans] *= static_cast<float>(fade_recip * (length - i));
     }
 }
 
@@ -165,7 +165,7 @@ void kernelmaker_normal_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -228,7 +228,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -277,7 +277,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
             // Ring modulate the two inputs sample and store the result
 
             double current_samp = ibuffer_get_samp(source, i + offset, 0) * ibuffer_get_samp(window, i, 0);
-            out_samps[i * target.get_num_chans()] = current_samp;
+            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
 
             // Store the peak abs sample value
             
@@ -332,11 +332,11 @@ void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double e
         for (i = 0; i < env1 * length; i++)
             out_samps[i * target.get_num_chans()] = 0.f;
         for (; i < env2 * length; i++)
-            out_samps[i * target.get_num_chans()] = ((i * length_recip) - env1) / (env2 - env1);
+            out_samps[i * target.get_num_chans()] = static_cast<float>(((i * length_recip) - env1) / (env2 - env1));
         for (; i < env3 * length; i++)
             out_samps[i * target.get_num_chans()] = 1.f;
         for (; i < env4 * length; i++)
-            out_samps[i * target.get_num_chans()] = 1.f - ((i * length_recip) - env3) / (env4 - env3);
+            out_samps[i * target.get_num_chans()] = static_cast<float>(1.f - ((i * length_recip) - env3) / (env4 - env3));
 
         for (; i < length; i++)
             out_samps[i * target.get_num_chans()] = 0.f;
