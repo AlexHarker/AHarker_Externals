@@ -208,11 +208,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
         double peak_amp = 0.;
         double slide_register = 0.0;
        
-        if (slide < 1)
-            slide = 1;
-
-        const double slide_up_recip = 1.0 / (double) slide;        // slideup;
-        const double slide_down_recip = 1.0 / (double) slide;        // slidedown;
+        const double slide_recip = 1.0 / static_cast<double>((slide < 1) ? 1 : slide);        // slideup;
         
 		for (t_ptr_int i = 0; i < length; i++)
 		{
@@ -223,11 +219,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 			
             // Window the sample (using slide filter on the window buffer)
 
-			if (wind_val >= slide_register) 
-				slide_register += slide_up_recip * (wind_val - slide_register);
-			else 
-				slide_register += slide_down_recip * (wind_val - slide_register);
-			
+            slide_register += slide_recip * (wind_val - slide_register);
 			current_samp *= slide_register;
 			
 			// Store the result
