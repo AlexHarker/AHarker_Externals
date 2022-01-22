@@ -39,6 +39,8 @@ double gesture_convert::operator()(double val)
         case conversion_mode::none:         return val;
         case conversion_mode::linear:       return clip((val * m_mult) - m_subtract);
         case conversion_mode::log_in:       return clip(exp(val * m_mult - m_subtract));
+        
+        default:                            return val;
     }
 }
 
