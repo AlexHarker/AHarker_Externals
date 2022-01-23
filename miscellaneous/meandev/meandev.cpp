@@ -41,7 +41,7 @@ struct t_data_base
     
     bool add()
     {
-        bool full = m_count != m_size;
+        bool full = m_count == m_size;
 
         m_position = next_idx();
         m_count = full ? m_count : m_count + 1;
@@ -454,7 +454,7 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv)
         
         x->data.set_size(max_age, true, x->weights_mode);
         
-        for (t_atom_long i = 0; i < x->num_dur - 1; i++)
+        for (t_atom_long i = 0; i < x->num_dur; i++)
         {
             x->durations[i].core_data.set_size(max_age);
             x->durations[i].mean_data.set_size(x->durations[i].age_span() / 5, true);
@@ -600,7 +600,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         
         // Always output the shortest duration and if data has overflowed then output all durations
  
-        for (t_atom_long i = first - 1; i >= (overflow ? 0 : first - 1) ; i--)
+        for (t_atom_long i = first; i >= (overflow ? 0 : first) ; i--)
             meandev_output(x, i);
     }
     else
@@ -616,7 +616,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         // Always output the shortest duration and if ready output others
         // FIX - check what happens with the shortest!!
         
-        for (t_atom_long i = first - 1; i >= 0; i--)
+        for (t_atom_long i = first; i >= 0; i--)
         {
             if (x->data.count() >= x->durations[i].min_age)
                 meandev_output(x, i);
