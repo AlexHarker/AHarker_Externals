@@ -123,7 +123,7 @@ struct t_weighted_data : t_data
         bool overflow = t_data::add(data, age);
 
         if (m_weights.size())
-            m_ages[m_position] = weight;
+            m_weights[m_position] = weight;
         
         return overflow;
     }
@@ -239,7 +239,7 @@ struct t_meandev
     t_duration_data *durations;
     
     t_atom_long num_dur;
-    char mean_mode;
+    t_atom_long mean_mode;
 
     double last_weight_in;
 
@@ -267,7 +267,7 @@ void meandev_int(t_meandev *x, t_atom_long data);
 void meandev_float(t_meandev *x, double data);
 void meandev_add_data(t_meandev *x, double data, double weight);
 
-void meandev_timed_add_remove_data(t_meandev *x, long dur_num);
+void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num);
 void meandev_timed_remove_mean(t_meandev *x, t_duration_data *duration);
 
 void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time);
@@ -275,7 +275,7 @@ void set_mean_clock(t_meandev *x, t_duration_data *duration, long time);
 
 void meandev_output_unweighted(t_meandev *x, t_duration_data *duration);
 void meandev_output_weighted(t_meandev *x, t_duration_data *duration);
-void meandev_output(t_meandev *x, long dur);
+void meandev_output(t_meandev *x, t_atom_long dur);
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration);
 
 std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
@@ -533,7 +533,7 @@ void meandev_bang(t_meandev *x)
         x->last_weight_in = 0.0;
         x->data.reset();
  
-        for (long i = x->num_dur - 1; i >=  0; i--)
+        for (t_atom_long i = x->num_dur - 1; i >=  0; i--)
         {
             x->durations[i].reset();
             outlet_float(x->durations[i].f_out2, 0.0);
@@ -561,8 +561,8 @@ void meandev_add_data(t_meandev *x, double data, double weight)
 {
     // Cache some useful values
     
-    long num_dur = x->num_dur;
-    long first = num_dur - 1;
+    t_atom_long num_dur = x->num_dur;
+    t_atom_long first = num_dur - 1;
     long prev_oldest_idx = x->data.oldest_idx();
     long time = gettime();
 
@@ -595,19 +595,19 @@ void meandev_add_data(t_meandev *x, double data, double weight)
     {
         // In the timed modes find time the next piece of data should be added/removed in each duration range
 
-        for (long i = 0; i < num_dur; i++)
+        for (t_atom_long i = 0; i < num_dur; i++)
             meandev_set_clock_data(x, x->durations + i, time);
         
         // Always output the shortest duration and if data has overflowed then output all durations
  
-        for (long i = first - 1; i >= (overflow ? 0 : first - 1) ; i--)
+        for (t_atom_long i = first - 1; i >= (overflow ? 0 : first - 1) ; i--)
             meandev_output(x, i);
     }
     else
     {
         // In the non-timed mode read in new data if each duration range is ready
 
-        for (long i = 0; i < first; i++)
+        for (t_atom_long i = 0; i < first; i++)
         {
             if (x->data.count() >= x->durations[i].min_age)
                 x->durations[i].core_data.add();
@@ -616,7 +616,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         // Always output the shortest duration and if ready output others
         // FIX - check what happens with the shortest!!
         
-        for (long i = first - 1; i >= 0; i--)
+        for (t_atom_long i = first - 1; i >= 0; i--)
         {
             if (x->data.count() >= x->durations[i].min_age)
                 meandev_output(x, i);
@@ -626,7 +626,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
 
 // Timed Routines
 
-void meandev_timed_add_remove_data(t_meandev *x, long dur_num)
+void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num)
 {
     t_duration_data *duration = x->durations + dur_num;
     long time = gettime();
@@ -778,7 +778,7 @@ void meandev_output_weighted(t_meandev *x, t_duration_data *duration)
     outlet_float(duration->f_out1, mean);
 }
 
-void meandev_output(t_meandev *x, long dur)
+void meandev_output(t_meandev *x, t_atom_long dur)
 {
     if (x->weights_mode)
         meandev_output_weighted(x, x->durations + dur);
