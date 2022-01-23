@@ -631,39 +631,27 @@ void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num)
 {
     t_duration_data *duration = x->durations + dur_num;
     long time = gettime();
-    bool change = false;
     
-    if (duration->add_remove)
-    {
-        // Remove data (first check that something is due to happen (not sure this should be needed))
+    // Remove data (first check that something is due to happen (not sure this should be needed))
 
-        if (time - x->data.ages()[duration->core_data.oldest_idx()] > duration->max_age)
-        {
-            change = true;
+    if (duration->add_remove && (time - x->data.ages()[duration->core_data.oldest_idx()] > duration->max_age))
+    {
+        // Remove and then check for discarding the data entirely
             
-            // Remove and then check for discarding the data entirely
-            
-            duration->core_data.remove();
-            if (!dur_num)
+        duration->core_data.remove();
+        if (!dur_num)
                 x->data.remove();
-        }
-    }
-    else
-    {
-        // Add routine (first check that something is due to happen)
-        
-        if ((time - x->data.ages()[duration->core_data.next_idx()]) > (duration->min_age))
-        {
-            change = true;
-            duration->core_data.add();
-        }
-    }
-    
-    // If there has been a change then output
-
-    if (change)
         meandev_output(x, dur_num);
-    
+    }
+
+    // Add routine (first check that something is due to happen)
+
+    if (!duration->add_remove && (time - x->data.ages()[duration->core_data.next_idx()]) > (duration->min_age))
+    {
+        duration->core_data.add();
+        meandev_output(x, dur_num);
+    }
+
     meandev_set_clock_data(x, duration, time);
 }
 
