@@ -18,18 +18,42 @@
 #include <vector>
 
 
+// Global Class Pointer
+
 t_class *this_class;
 
-// Core Types
+// Calculation and Caching Types
 
-struct t_data_base
+// Stats
+
+struct t_stats
+{
+    double mean;
+    double deviation;
+};
+
+// Data Counter (to manage data in a ring buffer)
+
+struct t_counter
 {
     void set_size(long size)        { m_size = size; }
+    
     long count() const              { return m_count; }
     long postion_idx() const        { return m_position; }
     long oldest_idx() const         { return (m_count - 1 <= m_position ? m_position - m_count : m_size + m_position - m_count) + 1; }
     long next_idx() const           { return (m_position >= m_size - 1) ? 0 : m_position + 1; }
     bool is_newest(long idx) const  { return idx == m_position; }
+        
+    bool add()
+    {
+        bool overflow = m_count == m_size;
+
+        m_position = next_idx();
+        m_count = overflow ? m_count : m_count + 1;
+    
+        return overflow;
+    }
+    
     void remove()                   { m_count = m_count ? m_count - 1 : 0; }
 
     void reset()
@@ -38,18 +62,8 @@ struct t_data_base
         m_position = -1;
     }
     
-    bool add()
-    {
-        bool full = m_count == m_size;
-
-        m_position = next_idx();
-        m_count = full ? m_count : m_count + 1;
-    
-        return full;
-    }
-    
     template <typename T>
-    double sum_data(const T& data) const
+    double calculate(const T& data) const
     {
         if (!count())
             return 0.0;
@@ -65,7 +79,7 @@ struct t_data_base
         for (long i = oldest > m_position ? oldest : m_size; i < m_size; i++)
             sum += data(i);
         
-        return sum / data.total(*this);
+        return sum / data.denominator(*this);
     }
     
 protected:
@@ -75,21 +89,27 @@ protected:
     long m_position = -1;
 };
 
-struct t_data : t_data_base
+// Stored Data With Times
+
+struct t_timed_data : t_counter
 {
     void set_size(long size, bool allocate_times)
     {
-        t_data_base::set_size(size);
+        t_counter::set_size(size);
         m_data.resize(size);
         if (allocate_times)
             m_times.resize(size);
     }
     
+    long oldest_time() const        { return m_times[oldest_idx()]; }
+    const double *data() const      { return m_data.data(); }
+    const long   *times() const     { return m_times.data(); }
+    
     bool add(double data, long time)
     {
         // (N.B. only those needed for the mode are stored)
 
-        bool overflow = t_data_base::add();
+        bool overflow = t_counter::add();
         
         m_data[m_position] = data;
         if (m_times.size())
@@ -98,22 +118,19 @@ struct t_data : t_data_base
         return overflow;
     }
  
-    const double *data() const      { return m_data.data(); }
-    const long   *times() const     { return m_times.data(); }
-    
-    long oldest_time() const        { return m_times[oldest_idx()]; }
-    
 protected:
     
     std::vector<double> m_data;
     std::vector<long> m_times;
 };
 
-struct t_weighted_data : t_data
+// Stored Data With Times and Weights
+
+struct t_weighted_data : t_timed_data
 {
     void set_size(long size, bool allocate_times, bool allocate_weights)
     {
-        t_data::set_size(size, allocate_times);
+        t_timed_data::set_size(size, allocate_times);
         if (allocate_weights)
             m_weights.resize(size);
     }
@@ -122,7 +139,7 @@ struct t_weighted_data : t_data
     {
         // (N.B. only those needed for the mode are stored)
         
-        bool overflow = t_data::add(data, time);
+        bool overflow = t_timed_data::add(data, time);
 
         if (m_weights.size())
             m_weights[m_position] = weight;
@@ -136,6 +153,61 @@ protected:
 
     std::vector<double> m_weights;
 };
+
+// Calculation Functors (mean / variance etc.)
+
+struct sum_functor
+{
+    sum_functor(const double *data) : m_data(data) {}
+    
+    double operator()(long i) const                     { return m_data[i]; }
+    double denominator(const t_counter& counter) const  { return 1.0; }
+    
+    static double square_difference(double data, double mean)
+    {
+        double difference = data - mean;
+        return difference * difference;
+    }
+
+    const double *m_data;
+};
+
+struct mean_functor : sum_functor
+{
+    mean_functor(const t_timed_data& data) : sum_functor(data.data()) {}
+        
+    double denominator(const t_counter& counter) const  { return counter.count(); }
+};
+
+struct weighted_mean_functor : mean_functor
+{
+    weighted_mean_functor(const t_weighted_data& data) : mean_functor(data), m_weights(data.weights()) {}
+    
+    double operator()(long i) const                     { return m_data[i] * m_weights[i]; }
+    double denominator(const t_counter counter) const   { return counter.calculate(sum_functor(m_weights)); }
+    
+    const double *m_weights;
+};
+    
+struct variance_functor : mean_functor
+{
+    variance_functor(const t_timed_data& data, double mean) : mean_functor(data), m_mean(mean) {}
+
+    double operator()(long i) const { return square_difference(m_data[i], m_mean); }
+    
+    double m_mean;
+};
+    
+struct weighted_variance_functor : weighted_mean_functor
+{
+    weighted_variance_functor(const t_weighted_data& data, double mean) : weighted_mean_functor(data), m_mean(mean) {}
+
+    double operator()(long i) const { return square_difference(m_data[i], m_mean) * m_weights[i]; }
+    
+    double m_mean;
+};
+
+// Duration Data
 
 struct t_duration_data
 {
@@ -166,8 +238,8 @@ struct t_duration_data
             clock_unset(f_mean_clock);
     }
     
-    t_data_base core_data;
-    t_data mean_data;
+    t_counter core_data;
+    t_timed_data mean_data;
     
     long min_age = 0;
     long max_age = 0;
@@ -180,62 +252,7 @@ struct t_duration_data
     t_clock *f_mean_clock = nullptr;
 };
 
-double square_difference(double data, double mean)
-{
-    double difference = data - mean;
-    return difference * difference;
-}
-
-struct sum_functor
-{
-    sum_functor(const double *data) : m_data(data) {}
-    
-    double operator()(long i) const                 { return m_data[i]; }
-    double total(const t_data_base& base) const     { return 1.0; }
-    
-    const double *m_data;
-};
-
-struct data_functor : sum_functor
-{
-    data_functor(const t_data& data) : sum_functor(data.data()) {}
-        
-    double total(const t_data_base& base) const { return base.count(); }
-};
-
-struct weighted_data_functor : data_functor
-{
-    weighted_data_functor(const t_weighted_data& data) : data_functor(data), m_weights(data.weights()) {}
-    
-    double operator()(long i) const                 { return m_data[i] * m_weights[i]; }
-    double total(const t_data_base base) const      { return base.sum_data(sum_functor(m_weights)); }
-    
-    const double *m_weights;
-};
-    
-struct variance_functor : data_functor
-{
-    variance_functor(const t_data& data, double mean) : data_functor(data), m_mean(mean) {}
-
-    double operator()(long i) const { return square_difference(m_data[i], m_mean); }
-    
-    double m_mean;
-};
-    
-struct variance_weighted_functor : weighted_data_functor
-{
-    variance_weighted_functor(const t_weighted_data& data, double mean) : weighted_data_functor(data), m_mean(mean) {}
-
-    double operator()(long i) const { return square_difference(m_data[i], m_mean) * m_weights[i]; }
-    
-    double m_mean;
-};
-
-struct t_stats
-{
-    double mean;
-    double deviation;
-};
+// Main Object Structure
 
 struct t_meandev
 {
@@ -267,6 +284,8 @@ struct t_meandev
     void *f_proxy;
     long f_inletNumber;
 };
+
+// Function Prototypes
 
 void *meandev_new(t_symbol *s, short argc, t_atom *argv);
 void meandev_free(t_meandev *x);
@@ -709,7 +728,7 @@ void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time)
 template <typename mean_calc, typename var_calc>
 void meandev_output_type(t_meandev *x, t_duration_data *duration)
 {
-    double mean = duration->core_data.sum_data(mean_calc(x->data));
+    double mean = duration->core_data.calculate(mean_calc(x->data));
     double deviation = 0.0;
 
     if (x->mean_mode && !x->is_first(duration))
@@ -720,7 +739,7 @@ void meandev_output_type(t_meandev *x, t_duration_data *duration)
         deviation = result.deviation;
     }
     else
-        deviation = duration->core_data.sum_data(var_calc(x->data, mean));
+        deviation = duration->core_data.calculate(var_calc(x->data, mean));
             
     outlet_float(duration->f_out2, x->standard_var ? sqrt(deviation) : deviation);
     outlet_float(duration->f_out1, mean);
@@ -729,9 +748,9 @@ void meandev_output_type(t_meandev *x, t_duration_data *duration)
 void meandev_output(t_meandev *x, t_duration_data *duration)
 {
     if (x->weights_mode)
-        meandev_output_type<weighted_data_functor, variance_weighted_functor>(x, duration);
+        meandev_output_type<weighted_mean_functor, weighted_variance_functor>(x, duration);
     else
-        meandev_output_type<data_functor, variance_functor>(x, duration);
+        meandev_output_type<mean_functor, variance_functor>(x, duration);
 }
 
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
@@ -748,8 +767,8 @@ void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
 
 t_stats meandev_calc_mean_stats(t_duration_data *duration)
 {
-    double mean      = duration->mean_data.sum_data(data_functor(duration->mean_data));
-    double deviation = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
+    double mean      = duration->mean_data.calculate(mean_functor(duration->mean_data));
+    double deviation = duration->mean_data.calculate(variance_functor(duration->mean_data, mean));
         
     return { mean, deviation };
 }
