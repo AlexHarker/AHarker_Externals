@@ -316,17 +316,17 @@ void meandev_report_overflow(t_meandev *x, long time, long& post_time, const cha
 int C74_EXPORT main()
 {
     this_class = class_new("meandev",
-                           (method)meandev_new,
-                           (method)meandev_free,
+                           (method) meandev_new,
+                           (method) meandev_free,
                            sizeof(t_meandev),
-                           NULL,
+                           nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)meandev_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)meandev_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)meandev_bang, "bang", 0);
-    class_addmethod(this_class, (method)meandev_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) meandev_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) meandev_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) meandev_bang, "bang", 0);
+    class_addmethod(this_class, (method) meandev_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
 
