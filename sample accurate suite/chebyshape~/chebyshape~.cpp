@@ -62,7 +62,7 @@ int C74_EXPORT main()
                            (method) chebyshape_new,
                            (method) chebyshape_free,
                            sizeof(t_chebyshape),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            A_DEFLONG,
                            0);
@@ -95,11 +95,11 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
     x->offset = std::max(0L, std::min(static_cast<long>(offset), x->num_sig_ins));
     
     if (!x->offset)
-        dsp_setup((t_pxobject *)x, static_cast<long>(num_coeff + 1));
+        dsp_setup((t_pxobject *) x, static_cast<long>(num_coeff + 1));
     else
-        dsp_setup((t_pxobject *)x, 2);
+        dsp_setup((t_pxobject *) x, 2);
     
-    outlet_new((t_object *)x, "signal");
+    outlet_new((t_object *) x, "signal");
     
     return x;
 }

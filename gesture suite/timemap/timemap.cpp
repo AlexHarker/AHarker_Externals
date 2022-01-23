@@ -129,7 +129,7 @@ int C74_EXPORT main()
                            (method) timemap_new,
                            (method) timemap_free,
                            sizeof(t_timemap),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFFLOAT,
                            A_DEFFLOAT,
                            A_DEFFLOAT,
@@ -156,7 +156,7 @@ int C74_EXPORT main()
 
 void *timemap_new(double rand_amount, double centre, double warp)
 {
-    t_timemap *x = (t_timemap *)object_alloc(this_class);
+    t_timemap *x = (t_timemap *) object_alloc(this_class);
     
     create_object(x->gen);
 
@@ -257,13 +257,13 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     
     if (num_points < 1)
     {
-        object_error((t_object *)x, "requested number of values must be a positive integer");
+        object_error((t_object *) x, "requested number of values must be a positive integer");
         return;
     }
     
     if (num_points > 1024)
     {
-        object_error((t_object *)x, "maximum number of output values is 1024");
+        object_error((t_object *) x, "maximum number of output values is 1024");
         num_points = 1024;
     }
     

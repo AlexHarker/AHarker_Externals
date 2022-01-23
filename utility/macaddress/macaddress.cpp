@@ -62,19 +62,19 @@ void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("macaddress",
-                            (method)macaddress_new,
-                            nullptr,
-                            (short) sizeof(t_macaddress),
-                            nullptr,
-                            A_DEFSYM,
-                            0);
+    this_class = class_new("macaddress",
+                           (method) macaddress_new,
+                           (method) nullptr,
+                           sizeof(t_macaddress),
+                           (method) nullptr,
+                           A_DEFSYM,
+                           0);
     
-    class_addmethod (this_class, (method)macaddress_bang, "bang", 0);
-    class_addmethod (this_class, (method)macaddress_set, "set", A_SYM, 0);
-    class_addmethod (this_class, (method)macaddress_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) macaddress_bang, "bang", 0);
+    class_addmethod(this_class, (method) macaddress_set, "set", A_SYM, 0);
+    class_addmethod(this_class, (method) macaddress_assist, "assist", A_CANT, 0);
     
-    class_register (CLASS_BOX, this_class);
+    class_register(CLASS_BOX, this_class);
     
     ps_empty = gensym("");
     ps_failed = gensym("failed");
@@ -89,7 +89,7 @@ void *macaddress_new(t_symbol *sym)
 {
     t_macaddress *x = (t_macaddress *) object_alloc(this_class);
     
-    x->output = outlet_new(x, 0);
+    x->output = outlet_new(x, nullptr);
     macaddress_set_internal(x, sym);
     
     return x;

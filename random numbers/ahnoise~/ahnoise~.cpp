@@ -42,14 +42,14 @@ void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerat
 int C74_EXPORT main()
 {
     this_class = class_new("ahnoise~",
-                           (method)ahnoise_new,
-                           (method)ahnoise_free,
+                           (method) ahnoise_new,
+                           (method) ahnoise_free,
                            sizeof(t_ahnoise),
-                           nullptr,
+                           (method) nullptr,
                            0);
     
-    class_addmethod(this_class, (method)ahnoise_dsp64, "dsp64", A_CANT, 0);
-    class_addmethod(this_class, (method)ahnoise_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ahnoise_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ahnoise_assist, "assist", A_CANT, 0);
     
     class_dspinit(this_class);
     
@@ -62,10 +62,10 @@ int C74_EXPORT main()
 
 void *ahnoise_new()
 {
-    t_ahnoise *x = (t_ahnoise *)object_alloc(this_class);
+    t_ahnoise *x = (t_ahnoise *) object_alloc(this_class);
 
-    dsp_setup((t_pxobject *)x, 0);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 0);
+    outlet_new((t_object *) x, "signal");
 
     create_object(x->gen);
     

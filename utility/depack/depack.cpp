@@ -47,17 +47,17 @@ int C74_EXPORT main()
 {
     this_class = class_new("depack",
                            (method) depack_new,
-                           nullptr,
+                           (method) nullptr,
                            sizeof(t_depack),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method)depack_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)depack_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)depack_list, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)depack_anything, "anything", A_GIMME, 0);
-    class_addmethod(this_class, (method)depack_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) depack_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) depack_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) depack_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) depack_anything, "anything", A_GIMME, 0);
+    class_addmethod(this_class, (method) depack_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -83,7 +83,7 @@ void *depack_new(t_atom_long num_outlets)
     x->num_outlets = static_cast<long>(num_outlets);
     
     for (long i = x->num_outlets - 1; i >= 0; i--)
-        x->outlet_array[i] = outlet_new(x, 0);
+        x->outlet_array[i] = outlet_new(x, nullptr);
     
     return x;
 }

@@ -21,11 +21,11 @@ void descriptors_main_common ()
 {
 	// Setup class basics
 	
-	class_addmethod (this_class, (method)descriptors_fft_params, "fftparams", A_GIMME, 0L);
-	class_addmethod (this_class, (method)descriptors_energy_thresh, "energythresh", A_GIMME, 0L);
-	class_addmethod (this_class, (method)descriptors_dsp, "dsp", A_CANT, 0L);
-	class_addmethod (this_class, (method)descriptors_dsp64, "dsp64", A_CANT, 0L);
-	class_addmethod (this_class, (method)descriptors_assist, "assist", A_CANT, 0L);
+	class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
+	class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
+	class_addmethod(this_class, (method) descriptors_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) descriptors_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) descriptors_assist, "assist", A_CANT, 0);
 
 	class_dspinit(this_class);
 	

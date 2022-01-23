@@ -2,8 +2,8 @@
 /*
  *  meandev
  *
- *  meandev is an object for calculating the mean and variance or standard deviation of a set of values over various ranges in the data's history.
- *  This makes it possible to compare these values for different ranges in time and make some assesment of how the data is changing.
+ *  meandev calculates the mean and variance or standard deviation of values over various ranges in the data's history.
+ *  This makes it possible to compare values for different ranges in time assess how the data is changing.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -316,17 +316,17 @@ void meandev_report_overflow(t_meandev *x, long time, long& post_time, const cha
 int C74_EXPORT main()
 {
     this_class = class_new("meandev",
-                           (method)meandev_new,
-                           (method)meandev_free,
+                           (method) meandev_new,
+                           (method) meandev_free,
                            sizeof(t_meandev),
-                           NULL,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)meandev_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)meandev_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)meandev_bang, "bang", 0);
-    class_addmethod(this_class, (method)meandev_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) meandev_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) meandev_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) meandev_bang, "bang", 0);
+    class_addmethod(this_class, (method) meandev_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
 

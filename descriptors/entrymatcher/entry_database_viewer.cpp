@@ -53,28 +53,38 @@ void entry_database_viewer_init()
     long	flags;
     
     common_symbols_init();
-    c = class_new("__entry_database_view", (method)entry_database_viewer_new, (method)entry_database_viewer_free, sizeof(t_entry_database_viewer), (method)0L, A_GIMME, 0);
+    
+    c = class_new("__entry_database_view",
+                  (method) entry_database_viewer_new,
+                  (method) entry_database_viewer_free,
+                  sizeof(t_entry_database_viewer),
+                  (method) nullptr,
+                  A_GIMME,
+                  0);
+    
     c->c_flags |= CLASS_FLAG_NEWDICTIONARY;
+    
     flags = JBOX_COLOR;
+    
     jbox_initclass(c, flags);
     
-    class_addmethod(c, (method)entry_database_viewer_getcelltext, "getcelltext", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_getcellstyle, "getcellstyle", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_getcelltext, "getcelltext", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_getcellstyle, "getcellstyle", A_CANT, 0);
 
-    class_addmethod(c, (method)entry_database_viewer_sort, "sortdata", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_dummycompare, "nevercalled", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_component, "component", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_sort, "sortdata", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_dummycompare, "nevercalled", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_component, "component", A_CANT, 0);
     
-    class_addmethod(c, (method)entry_database_viewer_editstarted, "editstarted", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_celledited, "editvalue", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_editstarted, "editstarted", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_celledited, "editvalue", A_CANT, 0);
     
-    class_addmethod(c, (method)entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
     
-    class_addmethod(c, (method)entry_database_viewer_set_database, "__set_database", A_CANT, 0);
-    class_addmethod(c, (method)entry_database_viewer_update, "__build_view", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_set_database, "__set_database", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_update, "__build_view", A_CANT, 0);
     
-    class_addmethod(c, (method)entry_database_viewer_notify, "notify", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_notify, "notify", A_CANT, 0);
   
     class_register(CLASS_BOX, c);
     entry_database_viewer_class = c;
@@ -88,19 +98,19 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
     if (!(d=object_dictionaryarg(argc, argv)))
         return NULL;
     
-    x = (t_entry_database_viewer *)object_alloc(entry_database_viewer_class);
+    x = (t_entry_database_viewer *) object_alloc(entry_database_viewer_class);
     
     if (x)
     {
-        new(x) t_entry_database_viewer;
+        new (x) t_entry_database_viewer;
         
         long flags =  JBOX_NODRAWBOX | JBOX_GROWBOTH | JBOX_NOFLOATINSPECTOR;
         
         jbox_new(&x->d_box, flags, argc, argv);
-        x->d_box.b_firstin = (t_object *)x;
+        x->d_box.b_firstin = (t_object *) x;
         
         x->d_dataview = (t_object *)jdataview_new();
-        jdataview_setclient(x->d_dataview, (t_object *)x);
+        jdataview_setclient(x->d_dataview, (t_object *) x);
         jdataview_setcolumnheaderheight(x->d_dataview, 30);
         jdataview_setheight(x->d_dataview, 22.0);
         jdataview_setautosizeright(x->d_dataview, 1);
@@ -133,7 +143,7 @@ void entry_database_viewer_free(t_entry_database_viewer *x)
 void entry_database_viewer_newpatcherview(t_entry_database_viewer *x, t_object *patcherview)
 {
     object_attach_byptr(x, patcherview);
-    jdataview_patchervis(x->d_dataview, patcherview, (t_object *)x);
+    jdataview_patchervis(x->d_dataview, patcherview, (t_object *) x);
 }
 
 void entry_database_viewer_freepatcherview(t_entry_database_viewer *x, t_object *patcherview)
@@ -277,7 +287,7 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
         }
     }
     
-    return jbox_notify((t_jbox *)x, s, msg, sender, data);
+    return jbox_notify((t_jbox *) x, s, msg, sender, data);
 }
 // Convenience Mappers
 

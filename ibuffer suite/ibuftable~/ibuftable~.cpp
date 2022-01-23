@@ -47,16 +47,16 @@ void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sampl
 int C74_EXPORT main()
 {
     this_class = class_new("ibuftable~",
-                           (method)ibuftable_new,
-                           (method)ibuftable_free,
+                           (method) ibuftable_new,
+                           (method) ibuftable_free,
                            sizeof(t_ibuftable),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
-    
-    class_addmethod(this_class, (method)ibuftable_set, "set", A_SYM, 0);
-    class_addmethod(this_class, (method)ibuftable_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)ibuftable_dsp64, "dsp64", A_CANT, 0);
+
+    class_addmethod(this_class, (method) ibuftable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuftable_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibuftable_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
     
@@ -87,10 +87,10 @@ int C74_EXPORT main()
 
 void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
 {
-    t_ibuftable *x = (t_ibuftable *)object_alloc(this_class);
+    t_ibuftable *x = (t_ibuftable *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     // Default variables
     

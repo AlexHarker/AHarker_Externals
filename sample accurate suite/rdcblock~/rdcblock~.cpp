@@ -49,7 +49,7 @@ int C74_EXPORT main()
                            (method) rdcblock_new,
                            (method) rdcblock_free,
                            sizeof(t_rdcblock),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -68,8 +68,8 @@ void *rdcblock_new(t_atom_long mode)
 {
     t_rdcblock *x = (t_rdcblock *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 2);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 2);
+    outlet_new((t_object *) x, "signal");
     
     x->x1 = x->y1 = 0.0;
     x->mode = mode;

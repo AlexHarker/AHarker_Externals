@@ -63,16 +63,16 @@ int C74_EXPORT main()
                             (method) kernelmaker_new,
                             (method) nullptr,
                             sizeof(t_kernelmaker),
-                            0L,
+                           (method) nullptr,
                             A_DEFLONG,
                             0);
     
-    class_addmethod(this_class, (method) kernelmaker_int, "int", A_LONG, 0L);
-    class_addmethod(this_class, (method) kernelmaker_window, "makekernel_wind", A_GIMME, 0L);
-    class_addmethod(this_class, (method) kernelmaker_env, "makekernel_env", A_GIMME, 0L);
-    class_addmethod(this_class, (method) kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0L);
-    class_addmethod(this_class, (method) kernelmaker_trap, "makekernel_trap", A_GIMME, 0L);
-    class_addmethod(this_class, (method) kernelmaker_assist, "assist", A_CANT, 0L);
+    class_addmethod(this_class, (method) kernelmaker_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) kernelmaker_window, "makekernel_wind", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_env, "makekernel_env", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_trap, "makekernel_trap", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
         
@@ -85,7 +85,7 @@ int C74_EXPORT main()
 
 void *kernelmaker_new(t_atom_long fades)
 {
-    t_kernelmaker *x = (t_kernelmaker *)object_alloc (this_class);
+    t_kernelmaker *x = (t_kernelmaker *) object_alloc(this_class);
     
     x->fades = !fades ? 40 : fades;
     

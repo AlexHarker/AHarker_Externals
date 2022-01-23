@@ -75,23 +75,23 @@ int C74_EXPORT main()
 {
 	this_class	= class_new	("entrymatcher",
 				(method) entrymatcher_new, 
-				(method)entrymatcher_free, 
-				(short)sizeof(t_entrymatcher), 
+				(method) entrymatcher_free, 
+				sizeof(t_entrymatcher), 
 				NULL, 
 				A_GIMME,
 				0);
     
-	class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_match_user,"match", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_match_user,"match", A_GIMME, 0);
 	
-    class_addmethod(this_class, (method)entrymatcher_dump, "dump", 0);
-	class_addmethod(this_class, (method)entrymatcher_lookup, "lookup", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_lookup, "index", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) entrymatcher_dump, "dump", 0);
+	class_addmethod(this_class, (method) entrymatcher_lookup, "lookup", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_lookup, "index", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_assist, "assist", A_CANT, 0);
 
-    class_addmethod(this_class, (method)entrymatcher_stats, "stats", A_GIMME, 0);
+    class_addmethod(this_class, (method) entrymatcher_stats, "stats", A_GIMME, 0);
 
-	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
+	class_addmethod(this_class, (method) entrymatcher_match_all, "bang", 0);
 	
     entrymatcher_add_common<t_entrymatcher>(this_class);
     
@@ -115,11 +115,11 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     t_atom_long num_reserved_entries = (argc > 1) ? atom_getlong(argv++) : 0;
     t_atom_long num_columns = argc ? atom_getlong(argv++) : 0;
     
-	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
+	t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
 	
 	x->the_data_outlet = listout(x);
 	x->the_distances_outlet = listout(x);
-	x->the_identifiers_outlet = outlet_new(x, 0);
+	x->the_identifiers_outlet = outlet_new(x, nullptr);
     x->the_indices_outlet = listout(x);
 	
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
@@ -201,7 +201,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, EntryDatabase::ReadPointer& d
     
     if (idx < 0 || idx >= numItems)
     {
-        object_error((t_object *)x, "entry does not exist");
+        object_error((t_object *) x, "entry does not exist");
         return;
     }
     else if (!argc)
@@ -252,7 +252,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
     if (output.size())
         outlet_list(x->the_data_outlet, NULL, output.size(), &output[0]);
     else
-        object_error((t_object *)x, "no stats specified");
+        object_error((t_object *) x, "no stats specified");
 }
 
 /*****************************************/

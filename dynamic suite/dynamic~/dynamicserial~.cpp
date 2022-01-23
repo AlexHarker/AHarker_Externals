@@ -99,7 +99,7 @@ int C74_EXPORT main()
                            (method) dynamicserial_new,
                            (method) dynamicserial_free,
                            sizeof(t_dynamicserial),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
@@ -125,13 +125,13 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
-    class_addmethod(this_class, (method)handler::deletepatch, "deletepatch", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
     class_addmethod(this_class, (method) handler::target, "target", A_GIMME, 0);                               // MUST FIX TO GIMME FOR NOW
     class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
     
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
-    class_addmethod(this_class, (method)handler::register_listener, "register_listener", A_CANT, 0);
-    class_addmethod(this_class, (method)handler::unregister_listener, "unregister_listener", A_CANT, 0);
+    class_addmethod(this_class, (method) handler::register_listener, "register_listener", A_CANT, 0);
+    class_addmethod(this_class, (method) handler::unregister_listener, "unregister_listener", A_CANT, 0);
     class_addmethod(this_class, (method) handler::query_num_sigins, "query_num_sigins", A_CANT, 0);
     class_addmethod(this_class, (method) handler::query_num_sigouts, "query_num_sigouts", A_CANT, 0);
     class_addmethod(this_class, (method) handler::query_sigins, "query_sigins", A_CANT, 0);
@@ -276,7 +276,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     // Make non-signal outlets first
     
     for (long i = num_outs - 1; i >= 0; i--)
-        outs[i] = outlet_new((t_object *)x, 0);
+        outs[i] = outlet_new((t_object *) x, nullptr);
     
     // Make signal ins
     
@@ -284,13 +284,13 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // All proxies (signals or messages must be declared as if signal inlets
     
-    dsp_setup((t_pxobject *)x, x->num_proxies);
+    dsp_setup((t_pxobject *) x, x->num_proxies);
     x->x_obj.z_misc = Z_NO_INPLACE;
     
     // Make signal outs
     
     for (long i = 0; i < num_sig_outs; i++)
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
     
     // Get parent patcher
     
@@ -298,7 +298,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup slots
     
-    x->patch_set = new patch_set<patch_slot>((t_object *)x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new patch_set<patch_slot>((t_object *) x, x->parent_patch, num_ins, num_outs, outs);
     
     // Load patch
     
@@ -310,7 +310,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
 
 void dynamicserial_free(t_dynamicserial *x)
 {
-    dsp_free((t_pxobject *)x);
+    dsp_free((t_pxobject *) x);
     
     // Free patches
     

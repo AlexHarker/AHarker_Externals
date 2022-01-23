@@ -29,17 +29,17 @@
 
 int C74_EXPORT main()
 {	
-	this_class = class_new ("descriptors~",
-							(method) descriptors_new, 
-							(method) descriptors_free, 
-							sizeof(t_descriptors), 
-							0L, 
-							A_GIMME, 
-							0);
+    this_class = class_new("descriptors~",
+                           (method) descriptors_new,
+                           (method) descriptors_free,
+                           sizeof(t_descriptors),
+                           0L,
+                           A_GIMME,
+                           0);
 	
-	class_addmethod (this_class, (method)descriptors_analyse, "analyse", A_GIMME, 0L);
-	class_addmethod (this_class, (method)descriptors_analyse, "analyze", A_GIMME, 0L);
-	class_addmethod (this_class, (method)descriptors_descriptors_non_rt, "descriptors", A_GIMME, 0L);
+	class_addmethod(this_class, (method) descriptors_analyse, "analyse", A_GIMME, 0);
+	class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
+	class_addmethod(this_class, (method) descriptors_descriptors_non_rt, "descriptors", A_GIMME, 0);
 	
 	descriptors_main_common();
 	
@@ -49,9 +49,9 @@ int C74_EXPORT main()
 }
 
 
-void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
+void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
-    t_descriptors *x = (t_descriptors *)object_alloc(this_class);
+    t_descriptors *x = (t_descriptors *) object_alloc(this_class);
 	
 	long max_fft_size_log2;
 	long max_fft_size_in = 0;
@@ -84,7 +84,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 
 	// This below sorts out the z_compile crash
 	
-	dsp_setup((t_pxobject *)x, 0);					
+	dsp_setup((t_pxobject *) x, 0);					
 	
 	// Allocate 4Mb of memory for the descriptors as a default
 	
@@ -158,7 +158,7 @@ void descriptors_free(t_descriptors *x)
 	ALIGNED_FREE (x->window);
 	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
-		freeobject((t_object *)x->output_rt_clock);
+		freeobject((t_object *) x->output_rt_clock);
 }
 
 

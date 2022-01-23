@@ -163,27 +163,27 @@ __inline double atom_getdouble_translate (t_atom *arg)
 
 int C74_EXPORT main()
 {
-	this_class	= class_new	("entrymatcher~",
-				(method) entrymatcher_new, 
-				(method)entrymatcher_free, 
-				(short)sizeof(t_entrymatcher), 
-				NULL, 
-				A_DEFLONG, 
-				A_DEFLONG,
-				A_DEFLONG
-,				0);
+	this_class = class_new("entrymatcher~",
+                           (method) entrymatcher_new,
+                           (method) entrymatcher_free,
+				           sizeof(t_entrymatcher),
+                           NULL,
+                           A_DEFLONG,
+                           A_DEFLONG,
+                           A_DEFLONG,
+                           0);
 	
-	class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
-	class_addmethod(this_class, (method)entrymatcher_clear,"reset", 0);
+	class_addmethod(this_class, (method) entrymatcher_clear,"clear", 0);
+	class_addmethod(this_class, (method) entrymatcher_clear,"reset", 0);
 
-	class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_limit,"limit", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_names,"names", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) entrymatcher_entry,"entry", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_limit,"limit", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_names,"names", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_assist, "assist", A_CANT, 0);
 	
-	class_addmethod(this_class, (method)entrymatcher_dsp, "dsp", A_CANT, 0);
-	class_addmethod(this_class, (method)entrymatcher_dsp64, "dsp64", A_CANT, 0);
+	class_addmethod(this_class, (method) entrymatcher_dsp, "dsp", A_CANT, 0);
+	class_addmethod(this_class, (method) entrymatcher_dsp64, "dsp64", A_CANT, 0);
 
 	class_dspinit(this_class);
 	

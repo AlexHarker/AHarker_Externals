@@ -67,22 +67,22 @@ void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, 
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibufconcatenate~",
-                            (method) ibufconcatenate_new,
-                            (method)ibufconcatenate_free,
-                            sizeof(t_ibufconcatenate),
-                            0L,
-                            A_SYM,
-                            A_DEFLONG,
-                            0);
+    this_class = class_new("ibufconcatenate~",
+                           (method) ibufconcatenate_new,
+                           (method) ibufconcatenate_free,
+                           sizeof(t_ibufconcatenate),
+                           (method) nullptr,
+                           A_SYM,
+                           A_DEFLONG,
+                           0);
     
-    class_addmethod (this_class, (method)ibufconcatenate_int, "int", A_LONG, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_set, "set", A_SYM, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_clear, "clear", 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_append, "append", A_SYM, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_entry, "entry", A_DEFFLOAT, A_DEFFLOAT, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_assist, "assist", A_CANT, 0L);
-    class_addmethod(this_class, (method)ibufconcatenate_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_set, "set", A_SYM, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_clear, "clear", 0);
+    class_addmethod(this_class, (method) ibufconcatenate_append, "append", A_SYM, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_entry, "entry", A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_dsp64, "dsp64", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -93,17 +93,17 @@ int C74_EXPORT main()
 
 void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode)
 {
-    t_ibufconcatenate *x = (t_ibufconcatenate *)object_alloc(this_class);
+    t_ibufconcatenate *x = (t_ibufconcatenate *) object_alloc(this_class);
     
     x->last_added_out = listout(x);
     
     if (!max_mode)
     {
-        dsp_setup((t_pxobject *)x, 1);
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
+        dsp_setup((t_pxobject *) x, 1);
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
     }
     else
     {

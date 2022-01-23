@@ -58,7 +58,7 @@ int C74_EXPORT main()
                            (method) dynamic_request_new,
                            (method) dynamic_request_free,
                            sizeof(t_dynamic_request),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -74,7 +74,7 @@ int C74_EXPORT main()
     return 0;
 }
 
-// New / free / assist
+// New / Free / Assist
 
 void *dynamic_request_new(t_atom_long inlet_num)
 {
@@ -88,8 +88,8 @@ void *dynamic_request_new(t_atom_long inlet_num)
     x->valid = false;
     x->prev = 0;
     
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     dynamic_request_int(x, inlet_num);
     

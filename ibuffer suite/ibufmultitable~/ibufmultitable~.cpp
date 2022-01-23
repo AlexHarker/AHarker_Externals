@@ -48,16 +48,16 @@ void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, do
 int C74_EXPORT main()
 {
     this_class = class_new("ibufmultitable~",
-                           (method)ibufmultitable_new,
-                           (method)ibufmultitable_free,
+                           (method) ibufmultitable_new,
+                           (method) ibufmultitable_free,
                            sizeof(t_ibufmultitable),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method)ibufmultitable_set, "set", A_SYM, 0);
-    class_addmethod(this_class, (method)ibufmultitable_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)ibufmultitable_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufmultitable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufmultitable_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufmultitable_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
     
@@ -88,10 +88,10 @@ int C74_EXPORT main()
 
 void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
 {
-    t_ibufmultitable *x = (t_ibufmultitable *)object_alloc(this_class);
+    t_ibufmultitable *x = (t_ibufmultitable *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 2);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 2);
+    outlet_new((t_object *) x, "signal");
     
     // Default variables
     

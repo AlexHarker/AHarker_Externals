@@ -53,7 +53,7 @@ int C74_EXPORT main()
                            (method) tsah_new,
                            (method) tsah_free,
                            sizeof(t_tsah),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -82,11 +82,11 @@ void *tsah_new(t_atom_long num_outlets)
         num_outlets = max_outlets;
     }
     
-    dsp_setup((t_pxobject *)x, static_cast<long>(num_outlets + 1));
+    dsp_setup((t_pxobject *) x, static_cast<long>(num_outlets + 1));
     
     for (i = 0; i < num_outlets; i++)
     {
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
         x->last_outputs[i] = 0.;
     }
     

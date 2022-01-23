@@ -134,21 +134,21 @@ void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sam
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibufplayer~",
-                            (method) ibufplayer_new,
-                            (method) ibufplayer_free,
-                            sizeof (t_ibufplayer),
-                            nullptr,
-                            A_GIMME,
-                            0);
+    this_class = class_new("ibufplayer~",
+                           (method) ibufplayer_new,
+                           (method) ibufplayer_free,
+                           sizeof(t_ibufplayer),
+                           (method) nullptr,
+                           A_GIMME,
+                           0);
     
-    class_addmethod(this_class, (method)ibufplayer_set, "set", A_SYM, 0);
-    class_addmethod(this_class, (method)ibufplayer_vols, "vols", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibufplayer_play, "play", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibufplayer_stop, "stop", 0);
-    
-    class_addmethod(this_class, (method)ibufplayer_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)ibufplayer_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufplayer_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufplayer_vols, "vols", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufplayer_play, "play", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufplayer_stop, "stop", 0);
+
+    class_addmethod(this_class, (method) ibufplayer_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufplayer_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
     
@@ -162,7 +162,7 @@ int C74_EXPORT main()
 
 void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 {
-    t_ibufplayer *x = (t_ibufplayer *)object_alloc(this_class);
+    t_ibufplayer *x = (t_ibufplayer *) object_alloc(this_class);
     
     // Arguments
     
@@ -173,7 +173,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup DSP
     
-    dsp_setup((t_pxobject *)x, 1);
+    dsp_setup((t_pxobject *) x, 1);
     
     // Creat bang outlet
     
@@ -182,7 +182,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     // Create signal outlets
     
     for (long i = 0; i < obj_n_chans + 1; i++)
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
     
     // Default variables
     
@@ -256,7 +256,7 @@ void ibufplayer_set(t_ibufplayer *x, t_symbol *s)
     else
     {
         x->buffer_name = nullptr;
-        object_error((t_object *)x, "no buffer %s", s->s_name);
+        object_error((t_object *) x, "no buffer %s", s->s_name);
     }
 }
 

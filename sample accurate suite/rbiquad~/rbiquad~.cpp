@@ -46,7 +46,7 @@ int C74_EXPORT main()
                            (method) rbiquad_new,
                            (method) rbiquad_free,
                            sizeof(t_rbiquad),
-                           nullptr,
+                           (method) nullptr,
                            0);
     
     class_addmethod(this_class, (method) rbiquad_assist, "assist", A_CANT, 0);
@@ -64,8 +64,8 @@ void *rbiquad_new()
 {
     t_rbiquad *x = (t_rbiquad *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 7);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 7);
+    outlet_new((t_object *) x, "signal");
     
     x->x1 = x->x2 = x->y1 = x->y2 = 0.;
     

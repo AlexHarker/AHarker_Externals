@@ -49,17 +49,17 @@ void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double *
 int C74_EXPORT main()
 {
     this_class = class_new("ibufconcatedrive~",
-                           (method)ibufconcatedrive_new,
-                           (method)ibufconcatedrive_free,
+                           (method) ibufconcatedrive_new,
+                           (method) ibufconcatedrive_free,
                            sizeof(t_ibufconcatedrive),
-                           nullptr,
+                           (method) nullptr,
                            A_SYM,
                            A_DEFFLOAT,
                            0);
     
-    class_addmethod(this_class, (method)ibufconcatedrive_set, "set", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibufconcatedrive_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)ibufconcatedrive_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatedrive_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufconcatedrive_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatedrive_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
@@ -69,11 +69,11 @@ int C74_EXPORT main()
 
 void *ibufconcatedrive_new(t_symbol *buffer_name, double init_val)
 {
-    t_ibufconcatedrive *x = (t_ibufconcatedrive *)object_alloc(this_class);
+    t_ibufconcatedrive *x = (t_ibufconcatedrive *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 4);
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 4);
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
     
     // Set default variables and initial output value
     

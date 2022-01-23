@@ -126,7 +126,7 @@ void Matchers::setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase
     {
         if (argc < 2)
         {
-            object_error((t_object *)x, "insufficient items in matchers message for unparsed test");
+            object_error((t_object *) x, "insufficient items in matchers message for unparsed test");
             break;
         }
         

@@ -57,7 +57,7 @@ int C74_EXPORT main()
                            (method) dynamic_patch_new,
                            (method) dynamic_patch_free,
                            sizeof(t_dynamic_patch),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -96,7 +96,7 @@ void *dynamic_patch_new(t_atom_long state)
 
 void dynamic_patch_free(t_dynamic_patch *x)
 {
-    freeobject((t_object *)x->m_clock);
+    freeobject((t_object *) x->m_clock);
 }
 
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s)
@@ -127,7 +127,7 @@ void dynamic_patch_bang(t_dynamic_patch *x)
 
 void dynamic_patch_delete(t_dynamic_patch *x)
 {
-    clock_set(x->m_clock, 0L);
+    clock_set(x->m_clock, 0);
 }
 
 void clock_delete(t_dynamic_patch *x)

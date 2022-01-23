@@ -155,13 +155,13 @@ void ibufconcatenate_info_free(t_ibufconcatenate_info *x);
 
 static void ibufconcatenate_info_setup()
 {
-    info_class = class_new ("ibufconcatenate_info",
-                            (method) ibufconcatenate_info_new,
-                            (method)ibufconcatenate_info_free,
-                            sizeof(t_ibufconcatenate_info),
-                            0L,
-                            A_SYM,
-                            0);
+    info_class = class_new("ibufconcatenate_info",
+                           (method) ibufconcatenate_info_new,
+                           (method) ibufconcatenate_info_free,
+                           sizeof(t_ibufconcatenate_info),
+                           (method) nullptr,
+                           A_SYM,
+                           0);
     
     
     class_register(CLASS_NOBOX, info_class);
@@ -169,7 +169,7 @@ static void ibufconcatenate_info_setup()
 
 void *ibufconcatenate_info_new(t_symbol *buffer_name)
 {
-    t_ibufconcatenate_info *x = (t_ibufconcatenate_info *)object_alloc(info_class);
+    t_ibufconcatenate_info *x = (t_ibufconcatenate_info *) object_alloc(info_class);
     
     // Create the struct fully
     

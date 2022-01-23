@@ -64,17 +64,17 @@ double erf_weighting(double mean, double dev);
 int C74_EXPORT main()
 {
     this_class = class_new("randfloats",
-                           (method)randfloats_new,
-                           (method)randfloats_free,
+                           (method) randfloats_new,
+                           (method) randfloats_free,
                            sizeof(t_randfloats),
-                           nullptr,
+                           (method) nullptr,
                            0);
     
-    class_addmethod(this_class, (method)randfloats_bang, "bang", 0);
-    class_addmethod(this_class, (method)randfloats_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)randfloats_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)randfloats_list, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)randfloats_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) randfloats_bang, "bang", 0);
+    class_addmethod(this_class, (method) randfloats_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) randfloats_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) randfloats_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) randfloats_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -85,7 +85,7 @@ int C74_EXPORT main()
 
 void *randfloats_new()
 {
-    t_randfloats *x = (t_randfloats *)object_alloc(this_class);
+    t_randfloats *x = (t_randfloats *) object_alloc(this_class);
 
     create_object(x->gen);
 
@@ -115,7 +115,7 @@ void *randfloats_new()
 void randfloats_free(t_randfloats *x)
 {
     for (long i = 0; i < 2; i++)
-        freeobject((t_object *)x->f_proxies[i]);
+        freeobject((t_object *) x->f_proxies[i]);
     
     destroy_object(x->gen);
 }
@@ -145,7 +145,7 @@ void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s)
 
 double randfloats_input(t_randfloats *x)
 {
-    switch (proxy_getinlet((t_object *)x))
+    switch (proxy_getinlet((t_object *) x))
     {
         case 1: return x->gen.rand_windowed_gaussian(x->params[0], x->params[1]);
         case 2: return triple_gauss_rand(x->gen, x->params);

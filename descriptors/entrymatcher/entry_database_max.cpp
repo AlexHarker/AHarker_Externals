@@ -47,19 +47,19 @@ void entry_database_view_removed(t_entry_database *database_object);
 
 int entry_database_init()
 {
-    database_class = class_new ("__entry_database",
-                             (method)entry_database_new,
-                             (method)entry_database_free,
-                             (short)sizeof(t_entry_database),
-                             NULL,
-                             A_SYM,
-                             A_LONG,
-                             A_LONG,
-                             0);
+    database_class = class_new("__entry_database",
+                               (method) entry_database_new,
+                               (method) entry_database_free,
+                               sizeof(t_entry_database),
+                               NULL,
+                               A_SYM,
+                               A_LONG,
+                               A_LONG,
+                               0);
     
     class_register(CLASS_NOBOX, database_class);
     
-    class_addmethod(database_class, (method)entry_database_view_removed, "__view_removed", A_CANT, 0);
+    class_addmethod(database_class, (method) entry_database_view_removed, "__view_removed", A_CANT, 0);
 
     entry_database_viewer_init();
     
@@ -70,7 +70,7 @@ int entry_database_init()
 
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    t_entry_database *x = (t_entry_database *)object_alloc(database_class);
+    t_entry_database *x = (t_entry_database *) object_alloc(database_class);
     
     num_reserved_entries = std::max(num_reserved_entries, t_atom_long(1));
     num_columns = std::max(num_columns, t_atom_long(1));
@@ -151,7 +151,7 @@ void entry_database_release(void *client, t_entry_database *x)
     if (last_client)
     {
         object_unregister(x);
-        defer_low(x, (method)entry_database_deferred_deletion, NULL, 0, NULL);
+        defer_low(x, (method) entry_database_deferred_deletion, NULL, 0, NULL);
     }
 }
 
@@ -290,7 +290,7 @@ NotifyPointer::~NotifyPointer()
     if (database->notify)
     {
         database->notify = false;
-        defer_low(mMaxDatabase, (method)entry_database_modified, NULL, 0, NULL);
+        defer_low(mMaxDatabase, (method) entry_database_modified, NULL, 0, NULL);
     }
 }
 
