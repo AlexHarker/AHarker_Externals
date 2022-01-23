@@ -15,7 +15,6 @@
 #include <AH_Lifecycle.hpp>
 
 #include <algorithm>
-#include <utility>
 #include <vector>
 
 
@@ -230,6 +229,12 @@ struct variance_weighted_functor : weighted_data_functor
     double m_mean;
 };
 
+struct t_stats
+{
+    double mean;
+    double deviation;
+};
+
 struct t_meandev
 {
     bool is_first(t_duration_data *duration) { return duration == durations + num_dur - 1; }
@@ -279,8 +284,10 @@ void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time);
 void meandev_output(t_meandev *x, t_atom_long dur);
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration);
 
-std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
-std::pair<double, double> meandev_calc_stats(t_duration_data *duration);
+t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
+t_stats meandev_calc_mean_stats(t_duration_data *duration);
+
+void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message);
 
 // Main
 
@@ -558,6 +565,8 @@ void meandev_float(t_meandev *x, double data)
         meandev_add_data(x, data, x->weights_mode ? x->last_weight_in : 1.0);
 }
 
+// Add Data
+
 void meandev_add_data(t_meandev *x, double data, double weight)
 {
     // Cache some useful values
@@ -576,10 +585,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
 
     if (overflow)
     {
-        if (x->timed_mode && x->last_post_time_data < time - 1000)
-            object_post((t_object *) x, "data overwrite: data does not stretch back full duration");
-        
-        x->last_post_time_data = time;
+        meandev_report_overflow(x, time, x->last_post_time_data, "data overwrite: data does not stretch back full duration");
                 
         // Update each duration range in case the data needs to be removed
             
@@ -643,10 +649,10 @@ void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num)
                 x->data.remove();
         meandev_output(x, dur_num);
     }
-
+        
     // Add routine (first check that something is due to happen)
 
-    if (!duration->add_remove && (time - x->data.ages()[duration->core_data.next_idx()]) > (duration->min_age))
+    if (!duration->add_remove && (time - x->data.ages()[duration->core_data.next_idx()] > duration->min_age))
     {
         duration->core_data.add();
         meandev_output(x, dur_num);
@@ -715,21 +721,19 @@ template <typename mean_calc, typename var_calc>
 void meandev_output_type(t_meandev *x, t_duration_data *duration)
 {
     double mean = duration->core_data.sum_data(mean_calc(x->data));
-    double variance = 0.0;
+    double deviation = 0.0;
 
     if (x->mean_mode && !x->is_first(duration))
     {
         auto result = meandev_new_mean(x, duration, mean);
             
-        mean = (x->mean_mode == 2) ? result.first : mean;
-        variance = result.second;
+        mean = (x->mean_mode == 2) ? result.mean : mean;
+        deviation = result.deviation;
     }
     else
-        variance = duration->core_data.sum_data(var_calc(x->data, mean));
-    
-    variance = x->standard_var ? sqrt(variance) : variance;
-        
-    outlet_float(duration->f_out2, variance);
+        deviation = duration->core_data.sum_data(var_calc(x->data, mean));
+            
+    outlet_float(duration->f_out2, x->standard_var ? sqrt(deviation) : deviation);
     outlet_float(duration->f_out1, mean);
 }
 
@@ -743,43 +747,46 @@ void meandev_output(t_meandev *x, t_atom_long dur)
 
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
 {
-    auto result = meandev_calc_stats(duration);
+    auto result = meandev_calc_mean_stats(duration);
     
-    const double mean = result.first;
-    const double variance = x->standard_var ? sqrt(result.second) : result.second;
-
     if (duration->core_data.count())
-        outlet_float(duration->f_out2, variance);
+        outlet_float(duration->f_out2, x->standard_var ? sqrt(result.deviation) : result.deviation);
     if (duration->core_data.count() && x->mean_mode == 2)
-        outlet_float(duration->f_out1, mean);
+        outlet_float(duration->f_out1, result.mean);
 }
 
 // Calculation Routines
 
-std::pair<double, double> meandev_calc_stats(t_duration_data *duration)
+t_stats meandev_calc_mean_stats(t_duration_data *duration)
 {
-    double mean     = duration->mean_data.sum_data(data_functor(duration->mean_data));
-    double variance = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
+    double mean      = duration->mean_data.sum_data(data_functor(duration->mean_data));
+    double deviation = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
         
-    return { mean, variance };
+    return { mean, deviation };
 }
 
-std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean)
+t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean)
 {
     long time = gettime();
     
     if (duration->mean_data.add(mean, time))
-    {
-        if (x->timed_mode && x->last_post_time_mean < time - 1000)
-            object_post((t_object *) x, "mean overwrite: data does not stretch back full duration");
-           
-        x->last_post_time_mean = time;
-    }
-        
+        meandev_report_overflow(x, time, x->last_post_time_mean, "mean overwrite: data does not stretch back full duration");
+    
     // Find the minimium times until the next mean should be removed
     
     if (x->timed_mode)
         meandev_set_clock_mean(x, duration, time);
     
-    return meandev_calc_stats(duration);
+    return meandev_calc_mean_stats(duration);
+}
+
+// Report Overflow
+
+void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message)
+{
+    if (x->timed_mode && post_time < time - 1000)
+    {
+        object_post((t_object *) x, message);
+        post_time = time;
+    }
 }
