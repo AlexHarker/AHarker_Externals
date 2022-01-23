@@ -75,8 +75,7 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
 void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv);
 
-void time_domain_convolve_scalar(float *in, float *impulse, float *output, long N, long L);
-void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L);
+void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L);
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
 void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -233,16 +232,16 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 // Perform
 
 #ifndef __APPLE__
-void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
+void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
     L = pad_length(L);
                    
-    for (long i = 0; i < N; i++)
+    for (t_ptr_int i = 0; i < N; i++)
     {
         VecType output_accum = VecType(0.f);
         float *input = in - L + 1 + i;
         
-        for (long j = 0; j < L >> 2; j += 4)
+        for (t_ptr_int j = 0; j < L >> 2; j += 4)
         {            
             output_accum += impulse[j + 0] * VecType(input);
             input += 4;
@@ -260,7 +259,7 @@ void time_domain_convolve(float *in, VecType *impulse, float *output, long N, lo
     }
 }
 #else
-void time_domain_convolve(float *in, VecType *impulse, float *output, long N, long L)
+void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
     vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
 }
@@ -268,7 +267,7 @@ void time_domain_convolve(float *in, VecType *impulse, float *output, long N, lo
 
 void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size)
 {
-    float *impulse_buffer = x->impulse_buffer;
+    VecType *impulse_buffer = reinterpret_cast<VecType*>(x->impulse_buffer);
     float *input_buffer = x->input_buffer;
     long input_position = x->input_position;
     long impulse_length = x->impulse_length;
@@ -287,7 +286,7 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
     
     // Do convolution
 
-    time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), (VecType *) impulse_buffer, out, vec_size, impulse_length);
+    time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), impulse_buffer, out, vec_size, impulse_length);
 }
 
 template<class T, class U>

@@ -104,7 +104,7 @@ struct t_partconvolve
     FFT_SPLIT_COMPLEX_F accum_buffer;
     FFT_SPLIT_COMPLEX_F partition_temp;
     
-    long max_impulse_length;
+    t_atom_long max_impulse_length;
     
     // Buffer name
     
@@ -129,7 +129,7 @@ struct t_partconvolve
 void partconvolve_free(t_partconvolve *x);
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
-void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size);
+void partconvolve_max_fft_size_set(t_partconvolve *x, t_atom_long max_fft_size);
 t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
 
 t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
@@ -204,7 +204,7 @@ int C74_EXPORT main()
 
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 {
-    long max_impulse_length = BUFFER_SIZE_DEFAULT;
+    t_atom_long max_impulse_length = BUFFER_SIZE_DEFAULT;
     
     // Setup the object and make inlets / outlets
     
@@ -318,7 +318,7 @@ void partconvolve_free(t_partconvolve *x)
 
 // Max FFT Size Setter
 
-void partconvolve_max_fft_size_set(t_partconvolve *x, long max_fft_size)
+void partconvolve_max_fft_size_set(t_partconvolve *x, t_atom_long max_fft_size)
 {
     long inexact = 0;
     long max_fft_size_log2 = int_log2(max_fft_size, &inexact);
@@ -389,18 +389,18 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
         // Make a hann window (and sqrt for overlap 2)
         
         for (long i = 0; i < fft_size; i++)
-            window[i] = sqrt(0.5 - (0.5 * cos(M_PI * 2.0 * ((double) i / (double) fft_size))));
+            window[i] = static_cast<float>(sqrt(0.5 - (0.5 * cos(M_PI * 2.0 * ((double) i / (double) fft_size)))));
         
         // Calculate the gain of the window and the appropriate scaling and apply
         // Note that the scaling is split between input and output windowing for ease
         
         for (long i = 0; i < fft_size; i++)
-            window_gain += (double) (window[i] * window[i]);
+            window_gain += (window[i] * window[i]);
         
-        window_scale = sqrt(1. / (4.0 * window_gain));
+        window_scale = sqrt(1.0 / (4.0 * window_gain));
         
         for (long i = 0; i < fft_size; i++)
-            window[i] *= window_scale;
+            window[i] *= static_cast<float>(window_scale);
         
         // Reload the impulse buffer if appropriate
         
@@ -412,8 +412,8 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 
 t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv)
 {
-    long length = atom_getlong(argv);
-    long max_impulse_length = x->max_impulse_length;
+    t_atom_long length = atom_getlong(argv);
+    t_atom_long max_impulse_length = x->max_impulse_length;
     
     if (!argc)
         return MAX_ERR_NONE;
@@ -562,7 +562,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
         {
             // Get real values (zero pad if not enough data)
             
-            long n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
+            t_ptr_int n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp2.realp, buffer_pos, n_samps, chan);
             std::fill_n(buffer_temp2.realp + n_samps, fft_size_halved - n_samps, 0.f);
             impulse_length -= fft_size_halved;
@@ -583,7 +583,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
         {
             // Get samples up to half the fft size, take FFT (with zero padding) and update the pointers
             
-            long n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
+            t_ptr_int n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, buffer_temp1, buffer_pos, n_samps, chan);
             hisstools_rfft(fft_setup_real, buffer_temp1, &buffer_temp2, n_samps, fft_size_log2);
             update_split_complex_pointers(buffer_temp2, buffer_temp2, fft_size_halved);
@@ -900,7 +900,7 @@ void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double
 
 void partconvolve_memoryusage(t_partconvolve *x)
 {
-    long memory_size = (x->max_impulse_length * 4 * sizeof(float)) + (x->max_fft_size * 7 * sizeof(float));
+    t_atom_long memory_size = (x->max_impulse_length * 4 * sizeof(float)) + (x->max_fft_size * 7 * sizeof(float));
     
     if (memory_size > 1024)
         object_post((t_object *) x, "using %.2lf MB", memory_size / 1048576.0);
