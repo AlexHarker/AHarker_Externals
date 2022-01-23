@@ -15,6 +15,7 @@
 #include <AH_Lifecycle.hpp>
 
 #include <algorithm>
+#include <limits>
 #include <vector>
 
 
@@ -403,6 +404,10 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv)
     
     // Take in the age ranges ensuring the correct ordering of max ages
     
+    // Clip the max age to some large value that will definitely fit in a long with some space for calculation
+    
+    args[2] = std::min(args[2], std::numeric_limits<long>::max() >> 1);
+    
     if (args[2] <= 1)
     {
         args[2] = 10;
@@ -437,8 +442,8 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv)
     {
         x->durations[i].f_out2 = floatout(x);
         x->durations[i].f_out1 = floatout(x);
-        x->durations[i].max_age = args[(2 * i) + 2];
-        x->durations[i].min_age = i == (x->num_dur - 1) ? 0 : args[(2 * i) + 3];
+        x->durations[i].max_age = static_cast<long>(args[(2 * i) + 2]);
+        x->durations[i].min_age = i == (x->num_dur - 1) ? 0 : static_cast<long>(args[(2 * i) + 3]);
     }
     
     // Allocate clocks
@@ -642,7 +647,6 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         }
         
         // Always output the shortest duration and if ready output others
-        // FIX - check what happens with the shortest!!
         
         for (t_atom_long i = first; i >= 0; i--)
         {
