@@ -77,52 +77,52 @@ protected:
 
 struct t_data : t_data_base
 {
-    void set_size(long size, bool allocate_ages)
+    void set_size(long size, bool allocate_times)
     {
         t_data_base::set_size(size);
         m_data.resize(size);
-        if (allocate_ages)
-            m_ages.resize(size);
+        if (allocate_times)
+            m_times.resize(size);
     }
     
-    bool add(double data, long age)
+    bool add(double data, long time)
     {
         // (N.B. only those needed for the mode are stored)
 
         bool overflow = t_data_base::add();
         
         m_data[m_position] = data;
-        if (m_ages.size())
-            m_ages[m_position] = age;
+        if (m_times.size())
+            m_times[m_position] = time;
         
         return overflow;
     }
  
-    const double *data() const   { return m_data.data(); }
-    const long   *ages() const   { return m_ages.data(); }
+    const double *data() const      { return m_data.data(); }
+    const long   *times() const     { return m_times.data(); }
     
-    long oldest_age() const      { return m_ages[oldest_idx()]; }
+    long oldest_time() const        { return m_times[oldest_idx()]; }
     
 protected:
     
     std::vector<double> m_data;
-    std::vector<long> m_ages;
+    std::vector<long> m_times;
 };
 
 struct t_weighted_data : t_data
 {
-    void set_size(long size, bool allocate_ages, bool allocate_weights)
+    void set_size(long size, bool allocate_times, bool allocate_weights)
     {
-        t_data::set_size(size, allocate_ages);
+        t_data::set_size(size, allocate_times);
         if (allocate_weights)
             m_weights.resize(size);
     }
     
-    bool add(double data, long age, double weight)
+    bool add(double data, long time, double weight)
     {
         // (N.B. only those needed for the mode are stored)
         
-        bool overflow = t_data::add(data, age);
+        bool overflow = t_data::add(data, time);
 
         if (m_weights.size())
             m_weights[m_position] = weight;
@@ -139,6 +139,8 @@ protected:
 
 struct t_duration_data
 {
+    enum class e_action { add, remove };
+    
     t_duration_data() = default;
     t_duration_data(const t_duration_data&) = delete;
     t_duration_data& operator=(const t_duration_data&) = delete;
@@ -170,7 +172,7 @@ struct t_duration_data
     long min_age = 0;
     long max_age = 0;
 
-    bool add_remove = false;
+    e_action action = e_action::add;
     
     t_outlet *f_out1 = nullptr;
     t_outlet *f_out2 = nullptr;
@@ -275,13 +277,13 @@ void meandev_int(t_meandev *x, t_atom_long data);
 void meandev_float(t_meandev *x, double data);
 void meandev_add_data(t_meandev *x, double data, double weight);
 
-void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num);
+void meandev_timed_add_remove_data(t_meandev *x, t_duration_data *duration);
 void meandev_timed_remove_mean(t_meandev *x, t_duration_data *duration);
 
 void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time);
 void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time);
 
-void meandev_output(t_meandev *x, t_atom_long dur);
+void meandev_output(t_meandev *x, t_duration_data *duration);
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration);
 
 t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
@@ -316,7 +318,7 @@ int C74_EXPORT main()
 template <int N>
 void meandev_tick_data(t_meandev *x)
 {
-    meandev_timed_add_remove_data(x, N);
+    meandev_timed_add_remove_data(x, x->durations + N);
 }
 
 template <int N>
@@ -603,7 +605,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         // Always output the shortest duration and if data has overflowed then output all durations
  
         for (t_atom_long i = first; i >= (overflow ? 0 : first) ; i--)
-            meandev_output(x, i);
+            meandev_output(x, x->durations + i);
         
         // In the timed modes find time the next piece of data should be added/removed in each duration range
 
@@ -626,52 +628,37 @@ void meandev_add_data(t_meandev *x, double data, double weight)
         for (t_atom_long i = first; i >= 0; i--)
         {
             if (x->data.count() >= x->durations[i].min_age)
-                meandev_output(x, i);
+                meandev_output(x, x->durations + i);
         }
     }
 }
 
 // Timed Routines
 
-void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num)
+void meandev_timed_add_remove_data(t_meandev *x, t_duration_data *duration)
 {
-    t_duration_data *duration = x->durations + dur_num;
-    long time = gettime();
-    
-    // Remove data (first check that something is due to happen (not sure this should be needed))
-
-    if (duration->add_remove && (time - x->data.ages()[duration->core_data.oldest_idx()] > duration->max_age))
+    if (duration->action == t_duration_data::e_action::remove)
     {
-        // Remove and then check for discarding the data entirely
+        // Check if we are in the largest duration (and hence dispose of entirely)
             
         duration->core_data.remove();
-        if (!dur_num)
-                x->data.remove();
-        meandev_output(x, dur_num);
+        if (duration == x->durations)
+            x->data.remove();
     }
-        
-    // Add routine (first check that something is due to happen)
-
-    if (!duration->add_remove && (time - x->data.ages()[duration->core_data.next_idx()] > duration->min_age))
-    {
+    else
         duration->core_data.add();
-        meandev_output(x, dur_num);
-    }
-
-    meandev_set_clock_data(x, duration, time);
+    
+    
+    meandev_output(x, duration);
+    meandev_set_clock_data(x, duration, gettime());
 }
 
 void meandev_timed_remove_mean(t_meandev *x, t_duration_data *duration)
 {
-    long time = gettime();
-        
-    if ((time - duration->mean_data.oldest_age()) > duration->age_span())
-    {
-        duration->mean_data.remove();
-        meandev_output_mean_removed(x, duration);
-    }
+    duration->mean_data.remove();
+    meandev_output_mean_removed(x, duration);
     
-    meandev_set_clock_mean(x, duration, time);
+    meandev_set_clock_mean(x, duration, gettime());
 }
 
 // Clock Setting Routines
@@ -680,18 +667,20 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
 {
     // Find the next timed action to perform
 
-    long del_time = duration->max_age - (time - x->data.ages()[duration->core_data.oldest_idx()]) + 1;
-    long add_time = duration->min_age - (time - x->data.ages()[duration->core_data.next_idx()]) + 1;
+    long del_time = duration->max_age - (time - x->data.times()[duration->core_data.oldest_idx()]);
+    long add_time = duration->min_age - (time - x->data.times()[duration->core_data.next_idx()]);
 
     // Unset clock (there may be no action to perform)
 
     clock_unset(duration->f_data_clock);
     
-    if ((add_time <= del_time || !duration->core_data.count()) && !x->data.is_newest(duration->core_data.postion_idx()) && !x->is_first(duration))
+    // Only add if there is new data and only remove if there is some to remove (otherwise pick the shortest delay)
+    
+    if ((add_time <= del_time || !duration->core_data.count()) && !x->data.is_newest(duration->core_data.postion_idx()))
     {
         // Next action is to add data
 
-        duration->add_remove = false;
+        duration->action = t_duration_data::e_action::add;
         clock_delay(duration->f_data_clock, std::max(0L, add_time));
     }
     else
@@ -700,7 +689,7 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
         {
             // Next action is to remove data
 
-            duration->add_remove = true;
+            duration->action = t_duration_data::e_action::remove;
             clock_delay(duration->f_data_clock, std::max(0L, del_time));
         }
     }
@@ -708,11 +697,11 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
 
 void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time)
 {
-    long min_time = duration->age_span() - (time - duration->mean_data.oldest_age()) + 1;
+    long min_time = duration->age_span() - (time - duration->mean_data.oldest_time());
     
     clock_unset(duration->f_mean_clock);
     if (duration->mean_data.count())
-        clock_delay(duration->f_mean_clock, min_time);
+        clock_delay(duration->f_mean_clock, std::max(0L, min_time));
 }
 
 // Output Routines
@@ -737,12 +726,12 @@ void meandev_output_type(t_meandev *x, t_duration_data *duration)
     outlet_float(duration->f_out1, mean);
 }
 
-void meandev_output(t_meandev *x, t_atom_long dur)
+void meandev_output(t_meandev *x, t_duration_data *duration)
 {
     if (x->weights_mode)
-        meandev_output_type<weighted_data_functor, variance_weighted_functor>(x, x->durations + dur);
+        meandev_output_type<weighted_data_functor, variance_weighted_functor>(x, duration);
     else
-        meandev_output_type<data_functor, variance_functor>(x, x->durations + dur);
+        meandev_output_type<data_functor, variance_functor>(x, duration);
 }
 
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
