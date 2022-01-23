@@ -319,7 +319,7 @@ int C74_EXPORT main()
                            (method) meandev_new,
                            (method) meandev_free,
                            sizeof(t_meandev),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     

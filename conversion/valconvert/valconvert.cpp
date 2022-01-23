@@ -34,7 +34,7 @@ method free_routine = (method) dsp_free;
 #else
 using max_object_base = t_object;
 const char *object_name = "valconvert";
-method free_routine = 0L;
+method free_routine = nullptr;
 #endif
 
 // Globals and Object Structure
@@ -118,22 +118,22 @@ int C74_EXPORT main()
                           (method) valconvert_new,
                           free_routine,
                           sizeof(t_valconvert),
-                          nullptr,
+                          (method) nullptr,
                           A_GIMME,
                           0);
     
 #ifdef MSP_VERSION
-    class_addmethod(this_class, (method)valconvert_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)valconvert_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) valconvert_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) valconvert_dsp64, "dsp64", A_CANT, 0);
     class_dspinit(this_class);
 #else
-    class_addmethod(this_class, (method)valconvert_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method)valconvert_float, "float", A_FLOAT, 0);
-    class_addmethod(this_class, (method)valconvert_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) valconvert_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) valconvert_float, "float", A_FLOAT, 0);
+    class_addmethod(this_class, (method) valconvert_list, "list", A_GIMME, 0);
 #endif
     
-    class_addmethod(this_class, (method)valconvert_anything, "anything", A_GIMME, 0);
-    class_addmethod(this_class, (method)valconvert_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) valconvert_anything, "anything", A_GIMME, 0);
+    class_addmethod(this_class, (method) valconvert_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -177,10 +177,10 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
     }
     
 #ifdef MSP_VERSION
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
 #else
-    x->the_outlet = outlet_new(x, 0);
+    x->the_outlet = outlet_new(x, nullptr);
 #endif
     
     return x;
@@ -422,7 +422,7 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
     
     if (argc < 4)
     {
-        object_error((t_object *)x, "not enough values for parameter change");
+        object_error((t_object *) x, "not enough values for parameter change");
         return;
     }
     

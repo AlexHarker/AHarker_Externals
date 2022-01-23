@@ -44,7 +44,7 @@ int C74_EXPORT main()
                           (method) getthread_new,
                           (method) nullptr,
                           sizeof(t_getthread),
-                          nullptr,
+                          (method) nullptr,
                           0);
     
     class_addmethod(this_class, (method) getthread_doit, "bang", 0);
@@ -63,7 +63,7 @@ int C74_EXPORT main()
 
 void *getthread_new()
 {
-    t_getthread *x = (t_getthread *) object_alloc (this_class);
+    t_getthread *x = (t_getthread *) object_alloc(this_class);
     
     x->thread_out = intout(x);
     

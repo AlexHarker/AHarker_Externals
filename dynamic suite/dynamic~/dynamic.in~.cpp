@@ -55,7 +55,7 @@ int C74_EXPORT main()
                            (method) dynamic_in_new,
                            (method) dynamic_in_free,
                            sizeof(t_dynamic_in),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -83,8 +83,8 @@ void *dynamic_in_new(t_atom_long inlet_num)
     x->inlet_num = -1;
     x->valid = false;
     
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     dynamic_in_int(x, inlet_num);
     

@@ -60,7 +60,7 @@ int C74_EXPORT main()
                            (method) voicedrive_new,
                            (method) voicedrive_free,
                            sizeof(t_voicedrive),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            A_DEFLONG,
                            0);
@@ -81,13 +81,13 @@ void *voicedrive_new(t_atom_long precision, t_atom_long interrupt_on)
 {
     t_voicedrive *x = (t_voicedrive *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 4);
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 4);
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
     if (precision)
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
     
     x->interrupt_on = interrupt_on ? true : false;
     x->precision = precision ? true : false;

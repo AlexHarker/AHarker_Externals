@@ -51,11 +51,16 @@ void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibuffermulti~", (method) ibuffermulti_new, (method)ibuffermulti_free, sizeof(t_ibuffermulti), 0L, 0);
+    this_class = class_new("ibuffermulti~",
+                           (method) ibuffermulti_new,
+                           (method) ibuffermulti_free,
+                           sizeof(t_ibuffermulti),
+                           (method) nullptr,
+                           0);
     
-    class_addmethod (this_class, (method)ibuffermulti_user_clear, "clear", 0);
-    class_addmethod (this_class, (method)ibuffermulti_user_load, "load", A_GIMME, 0);
-    class_addmethod (this_class, (method)ibuffermulti_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibuffermulti_user_clear, "clear", 0);
+    class_addmethod(this_class, (method) ibuffermulti_user_load, "load", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuffermulti_assist, "assist", A_CANT, 0);
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
@@ -69,9 +74,9 @@ int C74_EXPORT main()
 
 void *ibuffermulti_new()
 {
-    t_ibuffermulti *x = (t_ibuffermulti *) object_alloc (this_class);
+    t_ibuffermulti *x = (t_ibuffermulti *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 0);
+    dsp_setup((t_pxobject *) x, 0);
     
     x->number_out = intout(x);
     

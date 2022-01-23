@@ -73,31 +73,31 @@ int C74_EXPORT main()
 {
 #ifdef MSP_VERSION
     this_class = class_new("randomvals~",
-                           (method)randomvals_new,
-                           (method)randomvals_free,
+                           (method) randomvals_new,
+                           (method) randomvals_free,
                            sizeof(t_randomvals),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method)randomvals_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)randomvals_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) randomvals_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) randomvals_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
 #else
     this_class = class_new("randomvals",
-                           (method)randomvals_new,
-                           (method)randomvals_free,
+                           (method) randomvals_new,
+                           (method) randomvals_free,
                            sizeof(t_randomvals),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method)randomvals_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) randomvals_int, "int", A_LONG, 0);
 #endif
     
-    class_addmethod(this_class, (method)randomvals_list, "list", A_GIMME, 0);
-    class_addmethod(this_class, (method)randomvals_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) randomvals_list, "list", A_GIMME, 0);
+    class_addmethod(this_class, (method) randomvals_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -108,13 +108,13 @@ int C74_EXPORT main()
 
 void *randomvals_new()
 {
-    t_randomvals *x = (t_randomvals *)object_alloc(this_class);
+    t_randomvals *x = (t_randomvals *) object_alloc(this_class);
 
     create_object(x->gen);
 
 #ifdef MSP_VERSION
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
 #else
     x->the_outlet = floatout(x);
 #endif

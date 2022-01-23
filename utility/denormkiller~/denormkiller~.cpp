@@ -38,15 +38,15 @@ void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double
 int C74_EXPORT main()
 {
     this_class = class_new("denormkiller~",
-                           (method)denormkiller_new,
-                           (method)dsp_free,
+                           (method) denormkiller_new,
+                           (method) dsp_free,
                            sizeof(t_denormkiller),
-                           nullptr,
+                           (method) nullptr,
                            0);
     
-    class_addmethod(this_class, (method)denormkiller_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method)denormkiller_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)denormkiller_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) denormkiller_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) denormkiller_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) denormkiller_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
     
@@ -57,9 +57,9 @@ int C74_EXPORT main()
 
 void *denormkiller_new()
 {
-    t_denormkiller *x = (t_denormkiller *) object_alloc (this_class);
+    t_denormkiller *x = (t_denormkiller *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 0);
+    dsp_setup((t_pxobject *) x, 0);
     
     return x;
 }

@@ -168,26 +168,26 @@ int C74_EXPORT main()
 {
 	this_class	= class_new	("entrymatcher",
 				(method) entrymatcher_new, 
-				(method)entrymatcher_free, 
-				(short)sizeof(t_entrymatcher), 
+				(method) entrymatcher_free, 
+				sizeof(t_entrymatcher), 
 				NULL, 
 				A_DEFLONG, 
 				A_DEFLONG, 
 				0);
 	
-	class_addmethod(this_class, (method)entrymatcher_clear,"clear", 0);
-	class_addmethod(this_class, (method)entrymatcher_clear,"reset", 0);
+	class_addmethod(this_class, (method) entrymatcher_clear,"clear", 0);
+	class_addmethod(this_class, (method) entrymatcher_clear,"reset", 0);
 
-	class_addmethod(this_class, (method)entrymatcher_entry,"entry", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_match_user,"match", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_names,"names", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_lookup, "lookup", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_lookup, "index", A_GIMME, 0);
-	class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
+	class_addmethod(this_class, (method) entrymatcher_entry,"entry", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_match_user,"match", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_names,"names", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_lookup, "lookup", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_lookup, "index", A_GIMME, 0);
+	class_addmethod(this_class, (method) entrymatcher_assist, "assist", A_CANT, 0);
 	
-	class_addmethod(this_class, (method)entrymatcher_match_all, "bang", 0);
+	class_addmethod(this_class, (method) entrymatcher_match_all, "bang", 0);
 	
 	class_register(CLASS_BOX, this_class);
 	
@@ -228,7 +228,7 @@ int C74_EXPORT main()
 
 void *entrymatcher_new(long max_num_entries, long num_columns)
 {
-	t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
+	t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
 	
 	t_symbol **names;
 	char *label_modes;
@@ -502,7 +502,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *a
 	
 	if (to_lookup < 0 || to_lookup >= num_entries) 
 	{
-		object_error((t_object *)x, "entry does not exist %s", (argv - 1)->a_w.w_sym->s_name);
+		object_error((t_object *) x, "entry does not exist %s", (argv - 1)->a_w.w_sym->s_name);
 		return;
 	}
 	
@@ -638,7 +638,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, short argc, t_atom 
 		
 		if (test_type == TEST_NONE)
 		{
-			object_error((t_object *)x, "invalid test / no test specified in unparsed segment of matchers message");
+			object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
 			break;
 		}
 		

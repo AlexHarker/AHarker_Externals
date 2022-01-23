@@ -56,7 +56,7 @@ int C74_EXPORT main()
                           (method) schedulemessage_new,
                           (method) nullptr,
                           sizeof(t_schedulemessage),
-                          nullptr,
+                          (method) nullptr,
                           A_DEFFLOAT,
                           0);
 
@@ -85,7 +85,7 @@ void *schedulemessage_new(double delay)
     
     floatin(x, 1);
     
-    x->message_out = outlet_new(x, 0);
+    x->message_out = outlet_new(x, nullptr);
     x->delay = delay;
     
     return x;

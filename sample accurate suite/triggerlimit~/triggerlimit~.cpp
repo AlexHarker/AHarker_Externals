@@ -49,7 +49,7 @@ int C74_EXPORT main()
                            (method) triggerlimit_new,
                            (method) triggerlimit_free,
                            sizeof(t_triggerlimit),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -70,8 +70,8 @@ void *triggerlimit_new(t_atom_long limit)
 {
     t_triggerlimit *x = (t_triggerlimit *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     if (limit < 1)
         limit = 1;

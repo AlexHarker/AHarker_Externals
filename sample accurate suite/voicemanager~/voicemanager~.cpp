@@ -72,7 +72,7 @@ int C74_EXPORT main()
                            (method) voicemanager_new,
                            (method) voicemanager_free,
                            sizeof(t_voicemanager),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -92,12 +92,12 @@ int C74_EXPORT main()
 
 void *voicemanager_new(t_atom_long num_voices)
 {
-    t_voicemanager *x = (t_voicemanager *)object_alloc(this_class);
+    t_voicemanager *x = (t_voicemanager *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 4);
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 4);
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
     
     x->num_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(num_voices), max_voices)));
     x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->num_voices));

@@ -26,15 +26,15 @@
 
 int C74_EXPORT main()
 {
-	this_class = class_new ("descriptorsrt~",
-							(method) descriptors_new, 
-							(method)descriptors_free, 
-							sizeof(t_descriptors), 
-							0L, 
-							A_GIMME, 
-							0);
+	this_class = class_new("descriptorsrt~",
+                           (method) descriptors_new,
+                           (method) descriptors_free,
+                           sizeof(t_descriptors),
+                           0L,
+                           A_GIMME,
+                           0);
 	
-	class_addmethod (this_class, (method)descriptors_descriptors_rt, "descriptors", A_GIMME, 0L);
+	class_addmethod(this_class, (method) descriptors_descriptors_rt, "descriptors", A_GIMME, 0);
 	
 	descriptors_main_common();
 	
@@ -46,7 +46,7 @@ int C74_EXPORT main()
 
 void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 {
-    t_descriptors *x = (t_descriptors *)object_alloc(this_class);
+    t_descriptors *x = (t_descriptors *) object_alloc(this_class);
 	
 	long descriptor_feedback = 0;
 	long max_fft_size_log2;
@@ -71,7 +71,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	x->max_fft_size_log2 = max_fft_size_log2;
 	x->max_fft_size = max_fft_size = 1 << (max_fft_size_log2);
 	
-	dsp_setup((t_pxobject *)x, 1);
+	dsp_setup((t_pxobject *) x, 1);
 		
 	// Allocate memory
 	
@@ -136,7 +136,7 @@ void descriptors_free(t_descriptors *x)
 	ALIGNED_FREE (x->rt_buffer);
 	hisstools_destroy_setup(x->fft_setup_real);
 	if (x->output_rt_clock) 
-		freeobject((t_object *)x->output_rt_clock);
+		freeobject((t_object *) x->output_rt_clock);
 }
 
 

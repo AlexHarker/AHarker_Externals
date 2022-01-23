@@ -96,7 +96,7 @@ int C74_EXPORT main()
                            (method) timeconvolve_new,
                            (method) timeconvolve_free,
                            sizeof(t_timeconvolve),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
@@ -138,8 +138,8 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     t_timeconvolve *x = (t_timeconvolve *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x,"signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     // Set default initial attributes and variables
     

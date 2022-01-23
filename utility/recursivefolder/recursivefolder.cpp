@@ -60,14 +60,20 @@ int C74_EXPORT main()
 {
     t_class *c;
     
-    c = class_new("recursivefolder", (method)recursive_folder_new, 0L, sizeof(t_recursive_folder), 0L, A_GIMME, 0);
+    c = class_new("recursivefolder",
+                  (method) recursive_folder_new,
+                  (method) nullptr,
+                  sizeof(t_recursive_folder),
+                  (method) nullptr,
+                  A_GIMME,
+                  0);
     
-    class_addmethod(c, (method)recursive_folder_bang, "int", A_LONG, 0);
-    class_addmethod(c, (method)recursive_folder_bang, "bang", 0);
-    class_addmethod(c, (method)recursive_folder_anything, "anything", A_GIMME, 0);
-    class_addmethod(c, (method)recursive_folder_anything, "symbol",    A_SYM, 0);
-    class_addmethod(c, (method)recursive_folder_types, "types",    A_GIMME, 0);
-    class_addmethod(c, (method)recursive_folder_assist, "assist",    A_CANT, 0);
+    class_addmethod(c, (method) recursive_folder_bang, "int", A_LONG, 0);
+    class_addmethod(c, (method) recursive_folder_bang, "bang", 0);
+    class_addmethod(c, (method) recursive_folder_anything, "anything", A_GIMME, 0);
+    class_addmethod(c, (method) recursive_folder_anything, "symbol",    A_SYM, 0);
+    class_addmethod(c, (method) recursive_folder_types, "types",    A_GIMME, 0);
+    class_addmethod(c, (method) recursive_folder_assist, "assist",    A_CANT, 0);
     
     class_register(CLASS_BOX, c);
     this_class = c;
@@ -85,8 +91,8 @@ void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
 {
     t_recursive_folder *x = (t_recursive_folder *) object_alloc(this_class);
     
-    x->f_countout = intout((t_object *)x);
-    outlet_new((t_object *)x,0);
+    x->f_countout = intout((t_object *) x);
+    outlet_new((t_object *) x, nullptr);
     
     x->f_input = 0;
     x->f_numtypes = 0;
@@ -135,7 +141,7 @@ void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, cha
 
 void recursive_folder_bang(t_recursive_folder *x)
 {
-    defer(x,(method)recursive_folder_action, 0, 0, 0);
+    defer(x, (method) recursive_folder_action, 0, 0, 0);
 }
 
 
@@ -167,7 +173,7 @@ void recursive_folder_action(t_recursive_folder *x)
             err = path_frompathname(sourcename, &path, fullname);
             if (err || fullname[0])
             {
-                object_error((t_object *)x, "%s: not a folder", x->f_input->s_name);
+                object_error((t_object *) x, "%s: not a folder", x->f_input->s_name);
                 x->f_path = 0;
             }
             else

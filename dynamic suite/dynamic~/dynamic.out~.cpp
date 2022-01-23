@@ -59,7 +59,7 @@ int C74_EXPORT main()
                            (method) dynamic_out_new,
                            (method) dynamic_out_free,
                            sizeof(t_dynamic_out),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -79,7 +79,7 @@ int C74_EXPORT main()
 
 void *dynamic_out_new(t_atom_long outlet_num)
 {
-    t_dynamic_out *x = (t_dynamic_out *)object_alloc(this_class);
+    t_dynamic_out *x = (t_dynamic_out *) object_alloc(this_class);
     void *dynamicdsp_parent = dynamic_get_parent();
     
     x->out_handle = dynamic_get_sig_out_handle(dynamicdsp_parent, dynamic_get_patch_index(dynamicdsp_parent));
@@ -87,7 +87,7 @@ void *dynamic_out_new(t_atom_long outlet_num)
     
     x->outlet_num = outlet_num;
     
-    dsp_setup((t_pxobject *)x, 1);
+    dsp_setup((t_pxobject *) x, 1);
     
     return x;
 }

@@ -35,18 +35,18 @@ void ibufinfo_bang(t_ibufinfo *x);
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibufinfo~",
-                            (method) ibufinfo_new,
-                            nullptr,
-                            sizeof (t_ibufinfo),
-                            nullptr,
-                            A_DEFSYM,
-                            0);
+    this_class = class_new("ibufinfo~",
+                           (method) ibufinfo_new,
+                           (method) nullptr,
+                           sizeof (t_ibufinfo),
+                           (method) nullptr,
+                           A_DEFSYM,
+                           0);
     
-    class_addmethod(this_class, (method)ibufinfo_set, "set", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibufinfo_bang, "bang", 0);
+    class_addmethod(this_class, (method) ibufinfo_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufinfo_bang, "bang", 0);
     
-    class_addmethod(this_class, (method)ibufinfo_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufinfo_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -55,7 +55,7 @@ int C74_EXPORT main()
 
 void *ibufinfo_new(t_symbol *buffer_name)
 {
-    t_ibufinfo *x = (t_ibufinfo *)object_alloc(this_class);
+    t_ibufinfo *x = (t_ibufinfo *) object_alloc(this_class);
     
     x->chans_outlet = intout(x);
     x->sr_outlet = floatout(x);
@@ -121,5 +121,5 @@ void ibufinfo_set_internal(t_ibufinfo *x, t_symbol *name)
         }
     }
     else
-        object_error((t_object *)x, "named (i)buffer~ does not exist");
+        object_error((t_object *) x, "named (i)buffer~ does not exist");
 }

@@ -163,7 +163,7 @@ int C74_EXPORT main()
                            (method) partconvolve_new,
                            (method) partconvolve_free,
                            sizeof(t_partconvolve),
-                           nullptr,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
@@ -213,10 +213,10 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup the object and make inlets / outlets
     
-    t_partconvolve *x = (t_partconvolve *)object_alloc(this_class);
+    t_partconvolve *x = (t_partconvolve *) object_alloc(this_class);
         
-    dsp_setup((t_pxobject *)x, 1);
-    outlet_new((t_object *)x,"signal");
+    dsp_setup((t_pxobject *) x, 1);
+    outlet_new((t_object *) x, "signal");
     
     // Set default initial attributes and variables
     
@@ -243,7 +243,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
             max_impulse_length = BUFFER_SIZE_DEFAULT;
         if (max_impulse_length < 64)
         {
-            object_error( (t_object *) x, "minimum internal buffer size is 64 samples");
+            object_error((t_object *) x, "minimum internal buffer size is 64 samples");
             max_impulse_length = 64;
         }
         
@@ -921,9 +921,9 @@ void partconvolve_memoryusage(t_partconvolve *x)
     long memory_size = (x->max_impulse_length * 4 * sizeof(float)) + (x->max_fft_size * 7 * sizeof(float));
     
     if (memory_size > 1024)
-        object_post((t_object *)x, "using %.2lf MB", memory_size / 1048576.0);
+        object_post((t_object *) x, "using %.2lf MB", memory_size / 1048576.0);
     else
-        object_post((t_object *)x, "using %.2lf KB", memory_size / 1024.0);
+        object_post((t_object *) x, "using %.2lf KB", memory_size / 1024.0);
 }
 
 // Assist

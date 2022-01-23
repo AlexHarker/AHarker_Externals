@@ -48,7 +48,7 @@ int C74_EXPORT main()
                           (method) threadfilter_new,
                           (method) nullptr,
                           sizeof(t_threadfilter),
-                          nullptr,
+                          (method) nullptr,
                           0);
     
     class_addmethod(this_class, (method) threadfilter_int, "int", A_LONG, 0);
@@ -69,8 +69,8 @@ void *threadfilter_new()
 {
     t_threadfilter *x = (t_threadfilter *) object_alloc(this_class);
     
-    x->message_out_hi = outlet_new(x, 0);
-    x->message_out_lo = outlet_new(x, 0);
+    x->message_out_hi = outlet_new(x, nullptr);
+    x->message_out_lo = outlet_new(x, nullptr);
     
     return x;
 }

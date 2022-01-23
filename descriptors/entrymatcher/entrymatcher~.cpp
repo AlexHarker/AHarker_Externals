@@ -60,10 +60,10 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
-t_int *entrymatcher_perform (t_int *w);
+t_int *entrymatcher_perform(t_int *w);
 void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
 
-void entrymatcher_perform64 (t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 /*****************************************/
@@ -72,20 +72,20 @@ void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double
 
 int C74_EXPORT main()
 {
-    this_class	= class_new	("entrymatcher~",
-                             (method) entrymatcher_new,
-                             (method)entrymatcher_free,
-                             (short)sizeof(t_entrymatcher),
-                             NULL,
-                             A_GIMME,
-                             0);
+    this_class = class_new("entrymatcher~",
+                           (method) entrymatcher_new,
+                           (method) entrymatcher_free,
+                           sizeof(t_entrymatcher),
+                           (method) nullptr,
+                           A_GIMME,
+                           0);
     
-    class_addmethod(this_class, (method)entrymatcher_limit,"limit", A_GIMME, 0);
-    class_addmethod(this_class, (method)entrymatcher_matchers,"matchers", A_GIMME, 0);
-    class_addmethod(this_class, (method)entrymatcher_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) entrymatcher_limit,"limit", A_GIMME, 0);
+    class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
+    class_addmethod(this_class, (method) entrymatcher_assist, "assist", A_CANT, 0);
     
-    class_addmethod(this_class, (method)entrymatcher_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)entrymatcher_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) entrymatcher_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) entrymatcher_dsp64, "dsp64", A_CANT, 0);
 
     entrymatcher_add_common<t_entrymatcher>(this_class);
     
@@ -114,8 +114,8 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     
     t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 2 + max_matchers);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 2 + max_matchers);
+    outlet_new((t_object *) x, "signal");
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new Matchers;
@@ -209,7 +209,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         
         if (type == TEST_NONE)
         {
-            object_error((t_object *)x, "incorrect test type");
+            object_error((t_object *) x, "incorrect test type");
             break;
         }
         
@@ -258,16 +258,16 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         }
         else
         {
-            object_error((t_object *)x, "specified column in matchers message does not exist");
+            object_error((t_object *) x, "specified column in matchers message does not exist");
         }
     }
     
     if (argc > 0)
     {
         if (x->matchers->size() < max_matchers)
-            object_error((t_object *)x, "too many arguments to matchers message for number of specified tests");
+            object_error((t_object *) x, "too many arguments to matchers message for number of specified tests");
         else
-            object_error((t_object *)x, "not enough arguments to matchers message to correctly specify final matcher");
+            object_error((t_object *) x, "not enough arguments to matchers message to correctly specify final matcher");
     }
 }
 

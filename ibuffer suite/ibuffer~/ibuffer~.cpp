@@ -44,15 +44,22 @@ t_symbol *ps_null;
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibuffer~", (method) ibuffer_new, (method)ibuffer_free, (short)sizeof(t_ibuffer), 0L, A_DEFSYM, A_DEFSYM, 0);
+    this_class = class_new("ibuffer~",
+                           (method) ibuffer_new,
+                           (method) ibuffer_free,
+                           sizeof(t_ibuffer),
+                           (method) nullptr,
+                           A_DEFSYM,
+                           A_DEFSYM,
+                           0);
     
-    class_addmethod(this_class, (method)ibuffer_name, "name", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibuffer_name, "set", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibuffer_load, "open", A_GIMME, 0);
-    class_addmethod(this_class, (method)ibuffer_load, "replace", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuffer_name, "name", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuffer_name, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuffer_load, "open", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuffer_load, "replace", A_GIMME, 0);
     
-    class_addmethod(this_class, (method)ibuffer_valid, "valid", A_CANT, 0);
-    class_addmethod(this_class, (method)ibuffer_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibuffer_valid, "valid", A_CANT, 0);
+    class_addmethod(this_class, (method) ibuffer_assist, "assist", A_CANT, 0);
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
@@ -69,7 +76,7 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
     
     t_ibuffer *x = (t_ibuffer *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 0);
+    dsp_setup((t_pxobject *) x, 0);
     
     x->name = 0;
     x->memory = nullptr;
@@ -232,7 +239,7 @@ void form_os_name(char *filename, char *foldname, char *fullname)
 
 void ibuffer_switch_endianness(t_ibuffer *x)
 {
-    uint8_t *data = (uint8_t*)x->samples;
+    uint8_t *data = reinterpret_cast<uint8_t*>(x->samples);
     
     if (x->format == PCM_INT_16)
     {

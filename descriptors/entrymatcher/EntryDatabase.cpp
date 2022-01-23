@@ -187,7 +187,7 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
 {
     if (!argc--)
     {
-        object_error((t_object *)x, "no arguments for entry");
+        object_error((t_object *) x, "no arguments for entry");
         return;
     }
     
@@ -219,7 +219,7 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
         else
         {
             if (i < argc)
-                object_error((t_object *)x, "incorrect type in entry - column number %ld", i + 1);
+                object_error((t_object *) x, "incorrect type in entry - column number %ld", i + 1);
             
             setData(idx, i, mColumns[i].mLabel ? CustomAtom(gensym("")) : CustomAtom());
         }
@@ -252,7 +252,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
     {
-        object_error((t_object *)x, "no identifiers given for remove message");
+        object_error((t_object *) x, "no identifiers given for remove message");
         return;
     }
     

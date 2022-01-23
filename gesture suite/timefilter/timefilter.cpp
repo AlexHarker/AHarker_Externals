@@ -77,7 +77,7 @@ int C74_EXPORT main()
                            (method) timefilter_new,
                            (method) timefilter_free,
                            sizeof(t_timefilter),
-                           nullptr,
+                           (method) nullptr,
                            0);
     
     class_addmethod(this_class, (method) timefilter_bang, "bang", 0);
@@ -97,7 +97,7 @@ int C74_EXPORT main()
 
 void *timefilter_new()
 {
-    t_timefilter *x = (t_timefilter *)object_alloc(this_class);
+    t_timefilter *x = (t_timefilter *) object_alloc(this_class);
     
     x->list_outlet = listout(x);
     x->stored_length = 0;
@@ -139,7 +139,7 @@ void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
     long stored_list_length = x->stored_length;
     
     if (argc > 1024)
-        object_error((t_object *)x, "maximum list length is 1024 items");
+        object_error((t_object *) x, "maximum list length is 1024 items");
     
     while (argc-- && stored_list_length < 1024)
         stored_list[stored_list_length++] = atom_getfloat(argv++);

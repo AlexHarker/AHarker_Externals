@@ -62,7 +62,7 @@ int C74_EXPORT main()
                            (method) dynamic_this_new,
                            (method) dynamic_this_free,
                            sizeof(t_dynamic_this),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            A_DEFLONG,
                            0);
@@ -113,7 +113,7 @@ void *dynamic_this_new(t_atom_long on, t_atom_long busy)
 
 void dynamic_this_free(t_dynamic_this *x)
 {
-    freeobject((t_object *)x->m_clock);
+    freeobject((t_object *) x->m_clock);
     dynamic_unregister_listener(x->dynamic_parent, x->index, x);
 }
 
@@ -204,7 +204,7 @@ void dynamic_this_output_mute(t_dynamic_this *x)
 
 void dynamic_this_delete(t_dynamic_this *x)
 {
-    clock_set(x->m_clock, 0L);
+    clock_set(x->m_clock, 0);
 }
 
 void clock_delete(t_dynamic_this *x)

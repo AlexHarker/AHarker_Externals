@@ -101,12 +101,12 @@ void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s);
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("gesture_maker",
-                            (method)gesture_maker_new,
-                            (method)gesture_maker_free,
-                            sizeof(t_gesture_maker),
-                            nullptr,
-                            0);
+    this_class = class_new("gesture_maker",
+                           (method) gesture_maker_new,
+                           (method) gesture_maker_free,
+                           sizeof(t_gesture_maker),
+                           (method) nullptr,
+                           0);
     
     class_addmethod(this_class, (method) gesture_maker_drive, "drive", A_FLOAT, 0);
     class_addmethod(this_class, (method) gesture_maker_events, "events", A_GIMME, 0);
@@ -139,7 +139,7 @@ int C74_EXPORT main()
 
 void *gesture_maker_new()
 {
-    t_gesture_maker *x = (t_gesture_maker *)object_alloc(this_class);
+    t_gesture_maker *x = (t_gesture_maker *) object_alloc(this_class);
     
     x->gesture_drive_out = listout(x);
     x->gesture_vals_out = listout(x);
@@ -163,7 +163,7 @@ void *gesture_maker_new()
 void gesture_maker_free(t_gesture_maker *x)
 {
     if (x->gesture_clock)
-        freeobject((t_object *)x->gesture_clock);
+        freeobject((t_object *) x->gesture_clock);
 }
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
