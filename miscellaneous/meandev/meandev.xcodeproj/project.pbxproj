@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B8BEAA860CD67F7700F906C8 /* meandev.c in Sources */ = {isa = PBXBuildFile; fileRef = B8BEAA750CD67E2B00F906C8 /* meandev.c */; };
+		B8BEAA860CD67F7700F906C8 /* meandev.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BEAA750CD67E2B00F906C8 /* meandev.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B8BEAA750CD67E2B00F906C8 /* meandev.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = meandev.c; sourceTree = "<group>"; };
+		B8BEAA750CD67E2B00F906C8 /* meandev.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meandev.cpp; sourceTree = "<group>"; };
 		B8BEAA8F0CD67F7700F906C8 /* meandev.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = meandev.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C4F3CE1274340500CC6508 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -40,7 +40,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8BEAA750CD67E2B00F906C8 /* meandev.c */,
+				B8BEAA750CD67E2B00F906C8 /* meandev.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -139,7 +139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BEAA860CD67F7700F906C8 /* meandev.c in Sources */,
+				B8BEAA860CD67F7700F906C8 /* meandev.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
