@@ -406,7 +406,7 @@ void *meandev_new(t_symbol *s, short argc, t_atom *argv)
     
     // Clip the max age to some large value that will definitely fit in a long with some space for calculation
     
-    args[2] = std::min(args[2], std::numeric_limits<long>::max() >> 1);
+    args[2] = std::min(args[2], static_cast<t_atom_long>(std::numeric_limits<long>::max() >> 1));
     
     if (args[2] <= 1)
     {
