@@ -63,7 +63,7 @@ struct t_data_base
         for (long i = oldest > m_position ? oldest : m_size; i < m_size; i++)
             sum += data(i);
         
-        return sum;
+        return sum / data.total(*this);
     }
     
 protected:
@@ -182,50 +182,50 @@ double square_difference(double data, double mean)
     return difference * difference;
 }
 
-struct data_functor
+struct sum_functor
 {
-    data_functor(const t_data& data)
-    : m_data(data.data()) {}
+    sum_functor(const double *data) : m_data(data) {}
     
-    double operator()(long i) const { return m_data[i]; }
+    double operator()(long i) const                 { return m_data[i]; }
+    double total(const t_data_base& base) const     { return 1.0; }
     
     const double *m_data;
 };
 
-struct weighted_data_functor
+struct data_functor : sum_functor
 {
-    weighted_data_functor(const t_weighted_data& data)
-    : m_data(data.data()), m_weights(data.weights()) {}
+    data_functor(const t_data& data) : sum_functor(data.data()) {}
+        
+    double total(const t_data_base& base) const { return base.count(); }
+};
+
+struct weighted_data_functor : data_functor
+{
+    weighted_data_functor(const t_weighted_data& data) : data_functor(data), m_weights(data.weights()) {}
     
-    double operator()(long i) const { return m_data[i] * m_weights[i]; }
+    double operator()(long i) const                 { return m_data[i] * m_weights[i]; }
+    double total(const t_data_base base) const      { return base.sum_data(sum_functor(m_weights)); }
     
-    const double *m_data;
     const double *m_weights;
 };
     
-struct variance_functor
+struct variance_functor : data_functor
 {
-    variance_functor(const t_data& data, double mean)
-    : m_data(data.data()), m_mean(mean) {}
+    variance_functor(const t_data& data, double mean) : data_functor(data), m_mean(mean) {}
 
     double operator()(long i) const { return square_difference(m_data[i], m_mean); }
     
-    const double *m_data;
     double m_mean;
 };
     
-struct variance_weighted_functor
+struct variance_weighted_functor : weighted_data_functor
 {
-    variance_weighted_functor(const t_weighted_data& data, double mean)
-    : m_data(data.data()), m_weights(data.weights()), m_mean(mean) {}
+    variance_weighted_functor(const t_weighted_data& data, double mean) : weighted_data_functor(data), m_mean(mean) {}
 
     double operator()(long i) const { return square_difference(m_data[i], m_mean) * m_weights[i]; }
     
-    const double *m_data;
-    const double *m_weights;
     double m_mean;
 };
-
 
 struct t_meandev
 {
@@ -271,15 +271,13 @@ void meandev_timed_add_remove_data(t_meandev *x, t_atom_long dur_num);
 void meandev_timed_remove_mean(t_meandev *x, t_duration_data *duration);
 
 void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time);
-void set_mean_clock(t_meandev *x, t_duration_data *duration, long time);
+void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time);
 
-void meandev_output_unweighted(t_meandev *x, t_duration_data *duration);
-void meandev_output_weighted(t_meandev *x, t_duration_data *duration);
 void meandev_output(t_meandev *x, t_atom_long dur);
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration);
 
 std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
-std::pair<double, double> meandev_calc_variance(t_duration_data *duration);
+std::pair<double, double> meandev_calc_stats(t_duration_data *duration);
 
 // Main
 
@@ -569,7 +567,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
     // Store data, age and weight and update the shortest duration
 
     bool overflow = x->data.add(data, time, weight);
-    x->durations[first].core_data.add();         // FIX - Make sure this is added correctly!!
+    x->durations[first].core_data.add();
     
     // Check for overflow (also does largest band in "last n values" mode)
 
@@ -676,7 +674,7 @@ void meandev_timed_remove_mean(t_meandev *x, t_duration_data *duration)
         meandev_output_mean_removed(x, duration);
     }
     
-    set_mean_clock(x, duration, time);
+    meandev_set_clock_mean(x, duration, time);
 }
 
 // Clock Setting Routines
@@ -711,7 +709,7 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
     }
 }
 
-void set_mean_clock(t_meandev *x, t_duration_data *duration, long time)
+void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time)
 {
     long min_time = (duration->age_span()) - (time - duration->mean_data.oldest_age()) + 1;
     
@@ -722,14 +720,15 @@ void set_mean_clock(t_meandev *x, t_duration_data *duration, long time)
 
 // Output Routines
 
-void meandev_output_unweighted(t_meandev *x, t_duration_data *duration)
+template <typename mean_calc, typename var_calc>
+void meandev_output_type(t_meandev *x, t_duration_data *duration)
 {
     double mean = 0.0;
     double variance = 0.0;
 
     if (duration->core_data.count())
     {
-        mean = duration->core_data.sum_data(data_functor(x->data)) / duration->core_data.count();
+        mean = duration->core_data.sum_data(mean_calc(x->data));
         
         if (x->mean_mode && !x->is_first(duration))
         {
@@ -739,41 +738,11 @@ void meandev_output_unweighted(t_meandev *x, t_duration_data *duration)
             variance = result.second;
         }
         else
-            variance = duration->core_data.sum_data(variance_functor(x->data, mean)) / duration->core_data.count();
+            variance = duration->core_data.sum_data(var_calc(x->data, mean));
     }
     
     variance = x->standard_var ? sqrt(variance) : variance;
         
-    outlet_float(duration->f_out2, variance);
-    outlet_float(duration->f_out1, mean);
-}
-
-void meandev_output_weighted(t_meandev *x, t_duration_data *duration)
-{
-    double mean = 0.0;
-    double variance = 0.0;
-
-    if (duration->core_data.count())
-    {
-        // FIX weighting denominators!!!
-        
-        mean = duration->core_data.sum_data(weighted_data_functor(x->data)) / duration->core_data.count();
-    
-        if (x->mean_mode && !x->is_first(duration))
-        {
-            auto result = meandev_new_mean(x, duration, mean);
-            
-            mean = (x->mean_mode == 2) ? result.first : mean;
-            variance = result.second;
-        }
-        else
-            variance = duration->core_data.sum_data(variance_weighted_functor(x->data, mean)) / duration->core_data.count();
-    }
-    
-    // Sqrt if standard deviation is requested
-    
-    variance = x->standard_var ? sqrt(variance) : variance;
-
     outlet_float(duration->f_out2, variance);
     outlet_float(duration->f_out1, mean);
 }
@@ -781,14 +750,14 @@ void meandev_output_weighted(t_meandev *x, t_duration_data *duration)
 void meandev_output(t_meandev *x, t_atom_long dur)
 {
     if (x->weights_mode)
-        meandev_output_weighted(x, x->durations + dur);
+        meandev_output_type<weighted_data_functor, variance_weighted_functor>(x, x->durations + dur);
     else
-        meandev_output_unweighted(x, x->durations + dur);
+        meandev_output_type<data_functor, variance_functor>(x, x->durations + dur);
 }
 
 void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
 {
-    auto result = meandev_calc_variance(duration);
+    auto result = meandev_calc_stats(duration);
     
     const double mean = result.first;
     const double variance = x->standard_var ? sqrt(result.second) : result.second;
@@ -801,14 +770,14 @@ void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
 
 // Calculation Routines
 
-std::pair<double, double> meandev_calc_variance(t_duration_data *duration)
+std::pair<double, double> meandev_calc_stats(t_duration_data *duration)
 {
     if (duration->mean_data.count())
     {
         // Find mean and then variance
     
-        double mean     = duration->mean_data.sum_data(data_functor(duration->mean_data)) / duration->mean_data.count();
-        double variance = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean)) / duration->mean_data.count();
+        double mean     = duration->mean_data.sum_data(data_functor(duration->mean_data));
+        double variance = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
         
         return { mean, variance };
     }
@@ -831,7 +800,7 @@ std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *durati
     // Find the minimium times until the next mean should be removed
     
     if (x->timed_mode)
-        set_mean_clock(x, duration, time);
+        meandev_set_clock_mean(x, duration, time);
     
-    return meandev_calc_variance(duration);
+    return meandev_calc_stats(duration);
 }
