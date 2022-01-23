@@ -52,6 +52,9 @@ struct t_data_base
     template <typename T>
     double sum_data(const T& data) const
     {
+        if (!count())
+            return 0.0;
+        
         double sum = 0.0;
         
         long oldest = oldest_idx();
@@ -723,23 +726,18 @@ void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time)
 template <typename mean_calc, typename var_calc>
 void meandev_output_type(t_meandev *x, t_duration_data *duration)
 {
-    double mean = 0.0;
+    double mean = duration->core_data.sum_data(mean_calc(x->data));
     double variance = 0.0;
 
-    if (duration->core_data.count())
+    if (x->mean_mode && !x->is_first(duration))
     {
-        mean = duration->core_data.sum_data(mean_calc(x->data));
-        
-        if (x->mean_mode && !x->is_first(duration))
-        {
-            auto result = meandev_new_mean(x, duration, mean);
-                
-            mean = (x->mean_mode == 2) ? result.first : mean;
-            variance = result.second;
-        }
-        else
-            variance = duration->core_data.sum_data(var_calc(x->data, mean));
+        auto result = meandev_new_mean(x, duration, mean);
+            
+        mean = (x->mean_mode == 2) ? result.first : mean;
+        variance = result.second;
     }
+    else
+        variance = duration->core_data.sum_data(var_calc(x->data, mean));
     
     variance = x->standard_var ? sqrt(variance) : variance;
         
@@ -772,17 +770,10 @@ void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration)
 
 std::pair<double, double> meandev_calc_stats(t_duration_data *duration)
 {
-    if (duration->mean_data.count())
-    {
-        // Find mean and then variance
-    
-        double mean     = duration->mean_data.sum_data(data_functor(duration->mean_data));
-        double variance = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
+    double mean     = duration->mean_data.sum_data(data_functor(duration->mean_data));
+    double variance = duration->mean_data.sum_data(variance_functor(duration->mean_data, mean));
         
-        return { mean, variance };
-    }
-        
-    return { 0.0, 0.0 };
+    return { mean, variance };
 }
 
 std::pair<double, double> meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean)
