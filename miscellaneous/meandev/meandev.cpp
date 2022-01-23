@@ -2,8 +2,8 @@
 /*
  *  meandev
  *
- *  meandev is an object for calculating the mean and variance or standard deviation of a set of values over various ranges in the data's history.
- *  This makes it possible to compare these values for different ranges in time and make some assesment of how the data is changing.
+ *  meandev calculates the mean and variance or standard deviation of values over various ranges in the data's history.
+ *  This makes it possible to compare values for different ranges in time assess how the data is changing.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
