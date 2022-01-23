@@ -594,15 +594,15 @@ void meandev_add_data(t_meandev *x, double data, double weight)
     
     if (x->timed_mode)
     {
-        // In the timed modes find time the next piece of data should be added/removed in each duration range
-
-        for (t_atom_long i = 0; i < num_dur; i++)
-            meandev_set_clock_data(x, x->durations + i, time);
-        
         // Always output the shortest duration and if data has overflowed then output all durations
  
         for (t_atom_long i = first; i >= (overflow ? 0 : first) ; i--)
             meandev_output(x, i);
+        
+        // In the timed modes find time the next piece of data should be added/removed in each duration range
+
+        for (t_atom_long i = 0; i < num_dur; i++)
+            meandev_set_clock_data(x, x->durations + i, time);
     }
     else
     {
@@ -674,8 +674,8 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
 {
     // Find the next timed action to perform
 
-    long del_time = (duration->max_age) - (time - x->data.ages()[duration->core_data.oldest_idx()]) + 1;
-    long add_time = (duration->min_age) - (time - x->data.ages()[duration->core_data.next_idx()]) + 1;
+    long del_time = duration->max_age - (time - x->data.ages()[duration->core_data.oldest_idx()]) + 1;
+    long add_time = duration->min_age - (time - x->data.ages()[duration->core_data.next_idx()]) + 1;
 
     // Unset clock (there may be no action to perform)
 
@@ -702,7 +702,7 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
 
 void meandev_set_clock_mean(t_meandev *x, t_duration_data *duration, long time)
 {
-    long min_time = (duration->age_span()) - (time - duration->mean_data.oldest_age()) + 1;
+    long min_time = duration->age_span() - (time - duration->mean_data.oldest_age()) + 1;
     
     clock_unset(duration->f_mean_clock);
     if (duration->mean_data.count())
