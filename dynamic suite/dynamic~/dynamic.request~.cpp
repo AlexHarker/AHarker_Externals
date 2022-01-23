@@ -77,7 +77,7 @@ int C74_EXPORT main()
     return 0;
 }
 
-// New / free / assist
+// New / Free / Assist
 
 void *dynamic_request_new(t_atom_long inlet_num)
 {
