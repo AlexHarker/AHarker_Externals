@@ -33,7 +33,8 @@
 
 t_class *this_class;
 
-typedef struct entrymatcher {
+struct t_entrymatcher
+{
     
     t_pxobject x_obj;
     
@@ -50,8 +51,7 @@ typedef struct entrymatcher {
     random_generator<> gen;
     
     float *matcher_ins[256];
-    
-} t_entrymatcher;
+};
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);

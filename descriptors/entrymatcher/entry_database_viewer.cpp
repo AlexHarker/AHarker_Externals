@@ -7,7 +7,7 @@
 #include <jgraphics.h>
 #include <jdataview.h>
 
-typedef struct _entry_database_viewer
+struct t_entry_database_viewer
 {
     t_jbox              d_box;
     t_object            *d_dataview;
@@ -20,8 +20,7 @@ typedef struct _entry_database_viewer
     
     bool sort_direction;
     std::vector<long> indices;
-    
-} t_entry_database_viewer;
+};
 
 
 void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv);

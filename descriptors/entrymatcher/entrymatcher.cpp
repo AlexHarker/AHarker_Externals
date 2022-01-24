@@ -32,7 +32,8 @@ t_class *this_class;
 
 t_symbol *ps_lookup = gensym("lookup");
 
-typedef struct entrymatcher{
+struct t_entrymatcher
+{
 
     t_object x_obj;
     
@@ -48,8 +49,7 @@ typedef struct entrymatcher{
     void *the_identifiers_outlet;
     void *the_distances_outlet;
     void *the_data_outlet;
-    
-} t_entrymatcher;
+};
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
