@@ -284,12 +284,12 @@ void entry_database_view_removed(t_entry_database *database_object)
 
 notify_pointer::~notify_pointer()
 {
-    t_entry_database *database = (t_entry_database *) mMaxDatabase;
+    t_entry_database *database = (t_entry_database *) m_max_database;
     
     if (database->notify)
     {
         database->notify = false;
-        defer_low(mMaxDatabase, (method) entry_database_modified, nullptr, 0, nullptr);
+        defer_low(m_max_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
 

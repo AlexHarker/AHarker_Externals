@@ -57,7 +57,7 @@ private:
         }
         
         template <typename T, typename Op>
-        inline long comparison_test(std::vector<result>& results, long num_matches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        inline long comparison_test(std::vector<result>& results, long num_matches, const EntryDatabase::raw_accessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -69,7 +69,7 @@ private:
                 {
                     long idx = results[i].m_index;
                     
-                    if (op(accessor.getData(idx, m_column), comparison_value))
+                    if (op(accessor.get_data(idx, m_column), comparison_value))
                         results[matched++] = result(idx, results[i].m_distance);
                 }
             }
@@ -78,7 +78,7 @@ private:
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    t_untyped_atom value = accessor.getData(idx, m_column);
+                    t_untyped_atom value = accessor.get_data(idx, m_column);
                     
                     for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                     {
@@ -95,7 +95,7 @@ private:
         }
         
         template <typename Op>
-        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const EntryDatabase::raw_accessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -106,7 +106,7 @@ private:
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    double distance = op(comparison_value, accessor.getData(idx, m_column).m_value, m_scale);
+                    double distance = op(comparison_value, accessor.get_data(idx, m_column).m_value, m_scale);
                     distance *= distance;
                     
                     if (!reject || distance <= 1.0)
@@ -118,7 +118,7 @@ private:
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    double value = accessor.getData(idx, m_column).m_value;
+                    double value = accessor.get_data(idx, m_column).m_value;
                     double distance = HUGE_VAL;
                     
                     for (auto it = m_values.cbegin(); it != m_values.cend(); it++)

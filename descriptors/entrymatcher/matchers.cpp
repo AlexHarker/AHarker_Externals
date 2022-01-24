@@ -15,7 +15,7 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
     
     m_results.resize(num_items);
     
-    const EntryDatabase::RawAccessor accessor = database->rawAccessor();
+    const auto accessor = database->rawAccessor();
     
     if (!size() || m_audio_style)
     {
@@ -70,19 +70,19 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
                 {
                     case kTestMatch:
                         if (database->getColumnLabelMode(it->m_column))
-                            matched = it->comparison_test(accessor.getData(i, it->m_column), std::equal_to<t_symbol *>());
+                            matched = it->comparison_test(accessor.get_data(i, it->m_column), std::equal_to<t_symbol *>());
                         else
-                            matched = it->comparison_test(accessor.getData(i, it->m_column), std::equal_to<double>());
+                            matched = it->comparison_test(accessor.get_data(i, it->m_column), std::equal_to<double>());
                         break;
                         
-                    case kTestLess:             matched = it->comparison_test(accessor.getData(i, it->m_column), std::less<double>()); break;
-                    case kTestGreater:          matched = it->comparison_test(accessor.getData(i, it->m_column), std::greater<double>()); break;
-                    case kTestLessEqual:        matched = it->comparison_test(accessor.getData(i, it->m_column), std::less_equal<double>()); break;
-                    case kTestGreaterEqual:     matched = it->comparison_test(accessor.getData(i, it->m_column), std::greater_equal<double>()); break;
-                    case kTestDistance:         matched = it->distance_test(false, accessor.getData(i, it->m_column), distance_squared, Distance()); break;
-                    case kTestDistanceReject:   matched = it->distance_test(true, accessor.getData(i, it->m_column), distance_squared, Distance()); break;
-                    case kTestRatio:            matched = it->distance_test(false, accessor.getData(i, it->m_column), distance_squared, Ratio()); break;
-                    case kTestRatioReject:      matched = it->distance_test(true, accessor.getData(i, it->m_column), distance_squared, Ratio()); break;
+                    case kTestLess:             matched = it->comparison_test(accessor.get_data(i, it->m_column), std::less<double>()); break;
+                    case kTestGreater:          matched = it->comparison_test(accessor.get_data(i, it->m_column), std::greater<double>()); break;
+                    case kTestLessEqual:        matched = it->comparison_test(accessor.get_data(i, it->m_column), std::less_equal<double>()); break;
+                    case kTestGreaterEqual:     matched = it->comparison_test(accessor.get_data(i, it->m_column), std::greater_equal<double>()); break;
+                    case kTestDistance:         matched = it->distance_test(false, accessor.get_data(i, it->m_column), distance_squared, Distance()); break;
+                    case kTestDistanceReject:   matched = it->distance_test(true, accessor.get_data(i, it->m_column), distance_squared, Distance()); break;
+                    case kTestRatio:            matched = it->distance_test(false, accessor.get_data(i, it->m_column), distance_squared, Ratio()); break;
+                    case kTestRatioReject:      matched = it->distance_test(true, accessor.get_data(i, it->m_column), distance_squared, Ratio()); break;
                 }
 
                 if (!matched)

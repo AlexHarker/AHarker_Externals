@@ -30,7 +30,7 @@ t_symbol *ps_identfier = gensym("identifier");
 
 void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
     setColumnLabelModes(lock, x, argc, argv);
 }
 
@@ -48,8 +48,8 @@ void EntryDatabase::setColumnLabelModes(write_lock_hold &lock, void *x, long arg
     for (long i = 0; i < argc; i++)
     {
         bool label = atom_getlong(argv++) ? true : false;
-        labelsModesChanged |= label != mColumns[i].mLabel;
-        mColumns[i].mLabel = label;
+        labelsModesChanged |= label != m_columns[i].m_label;
+        m_columns[i].m_label = label;
     }
     
     if (labelsModesChanged)
@@ -60,7 +60,7 @@ void EntryDatabase::setColumnLabelModes(write_lock_hold &lock, void *x, long arg
 
 void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
     setColumnNames(lock, x, argc, argv);
 }
 
@@ -74,7 +74,7 @@ void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_
     argc = (argc > numColumns()) ? numColumns() : argc;
     
     for (long i = 0; i < argc; i++)
-        mColumns[i].mName = atom_getsym(argv++);
+        m_columns[i].m_name = atom_getsym(argv++);
 }
 
 /*****************************************/
@@ -83,7 +83,7 @@ void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_
 
 // Search Identifiers
 
-long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
+long EntryDatabase::search_identifiers(const t_atom *identifierAtom, long& idx) const
 {
     t_custom_atom identifier(identifierAtom, false);
     
@@ -95,17 +95,17 @@ long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) c
         gap /= 2;
         gap = gap < 1 ? 1 : gap;
         
-        switch (compare(identifier, getEntryIdentifier(mOrder[idx])))
+        switch (compare(identifier, getEntryIdentifier(m_order[idx])))
         {
             case t_custom_atom::kEqual:
-                return mOrder[idx];
+                return m_order[idx];
                 
             case t_custom_atom::kGreater:
                 idx += gap;
                 break;
                 
             case t_custom_atom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(mOrder[idx - 1])) == t_custom_atom::kGreater))
+                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(m_order[idx - 1])) == t_custom_atom::kGreater))
                     gap = 0;
                 else
                     idx -= gap;
@@ -129,7 +129,7 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
         return -1;
     
     for (long i = 0; i < numColumns(); i++)
-        if (columnName == mColumns[i].mName)
+        if (columnName == m_columns[i].m_name)
             return i;
     
     return -2;
@@ -143,19 +143,19 @@ long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
 
 void EntryDatabase::reserve(long items)
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
     
-    mIdentifiers.reserve(items);
-    mOrder.reserve(items);
-    mEntries.reserve(items * numColumns());
-    mTypes.reserve(items * numColumns());
+    m_identifiers.reserve(items);
+    m_order.reserve(items);
+    m_entries.reserve(items * numColumns());
+    m_types.reserve(items * numColumns());
 }
 
 // Clear (with lock)
 
 void EntryDatabase::clear()
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
     clear(lock);
 }
 
@@ -163,10 +163,10 @@ void EntryDatabase::clear()
 
 void EntryDatabase::clear(write_lock_hold &lock)
 {
-    mEntries.clear();
-    mIdentifiers.clear();
-    mOrder.clear();
-    mTypes.clear();
+    m_entries.clear();
+    m_identifiers.clear();
+    m_order.clear();
+    m_types.clear();
 }
 
 /*****************************************/
@@ -177,13 +177,13 @@ void EntryDatabase::clear(write_lock_hold &lock)
 
 void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
 {
-    write_lock_hold lock(&mLock);
-    addEntry(lock, x, argc, argv);
+    write_lock_hold lock(&m_lock);
+    add_entry(lock, x, argc, argv);
 }
 
 // Add (with pre-held lock)
 
-void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
     if (!argc--)
     {
@@ -195,17 +195,17 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
     
     t_atom *identifier = argv++;
     long order;
-    long idx = searchIdentifiers(identifier, order);
+    long idx = search_identifiers(identifier, order);
 
     // Make a space for a new entry in the case that this identifier does *not* exist
     
     if (idx < 0)
     {
         idx = numItems();
-        mEntries.resize((idx + 1) * numColumns());
-        mTypes.resize((idx + 1) * numColumns());
-        mOrder.insert(mOrder.begin() + order, idx);
-        mIdentifiers.push_back(t_custom_atom(identifier, false));
+        m_entries.resize((idx + 1) * numColumns());
+        m_types.resize((idx + 1) * numColumns());
+        m_order.insert(m_order.begin() + order, idx);
+        m_identifiers.push_back(t_custom_atom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
@@ -214,14 +214,14 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
     {
         t_custom_atom data = argv;
         
-        if (i < argc && mColumns[i].mLabel == (data.m_type == t_custom_atom::kSymbol))
-            setData(idx, i, data);
+        if (i < argc && m_columns[i].m_label == (data.m_type == t_custom_atom::kSymbol))
+            set_data(idx, i, data);
         else
         {
             if (i < argc)
                 object_error((t_object *) x, "incorrect type in entry - column number %ld", i + 1);
             
-            setData(idx, i, mColumns[i].mLabel ? t_custom_atom(gensym("")) : t_custom_atom());
+            set_data(idx, i, m_columns[i].m_label ? t_custom_atom(gensym("")) : t_custom_atom());
         }
     }
 }
@@ -230,18 +230,18 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
 
 void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
 
     long order;
-    long idx = searchIdentifiers(identifier, order);
+    long idx = search_identifiers(identifier, order);
     
     if (idx < 0)
         return;
     
     t_custom_atom data = item;
     
-    if (mColumns[column].mLabel == (data.m_type == t_custom_atom::kSymbol))
-        setData(idx, column, data);
+    if (m_columns[column].m_label == (data.m_type == t_custom_atom::kSymbol))
+        set_data(idx, column, data);
     else
         return;
 }
@@ -258,7 +258,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
     
     if (argc == 1)
     {
-        removeEntry(x, argv);
+        remove_entry(x, argv);
     }
     else
     {
@@ -270,7 +270,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
         for (long i = 0; i < argc; i++)
         {
             long idx;
-            long index = searchIdentifiers(argv +i, idx);
+            long index = search_identifiers(argv +i, idx);
             
             if (index > -1)
                 indices[size++] = index;
@@ -280,7 +280,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
         sort(indices, size);
         
         if (size)
-            removeEntries(database, indices);
+            remove_entries(database, indices);
     }
 }
 
@@ -304,7 +304,7 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
         indices[i] = matchers.get_index(i);
         
     if (numMatches && matchers.size())
-        removeEntries(database, indices);
+        remove_entries(database, indices);
 }
 
 // Helpers for mass removal
@@ -314,23 +314,23 @@ template <class T> void copyRange(std::vector<T>& data, long from, long to, long
     std::copy(data.begin() + (from * itemSize), data.begin() + (from + size) * itemSize, data.begin() + to * itemSize);
 }
 
-long EntryDatabase::getOrder(long idx)
+long EntryDatabase::get_order(long idx)
 {
     t_atom identifier;
     long order;
-    mIdentifiers[idx].get_atom(&identifier);
-    searchIdentifiers(&identifier, order);
+    m_identifiers[idx].get_atom(&identifier);
+    search_identifiers(&identifier, order);
     
     return order;
 }
 
 // Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
 
-void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const std::vector<long>& sortedIndices)
+void EntryDatabase::remove_entries(ReadWritePointer& readLockedDatabase, const std::vector<long>& sortedIndices)
 {
     readLockedDatabase.promoteToWrite();
     
-    long orderStart = getOrder(sortedIndices[0]);
+    long orderStart = get_order(sortedIndices[0]);
     long offset = sortedIndices[0];
     long next = sortedIndices[0];
     long size;
@@ -339,7 +339,7 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
     // Setup new order vector
     
     std::vector<long> newOrder(numItems());
-    std::copy(mOrder.begin(), mOrder.begin() + offset, newOrder.begin());
+    std::copy(m_order.begin(), m_order.begin() + offset, newOrder.begin());
     
     for (long i = 0; i < sortedIndices.size(); offset += (next - end))
     {
@@ -355,12 +355,12 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
         // Mark new order array for deletion
         
         for (long j = start; j < end; j++)
-            newOrder[getOrder(j)] = -1;
+            newOrder[get_order(j)] = -1;
         
         // Alter order indices
         
         for (long j = end; j < next; j++)
-            newOrder[getOrder(j)] = (j - end) + offset;
+            newOrder[get_order(j)] = (j - end) + offset;
     }
     
     long newSize = offset;
@@ -380,45 +380,45 @@ void EntryDatabase::removeEntries(ReadWritePointer& readLockedDatabase, const st
         
         // Move data
         
-        copyRange(mIdentifiers, end, offset, size);
-        copyRange(mTypes, end, offset, size, numColumns());
-        copyRange(mEntries, end, offset, size, numColumns());
+        copyRange(m_identifiers, end, offset, size);
+        copyRange(m_types, end, offset, size, numColumns());
+        copyRange(m_entries, end, offset, size, numColumns());
     }
 
     // Swap order vectors and do deletion
     
-    std::swap(mOrder, newOrder);
+    std::swap(m_order, newOrder);
     offset = orderStart;
     
-    for (long i = orderStart; i < mOrder.size(); offset += size)
+    for (long i = orderStart; i < m_order.size(); offset += size)
     {
-        for (end = ++i; end < mOrder.size(); end++)
-            if (mOrder[end] >= 0)
+        for (end = ++i; end < m_order.size(); end++)
+            if (m_order[end] >= 0)
                 break;
         
-        for (i = end, size = 0; i < mOrder.size(); i++, size++)
-            if (mOrder[i] < 0)
+        for (i = end, size = 0; i < m_order.size(); i++, size++)
+            if (m_order[i] < 0)
                 break;
         
-        copyRange(mOrder, end, offset, size);
+        copyRange(m_order, end, offset, size);
     }
     
     // Resize storage
     
-    mIdentifiers.resize(newSize);
-    mEntries.resize(newSize * numColumns());
-    mTypes.resize(newSize * numColumns());
-    mOrder.resize(newSize);
+    m_identifiers.resize(newSize);
+    m_entries.resize(newSize * numColumns());
+    m_types.resize(newSize * numColumns());
+    m_order.resize(newSize);
 }
 
 // Remove a single entry (with lock)
 
-void EntryDatabase::removeEntry(void *x, t_atom *identifier)
+void EntryDatabase::remove_entry(void *x, t_atom *identifier)
 {
-    write_lock_hold lock(&mLock);
+    write_lock_hold lock(&m_lock);
     
     long order;
-    long idx = searchIdentifiers(identifier, order);
+    long idx = search_identifiers(identifier, order);
     
     if (idx < 0)
     {
@@ -426,16 +426,16 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
         return;
     }
     
-    mIdentifiers.erase(mIdentifiers.begin() + idx);
-    mOrder.erase(mOrder.begin() + order);
-    mEntries.erase(mEntries.begin() + (idx * numColumns()), mEntries.begin() + ((idx + 1) * numColumns()));
-    mTypes.erase(mTypes.begin() + (idx * numColumns()), mTypes.begin() + ((idx + 1) * numColumns()));
+    m_identifiers.erase(m_identifiers.begin() + idx);
+    m_order.erase(m_order.begin() + order);
+    m_entries.erase(m_entries.begin() + (idx * numColumns()), m_entries.begin() + ((idx + 1) * numColumns()));
+    m_types.erase(m_types.begin() + (idx * numColumns()), m_types.begin() + ((idx + 1) * numColumns()));
  
-    std::vector<long>::iterator it = mOrder.begin();
+    std::vector<long>::iterator it = m_order.begin();
     
     // Unrolled order updating for speed
     
-    for ( ; it < (mOrder.end() - 3); it += 4)
+    for ( ; it < (m_order.end() - 3); it += 4)
     {
         if (it[0] > idx) it[0]--;
         if (it[1] > idx) it[1]--;
@@ -443,7 +443,7 @@ void EntryDatabase::removeEntry(void *x, t_atom *identifier)
         if (it[3] > idx) it[3]--;
     }
     
-    for ( ; it != mOrder.end(); it++)
+    for ( ; it != m_order.end(); it++)
         if (*it > idx)
             (*it)--;
 }
@@ -459,8 +459,8 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
     
     std::vector<double> values;
     double mean = 0.0;
-    bool meanCalculated = false;
-    bool valuesSorted = false;
+    bool mean_calculated = false;
+    bool sorted = false;
     long i;
 
     long column = columnFromSpecifier(argv++);
@@ -475,20 +475,20 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
         
         if (test == ps_mean || test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
         {
-            if (!meanCalculated)
-                mean = columnMean(column);
+            if (!mean_calculated)
+                mean = column_mean(column);
             if (test == ps_mean)
                 atom_setfloat(&output[i], mean);
             else
-                atom_setfloat(&output[i], columnStandardDeviation(column, mean));
-            meanCalculated = true;
+                atom_setfloat(&output[i], column_standard_deviation(column, mean));
+            mean_calculated = true;
         }
         else if (test == ps_median || test == ps_centile || test == ps_percentile)
         {
             double percentile = 50.0;
             
-            if (!valuesSorted)
-                columnSortValues(column, values);
+            if (!sorted)
+                column_sort_values(column, values);
             if (test != ps_median)
             {
                 if (argc--)
@@ -496,13 +496,13 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
                 else
                     object_error((t_object *) x, "no percentile given for percentile stat");
             }
-            atom_setfloat(&output[i], findPercentile(values, percentile));
-            valuesSorted = true;
+            atom_setfloat(&output[i], find_percentile(values, percentile));
+            sorted = true;
         }
         else if (test == ps_min || test == ps_minimum)
-            atom_setfloat(&output[i], columnMin(column));
+            atom_setfloat(&output[i], column_min(column));
         else if (test == ps_max || test == ps_maximum)
-            atom_setfloat(&output[i], columnMax(column));
+            atom_setfloat(&output[i], column_max(column));
         else
             object_error((t_object *) x, "unknown stat type");
     }
@@ -510,52 +510,52 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
     output.resize(i);
 }
 
-double EntryDatabase::columnMin(long column) const
+double EntryDatabase::column_min(long column) const
 {
-    return columnCalculate(column, HUGE_VAL, BinaryFunctor<std::min<double> >());
+    return column_calculate(column, HUGE_VAL, BinaryFunctor<std::min<double> >());
 }
 
-double EntryDatabase::columnMax(long column) const
+double EntryDatabase::column_max(long column) const
 {
-    return columnCalculate(column, -HUGE_VAL, BinaryFunctor<std::max<double> >());
+    return column_calculate(column, -HUGE_VAL, BinaryFunctor<std::max<double> >());
 }
 
-double EntryDatabase::columnMean(long column) const
+double EntryDatabase::column_mean(long column) const
 {
-    return columnCalculate(column, 0.0, std::plus<double>()) / numItems();
+    return column_calculate(column, 0.0, std::plus<double>()) / numItems();
 }
 
-double EntryDatabase::columnStandardDeviation(long column, double mean) const
+double EntryDatabase::column_standard_deviation(long column, double mean) const
 {
-    struct Variance
+    struct variance
     {
-        Variance(double mean) : mMean(mean) {}
-        double operator()(double sum, double data) { return sum + ((data - mMean) * (data - mMean)); }
-        double mMean;
+        variance(double mean) : m_mean(mean) {}
+        double operator()(double sum, double data) { return sum + ((data - m_mean) * (data - m_mean)); }
+        double m_mean;
     };
     
-    return sqrt(columnCalculate(column, 0.0, Variance(mean)) / numItems());
+    return sqrt(column_calculate(column, 0.0, variance(mean)) / numItems());
 }
 
-double EntryDatabase::columnStandardDeviation(long column) const
+double EntryDatabase::column_standard_deviation(long column) const
 {
-    return columnStandardDeviation(column, columnMean(column));
+    return column_standard_deviation(column, column_mean(column));
 }
 
-double EntryDatabase::columnPercentile(long column, double percentile) const
+double EntryDatabase::column_percentile(long column, double percentile) const
 {
     std::vector<double> values;
     
-    columnSortValues(column, values);
-    return findPercentile(values, percentile);
+    column_sort_values(column, values);
+    return find_percentile(values, percentile);
 }
 
-double EntryDatabase::columnMedian(long column) const
+double EntryDatabase::column_median(long column) const
 {
-    return columnPercentile(column, 50.0);
+    return column_percentile(column, 50.0);
 }
 
-void EntryDatabase::columnSortValues(long column, std::vector<double>& sortedValues) const
+void EntryDatabase::column_sort_values(long column, std::vector<double>& sortedValues) const
 {
     sortedValues.resize(numItems());
 
@@ -565,7 +565,7 @@ void EntryDatabase::columnSortValues(long column, std::vector<double>& sortedVal
     sort(sortedValues, numItems());
 }
 
-double EntryDatabase::findPercentile(std::vector<double>& sortedValues, double percentile) const
+double EntryDatabase::find_percentile(std::vector<double>& sortedValues, double percentile) const
 {
     long nItems = sortedValues.size();
     
@@ -601,7 +601,7 @@ void EntryDatabase::view(t_object *database_object) const
     }
     
     object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
-    object_attr_setsym(editor, gensym("title"), mName);
+    object_attr_setsym(editor, gensym("title"), m_name);
 }
 
 /*****************************************/
@@ -627,7 +627,7 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     }
     else
     {
-        strcpy(filename, mName->s_name);
+        strcpy(filename, m_name->s_name);
         if (saveasdialog_extended(filename, &path, &type, &types, 1))
             return;
     }
@@ -677,15 +677,15 @@ t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
     
     // Metadata
     
-    dictionary_appendlong(dictMeta, gensym("numcolumns"), numColumns());
+    dictionary_appendlong(dictMeta, gensym("numColumns"), numColumns());
     
     for (long i = 0; i < numColumns(); i++)
-        atom_setsym(&args[i], mColumns[i].mName);
+        atom_setsym(&args[i], m_columns[i].m_name);
     
     dictionary_appendatoms(dictMeta, gensym("names"), numColumns(), &args[0]);
     
     for (long i = 0; i < numColumns(); i++)
-        atom_setlong(&args[i], mColumns[i].mLabel);
+        atom_setlong(&args[i], m_columns[i].m_label);
     
     dictionary_appendatoms(dictMeta, gensym("labelmodes"), numColumns(), &args[0]);
     dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dictMeta);
@@ -746,16 +746,16 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
     
     if (dictMeta && dictData)
     {
-        write_lock_hold lock(&mLock);
+        write_lock_hold lock(&m_lock);
         clear(lock);
         
-        t_atom_long newNumColumns;
-        dictionary_getlong(dictMeta, gensym("numcolumns"), &newNumColumns);
+        t_atom_long newnumColumns;
+        dictionary_getlong(dictMeta, gensym("numColumns"), &newnumColumns);
         
-        if (newNumColumns != numColumns())
+        if (newnumColumns != numColumns())
         {
-            mColumns.clear();
-            mColumns.resize(newNumColumns);
+            m_columns.clear();
+            m_columns.resize(newnumColumns);
         }
         
         t_atom *argv;
@@ -778,7 +778,7 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
                 
                 t_dictionary *entryDict = (t_dictionary *) atom_getobj(argv + i);
                 if ((err = dictionary_getatoms(entryDict, gensym("entry"), &entryArgc, &entryArgv)) == MAX_ERR_NONE)
-                    addEntry(lock, x, entryArgc, entryArgv);
+                    add_entry(lock, x, entryArgc, entryArgv);
             }
         }
         else
@@ -787,7 +787,7 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
             {
                 std::string str("entry_" + std::to_string(i + 1));
                 if ((err = dictionary_getatoms(dictData, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-                    addEntry(lock, x, argc, argv);
+                    add_entry(lock, x, argc, argv);
             }
         }
     }

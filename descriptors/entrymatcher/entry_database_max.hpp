@@ -11,9 +11,11 @@
 
 // Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
 
-struct notify_pointer : public EntryDatabase::WritePointer
+struct notify_pointer : public EntryDatabase::write_pointer
 {
-    notify_pointer(EntryDatabase *ptr, t_object *maxDatabase) : EntryDatabase::WritePointer(ptr), mMaxDatabase(maxDatabase) {}
+    notify_pointer(EntryDatabase *ptr, t_object *max_database)
+    : EntryDatabase::write_pointer(ptr), m_max_database(max_database) {}
+    
     notify_pointer(const notify_pointer&) = delete;
     notify_pointer& operator=(const notify_pointer&) = delete;
     notify_pointer(notify_pointer&&) = default;
@@ -21,7 +23,7 @@ struct notify_pointer : public EntryDatabase::WritePointer
     
 protected:
 
-    t_object *mMaxDatabase;
+    t_object *m_max_database;
 };
 
 // Get / Change / Release Named Database

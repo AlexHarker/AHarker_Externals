@@ -386,7 +386,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         struct getter
         {
             getter(const EntryDatabase *database) : m_database(database) {}
-            t_custom_atom operator()(long idx) { return m_database->getEntryIdentifier(idx); }
+            t_custom_atom operator()(long idx) const { return m_database->getEntryIdentifier(idx); }
             const EntryDatabase *m_database;
         };
         
@@ -396,10 +396,10 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
     {
         if (database->getColumnLabelMode(column))
         {
-            struct getter : public EntryDatabase::RawAccessor
+            struct getter : public EntryDatabase::raw_accessor
             {
-                getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), m_column(column) {}
-                std::string operator()(long idx) const { return getData(idx, m_column).m_symbol->s_name; }
+                getter(long column, const EntryDatabase& database) : EntryDatabase::raw_accessor(database), m_column(column) {}
+                std::string operator()(long idx) const { return get_data(idx, m_column).m_symbol->s_name; }
                 long m_column;
             };
 
@@ -407,10 +407,10 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         }
         else
         {
-            struct getter : public EntryDatabase::RawAccessor
+            struct getter : public EntryDatabase::raw_accessor
             {
-                getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), m_column(column) {}
-                double operator()(long idx) const { return getData(idx, m_column); }
+                getter(long column, const EntryDatabase& database) : EntryDatabase::raw_accessor(database), m_column(column) {}
+                double operator()(long idx) const { return get_data(idx, m_column); }
                 long m_column;
             };
             
