@@ -322,9 +322,9 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
         if (column == -2)
             str = std::to_string(index + 1);
         else if (column == -1)
-            str = database->getEntryIdentifier(index).getString();
+            str = database->getEntryIdentifier(index).get_string();
         else
-            str = database->getTypedData(index, column).getString();
+            str = database->getTypedData(index, column).get_string();
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }
@@ -386,7 +386,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         struct Getter
         {
             Getter(const EntryDatabase *database) : mDatabase(database) {}
-            CustomAtom operator()(long idx) { return mDatabase->getEntryIdentifier(idx); }
+            t_custom_atom operator()(long idx) { return mDatabase->getEntryIdentifier(idx); }
             const EntryDatabase *mDatabase;
         };
         
@@ -400,7 +400,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
             struct Getter : public EntryDatabase::RawAccessor
             {
                 Getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), mColumn(column) {}
-                std::string operator()(long idx) { return getData(idx, mColumn).mSymbol->s_name; }
+                std::string operator()(long idx) { return getData(idx, mColumn).m_symbol->s_name; }
                 long mColumn;
             };
             

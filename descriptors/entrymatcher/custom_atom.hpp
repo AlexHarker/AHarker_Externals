@@ -8,31 +8,31 @@
 
 // Atom Without Type Information
 
-union UntypedAtom
+union t_untyped_atom
 {
     // Constructors from Different Types
     
-    UntypedAtom() : mInt(0) {}
-    UntypedAtom(double val) : mValue(val) {}
-    UntypedAtom(t_atom_long val) : mInt(val) {}
-    UntypedAtom(t_symbol *val) : mSymbol(val) {}
+    t_untyped_atom() : m_integer(0) {}
+    t_untyped_atom(double val) : m_value(val) {}
+    t_untyped_atom(t_atom_long val) : m_integer(val) {}
+    t_untyped_atom(t_symbol *val) : m_symbol(val) {}
     
     // Casts To Possible Types
     
-    operator double() const         { return mValue; }
-    operator t_atom_long() const    { return mInt; }
-    operator t_symbol *() const     { return mSymbol; }
+    operator double() const         { return m_value; }
+    operator t_atom_long() const    { return m_integer; }
+    operator t_symbol *() const     { return m_symbol; }
     
     // Data
     
-    double mValue;
-    t_atom_long mInt;
-    t_symbol *mSymbol;
+    double m_value;
+    t_atom_long m_integer;
+    t_symbol *m_symbol;
 };
 
 // An Atom with Type Information
 
-struct CustomAtom
+struct t_custom_atom
 {
     // Definitions
     
@@ -41,90 +41,90 @@ struct CustomAtom
     
     // Constructors from Different Types
 
-    CustomAtom() : mData(0.0), mType(kDouble) {}
-    CustomAtom(double val) : mData(val), mType(kDouble) {}
-    CustomAtom(t_symbol *sym) : mData(sym), mType(kSymbol) {}
+    t_custom_atom() : m_data(0.0), m_type(kDouble) {}
+    t_custom_atom(double val) : m_data(val), m_type(kDouble) {}
+    t_custom_atom(t_symbol *sym) : m_data(sym), m_type(kSymbol) {}
     
-    CustomAtom(t_atom_long val, bool translate = true) : mType(translate ? kTranslatedInt : kInt)
+    t_custom_atom(t_atom_long val, bool translate = true) : m_type(translate ? kTranslatedInt : kInt)
     {
         if (translate)
-            mData.mValue = val;
+            m_data.m_value = val;
         else
-            mData.mInt = val;
+            m_data.m_integer = val;
     }
     
-    CustomAtom(const t_atom *a, bool translate = true)
+    t_custom_atom(const t_atom *a, bool translate = true)
     {
         switch (atom_gettype(a))
         {
-            case A_SYM:     *this = CustomAtom(atom_getsym(a));                 break;
-            case A_FLOAT:   *this = CustomAtom(atom_getfloat(a));               break;
-            case A_LONG:    *this = CustomAtom(atom_getlong(a), translate);     break;
+            case A_SYM:     *this = t_custom_atom(atom_getsym(a));                 break;
+            case A_FLOAT:   *this = t_custom_atom(atom_getfloat(a));               break;
+            case A_LONG:    *this = t_custom_atom(atom_getlong(a), translate);     break;
                 
             default:
-                *this = CustomAtom();
+                *this = t_custom_atom();
         }
     }
     
-    CustomAtom(const UntypedAtom& a, const Type type) : mData(a), mType(type) {}
+    t_custom_atom(const t_untyped_atom& a, const Type type) : m_data(a), m_type(type) {}
     
     // Get as Standard Atom
     
-    void inline getAtom(t_atom *a) const
+    void inline get_atom(t_atom *a) const
     {
-        switch (mType)
+        switch (m_type)
         {
-            case kSymbol:           atom_setsym(a, mData.mSymbol);    break;
-            case kDouble:           atom_setfloat(a, mData.mValue);   break;
-            case kInt:              atom_setlong(a, mData.mInt);      break;
-            case kTranslatedInt:    atom_setlong(a, mData.mValue);    break;
+            case kSymbol:           atom_setsym(a, m_data.m_symbol);    break;
+            case kDouble:           atom_setfloat(a, m_data.m_value);   break;
+            case kInt:              atom_setlong(a, m_data.m_integer);      break;
+            case kTranslatedInt:    atom_setlong(a, m_data.m_value);    break;
         }
     }
     
     // Get As a String
     
-    std::string inline getString() const
+    std::string inline get_string() const
     {
-        switch (mType)
+        switch (m_type)
         {
-            case kSymbol:           return mData.mSymbol->s_name;
-            case kDouble:           return std::to_string(mData.mValue);
-            case kInt:              return std::to_string(mData.mInt);
-            case kTranslatedInt:    return std::to_string((t_atom_long) mData.mValue);
+            case kSymbol:           return m_data.m_symbol->s_name;
+            case kDouble:           return std::to_string(m_data.m_value);
+            case kInt:              return std::to_string(m_data.m_integer);
+            case kTranslatedInt:    return std::to_string((t_atom_long) m_data.m_value);
         }
     }
     
-    // Compare CustomAtoms
+    // Compare t_custom_atoms
     
-    friend inline CompareResult compare(const CustomAtom& a, const CustomAtom& b)
+    friend inline CompareResult compare(const t_custom_atom& a, const t_custom_atom& b)
     {
-        if (a.mType == b.mType)
+        if (a.m_type == b.m_type)
         {
-            switch (a.mType)
+            switch (a.m_type)
             {
                 case kDouble:
-                case kTranslatedInt:  return a.mData.mValue == b.mData.mValue ? kEqual : a.mData.mValue < b.mData.mValue ? kLess : kGreater;
-                case kInt:            return a.mData.mInt == b.mData.mInt ? kEqual : a.mData.mInt < b.mData.mInt ? kLess : kGreater;
-                case kSymbol:         return a.mData.mSymbol == b.mData.mSymbol ? kEqual :a.mData.mSymbol < b.mData.mSymbol ? kLess : kGreater;
+                case kTranslatedInt:  return a.m_data.m_value == b.m_data.m_value ? kEqual : a.m_data.m_value < b.m_data.m_value ? kLess : kGreater;
+                case kInt:            return a.m_data.m_integer == b.m_data.m_integer ? kEqual : a.m_data.m_integer < b.m_data.m_integer ? kLess : kGreater;
+                case kSymbol:         return a.m_data.m_symbol == b.m_data.m_symbol ? kEqual :a.m_data.m_symbol < b.m_data.m_symbol ? kLess : kGreater;
             }
         }
         
-        return (a.mType < b.mType) ? kLess : kGreater;
+        return (a.m_type < b.m_type) ? kLess : kGreater;
     }
     
-    bool operator < (const CustomAtom& a)
+    bool operator < (const t_custom_atom& a)
     {
-        Type type1 = mType == kTranslatedInt ? kDouble : mType;
-        Type type2 = a.mType == kTranslatedInt ? kDouble : a.mType;
+        Type type1 = m_type == kTranslatedInt ? kDouble : m_type;
+        Type type2 = a.m_type == kTranslatedInt ? kDouble : a.m_type;
 
         if (type1 == type2)
         {
-            switch (mType)
+            switch (m_type)
             {
                 case kDouble:
-                case kTranslatedInt:  return mData.mValue < a.mData.mValue;
-                case kInt:            return mData.mInt < a.mData.mInt;
-                case kSymbol:         return strcmp(mData.mSymbol->s_name, a.mData.mSymbol->s_name) < 0;
+                case kTranslatedInt:  return m_data.m_value < a.m_data.m_value;
+                case kInt:            return m_data.m_integer < a.m_data.m_integer;
+                case kSymbol:         return strcmp(m_data.m_symbol->s_name, a.m_data.m_symbol->s_name) < 0;
             }
         }
         
@@ -132,24 +132,24 @@ struct CustomAtom
         if (type2 == kSymbol) return false;
         
         if (type1 == kInt)
-            return mData.mInt < a.mData.mValue;
+            return m_data.m_integer < a.m_data.m_value;
         else
-            return mData.mValue < a.mData.mInt;
+            return m_data.m_value < a.m_data.m_integer;
     }
     
-    bool operator > (const CustomAtom& a)
+    bool operator > (const t_custom_atom& a)
     {
-        Type type1 = mType == kTranslatedInt ? kDouble : mType;
-        Type type2 = a.mType == kTranslatedInt ? kDouble : a.mType;
+        Type type1 = m_type == kTranslatedInt ? kDouble : m_type;
+        Type type2 = a.m_type == kTranslatedInt ? kDouble : a.m_type;
         
         if (type1 == type2)
         {
-            switch (mType)
+            switch (m_type)
             {
                 case kDouble:
-                case kTranslatedInt:  return mData.mValue > a.mData.mValue;
-                case kInt:            return mData.mInt > a.mData.mInt;
-                case kSymbol:         return strcmp(mData.mSymbol->s_name, a.mData.mSymbol->s_name) > 0;
+                case kTranslatedInt:  return m_data.m_value > a.m_data.m_value;
+                case kInt:            return m_data.m_integer > a.m_data.m_integer;
+                case kSymbol:         return strcmp(m_data.m_symbol->s_name, a.m_data.m_symbol->s_name) > 0;
             }
         }
         
@@ -157,21 +157,21 @@ struct CustomAtom
         if (type2 == kSymbol) return true;
         
         if (type1 == kInt)
-            return mData.mInt > a.mData.mValue;
+            return m_data.m_integer > a.m_data.m_value;
         else
-            return mData.mValue > a.mData.mInt;
+            return m_data.m_value > a.m_data.m_integer;
     }
     
     // Casts To Possible Types
 
-    operator double() const         { return mData.mValue; }
-    operator t_atom_long() const    { return mData.mInt; }
-    operator t_symbol *() const     { return mData.mSymbol; }
+    operator double() const         { return m_data.m_value; }
+    operator t_atom_long() const    { return m_data.m_integer; }
+    operator t_symbol *() const     { return m_data.m_symbol; }
     
     // Data
     
-    UntypedAtom mData;
-    Type mType;
+    t_untyped_atom m_data;
+    Type m_type;
 };
 
 #endif

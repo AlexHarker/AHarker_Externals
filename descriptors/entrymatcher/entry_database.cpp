@@ -85,7 +85,7 @@ void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_
 
 long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) const
 {
-    CustomAtom identifier(identifierAtom, false);
+    t_custom_atom identifier(identifierAtom, false);
     
     long gap = idx = numItems() / 2;
     gap = gap < 1 ? 1 : gap;
@@ -97,15 +97,15 @@ long EntryDatabase::searchIdentifiers(const t_atom *identifierAtom, long& idx) c
         
         switch (compare(identifier, getEntryIdentifier(mOrder[idx])))
         {
-            case CustomAtom::kEqual:
+            case t_custom_atom::kEqual:
                 return mOrder[idx];
                 
-            case CustomAtom::kGreater:
+            case t_custom_atom::kGreater:
                 idx += gap;
                 break;
                 
-            case CustomAtom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(mOrder[idx - 1])) == CustomAtom::kGreater))
+            case t_custom_atom::kLess:
+                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(mOrder[idx - 1])) == t_custom_atom::kGreater))
                     gap = 0;
                 else
                     idx -= gap;
@@ -205,23 +205,23 @@ void EntryDatabase::addEntry(write_lock_hold &lock, void *x, long argc, t_atom *
         mEntries.resize((idx + 1) * numColumns());
         mTypes.resize((idx + 1) * numColumns());
         mOrder.insert(mOrder.begin() + order, idx);
-        mIdentifiers.push_back(CustomAtom(identifier, false));
+        mIdentifiers.push_back(t_custom_atom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
     
     for (long i = 0; i < numColumns(); i++, argv++)
     {
-        CustomAtom data = argv;
+        t_custom_atom data = argv;
         
-        if (i < argc && mColumns[i].mLabel == (data.mType == CustomAtom::kSymbol))
+        if (i < argc && mColumns[i].mLabel == (data.m_type == t_custom_atom::kSymbol))
             setData(idx, i, data);
         else
         {
             if (i < argc)
                 object_error((t_object *) x, "incorrect type in entry - column number %ld", i + 1);
             
-            setData(idx, i, mColumns[i].mLabel ? CustomAtom(gensym("")) : CustomAtom());
+            setData(idx, i, mColumns[i].mLabel ? t_custom_atom(gensym("")) : t_custom_atom());
         }
     }
 }
@@ -238,9 +238,9 @@ void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
     if (idx < 0)
         return;
     
-    CustomAtom data = item;
+    t_custom_atom data = item;
     
-    if (mColumns[column].mLabel == (data.mType == CustomAtom::kSymbol))
+    if (mColumns[column].mLabel == (data.m_type == t_custom_atom::kSymbol))
         setData(idx, column, data);
     else
         return;
@@ -318,7 +318,7 @@ long EntryDatabase::getOrder(long idx)
 {
     t_atom identifier;
     long order;
-    mIdentifiers[idx].getAtom(&identifier);
+    mIdentifiers[idx].get_atom(&identifier);
     searchIdentifiers(&identifier, order);
     
     return order;
@@ -588,12 +588,12 @@ void EntryDatabase::view(t_object *database_object) const
 
     for (long i = 0; i < numItems(); i++)
     {
-        str.insert(str.size(), getEntryIdentifier(i).getString());
+        str.insert(str.size(), getEntryIdentifier(i).get_string());
         
         for (long j = 0; j < numColumns(); j++)
         {
             str.insert(str.size(), " ");
-            str.insert(str.size(), getTypedData(i, j).getString());
+            str.insert(str.size(), getTypedData(i, j).get_string());
         }
         
         if (i != (numItems() - 1))

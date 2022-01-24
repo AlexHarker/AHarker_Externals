@@ -27,14 +27,14 @@ public:
         
     public:
         
-        inline UntypedAtom getData(long idx, long column) const                  { return mIterator[idx * mNumColumns + column]; }
+        inline t_untyped_atom getData(long idx, long column) const                  { return mIterator[idx * mNumColumns + column]; }
 
     protected:
         
         RawAccessor(const EntryDatabase& database) : mNumColumns(database.numColumns()), mIterator(database.mEntries.begin()) {}
         
         const long mNumColumns;
-        const std::vector<UntypedAtom>::const_iterator mIterator;
+        const std::vector<t_untyped_atom>::const_iterator mIterator;
     };
     
     class AtomAccessor : private RawAccessor
@@ -43,13 +43,13 @@ public:
         
     public:
         
-        inline void getDataAtom(t_atom *a, long idx, long column) const       { CustomAtom(getData(idx, column), mTypes[idx * mNumColumns + column]).getAtom(a); }
+        inline void getDataAtom(t_atom *a, long idx, long column) const       { t_custom_atom(getData(idx, column), mTypes[idx * mNumColumns + column]).get_atom(a); }
         
     private:
         
         AtomAccessor(const EntryDatabase& database) : RawAccessor(database), mTypes(database.mTypes.begin()) {}
         
-        const std::vector<CustomAtom::Type>::const_iterator mTypes;
+        const std::vector<t_custom_atom::Type>::const_iterator mTypes;
     };
     
     struct ReadPointer
@@ -110,8 +110,8 @@ public:
     t_symbol *getName() const                                 { return mName; }
     t_symbol *getColumnName(long idx) const                   { return mColumns[idx].mName; }
     bool getColumnLabelMode(long idx) const                   { return mColumns[idx].mLabel; }
-    void getEntryIdentifier(t_atom *a, long idx) const        { return getEntryIdentifier(idx).getAtom(a); }
-    CustomAtom getEntryIdentifier(long idx) const             { return mIdentifiers[idx];}
+    void getEntryIdentifier(t_atom *a, long idx) const        { return getEntryIdentifier(idx).get_atom(a); }
+    t_custom_atom getEntryIdentifier(long idx) const             { return mIdentifiers[idx];}
     long getEntryIndex(const t_atom *identifier) const
     {
         long order;
@@ -135,9 +135,9 @@ public:
     t_dictionary *saveDictionary(bool entriesAsOneKey) const;
     void loadDictionary(t_object *x, t_dictionary *dict);
 
-    inline UntypedAtom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
-    inline CustomAtom getTypedData(long idx, long column) const             { return CustomAtom(getData(idx, column), mTypes[idx * numColumns() + column]); }
-    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).getAtom(a); }
+    inline t_untyped_atom getData(long idx, long column) const                 { return mEntries[idx * numColumns() + column]; }
+    inline t_custom_atom getTypedData(long idx, long column) const             { return t_custom_atom(getData(idx, column), mTypes[idx * numColumns() + column]); }
+    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).get_atom(a); }
 
 private:
 
@@ -201,20 +201,20 @@ private:
     long getOrder(long idx);
     long searchIdentifiers(const t_atom *identifierAtom, long& idx) const;
     
-    inline void setData(long idx, long column, const CustomAtom& data)
+    inline void setData(long idx, long column, const t_custom_atom& data)
     {
-        mEntries[idx * numColumns() + column] = data.mData;
-        mTypes[idx * numColumns() + column] = data.mType;
+        mEntries[idx * numColumns() + column] = data.m_data;
+        mTypes[idx * numColumns() + column] = data.m_type;
     }
    
     // Data
     
     t_symbol *mName;
     std::vector<ColumnInfo> mColumns;
-    std::vector<CustomAtom> mIdentifiers;
+    std::vector<t_custom_atom> mIdentifiers;
     std::vector<long> mOrder;
-    std::vector<UntypedAtom> mEntries;
-    std::vector<CustomAtom::Type> mTypes;
+    std::vector<t_untyped_atom> mEntries;
+    std::vector<t_custom_atom::Type> mTypes;
 
     mutable read_write_lock mLock;
 };

@@ -30,9 +30,9 @@ private:
     {
         Matcher(TestType type, long column, double scale = 1.0) : mType(type), mColumn(column), mScale(scale) {}
 
-        template <typename Op> inline bool comparisonTest(const UntypedAtom value, Op op) const
+        template <typename Op> inline bool comparisonTest(const t_untyped_atom value, Op op) const
         {
-            for (std::vector<CustomAtom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
                 if (op(value, (*it))) return true;
             
             return false;
@@ -42,7 +42,7 @@ private:
         {
             double distance = HUGE_VAL;
 
-            for (std::vector<CustomAtom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
             {
                 double currentDistance = op(value, *it, mScale);
                 currentDistance *= currentDistance;
@@ -75,9 +75,9 @@ private:
                 for (long i = 0; i < numMatches; i++)
                 {
                     long idx = results[i].mIndex;
-                    UntypedAtom value = accessor.getData(idx, mColumn);
+                    t_untyped_atom value = accessor.getData(idx, mColumn);
                     
-                    for (std::vector<CustomAtom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+                    for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
                     {
                         if (op(value, (*it)))
                         {
@@ -102,7 +102,7 @@ private:
                 for (long i = 0; i < numMatches; i++)
                 {
                     long idx = results[i].mIndex;
-                    double distance = op(comparisonValue, accessor.getData(idx, mColumn).mValue, mScale);
+                    double distance = op(comparisonValue, accessor.getData(idx, mColumn).m_value, mScale);
                     distance *= distance;
                     
                     if (!reject || distance <= 1.0)
@@ -114,10 +114,10 @@ private:
                 for (long i = 0; i < numMatches; i++)
                 {
                     long idx = results[i].mIndex;
-                    double value = accessor.getData(idx, mColumn).mValue;
+                    double value = accessor.getData(idx, mColumn).m_value;
                     double distance = HUGE_VAL;
                     
-                    for (std::vector<CustomAtom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+                    for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
                     {
                         double currentDistance = op((*it), value, mScale);
                         currentDistance *= currentDistance;
@@ -135,7 +135,7 @@ private:
 
         TestType mType;
         long mColumn;
-        std::vector<CustomAtom> mValues;
+        std::vector<t_custom_atom> mValues;
         double mScale;
     };
     
