@@ -29,7 +29,7 @@
 		B85C98F81F3DFAE7003F468F /* utilities.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85C98F51F3DFAE7003F468F /* utilities.hpp */; };
 		B85C98F91F3DFAE7003F468F /* utilities.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85C98F51F3DFAE7003F468F /* utilities.hpp */; };
 		B85C99061F3E392D003F468F /* entry_database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* entry_database.cpp */; };
-		B85C99071F3E3930003F468F /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
+		B85C99071F3E3930003F468F /* matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* matchers.cpp */; };
 		B8BACCD21F3F1092001589D8 /* entrymatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */; };
 		B8BACCD31F3F1096001589D8 /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
 		B8BACCDA1F3FD879001589D8 /* entry_database_max.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BACCD81F3FD879001589D8 /* entry_database_max.cpp */; };
@@ -38,7 +38,7 @@
 		B8BACCDD1F3FD879001589D8 /* entry_database_max.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8BACCD91F3FD879001589D8 /* entry_database_max.hpp */; };
 		B8CB69D11F3E3B7A00F6215A /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F41F3DFAE7003F468F /* utilities.cpp */; };
 		B8CB69D21F3E3B7D00F6215A /* entry_database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* entry_database.cpp */; };
-		B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* Matchers.cpp */; };
+		B8CB69D31F3E3B7F00F6215A /* matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* matchers.cpp */; };
 		B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */; };
 		B8F18CE61F52D76F000E59CA /* entry_database_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */; };
 		B8F18CE71F52D76F000E59CA /* entry_database_viewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* entry_database_viewer.cpp */; };
@@ -67,7 +67,7 @@
 		8D01CCD20486CAD60068D4B7 /* entrymatcher.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = entrymatcher.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80770B61F3B9DAA006E6C0B /* entry_database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database.cpp; sourceTree = "<group>"; };
 		B80770B71F3B9DAA006E6C0B /* entry_database.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entry_database.hpp; sourceTree = "<group>"; };
-		B85C98EC1F3DDA96003F468F /* Matchers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matchers.cpp; sourceTree = "<group>"; };
+		B85C98EC1F3DDA96003F468F /* matchers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matchers.cpp; sourceTree = "<group>"; };
 		B85C98ED1F3DDA96003F468F /* matchers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matchers.hpp; sourceTree = "<group>"; };
 		B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "entrymatcher~.cpp"; sourceTree = "<group>"; };
 		B85C98F41F3DFAE7003F468F /* utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
@@ -117,10 +117,10 @@
 			children = (
 				B8C536E11F42459A00B7978B /* sort.hpp */,
 				B8BACCD41F3F9923001589D8 /* custom_atom.hpp */,
-				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
 				B85C98F51F3DFAE7003F468F /* utilities.hpp */,
+				B85C98F41F3DFAE7003F468F /* utilities.cpp */,
 				B85C98ED1F3DDA96003F468F /* matchers.hpp */,
-				B85C98EC1F3DDA96003F468F /* Matchers.cpp */,
+				B85C98EC1F3DDA96003F468F /* matchers.cpp */,
 				B80770B71F3B9DAA006E6C0B /* entry_database.hpp */,
 				B80770B61F3B9DAA006E6C0B /* entry_database.cpp */,
 				B8F18CE51F52D76F000E59CA /* entry_database_viewer.hpp */,
@@ -283,7 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B85C99061F3E392D003F468F /* entry_database.cpp in Sources */,
-				B85C99071F3E3930003F468F /* Matchers.cpp in Sources */,
+				B85C99071F3E3930003F468F /* matchers.cpp in Sources */,
 				B8BACCD31F3F1096001589D8 /* utilities.cpp in Sources */,
 				B8F18CE61F52D76F000E59CA /* entry_database_viewer.cpp in Sources */,
 				B8BACCDA1F3FD879001589D8 /* entry_database_max.cpp in Sources */,
@@ -296,7 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8CB69D21F3E3B7D00F6215A /* entry_database.cpp in Sources */,
-				B8CB69D31F3E3B7F00F6215A /* Matchers.cpp in Sources */,
+				B8CB69D31F3E3B7F00F6215A /* matchers.cpp in Sources */,
 				B8CB69D11F3E3B7A00F6215A /* utilities.cpp in Sources */,
 				B8F18CE71F52D76F000E59CA /* entry_database_viewer.cpp in Sources */,
 				B8BACCDB1F3FD879001589D8 /* entry_database_max.cpp in Sources */,
