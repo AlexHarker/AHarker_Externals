@@ -638,12 +638,14 @@ void meandev_add_data(t_meandev *x, double data, double weight)
     }
     else
     {
-        // In the non-timed mode read in new data if each duration range is ready
+        // Read in new data if each duration range is ready and remove data where needed
 
         for (t_atom_long i = 0; i < first; i++)
         {
             if (x->data.count() >= x->durations[i].min_age)
                 x->durations[i].core_data.add();
+            if (x->durations[i].core_data.count() >= x->durations[i].age_span())
+                x->durations[i].core_data.remove();
         }
         
         // Always output the shortest duration and if ready output others
