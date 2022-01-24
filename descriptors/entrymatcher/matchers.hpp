@@ -30,11 +30,12 @@ private:
         matcher(TestType type, long column, double scale = 1.0)
         : m_type(type), m_column(column), m_scale(scale) {}
 
-        template <typename Op>
-        inline bool comparison_test(const t_untyped_atom value, Op op) const
+        template <template <typename U> class Op, typename T = double>
+        inline bool comparison_test(const T& value) const
         {
             for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
-                if (op(value, (*it))) return true;
+                if (Op<T>()(value, it->as<T>()))
+                    return true;
             
             return false;
         }
@@ -46,7 +47,7 @@ private:
 
             for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
             {
-                double current_distance = op(value, *it, m_scale);
+                double current_distance = op(value, it->as<double>(), m_scale);
                 current_distance *= current_distance;
                 if (current_distance < distance)
                     distance = current_distance;
@@ -56,20 +57,20 @@ private:
             return !reject || distance <= 1.0;
         }
         
-        template <typename T, typename Op>
-        inline long comparison_test(std::vector<result>& results, long num_matches, const entries::raw_accessor& accessor, Op op) const
+        template <template <typename U> class Op, typename T = double>
+        inline long comparison_test(std::vector<result>& results, long num_matches, const entries::accessor& access) const
         {
             long matched = 0;
             
             if (m_values.size() == 1)
             {
-                T comparison_value = m_values[0];
+                T comparison_value = m_values[0].as<T>();
                 
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
                     
-                    if (op(accessor.get_data(idx, m_column), comparison_value))
+                    if (Op<T>()(access.get_data<T>(idx, m_column), comparison_value))
                         results[matched++] = result(idx, results[i].m_distance);
                 }
             }
@@ -78,11 +79,11 @@ private:
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    t_untyped_atom value = accessor.get_data(idx, m_column);
+                    T value = access.get_data<T>(idx, m_column);
                     
                     for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                     {
-                        if (op(value, (*it)))
+                        if (Op<T>()(value, it->as<T>()))
                         {
                             results[matched++] = result(idx, results[i].m_distance);
                             break;
@@ -95,18 +96,18 @@ private:
         }
         
         template <typename Op>
-        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const entries::raw_accessor& accessor, Op op) const
+        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const entries::accessor& access, Op op) const
         {
             long matched = 0;
             
             if (m_values.size() == 1)
             {
-                double comparison_value = m_values[0];
+                double comparison_value = m_values[0].m_data.m_value;
                 
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    double distance = op(comparison_value, accessor.get_data(idx, m_column).m_value, m_scale);
+                    double distance = op(comparison_value, access.get_data(idx, m_column), m_scale);
                     distance *= distance;
                     
                     if (!reject || distance <= 1.0)
@@ -118,12 +119,12 @@ private:
                 for (long i = 0; i < num_matches; i++)
                 {
                     long idx = results[i].m_index;
-                    double value = accessor.get_data(idx, m_column).m_value;
+                    double value = access.get_data(idx, m_column);
                     double distance = HUGE_VAL;
                     
                     for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                     {
-                        double current_distance = op((*it), value, m_scale);
+                        double current_distance = op(it->as<double>(), value, m_scale);
                         current_distance *= current_distance;
                         if (current_distance < distance)
                             distance = current_distance;

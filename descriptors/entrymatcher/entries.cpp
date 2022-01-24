@@ -594,7 +594,7 @@ void entries::view(t_object *database_object) const
         for (long j = 0; j < num_columns(); j++)
         {
             str.insert(str.size(), " ");
-            str.insert(str.size(), get_typed_data(i, j).get_string());
+            str.insert(str.size(), get_typed(i, j).get_string());
         }
         
         if (i != (num_items() - 1))
@@ -704,7 +704,7 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
             get_entry_identifier(&args[0], i);
             
             for (long j = 0; j < num_columns(); j++)
-                get_data_atom(&args[j + 1], i, j);
+                get_atom(&args[j + 1], i, j);
             
             dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, &args[0]);
             atom_setobj(&entries[i], dict_entry);
@@ -721,7 +721,7 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
             get_entry_identifier(&args[0], i);
             
             for (long j = 0; j < num_columns(); j++)
-                get_data_atom(&args[j + 1], i, j);
+                get_atom(&args[j + 1], i, j);
             
             dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, &args[0]);
         }

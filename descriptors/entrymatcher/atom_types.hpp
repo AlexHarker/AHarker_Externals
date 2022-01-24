@@ -6,22 +6,30 @@
 #include <vector>
 #include <string>
 
-// Atom Without Type Information
+// Untyped Atom (condensed memory storage - the type will likely be stored separately)
 
 union t_untyped_atom
 {
-    // Constructors from Different Types
+    // Constructors
     
-    t_untyped_atom() : m_integer(0) {}
-    t_untyped_atom(double val) : m_value(val) {}
+    t_untyped_atom()                : m_integer(0) {}
+    t_untyped_atom(double val)      : m_value(val) {}
     t_untyped_atom(t_atom_long val) : m_integer(val) {}
-    t_untyped_atom(t_symbol *val) : m_symbol(val) {}
+    t_untyped_atom(t_symbol *val)   : m_symbol(val) {}
     
-    // Casts To Possible Types
+    // Reads
+
+    template <typename T>
+    T as() const;
+
+    template<>
+    double as() const { return m_value; }
+
+    template<>
+    t_atom_long as() const { return m_integer; }
     
-    operator double() const         { return m_value; }
-    operator t_atom_long() const    { return m_integer; }
-    operator t_symbol *() const     { return m_symbol; }
+    template<>
+    t_symbol *as() const { return m_symbol; }
     
     // Data
     
@@ -39,11 +47,11 @@ struct t_custom_atom
     enum CompareResult { kLess, kGreater, kEqual };
     enum Type : unsigned char { kSymbol, kDouble, kTranslatedInt, kInt  };
     
-    // Constructors from Different Types
+    // Constructors
 
-    t_custom_atom() : m_data(0.0), m_type(kDouble) {}
-    t_custom_atom(double val) : m_data(val), m_type(kDouble) {}
-    t_custom_atom(t_symbol *sym) : m_data(sym), m_type(kSymbol) {}
+    t_custom_atom()                 : m_data(0.0), m_type(kDouble) {}
+    t_custom_atom(double val)       : m_data(val), m_type(kDouble) {}
+    t_custom_atom(t_symbol *sym)    : m_data(sym), m_type(kSymbol) {}
     
     t_custom_atom(t_atom_long val, bool translate = true) : m_type(translate ? kTranslatedInt : kInt)
     {
@@ -162,11 +170,10 @@ struct t_custom_atom
             return m_data.m_value > a.m_data.m_integer;
     }
     
-    // Casts To Possible Types
+    // Typed Reads (forced)
 
-    operator double() const         { return m_data.m_value; }
-    operator t_atom_long() const    { return m_data.m_integer; }
-    operator t_symbol *() const     { return m_data.m_symbol; }
+    template <typename T>
+    T as() const { return m_data.as<T>(); }
     
     // Data
     

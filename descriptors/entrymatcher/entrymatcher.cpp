@@ -196,7 +196,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
     long num_items = database_ptr->num_items();
     long num_columns = database_ptr->num_columns();
     
-    auto accessor = database_ptr->get_atom_accessor();
+    auto access = database_ptr->get_accessor();
     
     if (idx < 0 || idx >= num_items)
     {
@@ -210,7 +210,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
         // If no columns are specified construct a list of all colums for that entry
         
         for (long i = 0; i < num_columns; i++)
-            accessor.get_data_atom(&output[i], idx, i);
+            access.get_atom(&output[i], idx, i);
     }
     else
     {
@@ -228,7 +228,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
             if (column == -1)
                 database_ptr->get_entry_identifier(&output[i], idx);
             else
-                accessor.get_data_atom(&output[i], idx, column);
+                access.get_atom(&output[i], idx, column);
         }
     }
     
