@@ -340,7 +340,7 @@ void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double 
     atom_setfloat(list + 1, beg);
     atom_setfloat(list + 2, end);
     
-    outlet_list(x->last_added_out, 0, 3, list);
+    outlet_list(x->last_added_out, nullptr, 3, list);
 }
 
 static inline t_ptr_int mstosamps(double ms, double sr)
@@ -386,7 +386,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
     atom_setlong(atom_out + 1, mstosamps(end, sr));
     atom_setfloat(atom_out + 2, sr);
     
-    outlet_list(x->data_out, 0, 3, atom_out);
+    outlet_list(x->data_out, nullptr, 3, atom_out);
 }
 
 void store(float *lo_res, float *hi_res, double output)

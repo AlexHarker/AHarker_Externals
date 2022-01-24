@@ -915,7 +915,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 
 	// Output
 	
-	outlet_list (x->the_list_outlet, 0L, output_length, output_list);
+	outlet_list (x->the_list_outlet, nullptr, output_length, output_list);
 }
 
 
