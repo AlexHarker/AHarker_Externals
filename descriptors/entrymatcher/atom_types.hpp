@@ -167,7 +167,7 @@ private:
         {
             switch (m_type)
             {
-                case category::integral:    return Op<double>()(as<t_atom_long>(), a.as<t_atom_long>());
+                case category::integral:    return Op<t_atom_long>()(as<t_atom_long>(), a.as<t_atom_long>());
                 case category::symbolic:    return Op<int>()(strcmp(as<const char *>(), a.as<const char *>()), 0);
                 default:                    return Op<double>()(as<double>(), a.as<double>());
             }
