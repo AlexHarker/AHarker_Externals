@@ -13,7 +13,7 @@ public:
     enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
     
 private:
- 
+    
     struct result
     {
         result() {}
@@ -136,7 +136,7 @@ private:
             
             return matched;
         }
-
+        
         TestType m_type;
         long m_column;
         std::vector<t_custom_atom> m_values;
