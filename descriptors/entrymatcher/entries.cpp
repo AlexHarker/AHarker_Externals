@@ -85,6 +85,8 @@ void entries::set_column_names(write_lock_hold &lock, void *x, long argc, t_atom
 
 long entries::search_identifiers(const t_atom *identifier_atom, long& idx) const
 {
+    using ordering = t_custom_atom::ordering;
+    
     t_custom_atom identifier(identifier_atom, false);
     
     long gap = idx = num_items() / 2;
@@ -95,17 +97,17 @@ long entries::search_identifiers(const t_atom *identifier_atom, long& idx) const
         gap /= 2;
         gap = gap < 1 ? 1 : gap;
         
-        switch (compare(identifier, get_entry_identifier(m_order[idx])))
+        switch (order(identifier, get_entry_identifier(m_order[idx])))
         {
-            case t_custom_atom::kEqual:
+            case ordering::equal:
                 return m_order[idx];
                 
-            case t_custom_atom::kGreater:
+            case ordering::higher:
                 idx += gap;
                 break;
                 
-            case t_custom_atom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, get_entry_identifier(m_order[idx - 1])) == t_custom_atom::kGreater))
+            case ordering::lower:
+                if (gap == 1 && (!idx || order(identifier, get_entry_identifier(m_order[idx - 1])) == ordering::higher))
                     gap = 0;
                 else
                     idx -= gap;
@@ -214,7 +216,7 @@ void entries::add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
     {
         t_custom_atom data = argv;
         
-        if (i < argc && m_columns[i].m_label == (data.m_type == t_custom_atom::kSymbol))
+        if (i < argc && m_columns[i].m_label == data.is_symbol())
             set_data(idx, i, data);
         else
         {
@@ -240,7 +242,7 @@ void entries::replace_item(t_atom *identifier, long column, t_atom *item)
     
     t_custom_atom data = item;
     
-    if (m_columns[column].m_label == (data.m_type == t_custom_atom::kSymbol))
+    if (m_columns[column].m_label == data.is_symbol())
         set_data(idx, column, data);
     else
         return;

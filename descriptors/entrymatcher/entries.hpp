@@ -53,7 +53,7 @@ public:
         
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
-        const std::vector<t_custom_atom::Type>::const_iterator m_types;
+        const std::vector<t_custom_atom::category>::const_iterator m_types;
     };
     
     struct read_pointer
@@ -224,7 +224,7 @@ private:
     std::vector<t_custom_atom> m_identifiers;
     std::vector<long> m_order;
     std::vector<t_untyped_atom> m_entries;
-    std::vector<t_custom_atom::Type> m_types;
+    std::vector<t_custom_atom::category> m_types;
 
     mutable read_write_lock m_lock;
 };

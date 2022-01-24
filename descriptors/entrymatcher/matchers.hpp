@@ -102,7 +102,7 @@ private:
             
             if (m_values.size() == 1)
             {
-                double comparison_value = m_values[0].m_data.m_value;
+                double comparison_value = m_values[0].as<double>();
                 
                 for (long i = 0; i < num_matches; i++)
                 {
