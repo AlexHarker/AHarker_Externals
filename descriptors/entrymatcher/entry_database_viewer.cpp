@@ -163,11 +163,11 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
 {
     if (x->database && x->visible && !x->in_edit)
     {
-        EntryDatabase::ReadPointer database(x->database);
+        EntryDatabase::read_pointer database(x->database);
         
         // Update columns
         
-        long num_database_columns = database->numColumns() + 2;
+        long num_database_columns = database->num_columns() + 2;
         long num_columns = jdataview_getnumcolumns(x->d_dataview);
         
         if (num_database_columns != num_columns)
@@ -214,15 +214,15 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
         column = jdataview_getnthcolumn(x->d_dataview, 1);
         jcolumn_setlabel(column, gensym("identifier"));
         
-        for (long i = 0; i < database->numColumns(); i++)
+        for (long i = 0; i < database->num_columns(); i++)
         {
             t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 2);
-            jcolumn_setlabel(column, database->getColumnName(i));
+            jcolumn_setlabel(column, database->get_column_name(i));
         }
         
         // Update rows
         
-        long num_items = database->numItems();
+        long num_items = database->num_items();
         long num_rows = jdataview_getnumrows(x->d_dataview);
         
         if (num_rows != num_items)
@@ -314,7 +314,7 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
 {
     if (x->database)
     {
-        EntryDatabase::ReadPointer database(x->database);
+        EntryDatabase::read_pointer database(x->database);
         long column = map_colname(colname);
         t_ptr_int index = map_rowref(x, rr);
         std::string str;
@@ -322,9 +322,9 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
         if (column == -2)
             str = std::to_string(index + 1);
         else if (column == -1)
-            str = database->getEntryIdentifier(index).get_string();
+            str = database->get_entry_identifier(index).get_string();
         else
-            str = database->getTypedData(index, column).get_string();
+            str = database->get_typed_data(index, column).get_string();
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }
@@ -338,11 +338,11 @@ void entry_database_viewer_getcellstyle(t_entry_database_viewer *x, t_symbol *co
 
 void entry_database_viewer_editstarted(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr)
 {
-    EntryDatabase::ReadPointer database(x->database);
+    EntryDatabase::read_pointer database(x->database);
     t_ptr_int index = map_rowref(x, rr);
     
     x->in_edit = true;
-    database->getEntryIdentifier(&x->edit_identifier, index);
+    database->get_entry_identifier(&x->edit_identifier, index);
 }
 
 void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
@@ -350,7 +350,7 @@ void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *coln
     long column = map_colname(colname);
     
     if (argc)
-        x->database->replaceItem(&x->edit_identifier, column, argv);
+        x->database->replace_item(&x->edit_identifier, column, argv);
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
     x->in_edit = false;
@@ -360,10 +360,10 @@ void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *coln
 
 void entry_database_viewer_component(t_entry_database_viewer *x, t_symbol *colname, t_rowref rr, long *component, long *options)
 {
-    EntryDatabase::ReadPointer database(x->database);
+    EntryDatabase::read_pointer database(x->database);
     
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
-    *options = database->getColumnLabelMode(map_colname(colname)) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
+    *options = database->get_column_label_mode(map_colname(colname)) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }
 
 void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t_privatesortrec *record)
@@ -371,13 +371,13 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
     x->sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
     long column = map_colname(colname);
     
-    EntryDatabase::ReadPointer database(x->database);
+    EntryDatabase::read_pointer database(x->database);
     
-    if (x->indices.size() != database->numItems() || column == -2)
+    if (x->indices.size() != database->num_items() || column == -2)
     {
-        x->indices.resize(database->numItems());
+        x->indices.resize(database->num_items());
     
-        for (long i = 0; i < database->numItems(); i++)
+        for (long i = 0; i < database->num_items(); i++)
             x->indices[i] = i;
     }
     
@@ -386,15 +386,15 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         struct getter
         {
             getter(const EntryDatabase *database) : m_database(database) {}
-            t_custom_atom operator()(long idx) const { return m_database->getEntryIdentifier(idx); }
+            t_custom_atom operator()(long idx) const { return m_database->get_entry_identifier(idx); }
             const EntryDatabase *m_database;
         };
         
-        sort(x->indices, database->numItems(), getter(x->database));
+        sort(x->indices, database->num_items(), getter(x->database));
     }
     else if (column >= 0)
     {
-        if (database->getColumnLabelMode(column))
+        if (database->get_column_label_mode(column))
         {
             struct getter : public EntryDatabase::raw_accessor
             {
@@ -403,7 +403,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
                 long m_column;
             };
 
-            sort(x->indices, database->numItems(), getter(column, *x->database));
+            sort(x->indices, database->num_items(), getter(column, *x->database));
         }
         else
         {
@@ -414,7 +414,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
                 long m_column;
             };
             
-            sort(x->indices, database->numItems(), getter(column, *x->database));
+            sort(x->indices, database->num_items(), getter(column, *x->database));
         }
     }
 }

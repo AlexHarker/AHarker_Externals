@@ -35,7 +35,7 @@ void database_view(void *x, t_object *database_object);
 
 // Retrieve Pointers for Reading or Writing
 
-EntryDatabase::ReadPointer database_getptr_read(t_object *database_object);
+EntryDatabase::read_pointer database_getptr_read(t_object *database_object);
 notify_pointer database_getptr_write(t_object *database_object);
 
 #endif

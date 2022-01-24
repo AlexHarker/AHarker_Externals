@@ -147,7 +147,7 @@ public:
     
     matchers() : m_num_matches(0), m_audio_style(false) {}
     
-    long match(const EntryDatabase::ReadPointer& database, double ratio_matched = 1.0, long max_matches = 0, bool must_sort = true) const;
+    long match(const EntryDatabase::read_pointer& database, double ratio_matched = 1.0, long max_matches = 0, bool must_sort = true) const;
     
     size_t size() const { return m_matchers.size(); }
     
@@ -170,7 +170,7 @@ public:
     void add_target(t_symbol *value);
     void add_matcher(TestType type, long column, double scale = 1.0);
     
-    void set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database);
+    void set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::read_pointer& database);
     void set_audio_style(bool style) { m_audio_style = style; }
     
 private:

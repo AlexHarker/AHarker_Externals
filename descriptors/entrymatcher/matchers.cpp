@@ -5,17 +5,17 @@
 #include "matchers.hpp"
 #include "sort.hpp"
 
-long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_matched, long max_matches, bool must_sort) const
+long matchers::match(const EntryDatabase::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const
 {
     struct Distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct Ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
     
-    long num_items = database->numItems();
+    long num_items = database->num_items();
     m_num_matches = 0;
     
     m_results.resize(num_items);
     
-    const auto accessor = database->rawAccessor();
+    const auto accessor = database->get_raw_accessor();
     
     if (!size() || m_audio_style)
     {
@@ -38,7 +38,7 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
             switch (it->m_type)
             {
                 case kTestMatch:
-                    if (database->getColumnLabelMode(it->m_column))
+                    if (database->get_column_label_mode(it->m_column))
                         m_num_matches = it->comparison_test<t_symbol *>(m_results, m_num_matches, accessor, std::equal_to<t_symbol *>());
                     else
                         m_num_matches = it->comparison_test<double>(m_results, m_num_matches, accessor, std::equal_to<double>());
@@ -69,7 +69,7 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
                 switch (it->m_type)
                 {
                     case kTestMatch:
-                        if (database->getColumnLabelMode(it->m_column))
+                        if (database->get_column_label_mode(it->m_column))
                             matched = it->comparison_test(accessor.get_data(i, it->m_column), std::equal_to<t_symbol *>());
                         else
                             matched = it->comparison_test(accessor.get_data(i, it->m_column), std::equal_to<double>());
@@ -105,7 +105,7 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
     
     if (size() && (must_sort || num_matches < m_num_matches))
     {
-        if (num_matches < (database->numItems() / 8))
+        if (num_matches < (database->num_items() / 8))
             num_matches = sort_top_n(num_matches, m_num_matches);
         else
             sort(m_results, m_num_matches);
@@ -114,7 +114,7 @@ long matchers::match(const EntryDatabase::ReadPointer& database, double ratio_ma
     return m_num_matches = num_matches;
 }
 
-void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database)
+void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::read_pointer& database)
 {
     // Empty the matchers
     
@@ -132,7 +132,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabas
         
         // Get the column and test type
         
-        long column = database->columnFromSpecifier(argv++);
+        long column = database->column_from_specifier(argv++);
         ::TestType type = entrymatcher_test_types(argv++);
         argc -= 2;
         
@@ -143,12 +143,12 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabas
             object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
             break;
         }
-        else if (column < 0 || column >= database->numColumns())
+        else if (column < 0 || column >= database->num_columns())
         {
             object_error((t_object *) x, "specified column in matchers message does not exist");
             continue;
         }
-        else if (database->getColumnLabelMode(column) && type != TEST_MATCH)
+        else if (database->get_column_label_mode(column) && type != TEST_MATCH)
         {
             object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
             continue;
@@ -158,7 +158,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabas
         
         // Parse values
         
-        if (database->getColumnLabelMode(column))
+        if (database->get_column_label_mode(column))
         {
             // If this column is for labels store details of a valid match test (other tests are not valid)
             

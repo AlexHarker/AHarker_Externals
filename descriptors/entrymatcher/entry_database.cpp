@@ -28,50 +28,50 @@ t_symbol *ps_identfier = gensym("identifier");
 
 // Set Column Labels (with lock)
 
-void EntryDatabase::setColumnLabelModes(void *x, long argc, t_atom *argv)
+void EntryDatabase::set_column_label_modes(void *x, long argc, t_atom *argv)
 {
     write_lock_hold lock(&m_lock);
-    setColumnLabelModes(lock, x, argc, argv);
+    set_column_label_modes(lock, x, argc, argv);
 }
 
 // Set Column Labels (with pre-held lock)
 
-void EntryDatabase::setColumnLabelModes(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
-    bool labelsModesChanged = false;
+    bool label_modes_changed = false;
     
-    if (argc > numColumns())
+    if (argc > num_columns())
         object_error((t_object *) x, "more label modes than columns");
     
-    argc = (argc > numColumns()) ? numColumns() : argc;
+    argc = (argc > num_columns()) ? num_columns() : argc;
     
     for (long i = 0; i < argc; i++)
     {
         bool label = atom_getlong(argv++) ? true : false;
-        labelsModesChanged |= label != m_columns[i].m_label;
+        label_modes_changed |= label != m_columns[i].m_label;
         m_columns[i].m_label = label;
     }
     
-    if (labelsModesChanged)
+    if (label_modes_changed)
         clear(lock);
 }
 
 // Set Column Names (with lock)
 
-void EntryDatabase::setColumnNames(void *x, long argc, t_atom *argv)
+void EntryDatabase::set_column_names(void *x, long argc, t_atom *argv)
 {
     write_lock_hold lock(&m_lock);
-    setColumnNames(lock, x, argc, argv);
+    set_column_names(lock, x, argc, argv);
 }
 
 // Set Column Names (with pre-held lock)
 
-void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void EntryDatabase::set_column_names(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 {
-    if (argc > numColumns())
+    if (argc > num_columns())
         object_error((t_object *) x, "more names than columns");
     
-    argc = (argc > numColumns()) ? numColumns() : argc;
+    argc = (argc > num_columns()) ? num_columns() : argc;
     
     for (long i = 0; i < argc; i++)
         m_columns[i].m_name = atom_getsym(argv++);
@@ -83,19 +83,19 @@ void EntryDatabase::setColumnNames(write_lock_hold &lock, void *x, long argc, t_
 
 // Search Identifiers
 
-long EntryDatabase::search_identifiers(const t_atom *identifierAtom, long& idx) const
+long EntryDatabase::search_identifiers(const t_atom *identifier_atom, long& idx) const
 {
-    t_custom_atom identifier(identifierAtom, false);
+    t_custom_atom identifier(identifier_atom, false);
     
-    long gap = idx = numItems() / 2;
+    long gap = idx = num_items() / 2;
     gap = gap < 1 ? 1 : gap;
     
-    while (gap && idx < numItems())
+    while (gap && idx < num_items())
     {
         gap /= 2;
         gap = gap < 1 ? 1 : gap;
         
-        switch (compare(identifier, getEntryIdentifier(m_order[idx])))
+        switch (compare(identifier, get_entry_identifier(m_order[idx])))
         {
             case t_custom_atom::kEqual:
                 return m_order[idx];
@@ -105,7 +105,7 @@ long EntryDatabase::search_identifiers(const t_atom *identifierAtom, long& idx) 
                 break;
                 
             case t_custom_atom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, getEntryIdentifier(m_order[idx - 1])) == t_custom_atom::kGreater))
+                if (gap == 1 && (!idx || compare(identifier, get_entry_identifier(m_order[idx - 1])) == t_custom_atom::kGreater))
                     gap = 0;
                 else
                     idx -= gap;
@@ -118,18 +118,18 @@ long EntryDatabase::search_identifiers(const t_atom *identifierAtom, long& idx) 
 
 // Find a Column from Specifier
 
-long EntryDatabase::columnFromSpecifier(const t_atom *specifier) const
+long EntryDatabase::column_from_specifier(const t_atom *specifier) const
 {
     if (atom_gettype(specifier) != A_SYM)
         return atom_getlong(specifier) - 1;
     
-    t_symbol *columnName = atom_getsym(specifier);
+    t_symbol *column_name = atom_getsym(specifier);
     
-    if (columnName == ps_identfier)
+    if (column_name == ps_identfier)
         return -1;
     
-    for (long i = 0; i < numColumns(); i++)
-        if (columnName == m_columns[i].m_name)
+    for (long i = 0; i < num_columns(); i++)
+        if (column_name == m_columns[i].m_name)
             return i;
     
     return -2;
@@ -147,8 +147,8 @@ void EntryDatabase::reserve(long items)
     
     m_identifiers.reserve(items);
     m_order.reserve(items);
-    m_entries.reserve(items * numColumns());
-    m_types.reserve(items * numColumns());
+    m_entries.reserve(items * num_columns());
+    m_types.reserve(items * num_columns());
 }
 
 // Clear (with lock)
@@ -175,7 +175,7 @@ void EntryDatabase::clear(write_lock_hold &lock)
 
 // Add (with lock)
 
-void EntryDatabase::addEntry(void *x, long argc, t_atom *argv)
+void EntryDatabase::add_entry(void *x, long argc, t_atom *argv)
 {
     write_lock_hold lock(&m_lock);
     add_entry(lock, x, argc, argv);
@@ -201,16 +201,16 @@ void EntryDatabase::add_entry(write_lock_hold &lock, void *x, long argc, t_atom 
     
     if (idx < 0)
     {
-        idx = numItems();
-        m_entries.resize((idx + 1) * numColumns());
-        m_types.resize((idx + 1) * numColumns());
+        idx = num_items();
+        m_entries.resize((idx + 1) * num_columns());
+        m_types.resize((idx + 1) * num_columns());
         m_order.insert(m_order.begin() + order, idx);
         m_identifiers.push_back(t_custom_atom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
     
-    for (long i = 0; i < numColumns(); i++, argv++)
+    for (long i = 0; i < num_columns(); i++, argv++)
     {
         t_custom_atom data = argv;
         
@@ -228,7 +228,7 @@ void EntryDatabase::add_entry(write_lock_hold &lock, void *x, long argc, t_atom 
 
 // Replace one item
 
-void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
+void EntryDatabase::replace_item(t_atom *identifier, long column, t_atom *item)
 {
     write_lock_hold lock(&m_lock);
 
@@ -248,7 +248,7 @@ void EntryDatabase::replaceItem(t_atom *identifier, long column, t_atom *item)
 
 // Remove entries from identifiers (with read pointer - ugraded on next method call to write)
 
-void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
+void EntryDatabase::remove_entries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
     {
@@ -262,7 +262,7 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
     }
     else
     {
-        ReadWritePointer database(this);
+        read_write_pointer database(this);
     
         std::vector<long> indices(argc);
         long size = 0;
@@ -286,32 +286,33 @@ void EntryDatabase::removeEntries(void *x, long argc, t_atom *argv)
 
 // Remove entries from matching (with read pointer - ugraded on next method call to write)
 
-void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
+void EntryDatabase::remove_matched_entries(void *x, long argc, t_atom *argv)
 {
     if (!argc)
         return;
     
-    ReadWritePointer database(this);
+    read_write_pointer database(this);
     matchers matchers;
     std::vector<long> indices;
-    long numMatches = 0;
+    long num_matches = 0;
     
     matchers.set_matchers(x, argc, argv, database);
-    numMatches = matchers.match(database, true);
-    indices.resize(numMatches);
+    num_matches = matchers.match(database, true);
+    indices.resize(num_matches);
         
-    for (long i = 0; i < numMatches; i++)
+    for (long i = 0; i < num_matches; i++)
         indices[i] = matchers.get_index(i);
         
-    if (numMatches && matchers.size())
+    if (num_matches && matchers.size())
         remove_entries(database, indices);
 }
 
 // Helpers for mass removal
 
-template <class T> void copyRange(std::vector<T>& data, long from, long to, long size, long itemSize = 1)
+template <class T>
+void copy_range(std::vector<T>& data, long from, long to, long size, long item_size = 1)
 {
-    std::copy(data.begin() + (from * itemSize), data.begin() + (from + size) * itemSize, data.begin() + to * itemSize);
+    std::copy(data.begin() + (from * item_size), data.begin() + (from + size) * item_size, data.begin() + to * item_size);
 }
 
 long EntryDatabase::get_order(long idx)
@@ -326,71 +327,71 @@ long EntryDatabase::get_order(long idx)
 
 // Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
 
-void EntryDatabase::remove_entries(ReadWritePointer& readLockedDatabase, const std::vector<long>& sortedIndices)
+void EntryDatabase::remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& sorted_indices)
 {
-    readLockedDatabase.promoteToWrite();
+    read_locked_database.promote();
     
-    long orderStart = get_order(sortedIndices[0]);
-    long offset = sortedIndices[0];
-    long next = sortedIndices[0];
+    long order_start = get_order(sorted_indices[0]);
+    long offset = sorted_indices[0];
+    long next = sorted_indices[0];
     long size;
     long end;
     
     // Setup new order vector
     
-    std::vector<long> newOrder(numItems());
-    std::copy(m_order.begin(), m_order.begin() + offset, newOrder.begin());
+    std::vector<long> new_order(num_items());
+    std::copy(m_order.begin(), m_order.begin() + offset, new_order.begin());
     
-    for (long i = 0; i < sortedIndices.size(); offset += (next - end))
+    for (long i = 0; i < sorted_indices.size(); offset += (next - end))
     {
         long start = next;
         
-        for (++i; i < sortedIndices.size(); i++)
-            if (sortedIndices[i] > sortedIndices[i - 1] + 1)
+        for (++i; i < sorted_indices.size(); i++)
+            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
                 break;
         
-        end = sortedIndices[i - 1] + 1;
-        next = i < sortedIndices.size() ? sortedIndices[i] : numItems();
+        end = sorted_indices[i - 1] + 1;
+        next = i < sorted_indices.size() ? sorted_indices[i] : num_items();
         
         // Mark new order array for deletion
         
         for (long j = start; j < end; j++)
-            newOrder[get_order(j)] = -1;
+            new_order[get_order(j)] = -1;
         
         // Alter order indices
         
         for (long j = end; j < next; j++)
-            newOrder[get_order(j)] = (j - end) + offset;
+            new_order[get_order(j)] = (j - end) + offset;
     }
     
-    long newSize = offset;
+    long new_size = offset;
     
     // Remove data
 
-    offset = sortedIndices[0];
+    offset = sorted_indices[0];
     
-    for (long i = 0; i < sortedIndices.size(); offset += size)
+    for (long i = 0; i < sorted_indices.size(); offset += size)
     {
-        for (++i; i < sortedIndices.size(); i++)
-            if (sortedIndices[i] > sortedIndices[i - 1] + 1)
+        for (++i; i < sorted_indices.size(); i++)
+            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
                 break;
         
-        end = sortedIndices[i - 1] + 1;
-        size = (i < sortedIndices.size() ? sortedIndices[i] : numItems()) - end;
+        end = sorted_indices[i - 1] + 1;
+        size = (i < sorted_indices.size() ? sorted_indices[i] : num_items()) - end;
         
         // Move data
         
-        copyRange(m_identifiers, end, offset, size);
-        copyRange(m_types, end, offset, size, numColumns());
-        copyRange(m_entries, end, offset, size, numColumns());
+        copy_range(m_identifiers, end, offset, size);
+        copy_range(m_types, end, offset, size, num_columns());
+        copy_range(m_entries, end, offset, size, num_columns());
     }
 
     // Swap order vectors and do deletion
     
-    std::swap(m_order, newOrder);
-    offset = orderStart;
+    std::swap(m_order, new_order);
+    offset = order_start;
     
-    for (long i = orderStart; i < m_order.size(); offset += size)
+    for (long i = order_start; i < m_order.size(); offset += size)
     {
         for (end = ++i; end < m_order.size(); end++)
             if (m_order[end] >= 0)
@@ -400,15 +401,15 @@ void EntryDatabase::remove_entries(ReadWritePointer& readLockedDatabase, const s
             if (m_order[i] < 0)
                 break;
         
-        copyRange(m_order, end, offset, size);
+        copy_range(m_order, end, offset, size);
     }
     
     // Resize storage
     
-    m_identifiers.resize(newSize);
-    m_entries.resize(newSize * numColumns());
-    m_types.resize(newSize * numColumns());
-    m_order.resize(newSize);
+    m_identifiers.resize(new_size);
+    m_entries.resize(new_size * num_columns());
+    m_types.resize(new_size * num_columns());
+    m_order.resize(new_size);
 }
 
 // Remove a single entry (with lock)
@@ -428,8 +429,8 @@ void EntryDatabase::remove_entry(void *x, t_atom *identifier)
     
     m_identifiers.erase(m_identifiers.begin() + idx);
     m_order.erase(m_order.begin() + order);
-    m_entries.erase(m_entries.begin() + (idx * numColumns()), m_entries.begin() + ((idx + 1) * numColumns()));
-    m_types.erase(m_types.begin() + (idx * numColumns()), m_types.begin() + ((idx + 1) * numColumns()));
+    m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
+    m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
  
     std::vector<long>::iterator it = m_order.begin();
     
@@ -463,7 +464,7 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
     bool sorted = false;
     long i;
 
-    long column = columnFromSpecifier(argv++);
+    long column = column_from_specifier(argv++);
     argc--;
 
     output.resize(argc);
@@ -512,17 +513,17 @@ void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_ato
 
 double EntryDatabase::column_min(long column) const
 {
-    return column_calculate(column, HUGE_VAL, BinaryFunctor<std::min<double> >());
+    return column_calculate(column, HUGE_VAL, binary_functor<std::min<double> >());
 }
 
 double EntryDatabase::column_max(long column) const
 {
-    return column_calculate(column, -HUGE_VAL, BinaryFunctor<std::max<double> >());
+    return column_calculate(column, -HUGE_VAL, binary_functor<std::max<double> >());
 }
 
 double EntryDatabase::column_mean(long column) const
 {
-    return column_calculate(column, 0.0, std::plus<double>()) / numItems();
+    return column_calculate(column, 0.0, std::plus<double>()) / num_items();
 }
 
 double EntryDatabase::column_standard_deviation(long column, double mean) const
@@ -534,7 +535,7 @@ double EntryDatabase::column_standard_deviation(long column, double mean) const
         double m_mean;
     };
     
-    return sqrt(column_calculate(column, 0.0, variance(mean)) / numItems());
+    return sqrt(column_calculate(column, 0.0, variance(mean)) / num_items());
 }
 
 double EntryDatabase::column_standard_deviation(long column) const
@@ -555,26 +556,26 @@ double EntryDatabase::column_median(long column) const
     return column_percentile(column, 50.0);
 }
 
-void EntryDatabase::column_sort_values(long column, std::vector<double>& sortedValues) const
+void EntryDatabase::column_sort_values(long column, std::vector<double>& sorted_values) const
 {
-    sortedValues.resize(numItems());
+    sorted_values.resize(num_items());
 
-    for (long i = 0; i < numItems(); i++)
-        sortedValues[i] = getData(i, column);
+    for (long i = 0; i < num_items(); i++)
+        sorted_values[i] = get_data(i, column);
     
-    sort(sortedValues, numItems());
+    sort(sorted_values, num_items());
 }
 
-double EntryDatabase::find_percentile(std::vector<double>& sortedValues, double percentile) const
+double EntryDatabase::find_percentile(std::vector<double>& sorted_values, double percentile) const
 {
-    long nItems = sortedValues.size();
+    long n_items = sorted_values.size();
     
-    if (!nItems)
+    if (!n_items)
         return std::numeric_limits<double>::quiet_NaN();
     
-    long idx = std::max(0L, std::min((long) round(nItems * (percentile / 100.0)), nItems - 1));
+    long idx = std::max(0L, std::min((long) round(n_items * (percentile / 100.0)), n_items - 1));
     
-    return sortedValues[idx];
+    return sorted_values[idx];
 }
 
 /*****************************************/
@@ -586,17 +587,17 @@ void EntryDatabase::view(t_object *database_object) const
     t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
     std::string str;
 
-    for (long i = 0; i < numItems(); i++)
+    for (long i = 0; i < num_items(); i++)
     {
-        str.insert(str.size(), getEntryIdentifier(i).get_string());
+        str.insert(str.size(), get_entry_identifier(i).get_string());
         
-        for (long j = 0; j < numColumns(); j++)
+        for (long j = 0; j < num_columns(); j++)
         {
             str.insert(str.size(), " ");
-            str.insert(str.size(), getTypedData(i, j).get_string());
+            str.insert(str.size(), get_typed_data(i, j).get_string());
         }
         
-        if (i != (numItems() - 1))
+        if (i != (num_items() - 1))
             str.insert(str.size(), "\n");
     }
     
@@ -610,7 +611,7 @@ void EntryDatabase::view(t_object *database_object) const
 
 // File Save
 
-void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
+void EntryDatabase::save(t_object *x, t_symbol *file) const
 {
     char filepath[MAX_PATH_CHARS];
     char filename[MAX_FILENAME_CHARS];
@@ -619,9 +620,9 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
     t_fourcc type;
     t_fourcc types = 'JSON';
     
-    if (fileSpecifier && fileSpecifier != gensym(""))
+    if (file && file != gensym(""))
     {
-        strncpy_zero(filepath, fileSpecifier->s_name, MAX_PATH_CHARS);
+        strncpy_zero(filepath, file->s_name, MAX_PATH_CHARS);
         if (path_frompotentialpathname(filepath, &path, filename))
             return;
     }
@@ -632,14 +633,14 @@ void EntryDatabase::save(t_object *x, t_symbol *fileSpecifier) const
             return;
     }
     
-    t_dictionary *dict = saveDictionary(true);
+    t_dictionary *dict = save_dictionary(true);
     dictionary_write(dict, filename, path);
     object_free(dict);
 }
 
 // File Load
 
-void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
+void EntryDatabase::load(t_object *x, t_symbol *file)
 {
     char filename[MAX_PATH_CHARS];
     short path;
@@ -647,9 +648,9 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     t_fourcc type;
     t_fourcc types = 'JSON';
     
-    if (fileSpecifier && fileSpecifier != gensym(""))
+    if (file && file != gensym(""))
     {
-        strncpy_zero(filename, fileSpecifier->s_name, MAX_PATH_CHARS);
+        strncpy_zero(filename, file->s_name, MAX_PATH_CHARS);
         if (locatefile_extended(filename, &path, &type, &types, 1))
             return;
     }
@@ -662,123 +663,123 @@ void EntryDatabase::load(t_object *x, t_symbol *fileSpecifier)
     
     t_dictionary *dict;
     dictionary_read(filename, path, &dict);
-    loadDictionary(x, dict);
+    load_dictionary(x, dict);
     object_free(dict);
 }
 
 // Dictionary Save
 
-t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
+t_dictionary *EntryDatabase::save_dictionary(bool entries_as_one_key) const
 {
-    std::vector<t_atom> args(numColumns() + 1);
+    std::vector<t_atom> args(num_columns() + 1);
     t_dictionary *dict = dictionary_new();
-    t_dictionary *dictMeta = dictionary_new();
-    t_dictionary *dictData = dictionary_new();
+    t_dictionary *dict_meta = dictionary_new();
+    t_dictionary *dict_data = dictionary_new();
     
     // Metadata
     
-    dictionary_appendlong(dictMeta, gensym("numColumns"), numColumns());
+    dictionary_appendlong(dict_meta, gensym("num_columns"), num_columns());
     
-    for (long i = 0; i < numColumns(); i++)
+    for (long i = 0; i < num_columns(); i++)
         atom_setsym(&args[i], m_columns[i].m_name);
     
-    dictionary_appendatoms(dictMeta, gensym("names"), numColumns(), &args[0]);
+    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), &args[0]);
     
-    for (long i = 0; i < numColumns(); i++)
+    for (long i = 0; i < num_columns(); i++)
         atom_setlong(&args[i], m_columns[i].m_label);
     
-    dictionary_appendatoms(dictMeta, gensym("labelmodes"), numColumns(), &args[0]);
-    dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dictMeta);
+    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), &args[0]);
+    dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dict_meta);
     
     // Data
     
-    if (entriesAsOneKey)
+    if (entries_as_one_key)
     {
-        std::vector<t_atom> entries(numItems());
+        std::vector<t_atom> entries(num_items());
 
-        for (long i = 0; i < numItems(); i++)
+        for (long i = 0; i < num_items(); i++)
         {
-            t_dictionary *entryDict = dictionary_new();
+            t_dictionary *dict_entry = dictionary_new();
             
-            getEntryIdentifier(&args[0], i);
+            get_entry_identifier(&args[0], i);
             
-            for (long j = 0; j < numColumns(); j++)
-                getDataAtom(&args[j + 1], i, j);
+            for (long j = 0; j < num_columns(); j++)
+                get_data_atom(&args[j + 1], i, j);
             
-            dictionary_appendatoms(entryDict, gensym("entry"), numColumns() + 1, &args[0]);
-            atom_setobj(&entries[i], entryDict);
+            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, &args[0]);
+            atom_setobj(&entries[i], dict_entry);
         }
         
-        dictionary_appendatoms(dictData, gensym("all_entries"), numItems(), &entries[0]);
+        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), &entries[0]);
     }
     else
     {
-        for (long i = 0; i < numItems(); i++)
+        for (long i = 0; i < num_items(); i++)
         {
             std::string str("entry_" + std::to_string(i + 1));
             
-            getEntryIdentifier(&args[0], i);
+            get_entry_identifier(&args[0], i);
             
-            for (long j = 0; j < numColumns(); j++)
-                getDataAtom(&args[j + 1], i, j);
+            for (long j = 0; j < num_columns(); j++)
+                get_data_atom(&args[j + 1], i, j);
             
-            dictionary_appendatoms(dictData, gensym(str.c_str()), numColumns() + 1, &args[0]);
+            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, &args[0]);
         }
     }
-    dictionary_appenddictionary(dict, gensym("data"), (t_object *) dictData);
+    dictionary_appenddictionary(dict, gensym("data"), (t_object *) dict_data);
     
     return dict;
 }
 
 // Dictionary Load (with lock)
 
-void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
+void EntryDatabase::load_dictionary(t_object *x, t_dictionary *dict)
 {
     t_max_err err = MAX_ERR_NONE;
-    t_dictionary *dictMeta = nullptr;
-    t_dictionary *dictData = nullptr;
+    t_dictionary *dict_meta = nullptr;
+    t_dictionary *dict_data = nullptr;
     
     if (!dict)
         return;
     
-    dictionary_getdictionary(dict, gensym("metadata"), (t_object **) &dictMeta);
-    dictionary_getdictionary(dict, gensym("data"), (t_object **) &dictData);
+    dictionary_getdictionary(dict, gensym("metadata"), (t_object **) &dict_meta);
+    dictionary_getdictionary(dict, gensym("data"), (t_object **) &dict_data);
     
-    if (dictMeta && dictData)
+    if (dict_meta && dict_data)
     {
         write_lock_hold lock(&m_lock);
         clear(lock);
         
-        t_atom_long newnumColumns;
-        dictionary_getlong(dictMeta, gensym("numColumns"), &newnumColumns);
+        t_atom_long newnum_columns;
+        dictionary_getlong(dict_meta, gensym("num_columns"), &newnum_columns);
         
-        if (newnumColumns != numColumns())
+        if (newnum_columns != num_columns())
         {
             m_columns.clear();
-            m_columns.resize(newnumColumns);
+            m_columns.resize(newnum_columns);
         }
         
         t_atom *argv;
         long argc;
         
-        dictionary_getatoms(dictMeta, gensym("names"), &argc, &argv);
-        setColumnNames(lock, x, argc, argv);
+        dictionary_getatoms(dict_meta, gensym("names"), &argc, &argv);
+        set_column_names(lock, x, argc, argv);
         
-        dictionary_getatoms(dictMeta, gensym("labelmodes"), &argc, &argv);
-        setColumnLabelModes(lock, x, argc, argv);
+        dictionary_getatoms(dict_meta, gensym("labelmodes"), &argc, &argv);
+        set_column_label_modes(lock, x, argc, argv);
         
         // Data
         
-        if (dictionary_getatoms(dictData, gensym("all_entries"), &argc, &argv) == MAX_ERR_NONE)
+        if (dictionary_getatoms(dict_data, gensym("all_entries"), &argc, &argv) == MAX_ERR_NONE)
         {
             for (long i = 0; i < argc; i++)
             {
-                t_atom *entryArgv;
-                long entryArgc;
+                t_atom *entry_argv;
+                long entry_argc;
                 
-                t_dictionary *entryDict = (t_dictionary *) atom_getobj(argv + i);
-                if ((err = dictionary_getatoms(entryDict, gensym("entry"), &entryArgc, &entryArgv)) == MAX_ERR_NONE)
-                    add_entry(lock, x, entryArgc, entryArgv);
+                t_dictionary *dict_entry = (t_dictionary *) atom_getobj(argv + i);
+                if ((err = dictionary_getatoms(dict_entry, gensym("entry"), &entry_argc, &entry_argv)) == MAX_ERR_NONE)
+                    add_entry(lock, x, entry_argc, entry_argv);
             }
         }
         else
@@ -786,7 +787,7 @@ void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
             for (long i = 0; err == MAX_ERR_NONE; i++)
             {
                 std::string str("entry_" + std::to_string(i + 1));
-                if ((err = dictionary_getatoms(dictData, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
+                if ((err = dictionary_getatoms(dict_data, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
                     add_entry(lock, x, argc, argv);
             }
         }

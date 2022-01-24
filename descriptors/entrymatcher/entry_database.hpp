@@ -35,7 +35,7 @@ public:
     protected:
         
         raw_accessor(const EntryDatabase& database)
-        : m_num_columns(database.numColumns()), m_iterator(database.m_entries.cbegin()) {}
+        : m_num_columns(database.num_columns()), m_iterator(database.m_entries.cbegin()) {}
         
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
@@ -60,13 +60,13 @@ public:
         const std::vector<t_custom_atom::Type>::const_iterator m_types;
     };
     
-    struct ReadPointer
+    struct read_pointer
     {
-        ReadPointer(const EntryDatabase *ptr) : m_ptr(ptr)  { m_ptr->m_lock.acquire_read(); }
-        ReadPointer(const ReadPointer&) = delete;
-        ReadPointer& operator=(const ReadPointer&) = delete;
-        ReadPointer( ReadPointer&&) = default;
-        ~ReadPointer()                                      { destroy(); }
+        read_pointer(const EntryDatabase *ptr) : m_ptr(ptr)  { m_ptr->m_lock.acquire_read(); }
+        read_pointer(const read_pointer&) = delete;
+        read_pointer& operator=(const read_pointer&) = delete;
+        read_pointer(read_pointer&&) = default;
+        ~read_pointer()                                      { destroy(); }
         
         void destroy()
         {
@@ -97,36 +97,37 @@ public:
         EntryDatabase *m_ptr;
     };
 
-    EntryDatabase(t_symbol *name, long numCols) : m_name(name) { m_columns.resize(numCols); }
+    EntryDatabase(t_symbol *name, long num_columns)
+    : m_name(name) { m_columns.resize(num_columns); }
     
-    raw_accessor rawAccessor() const { return raw_accessor(*this); }
-    atom_accessor atomAccessor() const { return atom_accessor(*this); }
+    raw_accessor get_raw_accessor() const { return raw_accessor(*this); }
+    atom_accessor get_atom_accessor() const { return atom_accessor(*this); }
 
     void reserve(long items);
     void clear();
     
-    size_t numItems() const         { return m_identifiers.size(); }
-    size_t numColumns() const       { return m_columns.size(); }
+    size_t num_items() const            { return m_identifiers.size(); }
+    size_t num_columns() const          { return m_columns.size(); }
     
-    void setColumnLabelModes(void *x, long argc, t_atom *argv);
-    void setColumnNames(void *x, long argc, t_atom *argv);
-    void addEntry(void *x, long argc, t_atom *argv);
-    void replaceItem(t_atom *identifier, long column, t_atom *item);
-    void removeEntries(void *x, long argc, t_atom *argv);
-    void removeMatchedEntries(void *x, long argc, t_atom *argv);
+    void set_column_label_modes(void *x, long argc, t_atom *argv);
+    void set_column_names(void *x, long argc, t_atom *argv);
+    void add_entry(void *x, long argc, t_atom *argv);
+    void replace_item(t_atom *identifier, long column, t_atom *item);
+    void remove_entries(void *x, long argc, t_atom *argv);
+    void remove_matched_entries(void *x, long argc, t_atom *argv);
     
-    t_symbol *getName() const                                   { return m_name; }
-    t_symbol *getColumnName(long idx) const                     { return m_columns[idx].m_name; }
-    bool getColumnLabelMode(long idx) const                     { return m_columns[idx].m_label; }
-    void getEntryIdentifier(t_atom *a, long idx) const          { return getEntryIdentifier(idx).get_atom(a); }
-    t_custom_atom getEntryIdentifier(long idx) const            { return m_identifiers[idx];}
-    long getEntryIndex(const t_atom *identifier) const
+    t_symbol *get_name() const                              { return m_name; }
+    t_symbol *get_column_name(long idx) const               { return m_columns[idx].m_name; }
+    bool get_column_label_mode(long idx) const              { return m_columns[idx].m_label; }
+    void get_entry_identifier(t_atom *a, long idx) const    { return get_entry_identifier(idx).get_atom(a); }
+    t_custom_atom get_entry_identifier(long idx) const      { return m_identifiers[idx];}
+    long get_entry_index(const t_atom *identifier) const
     {
         long order;
         return search_identifiers(identifier, order);
     }
     
-    long columnFromSpecifier(const t_atom *specifier) const;
+    long column_from_specifier(const t_atom *specifier) const;
     
     void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
     double column_min(long column) const;
@@ -137,23 +138,24 @@ public:
     double column_median(long column) const;
     
     void view(t_object *database_object) const;
-    void save(t_object *x, t_symbol *fileSpecifier) const;
-    void load(t_object *x, t_symbol *fileSpecifier);
+    void save(t_object *x, t_symbol *file) const;
+    void load(t_object *x, t_symbol *file);
 
-    t_dictionary *saveDictionary(bool entriesAsOneKey) const;
-    void loadDictionary(t_object *x, t_dictionary *dict);
+    t_dictionary *save_dictionary(bool entries_as_one_key) const;
+    void load_dictionary(t_object *x, t_dictionary *dict);
 
-    inline t_untyped_atom getData(long idx, long column) const              { return m_entries[idx * numColumns() + column]; }
-    inline t_custom_atom getTypedData(long idx, long column) const          { return t_custom_atom(getData(idx, column), m_types[idx * numColumns() + column]); }
-    inline void getDataAtom(t_atom *a, long idx, long column) const         { return getTypedData(idx, column).get_atom(a); }
+    inline t_untyped_atom get_data(long idx, long column) const         { return m_entries[idx * num_columns() + column]; }
+    inline t_custom_atom get_typed_data(long idx, long column) const    { return t_custom_atom(get_data(idx, column), m_types[idx * num_columns() + column]); }
+    inline void get_data_atom(t_atom *a, long idx, long column) const   { return get_typed_data(idx, column).get_atom(a); }
 
 private:
 
-    struct ReadWritePointer : public ReadPointer
+    struct read_write_pointer : public read_pointer
     {
-        ReadWritePointer(const EntryDatabase *ptr) : ReadPointer(ptr), m_promoted(false) {}
+        read_write_pointer(const EntryDatabase *ptr)
+        : read_pointer(ptr), m_promoted(false) {}
         
-        ~ReadWritePointer()
+        ~read_write_pointer()
         {
             if (m_promoted)
             {
@@ -162,14 +164,14 @@ private:
             }
         }
         
-        void promoteToWrite()
+        void promote()
         {
             m_ptr->m_lock.promote();
             m_promoted = true;
         }
         
-        ReadWritePointer(const ReadWritePointer&) = delete;
-        ReadWritePointer& operator=(const ReadWritePointer&) = delete;
+        read_write_pointer(const read_write_pointer&) = delete;
+        read_write_pointer& operator=(const read_write_pointer&) = delete;
         
     private:
         
@@ -177,43 +179,43 @@ private:
     };
     
     void clear(write_lock_hold &lock);
-    void setColumnLabelModes(write_lock_hold &lock, void *x, long argc, t_atom *argv);
-    void setColumnNames(write_lock_hold &lock, void *x, long argc, t_atom *argv);
+    void set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv);
+    void set_column_names(write_lock_hold &lock, void *x, long argc, t_atom *argv);
     void add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv);
     void remove_entry(void *x, t_atom *identifier);
-    void remove_entries(ReadWritePointer& readLockedDatabase, const std::vector<long>& indices);
+    void remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& indices);
     
     template <const double& func(const double&, const double&)>
-    struct BinaryFunctor
+    struct binary_functor
     {
         const double operator()(const double a, const double b) { return func(a, b); }
     };
     
     double column_standard_deviation(long column, double mean) const;
-    void column_sort_values(long column, std::vector<double>& sortedValues) const;
-    double find_percentile(std::vector<double>& sortedValues, double percentile) const;
+    void column_sort_values(long column, std::vector<double>& sorted_values) const;
+    double find_percentile(std::vector<double>& sorted_values, double percentile) const;
 
     template <class Op>
-    double column_calculate(long column, const double startValue, Op op) const
+    double column_calculate(long column, const double start_value, Op op) const
     {
-        double value = startValue;
+        double value = start_value;
     
-        if (column < 0 || m_columns[column].m_label || !numItems())
+        if (column < 0 || m_columns[column].m_label || !num_items())
             return std::numeric_limits<double>::quiet_NaN();
         
-        for (long i = 0; i < numItems(); i++)
-            value = op(value, getData(i, column));
+        for (long i = 0; i < num_items(); i++)
+            value = op(value, get_data(i, column));
         
         return value;
     }
 
     long get_order(long idx);
-    long search_identifiers(const t_atom *identifierAtom, long& idx) const;
+    long search_identifiers(const t_atom *identifier_atom, long& idx) const;
     
     inline void set_data(long idx, long column, const t_custom_atom& data)
     {
-        m_entries[idx * numColumns() + column] = data.m_data;
-        m_types[idx * numColumns() + column] = data.m_type;
+        m_entries[idx * num_columns() + column] = data.m_data;
+        m_types[idx * num_columns() + column] = data.m_type;
     }
    
     // Data

@@ -139,7 +139,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
         entry_database_modified(x, nullptr, 0, nullptr);
         
-        object_detach(ps_name_space_name, x->database.getName(), client);
+        object_detach(ps_name_space_name, x->database.get_name(), client);
         
         spin_lock_hold(&x->lock);
         last_client = (--x->count <= 0);
@@ -242,7 +242,7 @@ void entry_database_view(t_entry_database *database_object)
         
         // Must set after creating, because reasons...
         
-        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.getName());
+        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.get_name());
         object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
         object_attr_setlong(database_object->patch, gensym("cansave"), 0);
         /*
@@ -323,10 +323,10 @@ void database_view(void *x, t_object *database_object)
 
 // Retrieve Pointers for Reading or Writing
 
-EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
+EntryDatabase::read_pointer database_getptr_read(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return EntryDatabase::ReadPointer(&obj->database);
+    return EntryDatabase::read_pointer(&obj->database);
 }
 
 notify_pointer database_getptr_write(t_object *database_object)

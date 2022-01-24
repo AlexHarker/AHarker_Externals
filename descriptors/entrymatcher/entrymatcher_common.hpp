@@ -23,31 +23,31 @@ void entrymatcher_clear(T *x)
 template <class T>
 void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object)->set_column_label_modes(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnNames(x, argc, argv);
+    database_getptr_write(x->database_object)->set_column_names(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
+    database_getptr_write(x->database_object)->add_entry(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->remove_entries(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->remove_matched_entries(x, argc, argv);
 }
 
 // View, User Save and User Load Routines
@@ -77,13 +77,13 @@ void entrymatcher_load(T *x, t_symbol *file)
 template <class T>
 t_dictionary *entrymatcher_save_dict(T *x)
 {
-    return database_getptr_read(x->database_object)->saveDictionary(true);
+    return database_getptr_read(x->database_object)->save_dictionary(true);
 }
 
 template <class T>
 void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
-    database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+    database_getptr_write(x->database_object)->load_dictionary((t_object*) x, dict);
 }
 
 template <class T>

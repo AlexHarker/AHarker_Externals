@@ -195,7 +195,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 {
     long max_matchers = x->max_matchers;
     
-    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+    EntryDatabase::read_pointer database = database_getptr_read(x->database_object);
     
     x->matchers->clear();
     
@@ -203,7 +203,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     {
         // Find the column index for the test and the test type
         
-        long column = database->columnFromSpecifier(argv++);
+        long column = database->column_from_specifier(argv++);
         TestType type = entrymatcher_test_types(argv++);
         
         // If that fails we are done
@@ -222,7 +222,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         
         // Check that the arguments are all valid
         
-        if (column >= 0 && column < database->numColumns())
+        if (column >= 0 && column < database->num_columns())
         {
             if (argc >= arg_check)
             {
@@ -289,7 +289,7 @@ t_int *entrymatcher_perform(t_int *w)
     
     random_generator<>& gen = x->gen;
 
-    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+    EntryDatabase::read_pointer database = database_getptr_read(x->database_object);
     matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
@@ -350,7 +350,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     
     random_generator<>& gen = x->gen;
     
-    EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
+    EntryDatabase::read_pointer database = database_getptr_read(x->database_object);
     matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
