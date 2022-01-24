@@ -414,4 +414,3 @@ void valconvert_anything(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv
     x->mul = (min_in == max_in) ? 0.0 : (max_out - min_out) / (max_in - min_in);
     x->sub = (min_in * x->mul) - min_out;
 }
-

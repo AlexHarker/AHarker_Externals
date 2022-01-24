@@ -197,4 +197,3 @@ void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Output");
 }
-

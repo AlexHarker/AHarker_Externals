@@ -143,4 +143,3 @@ void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Triggers Out");
 }
-

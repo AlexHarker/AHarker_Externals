@@ -190,4 +190,3 @@ void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Output");
 }
-
