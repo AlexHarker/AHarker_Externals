@@ -3,9 +3,9 @@
 #include <functional>
 #include <cmath>
 
-#include "EntryDatabase.h"
-#include "Matchers.h"
-#include "Sort.h"
+#include "entry_database.hpp"
+#include "matchers.hpp"
+#include "sort.hpp"
 
 t_symbol *ps_mean = gensym("mean");
 t_symbol *ps_min = gensym("min");

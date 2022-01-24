@@ -1,15 +1,13 @@
 
-#ifndef ENTRY_DATABASE_MAX_H
-#define ENTRY_DATABASE_MAX_H
+#ifndef ENTRY_DATABASE_MAX_HPP
+#define ENTRY_DATABASE_MAX_HPP
 
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "EntryDatabase.h"
+#include "entry_database.hpp"
 
-/*****************************************/
 // Client Routines and Structures ONLY (other items are private)
-/*****************************************/
 
 // Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
 

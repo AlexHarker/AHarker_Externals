@@ -23,11 +23,10 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "EntryDatabase.h"
-#include "Matchers.h"
-#include "utilities.h"
-#include "entry_database_max.h"
-#include "entrymatcher_common.h"
+#include "entry_database_max.hpp"
+#include "entrymatcher_common.hpp"
+#include "matchers.hpp"
+#include "utilities.hpp"
 
 t_class *this_class;
 

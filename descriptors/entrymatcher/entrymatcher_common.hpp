@@ -1,14 +1,12 @@
 
-#ifndef ENTRYMATCHER_COMMON_H
-#define ENTRYMATCHER_COMMON_H
+#ifndef ENTRYMATCHER_COMMON_HPP
+#define ENTRYMATCHER_COMMON_HPP
 
 #include <ext.h>
 #include <ext_obex.h>
 #include <ext_dictobj.h>
 
-/*****************************************/
 // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
-/*****************************************/
 
 template <class T>
 void entrymatcher_refer(T *x, t_symbol *name)
@@ -52,9 +50,7 @@ void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
     database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
 }
 
-/*****************************************/
 // View, User Save and User Load Routines
-/*****************************************/
 
 template <class T>
 void entrymatcher_view(T *x)
@@ -74,9 +70,7 @@ void entrymatcher_load(T *x, t_symbol *file)
     database_getptr_write(x->database_object)->load((t_object *) x, file);
 }
 
-/*****************************************/
 // Load and Save (pattr/embedding/parameters etc.)
-/*****************************************/
 
 // Save and Load Dictionary
 
@@ -160,9 +154,7 @@ void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *d
     }
 }
 
-/*****************************************/
 // Audiostyle Temporary Routine
-/*****************************************/
 
 template <class T>
 void entrymatcher_audiostyle(T *x, t_atom_long style)
@@ -170,9 +162,7 @@ void entrymatcher_audiostyle(T *x, t_atom_long style)
     x->matchers->setAudioStyle(style ? true : false);
 }
 
-/*****************************************/
 // Add Common Routines
-/*****************************************/
 
 template <class T>
 void entrymatcher_add_common(t_class *class_pointer)
@@ -210,9 +200,7 @@ void entrymatcher_add_common(t_class *class_pointer)
     CLASS_ATTR_SAVE(class_pointer, "embed", 0);
 }
 
-/*****************************************/
 // New Common Routine
-/*****************************************/
 
 template <class T>
 void entrymatcher_new_common(T *x)

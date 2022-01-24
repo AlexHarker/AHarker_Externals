@@ -1,8 +1,8 @@
 
 #include <algorithm>
 
-#include "entry_database_max.h"
-#include "entry_database_viewer.h"
+#include "entry_database_max.hpp"
+#include "entry_database_viewer.hpp"
 
 #include <AH_Locks.hpp>
 

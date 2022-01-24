@@ -1,10 +1,10 @@
 
-#ifndef MATCHERS_H
-#define MATCHERS_H
+#ifndef MATCHERS_HPP
+#define MATCHERS_HPP
 
-#include "CustomAtom.h"
-#include "EntryDatabase.h"
-#include "utilities.h"
+#include "custom_atom.hpp"
+#include "entry_database.hpp"
+#include "utilities.hpp"
 
 class Matchers
 {

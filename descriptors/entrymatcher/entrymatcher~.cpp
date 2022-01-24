@@ -23,13 +23,13 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Random.h>
+#include <AH_Lifecycle.hpp>
+#include <RandomGenerator.hpp>
 
-#include "EntryDatabase.h"
-#include "Matchers.h"
-#include "utilities.h"
-#include "entry_database_max.h"
-#include "entrymatcher_common.h"
+#include "entry_database_max.hpp"
+#include "entrymatcher_common.hpp"
+#include "matchers.hpp"
+#include "utilities.hpp"
 
 t_class *this_class;
 
@@ -47,7 +47,7 @@ typedef struct entrymatcher {
     long n_limit;
     double ratio_kept;
     
-    t_rand_gen gen;
+    random_generator<> gen;
     
     float *matcher_ins[256];
     
@@ -112,8 +112,10 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     t_atom_long num_columns = argc  ? atom_getlong(argv++) : 0;
     t_atom_long max_matchers = (argc > 1)  ? atom_getlong(argv++) : 0;
     
-    t_entrymatcher *x = (t_entrymatcher *)object_alloc(this_class);
+    t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
     
+    create_object(x->gen);
+
     dsp_setup((t_pxobject *) x, 2 + max_matchers);
     outlet_new((t_object *) x, "signal");
     
@@ -125,10 +127,8 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->n_limit = 0;
     
     entrymatcher_new_common(x);
-
-    rand_seed(&x->gen);
     
-    return (x);
+    return x;
 }
 
 void entrymatcher_free(t_entrymatcher *x)
@@ -136,6 +136,7 @@ void entrymatcher_free(t_entrymatcher *x)
     dsp_free(&x->x_obj);
     database_release(x, x->database_object);
     delete x->matchers;
+    destroy_object(x->gen);
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -286,8 +287,8 @@ t_int *entrymatcher_perform(t_int *w)
     long vec_size = w[5];
     t_entrymatcher *x = (t_entrymatcher *) w[6];
     
-    t_rand_gen *gen = &x->gen;
-    
+    random_generator<>& gen = x->gen;
+
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
     
@@ -315,8 +316,8 @@ t_int *entrymatcher_perform(t_int *w)
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = matchers->getIndex(rand_int_n(gen, num_matched_indices - 1));
-        
+            index = matchers->getIndex(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
+
         *out++ = (float) index + 1;
     }
     
@@ -347,7 +348,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     double **matcher_ins = ins + 2;
     double *out = outs[0];
     
-    t_rand_gen *gen = &x->gen;
+    random_generator<>& gen = x->gen;
     
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
     Matchers *matchers = x->matchers;
@@ -376,7 +377,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = matchers->getIndex(rand_int_n(gen, num_matched_indices - 1));
+            index = matchers->getIndex(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
         
         *out++ = (float) index + 1;
     }

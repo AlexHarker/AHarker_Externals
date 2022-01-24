@@ -1,6 +1,6 @@
 
-#ifndef CUSTOMATOM_H
-#define CUSTOMATOM_H
+#ifndef CUSTOM_ATOM_HPP
+#define CUSTOM_ATOM_HPP
 
 #include <ext.h>
 #include <vector>

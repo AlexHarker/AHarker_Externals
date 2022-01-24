@@ -1,7 +1,7 @@
 
-#include "entry_database_viewer.h"
-#include "EntryDatabase.h"
-#include "Sort.h"
+#include "entry_database_viewer.hpp"
+#include "entry_database.hpp"
+#include "sort.hpp"
 
 #include <jpatcher_api.h>
 #include <jgraphics.h>
@@ -421,4 +421,3 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         }
     }
 }
-

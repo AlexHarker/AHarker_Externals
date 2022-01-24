@@ -1,11 +1,11 @@
 
-#ifndef ENTRYDATABASE_H
-#define ENTRYDATABASE_H
+#ifndef ENTRY_DATABASE_HPP
+#define ENTRY_DATABASE_HPP
 
 #include <ext.h>
 #include <vector>
 
-#include "CustomAtom.h"
+#include "custom_atom.hpp"
 
 #include <AH_Locks.hpp>
 
@@ -218,6 +218,5 @@ private:
 
     mutable read_write_lock mLock;
 };
-
 
 #endif

@@ -1,10 +1,11 @@
 
-#ifndef SORT_H
-#define SORT_H
+#ifndef SORT_HPP
+#define SORT_HPP
 
 // Convenience for altering swap flags
 
-template <class T> bool swap(T& a, T& b)
+template <class T>
+bool swap(T& a, T& b)
 {
     std::swap(a, b);
     return true;
@@ -13,9 +14,9 @@ template <class T> bool swap(T& a, T& b)
 // An ascending order index sort (combsort11 algorithm)
 
 template <class T, class U>
-void sort(T& indices, U& values, long numValues)
+void sort(T& indices, U& values, long size)
 {
-    long gap = numValues;
+    long gap = size;
     bool swaps = true;
     long i;
     
@@ -28,7 +29,7 @@ void sort(T& indices, U& values, long numValues)
             if (gap < 1) gap = 1;
         }
         
-        for (i = 0, swaps = false; i + gap < numValues; i++)
+        for (i = 0, swaps = false; i + gap < size; i++)
             if (values[indices[i]] > values[indices[i + gap]])
                 swaps = swap(indices[i], indices[i + gap]);
     }
@@ -37,9 +38,9 @@ void sort(T& indices, U& values, long numValues)
 // An ascending order sort (combsort11 algorithm)
 
 template <class T>
-void sort(T& values, long numValues)
+void sort(T& values, long size)
 {
-    long gap = numValues;
+    long gap = size;
     bool swaps = true;
     long i;
     
@@ -52,7 +53,7 @@ void sort(T& values, long numValues)
             if (gap < 1) gap = 1;
         }
         
-        for (i = 0, swaps = false; i + gap < numValues; i++)
+        for (i = 0, swaps = false; i + gap < size; i++)
             if (values[i] > values[i + gap])
                 swaps = swap(values[i], values[i + gap]);
     }
@@ -61,9 +62,9 @@ void sort(T& values, long numValues)
 // An ascending order index sort with a getter (combsort11 algorithm)
 
 template <class T, typename Op>
-void sort(T& indices, long numValues, Op& valueGetter)
+void sort(T& indices, long size, Op& getter)
 {
-    long gap = numValues;
+    long gap = size;
     bool swaps = true;
     long i;
     
@@ -76,11 +77,10 @@ void sort(T& indices, long numValues, Op& valueGetter)
             if (gap < 1) gap = 1;
         }
         
-        for (i = 0, swaps = false; i + gap < numValues; i++)
-            if (valueGetter(indices[i]) > valueGetter(indices[i + gap]))
+        for (i = 0, swaps = false; i + gap < size; i++)
+            if (getter(indices[i]) > getter(indices[i + gap]))
                 swaps = swap(indices[i], indices[i + gap]);
     }
 }
-
 
 #endif
