@@ -8,7 +8,6 @@
 
 class Matchers
 {
-    
 public:
     
     enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
@@ -38,7 +37,8 @@ private:
             return false;
         }
         
-        template <typename Op> inline bool distanceTest(bool reject, const double value, double& overallDistance, Op op) const
+        template <typename Op>
+        inline bool distanceTest(bool reject, const double value, double& overallDistance, Op op) const
         {
             double distance = HUGE_VAL;
 
@@ -54,7 +54,8 @@ private:
             return !reject || distance <= 1.0;
         }
         
-        template <typename T, typename Op> inline long comparisonTest(std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        template <typename T, typename Op>
+        inline long comparisonTest(std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -91,7 +92,8 @@ private:
             return matched;
         }
         
-        template <typename Op> inline long distanceTest(bool reject, std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        template <typename Op>
+        inline long distanceTest(bool reject, std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
@@ -180,6 +182,5 @@ private:
     std::vector<Matcher> mMatchers;
     bool mAudioStyle;
 };
-
 
 #endif

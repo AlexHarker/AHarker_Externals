@@ -10,7 +10,7 @@
 // Entry Database Max Object Struture
 /*****************************************/
 
-typedef struct entry_database
+struct t_entry_database
 {
     t_object a_obj;
     
@@ -22,8 +22,7 @@ typedef struct entry_database
     
     long count;
     bool notify;
-    
-} t_entry_database;
+};
 
 /*****************************************/
 // Entry Database Max Object Definitions
@@ -89,7 +88,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->patch = nullptr;
     x->viewer = nullptr;
     
-    return (x);
+    return x;
 }
 
 // Free
