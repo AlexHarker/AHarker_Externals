@@ -292,16 +292,16 @@ void EntryDatabase::removeMatchedEntries(void *x, long argc, t_atom *argv)
         return;
     
     ReadWritePointer database(this);
-    Matchers matchers;
+    matchers matchers;
     std::vector<long> indices;
     long numMatches = 0;
     
-    matchers.setMatchers(x, argc, argv, database);
+    matchers.set_matchers(x, argc, argv, database);
     numMatches = matchers.match(database, true);
     indices.resize(numMatches);
         
     for (long i = 0; i < numMatches; i++)
-        indices[i] = matchers.getIndex(i);
+        indices[i] = matchers.get_index(i);
         
     if (numMatches && matchers.size())
         removeEntries(database, indices);

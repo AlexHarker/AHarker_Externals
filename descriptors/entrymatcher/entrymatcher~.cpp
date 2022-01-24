@@ -38,7 +38,7 @@ typedef struct entrymatcher {
     t_pxobject x_obj;
     
     t_object *database_object;
-    Matchers *matchers;
+    matchers *matchers;
     
     t_patcher *patcher;
     long embed;
@@ -120,7 +120,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     outlet_new((t_object *) x, "signal");
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
-    x->matchers = new Matchers;
+    x->matchers = new matchers;
     
     x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));
     x->ratio_kept = 1.0;
@@ -243,17 +243,17 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                 switch (type)
                 {
                     case TEST_NONE:                 break;
-                    case TEST_MATCH:                x->matchers->addMatcher(Matchers::kTestMatch, column);                      break;
-                    case TEST_LESS_THAN:            x->matchers->addMatcher(Matchers::kTestLess, column);                       break;
-                    case TEST_GREATER_THAN:         x->matchers->addMatcher(Matchers::kTestGreater, column);                    break;
-                    case TEST_LESS_THAN_EQ:         x->matchers->addMatcher(Matchers::kTestLessEqual, column);                  break;
-                    case TEST_GREATER_THAN_EQ:      x->matchers->addMatcher(Matchers::kTestGreaterEqual, column);               break;
-                    case TEST_DISTANCE:             x->matchers->addMatcher(Matchers::kTestDistance, column);                   break;
-                    case TEST_SCALE:                x->matchers->addMatcher(Matchers::kTestDistance, column, scale);            break;
-                    case TEST_WITHIN:               x->matchers->addMatcher(Matchers::kTestDistanceReject, column, scale);      break;
-                    case TEST_DISTANCE_RATIO:       x->matchers->addMatcher(Matchers::kTestRatio, column);                      break;
-                    case TEST_SCALE_RATIO:          x->matchers->addMatcher(Matchers::kTestRatio, column, scale);               break;
-                    case TEST_WITHIN_RATIO:         x->matchers->addMatcher(Matchers::kTestRatioReject, column, scale);         break;
+                    case TEST_MATCH:                x->matchers->add_matcher(matchers::kTestMatch, column);                      break;
+                    case TEST_LESS_THAN:            x->matchers->add_matcher(matchers::kTestLess, column);                       break;
+                    case TEST_GREATER_THAN:         x->matchers->add_matcher(matchers::kTestGreater, column);                    break;
+                    case TEST_LESS_THAN_EQ:         x->matchers->add_matcher(matchers::kTestLessEqual, column);                  break;
+                    case TEST_GREATER_THAN_EQ:      x->matchers->add_matcher(matchers::kTestGreaterEqual, column);               break;
+                    case TEST_DISTANCE:             x->matchers->add_matcher(matchers::kTestDistance, column);                   break;
+                    case TEST_SCALE:                x->matchers->add_matcher(matchers::kTestDistance, column, scale);            break;
+                    case TEST_WITHIN:               x->matchers->add_matcher(matchers::kTestDistanceReject, column, scale);      break;
+                    case TEST_DISTANCE_RATIO:       x->matchers->add_matcher(matchers::kTestRatio, column);                      break;
+                    case TEST_SCALE_RATIO:          x->matchers->add_matcher(matchers::kTestRatio, column, scale);               break;
+                    case TEST_WITHIN_RATIO:         x->matchers->add_matcher(matchers::kTestRatioReject, column, scale);         break;
                 }
             }
         }
@@ -290,12 +290,12 @@ t_int *entrymatcher_perform(t_int *w)
     random_generator<>& gen = x->gen;
 
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
-    Matchers *matchers = x->matchers;
+    matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
     
     long n_limit = x->n_limit;
-    long num_matched_indices = matchers->getNumMatches();
+    long num_matched_indices = matchers->get_num_matches();
     
     for (long i = 0; i < vec_size; i++)
     {
@@ -308,7 +308,7 @@ t_int *entrymatcher_perform(t_int *w)
             // Do matching (if requested)
             
             for (long j = 0; j < x->max_matchers; j++)
-                matchers->setTarget(j, matcher_ins[j][i]);
+                matchers->set_target(j, matcher_ins[j][i]);
             
             num_matched_indices = matchers->match(database, ratio_kept, n_limit, true);
         }
@@ -316,7 +316,7 @@ t_int *entrymatcher_perform(t_int *w)
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = matchers->getIndex(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
+            index = matchers->get_index(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
 
         *out++ = (float) index + 1;
     }
@@ -351,12 +351,12 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     random_generator<>& gen = x->gen;
     
     EntryDatabase::ReadPointer database = database_getptr_read(x->database_object);
-    Matchers *matchers = x->matchers;
+    matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
 
     long n_limit = x->n_limit;
-    long num_matched_indices = matchers->getNumMatches();
+    long num_matched_indices = matchers->get_num_matches();
     
     for (long i = 0; i < vec_size; i++)
     {
@@ -369,7 +369,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             // Do matching (if requested)
             
             for (long j = 0; j < x->max_matchers; j++)
-                matchers->setTarget(j, matcher_ins[j][i]);
+                matchers->set_target(j, matcher_ins[j][i]);
             
             num_matched_indices = matchers->match(database, ratio_kept, n_limit, true);
         }
@@ -377,7 +377,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = matchers->getIndex(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
+            index = matchers->get_index(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
         
         *out++ = (float) index + 1;
     }

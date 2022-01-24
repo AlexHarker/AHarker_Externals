@@ -37,7 +37,7 @@ typedef struct entrymatcher{
     t_object x_obj;
     
     t_object *database_object;
-    Matchers *matchers;
+    matchers *matchers;
     
     long embed;
     t_patcher *patcher;
@@ -122,7 +122,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->the_indices_outlet = listout(x);
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
-    x->matchers = new Matchers;
+    x->matchers = new matchers;
     
     entrymatcher_new_common(x);
 
@@ -262,7 +262,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->matchers->setMatchers(x, argc, argv, database_getptr_read(x->database_object));
+    x->matchers->set_matchers(x, argc, argv, database_getptr_read(x->database_object));
 }
 
 void entrymatcher_match_all(t_entrymatcher *x)
@@ -314,7 +314,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
     t_atom output_distances[1024];
     
     EntryDatabase::ReadPointer database_ptr = database_getptr_read(x->database_object);
-    Matchers *matchers = x->matchers;
+    matchers *matchers = x->matchers;
         
     // Calculate potential matches and sort if there are matches
         
@@ -324,8 +324,8 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
     
     for (long i = 0; i < num_matches; i++)
     {
-        long index = matchers->getIndex(i);
-        double distance = matchers->getDistance(i);
+        long index = matchers->get_index(i);
+        double distance = matchers->get_distance(i);
         
         if (distance > distance_limit)
         {

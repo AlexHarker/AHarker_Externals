@@ -6,7 +6,7 @@
 #include "entry_database.hpp"
 #include "utilities.hpp"
 
-class Matchers
+class matchers
 {
 public:
     
@@ -14,75 +14,77 @@ public:
     
 private:
  
-    struct Result
+    struct result
     {
-        Result() {}
-        Result(long index, double distance) : mIndex(index), mDistance(distance) {}
+        result() {}
+        result(long index, double distance) : m_index(index), m_distance(distance) {}
         
-        friend bool operator > (const Result& a, const Result& b) { return a.mDistance > b.mDistance; }
+        friend bool operator > (const result& a, const result& b) { return a.m_distance > b.m_distance; }
         
-        long mIndex;
-        double mDistance;
+        long m_index;
+        double m_distance;
     };
     
-    struct Matcher
+    struct matcher
     {
-        Matcher(TestType type, long column, double scale = 1.0) : mType(type), mColumn(column), mScale(scale) {}
+        matcher(TestType type, long column, double scale = 1.0)
+        : m_type(type), m_column(column), m_scale(scale) {}
 
-        template <typename Op> inline bool comparisonTest(const t_untyped_atom value, Op op) const
+        template <typename Op>
+        inline bool comparison_test(const t_untyped_atom value, Op op) const
         {
-            for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                 if (op(value, (*it))) return true;
             
             return false;
         }
         
         template <typename Op>
-        inline bool distanceTest(bool reject, const double value, double& overallDistance, Op op) const
+        inline bool distance_test(bool reject, const double value, double& overall_distance, Op op) const
         {
             double distance = HUGE_VAL;
 
-            for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+            for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
             {
-                double currentDistance = op(value, *it, mScale);
-                currentDistance *= currentDistance;
-                if (currentDistance < distance)
-                    distance = currentDistance;
+                double current_distance = op(value, *it, m_scale);
+                current_distance *= current_distance;
+                if (current_distance < distance)
+                    distance = current_distance;
             }
             
-            overallDistance += distance;
+            overall_distance += distance;
             return !reject || distance <= 1.0;
         }
         
         template <typename T, typename Op>
-        inline long comparisonTest(std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        inline long comparison_test(std::vector<result>& results, long num_matches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
-            if (mValues.size() == 1)
+            if (m_values.size() == 1)
             {
-                T comparisonValue = mValues[0];
+                T comparison_value = m_values[0];
                 
-                for (long i = 0; i < numMatches; i++)
+                for (long i = 0; i < num_matches; i++)
                 {
-                    long idx = results[i].mIndex;
+                    long idx = results[i].m_index;
                     
-                    if (op(accessor.getData(idx, mColumn), comparisonValue))
-                        results[matched++] = Result(idx, results[i].mDistance);
+                    if (op(accessor.getData(idx, m_column), comparison_value))
+                        results[matched++] = result(idx, results[i].m_distance);
                 }
             }
             else
             {
-                for (long i = 0; i < numMatches; i++)
+                for (long i = 0; i < num_matches; i++)
                 {
-                    long idx = results[i].mIndex;
-                    t_untyped_atom value = accessor.getData(idx, mColumn);
+                    long idx = results[i].m_index;
+                    t_untyped_atom value = accessor.getData(idx, m_column);
                     
-                    for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+                    for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                     {
                         if (op(value, (*it)))
                         {
-                            results[matched++] = Result(idx, results[i].mDistance);
+                            results[matched++] = result(idx, results[i].m_distance);
                             break;
                         }
                     }
@@ -93,94 +95,95 @@ private:
         }
         
         template <typename Op>
-        inline long distanceTest(bool reject, std::vector<Result>& results, long numMatches, const EntryDatabase::RawAccessor& accessor, Op op) const
+        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const EntryDatabase::RawAccessor& accessor, Op op) const
         {
             long matched = 0;
             
-            if (mValues.size() == 1)
+            if (m_values.size() == 1)
             {
-                double comparisonValue = mValues[0];
+                double comparison_value = m_values[0];
                 
-                for (long i = 0; i < numMatches; i++)
+                for (long i = 0; i < num_matches; i++)
                 {
-                    long idx = results[i].mIndex;
-                    double distance = op(comparisonValue, accessor.getData(idx, mColumn).m_value, mScale);
+                    long idx = results[i].m_index;
+                    double distance = op(comparison_value, accessor.getData(idx, m_column).m_value, m_scale);
                     distance *= distance;
                     
                     if (!reject || distance <= 1.0)
-                        results[matched++] = Result(idx, results[i].mDistance + distance);
+                        results[matched++] = result(idx, results[i].m_distance + distance);
                 }
             }
             else
             {
-                for (long i = 0; i < numMatches; i++)
+                for (long i = 0; i < num_matches; i++)
                 {
-                    long idx = results[i].mIndex;
-                    double value = accessor.getData(idx, mColumn).m_value;
+                    long idx = results[i].m_index;
+                    double value = accessor.getData(idx, m_column).m_value;
                     double distance = HUGE_VAL;
                     
-                    for (std::vector<t_custom_atom>::const_iterator it = mValues.begin(); it != mValues.end(); it++)
+                    for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
                     {
-                        double currentDistance = op((*it), value, mScale);
-                        currentDistance *= currentDistance;
-                        if (currentDistance < distance)
-                            distance = currentDistance;
+                        double current_distance = op((*it), value, m_scale);
+                        current_distance *= current_distance;
+                        if (current_distance < distance)
+                            distance = current_distance;
                     }
                     
                     if (!reject || distance <= 1.0)
-                        results[matched++] = Result(idx, results[i].mDistance + distance);
+                        results[matched++] = result(idx, results[i].m_distance + distance);
                 }
             }
             
             return matched;
         }
 
-        TestType mType;
-        long mColumn;
-        std::vector<t_custom_atom> mValues;
-        double mScale;
+        TestType m_type;
+        long m_column;
+        std::vector<t_custom_atom> m_values;
+        double m_scale;
     };
     
 public:
     
-    Matchers() : mNumMatches(0), mAudioStyle(false) {}
+    matchers() : m_num_matches(0), m_audio_style(false) {}
     
-    long match(const EntryDatabase::ReadPointer& database, double ratioMatched = 1.0, long maxMatches = 0, bool mustSort = true) const;
+    long match(const EntryDatabase::ReadPointer& database, double ratio_matched = 1.0, long max_matches = 0, bool must_sort = true) const;
     
-    size_t size() const { return mMatchers.size(); }
+    size_t size() const { return m_matchers.size(); }
     
     void clear();
     
-    void setTarget(long idx, double value)
+    void set_target(long idx, double value)
     {
         if (idx >= 0 && idx < size())
         {
-            mMatchers[idx].mValues.resize(1);
-            mMatchers[idx].mValues[0] = value;
+            m_matchers[idx].m_values.resize(1);
+            m_matchers[idx].m_values[0] = value;
         }
     }
     
-    long getNumMatches() const              { return mNumMatches; }
-    long getIndex(long idx) const           { return mResults[idx].mIndex; }
-    double getDistance(long idx) const      { return sqrt(mResults[idx].mDistance); }
+    long get_num_matches() const            { return m_num_matches; }
+    long get_index(long idx) const          { return m_results[idx].m_index; }
+    double get_distance(long idx) const     { return sqrt(m_results[idx].m_distance); }
     
-    void addTarget(double value);
-    void addTarget(t_symbol *value);
-    void addMatcher(TestType type, long column, double scale = 1.0);
+    void add_target(double value);
+    void add_target(t_symbol *value);
+    void add_matcher(TestType type, long column, double scale = 1.0);
     
-    void setMatchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database);
-    void setAudioStyle(bool style) { mAudioStyle = style; }
+    void set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::ReadPointer& database);
+    void set_audio_style(bool style) { m_audio_style = style; }
     
 private:
     
-    long sortTopN(long N, long size) const;
+    long sort_top_n(long N, long size) const;
     
-    mutable long mNumMatches;
+    mutable long m_num_matches;
     
-    mutable std::vector<Result> mResults;
+    mutable std::vector<result> m_results;
     
-    std::vector<Matcher> mMatchers;
-    bool mAudioStyle;
+    std::vector<matcher> m_matchers;
+    
+    bool m_audio_style;
 };
 
 #endif

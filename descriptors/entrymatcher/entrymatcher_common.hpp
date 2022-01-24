@@ -159,7 +159,7 @@ void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 template <class T>
 void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
-    x->matchers->setAudioStyle(style ? true : false);
+    x->matchers->set_audio_style(style ? true : false);
 }
 
 // Add Common Routines
