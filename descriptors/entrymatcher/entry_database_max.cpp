@@ -282,7 +282,7 @@ void entry_database_view_removed(t_entry_database *database_object)
 // Notify Pointer (notifies clients after write operation)
 /*****************************************/
 
-NotifyPointer::~NotifyPointer()
+notify_pointer::~notify_pointer()
 {
     t_entry_database *database = (t_entry_database *) mMaxDatabase;
     
@@ -329,8 +329,8 @@ EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
     return EntryDatabase::ReadPointer(&obj->database);
 }
 
-NotifyPointer database_getptr_write(t_object *database_object)
+notify_pointer database_getptr_write(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return NotifyPointer(&obj->database, (t_object *) obj);
+    return notify_pointer(&obj->database, (t_object *) obj);
 }
