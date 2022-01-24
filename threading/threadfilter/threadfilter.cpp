@@ -111,7 +111,6 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
 
 // Assist
 
-
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)

@@ -27,6 +27,7 @@
 
 #include <algorithm>
 
+
 // Globals and Object Structure
 
 t_class *this_class;
@@ -357,4 +358,3 @@ void voicemanager_assist(t_voicemanager *x, void *b, long m, long a, char *s)
             break;
     }
 }
-
