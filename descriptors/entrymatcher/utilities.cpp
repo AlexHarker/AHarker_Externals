@@ -48,4 +48,3 @@ TestType entrymatcher_test_types(t_atom *argv)
     
     return TEST_NONE;
 }
-

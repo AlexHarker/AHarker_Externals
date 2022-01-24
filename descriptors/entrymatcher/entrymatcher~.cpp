@@ -2,18 +2,18 @@
 /*
  *  entrymatcher~
  *
- *	entrymatcher~ is the audio rate counterpart of entrymatcher, capable of matching with sample-accurate timing.
- *	It is intended primarily for use in granular synthesis applications requiring sample accuracy for audio matching using descriptors.
+ *  entrymatcher~ is the audio rate counterpart of entrymatcher, capable of matching with sample-accurate timing.
+ *  It is intended primarily for use in granular synthesis applications requiring sample accuracy for audio matching using descriptors.
  *
- *	entrymatcher~ does not offer all the features of entrymatcher, and there are some key differences to the max version:
+ *  entrymatcher~ does not offer all the features of entrymatcher, and there are some key differences to the max version:
  *
- *	1 - entrymatcher~ takes values for matching at signal rate, and has a different message structure for setting matching criteria.
- *	2 - entrymatcher~ randomly selects a value from all the valid matches and outputs only that one value.
- *	3 - for reasons of efficiency the matching process and the randomisation processes can be triggered separately to allow variation over small time scales, without the expense of recalculating matches.
- *	4 - only numeric data can be used (although entries and columns can still be referred to using symbols).
+ *  1 - entrymatcher~ takes values for matching at signal rate, and has a different message structure for setting matching criteria.
+ *  2 - entrymatcher~ randomly selects a value from all the valid matches and outputs only that one value.
+ *  3 - for reasons of efficiency the matching process and the randomisation processes can be triggered separately to allow variation over small time scales, without the expense of recalculating matches.
+ *  4 - only numeric data can be used (although entries and columns can still be referred to using symbols).
  *
- *	In practice a large number of matching scenarios and data lookup requirements can be satisfied.
- *	The features of the entrymatcher~ object are covered in detail in the helpfile documentation.
+ *  In practice a large number of matching scenarios and data lookup requirements can be satisfied.
+ *  The features of the entrymatcher~ object are covered in detail in the helpfile documentation.
  *
  *  Copyright 2010 Alex Harker. All rights reserved.
  *
@@ -340,7 +340,7 @@ void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
 /*****************************************/
 
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{	
+{
     // Set pointers
     
     double *choose_in = ins[0];
@@ -364,7 +364,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
         
         long index = -1;
         
-        if (*match_in++) 
+        if (*match_in++)
         {
             // Do matching (if requested)
             
@@ -384,6 +384,6 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
 }
 
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
-{				
+{
     object_method(dsp64, gensym("dsp_add64"), x, entrymatcher_perform64, 0, NULL);
 }

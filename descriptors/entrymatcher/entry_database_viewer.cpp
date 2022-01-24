@@ -45,12 +45,12 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
 
 long entry_database_viewer_dummycompare(t_rowref a, t_rowref b) { return 1; }
 
-static t_class	*entry_database_viewer_class = NULL;
+static t_class *entry_database_viewer_class = NULL;
 
 void entry_database_viewer_init()
 {
-    t_class	*c;
-    long	flags;
+    t_class *c;
+    long flags;
     
     common_symbols_init();
     
@@ -264,7 +264,7 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
     {
         // Get attibute name
         
-        t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));	// ask attribute object for name
+        t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); // ask attribute object for name
         
         if (attrname == gensym("rect"))
         {
