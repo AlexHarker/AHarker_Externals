@@ -26,7 +26,6 @@
 #include "entry_database.hpp"
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
-#include "utilities.hpp"
 
 t_class *this_class;
 

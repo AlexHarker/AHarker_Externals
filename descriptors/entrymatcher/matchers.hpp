@@ -4,7 +4,27 @@
 
 #include "atom_types.hpp"
 #include "entry_database.hpp"
-#include "utilities.hpp"
+
+
+enum TestType
+{
+    TEST_NONE,
+    TEST_MATCH,
+    TEST_LESS_THAN,
+    TEST_GREATER_THAN,
+    TEST_LESS_THAN_EQ,
+    TEST_GREATER_THAN_EQ,
+    TEST_DISTANCE,
+    TEST_SCALE,
+    TEST_WITHIN,
+    TEST_DISTANCE_RATIO,
+    TEST_SCALE_RATIO,
+    TEST_WITHIN_RATIO
+};
+
+TestType test_type(t_atom *argv);
+
+
 
 class matchers
 {
