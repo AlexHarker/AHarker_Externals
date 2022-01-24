@@ -1,6 +1,6 @@
 
-#ifndef CUSTOM_ATOM_HPP
-#define CUSTOM_ATOM_HPP
+#ifndef ATOM_TYPES_HPP
+#define ATOM_TYPES_HPP
 
 #include <ext.h>
 #include <vector>

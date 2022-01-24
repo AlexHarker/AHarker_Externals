@@ -1,795 +1,336 @@
 
 #include <algorithm>
-#include <functional>
-#include <cmath>
 
 #include "entry_database.hpp"
-#include "matchers.hpp"
-#include "sort.hpp"
+#include "entry_database_viewer.hpp"
 
-t_symbol *ps_mean = gensym("mean");
-t_symbol *ps_min = gensym("min");
-t_symbol *ps_minimum = gensym("minimum");
-t_symbol *ps_max = gensym("max");
-t_symbol *ps_maximum = gensym("maximum");
-t_symbol *ps_median = gensym("median");
-t_symbol *ps_stddev = gensym("stddev");
-t_symbol *ps_deviation = gensym("deviation");
-t_symbol *ps_standard_dev = gensym("standard_dev");
-t_symbol *ps_standard_deviation= gensym("standard_deviation");
-t_symbol *ps_centile = gensym("centile");
-t_symbol *ps_percentile = gensym("percentile");
-
-t_symbol *ps_identfier = gensym("identifier");
+#include <AH_Locks.hpp>
 
 /*****************************************/
-// Column Setup
+// Entry Database Max Object Struture
 /*****************************************/
 
-// Set Column Labels (with lock)
-
-void EntryDatabase::set_column_label_modes(void *x, long argc, t_atom *argv)
+struct t_entry_database
 {
-    write_lock_hold lock(&m_lock);
-    set_column_label_modes(lock, x, argc, argv);
-}
-
-// Set Column Labels (with pre-held lock)
-
-void EntryDatabase::set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv)
-{
-    bool label_modes_changed = false;
+    t_object a_obj;
     
-    if (argc > num_columns())
-        object_error((t_object *) x, "more label modes than columns");
+    entries database;
+    thread_lock lock;
     
-    argc = (argc > num_columns()) ? num_columns() : argc;
+    t_object *patch;
+    t_object *viewer;
     
-    for (long i = 0; i < argc; i++)
-    {
-        bool label = atom_getlong(argv++) ? true : false;
-        label_modes_changed |= label != m_columns[i].m_label;
-        m_columns[i].m_label = label;
-    }
-    
-    if (label_modes_changed)
-        clear(lock);
-}
-
-// Set Column Names (with lock)
-
-void EntryDatabase::set_column_names(void *x, long argc, t_atom *argv)
-{
-    write_lock_hold lock(&m_lock);
-    set_column_names(lock, x, argc, argv);
-}
-
-// Set Column Names (with pre-held lock)
-
-void EntryDatabase::set_column_names(write_lock_hold &lock, void *x, long argc, t_atom *argv)
-{
-    if (argc > num_columns())
-        object_error((t_object *) x, "more names than columns");
-    
-    argc = (argc > num_columns()) ? num_columns() : argc;
-    
-    for (long i = 0; i < argc; i++)
-        m_columns[i].m_name = atom_getsym(argv++);
-}
+    long count;
+    bool notify;
+};
 
 /*****************************************/
-// Find Entries / Columns
+// Entry Database Max Object Definitions
 /*****************************************/
 
-// Search Identifiers
+t_class *database_class;
+t_symbol *ps_database_class_name = gensym("__entry_database");
+t_symbol *ps_name_space_name = gensym("__entry_database_private");
 
-long EntryDatabase::search_identifiers(const t_atom *identifier_atom, long& idx) const
-{
-    t_custom_atom identifier(identifier_atom, false);
-    
-    long gap = idx = num_items() / 2;
-    gap = gap < 1 ? 1 : gap;
-    
-    while (gap && idx < num_items())
-    {
-        gap /= 2;
-        gap = gap < 1 ? 1 : gap;
-        
-        switch (compare(identifier, get_entry_identifier(m_order[idx])))
-        {
-            case t_custom_atom::kEqual:
-                return m_order[idx];
-                
-            case t_custom_atom::kGreater:
-                idx += gap;
-                break;
-                
-            case t_custom_atom::kLess:
-                if (gap == 1 && (!idx || compare(identifier, get_entry_identifier(m_order[idx - 1])) == t_custom_atom::kGreater))
-                    gap = 0;
-                else
-                    idx -= gap;
-                break;
-        }
-    }
-    
-    return -1;
-}
+int entry_database_init();
+void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
+void entry_database_free(t_entry_database *x);
 
-// Find a Column from Specifier
-
-long EntryDatabase::column_from_specifier(const t_atom *specifier) const
-{
-    if (atom_gettype(specifier) != A_SYM)
-        return atom_getlong(specifier) - 1;
-    
-    t_symbol *column_name = atom_getsym(specifier);
-    
-    if (column_name == ps_identfier)
-        return -1;
-    
-    for (long i = 0; i < num_columns(); i++)
-        if (column_name == m_columns[i].m_name)
-            return i;
-    
-    return -2;
-}
+void entry_database_view_removed(t_entry_database *database_object);
 
 /*****************************************/
-// Saving and Loading
+// Entry Database Max Object Routines
 /*****************************************/
 
-// Reserve (with lock)
+// Init (like main)
 
-void EntryDatabase::reserve(long items)
+int entry_database_init()
 {
-    write_lock_hold lock(&m_lock);
+    database_class = class_new("__entry_database",
+                               (method) entry_database_new,
+                               (method) entry_database_free,
+                               sizeof(t_entry_database),
+                               (method) nullptr,
+                               A_SYM,
+                               A_LONG,
+                               A_LONG,
+                               0);
     
-    m_identifiers.reserve(items);
-    m_order.reserve(items);
-    m_entries.reserve(items * num_columns());
-    m_types.reserve(items * num_columns());
+    class_register(CLASS_NOBOX, database_class);
+    
+    class_addmethod(database_class, (method) entry_database_view_removed, "__view_removed", A_CANT, 0);
+
+    entry_database_viewer_init();
+    
+    return 0;
 }
 
-// Clear (with lock)
+// New
 
-void EntryDatabase::clear()
+void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    write_lock_hold lock(&m_lock);
-    clear(lock);
+    t_entry_database *x = (t_entry_database *) object_alloc(database_class);
+    
+    num_reserved_entries = std::max(num_reserved_entries, t_atom_long(1));
+    num_columns = std::max(num_columns, t_atom_long(1));
+    
+    // Construct the database and lock
+    
+    new(&x->lock) thread_lock();
+    new(&x->database) entries(name, num_columns);
+    
+    // Reserve entries, set count to one and set to notify
+    
+    x->database.reserve(num_reserved_entries);
+    x->count = 1;
+    x->notify = true;
+    
+    x->patch = nullptr;
+    x->viewer = nullptr;
+    
+    return x;
 }
 
-// Clear (with pre-held lock)
+// Free
 
-void EntryDatabase::clear(write_lock_hold &lock)
+void entry_database_free(t_entry_database *x)
 {
-    m_entries.clear();
-    m_identifiers.clear();
-    m_order.clear();
-    m_types.clear();
+    // Destruct C++ objects
+    
+    x->database.~entries();
+    x->lock.~thread_lock();
+    
+    // Destroy patch (which destroys viewer)
+    
+    object_free(x->patch);
 }
 
-/*****************************************/
-// Adding / Removing Entries
-/*****************************************/
+// Modification Notification (in the low-priority thread)
 
-// Add (with lock)
-
-void EntryDatabase::add_entry(void *x, long argc, t_atom *argv)
+void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    write_lock_hold lock(&m_lock);
-    add_entry(lock, x, argc, argv);
-}
-
-// Add (with pre-held lock)
-
-void EntryDatabase::add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
-{
-    if (!argc--)
+    static t_symbol *database_modified = gensym("__database_modified");
+    
+    if (!x->notify)
     {
-        object_error((t_object *) x, "no arguments for entry");
-        return;
-    }
-    
-    // Get the identifier, order position and find any prexisting entry with this identifier
-    
-    t_atom *identifier = argv++;
-    long order;
-    long idx = search_identifiers(identifier, order);
-
-    // Make a space for a new entry in the case that this identifier does *not* exist
-    
-    if (idx < 0)
-    {
-        idx = num_items();
-        m_entries.resize((idx + 1) * num_columns());
-        m_types.resize((idx + 1) * num_columns());
-        m_order.insert(m_order.begin() + order, idx);
-        m_identifiers.push_back(t_custom_atom(identifier, false));
-    }
-
-    // Store data of the correct data type but store null data for any unspecified columns / incorrect types
-    
-    for (long i = 0; i < num_columns(); i++, argv++)
-    {
-        t_custom_atom data = argv;
-        
-        if (i < argc && m_columns[i].m_label == (data.m_type == t_custom_atom::kSymbol))
-            set_data(idx, i, data);
-        else
-        {
-            if (i < argc)
-                object_error((t_object *) x, "incorrect type in entry - column number %ld", i + 1);
-            
-            set_data(idx, i, m_columns[i].m_label ? t_custom_atom(gensym("")) : t_custom_atom());
-        }
+        if (x->viewer)
+            object_method(x->viewer, gensym("__build_view"));
+        object_notify(x, database_modified, nullptr);
+        x->notify = true;
     }
 }
 
-// Replace one item
+// Delete (in the low-priority thread)
 
-void EntryDatabase::replace_item(t_atom *identifier, long column, t_atom *item)
+void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    write_lock_hold lock(&m_lock);
-
-    long order;
-    long idx = search_identifiers(identifier, order);
-    
-    if (idx < 0)
-        return;
-    
-    t_custom_atom data = item;
-    
-    if (m_columns[column].m_label == (data.m_type == t_custom_atom::kSymbol))
-        set_data(idx, column, data);
-    else
-        return;
+    object_free(x);
 }
 
-// Remove entries from identifiers (with read pointer - ugraded on next method call to write)
+// Release a Database Safely (deleting if necessary)
 
-void EntryDatabase::remove_entries(void *x, long argc, t_atom *argv)
+void entry_database_release(void *client, t_entry_database *x)
 {
-    if (!argc)
+    bool last_client = false;
+    
+    if (x)
     {
-        object_error((t_object *) x, "no identifiers given for remove message");
-        return;
+        // Complete notifications before the object is released
+
+        entry_database_modified(x, nullptr, 0, nullptr);
+        
+        object_detach(ps_name_space_name, x->database.get_name(), client);
+        
+        spin_lock_hold(&x->lock);
+        last_client = (--x->count <= 0);
     }
     
-    if (argc == 1)
-    {
-        remove_entry(x, argv);
-    }
-    else
-    {
-        read_write_pointer database(this);
+    // If this is the last client then free the object (deferlow in case the pointer is hanging around)
     
-        std::vector<long> indices(argc);
-        long size = 0;
-        
-        for (long i = 0; i < argc; i++)
-        {
-            long idx;
-            long index = search_identifiers(argv +i, idx);
-            
-            if (index > -1)
-                indices[size++] = index;
-        }
-        
-        indices.resize(size);
-        sort(indices, size);
-        
-        if (size)
-            remove_entries(database, indices);
+    if (last_client)
+    {
+        object_unregister(x);
+        defer_low(x, (method) entry_database_deferred_deletion, nullptr, 0, nullptr);
     }
 }
 
-// Remove entries from matching (with read pointer - ugraded on next method call to write)
+// Find a Entry Database Max Object and Attach (if it already exists)
 
-void EntryDatabase::remove_matched_entries(void *x, long argc, t_atom *argv)
+t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *old_database_object)
 {
-    if (!argc)
-        return;
+    bool found_new = false;
     
-    read_write_pointer database(this);
-    matchers matchers;
-    std::vector<long> indices;
-    long num_matches = 0;
+    // Make sure the max database class exists
     
-    matchers.set_matchers(x, argc, argv, database);
-    num_matches = matchers.match(database, true);
-    indices.resize(num_matches);
-        
-    for (long i = 0; i < num_matches; i++)
-        indices[i] = matchers.get_index(i);
-        
-    if (num_matches && matchers.size())
-        remove_entries(database, indices);
-}
-
-// Helpers for mass removal
-
-template <class T>
-void copy_range(std::vector<T>& data, long from, long to, long size, long item_size = 1)
-{
-    std::copy(data.begin() + (from * item_size), data.begin() + (from + size) * item_size, data.begin() + to * item_size);
-}
-
-long EntryDatabase::get_order(long idx)
-{
-    t_atom identifier;
-    long order;
-    m_identifiers[idx].get_atom(&identifier);
-    search_identifiers(&identifier, order);
+    if (!class_findbyname(CLASS_NOBOX, ps_database_class_name))
+        entry_database_init();
     
-    return order;
-}
-
-// Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
-
-void EntryDatabase::remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& sorted_indices)
-{
-    read_locked_database.promote();
+    // See if an object is registered with this name that is still active nad if so increase the count
     
-    long order_start = get_order(sorted_indices[0]);
-    long offset = sorted_indices[0];
-    long next = sorted_indices[0];
-    long size;
-    long end;
+    t_entry_database *x = (t_entry_database *) object_findregistered(ps_name_space_name, name);
     
-    // Setup new order vector
-    
-    std::vector<long> new_order(num_items());
-    std::copy(m_order.begin(), m_order.begin() + offset, new_order.begin());
-    
-    for (long i = 0; i < sorted_indices.size(); offset += (next - end))
+    if (x && x != old_database_object)
     {
-        long start = next;
-        
-        for (++i; i < sorted_indices.size(); i++)
-            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
-                break;
-        
-        end = sorted_indices[i - 1] + 1;
-        next = i < sorted_indices.size() ? sorted_indices[i] : num_items();
-        
-        // Mark new order array for deletion
-        
-        for (long j = start; j < end; j++)
-            new_order[get_order(j)] = -1;
-        
-        // Alter order indices
-        
-        for (long j = end; j < next; j++)
-            new_order[get_order(j)] = (j - end) + offset;
+        spin_lock_hold(&x->lock);
+
+        if ((found_new = x->count > 0))
+            x->count++;
     }
     
-    long new_size = offset;
+    // Otherwise return the old object
     
-    // Remove data
+    if (!found_new)
+        return old_database_object;
+    
+    // Release the old object and attach to the new
+    
+    if (old_database_object)
+        entry_database_release(client, old_database_object);
+    object_attach(ps_name_space_name, name, client);
+    
+    return x;
+}
 
-    offset = sorted_indices[0];
-    
-    for (long i = 0; i < sorted_indices.size(); offset += size)
-    {
-        for (++i; i < sorted_indices.size(); i++)
-            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
-                break;
-        
-        end = sorted_indices[i - 1] + 1;
-        size = (i < sorted_indices.size() ? sorted_indices[i] : num_items()) - end;
-        
-        // Move data
-        
-        copy_range(m_identifiers, end, offset, size);
-        copy_range(m_types, end, offset, size, num_columns());
-        copy_range(m_entries, end, offset, size, num_columns());
-    }
+// Create a Max Database Object (or attach if it already exists)
 
-    // Swap order vectors and do deletion
+t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+{
+    t_atom argv[3];
+    atom_setsym(argv + 0, name);
+    atom_setlong(argv + 1, num_reserved_entries);
+    atom_setlong(argv + 2, num_columns);
     
-    std::swap(m_order, new_order);
-    offset = order_start;
+    // See if an object is registered (otherwise make object and register it)
     
-    for (long i = order_start; i < m_order.size(); offset += size)
+    t_entry_database *x = entry_database_findattach(client, name, nullptr);
+    
+    if (!x)
     {
-        for (end = ++i; end < m_order.size(); end++)
-            if (m_order[end] >= 0)
-                break;
-        
-        for (i = end, size = 0; i < m_order.size(); i++, size++)
-            if (m_order[i] < 0)
-                break;
-        
-        copy_range(m_order, end, offset, size);
+        x = (t_entry_database *) object_register(ps_name_space_name, name, object_new_typed(CLASS_NOBOX, ps_database_class_name, 3, argv));
+        object_attach(ps_name_space_name, name, client);
     }
     
-    // Resize storage
-    
-    m_identifiers.resize(new_size);
-    m_entries.resize(new_size * num_columns());
-    m_types.resize(new_size * num_columns());
-    m_order.resize(new_size);
+    return x;
 }
 
-// Remove a single entry (with lock)
-
-void EntryDatabase::remove_entry(void *x, t_atom *identifier)
-{
-    write_lock_hold lock(&m_lock);
-    
-    long order;
-    long idx = search_identifiers(identifier, order);
-    
-    if (idx < 0)
-    {
-        object_error((t_object *) x, "entry does not exist");
-        return;
-    }
-    
-    m_identifiers.erase(m_identifiers.begin() + idx);
-    m_order.erase(m_order.begin() + order);
-    m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
-    m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
- 
-    std::vector<long>::iterator it = m_order.begin();
-    
-    // Unrolled order updating for speed
-    
-    for ( ; it < (m_order.end() - 3); it += 4)
-    {
-        if (it[0] > idx) it[0]--;
-        if (it[1] > idx) it[1]--;
-        if (it[2] > idx) it[2]--;
-        if (it[3] > idx) it[3]--;
-    }
-    
-    for ( ; it != m_order.end(); it++)
-        if (*it > idx)
-            (*it)--;
-}
-
-/*****************************************/
-// Stats Calculations
-/*****************************************/
-
-void EntryDatabase::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const
-{
-    if (argc < 2)
-        return;
-    
-    std::vector<double> values;
-    double mean = 0.0;
-    bool mean_calculated = false;
-    bool sorted = false;
-    long i;
-
-    long column = column_from_specifier(argv++);
-    argc--;
-
-    output.resize(argc);
-
-    for (i = 0; argc > 0; i++)
-    {
-        t_symbol *test = atom_getsym(argv++);
-        argc--;
-        
-        if (test == ps_mean || test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
-        {
-            if (!mean_calculated)
-                mean = column_mean(column);
-            if (test == ps_mean)
-                atom_setfloat(&output[i], mean);
-            else
-                atom_setfloat(&output[i], column_standard_deviation(column, mean));
-            mean_calculated = true;
-        }
-        else if (test == ps_median || test == ps_centile || test == ps_percentile)
-        {
-            double percentile = 50.0;
-            
-            if (!sorted)
-                column_sort_values(column, values);
-            if (test != ps_median)
-            {
-                if (argc--)
-                    percentile = atom_getfloat(argv++);
-                else
-                    object_error((t_object *) x, "no percentile given for percentile stat");
-            }
-            atom_setfloat(&output[i], find_percentile(values, percentile));
-            sorted = true;
-        }
-        else if (test == ps_min || test == ps_minimum)
-            atom_setfloat(&output[i], column_min(column));
-        else if (test == ps_max || test == ps_maximum)
-            atom_setfloat(&output[i], column_max(column));
-        else
-            object_error((t_object *) x, "unknown stat type");
-    }
-    
-    output.resize(i);
-}
-
-double EntryDatabase::column_min(long column) const
-{
-    return column_calculate(column, HUGE_VAL, binary_functor<std::min<double> >());
-}
-
-double EntryDatabase::column_max(long column) const
-{
-    return column_calculate(column, -HUGE_VAL, binary_functor<std::max<double> >());
-}
-
-double EntryDatabase::column_mean(long column) const
-{
-    return column_calculate(column, 0.0, std::plus<double>()) / num_items();
-}
-
-double EntryDatabase::column_standard_deviation(long column, double mean) const
-{
-    struct variance
-    {
-        variance(double mean) : m_mean(mean) {}
-        double operator()(double sum, double data) { return sum + ((data - m_mean) * (data - m_mean)); }
-        double m_mean;
-    };
-    
-    return sqrt(column_calculate(column, 0.0, variance(mean)) / num_items());
-}
-
-double EntryDatabase::column_standard_deviation(long column) const
-{
-    return column_standard_deviation(column, column_mean(column));
-}
-
-double EntryDatabase::column_percentile(long column, double percentile) const
-{
-    std::vector<double> values;
-    
-    column_sort_values(column, values);
-    return find_percentile(values, percentile);
-}
-
-double EntryDatabase::column_median(long column) const
-{
-    return column_percentile(column, 50.0);
-}
-
-void EntryDatabase::column_sort_values(long column, std::vector<double>& sorted_values) const
-{
-    sorted_values.resize(num_items());
-
-    for (long i = 0; i < num_items(); i++)
-        sorted_values[i] = get_data(i, column);
-    
-    sort(sorted_values, num_items());
-}
-
-double EntryDatabase::find_percentile(std::vector<double>& sorted_values, double percentile) const
-{
-    long n_items = sorted_values.size();
-    
-    if (!n_items)
-        return std::numeric_limits<double>::quiet_NaN();
-    
-    long idx = std::max(0L, std::min((long) round(n_items * (percentile / 100.0)), n_items - 1));
-    
-    return sorted_values[idx];
-}
-
-/*****************************************/
 // View
-/*****************************************/
 
-void EntryDatabase::view(t_object *database_object) const
+void entry_database_view(t_entry_database *database_object)
 {
-    t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
-    std::string str;
-
-    for (long i = 0; i < num_items(); i++)
+    // Create and/or bring to front
+    
+    if (!database_object->patch)
     {
-        str.insert(str.size(), get_entry_identifier(i).get_string());
+        // Create patcher
         
-        for (long j = 0; j < num_columns(); j++)
+        t_dictionary *d = dictionary_new();
+        t_atom a;
+        t_atom *av = nullptr;
+        long ac = 0;
+        
+        // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
+        
+        t_symbol *ps_parent_patcher = gensym("#P");
+        t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
+        ps_parent_patcher->s_thing = nullptr;
+        
+        atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
+        attr_args_dictionary(d, ac, av);
+        atom_setobj(&a, d);
+        database_object->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+        ps_parent_patcher->s_thing = parent;
+        
+        // Must set after creating, because reasons...
+        
+        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.get_name());
+        object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
+        object_attr_setlong(database_object->patch, gensym("cansave"), 0);
+        /*
+        long attrcount = 0;
+        t_symbol **names = nullptr;
+        
+        object_attr_getnames(database_object->patch, &attrcount, &names);
+        
+        for (long i = 0; i < attrcount; i++)
         {
-            str.insert(str.size(), " ");
-            str.insert(str.size(), get_typed_data(i, j).get_string());
+            long argc = 0;
+            t_atom *argv = nullptr;
+            char *str = names[i]->s_name;
+            
+            object_attr_getvalueof(database_object->patch, names[i], &argc, &argv);
+            post("attribute called %s", str);
         }
+        */
+        // Make internal object (and set database)
         
-        if (i != (num_items() - 1))
-            str.insert(str.size(), "\n");
+        database_object->viewer = newobject_sprintf(database_object->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
+        
+        object_method(database_object->viewer, gensym("__set_database"), database_object, &database_object->database);
     }
     
-    object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
-    object_attr_setsym(editor, gensym("title"), m_name);
+    if (database_object->patch)
+        object_method(database_object->patch, gensym("front"));
+}
+
+void entry_database_view_removed(t_entry_database *database_object)
+{
+    database_object->patch = nullptr;
+    database_object->viewer = nullptr;
 }
 
 /*****************************************/
-// Saving and Loading
+// Notify Pointer (notifies clients after write operation)
 /*****************************************/
 
-// File Save
-
-void EntryDatabase::save(t_object *x, t_symbol *file) const
+notify_pointer::~notify_pointer()
 {
-    char filepath[MAX_PATH_CHARS];
-    char filename[MAX_FILENAME_CHARS];
-    short path;
+    t_entry_database *database = (t_entry_database *) m_max_database;
     
-    t_fourcc type;
-    t_fourcc types = 'JSON';
-    
-    if (file && file != gensym(""))
+    if (database->notify)
     {
-        strncpy_zero(filepath, file->s_name, MAX_PATH_CHARS);
-        if (path_frompotentialpathname(filepath, &path, filename))
-            return;
+        database->notify = false;
+        defer_low(m_max_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
-    else
-    {
-        strcpy(filename, m_name->s_name);
-        if (saveasdialog_extended(filename, &path, &type, &types, 1))
-            return;
-    }
-    
-    t_dictionary *dict = save_dictionary(true);
-    dictionary_write(dict, filename, path);
-    object_free(dict);
 }
 
-// File Load
+/*****************************************/
+// Client Routines
+/*****************************************/
 
-void EntryDatabase::load(t_object *x, t_symbol *file)
+// Get / Change / Release Named Database
+
+t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    char filename[MAX_PATH_CHARS];
-    short path;
-
-    t_fourcc type;
-    t_fourcc types = 'JSON';
-    
-    if (file && file != gensym(""))
-    {
-        strncpy_zero(filename, file->s_name, MAX_PATH_CHARS);
-        if (locatefile_extended(filename, &path, &type, &types, 1))
-            return;
-    }
-    else
-    {
-        strcpy(filename, "");
-        if (open_dialog(filename, &path, &type, &types, 1))
-            return;
-    }
-    
-    t_dictionary *dict;
-    dictionary_read(filename, path, &dict);
-    load_dictionary(x, dict);
-    object_free(dict);
+    return (t_object *) entry_database_create(x, name, num_reserved_entries, num_columns);
 }
 
-// Dictionary Save
-
-t_dictionary *EntryDatabase::save_dictionary(bool entries_as_one_key) const
+t_object *database_change(void *x, t_symbol *name, t_object *old_object)
 {
-    std::vector<t_atom> args(num_columns() + 1);
-    t_dictionary *dict = dictionary_new();
-    t_dictionary *dict_meta = dictionary_new();
-    t_dictionary *dict_data = dictionary_new();
-    
-    // Metadata
-    
-    dictionary_appendlong(dict_meta, gensym("num_columns"), num_columns());
-    
-    for (long i = 0; i < num_columns(); i++)
-        atom_setsym(&args[i], m_columns[i].m_name);
-    
-    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), &args[0]);
-    
-    for (long i = 0; i < num_columns(); i++)
-        atom_setlong(&args[i], m_columns[i].m_label);
-    
-    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), &args[0]);
-    dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dict_meta);
-    
-    // Data
-    
-    if (entries_as_one_key)
-    {
-        std::vector<t_atom> entries(num_items());
-
-        for (long i = 0; i < num_items(); i++)
-        {
-            t_dictionary *dict_entry = dictionary_new();
-            
-            get_entry_identifier(&args[0], i);
-            
-            for (long j = 0; j < num_columns(); j++)
-                get_data_atom(&args[j + 1], i, j);
-            
-            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, &args[0]);
-            atom_setobj(&entries[i], dict_entry);
-        }
-        
-        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), &entries[0]);
-    }
-    else
-    {
-        for (long i = 0; i < num_items(); i++)
-        {
-            std::string str("entry_" + std::to_string(i + 1));
-            
-            get_entry_identifier(&args[0], i);
-            
-            for (long j = 0; j < num_columns(); j++)
-                get_data_atom(&args[j + 1], i, j);
-            
-            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, &args[0]);
-        }
-    }
-    dictionary_appenddictionary(dict, gensym("data"), (t_object *) dict_data);
-    
-    return dict;
+    return (t_object *) entry_database_findattach(x, name, (t_entry_database *) old_object);
 }
 
-// Dictionary Load (with lock)
-
-void EntryDatabase::load_dictionary(t_object *x, t_dictionary *dict)
+void database_release(void *x, t_object *database_object)
 {
-    t_max_err err = MAX_ERR_NONE;
-    t_dictionary *dict_meta = nullptr;
-    t_dictionary *dict_data = nullptr;
-    
-    if (!dict)
-        return;
-    
-    dictionary_getdictionary(dict, gensym("metadata"), (t_object **) &dict_meta);
-    dictionary_getdictionary(dict, gensym("data"), (t_object **) &dict_data);
-    
-    if (dict_meta && dict_data)
-    {
-        write_lock_hold lock(&m_lock);
-        clear(lock);
-        
-        t_atom_long newnum_columns;
-        dictionary_getlong(dict_meta, gensym("num_columns"), &newnum_columns);
-        
-        if (newnum_columns != num_columns())
-        {
-            m_columns.clear();
-            m_columns.resize(newnum_columns);
-        }
-        
-        t_atom *argv;
-        long argc;
-        
-        dictionary_getatoms(dict_meta, gensym("names"), &argc, &argv);
-        set_column_names(lock, x, argc, argv);
-        
-        dictionary_getatoms(dict_meta, gensym("labelmodes"), &argc, &argv);
-        set_column_label_modes(lock, x, argc, argv);
-        
-        // Data
-        
-        if (dictionary_getatoms(dict_data, gensym("all_entries"), &argc, &argv) == MAX_ERR_NONE)
-        {
-            for (long i = 0; i < argc; i++)
-            {
-                t_atom *entry_argv;
-                long entry_argc;
-                
-                t_dictionary *dict_entry = (t_dictionary *) atom_getobj(argv + i);
-                if ((err = dictionary_getatoms(dict_entry, gensym("entry"), &entry_argc, &entry_argv)) == MAX_ERR_NONE)
-                    add_entry(lock, x, entry_argc, entry_argv);
-            }
-        }
-        else
-        {
-            for (long i = 0; err == MAX_ERR_NONE; i++)
-            {
-                std::string str("entry_" + std::to_string(i + 1));
-                if ((err = dictionary_getatoms(dict_data, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-                    add_entry(lock, x, argc, argv);
-            }
-        }
-    }
+    entry_database_release(x, (t_entry_database *) database_object);
+}
+
+// View
+
+void database_view(void *x, t_object *database_object)
+{
+    entry_database_view((t_entry_database *) database_object);
+}
+
+// Retrieve Pointers for Reading or Writing
+
+entries::read_pointer database_getptr_read(t_object *database_object)
+{
+    t_entry_database *obj = (t_entry_database *) database_object;
+    return entries::read_pointer(&obj->database);
+}
+
+notify_pointer database_getptr_write(t_object *database_object)
+{
+    t_entry_database *obj = (t_entry_database *) database_object;
+    return notify_pointer(&obj->database, (t_object *) obj);
 }

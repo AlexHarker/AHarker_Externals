@@ -5,7 +5,7 @@
 #include "matchers.hpp"
 #include "sort.hpp"
 
-long matchers::match(const EntryDatabase::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const
+long matchers::match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const
 {
     struct distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
     struct ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
@@ -114,7 +114,7 @@ long matchers::match(const EntryDatabase::read_pointer& database, double ratio_m
     return m_num_matches = num_matches;
 }
 
-void matchers::set_matchers(void *x, long argc, t_atom *argv, const EntryDatabase::read_pointer& database)
+void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database)
 {
     // Empty the matchers
     

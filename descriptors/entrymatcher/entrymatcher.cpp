@@ -23,7 +23,7 @@
 #include <ext.h>
 #include <ext_obex.h>
 
-#include "entry_database_max.hpp"
+#include "entry_database.hpp"
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
 #include "utilities.hpp"
@@ -57,7 +57,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_lookup_output(t_entrymatcher *x, EntryDatabase::read_pointer& database_ptr, long idx, long argc, t_atom *argv);
+void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& database_ptr, long idx, long argc, t_atom *argv);
 
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -167,7 +167,7 @@ void entrymatcher_dump(t_entrymatcher *x)
 {
     for (long i = 0; ; i++)
     {
-        EntryDatabase::read_pointer database_ptr = database_getptr_read(x->database_object);
+        auto database_ptr = database_getptr_read(x->database_object);
         
         if (i >= database_ptr->num_items())
             break;
@@ -181,7 +181,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
     if (!argc)
         return;
 
-    EntryDatabase::read_pointer database_ptr = database_getptr_read(x->database_object);
+    auto database_ptr = database_getptr_read(x->database_object);
 
     // Use identifier or index depending on the message received
     
@@ -189,7 +189,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
     entrymatcher_lookup_output(x, database_ptr, idx, --argc, ++argv);
 }
 
-void entrymatcher_lookup_output(t_entrymatcher *x, EntryDatabase::read_pointer& database_ptr, long idx, long argc, t_atom *argv)
+void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& database_ptr, long idx, long argc, t_atom *argv)
 {
     std::vector<t_atom> output;
     
@@ -313,7 +313,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
     t_atom output_indices[1024];
     t_atom output_distances[1024];
     
-    EntryDatabase::read_pointer database_ptr = database_getptr_read(x->database_object);
+    auto database_ptr = database_getptr_read(x->database_object);
     matchers *matchers = x->matchers;
         
     // Calculate potential matches and sort if there are matches
