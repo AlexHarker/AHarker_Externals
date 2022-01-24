@@ -56,7 +56,7 @@ struct t_custom_atom
     t_custom_atom(t_atom_long val, bool translate = true) : m_type(translate ? kTranslatedInt : kInt)
     {
         if (translate)
-            m_data.m_value = val;
+            m_data.m_value = static_cast<double>(val);
         else
             m_data.m_integer = val;
     }
@@ -85,7 +85,7 @@ struct t_custom_atom
             case kSymbol:           atom_setsym(a, m_data.m_symbol);    break;
             case kDouble:           atom_setfloat(a, m_data.m_value);   break;
             case kInt:              atom_setlong(a, m_data.m_integer);      break;
-            case kTranslatedInt:    atom_setlong(a, m_data.m_value);    break;
+            case kTranslatedInt:    atom_setlong(a, static_cast<t_atom_long>(m_data.m_value));    break;
         }
     }
     

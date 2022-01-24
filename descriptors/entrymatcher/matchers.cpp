@@ -98,7 +98,7 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     
     ratio_matched = std::min(std::max(ratio_matched, 0.0), 1.0);
     max_matches = std::max(max_matches, 0L);
-    long num_matches = round(m_num_matches * ratio_matched);
+    long num_matches = static_cast<long>(round(m_num_matches * ratio_matched));
     num_matches = (max_matches && m_num_matches > max_matches) ? max_matches : m_num_matches;
 
     // FIX - better heuristics and more info on what has been sorted...

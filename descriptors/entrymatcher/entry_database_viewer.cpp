@@ -114,7 +114,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         x->d_dataview = (t_object *)jdataview_new();
         jdataview_setclient(x->d_dataview, (t_object *) x);
         jdataview_setcolumnheaderheight(x->d_dataview, 30);
-        jdataview_setheight(x->d_dataview, 22.0);
+        jdataview_setheight(x->d_dataview, 22);
         jdataview_setautosizeright(x->d_dataview, 1);
         jdataview_setautosizerightcolumn(x->d_dataview, 1);
         jdataview_setdragenabled(x->d_dataview, 0);
