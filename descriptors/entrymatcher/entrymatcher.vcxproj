@@ -10,6 +10,24 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="atom_types.hpp" />
+    <ClInclude Include="entries.hpp" />
+    <ClInclude Include="entrymatcher_common.hpp" />
+    <ClInclude Include="entry_database.hpp" />
+    <ClInclude Include="entry_database_viewer.hpp" />
+    <ClInclude Include="matchers.hpp" />
+    <ClInclude Include="sort.hpp" />
+    <ClInclude Include="utilities.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="entries.cpp" />
+    <ClCompile Include="entrymatcher.cpp" />
+    <ClCompile Include="entry_database.cpp" />
+    <ClCompile Include="entry_database_viewer.cpp" />
+    <ClCompile Include="matchers.cpp" />
+    <ClCompile Include="utilities.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>entrymatcher</ProjectName>
     <ProjectGuid>{754D998E-C066-49B1-8A78-28BAAC76A015}</ProjectGuid>
@@ -47,9 +65,6 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <ClCompile Include="entrymatcher.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

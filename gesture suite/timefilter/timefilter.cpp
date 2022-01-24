@@ -202,7 +202,7 @@ void timefilter_bang(t_timefilter *x)
     
     // Output and clear stored list
     
-    outlet_list(x->list_outlet, 0L, static_cast<short>(output_length), output_list);
+    outlet_list(x->list_outlet, nullptr, static_cast<short>(output_length), output_list);
     x->stored_length = 0;
 }
 

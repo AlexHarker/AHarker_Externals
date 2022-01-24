@@ -1,14 +1,12 @@
 
-#ifndef ENTRYMATCHER_COMMON_H
-#define ENTRYMATCHER_COMMON_H
+#ifndef ENTRYMATCHER_COMMON_HPP
+#define ENTRYMATCHER_COMMON_HPP
 
 #include <ext.h>
 #include <ext_obex.h>
 #include <ext_dictobj.h>
 
-/*****************************************/
 // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
-/*****************************************/
 
 template <class T>
 void entrymatcher_refer(T *x, t_symbol *name)
@@ -25,36 +23,34 @@ void entrymatcher_clear(T *x)
 template <class T>
 void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnLabelModes(x, argc, argv);
+    database_getptr_write(x->database_object)->set_column_label_modes(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->setColumnNames(x, argc, argv);
+    database_getptr_write(x->database_object)->set_column_names(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->addEntry(x, argc, argv);
+    database_getptr_write(x->database_object)->add_entry(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->remove_entries(x, argc, argv);
 }
 
 template <class T>
 void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    database_getptr_write(x->database_object)->removeMatchedEntries(x, argc, argv);
+    database_getptr_write(x->database_object)->remove_matched_entries(x, argc, argv);
 }
 
-/*****************************************/
 // View, User Save and User Load Routines
-/*****************************************/
 
 template <class T>
 void entrymatcher_view(T *x)
@@ -74,22 +70,20 @@ void entrymatcher_load(T *x, t_symbol *file)
     database_getptr_write(x->database_object)->load((t_object *) x, file);
 }
 
-/*****************************************/
 // Load and Save (pattr/embedding/parameters etc.)
-/*****************************************/
 
 // Save and Load Dictionary
 
 template <class T>
 t_dictionary *entrymatcher_save_dict(T *x)
 {
-    return database_getptr_read(x->database_object)->saveDictionary(true);
+    return database_getptr_read(x->database_object)->save_dictionary(true);
 }
 
 template <class T>
 void entrymatcher_load_dict(T *x, t_dictionary *dict)
 {
-    database_getptr_write(x->database_object)->loadDictionary((t_object*) x, dict);
+    database_getptr_write(x->database_object)->load_dictionary((t_object*) x, dict);
 }
 
 template <class T>
@@ -115,7 +109,7 @@ void entrymatcher_save_patcher(T *x, t_dictionary *dict)
 template <class T>
 void entrymatcher_load_patcher(T *x)
 {
-    t_dictionary *dict = NULL;
+    t_dictionary *dict = nullptr;
     
     if ((dict = (t_dictionary *) gensym("#D")->s_thing))
     {
@@ -154,25 +148,21 @@ void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 
     if (msg == database_modified)
     {
-        object_notify(x, _sym_modified, NULL);
+        object_notify(x, _sym_modified, nullptr);
         if (x->embed)
             jpatcher_set_dirty(x->patcher, 1);
     }
 }
 
-/*****************************************/
 // Audiostyle Temporary Routine
-/*****************************************/
 
 template <class T>
 void entrymatcher_audiostyle(T *x, t_atom_long style)
 {
-    x->matchers->setAudioStyle(style ? true : false);
+    x->matchers->set_audio_style(style ? true : false);
 }
 
-/*****************************************/
 // Add Common Routines
-/*****************************************/
 
 template <class T>
 void entrymatcher_add_common(t_class *class_pointer)
@@ -210,9 +200,7 @@ void entrymatcher_add_common(t_class *class_pointer)
     CLASS_ATTR_SAVE(class_pointer, "embed", 0);
 }
 
-/*****************************************/
 // New Common Routine
-/*****************************************/
 
 template <class T>
 void entrymatcher_new_common(T *x)

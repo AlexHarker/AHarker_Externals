@@ -21,15 +21,14 @@
 t_class *this_class;
 
 
-typedef struct _ibuffermulti
+struct t_ibuffermulti
 {
     t_pxobject x_obj;
     
     std::vector<t_object *> buffers;
     
     void *number_out;
-    
-} t_ibuffermulti;
+};
 
 
 t_symbol *ps_set;

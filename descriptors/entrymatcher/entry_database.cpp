@@ -1,8 +1,8 @@
 
 #include <algorithm>
 
-#include "entry_database_max.h"
-#include "entry_database_viewer.h"
+#include "entry_database.hpp"
+#include "entry_database_viewer.hpp"
 
 #include <AH_Locks.hpp>
 
@@ -10,11 +10,11 @@
 // Entry Database Max Object Struture
 /*****************************************/
 
-typedef struct entry_database
+struct t_entry_database
 {
     t_object a_obj;
     
-    EntryDatabase database;
+    entries database;
     thread_lock lock;
     
     t_object *patch;
@@ -22,8 +22,7 @@ typedef struct entry_database
     
     long count;
     bool notify;
-    
-} t_entry_database;
+};
 
 /*****************************************/
 // Entry Database Max Object Definitions
@@ -51,7 +50,7 @@ int entry_database_init()
                                (method) entry_database_new,
                                (method) entry_database_free,
                                sizeof(t_entry_database),
-                               NULL,
+                               (method) nullptr,
                                A_SYM,
                                A_LONG,
                                A_LONG,
@@ -78,7 +77,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     // Construct the database and lock
     
     new(&x->lock) thread_lock();
-    new(&x->database) EntryDatabase(name, num_columns);
+    new(&x->database) entries(name, num_columns);
     
     // Reserve entries, set count to one and set to notify
     
@@ -86,10 +85,10 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    x->patch = NULL;
-    x->viewer = NULL;
+    x->patch = nullptr;
+    x->viewer = nullptr;
     
-    return (x);
+    return x;
 }
 
 // Free
@@ -98,7 +97,7 @@ void entry_database_free(t_entry_database *x)
 {
     // Destruct C++ objects
     
-    x->database.~EntryDatabase();
+    x->database.~entries();
     x->lock.~thread_lock();
     
     // Destroy patch (which destroys viewer)
@@ -116,7 +115,7 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     {
         if (x->viewer)
             object_method(x->viewer, gensym("__build_view"));
-        object_notify(x, database_modified, NULL);
+        object_notify(x, database_modified, nullptr);
         x->notify = true;
     }
 }
@@ -138,9 +137,9 @@ void entry_database_release(void *client, t_entry_database *x)
     {
         // Complete notifications before the object is released
 
-        entry_database_modified(x, NULL, 0, NULL);
+        entry_database_modified(x, nullptr, 0, nullptr);
         
-        object_detach(ps_name_space_name, x->database.getName(), client);
+        object_detach(ps_name_space_name, x->database.get_name(), client);
         
         spin_lock_hold(&x->lock);
         last_client = (--x->count <= 0);
@@ -151,7 +150,7 @@ void entry_database_release(void *client, t_entry_database *x)
     if (last_client)
     {
         object_unregister(x);
-        defer_low(x, (method) entry_database_deferred_deletion, NULL, 0, NULL);
+        defer_low(x, (method) entry_database_deferred_deletion, nullptr, 0, nullptr);
     }
 }
 
@@ -203,7 +202,7 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     
     // See if an object is registered (otherwise make object and register it)
     
-    t_entry_database *x = entry_database_findattach(client, name, NULL);
+    t_entry_database *x = entry_database_findattach(client, name, nullptr);
     
     if (!x)
     {
@@ -226,14 +225,14 @@ void entry_database_view(t_entry_database *database_object)
         
         t_dictionary *d = dictionary_new();
         t_atom a;
-        t_atom *av = NULL;
+        t_atom *av = nullptr;
         long ac = 0;
         
         // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
         
         t_symbol *ps_parent_patcher = gensym("#P");
         t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
-        ps_parent_patcher->s_thing = NULL;
+        ps_parent_patcher->s_thing = nullptr;
         
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
         attr_args_dictionary(d, ac, av);
@@ -243,19 +242,19 @@ void entry_database_view(t_entry_database *database_object)
         
         // Must set after creating, because reasons...
         
-        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.getName());
+        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.get_name());
         object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
         object_attr_setlong(database_object->patch, gensym("cansave"), 0);
         /*
         long attrcount = 0;
-        t_symbol **names = NULL;
+        t_symbol **names = nullptr;
         
         object_attr_getnames(database_object->patch, &attrcount, &names);
         
         for (long i = 0; i < attrcount; i++)
         {
             long argc = 0;
-            t_atom *argv = NULL;
+            t_atom *argv = nullptr;
             char *str = names[i]->s_name;
             
             object_attr_getvalueof(database_object->patch, names[i], &argc, &argv);
@@ -275,22 +274,22 @@ void entry_database_view(t_entry_database *database_object)
 
 void entry_database_view_removed(t_entry_database *database_object)
 {
-    database_object->patch = NULL;
-    database_object->viewer = NULL;
+    database_object->patch = nullptr;
+    database_object->viewer = nullptr;
 }
 
 /*****************************************/
 // Notify Pointer (notifies clients after write operation)
 /*****************************************/
 
-NotifyPointer::~NotifyPointer()
+notify_pointer::~notify_pointer()
 {
-    t_entry_database *database = (t_entry_database *) mMaxDatabase;
+    t_entry_database *database = (t_entry_database *) m_max_database;
     
     if (database->notify)
     {
         database->notify = false;
-        defer_low(mMaxDatabase, (method) entry_database_modified, NULL, 0, NULL);
+        defer_low(m_max_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
 
@@ -324,14 +323,14 @@ void database_view(void *x, t_object *database_object)
 
 // Retrieve Pointers for Reading or Writing
 
-EntryDatabase::ReadPointer database_getptr_read(t_object *database_object)
+entries::read_pointer database_getptr_read(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return EntryDatabase::ReadPointer(&obj->database);
+    return entries::read_pointer(&obj->database);
 }
 
-NotifyPointer database_getptr_write(t_object *database_object)
+notify_pointer database_getptr_write(t_object *database_object)
 {
     t_entry_database *obj = (t_entry_database *) database_object;
-    return NotifyPointer(&obj->database, (t_object *) obj);
+    return notify_pointer(&obj->database, (t_object *) obj);
 }

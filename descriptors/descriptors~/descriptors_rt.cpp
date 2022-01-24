@@ -335,7 +335,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 
 void output_rt (t_descriptors *x)
 {
-	outlet_list (x->the_list_outlet, 0L, x->output_length, x->output_list);
+	outlet_list (x->the_list_outlet, nullptr, x->output_length, x->output_list);
 }
 
 

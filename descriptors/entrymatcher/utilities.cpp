@@ -1,5 +1,5 @@
 
-#include "utilities.h"
+#include "utilities.hpp"
 
 // Test Symbols
 
@@ -48,4 +48,3 @@ TestType entrymatcher_test_types(t_atom *argv)
     
     return TEST_NONE;
 }
-
