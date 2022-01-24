@@ -65,7 +65,7 @@ public:
             if (mPtr)
             {
                 mPtr->mLock.release_read();
-                mPtr = NULL;
+                mPtr = nullptr;
             }
         }
         
@@ -150,7 +150,7 @@ private:
             if (mPromoted)
             {
                 mPtr->mLock.release_write();
-                mPtr = NULL;
+                mPtr = nullptr;
             }
         }
         

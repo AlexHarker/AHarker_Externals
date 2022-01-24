@@ -51,7 +51,7 @@ int entry_database_init()
                                (method) entry_database_new,
                                (method) entry_database_free,
                                sizeof(t_entry_database),
-                               NULL,
+                               (method) nullptr,
                                A_SYM,
                                A_LONG,
                                A_LONG,
@@ -86,8 +86,8 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    x->patch = NULL;
-    x->viewer = NULL;
+    x->patch = nullptr;
+    x->viewer = nullptr;
     
     return (x);
 }
@@ -116,7 +116,7 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     {
         if (x->viewer)
             object_method(x->viewer, gensym("__build_view"));
-        object_notify(x, database_modified, NULL);
+        object_notify(x, database_modified, nullptr);
         x->notify = true;
     }
 }
@@ -138,7 +138,7 @@ void entry_database_release(void *client, t_entry_database *x)
     {
         // Complete notifications before the object is released
 
-        entry_database_modified(x, NULL, 0, NULL);
+        entry_database_modified(x, nullptr, 0, nullptr);
         
         object_detach(ps_name_space_name, x->database.getName(), client);
         
@@ -151,7 +151,7 @@ void entry_database_release(void *client, t_entry_database *x)
     if (last_client)
     {
         object_unregister(x);
-        defer_low(x, (method) entry_database_deferred_deletion, NULL, 0, NULL);
+        defer_low(x, (method) entry_database_deferred_deletion, nullptr, 0, nullptr);
     }
 }
 
@@ -203,7 +203,7 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     
     // See if an object is registered (otherwise make object and register it)
     
-    t_entry_database *x = entry_database_findattach(client, name, NULL);
+    t_entry_database *x = entry_database_findattach(client, name, nullptr);
     
     if (!x)
     {
@@ -226,14 +226,14 @@ void entry_database_view(t_entry_database *database_object)
         
         t_dictionary *d = dictionary_new();
         t_atom a;
-        t_atom *av = NULL;
+        t_atom *av = nullptr;
         long ac = 0;
         
         // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
         
         t_symbol *ps_parent_patcher = gensym("#P");
         t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
-        ps_parent_patcher->s_thing = NULL;
+        ps_parent_patcher->s_thing = nullptr;
         
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
         attr_args_dictionary(d, ac, av);
@@ -248,14 +248,14 @@ void entry_database_view(t_entry_database *database_object)
         object_attr_setlong(database_object->patch, gensym("cansave"), 0);
         /*
         long attrcount = 0;
-        t_symbol **names = NULL;
+        t_symbol **names = nullptr;
         
         object_attr_getnames(database_object->patch, &attrcount, &names);
         
         for (long i = 0; i < attrcount; i++)
         {
             long argc = 0;
-            t_atom *argv = NULL;
+            t_atom *argv = nullptr;
             char *str = names[i]->s_name;
             
             object_attr_getvalueof(database_object->patch, names[i], &argc, &argv);
@@ -275,8 +275,8 @@ void entry_database_view(t_entry_database *database_object)
 
 void entry_database_view_removed(t_entry_database *database_object)
 {
-    database_object->patch = NULL;
-    database_object->viewer = NULL;
+    database_object->patch = nullptr;
+    database_object->viewer = nullptr;
 }
 
 /*****************************************/
@@ -290,7 +290,7 @@ NotifyPointer::~NotifyPointer()
     if (database->notify)
     {
         database->notify = false;
-        defer_low(mMaxDatabase, (method) entry_database_modified, NULL, 0, NULL);
+        defer_low(mMaxDatabase, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
 

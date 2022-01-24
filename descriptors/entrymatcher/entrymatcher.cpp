@@ -101,7 +101,7 @@ int C74_EXPORT main()
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 {
-    t_symbol *name = NULL;
+    t_symbol *name = nullptr;
     
     if (argc && atom_gettype(argv) == A_SYM)
     {
@@ -172,7 +172,7 @@ void entrymatcher_dump(t_entrymatcher *x)
         if (i >= database_ptr->numItems())
             break;
         
-        entrymatcher_lookup_output(x, database_ptr, i, 0, NULL);
+        entrymatcher_lookup_output(x, database_ptr, i, 0, nullptr);
     }
 }
 
@@ -236,7 +236,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, EntryDatabase::ReadPointer& d
     
     database_ptr.destroy();
     
-    outlet_list(x->the_data_outlet, NULL, output.size(), &output[0]);
+    outlet_list(x->the_data_outlet, nullptr, output.size(), &output[0]);
 }
 
 /*****************************************/
@@ -249,7 +249,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
     database_getptr_read(x->database_object)->stats(x, output, argc, argv);
 
     if (output.size())
-        outlet_list(x->the_data_outlet, NULL, output.size(), &output[0]);
+        outlet_list(x->the_data_outlet, nullptr, output.size(), &output[0]);
     else
         object_error((t_object *) x, "no stats specified");
 }
@@ -346,11 +346,11 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
     
     if (num_matches)
     {
-        outlet_list(x->the_distances_outlet, NULL, num_matches, output_distances);
+        outlet_list(x->the_distances_outlet, nullptr, num_matches, output_distances);
         if (atom_gettype(output_identifiers) == A_SYM)
             outlet_anything(x->the_identifiers_outlet, atom_getsym(output_identifiers), num_matches - 1, output_identifiers + 1);
         else
-            outlet_list(x->the_identifiers_outlet, NULL, num_matches, output_identifiers);
-        outlet_list(x->the_indices_outlet, NULL, num_matches, output_indices);
+            outlet_list(x->the_identifiers_outlet, nullptr, num_matches, output_identifiers);
+        outlet_list(x->the_indices_outlet, nullptr, num_matches, output_indices);
     }
 }

@@ -98,7 +98,7 @@ int C74_EXPORT main()
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 {
-    t_symbol *name = NULL;
+    t_symbol *name = nullptr;
     
     if (argc && atom_gettype(argv) == A_SYM)
     {
@@ -385,5 +385,5 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
 
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
-    object_method(dsp64, gensym("dsp_add64"), x, entrymatcher_perform64, 0, NULL);
+    object_method(dsp64, gensym("dsp_add64"), x, entrymatcher_perform64, 0, nullptr);
 }

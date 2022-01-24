@@ -45,7 +45,7 @@ t_max_err entry_database_viewer_notify(t_entry_database_viewer *x, t_symbol *s, 
 
 long entry_database_viewer_dummycompare(t_rowref a, t_rowref b) { return 1; }
 
-static t_class *entry_database_viewer_class = NULL;
+static t_class *entry_database_viewer_class = nullptr;
 
 void entry_database_viewer_init()
 {
@@ -93,10 +93,10 @@ void entry_database_viewer_init()
 void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_entry_database_viewer *x;
-    t_dictionary *d = NULL;
+    t_dictionary *d = nullptr;
     
-    if (!(d=object_dictionaryarg(argc, argv)))
-        return NULL;
+    if (!(d = object_dictionaryarg(argc, argv)))
+        return nullptr;
     
     x = (t_entry_database_viewer *) object_alloc(entry_database_viewer_class);
     
@@ -119,10 +119,10 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setscrollvisible(x->d_dataview, 1, 1);
      
         x->visible = false;
-        x->database = NULL;
+        x->database = nullptr;
         x->patcher = gensym("#P")->s_thing;
         x->in_edit = false;
-        atom_setobj(&x->edit_identifier, NULL);
+        atom_setobj(&x->edit_identifier, nullptr);
         
         attr_dictionary_process(x, d);
 
@@ -177,7 +177,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                 long column_difference = num_database_columns - num_columns;
                 for (long i = 0; i < column_difference; i++)
                 {
-                    t_object *column = jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), NULL, true);
+                    t_object *column = jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), nullptr, true);
                     jcolumn_setminwidth(column, 50);
                     jcolumn_setwidth(column, 90);
                     jcolumn_setmaxwidth(column, 300);
@@ -194,7 +194,7 @@ void entry_database_viewer_update(t_entry_database_viewer *x)
                     {
                         jcolumn_sethideable(column, 1);
                         jcolumn_setrowcomponentmsg(column, gensym("component"));
-                        jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), NULL);
+                        jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), nullptr);
                     }
                 }
             }
@@ -352,7 +352,7 @@ void entry_database_viewer_celledited(t_entry_database_viewer *x, t_symbol *coln
     if (argc)
         x->database->replaceItem(&x->edit_identifier, column, argv);
     jdataview_redrawcell(x->d_dataview, colname, rr);
-    atom_setobj(&x->edit_identifier, NULL);
+    atom_setobj(&x->edit_identifier, nullptr);
     x->in_edit = false;
     
     entry_database_viewer_update(x);

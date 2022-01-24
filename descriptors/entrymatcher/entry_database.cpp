@@ -735,8 +735,8 @@ t_dictionary *EntryDatabase::saveDictionary(bool entriesAsOneKey) const
 void EntryDatabase::loadDictionary(t_object *x, t_dictionary *dict)
 {
     t_max_err err = MAX_ERR_NONE;
-    t_dictionary *dictMeta = NULL;
-    t_dictionary *dictData = NULL;
+    t_dictionary *dictMeta = nullptr;
+    t_dictionary *dictData = nullptr;
     
     if (!dict)
         return;

@@ -109,7 +109,7 @@ void entrymatcher_save_patcher(T *x, t_dictionary *dict)
 template <class T>
 void entrymatcher_load_patcher(T *x)
 {
-    t_dictionary *dict = NULL;
+    t_dictionary *dict = nullptr;
     
     if ((dict = (t_dictionary *) gensym("#D")->s_thing))
     {
@@ -148,7 +148,7 @@ void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *d
 
     if (msg == database_modified)
     {
-        object_notify(x, _sym_modified, NULL);
+        object_notify(x, _sym_modified, nullptr);
         if (x->embed)
             jpatcher_set_dirty(x->patcher, 1);
     }
