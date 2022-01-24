@@ -10,6 +10,7 @@
 struct t_entry_database_viewer
 {
     t_jbox              d_box;
+    
     t_object            *d_dataview;
     t_object            *patcher;
     t_object            *database_object;
@@ -370,7 +371,7 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
     x->sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
     long column = map_colname(colname);
     
-    EntryDatabase::ReadPointer database = EntryDatabase::ReadPointer(x->database);
+    EntryDatabase::ReadPointer database(x->database);
     
     if (x->indices.size() != database->numItems() || column == -2)
     {
@@ -382,41 +383,38 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
     
     if (column == -1)
     {
-        struct Getter
+        struct getter
         {
-            Getter(const EntryDatabase *database) : mDatabase(database) {}
-            t_custom_atom operator()(long idx) { return mDatabase->getEntryIdentifier(idx); }
-            const EntryDatabase *mDatabase;
+            getter(const EntryDatabase *database) : m_database(database) {}
+            t_custom_atom operator()(long idx) { return m_database->getEntryIdentifier(idx); }
+            const EntryDatabase *m_database;
         };
         
-        Getter getter(x->database);
-        sort(x->indices, database->numItems(), getter);
+        sort(x->indices, database->numItems(), getter(x->database));
     }
     else if (column >= 0)
     {
         if (database->getColumnLabelMode(column))
         {
-            struct Getter : public EntryDatabase::RawAccessor
+            struct getter : public EntryDatabase::RawAccessor
             {
-                Getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), mColumn(column) {}
-                std::string operator()(long idx) { return getData(idx, mColumn).m_symbol->s_name; }
-                long mColumn;
+                getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), m_column(column) {}
+                std::string operator()(long idx) const { return getData(idx, m_column).m_symbol->s_name; }
+                long m_column;
             };
-            
-            Getter getter(column, *x->database);
-            sort(x->indices, database->numItems(), getter);
+
+            sort(x->indices, database->numItems(), getter(column, *x->database));
         }
         else
         {
-            struct Getter : public EntryDatabase::RawAccessor
+            struct getter : public EntryDatabase::RawAccessor
             {
-                Getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), mColumn(column) {}
-                double operator()(long idx) { return getData(idx, mColumn); }
-                long mColumn;
+                getter(long column, const EntryDatabase& database) : EntryDatabase::RawAccessor(database), m_column(column) {}
+                double operator()(long idx) const { return getData(idx, m_column); }
+                long m_column;
             };
             
-            Getter getter(column, *x->database);
-            sort(x->indices, database->numItems(), getter);
+            sort(x->indices, database->numItems(), getter(column, *x->database));
         }
     }
 }

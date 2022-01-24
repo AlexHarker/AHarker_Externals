@@ -62,7 +62,7 @@ void sort(T& values, long size)
 // An ascending order index sort with a getter (combsort11 algorithm)
 
 template <class T, typename Op>
-void sort(T& indices, long size, Op& getter)
+void sort(T& indices, long size, const Op& getter)
 {
     long gap = size;
     bool swaps = true;
