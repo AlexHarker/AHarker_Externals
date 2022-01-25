@@ -5,7 +5,6 @@
 #include "atom_types.hpp"
 #include "entry_database.hpp"
 
-
 enum TestType
 {
     TEST_NONE,
@@ -21,8 +20,6 @@ enum TestType
     TEST_SCALE_RATIO,
     TEST_WITHIN_RATIO
 };
-
-TestType test_type(t_atom *argv);
 
 class matchers
 {
@@ -208,7 +205,10 @@ public:
     
     size_t size() const { return m_matchers.size(); }
     
-    void clear();
+    void clear()
+    {
+        m_matchers.clear();
+    }
     
     void set_target(long idx, double value)
     {
@@ -223,17 +223,30 @@ public:
     long get_index(long idx) const          { return m_results[idx].m_index; }
     double get_distance(long idx) const     { return sqrt(m_results[idx].m_distance); }
     
-    void add_target(double value);
-    void add_target(t_symbol *value);
-    void add_matcher(e_test type, long column, double scale = 1.0);
+    void add_target(double value)
+    {
+        if (m_matchers.size())
+            m_matchers.back().m_targets.push_back(value);
+    }
+
+    void add_target(t_symbol *value)
+    {
+        if (m_matchers.size())
+            m_matchers.back().m_targets.push_back(value);
+    }
+
+    void add_matcher(e_test type, long column, double scale = 1.0)
+    {
+        m_matchers.push_back(matcher(type, column, scale));
+    }
     
     void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
     void set_audio_style(bool style) { m_audio_style = style; }
     
+    static TestType test_type(t_atom *argv);
+
 private:
-    
-    long sort_top_n(long N, long size) const;
-    
+        
     mutable long m_num_matches;
     
     mutable results_set m_results;

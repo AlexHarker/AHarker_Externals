@@ -203,7 +203,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         // Find the column index for the test and the test type
         
         long column = database->column_from_specifier(argv++);
-        TestType type = test_type(argv++);
+        TestType type = matchers::test_type(argv++);
         
         // If that fails we are done
         

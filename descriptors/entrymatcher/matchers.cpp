@@ -33,7 +33,7 @@ t_symbol *ps_sym_within_ratio = gensym("</>");
 
 // Attempts to match an atom with any of the symbols representing a valid test type
 
-TestType test_type(t_atom *argv)
+TestType matchers::test_type(t_atom *argv)
 {
     if (atom_gettype(argv) != A_SYM)
         return TEST_NONE;
@@ -107,7 +107,15 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     if (size() && (must_sort || num_matches < m_num_matches))
     {
         if (num_matches < (database->num_items() / 8))
-            num_matches = sort_top_n(num_matches, m_num_matches);
+        {
+            num_matches = std::min(num_matches, m_num_matches);
+            
+            // Partial insertion sort (faster sorting for small numbers of n)...
+            
+            for (long i = 0; i < num_matches; i++)
+                std::swap(m_results[i], (*std::min_element(m_results.begin() + i, m_results.begin() + m_num_matches)));
+           
+        }
         else
             sort(m_results, m_num_matches);
     }
@@ -220,38 +228,4 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
         if (!has_target)
             object_error((t_object *) x, "no target values given for specified test in matchers message");
     }
-}
-
-long matchers::sort_top_n(long N, long size) const
-{
-    N = std::min(N, size);
-    
-    // Partial insertion sort (faster sorting for small numbers of n)...
-    
-    for (long i = 0; i < N; i++)
-        std::swap(m_results[i], (*std::min_element(m_results.begin() + i, m_results.begin() + size)));
-    
-    return N;
-}
-
-void matchers::clear()
-{
-    m_matchers.clear();
-}
-
-void matchers::add_target(double value)
-{
-    if (m_matchers.size())
-        m_matchers.back().m_targets.push_back(value);
-}
-
-void matchers::add_target(t_symbol *value)
-{
-    if (m_matchers.size())
-        m_matchers.back().m_targets.push_back(value);
-}
-
-void matchers::add_matcher(e_test type, long column, double scale)
-{
-    m_matchers.push_back(matcher(type, column, scale));
 }
