@@ -37,8 +37,9 @@ private:
         result() {}
         result(long index, double distance) : m_index(index), m_distance(distance) {}
         
+        friend bool operator < (const result& a, const result& b) { return a.m_distance < b.m_distance; }
         friend bool operator > (const result& a, const result& b) { return a.m_distance > b.m_distance; }
-        
+
         long m_index;
         double m_distance;
     };

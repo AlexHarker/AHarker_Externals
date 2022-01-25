@@ -229,21 +229,7 @@ long matchers::sort_top_n(long N, long size) const
     // Partial insertion sort (faster sorting for small numbers of n)...
     
     for (long i = 0; i < N; i++)
-    {
-        double min_distance = m_results[i].m_distance;
-        long swap = i;
-        
-        for (long j = i + 1; j < size; j++)
-        {
-            if (m_results[j].m_distance < min_distance)
-            {
-                min_distance = m_results[j].m_distance;
-                swap = j;
-            }
-        }
-        
-        std::swap(m_results[swap], m_results[i]);
-    }
+        std::swap(m_results[i], (*std::min_element(m_results.begin() + i, m_results.begin() + size)));
     
     return N;
 }
