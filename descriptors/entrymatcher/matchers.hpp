@@ -24,16 +24,14 @@ enum TestType
 
 TestType test_type(t_atom *argv);
 
-
-
 class matchers
 {
 public:
     
-    enum TestType { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
+    enum e_test { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
     
 private:
-    
+        
     struct result
     {
         result() {}
@@ -44,125 +42,162 @@ private:
         long m_index;
         double m_distance;
     };
-    
+
+    using accessor = entries::accessor;
+    using results_set = std::vector<result>;
+    using target_set = std::vector<t_custom_atom>;
+
     struct matcher
     {
-        matcher(TestType type, long column, double scale = 1.0)
+        matcher(e_test type, long column, double scale = 1.0)
         : m_type(type), m_column(column), m_scale(scale) {}
-
-        template <template <typename U> class Op, typename T = double>
-        inline bool comparison_test(const T& value) const
-        {
-            for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
-                if (Op<T>()(value, it->as<T>()))
-                    return true;
-            
-            return false;
-        }
+                
+        struct distance { double operator()(double a, double b) { return a - b; }};
+        struct ratio { double operator()(double a, double b) { return (a > b ? a / b : b / a) - 1.0; }};
         
-        template <typename Op>
-        inline bool distance_test(bool reject, const double value, double& overall_distance, Op op) const
+        template <template <typename U> class Op, typename T>
+        struct compare
         {
-            double distance = HUGE_VAL;
-
-            for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
+            inline bool operator()(const T& value, const T& target, double scale, double sum)
             {
-                double current_distance = op(value, it->as<double>(), m_scale);
-                current_distance *= current_distance;
-                if (current_distance < distance)
-                    distance = current_distance;
+                return Op<T>()(value, target);
+            }
+         
+            inline bool operator()(const T& value, const target_set targets, double scale, double sum) const
+            {
+                for (auto it = targets.cbegin(); it != targets.cend(); it++)
+                    if (Op<T>()(value, it->as<T>()))
+                        return true;
+            
+                return false;
+            }
+        };
+        
+        template <class Op, bool Reject>
+        struct interval
+        {
+            static double square(const double x) { return x * x; }
+            
+            inline bool operator()(const double& value, const double& target, double scale, double& sum)
+            {
+                double distance = square(Op()(value, target) * scale);
+
+                sum += distance;
+                
+                return (!Reject || distance <= 1.0);
             }
             
-            overall_distance += distance;
-            return !reject || distance <= 1.0;
-        }
-        
-        template <template <typename U> class Op, typename T = double>
-        inline long comparison_test(std::vector<result>& results, long num_matches, const entries::accessor& access) const
+            inline bool operator()(const double& value, const target_set targets, double scale, double& sum) const
+            {
+                double distance = HUGE_VAL;
+
+                for (auto it = targets.cbegin(); it != targets.cend(); it++)
+                    distance = std::min(distance, square(Op()(value, it->as<double>()) * scale));
+                
+                sum += distance;
+                
+                return !Reject || distance <= 1.0;
+            }
+        };
+                
+        template <typename T, typename Op>
+        inline long loop(results_set& results, long size, const accessor& access) const
         {
+            auto data = [&](long i) { return access.get_data<T>(results[i].m_index, m_column); };
+            
             long matched = 0;
             
-            if (m_values.size() == 1)
+            if (m_targets.size() == 1)
             {
-                T comparison_value = m_values[0].as<T>();
+                T target = m_targets[0].as<T>();
                 
-                for (long i = 0; i < num_matches; i++)
-                {
-                    long idx = results[i].m_index;
-                    
-                    if (Op<T>()(access.get_data<T>(idx, m_column), comparison_value))
-                        results[matched++] = result(idx, results[i].m_distance);
-                }
+                for (long i = 0; i < size; i++)
+                    if (Op()(data(i), target, m_scale, results[i].m_distance))
+                        results[matched++] = results[i];
             }
             else
             {
-                for (long i = 0; i < num_matches; i++)
-                {
-                    long idx = results[i].m_index;
-                    T value = access.get_data<T>(idx, m_column);
-                    
-                    for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
-                    {
-                        if (Op<T>()(value, it->as<T>()))
-                        {
-                            results[matched++] = result(idx, results[i].m_distance);
-                            break;
-                        }
-                    }
-                }
+                for (long i = 0; i < size; i++)
+                    if (Op()(data(i), m_targets, m_scale, results[i].m_distance))
+                        results[matched++] = results[i];
             }
             
             return matched;
         }
         
-        template <typename Op>
-        inline long distance_test(bool reject, std::vector<result>& results, long num_matches, const entries::accessor& access, Op op) const
+        template <template <typename U> class Op, typename T = double>
+        bool comparison(const T& value) const
         {
-            long matched = 0;
-            
-            if (m_values.size() == 1)
-            {
-                double comparison_value = m_values[0].as<double>();
-                
-                for (long i = 0; i < num_matches; i++)
-                {
-                    long idx = results[i].m_index;
-                    double distance = op(comparison_value, access.get_data(idx, m_column), m_scale);
-                    distance *= distance;
-                    
-                    if (!reject || distance <= 1.0)
-                        results[matched++] = result(idx, results[i].m_distance + distance);
-                }
-            }
-            else
-            {
-                for (long i = 0; i < num_matches; i++)
-                {
-                    long idx = results[i].m_index;
-                    double value = access.get_data(idx, m_column);
-                    double distance = HUGE_VAL;
-                    
-                    for (auto it = m_values.cbegin(); it != m_values.cend(); it++)
-                    {
-                        double current_distance = op(it->as<double>(), value, m_scale);
-                        current_distance *= current_distance;
-                        if (current_distance < distance)
-                            distance = current_distance;
-                    }
-                    
-                    if (!reject || distance <= 1.0)
-                        results[matched++] = result(idx, results[i].m_distance + distance);
-                }
-            }
-            
-            return matched;
+            return compare<Op, T>()(value, m_targets, m_scale, 0.0);
+        }
+    
+        template <template <typename U> class Op, typename T = double>
+        long comparison_loop(results_set& results, long size, const accessor& access) const
+        {
+            return loop<T, compare<Op, T>>(results, size, access);
         }
         
-        TestType m_type;
+        template <typename Op, bool Reject>
+        bool measure(const double& value, double& distance_sum) const
+        {
+            return interval<Op, Reject>()(value, m_targets, m_scale, distance_sum);
+        }
+        
+        template <typename Op, bool Reject>
+        long measure_loop(results_set& results, long size, const accessor& access) const
+        {
+            return loop<double, interval<Op, Reject>>(results, size, access);
+        }
+    
+        bool match(long idx, const accessor& access, double& sum) const
+        {
+            switch (m_type)
+            {
+                case kTestMatch:
+                    if (access->get_column_label_mode(m_column))
+                        return comparison<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(idx, m_column));
+                    else
+                        return comparison<std::equal_to, double>(access.get_data(idx, m_column));
+                    
+                case kTestLess:             return comparison<std::less>(access.get_data(idx, m_column));
+                case kTestGreater:          return comparison<std::greater>(access.get_data(idx, m_column));
+                case kTestLessEqual:        return comparison<std::less_equal>(access.get_data(idx, m_column));
+                case kTestGreaterEqual:     return comparison<std::greater_equal>(access.get_data(idx, m_column));
+                case kTestDistance:         return measure<distance, false>(access.get_data(idx, m_column), sum);
+                case kTestDistanceReject:   return measure<distance, true>(access.get_data(idx, m_column), sum);
+                case kTestRatio:            return measure<ratio, false>(access.get_data(idx, m_column), sum);
+                case kTestRatioReject:      return measure<ratio, true>(access.get_data(idx, m_column), sum);
+            }
+        }
+        
+        long match(results_set& results, long size, const accessor& access) const
+        {
+            switch (m_type)
+            {
+                case kTestMatch:
+                    if (access->get_column_label_mode(m_column))
+                        return comparison_loop<std::equal_to, t_symbol *>(results, size, access);
+                    else
+                        return comparison_loop<std::equal_to, double>(results, size, access);
+                    
+                case kTestLess:             return comparison_loop<std::less>(results, size, access);
+                case kTestGreater:          return comparison_loop<std::greater>(results, size, access);
+                case kTestLessEqual:        return comparison_loop<std::less_equal>(results, size, access);
+                case kTestGreaterEqual:     return comparison_loop<std::greater_equal>(results, size, access);
+                case kTestDistance:         return measure_loop<distance, false>(results, size, access);
+                case kTestDistanceReject:   return measure_loop<distance, true>(results, size, access);
+                case kTestRatio:            return measure_loop<ratio, false>(results, size, access);
+                case kTestRatioReject:      return measure_loop<ratio, true>(results, size, access);
+            }
+        }
+        
+        e_test m_type;
         long m_column;
-        std::vector<t_custom_atom> m_values;
+        target_set m_targets;
         double m_scale;
     };
+    
+    using matcher_set = std::vector<struct matcher>;
     
 public:
     
@@ -178,8 +213,8 @@ public:
     {
         if (idx >= 0 && idx < size())
         {
-            m_matchers[idx].m_values.resize(1);
-            m_matchers[idx].m_values[0] = value;
+            m_matchers[idx].m_targets.resize(1);
+            m_matchers[idx].m_targets[0] = value;
         }
     }
     
@@ -189,7 +224,7 @@ public:
     
     void add_target(double value);
     void add_target(t_symbol *value);
-    void add_matcher(TestType type, long column, double scale = 1.0);
+    void add_matcher(e_test type, long column, double scale = 1.0);
     
     void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
     void set_audio_style(bool style) { m_audio_style = style; }
@@ -200,9 +235,9 @@ private:
     
     mutable long m_num_matches;
     
-    mutable std::vector<result> m_results;
+    mutable results_set m_results;
     
-    std::vector<matcher> m_matchers;
+    matcher_set m_matchers;
     
     bool m_audio_style;
 };

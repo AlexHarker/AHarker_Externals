@@ -38,6 +38,8 @@ public:
             t_custom_atom(get_untyped(idx, column), m_types[idx * m_num_columns + column]).get_atom(a);
         }
         
+        const entries *operator->() const { return &m_database; }
+                
     protected:
     
         inline t_untyped_atom get_untyped(long idx, long column) const
@@ -46,11 +48,13 @@ public:
         }
         
         accessor(const entries& database)
-        : m_num_columns(database.num_columns())
+        : m_database(database)
+        , m_num_columns(database.num_columns())
         , m_iterator(database.m_entries.cbegin())
         , m_types(database.m_types.cbegin())
         {}
         
+        const entries& m_database;
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
         const std::vector<t_custom_atom::category>::const_iterator m_types;

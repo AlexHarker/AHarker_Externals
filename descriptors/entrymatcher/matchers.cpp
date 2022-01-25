@@ -53,14 +53,8 @@ TestType test_type(t_atom *argv)
     return TEST_NONE;
 }
 
-
-
-
 long matchers::match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const
 {
-    struct distance { double operator()(double a, double b, double scale) { return (a - b) * scale; } };
-    struct ratio { double operator()(double a, double b, double scale) { return (((a > b) ? a / b : b / a) - 1.0) * scale; }};
-    
     long num_items = database->num_items();
     m_num_matches = 0;
     
@@ -81,69 +75,25 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     
     if (m_audio_style)
     {
-        for (auto it = m_matchers.cbegin(); it != m_matchers.cend(); it++)
-        {
-           if (!m_num_matches)
-               break;
-            
-            switch (it->m_type)
-            {
-                case kTestMatch:
-                    if (database->get_column_label_mode(it->m_column))
-                        m_num_matches = it->comparison_test<std::equal_to, t_symbol *>(m_results, m_num_matches, access);
-                    else
-                        m_num_matches = it->comparison_test<std::equal_to, double>(m_results, m_num_matches, access);
-                    break;
-                    
-                case kTestLess:             m_num_matches = it->comparison_test<std::less>(m_results, m_num_matches, access);             break;
-                case kTestGreater:          m_num_matches = it->comparison_test<std::greater>(m_results, m_num_matches, access);          break;
-                case kTestLessEqual:        m_num_matches = it->comparison_test<std::less_equal>(m_results, m_num_matches, access);       break;
-                case kTestGreaterEqual:     m_num_matches = it->comparison_test<std::greater_equal>(m_results, m_num_matches, access);    break;
-                case kTestDistance:         m_num_matches = it->distance_test(false, m_results, m_num_matches, access, distance());       break;
-                case kTestDistanceReject:   m_num_matches = it->distance_test(true, m_results, m_num_matches, access, distance());        break;
-                case kTestRatio:            m_num_matches = it->distance_test(false, m_results, m_num_matches, access, ratio());          break;
-                case kTestRatioReject:      m_num_matches = it->distance_test(true, m_results, m_num_matches, access, ratio());           break;
-            }
-        }
+        for (auto it = m_matchers.cbegin(); it != m_matchers.cend() && m_num_matches; it++)
+            m_num_matches = it->match(m_results, m_num_matches, access);
     }
     else
     {
+        // Assume a match for each entry (for the case of no matchers)
+
         for (long i = 0; i < num_items; i++)
         {
-            // Assume a match for each entry (for the case of no matchers)
-            
             bool matched = true;
-            double distance_squared = 0.0;
+            double sum = 0.0;
             
-            for (auto it = m_matchers.cbegin(); it != m_matchers.cend(); it++)
-            {
-                switch (it->m_type)
-                {
-                    case kTestMatch:
-                        if (database->get_column_label_mode(it->m_column))
-                            matched = it->comparison_test<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(i, it->m_column));
-                        else
-                            matched = it->comparison_test<std::equal_to, double>(access.get_data(i, it->m_column));
-                        break;
-                        
-                    case kTestLess:             matched = it->comparison_test<std::less>(access.get_data(i, it->m_column)); break;
-                    case kTestGreater:          matched = it->comparison_test<std::greater>(access.get_data(i, it->m_column)); break;
-                    case kTestLessEqual:        matched = it->comparison_test<std::less_equal>(access.get_data(i, it->m_column)); break;
-                    case kTestGreaterEqual:     matched = it->comparison_test<std::greater_equal>(access.get_data(i, it->m_column)); break;
-                    case kTestDistance:         matched = it->distance_test(false, access.get_data(i, it->m_column), distance_squared, distance()); break;
-                    case kTestDistanceReject:   matched = it->distance_test(true, access.get_data(i, it->m_column), distance_squared, distance()); break;
-                    case kTestRatio:            matched = it->distance_test(false, access.get_data(i, it->m_column), distance_squared, ratio()); break;
-                    case kTestRatioReject:      matched = it->distance_test(true, access.get_data(i, it->m_column), distance_squared, ratio()); break;
-                }
-
-                if (!matched)
-                    break;
-            }
+            for (auto it = m_matchers.cbegin(); it != m_matchers.cend() && matched; it++)
+                matched = it->match(i, access, sum);
             
             // Store the entry if it is a valid match
             
             if (matched)
-                m_results[m_num_matches++] = result(i, distance_squared);
+                m_results[m_num_matches++] = result(i, sum);
         }
     }
     
@@ -184,7 +134,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
         // Get the column and test type
         
         long column = database->column_from_specifier(argv++);
-        ::TestType type = test_type(argv++);
+        TestType type = test_type(argv++);
         argc -= 2;
         
         // Test for issues
@@ -306,16 +256,16 @@ void matchers::clear()
 void matchers::add_target(double value)
 {
     if (m_matchers.size())
-        m_matchers.back().m_values.push_back(value);
+        m_matchers.back().m_targets.push_back(value);
 }
 
 void matchers::add_target(t_symbol *value)
 {
     if (m_matchers.size())
-        m_matchers.back().m_values.push_back(value);
+        m_matchers.back().m_targets.push_back(value);
 }
 
-void matchers::add_matcher(TestType type, long column, double scale)
+void matchers::add_matcher(e_test type, long column, double scale)
 {
     m_matchers.push_back(matcher(type, column, scale));
 }
