@@ -17,8 +17,8 @@ struct t_entry_database
     entries database;
     thread_lock lock;
     
-    t_object *patch;
-    t_object *viewer;
+    t_object *view_patch;
+    t_object *view;
     
     long count;
     bool notify;
@@ -85,8 +85,10 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    x->patch = nullptr;
-    x->viewer = nullptr;
+    // Don't create the viewer yet
+    
+    x->view_patch = nullptr;
+    x->view = nullptr;
     
     return x;
 }
@@ -102,7 +104,7 @@ void entry_database_free(t_entry_database *x)
     
     // Destroy patch (which destroys viewer)
     
-    object_free(x->patch);
+    object_free(x->view_patch);
 }
 
 // Modification Notification (in the low-priority thread)
@@ -113,7 +115,7 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     
     if (!x->notify)
     {
-        if (x->viewer)
+        if (x->view)
             object_method(x->viewer, gensym("__build_view"));
         object_notify(x, database_modified, nullptr);
         x->notify = true;
@@ -219,7 +221,7 @@ void entry_database_view(t_entry_database *database)
 {
     // Create if it doesn't yet exist
     
-    if (!database->patch)
+    if (!database->view_patch)
     {
         // Create patcher
         
@@ -237,32 +239,32 @@ void entry_database_view(t_entry_database *database)
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
         attr_args_dictionary(d, ac, av);
         atom_setobj(&a, d);
-        database->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+        database->view_patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
         ps_parent_patcher->s_thing = parent;
         
         // These must all be set after creating
         
-        object_attr_setsym(database->patch, gensym("title"), database->database.get_name());
-        object_attr_setlong(database->patch, gensym("newviewdisabled"), 1);
-        object_attr_setlong(database->patch, gensym("cansave"), 0);
+        object_attr_setsym(database->view_patch, gensym("title"), database->database.get_name());
+        object_attr_setlong(database->view_patch, gensym("newviewdisabled"), 1);
+        object_attr_setlong(database->view_patch, gensym("cansave"), 0);
 
         // Make viewer object (and set database)
         
         const char *viewer_text = "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300";
-        database->viewer = newobject_sprintf(database->patch, viewer_text);
-        object_method(database->viewer, gensym("__set_database"), database, &database->database);
+        database->view = newobject_sprintf(database->view_patch, viewer_text);
+        object_method(database->view, gensym("__set_database"), database, &database->database);
     }
     
     // Bring to front
     
-    if (database->patch)
-        object_method(database->patch, gensym("front"));
+    if (database->view_patch)
+        object_method(database->view_patch, gensym("front"));
 }
 
 void entry_database_view_removed(t_entry_database *database)
 {
-    database->patch = nullptr;
-    database->viewer = nullptr;
+    database->view_patch = nullptr;
+    database->view = nullptr;
 }
 
 /*****************************************/
