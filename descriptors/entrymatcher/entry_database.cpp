@@ -4,6 +4,7 @@
 #include "entry_database.hpp"
 #include "entry_database_viewer.hpp"
 
+#include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
 /*****************************************/
@@ -76,8 +77,8 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Construct the database and lock
     
-    new(&x->lock) thread_lock();
-    new(&x->database) entries(name, num_columns);
+    create_object(x->lock);
+    create_object(x->database, name, num_columns);
     
     // Reserve entries, set count to one and set to notify
     
@@ -97,12 +98,10 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 
 void entry_database_free(t_entry_database *x)
 {
-    // Destruct C++ objects
-    
-    x->database.~entries();
-    x->lock.~thread_lock();
-    
-    // Destroy patch (which destroys viewer)
+    destroy_object(x->database);
+    destroy_object(x->lock);
+   
+    // Destroy view patch (which destroys the view)
     
     object_free(x->view_patch);
 }
