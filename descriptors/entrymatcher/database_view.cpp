@@ -12,6 +12,9 @@
 #include <numeric>
 #include <vector>
 
+
+// Globals and Object Structure
+
 static t_class *database_view_class = nullptr;
 
 struct t_database_view
@@ -58,7 +61,7 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
 
 long database_view_dummycompare(t_rowref a, t_rowref b) { return 1; }
 
-// Column and Row Mappers and Utilities
+// Column + Row Mappers / Utilities
 
 enum header_column : long
 {
