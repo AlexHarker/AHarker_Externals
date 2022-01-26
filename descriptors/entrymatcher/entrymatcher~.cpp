@@ -86,7 +86,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) entrymatcher_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) entrymatcher_dsp64, "dsp64", A_CANT, 0);
 
-    entrymatcher_add_common<t_entrymatcher>(this_class);
+    entrymatcher_common<t_entrymatcher>::class_add(this_class);
     
     class_dspinit(this_class);
 
@@ -125,8 +125,8 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->ratio_kept = 1.0;
     x->n_limit = 0;
     
-    entrymatcher_new_common(x);
-    
+    entrymatcher_common<t_entrymatcher>::object_init(x);
+
     return x;
 }
 

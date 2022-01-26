@@ -91,7 +91,7 @@ int C74_EXPORT main()
 
     class_addmethod(this_class, (method) entrymatcher_match_all, "bang", 0);
     
-    entrymatcher_add_common<t_entrymatcher>(this_class);
+    entrymatcher_common<t_entrymatcher>::class_add(this_class);
     
     class_register(CLASS_BOX, this_class);
     
@@ -123,7 +123,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new matchers;
     
-    entrymatcher_new_common(x);
+    entrymatcher_common<t_entrymatcher>::object_init(x);
 
     return (x);
 }
