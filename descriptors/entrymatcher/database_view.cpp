@@ -83,7 +83,7 @@ long get_index_from_colname(t_symbol *colname)
 
 long map_rowref_to_index(t_database_view *x, t_rowref rr)
 {
-    long index = reinterpret_cast<long>(rr) - 1;
+    long index = static_cast<long>(reinterpret_cast<t_ptr_int>(rr)) - 1;
     
     if (index >= x->row_map.size())
         return index;
@@ -99,7 +99,7 @@ struct rowref_sequence : std::vector<t_rowref>
     rowref_sequence(long size, long start) : std::vector<t_rowref>(size)
     {
         for (auto it = begin(); it != end(); it++)
-            (*it) = reinterpret_cast<t_rowref>(++start);
+            (*it) = reinterpret_cast<t_rowref>(static_cast<t_ptr_int>(++start));
     }
     
     long size() { return static_cast<long>(std::vector<t_rowref>::size()); }

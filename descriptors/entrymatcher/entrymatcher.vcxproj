@@ -15,7 +15,7 @@
     <ClInclude Include="entries.hpp" />
     <ClInclude Include="entrymatcher_common.hpp" />
     <ClInclude Include="entry_database.hpp" />
-    <ClInclude Include="entry_database_viewer.hpp" />
+    <ClInclude Include="database_view.hpp" />
     <ClInclude Include="matchers.hpp" />
     <ClInclude Include="sort.hpp" />
   </ItemGroup>
@@ -23,7 +23,7 @@
     <ClCompile Include="entries.cpp" />
     <ClCompile Include="entrymatcher.cpp" />
     <ClCompile Include="entry_database.cpp" />
-    <ClCompile Include="entry_database_viewer.cpp" />
+    <ClCompile Include="database_view.cpp" />
     <ClCompile Include="matchers.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
