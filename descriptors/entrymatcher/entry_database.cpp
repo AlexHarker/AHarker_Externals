@@ -3,7 +3,7 @@
 #include <string>
 
 #include "entry_database.hpp"
-#include "entry_database_viewer.hpp"
+#include "database_view.hpp"
 
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
@@ -63,7 +63,7 @@ int entry_database_init()
     
     class_addmethod(database_class, (method) entry_database_view_removed, private_strings::view_removed(), A_CANT, 0);
 
-    entry_database_viewer_init();
+    database_view_init();
     
     return 0;
 }
@@ -254,10 +254,10 @@ void entry_database_view(t_entry_database *x)
 
         // Make viewer object (and set database)
         
-        std::string viewer_text("@maxclass newobj @text \"");
-        viewer_text.append(private_strings::view_classname());
-        viewer_text.append("\" @patching_rect 0 0 300 300");
-        x->view = newobject_sprintf(x->view_patch, viewer_text.c_str());
+        std::string view_text("@maxclass newobj @text \"");
+        view_text.append(private_strings::view_classname());
+        view_text.append("\" @patching_rect 0 0 300 300");
+        x->view = newobject_sprintf(x->view_patch, view_text.c_str());
         object_method(x->view, gensym(private_strings::set_database()), x, &x->database);
     }
     
