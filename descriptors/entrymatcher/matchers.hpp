@@ -5,6 +5,8 @@
 #include "atom_types.hpp"
 #include "entry_database.hpp"
 
+#include <limits>
+
 enum TestType
 {
     TEST_NONE,
@@ -214,7 +216,7 @@ private:
             
             inline bool operator()(const double& value, const target_set targets, double scale, double& sum) const
             {
-                double distance = HUGE_VAL;
+                double distance = std::numeric_limits<double>::infinity();
 
                 for (auto it = targets.cbegin(); it != targets.cend(); it++)
                     distance = std::min(distance, square(Op()(value, it->as<double>()) * scale));
