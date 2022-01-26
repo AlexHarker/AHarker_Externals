@@ -133,7 +133,7 @@ void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long a
 
 // Release a Database Safely (deleting if necessary)
 
-void entry_database_release(void *client, t_entry_database *x)
+void entry_database_release(t_entry_database *x, void *client)
 {
     bool last_client = false;
     
@@ -160,7 +160,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
 // Find a Entry Database Max Object and Attach (if it already exists)
 
-t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *prev_database)
+t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *name, void *client)
 {
     bool found_new = false;
     
@@ -173,7 +173,7 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     t_entry_database *x = (t_entry_database *) object_findregistered(ps_private_namespace, name);
     
-    if (x && x != prev_database)
+    if (x && x != prev)
     {
         spin_lock_hold(&x->lock);
 
@@ -184,12 +184,12 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     // Otherwise return the old object
     
     if (!found_new)
-        return prev_database;
+        return prev;
     
     // Release the old object and attach to the new
     
-    if (prev_database)
-        entry_database_release(client, prev_database);
+    if (prev)
+        entry_database_release(prev, client);
     object_attach(ps_private_namespace, name, client);
     
     return x;
@@ -197,16 +197,17 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
 
 // Create a Max Database Object (or attach if it already exists)
 
-t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
 {
+    // Note that the number of entries is not fixed - this is just the number that are reserved
     t_atom argv[3];
     atom_setsym(argv + 0, name);
-    atom_setlong(argv + 1, num_reserved_entries);
+    atom_setlong(argv + 1, num_entries);
     atom_setlong(argv + 2, num_columns);
     
     // See if an object is registered (otherwise make object and register it)
     
-    t_entry_database *x = entry_database_findattach(client, name, nullptr);
+    t_entry_database *x = entry_database_findattach(nullptr, name, client);
     
     if (!x)
     {
@@ -220,11 +221,11 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
 
 // View
 
-void entry_database_view(t_entry_database *database)
+void entry_database_view(t_entry_database *x)
 {
     // Create if it doesn't yet exist
     
-    if (!database->view_patch)
+    if (!x->view_patch)
     {
         // Create patcher
         
@@ -242,39 +243,37 @@ void entry_database_view(t_entry_database *database)
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
         attr_args_dictionary(d, ac, av);
         atom_setobj(&a, d);
-        database->view_patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+        x->view_patch = (t_object *) object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
         ps_parent_patcher->s_thing = parent;
         
         // These must all be set after creating
         
-        object_attr_setsym(database->view_patch, gensym("title"), database->database.get_name());
-        object_attr_setlong(database->view_patch, gensym("newviewdisabled"), 1);
-        object_attr_setlong(database->view_patch, gensym("cansave"), 0);
+        object_attr_setsym(x->view_patch, gensym("title"), x->database.get_name());
+        object_attr_setlong(x->view_patch, gensym("newviewdisabled"), 1);
+        object_attr_setlong(x->view_patch, gensym("cansave"), 0);
 
         // Make viewer object (and set database)
         
         std::string viewer_text("@maxclass newobj @text \"");
         viewer_text.append(private_strings::view_classname());
         viewer_text.append("\" @patching_rect 0 0 300 300");
-        database->view = newobject_sprintf(database->view_patch, viewer_text.c_str());
-        object_method(database->view, gensym(private_strings::set_database()), database, &database->database);
+        x->view = newobject_sprintf(x->view_patch, viewer_text.c_str());
+        object_method(x->view, gensym(private_strings::set_database()), x, &x->database);
     }
     
     // Bring to front
     
-    if (database->view_patch)
-        object_method(database->view_patch, gensym("front"));
+    if (x->view_patch)
+        object_method(x->view_patch, gensym("front"));
 }
 
-void entry_database_view_removed(t_entry_database *database)
+void entry_database_view_removed(t_entry_database *x)
 {
-    database->view_patch = nullptr;
-    database->view = nullptr;
+    x->view_patch = nullptr;
+    x->view = nullptr;
 }
 
-/*****************************************/
 // Notify Pointer (notifies clients after write operation)
-/*****************************************/
 
 notify_pointer::~notify_pointer()
 {    
@@ -293,17 +292,17 @@ notify_pointer::~notify_pointer()
 
 t_entry_database *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return entry_database_create(x, name, num_reserved_entries, num_columns);
+    return entry_database_create(name, num_reserved_entries, num_columns, x);
 }
 
 t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *prev_database)
 {
-    return entry_database_findattach(x, name, prev_database);
+    return entry_database_findattach(prev_database, name,  x);
 }
 
 void database_release(void *x, t_entry_database *database)
 {
-    entry_database_release(x, database);
+    entry_database_release(database, x);
 }
 
 // View
