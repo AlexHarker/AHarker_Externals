@@ -7,38 +7,23 @@
 
 #include <limits>
 
-enum TestType
-{
-    TEST_NONE,
-    TEST_MATCH,
-    TEST_LESS_THAN,
-    TEST_GREATER_THAN,
-    TEST_LESS_THAN_EQ,
-    TEST_GREATER_THAN_EQ,
-    TEST_DISTANCE,
-    TEST_SCALE,
-    TEST_WITHIN,
-    TEST_DISTANCE_RATIO,
-    TEST_SCALE_RATIO,
-    TEST_WITHIN_RATIO
-};
-
 class matchers
 {
 public:
     
-    enum class test { match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
+    enum class test { none, match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
         
     // Constructor and Capacity
     
     matchers() : m_num_matches(0), m_audio_style(false) {}
         
-    size_t size() const     { return m_matchers.size(); }
-    void clear()            { m_matchers.clear(); }
+    long size() const   { return static_cast<long>(m_matchers.size()); }
+    void clear()        { m_matchers.clear(); }
 
-    // Utility
+    // Utilities
     
-    static TestType test_type(t_atom *argv);
+    static test test_type(t_atom *argv);
+    static bool needs_scale(t_atom *argv);
 
     // Add / Set Matchers
     
@@ -136,6 +121,8 @@ private:
                 case test::diff_reject:   return measure<difference, true>(access.get_data(idx, m_column), sum);
                 case test::ratio:         return measure<excess_ratio, false>(access.get_data(idx, m_column), sum);
                 case test::ratio_reject:  return measure<excess_ratio, true>(access.get_data(idx, m_column), sum);
+                    
+                default:                  return true;
             }
         }
         
@@ -157,6 +144,8 @@ private:
                 case test::diff_reject:   return measure_loop<difference, true>(results, size, access);
                 case test::ratio:         return measure_loop<excess_ratio, false>(results, size, access);
                 case test::ratio_reject:  return measure_loop<excess_ratio, true>(results, size, access);
+                    
+                default:                  return size;
             }
         }
         
