@@ -9,6 +9,7 @@
 #include <jgraphics.h>
 #include <jdataview.h>
 
+#include <numeric>
 #include <vector>
 
 static t_class *database_view_class = nullptr;
@@ -28,7 +29,7 @@ struct t_database_view
     t_atom edit_identifier;
     
     bool sort_direction;
-    std::vector<long> indices;
+    std::vector<long> row_map;
 };
 
 // Function Prototypes
@@ -53,7 +54,53 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
 void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options);
 void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record);
 
+// N.B. required for custom sorting
+
 long database_view_dummycompare(t_rowref a, t_rowref b) { return 1; }
+
+// Column and Row Mappers and Utilities
+
+enum header_column : long
+{
+    COLINDEX_ITEM_NUMBER = -2,
+    COLINDEX_IDENTIFIER = -1,
+};
+
+t_symbol *ps_first_colname = gensym("0");
+
+t_symbol *get_colname_from_index(long idx)
+{
+    return gensym(std::to_string(idx).c_str());
+}
+
+long get_index_from_colname(t_symbol *colname)
+{
+    return std::stol(colname->s_name) - 2;
+}
+
+long map_rowref_to_index(t_database_view *x, t_rowref rr)
+{
+    long index = reinterpret_cast<long>(rr) - 1;
+    
+    if (index >= x->row_map.size())
+        return index;
+    
+    if (x->sort_direction)
+        return x->row_map[index];
+    else
+        return x->row_map[x->row_map.size() - index - 1];
+}
+
+struct rowref_sequence : std::vector<t_rowref>
+{
+    rowref_sequence(long size, long start) : std::vector<t_rowref>(size)
+    {
+        for (auto it = begin(); it != end(); it++)
+            (*it) = reinterpret_cast<t_rowref>(++start);
+    }
+    
+    long size() { return static_cast<long>(std::vector<t_rowref>::size()); }
+};
 
 // Init (like main)
 
@@ -87,7 +134,7 @@ void database_view_init()
     class_addmethod(c, (method) database_view_editstarted, "editstarted", A_CANT, 0);
     class_addmethod(c, (method) database_view_celledited, "editvalue", A_CANT, 0);
     
-    class_addmethod(c, (method) database_view_dummycompare, "nevercalled", A_CANT, 0);
+    class_addmethod(c, (method) database_view_dummycompare, "__never_called", A_CANT, 0);
     
     class_addmethod(c, (method) database_view_component, "component", A_CANT, 0);
     class_addmethod(c, (method) database_view_sort, "sortdata", A_CANT, 0);
@@ -181,101 +228,101 @@ void database_view_set_database(t_database_view *x, t_object *database_object, e
 
 void database_view_update(t_database_view *x)
 {
-    if (x->database && x->visible && !x->in_edit)
+    // Don't update if there isn't a database, it's not visible, or we are editing
+    
+    if (!x->database || !x->visible || x->in_edit)
+        return;
+    
+    entries::read_pointer database(x->database);
+        
+    // Update columns
+    
+    const long num_view_columns = jdataview_getnumcolumns(x->d_dataview);
+    const long required_columns = database->num_columns() + 2;
+    
+    if (required_columns != num_view_columns)
     {
-        entries::read_pointer database(x->database);
-        
-        // Update columns
-        
-        long num_database_columns = database->num_columns() + 2;
-        long num_columns = jdataview_getnumcolumns(x->d_dataview);
-        
-        if (num_database_columns != num_columns)
+        if (num_view_columns < required_columns)
         {
-            if (num_columns < num_database_columns)
+            // Add new columns and set their style
+            
+            for (long i = num_view_columns; i < required_columns; i++)
             {
-                long column_difference = num_database_columns - num_columns;
-                for (long i = 0; i < column_difference; i++)
+                t_object *column = jdataview_addcolumn(x->d_dataview, get_colname_from_index(i), nullptr, 0);
+                
+                // N.B. - custom sort must be set in order to override...
+
+                jcolumn_setminwidth(column, 50);
+                jcolumn_setwidth(column, 90);
+                jcolumn_setmaxwidth(column, 300);
+                jcolumn_setdraggable(column, 0);
+                jcolumn_setsortable(column, 1);
+                jcolumn_setcelltextstylemsg(column, gensym("getcellstyle"));
+                jcolumn_setcustomsort(column, gensym("__never_called"));
+                jcolumn_setoverridesort(column, 1);
+                
+                if (i >= 2)
                 {
-                    t_object *column = jdataview_addcolumn(x->d_dataview, gensym(std::to_string(i).c_str()), nullptr, true);
-                    jcolumn_setminwidth(column, 50);
-                    jcolumn_setwidth(column, 90);
-                    jcolumn_setmaxwidth(column, 300);
-                    jcolumn_setdraggable(column, 0);
-                    jcolumn_setsortable(column, 1);
-                    jcolumn_setcelltextstylemsg(column, gensym("getcellstyle"));
-                    
-                    // N.B. - custom sort must be set in order to override...
-                    
-                    jcolumn_setcustomsort(column, gensym("nevercalled"));
-                    jcolumn_setoverridesort(column, 1);
-                    
-                    if ((num_columns + i) > 1)
-                    {
-                        jcolumn_sethideable(column, 1);
-                        jcolumn_setrowcomponentmsg(column, gensym("component"));
-                        jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), nullptr);
-                    }
+                    jcolumn_sethideable(column, 1);
+                    jcolumn_setrowcomponentmsg(column, gensym("component"));
+                    jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), nullptr);
                 }
             }
-            else
-            {
-                long column_difference = num_columns - num_database_columns;
-                for (long i = 0; i < column_difference; i++)
-                    jdataview_deletecolumn(x->d_dataview, jdataview_getnthcolumn(x->d_dataview, i + num_database_columns));
-            }
         }
-
-        // Update columns labels
-
-        t_object *column = jdataview_getnthcolumn(x->d_dataview, 0);
-        jcolumn_setlabel(column, gensym("#"));
-
-        column = jdataview_getnthcolumn(x->d_dataview, 1);
-        jcolumn_setlabel(column, gensym("identifier"));
-        
-        for (long i = 0; i < database->num_columns(); i++)
-        {
-            t_object *column = jdataview_getnthcolumn(x->d_dataview,  i + 2);
-            jcolumn_setlabel(column, database->get_column_name(i));
-        }
-        
-        // Update rows
-        
-        long num_items = database->num_items();
-        long num_rows = jdataview_getnumrows(x->d_dataview);
-        
-        if (num_rows != num_items)
-        {
-            if (num_items == 0)
-            {
-                jdataview_clear(x->d_dataview);
-            }
-            else if (num_rows < num_items)
-            {
-                long row_difference = num_items - num_rows;
-                std::vector<t_rowref> rowrefs(row_difference);
-                for (long i = 0; i < row_difference; i++)
-                    rowrefs[i] = (t_rowref)(1 + i + num_rows);
-                jdataview_addrows(x->d_dataview, row_difference, &rowrefs[0]);
-            }
-            else
-            {
-                long row_difference = num_rows - num_items;
-                t_rowref *rowrefs = (t_rowref *)malloc(sizeof(t_rowref) * row_difference);
-                for (long i = 0; i < row_difference; i++)
-                    rowrefs[i] = (t_rowref *)(1 + i + num_items);
-                jdataview_deleterows(x->d_dataview, row_difference, &rowrefs[0]);
-            }
-        }
-        
-        // FIX - doesn't work - why not?
-        
-        if (num_columns == 0)
-            jdataview_sort(x->d_dataview, gensym("0"), 1);
         else
-            jdataview_resort(x->d_dataview);
+        {
+            // Delete unused columns
+            
+            for (long i = required_columns; i < num_view_columns; i++)
+                jdataview_deletecolumn(x->d_dataview, jdataview_getnthcolumn(x->d_dataview, i));
+        }
     }
+
+    // Update column labels (# and identifier columns / data)
+    
+    jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview, 0), gensym("#"));
+    jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview, 1), gensym("identifier"));
+        
+    for (long i = 0; i < database->num_columns(); i++)
+        jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview,  i + 2), database->get_column_name(i));
+
+    // Update rows
+    
+    long num_view_rows = jdataview_getnumrows(x->d_dataview);
+    long required_items = database->num_items();
+    
+    if (num_view_rows != required_items)
+    {
+        if (!required_items)
+        {
+            // No data - clear the view
+            
+            jdataview_clear(x->d_dataview);
+        }
+        else if (num_view_rows < required_items)
+        {
+            // Create additional rows
+            
+            rowref_sequence refs(required_items - num_view_rows, num_view_rows);
+            jdataview_addrows(x->d_dataview, refs.size(), refs.data());
+        }
+        else
+        {
+            // Delte additional rows
+            
+            rowref_sequence refs(num_view_rows - required_items, required_items);
+            jdataview_deleterows(x->d_dataview, refs.size(), refs.data());
+        }
+    }
+    
+    // Sort or resort
+    
+    // FIX - doesn't work - why not?
+    
+    if (num_view_columns == 0)
+        jdataview_sort(x->d_dataview, ps_first_colname, 1);
+    else
+        jdataview_resort(x->d_dataview);
 }
 
 // Notifications
@@ -313,42 +360,25 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
     return jbox_notify((t_jbox *) x, s, msg, sender, data);
 }
 
-// Convenience Mappers
-
-t_ptr_int map_rowref(t_database_view *x, t_rowref rr)
-{
-    t_ptr_int index = (t_ptr_int) rr - 1;
-    
-    if (index >= x->indices.size())
-        return index;
-    else if (x->sort_direction)
-        return x->indices[index];
-    else
-        return x->indices[x->indices.size() - index - 1];
-}
-
-long map_colname(t_symbol *colname)
-{
-    return std::stol(colname->s_name) - 2;
-}
-
 // Cell Text and Style
 
 void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen)
 {
     if (x->database)
     {
-        entries::read_pointer database(x->database);
-        long column = map_colname(colname);
-        t_ptr_int index = map_rowref(x, rr);
         std::string str;
 
-        if (column == -2)
-            str = std::to_string(index + 1);
-        else if (column == -1)
-            str = database->get_entry_identifier(index).get_string();
+        entries::read_pointer database(x->database);
+
+        long column_index = get_index_from_colname(colname);
+        long row_index = map_rowref_to_index(x, rr);
+
+        if (column_index == COLINDEX_ITEM_NUMBER)
+            str = std::to_string(row_index + 1);
+        else if (column_index == COLINDEX_IDENTIFIER)
+            str = database->get_entry_identifier(row_index).get_string();
         else
-            str = database->get_string(index, column);
+            str = database->get_string(row_index, column_index);
 
         strncpy_zero(text, str.c_str(), maxlen - 1);
     }
@@ -356,7 +386,7 @@ void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref r
 
 void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref rr, long *style, long *align)
 {
-    *style = (colname == gensym("0")) ? JCOLUMN_STYLE_ITALIC : JCOLUMN_STYLE_PLAIN;
+    *style = (colname == ps_first_colname) ? JCOLUMN_STYLE_ITALIC : JCOLUMN_STYLE_PLAIN;
     *align = JCOLUMN_ALIGN_CENTER;
 }
 
@@ -365,18 +395,18 @@ void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref 
 void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
     entries::read_pointer database(x->database);
-    t_ptr_int index = map_rowref(x, rr);
+    long row_index = map_rowref_to_index(x, rr);
     
     x->in_edit = true;
-    database->get_entry_identifier(&x->edit_identifier, index);
+    database->get_entry_identifier(&x->edit_identifier, row_index);
 }
 
 void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
 {
-    long column = map_colname(colname);
+    long column_index = get_index_from_colname(colname);
     
     if (argc)
-        x->database->replace_item(&x->edit_identifier, column, argv);
+        x->database->replace_item(&x->edit_identifier, column_index, argv);
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
     x->in_edit = false;
@@ -390,61 +420,67 @@ void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr,
 {
     entries::read_pointer database(x->database);
     
+    long column_index = get_index_from_colname(colname);
+    
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
-    *options = database->get_column_label_mode(map_colname(colname)) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
+    *options = database->get_column_label_mode(column_index) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }
 
 // Sorting
 
 void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record)
 {
+    // Sorting accessor functors
+    
+    struct identifier_getter
+    {
+        identifier_getter(const entries *database) : m_database(database) {}
+        t_custom_atom operator()(long idx) const { return m_database->get_entry_identifier(idx); }
+        const entries *m_database;
+    };
+    
+    struct string_getter : public entries::accessor
+    {
+        string_getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
+        std::string operator()(long idx) const { return get_untyped(idx, m_column).m_symbol->s_name; }
+        long m_column;
+    };
+    
+    struct data_getter : public entries::accessor
+    {
+        data_getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
+        double operator()(long idx) const { return get_data(idx, m_column); }
+        long m_column;
+    };
+    
+    // Get the column and store the sorting direction
+    
+    long column_index = get_index_from_colname(colname);
     x->sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
-    long column = map_colname(colname);
     
     entries::read_pointer database(x->database);
     
-    if (x->indices.size() != database->num_items() || column == -2)
-    {
-        x->indices.resize(database->num_items());
+    // If we are sorted in order, or the row map need resizing, intialise them here
     
-        for (long i = 0; i < database->num_items(); i++)
-            x->indices[i] = i;
+    if (x->row_map.size() != database->num_items() || column_index == COLINDEX_ITEM_NUMBER)
+    {
+        x->row_map.resize(database->num_items());
+        std::iota(x->row_map.begin(), x->row_map.end(), 0);
     }
     
-    if (column == -1)
+    if (column_index == COLINDEX_IDENTIFIER)
     {
-        struct getter
-        {
-            getter(const entries *database) : m_database(database) {}
-            t_custom_atom operator()(long idx) const { return m_database->get_entry_identifier(idx); }
-            const entries *m_database;
-        };
+        // Sort row map on identifiers
         
-        sort(x->indices, database->num_items(), getter(x->database));
+        sort(x->row_map, database->num_items(), identifier_getter(x->database));
     }
-    else if (column >= 0)
+    else if (column_index >= 0)
     {
-        if (database->get_column_label_mode(column))
-        {
-            struct getter : public entries::accessor
-            {
-                getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
-                std::string operator()(long idx) const { return get_untyped(idx, m_column).m_symbol->s_name; }
-                long m_column;
-            };
-
-            sort(x->indices, database->num_items(), getter(column, *x->database));
-        }
+        // Sort row map on data (using labels or data as per the column)
+        
+        if (database->get_column_label_mode(column_index))
+            sort(x->row_map, database->num_items(), string_getter(column_index, *x->database));
         else
-        {
-            struct getter : public entries::accessor
-            {
-                getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
-                double operator()(long idx) const { return get_data(idx, m_column); }
-                long m_column;
-            };
-            
-            sort(x->indices, database->num_items(), getter(column, *x->database));
-        }
+            sort(x->row_map, database->num_items(), data_getter(column_index, *x->database));
     }
 }

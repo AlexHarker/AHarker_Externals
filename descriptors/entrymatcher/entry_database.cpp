@@ -8,9 +8,7 @@
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
-/*****************************************/
-// Entry Database Max Object Struture
-/*****************************************/
+// Entry Database Object Struture
 
 struct t_entry_database
 {
@@ -26,14 +24,14 @@ struct t_entry_database
     bool notify;
 };
 
-/*****************************************/
-// Entry Database Max Object Definitions
-/*****************************************/
+// Entry Database Definitions
 
 t_class *database_class;
 const char *database_classname = "__entry_database";
 t_symbol *ps_database_classname = gensym(database_classname);
 t_symbol *ps_private_namespace = gensym("__entry_database_private");
+
+// Function Prototypes
 
 int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
@@ -41,11 +39,7 @@ void entry_database_free(t_entry_database *x);
 
 void entry_database_view_removed(t_entry_database *database);
 
-/*****************************************/
-// Entry Database Max Object Routines
-/*****************************************/
-
-// Init (like main)
+// Init (main)
 
 int entry_database_init()
 {
@@ -68,7 +62,7 @@ int entry_database_init()
     return 0;
 }
 
-// New
+// New / Free
 
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
@@ -88,15 +82,13 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     x->count = 1;
     x->notify = true;
     
-    // Don't create the viewer yet
+    // Don't create the view yet
     
     x->view_patch = nullptr;
     x->view = nullptr;
     
     return x;
 }
-
-// Free
 
 void entry_database_free(t_entry_database *x)
 {
@@ -131,7 +123,7 @@ void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long a
     object_free(x);
 }
 
-// Release a Database Safely (deleting if necessary)
+// Release a Database (deleting if necessary)
 
 void entry_database_release(t_entry_database *x, void *client)
 {
@@ -142,8 +134,9 @@ void entry_database_release(t_entry_database *x, void *client)
         // Complete notifications before the object is released
 
         entry_database_modified(x, nullptr, 0, nullptr);
-        
         object_detach(ps_private_namespace, x->database.get_name(), client);
+        
+        // Decrease the count with the lock held
         
         spin_lock_hold(&x->lock);
         last_client = (--x->count <= 0);
@@ -158,7 +151,7 @@ void entry_database_release(t_entry_database *x, void *client)
     }
 }
 
-// Find a Entry Database Max Object and Attach (if it already exists)
+// Find a Database and Attach (if it already exists)
 
 t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *name, void *client)
 {
@@ -195,11 +188,12 @@ t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *na
     return x;
 }
 
-// Create a Max Database Object (or attach if it already exists)
+// Create a Database Object (or attach if it already exists)
 
 t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
 {
-    // Note that the number of entries is not fixed - this is just the number that are reserved
+    // Note that the number of entries is not fixed (this is just the number that are reserved)
+    
     t_atom argv[3];
     atom_setsym(argv + 0, name);
     atom_setlong(argv + 1, num_entries);
@@ -219,7 +213,7 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
     return x;
 }
 
-// View
+// Open View
 
 void entry_database_view(t_entry_database *x)
 {
@@ -252,7 +246,7 @@ void entry_database_view(t_entry_database *x)
         object_attr_setlong(x->view_patch, gensym("newviewdisabled"), 1);
         object_attr_setlong(x->view_patch, gensym("cansave"), 0);
 
-        // Make viewer object (and set database)
+        // Make view object (and set database)
         
         std::string view_text("@maxclass newobj @text \"");
         view_text.append(private_strings::view_classname());
@@ -284,9 +278,7 @@ notify_pointer::~notify_pointer()
     }
 }
 
-/*****************************************/
 // Client Routines
-/*****************************************/
 
 // Get / Change / Release
 
