@@ -213,11 +213,11 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     return x;
 }
 
-// View
+// Viewer
 
 void entry_database_view(t_entry_database *database_object)
 {
-    // Create and/or bring to front
+    // Create if it doesn't yet exist
     
     if (!database_object->patch)
     {
@@ -228,7 +228,7 @@ void entry_database_view(t_entry_database *database_object)
         t_atom *av = nullptr;
         long ac = 0;
         
-        // The patcher we create should not belong to any other patcher, so we need to set the #P symbol
+        // The patcher we create should not belong to any other patcher, so we need to set #P s_thing
         
         t_symbol *ps_parent_patcher = gensym("#P");
         t_patcher *parent = (t_patcher *) ps_parent_patcher->s_thing;
@@ -240,27 +240,11 @@ void entry_database_view(t_entry_database *database_object)
         database_object->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
         ps_parent_patcher->s_thing = parent;
         
-        // Must set after creating, because reasons...
+        // These must all be set after creating
         
         object_attr_setsym(database_object->patch, gensym("title"), database_object->database.get_name());
         object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
         object_attr_setlong(database_object->patch, gensym("cansave"), 0);
-        /*
-        long attrcount = 0;
-        t_symbol **names = nullptr;
-        
-        object_attr_getnames(database_object->patch, &attrcount, &names);
-        
-        for (long i = 0; i < attrcount; i++)
-        {
-            long argc = 0;
-            t_atom *argv = nullptr;
-            char *str = names[i]->s_name;
-            
-            object_attr_getvalueof(database_object->patch, names[i], &argc, &argv);
-            post("attribute called %s", str);
-        }
-        */
         // Make internal object (and set database)
         
         database_object->viewer = newobject_sprintf(database_object->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
@@ -297,7 +281,7 @@ notify_pointer::~notify_pointer()
 // Client Routines
 /*****************************************/
 
-// Get / Change / Release Named Database
+// Get / Change / Release
 
 t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
