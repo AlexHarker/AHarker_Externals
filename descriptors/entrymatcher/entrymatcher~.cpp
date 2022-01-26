@@ -37,7 +37,7 @@ struct t_entrymatcher
     
     t_pxobject x_obj;
     
-    t_object *database_object;
+    t_entry_database *database_object;
     matchers *matchers;
     
     t_patcher *patcher;

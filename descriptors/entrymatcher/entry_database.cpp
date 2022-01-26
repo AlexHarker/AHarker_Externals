@@ -36,7 +36,7 @@ int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
 void entry_database_free(t_entry_database *x);
 
-void entry_database_view_removed(t_entry_database *database_object);
+void entry_database_view_removed(t_entry_database *database);
 
 /*****************************************/
 // Entry Database Max Object Routines
@@ -156,7 +156,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
 // Find a Entry Database Max Object and Attach (if it already exists)
 
-t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *old_database_object)
+t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entry_database *prev_database)
 {
     bool found_new = false;
     
@@ -169,7 +169,7 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     t_entry_database *x = (t_entry_database *) object_findregistered(ps_name_space_name, name);
     
-    if (x && x != old_database_object)
+    if (x && x != prev_database)
     {
         spin_lock_hold(&x->lock);
 
@@ -180,12 +180,12 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     // Otherwise return the old object
     
     if (!found_new)
-        return old_database_object;
+        return prev_database;
     
     // Release the old object and attach to the new
     
-    if (old_database_object)
-        entry_database_release(client, old_database_object);
+    if (prev_database)
+        entry_database_release(client, prev_database);
     object_attach(ps_name_space_name, name, client);
     
     return x;
@@ -215,11 +215,11 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
 
 // Viewer
 
-void entry_database_view(t_entry_database *database_object)
+void entry_database_view(t_entry_database *database)
 {
     // Create if it doesn't yet exist
     
-    if (!database_object->patch)
+    if (!database->patch)
     {
         // Create patcher
         
@@ -237,29 +237,32 @@ void entry_database_view(t_entry_database *database_object)
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
         attr_args_dictionary(d, ac, av);
         atom_setobj(&a, d);
-        database_object->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
+        database->patch = (t_object *)object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
         ps_parent_patcher->s_thing = parent;
         
         // These must all be set after creating
         
-        object_attr_setsym(database_object->patch, gensym("title"), database_object->database.get_name());
-        object_attr_setlong(database_object->patch, gensym("newviewdisabled"), 1);
-        object_attr_setlong(database_object->patch, gensym("cansave"), 0);
-        // Make internal object (and set database)
+        object_attr_setsym(database->patch, gensym("title"), database->database.get_name());
+        object_attr_setlong(database->patch, gensym("newviewdisabled"), 1);
+        object_attr_setlong(database->patch, gensym("cansave"), 0);
+
+        // Make viewer object (and set database)
         
-        database_object->viewer = newobject_sprintf(database_object->patch, "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300");
-        
-        object_method(database_object->viewer, gensym("__set_database"), database_object, &database_object->database);
+        const char *viewer_text = "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300";
+        database->viewer = newobject_sprintf(database->patch, viewer_text);
+        object_method(database->viewer, gensym("__set_database"), database, &database->database);
     }
     
-    if (database_object->patch)
-        object_method(database_object->patch, gensym("front"));
+    // Bring to front
+    
+    if (database->patch)
+        object_method(database->patch, gensym("front"));
 }
 
-void entry_database_view_removed(t_entry_database *database_object)
+void entry_database_view_removed(t_entry_database *database)
 {
-    database_object->patch = nullptr;
-    database_object->viewer = nullptr;
+    database->patch = nullptr;
+    database->viewer = nullptr;
 }
 
 /*****************************************/
@@ -267,13 +270,11 @@ void entry_database_view_removed(t_entry_database *database_object)
 /*****************************************/
 
 notify_pointer::~notify_pointer()
-{
-    t_entry_database *database = (t_entry_database *) m_max_database;
-    
-    if (database->notify)
+{    
+    if (m_database->notify)
     {
-        database->notify = false;
-        defer_low(m_max_database, (method) entry_database_modified, nullptr, 0, nullptr);
+        m_database->notify = false;
+        defer_low(m_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
 
@@ -283,38 +284,36 @@ notify_pointer::~notify_pointer()
 
 // Get / Change / Release
 
-t_object *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
+t_entry_database *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return (t_object *) entry_database_create(x, name, num_reserved_entries, num_columns);
+    return entry_database_create(x, name, num_reserved_entries, num_columns);
 }
 
-t_object *database_change(void *x, t_symbol *name, t_object *old_object)
+t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *prev_database)
 {
-    return (t_object *) entry_database_findattach(x, name, (t_entry_database *) old_object);
+    return entry_database_findattach(x, name, prev_database);
 }
 
-void database_release(void *x, t_object *database_object)
+void database_release(void *x, t_entry_database *database)
 {
-    entry_database_release(x, (t_entry_database *) database_object);
+    entry_database_release(x, database);
 }
 
 // View
 
-void database_view(void *x, t_object *database_object)
+void database_view(void *x, t_entry_database *database)
 {
-    entry_database_view((t_entry_database *) database_object);
+    entry_database_view(database);
 }
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_pointer database_getptr_read(t_object *database_object)
+entries::read_pointer database_getptr_read(t_entry_database *database)
 {
-    t_entry_database *obj = (t_entry_database *) database_object;
-    return entries::read_pointer(&obj->database);
+    return entries::read_pointer(&database->database);
 }
 
-notify_pointer database_getptr_write(t_object *database_object)
+notify_pointer database_getptr_write(t_entry_database *database)
 {
-    t_entry_database *obj = (t_entry_database *) database_object;
-    return notify_pointer(&obj->database, (t_object *) obj);
+    return notify_pointer(&database->database, database);
 }

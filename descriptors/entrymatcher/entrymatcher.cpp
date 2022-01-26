@@ -36,7 +36,7 @@ struct t_entrymatcher
 
     t_object x_obj;
     
-    t_object *database_object;
+    t_entry_database *database_object;
     matchers *matchers;
     
     long embed;
