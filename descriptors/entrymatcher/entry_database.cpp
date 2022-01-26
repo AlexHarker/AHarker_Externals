@@ -116,7 +116,7 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     if (!x->notify)
     {
         if (x->view)
-            object_method(x->viewer, gensym("__build_view"));
+            object_method(x->view, gensym("__build_view"));
         object_notify(x, database_modified, nullptr);
         x->notify = true;
     }
