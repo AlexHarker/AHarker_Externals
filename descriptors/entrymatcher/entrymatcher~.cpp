@@ -37,7 +37,7 @@ struct t_entrymatcher
     
     t_pxobject x_obj;
     
-    t_object *database_object;
+    t_entry_database *database_object;
     matchers *matchers;
     
     t_patcher *patcher;
@@ -205,11 +205,12 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         // Find the column index for the test and the test type
         
         long column = database->column_from_specifier(argv++);
-        TestType type = matchers::test_type(argv++);
+        bool get_scale = matchers::needs_scale(argv);
+        test type = matchers::test_type(argv++);
         
         // If that fails we are done
         
-        if (type == TEST_NONE)
+        if (type == test::none)
         {
             object_error((t_object *) x, "incorrect test type");
             break;
@@ -219,7 +220,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         
         // Get number of expected arguments for this test type
         
-        long arg_check = (type == TEST_SCALE || type == TEST_WITHIN || type == TEST_SCALE_RATIO || type == TEST_WITHIN_RATIO) ? 1 : 0;
+        long arg_check = get_scale ? 1 : 0;
         
         // Check that the arguments are all valid
         
@@ -231,9 +232,9 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                 
                 double scale = 1.0;
                 
-                if (type == TEST_SCALE || type == TEST_WITHIN)
+                if (type == test::diff || type == test::diff_reject)
                     scale = fabs(1. / atom_getfloat(argv++));
-                else if (type == TEST_SCALE_RATIO || type == TEST_WITHIN_RATIO)
+                else if (type == test::ratio || type == test::ratio_reject)
                 {
                     scale = fabs(atom_getfloat(argv++));
                     scale = (scale < 1.0) ? 1.0 / scale : scale;
@@ -241,21 +242,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                 }
                 argc -= arg_check;
                 
-                switch (type)
-                {
-                    case TEST_NONE:                 break;
-                    case TEST_MATCH:                x->matchers->add_matcher(test::match, column);                  break;
-                    case TEST_LESS_THAN:            x->matchers->add_matcher(test::less, column);                   break;
-                    case TEST_GREATER_THAN:         x->matchers->add_matcher(test::greater, column);                break;
-                    case TEST_LESS_THAN_EQ:         x->matchers->add_matcher(test::less_eq, column);                break;
-                    case TEST_GREATER_THAN_EQ:      x->matchers->add_matcher(test::greater_eq, column);             break;
-                    case TEST_DISTANCE:             x->matchers->add_matcher(test::diff, column);                   break;
-                    case TEST_SCALE:                x->matchers->add_matcher(test::diff, column, scale);            break;
-                    case TEST_WITHIN:               x->matchers->add_matcher(test::diff_reject, column, scale);     break;
-                    case TEST_DISTANCE_RATIO:       x->matchers->add_matcher(test::ratio, column);                  break;
-                    case TEST_SCALE_RATIO:          x->matchers->add_matcher(test::ratio, column, scale);           break;
-                    case TEST_WITHIN_RATIO:         x->matchers->add_matcher(test::ratio_reject, column, scale);    break;
-                }
+                x->matchers->add_matcher(type, column, scale);
             }
         }
         else
