@@ -53,9 +53,7 @@ void entry_database_viewer_init()
 {
     t_class *c;
     long flags;
-    
-    common_symbols_init();
-    
+        
     c = class_new("__entry_database_view",
                   (method) entry_database_viewer_new,
                   (method) entry_database_viewer_free,
@@ -326,7 +324,7 @@ void entry_database_viewer_getcelltext(t_entry_database_viewer *x, t_symbol *col
         else if (column == -1)
             str = database->get_entry_identifier(index).get_string();
         else
-            str = database->get_typed_data(index, column).get_string();
+            str = database->get_string(index, column);
 
         strncpy_zero(text, str.c_str(), maxlen-1);
     }
@@ -398,10 +396,10 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
     {
         if (database->get_column_label_mode(column))
         {
-            struct getter : public entries::raw_accessor
+            struct getter : public entries::accessor
             {
-                getter(long column, const entries& database) : entries::raw_accessor(database), m_column(column) {}
-                std::string operator()(long idx) const { return get_data(idx, m_column).m_symbol->s_name; }
+                getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
+                std::string operator()(long idx) const { return get_untyped(idx, m_column).m_symbol->s_name; }
                 long m_column;
             };
 
@@ -409,9 +407,9 @@ void entry_database_viewer_sort(t_entry_database_viewer *x, t_symbol *colname, t
         }
         else
         {
-            struct getter : public entries::raw_accessor
+            struct getter : public entries::accessor
             {
-                getter(long column, const entries& database) : entries::raw_accessor(database), m_column(column) {}
+                getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
                 double operator()(long idx) const { return get_data(idx, m_column); }
                 long m_column;
             };

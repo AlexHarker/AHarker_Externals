@@ -21,43 +21,43 @@ class entries
     
 public:
     
-    class raw_accessor
+    class accessor
     {
         friend entries;
         
     public:
+    
+        template <typename T = double>
+        inline T get_data(long idx, long column) const
+        {
+            return get_untyped(idx, column).as<T>();
+        }
         
-        inline t_untyped_atom get_data(long idx, long column) const
+        inline void get_atom(t_atom *a, long idx, long column) const
+        {
+            t_custom_atom(get_untyped(idx, column), m_types[idx * m_num_columns + column]).get_atom(a);
+        }
+        
+        const entries *operator->() const { return &m_database; }
+                
+    protected:
+    
+        inline t_untyped_atom get_untyped(long idx, long column) const
         {
             return m_iterator[idx * m_num_columns + column];
         }
-
-    protected:
         
-        raw_accessor(const entries& database)
-        : m_num_columns(database.num_columns()), m_iterator(database.m_entries.cbegin()) {}
+        accessor(const entries& database)
+        : m_database(database)
+        , m_num_columns(database.num_columns())
+        , m_iterator(database.m_entries.cbegin())
+        , m_types(database.m_types.cbegin())
+        {}
         
+        const entries& m_database;
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
-    };
-    
-    class atom_accessor : private raw_accessor
-    {
-        friend entries;
-        
-    public:
-        
-        inline void get_data_atom(t_atom *a, long idx, long column) const
-        {
-            t_custom_atom(get_data(idx, column), m_types[idx * m_num_columns + column]).get_atom(a);
-        }
-        
-    private:
-        
-        atom_accessor(const entries& database)
-        : raw_accessor(database), m_types(database.m_types.cbegin()) {}
-        
-        const std::vector<t_custom_atom::Type>::const_iterator m_types;
+        const std::vector<t_custom_atom::category>::const_iterator m_types;
     };
     
     struct read_pointer
@@ -100,8 +100,7 @@ public:
     entries(t_symbol *name, long num_columns)
     : m_name(name) { m_columns.resize(num_columns); }
     
-    raw_accessor get_raw_accessor() const { return raw_accessor(*this); }
-    atom_accessor get_atom_accessor() const { return atom_accessor(*this); }
+    accessor get_accessor() const { return accessor(*this); }
 
     void reserve(long items);
     void clear();
@@ -144,10 +143,9 @@ public:
     t_dictionary *save_dictionary(bool entries_as_one_key) const;
     void load_dictionary(t_object *x, t_dictionary *dict);
 
-    inline t_untyped_atom get_data(long idx, long column) const         { return m_entries[idx * num_columns() + column]; }
-    inline t_custom_atom get_typed_data(long idx, long column) const    { return t_custom_atom(get_data(idx, column), m_types[idx * num_columns() + column]); }
-    inline void get_data_atom(t_atom *a, long idx, long column) const   { return get_typed_data(idx, column).get_atom(a); }
-
+    inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
+    inline std::string get_string(long idx, long column) const      { return get_typed(idx, column).get_string(); }
+    
 private:
 
     struct read_write_pointer : public read_pointer
@@ -177,6 +175,10 @@ private:
         
         bool m_promoted;
     };
+    
+    inline t_untyped_atom get_untyped(long idx, long column) const  { return m_entries[idx * num_columns() + column]; }
+    inline t_custom_atom get_typed(long idx, long column) const     { return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]); }
+    inline double get_data(long idx, long column) const             { return get_untyped(idx, column).m_value; }
     
     void clear(write_lock_hold &lock);
     void set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv);
@@ -226,7 +228,7 @@ private:
     std::vector<t_custom_atom> m_identifiers;
     std::vector<long> m_order;
     std::vector<t_untyped_atom> m_entries;
-    std::vector<t_custom_atom::Type> m_types;
+    std::vector<t_custom_atom::category> m_types;
 
     mutable read_write_lock m_lock;
 };

@@ -213,7 +213,7 @@ struct weighted_variance_functor : weighted_mean_functor
 
 struct t_duration_data
 {
-    enum class e_action { add, remove };
+    enum class action_type { add, remove };
     
     t_duration_data() = default;
     t_duration_data(const t_duration_data&) = delete;
@@ -246,7 +246,7 @@ struct t_duration_data
     long min_age = 0;
     long max_age = 0;
 
-    e_action action = e_action::add;
+    action_type action = action_type::add;
     
     t_outlet *f_out1 = nullptr;
     t_outlet *f_out2 = nullptr;
@@ -663,7 +663,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
 
 void meandev_timed_add_remove_data(t_meandev *x, t_duration_data *duration)
 {
-    if (duration->action == t_duration_data::e_action::remove)
+    if (duration->action == t_duration_data::action_type::remove)
     {
         // Check if we are in the largest duration (and hence dispose of entirely)
             
@@ -706,7 +706,7 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
     {
         // Next action is to add data
 
-        duration->action = t_duration_data::e_action::add;
+        duration->action = t_duration_data::action_type::add;
         clock_delay(duration->f_data_clock, std::max(0L, add_time));
     }
     else
@@ -715,7 +715,7 @@ void meandev_set_clock_data(t_meandev *x, t_duration_data *duration, long time)
         {
             // Next action is to remove data
 
-            duration->action = t_duration_data::e_action::remove;
+            duration->action = t_duration_data::action_type::remove;
             clock_delay(duration->f_data_clock, std::max(0L, del_time));
         }
     }

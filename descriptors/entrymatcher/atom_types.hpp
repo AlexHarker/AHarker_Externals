@@ -3,25 +3,39 @@
 #define ATOM_TYPES_HPP
 
 #include <ext.h>
+#include <functional>
 #include <vector>
 #include <string>
 
-// Atom Without Type Information
+// Untyped Atom (condensed memory storage - the type will likely be stored separately)
 
 union t_untyped_atom
 {
-    // Constructors from Different Types
+    // Constructors
     
-    t_untyped_atom() : m_integer(0) {}
-    t_untyped_atom(double val) : m_value(val) {}
+    t_untyped_atom()                : m_integer(0) {}
+    t_untyped_atom(double val)      : m_value(val) {}
     t_untyped_atom(t_atom_long val) : m_integer(val) {}
-    t_untyped_atom(t_symbol *val) : m_symbol(val) {}
+    t_untyped_atom(t_symbol *val)   : m_symbol(val) {}
     
-    // Casts To Possible Types
+    // Reads (typed)
+
+    template <typename T>
+    T as() const;
+
+    template<>
+    double as() const       { return m_value; }
+
+    template<>
+    t_atom_long as() const  { return m_integer; }
     
-    operator double() const         { return m_value; }
-    operator t_atom_long() const    { return m_integer; }
-    operator t_symbol *() const     { return m_symbol; }
+    template<>
+    t_symbol *as() const    { return m_symbol; }
+    
+    template<>
+    const char *as() const  { return m_symbol->s_name; }
+    
+    t_atom_long deconform() const { return static_cast<t_atom_long>(m_value); }
     
     // Data
     
@@ -30,148 +44,146 @@ union t_untyped_atom
     t_symbol *m_symbol;
 };
 
-// An Atom with Type Information
+// An Custom Atom with Type Information
 
 struct t_custom_atom
 {
     // Definitions
+               
+    enum class ordering { lower, higher, equal };
+    enum class category : unsigned char { floating, integral, conformed, symbolic  };
     
-    enum CompareResult { kLess, kGreater, kEqual };
-    enum Type : unsigned char { kSymbol, kDouble, kTranslatedInt, kInt  };
-    
-    // Constructors from Different Types
+    // Constructors
 
-    t_custom_atom() : m_data(0.0), m_type(kDouble) {}
-    t_custom_atom(double val) : m_data(val), m_type(kDouble) {}
-    t_custom_atom(t_symbol *sym) : m_data(sym), m_type(kSymbol) {}
+    t_custom_atom()                 : m_data(0.0), m_type(category::floating) {}
+    t_custom_atom(double val)       : m_data(val), m_type(category::floating) {}
+    t_custom_atom(t_symbol *sym)    : m_data(sym), m_type(category::symbolic) {}
     
-    t_custom_atom(t_atom_long val, bool translate = true) : m_type(translate ? kTranslatedInt : kInt)
+    t_custom_atom(t_atom_long val, bool conform = true)
+    : m_type(conform ? category::conformed : category::integral)
     {
-        if (translate)
+        if (conform)
             m_data.m_value = static_cast<double>(val);
         else
             m_data.m_integer = val;
     }
     
-    t_custom_atom(const t_atom *a, bool translate = true)
+    t_custom_atom(const t_untyped_atom& a, const category type)
+    : m_data(a), m_type(type) {}
+    
+    t_custom_atom(const t_atom *a, bool conform = true)
     {
         switch (atom_gettype(a))
         {
             case A_SYM:     *this = t_custom_atom(atom_getsym(a));                 break;
             case A_FLOAT:   *this = t_custom_atom(atom_getfloat(a));               break;
-            case A_LONG:    *this = t_custom_atom(atom_getlong(a), translate);     break;
-                
-            default:
-                *this = t_custom_atom();
+            case A_LONG:    *this = t_custom_atom(atom_getlong(a), conform);       break;
+            default:        *this = t_custom_atom();
         }
     }
     
-    t_custom_atom(const t_untyped_atom& a, const Type type) : m_data(a), m_type(type) {}
+    // Symbol Check
     
-    // Get as Standard Atom
+    bool is_symbol() const { return m_type == category::symbolic; }
+    
+    // Typed Reads (force type)
+
+    template <typename T>
+    T as() const { return m_data.as<T>(); }
+    
+    t_atom_long deconform() const { return m_data.deconform(); }
+    
+    // Get Atom
     
     void inline get_atom(t_atom *a) const
     {
         switch (m_type)
         {
-            case kSymbol:           atom_setsym(a, m_data.m_symbol);    break;
-            case kDouble:           atom_setfloat(a, m_data.m_value);   break;
-            case kInt:              atom_setlong(a, m_data.m_integer);      break;
-            case kTranslatedInt:    atom_setlong(a, static_cast<t_atom_long>(m_data.m_value));    break;
+            case category::floating:    atom_setfloat(a, as<double>());         break;
+            case category::integral:    atom_setlong(a, as<t_atom_long>());     break;
+            case category::conformed:   atom_setlong(a, deconform());           break;
+            case category::symbolic:    atom_setsym(a, as<t_symbol *>());       break;
+            default:                    atom_setfloat(a, 0.0);
         }
     }
     
-    // Get As a String
+    // Get as String
     
     std::string inline get_string() const
     {
         switch (m_type)
         {
-            case kSymbol:           return m_data.m_symbol->s_name;
-            case kDouble:           return std::to_string(m_data.m_value);
-            case kInt:              return std::to_string(m_data.m_integer);
-            case kTranslatedInt:    return std::to_string((t_atom_long) m_data.m_value);
+            case category::floating:    return std::to_string(as<double>());
+            case category::integral:    return std::to_string(as<t_atom_long>());
+            case category::conformed:   return std::to_string(deconform());
+            case category::symbolic:    return as<const char *>();
+            default:                    return {};
         }
     }
     
-    // Compare t_custom_atoms
+    // Comparisons and ordering (compare is consistent across runs, but ordering is faster)
     
-    friend inline CompareResult compare(const t_custom_atom& a, const t_custom_atom& b)
+    friend inline ordering order(const t_custom_atom& a, const t_custom_atom& b)
     {
         if (a.m_type == b.m_type)
         {
             switch (a.m_type)
             {
-                case kDouble:
-                case kTranslatedInt:  return a.m_data.m_value == b.m_data.m_value ? kEqual : a.m_data.m_value < b.m_data.m_value ? kLess : kGreater;
-                case kInt:            return a.m_data.m_integer == b.m_data.m_integer ? kEqual : a.m_data.m_integer < b.m_data.m_integer ? kLess : kGreater;
-                case kSymbol:         return a.m_data.m_symbol == b.m_data.m_symbol ? kEqual :a.m_data.m_symbol < b.m_data.m_symbol ? kLess : kGreater;
-            }
-        }
-        
-        return (a.m_type < b.m_type) ? kLess : kGreater;
-    }
-    
-    bool operator < (const t_custom_atom& a)
-    {
-        Type type1 = m_type == kTranslatedInt ? kDouble : m_type;
-        Type type2 = a.m_type == kTranslatedInt ? kDouble : a.m_type;
+                case category::integral:    return order(a.as<t_atom_long>(), b.as<t_atom_long>());
+                case category::symbolic:    return order(a.as<t_symbol *>(), b.as<t_symbol *>());
+                default:                    return order(a.as<double>(), b.as<double>());
 
-        if (type1 == type2)
-        {
-            switch (m_type)
-            {
-                case kDouble:
-                case kTranslatedInt:  return m_data.m_value < a.m_data.m_value;
-                case kInt:            return m_data.m_integer < a.m_data.m_integer;
-                case kSymbol:         return strcmp(m_data.m_symbol->s_name, a.m_data.m_symbol->s_name) < 0;
             }
         }
         
-        if (type1 == kSymbol) return true;
-        if (type2 == kSymbol) return false;
-        
-        if (type1 == kInt)
-            return m_data.m_integer < a.m_data.m_value;
-        else
-            return m_data.m_value < a.m_data.m_integer;
+        return (a.m_type < b.m_type) ? ordering::lower : ordering::higher;
     }
     
-    bool operator > (const t_custom_atom& a)
-    {
-        Type type1 = m_type == kTranslatedInt ? kDouble : m_type;
-        Type type2 = a.m_type == kTranslatedInt ? kDouble : a.m_type;
-        
-        if (type1 == type2)
-        {
-            switch (m_type)
-            {
-                case kDouble:
-                case kTranslatedInt:  return m_data.m_value > a.m_data.m_value;
-                case kInt:            return m_data.m_integer > a.m_data.m_integer;
-                case kSymbol:         return strcmp(m_data.m_symbol->s_name, a.m_data.m_symbol->s_name) > 0;
-            }
-        }
-        
-        if (type1 == kSymbol) return false;
-        if (type2 == kSymbol) return true;
-        
-        if (type1 == kInt)
-            return m_data.m_integer > a.m_data.m_value;
-        else
-            return m_data.m_value > a.m_data.m_integer;
-    }
-    
-    // Casts To Possible Types
+    bool operator < (const t_custom_atom& a) { return comparison<std::less>(a); }
+    bool operator > (const t_custom_atom& a) { return comparison<std::greater>(a); }
 
-    operator double() const         { return m_data.m_value; }
-    operator t_atom_long() const    { return m_data.m_integer; }
-    operator t_symbol *() const     { return m_data.m_symbol; }
-    
     // Data
-    
+
     t_untyped_atom m_data;
-    Type m_type;
+    category m_type;
+    
+private:
+
+    // Implementation (ordering and comparisons)
+    
+    template <typename T>
+    static ordering order(const T& a, const T& b)
+    {
+        return a == b ? ordering::equal : a < b ? ordering::lower : ordering::higher;
+    }
+    
+    template <template <typename U> class Op>
+    bool comparison(const t_custom_atom& a)
+    {
+        category type1 = m_type == category::conformed ? category::floating : m_type;
+        category type2 = a.m_type == category::conformed ? category::floating : a.m_type;
+
+        if (type1 == type2)
+        {
+            switch (m_type)
+            {
+                case category::integral:    return Op<t_atom_long>()(as<t_atom_long>(), a.as<t_atom_long>());
+                case category::symbolic:    return Op<int>()(strcmp(as<const char *>(), a.as<const char *>()), 0);
+                default:                    return Op<double>()(as<double>(), a.as<double>());
+            }
+        }
+        
+        if (type1 == category::symbolic)
+            return Op<int>()(0, 1);
+        
+        if (type2 == category::symbolic)
+            return Op<int>()(1, 0);
+        
+        if (type1 == category::integral)
+            return Op<double>()(static_cast<double>(as<t_atom_long>()), as<double>());
+        else
+            return Op<double>()(as<double>(), static_cast<double>(as<t_atom_long>()));
+    }
 };
 
 #endif

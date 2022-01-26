@@ -26,7 +26,6 @@
 #include "entry_database.hpp"
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
-#include "utilities.hpp"
 
 t_class *this_class;
 
@@ -92,7 +91,7 @@ int C74_EXPORT main()
 
     class_addmethod(this_class, (method) entrymatcher_match_all, "bang", 0);
     
-    entrymatcher_add_common<t_entrymatcher>(this_class);
+    entrymatcher_common<t_entrymatcher>::class_add(this_class);
     
     class_register(CLASS_BOX, this_class);
     
@@ -124,7 +123,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new matchers;
     
-    entrymatcher_new_common(x);
+    entrymatcher_common<t_entrymatcher>::object_init(x);
 
     return (x);
 }
@@ -196,7 +195,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
     long num_items = database_ptr->num_items();
     long num_columns = database_ptr->num_columns();
     
-    auto accessor = database_ptr->get_atom_accessor();
+    auto access = database_ptr->get_accessor();
     
     if (idx < 0 || idx >= num_items)
     {
@@ -210,7 +209,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
         // If no columns are specified construct a list of all colums for that entry
         
         for (long i = 0; i < num_columns; i++)
-            accessor.get_data_atom(&output[i], idx, i);
+            access.get_atom(&output[i], idx, i);
     }
     else
     {
@@ -228,7 +227,7 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
             if (column == -1)
                 database_ptr->get_entry_identifier(&output[i], idx);
             else
-                accessor.get_data_atom(&output[i], idx, column);
+                access.get_atom(&output[i], idx, column);
         }
     }
     
@@ -318,7 +317,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
     // Calculate potential matches and sort if there are matches
         
-    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit), 1024L);
+    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit, true), 1024L);
 
     // Limit matches by maximum distance if specified
     
