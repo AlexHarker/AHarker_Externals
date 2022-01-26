@@ -151,18 +151,18 @@ struct entrymatcher_common
 
     static void class_add(t_class *class_pointer)
     {
-        class_addmethod(class_pointer, (method) entrymatcher_refer,"refer", A_SYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_refer, "refer", A_SYM, 0);
         
-        class_addmethod(class_pointer, (method) entrymatcher_clear,"clear", 0);
-        class_addmethod(class_pointer, (method) entrymatcher_clear,"reset", 0);
+        class_addmethod(class_pointer, (method) entrymatcher_clear, "clear", 0);
+        class_addmethod(class_pointer, (method) entrymatcher_clear, "reset", 0);
      
-        class_addmethod(class_pointer, (method) entrymatcher_entry,"entry", A_GIMME, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_remove,"remove", A_GIMME, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_removeif,"removeif", A_GIMME, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_labelmodes,"labelmodes", A_GIMME, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_names,"names", A_GIMME, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_entry, "entry", A_GIMME, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_remove, "remove", A_GIMME, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_removeif, "removeif", A_GIMME, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_labelmodes, "labelmodes", A_GIMME, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_names, "names", A_GIMME, 0);
 
-        class_addmethod(class_pointer, (method) entrymatcher_dictionary,"dictionary", A_SYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_dictionary, "dictionary", A_SYM, 0);
 
         class_addmethod(class_pointer, (method) entrymatcher_save_patcher, "appendtodictionary", A_CANT, 0);
 
