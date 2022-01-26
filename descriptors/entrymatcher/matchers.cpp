@@ -171,7 +171,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
         {
             // If this column is for labels store details of a valid match test (other tests are not valid)
             
-            add_matcher(matchers::kTestMatch, column);
+            add_matcher(test::match, column);
             
             for ( ; argc; argc--, argv++)
             {
@@ -203,17 +203,17 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
             switch (type)
             {
                 case TEST_NONE:                 break;
-                case TEST_MATCH:                add_matcher(matchers::kTestMatch, column);                      break;
-                case TEST_LESS_THAN:            add_matcher(matchers::kTestLess, column);                       break;
-                case TEST_GREATER_THAN:         add_matcher(matchers::kTestGreater, column);                    break;
-                case TEST_LESS_THAN_EQ:         add_matcher(matchers::kTestLessEqual, column);                  break;
-                case TEST_GREATER_THAN_EQ:      add_matcher(matchers::kTestGreaterEqual, column);               break;
-                case TEST_DISTANCE:             add_matcher(matchers::kTestDistance, column);                   break;
-                case TEST_SCALE:                add_matcher(matchers::kTestDistance, column, scale);            break;
-                case TEST_WITHIN:               add_matcher(matchers::kTestDistanceReject, column, scale);      break;
-                case TEST_DISTANCE_RATIO:       add_matcher(matchers::kTestRatio, column);                      break;
-                case TEST_SCALE_RATIO:          add_matcher(matchers::kTestRatio, column, scale);               break;
-                case TEST_WITHIN_RATIO:         add_matcher(matchers::kTestRatioReject, column, scale);         break;
+                case TEST_MATCH:                add_matcher(test::match, column);                   break;
+                case TEST_LESS_THAN:            add_matcher(test::less, column);                    break;
+                case TEST_GREATER_THAN:         add_matcher(test::greater, column);                 break;
+                case TEST_LESS_THAN_EQ:         add_matcher(test::less_eq, column);                 break;
+                case TEST_GREATER_THAN_EQ:      add_matcher(test::greater_eq, column);              break;
+                case TEST_DISTANCE:             add_matcher(test::diff, column);                    break;
+                case TEST_SCALE:                add_matcher(test::diff, column, scale);             break;
+                case TEST_WITHIN:               add_matcher(test::diff_reject, column, scale);      break;
+                case TEST_DISTANCE_RATIO:       add_matcher(test::ratio, column);                   break;
+                case TEST_SCALE_RATIO:          add_matcher(test::ratio, column, scale);            break;
+                case TEST_WITHIN_RATIO:         add_matcher(test::ratio_reject, column, scale);     break;
             }
             
             for ( ; argc; argc--, argv++)

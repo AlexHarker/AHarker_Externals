@@ -299,7 +299,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
     long num_matches = 0;
     
     matchers.set_matchers(x, argc, argv, database);
-    num_matches = matchers.match(database, true);
+    num_matches = matchers.match(database, 1.0, 0, true);
     indices.resize(num_matches);
         
     for (long i = 0; i < num_matches; i++)

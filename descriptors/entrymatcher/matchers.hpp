@@ -25,10 +25,66 @@ class matchers
 {
 public:
     
-    enum e_test { kTestMatch, kTestLess, kTestGreater, kTestLessEqual, kTestGreaterEqual, kTestDistance, kTestRatio, kTestDistanceReject, kTestRatioReject };
+    enum class test { match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
+        
+    // Constructor and Capacity
+    
+    matchers() : m_num_matches(0), m_audio_style(false) {}
+        
+    size_t size() const     { return m_matchers.size(); }
+    void clear()            { m_matchers.clear(); }
+
+    // Utility
+    
+    static TestType test_type(t_atom *argv);
+
+    // Add / Set Matchers
+    
+    void add_matcher(test type, long column, double scale = 1.0)
+    {
+        m_matchers.push_back(matcher(type, column, scale));
+    }
+    
+    void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
+    
+    // Add / Set Targets
+    
+    void add_target(double value)
+    {
+        if (m_matchers.size())
+            m_matchers.back().add_target(value);
+    }
+
+    void add_target(t_symbol *value)
+    {
+        if (m_matchers.size())
+            m_matchers.back().add_target(value);
+    }
+
+    void set_target(long idx, double value)
+    {
+        if (idx >= 0 && idx < size())
+            m_matchers[idx].set_target(value);
+    }
+    
+    // Matching
+    
+    void set_audio_style(bool style) { m_audio_style = style; }
+
+    long match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const;
+    
+    // Results
+    
+    long get_num_matches() const            { return m_num_matches; }
+    long get_index(long idx) const          { return m_results[idx].m_index; }
+    double get_distance(long idx) const     { return sqrt(m_results[idx].m_distance); }
     
 private:
-        
+
+    // Implementation
+    
+    // Results
+    
     struct result
     {
         result() {}
@@ -41,20 +97,91 @@ private:
         double m_distance;
     };
 
+    // Useful Types
+    
     using accessor = entries::accessor;
-    using results_set = std::vector<result>;
     using target_set = std::vector<t_custom_atom>;
+    using results_set = std::vector<result>;
 
-    struct matcher
+    // Matcher Class
+    
+    class matcher
     {
-        matcher(e_test type, long column, double scale = 1.0)
+    public:
+        
+        // Constructor
+        
+        matcher(test type, long column, double scale = 1.0)
         : m_type(type), m_column(column), m_scale(scale) {}
-                
-        struct distance { double operator()(double a, double b) { return a - b; }};
-        struct ratio { double operator()(double a, double b) { return (a > b ? a / b : b / a) - 1.0; }};
+         
+        // Matching
+        
+        bool match(long idx, const accessor& access, double& sum) const
+        {
+            switch (m_type)
+            {
+                case test::match:
+                    if (access->get_column_label_mode(m_column))
+                        return compare<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(idx, m_column));
+                    else
+                        return compare<std::equal_to, double>(access.get_data(idx, m_column));
+                    
+                case test::less:          return compare<std::less>(access.get_data(idx, m_column));
+                case test::greater:       return compare<std::greater>(access.get_data(idx, m_column));
+                case test::less_eq:       return compare<std::less_equal>(access.get_data(idx, m_column));
+                case test::greater_eq:    return compare<std::greater_equal>(access.get_data(idx, m_column));
+                case test::diff:          return measure<difference, false>(access.get_data(idx, m_column), sum);
+                case test::diff_reject:   return measure<difference, true>(access.get_data(idx, m_column), sum);
+                case test::ratio:         return measure<excess_ratio, false>(access.get_data(idx, m_column), sum);
+                case test::ratio_reject:  return measure<excess_ratio, true>(access.get_data(idx, m_column), sum);
+            }
+        }
+        
+        long match(results_set& results, long size, const accessor& access) const
+        {
+            switch (m_type)
+            {
+                case test::match:
+                    if (access->get_column_label_mode(m_column))
+                        return compare_loop<std::equal_to, t_symbol *>(results, size, access);
+                    else
+                        return compare_loop<std::equal_to, double>(results, size, access);
+                    
+                case test::less:          return compare_loop<std::less>(results, size, access);
+                case test::greater:       return compare_loop<std::greater>(results, size, access);
+                case test::less_eq:       return compare_loop<std::less_equal>(results, size, access);
+                case test::greater_eq:    return compare_loop<std::greater_equal>(results, size, access);
+                case test::diff:          return measure_loop<difference, false>(results, size, access);
+                case test::diff_reject:   return measure_loop<difference, true>(results, size, access);
+                case test::ratio:         return measure_loop<excess_ratio, false>(results, size, access);
+                case test::ratio_reject:  return measure_loop<excess_ratio, true>(results, size, access);
+            }
+        }
+        
+        // Set Targets
+        
+        void set_target(double value) { m_targets.resize(1, value); }
+        void add_target(double value) { m_targets.push_back(value); }
+        void add_target(t_symbol *value) { m_targets.push_back(value); }
+        
+    private:
+        
+        // Single Matcher Implementation
+        
+        // Functors
+  
+        struct difference
+        {
+            double operator()(double a, double b) { return a - b; }
+        };
+        
+        struct excess_ratio
+        {
+            double operator()(double a, double b) { return (a > b ? a / b : b / a) - 1.0; }
+        };
         
         template <template <typename U> class Op, typename T>
-        struct compare
+        struct comparison
         {
             inline bool operator()(const T& value, const T& target, double scale, double sum)
             {
@@ -72,7 +199,7 @@ private:
         };
         
         template <class Op, bool Reject>
-        struct interval
+        struct measurement
         {
             static double square(const double x) { return x * x; }
             
@@ -97,7 +224,9 @@ private:
                 return !Reject || distance <= 1.0;
             }
         };
-                
+        
+        // Loop Over Database
+        
         template <typename T, typename Op>
         inline long loop(results_set& results, long size, const accessor& access) const
         {
@@ -123,135 +252,46 @@ private:
             return matched;
         }
         
+        // Single and Looped Function Calls
+        
         template <template <typename U> class Op, typename T = double>
-        bool comparison(const T& value) const
+        bool compare(const T& value) const
         {
-            return compare<Op, T>()(value, m_targets, m_scale, 0.0);
+            return comparison<Op, T>()(value, m_targets, m_scale, 0.0);
         }
     
-        template <template <typename U> class Op, typename T = double>
-        long comparison_loop(results_set& results, long size, const accessor& access) const
-        {
-            return loop<T, compare<Op, T>>(results, size, access);
-        }
-        
         template <typename Op, bool Reject>
         bool measure(const double& value, double& distance_sum) const
         {
-            return interval<Op, Reject>()(value, m_targets, m_scale, distance_sum);
+            return measurement<Op, Reject>()(value, m_targets, m_scale, distance_sum);
+        }
+    
+        template <template <typename U> class Op, typename T = double>
+        long compare_loop(results_set& results, long size, const accessor& access) const
+        {
+            return loop<T, comparison<Op, T>>(results, size, access);
         }
         
         template <typename Op, bool Reject>
         long measure_loop(results_set& results, long size, const accessor& access) const
         {
-            return loop<double, interval<Op, Reject>>(results, size, access);
+            return loop<double, measurement<Op, Reject>>(results, size, access);
         }
     
-        bool match(long idx, const accessor& access, double& sum) const
-        {
-            switch (m_type)
-            {
-                case kTestMatch:
-                    if (access->get_column_label_mode(m_column))
-                        return comparison<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(idx, m_column));
-                    else
-                        return comparison<std::equal_to, double>(access.get_data(idx, m_column));
-                    
-                case kTestLess:             return comparison<std::less>(access.get_data(idx, m_column));
-                case kTestGreater:          return comparison<std::greater>(access.get_data(idx, m_column));
-                case kTestLessEqual:        return comparison<std::less_equal>(access.get_data(idx, m_column));
-                case kTestGreaterEqual:     return comparison<std::greater_equal>(access.get_data(idx, m_column));
-                case kTestDistance:         return measure<distance, false>(access.get_data(idx, m_column), sum);
-                case kTestDistanceReject:   return measure<distance, true>(access.get_data(idx, m_column), sum);
-                case kTestRatio:            return measure<ratio, false>(access.get_data(idx, m_column), sum);
-                case kTestRatioReject:      return measure<ratio, true>(access.get_data(idx, m_column), sum);
-            }
-        }
+        // Matching Data
         
-        long match(results_set& results, long size, const accessor& access) const
-        {
-            switch (m_type)
-            {
-                case kTestMatch:
-                    if (access->get_column_label_mode(m_column))
-                        return comparison_loop<std::equal_to, t_symbol *>(results, size, access);
-                    else
-                        return comparison_loop<std::equal_to, double>(results, size, access);
-                    
-                case kTestLess:             return comparison_loop<std::less>(results, size, access);
-                case kTestGreater:          return comparison_loop<std::greater>(results, size, access);
-                case kTestLessEqual:        return comparison_loop<std::less_equal>(results, size, access);
-                case kTestGreaterEqual:     return comparison_loop<std::greater_equal>(results, size, access);
-                case kTestDistance:         return measure_loop<distance, false>(results, size, access);
-                case kTestDistanceReject:   return measure_loop<distance, true>(results, size, access);
-                case kTestRatio:            return measure_loop<ratio, false>(results, size, access);
-                case kTestRatioReject:      return measure_loop<ratio, true>(results, size, access);
-            }
-        }
-        
-        e_test m_type;
+        test m_type;
         long m_column;
         target_set m_targets;
         double m_scale;
     };
     
-    using matcher_set = std::vector<struct matcher>;
-    
-public:
-    
-    matchers() : m_num_matches(0), m_audio_style(false) {}
-    
-    long match(const entries::read_pointer& database, double ratio_matched = 1.0, long max_matches = 0, bool must_sort = true) const;
-    
-    size_t size() const { return m_matchers.size(); }
-    
-    void clear()
-    {
-        m_matchers.clear();
-    }
-    
-    void set_target(long idx, double value)
-    {
-        if (idx >= 0 && idx < size())
-        {
-            m_matchers[idx].m_targets.resize(1);
-            m_matchers[idx].m_targets[0] = value;
-        }
-    }
-    
-    long get_num_matches() const            { return m_num_matches; }
-    long get_index(long idx) const          { return m_results[idx].m_index; }
-    double get_distance(long idx) const     { return sqrt(m_results[idx].m_distance); }
-    
-    void add_target(double value)
-    {
-        if (m_matchers.size())
-            m_matchers.back().m_targets.push_back(value);
-    }
-
-    void add_target(t_symbol *value)
-    {
-        if (m_matchers.size())
-            m_matchers.back().m_targets.push_back(value);
-    }
-
-    void add_matcher(e_test type, long column, double scale = 1.0)
-    {
-        m_matchers.push_back(matcher(type, column, scale));
-    }
-    
-    void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
-    void set_audio_style(bool style) { m_audio_style = style; }
-    
-    static TestType test_type(t_atom *argv);
-
-private:
-        
+    // Data
+            
     mutable long m_num_matches;
-    
     mutable results_set m_results;
     
-    matcher_set m_matchers;
+    std::vector<matcher> m_matchers;
     
     bool m_audio_style;
 };

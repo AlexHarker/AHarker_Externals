@@ -317,7 +317,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         
     // Calculate potential matches and sort if there are matches
         
-    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit), 1024L);
+    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit, true), 1024L);
 
     // Limit matches by maximum distance if specified
     

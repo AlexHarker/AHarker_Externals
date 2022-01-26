@@ -192,6 +192,8 @@ void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
+    using test = matchers::test;
+    
     long max_matchers = x->max_matchers;
     
     auto database = database_getptr_read(x->database_object);
@@ -242,17 +244,17 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                 switch (type)
                 {
                     case TEST_NONE:                 break;
-                    case TEST_MATCH:                x->matchers->add_matcher(matchers::kTestMatch, column);                      break;
-                    case TEST_LESS_THAN:            x->matchers->add_matcher(matchers::kTestLess, column);                       break;
-                    case TEST_GREATER_THAN:         x->matchers->add_matcher(matchers::kTestGreater, column);                    break;
-                    case TEST_LESS_THAN_EQ:         x->matchers->add_matcher(matchers::kTestLessEqual, column);                  break;
-                    case TEST_GREATER_THAN_EQ:      x->matchers->add_matcher(matchers::kTestGreaterEqual, column);               break;
-                    case TEST_DISTANCE:             x->matchers->add_matcher(matchers::kTestDistance, column);                   break;
-                    case TEST_SCALE:                x->matchers->add_matcher(matchers::kTestDistance, column, scale);            break;
-                    case TEST_WITHIN:               x->matchers->add_matcher(matchers::kTestDistanceReject, column, scale);      break;
-                    case TEST_DISTANCE_RATIO:       x->matchers->add_matcher(matchers::kTestRatio, column);                      break;
-                    case TEST_SCALE_RATIO:          x->matchers->add_matcher(matchers::kTestRatio, column, scale);               break;
-                    case TEST_WITHIN_RATIO:         x->matchers->add_matcher(matchers::kTestRatioReject, column, scale);         break;
+                    case TEST_MATCH:                x->matchers->add_matcher(test::match, column);                  break;
+                    case TEST_LESS_THAN:            x->matchers->add_matcher(test::less, column);                   break;
+                    case TEST_GREATER_THAN:         x->matchers->add_matcher(test::greater, column);                break;
+                    case TEST_LESS_THAN_EQ:         x->matchers->add_matcher(test::less_eq, column);                break;
+                    case TEST_GREATER_THAN_EQ:      x->matchers->add_matcher(test::greater_eq, column);             break;
+                    case TEST_DISTANCE:             x->matchers->add_matcher(test::diff, column);                   break;
+                    case TEST_SCALE:                x->matchers->add_matcher(test::diff, column, scale);            break;
+                    case TEST_WITHIN:               x->matchers->add_matcher(test::diff_reject, column, scale);     break;
+                    case TEST_DISTANCE_RATIO:       x->matchers->add_matcher(test::ratio, column);                  break;
+                    case TEST_SCALE_RATIO:          x->matchers->add_matcher(test::ratio, column, scale);           break;
+                    case TEST_WITHIN_RATIO:         x->matchers->add_matcher(test::ratio_reject, column, scale);    break;
                 }
             }
         }
