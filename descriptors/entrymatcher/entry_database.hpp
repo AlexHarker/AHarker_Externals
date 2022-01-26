@@ -13,6 +13,17 @@
 
 struct t_entry_database;
 
+// Private Strings (for inter max-object communication)
+
+struct private_strings
+{
+    static const char *view_classname() { return "__entry_database_view"; }
+    static const char *database_modified() { return "__database_modified"; }
+    static const char *view_removed() { return "__view_removed"; }
+    static const char *build_view() { return "__build_view"; }
+    static const char *set_database() { return "__set_database"; }
+};
+
 // Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
 
 struct notify_pointer : public entries::write_pointer

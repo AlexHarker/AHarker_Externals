@@ -129,11 +129,12 @@ struct entrymatcher_common
 
     static void entrymatcher_notify(T *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
     {
-        static t_symbol *database_modified = gensym("__database_modified");
+        static t_symbol *modified = gensym("modified");
+        static t_symbol *database_modified = gensym(private_strings::database_modified());
 
         if (msg == database_modified)
         {
-            object_notify(x, gensym("modified"), nullptr);
+            object_notify(x, modified, nullptr);
             if (x->embed)
                 jpatcher_set_dirty(x->patcher, 1);
         }

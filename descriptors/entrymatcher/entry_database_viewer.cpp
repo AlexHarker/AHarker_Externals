@@ -54,7 +54,7 @@ void entry_database_viewer_init()
     t_class *c;
     long flags;
         
-    c = class_new("__entry_database_view",
+    c = class_new(private_strings::view_classname(),
                   (method) entry_database_viewer_new,
                   (method) entry_database_viewer_free,
                   sizeof(t_entry_database_viewer),
@@ -81,8 +81,8 @@ void entry_database_viewer_init()
     class_addmethod(c, (method) entry_database_viewer_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method) entry_database_viewer_freepatcherview, "freepatcherview", A_CANT, 0);
     
-    class_addmethod(c, (method) entry_database_viewer_set_database, "__set_database", A_CANT, 0);
-    class_addmethod(c, (method) entry_database_viewer_update, "__build_view", A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_set_database, private_strings::set_database(), A_CANT, 0);
+    class_addmethod(c, (method) entry_database_viewer_update, private_strings::build_view(), A_CANT, 0);
     
     class_addmethod(c, (method) entry_database_viewer_notify, "notify", A_CANT, 0);
   
@@ -134,7 +134,7 @@ void *entry_database_viewer_new(t_symbol *s, short argc, t_atom *argv)
 
 void entry_database_viewer_free(t_entry_database_viewer *x)
 {
-    object_method(x->database_object, gensym("__view_removed"));
+    object_method(x->database_object, gensym(private_strings::view_removed()));
     object_free(x->d_dataview);
     jbox_free(&x->d_box);
     x->~t_entry_database_viewer();

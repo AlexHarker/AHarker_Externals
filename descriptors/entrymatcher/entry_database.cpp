@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <string>
 
 #include "entry_database.hpp"
 #include "entry_database_viewer.hpp"
@@ -30,8 +31,9 @@ struct t_entry_database
 /*****************************************/
 
 t_class *database_class;
-t_symbol *ps_database_class_name = gensym("__entry_database");
-t_symbol *ps_name_space_name = gensym("__entry_database_private");
+const char *database_classname = "__entry_database";
+t_symbol *ps_database_classname = gensym(database_classname);
+t_symbol *ps_private_namespace = gensym("__entry_database_private");
 
 int entry_database_init();
 void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns);
@@ -47,7 +49,7 @@ void entry_database_view_removed(t_entry_database *database);
 
 int entry_database_init()
 {
-    database_class = class_new("__entry_database",
+    database_class = class_new(database_classname,
                                (method) entry_database_new,
                                (method) entry_database_free,
                                sizeof(t_entry_database),
@@ -59,7 +61,7 @@ int entry_database_init()
     
     class_register(CLASS_NOBOX, database_class);
     
-    class_addmethod(database_class, (method) entry_database_view_removed, "__view_removed", A_CANT, 0);
+    class_addmethod(database_class, (method) entry_database_view_removed, private_strings::view_removed(), A_CANT, 0);
 
     entry_database_viewer_init();
     
@@ -110,12 +112,13 @@ void entry_database_free(t_entry_database *x)
 
 void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    static t_symbol *database_modified = gensym("__database_modified");
-    
+    static t_symbol *database_modified = gensym(private_strings::database_modified());
+    static t_symbol *build_view = gensym(private_strings::build_view());
+
     if (!x->notify)
     {
         if (x->view)
-            object_method(x->view, gensym("__build_view"));
+            object_method(x->view, build_view);
         object_notify(x, database_modified, nullptr);
         x->notify = true;
     }
@@ -140,7 +143,7 @@ void entry_database_release(void *client, t_entry_database *x)
 
         entry_database_modified(x, nullptr, 0, nullptr);
         
-        object_detach(ps_name_space_name, x->database.get_name(), client);
+        object_detach(ps_private_namespace, x->database.get_name(), client);
         
         spin_lock_hold(&x->lock);
         last_client = (--x->count <= 0);
@@ -163,12 +166,12 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     // Make sure the max database class exists
     
-    if (!class_findbyname(CLASS_NOBOX, ps_database_class_name))
+    if (!class_findbyname(CLASS_NOBOX, ps_database_classname))
         entry_database_init();
     
     // See if an object is registered with this name that is still active nad if so increase the count
     
-    t_entry_database *x = (t_entry_database *) object_findregistered(ps_name_space_name, name);
+    t_entry_database *x = (t_entry_database *) object_findregistered(ps_private_namespace, name);
     
     if (x && x != prev_database)
     {
@@ -187,7 +190,7 @@ t_entry_database *entry_database_findattach(void *client, t_symbol *name, t_entr
     
     if (prev_database)
         entry_database_release(client, prev_database);
-    object_attach(ps_name_space_name, name, client);
+    object_attach(ps_private_namespace, name, client);
     
     return x;
 }
@@ -207,14 +210,15 @@ t_entry_database *entry_database_create(void *client, t_symbol *name, t_atom_lon
     
     if (!x)
     {
-        x = (t_entry_database *) object_register(ps_name_space_name, name, object_new_typed(CLASS_NOBOX, ps_database_class_name, 3, argv));
-        object_attach(ps_name_space_name, name, client);
+        x = (t_entry_database *) object_new_typed(CLASS_NOBOX, ps_database_classname, 3, argv);
+        x = (t_entry_database *) object_register(ps_private_namespace, name, x);
+        object_attach(ps_private_namespace, name, client);
     }
     
     return x;
 }
 
-// Viewer
+// View
 
 void entry_database_view(t_entry_database *database)
 {
@@ -249,9 +253,11 @@ void entry_database_view(t_entry_database *database)
 
         // Make viewer object (and set database)
         
-        const char *viewer_text = "@maxclass newobj @text \"__entry_database_view\" @patching_rect 0 0 300 300";
-        database->view = newobject_sprintf(database->view_patch, viewer_text);
-        object_method(database->view, gensym("__set_database"), database, &database->database);
+        std::string viewer_text("@maxclass newobj @text \"");
+        viewer_text.append(private_strings::view_classname());
+        viewer_text.append("\" @patching_rect 0 0 300 300");
+        database->view = newobject_sprintf(database->view_patch, viewer_text.c_str());
+        object_method(database->view, gensym(private_strings::set_database()), database, &database->database);
     }
     
     // Bring to front
