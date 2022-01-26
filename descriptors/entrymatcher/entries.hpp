@@ -105,7 +105,7 @@ public:
     void reserve(long items);
     void clear();
     
-    lon num_items() const       { return static_cast<long>(m_identifiers.size()); }
+    long num_items() const      { return static_cast<long>(m_identifiers.size()); }
     long num_columns() const    { return static_cast<long>(m_columns.size()); }
     
     void set_column_label_modes(void *x, long argc, t_atom *argv);
