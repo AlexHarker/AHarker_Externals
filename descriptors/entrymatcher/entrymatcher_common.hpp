@@ -133,7 +133,7 @@ struct entrymatcher_common
 
         if (msg == database_modified)
         {
-            object_notify(x, _sym_modified, nullptr);
+            object_notify(x, gensym("modified"), nullptr);
             if (x->embed)
                 jpatcher_set_dirty(x->patcher, 1);
         }

@@ -53,9 +53,7 @@ void entry_database_viewer_init()
 {
     t_class *c;
     long flags;
-    
-    common_symbols_init();
-    
+        
     c = class_new("__entry_database_view",
                   (method) entry_database_viewer_new,
                   (method) entry_database_viewer_free,
