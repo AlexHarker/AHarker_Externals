@@ -3,18 +3,21 @@
 #include "entry_database.hpp"
 #include "sort.hpp"
 
+#include "AH_Lifecycle.hpp"
+
 #include <jpatcher_api.h>
 #include <jgraphics.h>
 #include <jdataview.h>
 
 #include <vector>
 
+static t_class *database_view_class = nullptr;
+
 struct t_database_view
 {
     t_jbox d_box;
     
     t_object *d_dataview;
-    t_object *patcher;
     t_object *database_object;
     
     entries *database;
@@ -28,6 +31,7 @@ struct t_database_view
     std::vector<long> indices;
 };
 
+// Function Prototypes
 
 void *database_view_new(t_symbol *s, short argc, t_atom *argv);
 void database_view_free(t_database_view *x);
@@ -37,20 +41,21 @@ void database_view_freepatcherview(t_database_view *x, t_object *patcherview);
 
 void database_view_set_database(t_database_view *x, t_object *database_object, entries *database);
 void database_view_update(t_database_view *x);
-void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr);
-void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
-void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref rr, long *style, long *align);
-
-void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record);
-
-void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv);
-void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options);
 
 t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
+void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
+void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref rr, long *style, long *align);
+
+void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr);
+void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv);
+
+void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options);
+void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record);
+
 long database_view_dummycompare(t_rowref a, t_rowref b) { return 1; }
 
-static t_class *database_view_class = nullptr;
+// Init (like main)
 
 void database_view_init()
 {
@@ -68,27 +73,30 @@ void database_view_init()
     
     jbox_initclass(c, flags);
     
-    class_addmethod(c, (method) database_view_getcelltext, "getcelltext", A_CANT, 0);
-    class_addmethod(c, (method) database_view_getcellstyle, "getcellstyle", A_CANT, 0);
-
-    class_addmethod(c, (method) database_view_sort, "sortdata", A_CANT, 0);
-    class_addmethod(c, (method) database_view_dummycompare, "nevercalled", A_CANT, 0);
-    class_addmethod(c, (method) database_view_component, "component", A_CANT, 0);
-    
-    class_addmethod(c, (method) database_view_editstarted, "editstarted", A_CANT, 0);
-    class_addmethod(c, (method) database_view_celledited, "editvalue", A_CANT, 0);
-    
     class_addmethod(c, (method) database_view_newpatcherview, "newpatcherview", A_CANT, 0);
     class_addmethod(c, (method) database_view_freepatcherview, "freepatcherview", A_CANT, 0);
-    
+      
     class_addmethod(c, (method) database_view_set_database, private_strings::set_database(), A_CANT, 0);
     class_addmethod(c, (method) database_view_update, private_strings::build_view(), A_CANT, 0);
     
     class_addmethod(c, (method) database_view_notify, "notify", A_CANT, 0);
-  
+
+    class_addmethod(c, (method) database_view_getcelltext, "getcelltext", A_CANT, 0);
+    class_addmethod(c, (method) database_view_getcellstyle, "getcellstyle", A_CANT, 0);
+
+    class_addmethod(c, (method) database_view_editstarted, "editstarted", A_CANT, 0);
+    class_addmethod(c, (method) database_view_celledited, "editvalue", A_CANT, 0);
+    
+    class_addmethod(c, (method) database_view_dummycompare, "nevercalled", A_CANT, 0);
+    
+    class_addmethod(c, (method) database_view_component, "component", A_CANT, 0);
+    class_addmethod(c, (method) database_view_sort, "sortdata", A_CANT, 0);
+    
     class_register(CLASS_BOX, c);
     database_view_class = c;
 }
+
+// New / Free
 
 void *database_view_new(t_symbol *s, short argc, t_atom *argv)
 {
@@ -102,14 +110,16 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
     
     if (x)
     {
-        new (x) t_database_view;
+        create_object(x);
+     
+        // Create and set up the view
         
         long flags =  JBOX_NODRAWBOX | JBOX_GROWBOTH | JBOX_NOFLOATINSPECTOR;
         
         jbox_new(&x->d_box, flags, argc, argv);
         x->d_box.b_firstin = (t_object *) x;
         
-        x->d_dataview = (t_object *)jdataview_new();
+        x->d_dataview = (t_object *) jdataview_new();
         jdataview_setclient(x->d_dataview, (t_object *) x);
         jdataview_setcolumnheaderheight(x->d_dataview, 30);
         jdataview_setheight(x->d_dataview, 22);
@@ -120,7 +130,6 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
      
         x->visible = false;
         x->database = nullptr;
-        x->patcher = gensym("#P")->s_thing;
         x->in_edit = false;
         atom_setobj(&x->edit_identifier, nullptr);
         
@@ -129,16 +138,23 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
         jbox_ready(&x->d_box);
     }
     
-    return(x);
+    return x;
 }
 
 void database_view_free(t_database_view *x)
 {
+    // Notify the database object that the view has been removed
+    
     object_method(x->database_object, gensym(private_strings::view_removed()));
+    
+    // Free resources
+    
     object_free(x->d_dataview);
     jbox_free(&x->d_box);
-    x->~t_database_view();
+    destroy_object(x);
 }
+
+// Patcher Views
 
 void database_view_newpatcherview(t_database_view *x, t_object *patcherview)
 {
@@ -152,12 +168,16 @@ void database_view_freepatcherview(t_database_view *x, t_object *patcherview)
     jdataview_patcherinvis(x->d_dataview, patcherview);
 }
 
+// Set Database
+
 void database_view_set_database(t_database_view *x, t_object *database_object, entries *database)
 {
     x->database = database;
     x->database_object = database_object;
     database_view_update(x);
 }
+
+// Update
 
 void database_view_update(t_database_view *x)
 {
@@ -258,21 +278,24 @@ void database_view_update(t_database_view *x)
     }
 }
 
+// Notifications
+
 t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
 {
     if (msg == gensym("attr_modified") && object_classname(sender) == gensym("patcherview"))
     {
         // Get attibute name
         
-        t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname")); // ask attribute object for name
+        t_symbol *attrname = (t_symbol *)object_method((t_object *)data, gensym("getname"));
         
         if (attrname == gensym("rect"))
         {
             t_rect rect;
         
-            patcherview_get_rect( (t_object *) sender, &rect);
-            rect.x = 0;
-            rect.y = 0;
+            // Get rect and then set its position to (0, 0) to set the view size
+            
+            patcherview_get_rect((t_object *) sender, &rect);
+            rect.x = rect.y = 0;
             jbox_set_rect_for_view((t_object *) &x->d_box, (t_object *) sender, &rect);
         }
         else if (attrname == gensym("visible"))
@@ -289,6 +312,7 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
     
     return jbox_notify((t_jbox *) x, s, msg, sender, data);
 }
+
 // Convenience Mappers
 
 t_ptr_int map_rowref(t_database_view *x, t_rowref rr)
@@ -308,7 +332,7 @@ long map_colname(t_symbol *colname)
     return std::stol(colname->s_name) - 2;
 }
 
-// Cell behaviours
+// Cell Text and Style
 
 void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen)
 {
@@ -326,7 +350,7 @@ void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref r
         else
             str = database->get_string(index, column);
 
-        strncpy_zero(text, str.c_str(), maxlen-1);
+        strncpy_zero(text, str.c_str(), maxlen - 1);
     }
 }
 
@@ -335,6 +359,8 @@ void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref 
     *style = (colname == gensym("0")) ? JCOLUMN_STYLE_ITALIC : JCOLUMN_STYLE_PLAIN;
     *align = JCOLUMN_ALIGN_CENTER;
 }
+
+// Editing
 
 void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
@@ -358,6 +384,8 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     database_view_update(x);
 }
 
+// Component
+
 void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options)
 {
     entries::read_pointer database(x->database);
@@ -365,6 +393,8 @@ void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr,
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
     *options = database->get_column_label_mode(map_colname(colname)) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }
+
+// Sorting
 
 void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record)
 {
