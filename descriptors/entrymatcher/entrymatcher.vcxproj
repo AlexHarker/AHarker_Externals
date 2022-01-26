@@ -18,7 +18,6 @@
     <ClInclude Include="entry_database_viewer.hpp" />
     <ClInclude Include="matchers.hpp" />
     <ClInclude Include="sort.hpp" />
-    <ClInclude Include="utilities.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entries.cpp" />
@@ -26,7 +25,6 @@
     <ClCompile Include="entry_database.cpp" />
     <ClCompile Include="entry_database_viewer.cpp" />
     <ClCompile Include="matchers.cpp" />
-    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>entrymatcher</ProjectName>
