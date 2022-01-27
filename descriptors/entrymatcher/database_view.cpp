@@ -26,7 +26,6 @@ struct t_database_view
     
     entries *database;
     
-    bool visible;
     bool in_edit;
     
     t_atom edit_identifier;
@@ -179,7 +178,6 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setdragenabled(x->d_dataview, 0);
         jdataview_setscrollvisible(x->d_dataview, 1, 1);
      
-        x->visible = false;
         x->database = nullptr;
         x->in_edit = false;
         atom_setobj(&x->edit_identifier, nullptr);
@@ -233,9 +231,9 @@ void database_view_set_database(t_database_view *x, t_object *database_object, e
 
 void database_view_update(t_database_view *x)
 {
-    // Don't update if there isn't a database, it's not visible, or we are editing
+    // Don't update if there isn't a database, or we are editing
     
-    if (!x->database || !x->visible || x->in_edit)
+    if (!x->database || x->in_edit)
         return;
     
     entries::read_pointer database(x->database);
@@ -347,16 +345,6 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
             patcherview_get_rect((t_object *) sender, &rect);
             rect.x = rect.y = 0;
             jbox_set_rect_for_view((t_object *) &x->d_box, (t_object *) sender, &rect);
-        }
-        else if (attrname == gensym("visible"))
-        {
-            if (patcherview_get_visible((t_object *) sender))
-            {
-                x->visible = true;
-                database_view_update(x);
-            }
-            else
-                x->visible = false;
         }
     }
     
