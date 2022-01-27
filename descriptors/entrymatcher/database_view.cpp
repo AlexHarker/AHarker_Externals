@@ -21,7 +21,7 @@ struct t_database_view
 {
     t_jbox d_box;
     
-    t_object *d_dataview;
+    t_object *dataview;
     t_object *database_object;
     
     entries *database;
@@ -172,14 +172,14 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
         jbox_new(&x->d_box, flags, argc, argv);
         x->d_box.b_firstin = (t_object *) x;
         
-        x->d_dataview = (t_object *) jdataview_new();
-        jdataview_setclient(x->d_dataview, (t_object *) x);
-        jdataview_setcolumnheaderheight(x->d_dataview, 30);
-        jdataview_setheight(x->d_dataview, 22);
-        jdataview_setautosizeright(x->d_dataview, 1);
-        jdataview_setautosizerightcolumn(x->d_dataview, 1);
-        jdataview_setdragenabled(x->d_dataview, 0);
-        jdataview_setscrollvisible(x->d_dataview, 1, 1);
+        x->dataview = (t_object *) jdataview_new();
+        jdataview_setclient(x->dataview, (t_object *) x);
+        jdataview_setcolumnheaderheight(x->dataview, 30);
+        jdataview_setheight(x->dataview, 22);
+        jdataview_setautosizeright(x->dataview, 1);
+        jdataview_setautosizerightcolumn(x->dataview, 1);
+        jdataview_setdragenabled(x->dataview, 0);
+        jdataview_setscrollvisible(x->dataview, 1, 1);
      
         x->database = nullptr;
 
@@ -201,7 +201,7 @@ void database_view_free(t_database_view *x)
     
     // Free resources
     
-    object_free(x->d_dataview);
+    object_free(x->dataview);
     jbox_free(&x->d_box);
     destroy_object(x->database);
     destroy_object(x->row_map);
@@ -212,13 +212,13 @@ void database_view_free(t_database_view *x)
 void database_view_newpatcherview(t_database_view *x, t_object *patcherview)
 {
     object_attach_byptr(x, patcherview);
-    jdataview_patchervis(x->d_dataview, patcherview, (t_object *) x);
+    jdataview_patchervis(x->dataview, patcherview, (t_object *) x);
 }
 
 void database_view_freepatcherview(t_database_view *x, t_object *patcherview)
 {
     object_detach_byptr(x, patcherview);
-    jdataview_patcherinvis(x->d_dataview, patcherview);
+    jdataview_patcherinvis(x->dataview, patcherview);
 }
 
 // Set Database
@@ -243,7 +243,7 @@ void database_view_update(t_database_view *x)
         
     // Update columns
     
-    const long num_view_columns = jdataview_getnumcolumns(x->d_dataview);
+    const long num_view_columns = jdataview_getnumcolumns(x->dataview);
     const long required_columns = database->num_columns() + 2;
     
     if (required_columns != num_view_columns)
@@ -254,7 +254,7 @@ void database_view_update(t_database_view *x)
             
             for (long i = num_view_columns; i < required_columns; i++)
             {
-                t_object *column = jdataview_addcolumn(x->d_dataview, get_colname_from_index(i), nullptr, 0);
+                t_object *column = jdataview_addcolumn(x->dataview, get_colname_from_index(i), nullptr, 0);
                 
                 // N.B. - custom sort must be set in order to override...
 
@@ -284,21 +284,21 @@ void database_view_update(t_database_view *x)
             // Delete unused columns
             
             for (long i = required_columns; i < num_view_columns; i++)
-                jdataview_deletecolumn(x->d_dataview, jdataview_getnthcolumn(x->d_dataview, i));
+                jdataview_deletecolumn(x->dataview, jdataview_getnthcolumn(x->dataview, i));
         }
     }
 
     // Update column labels (# and identifier columns / data)
     
-    jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview, 0), gensym("#"));
-    jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview, 1), gensym("identifier"));
+    jcolumn_setlabel(jdataview_getnthcolumn(x->dataview, 0), gensym("#"));
+    jcolumn_setlabel(jdataview_getnthcolumn(x->dataview, 1), gensym("identifier"));
         
     for (long i = 0; i < database->num_columns(); i++)
-        jcolumn_setlabel(jdataview_getnthcolumn(x->d_dataview,  i + 2), database->get_column_name(i));
+        jcolumn_setlabel(jdataview_getnthcolumn(x->dataview,  i + 2), database->get_column_name(i));
 
     // Update rows
     
-    long num_view_rows = jdataview_getnumrows(x->d_dataview);
+    long num_view_rows = jdataview_getnumrows(x->dataview);
     long required_items = database->num_items();
     
     if (num_view_rows != required_items)
@@ -307,26 +307,26 @@ void database_view_update(t_database_view *x)
         {
             // No data - clear the view
             
-            jdataview_clear(x->d_dataview);
+            jdataview_clear(x->dataview);
         }
         else if (num_view_rows < required_items)
         {
             // Create additional rows
             
             rowref_sequence refs(required_items - num_view_rows, num_view_rows);
-            jdataview_addrows(x->d_dataview, refs.size(), refs.data());
+            jdataview_addrows(x->dataview, refs.size(), refs.data());
         }
         else
         {
             // Delete additional rows
             
             rowref_sequence refs(num_view_rows - required_items, required_items);
-            jdataview_deleterows(x->d_dataview, refs.size(), refs.data());
+            jdataview_deleterows(x->dataview, refs.size(), refs.data());
         }
     }
     
     for (long i = 0; i < database->num_columns(); i++)
-        jdataview_redrawcolumn(x->d_dataview, database->get_column_name(i));
+        jdataview_redrawcolumn(x->dataview, database->get_column_name(i));
 }
 
 // Notifications
@@ -414,13 +414,13 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     if (argc)
     {
         x->database->replace_item(&x->edit_identifier, column_index, argv);
-        jdataview_redrawcell(x->d_dataview, colname, rr);
+        jdataview_redrawcell(x->dataview, colname, rr);
     }
 }
 
 void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
-    jdataview_redrawcell(x->d_dataview, colname, rr);
+    jdataview_redrawcell(x->dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
 }
 
