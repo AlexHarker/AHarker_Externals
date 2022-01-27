@@ -160,7 +160,8 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
     
     if (x)
     {
-        create_object(x);
+        create_object(x->database);
+        create_object(x->row_map);
      
         // Create and set up the view
         
@@ -201,7 +202,8 @@ void database_view_free(t_database_view *x)
     
     object_free(x->d_dataview);
     jbox_free(&x->d_box);
-    destroy_object(x);
+    destroy_object(x->database);
+    destroy_object(x->row_map);
 }
 
 // Patcher Views
@@ -318,9 +320,7 @@ void database_view_update(t_database_view *x)
         }
     }
     
-    // Sort or resort
-    
-    // FIX - doesn't work - why not?
+    // Sort if new, else resort
     
     if (num_view_columns == 0)
         jdataview_sort(x->d_dataview, ps_first_colname, 1);
@@ -433,6 +433,9 @@ void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr,
 
 void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record)
 {
+    if (!record)
+        return;
+    
     // Sorting accessor functors
     
     struct identifier_getter
