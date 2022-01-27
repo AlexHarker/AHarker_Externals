@@ -267,6 +267,9 @@ void database_view_update(t_database_view *x)
                 jcolumn_setcustomsort(column, gensym("__never_called"));
                 jcolumn_setoverridesort(column, 1);
                 
+                if (i == 0)
+                    jcolumn_setinitiallysorted(column, JCOLUMN_INITIALLYSORTED_FORWARDS);
+                
                 if (i >= 2)
                 {
                     jcolumn_sethideable(column, 1);
@@ -322,12 +325,8 @@ void database_view_update(t_database_view *x)
         }
     }
     
-    // Sort if new, else resort
-    
-    if (num_view_columns == 0)
-        jdataview_sort(x->d_dataview, ps_first_colname, 1);
-    else
-        jdataview_resort(x->d_dataview);
+    for (long i = 0; i < database->num_columns(); i++)
+        jdataview_redrawcolumn(x->d_dataview, database->get_column_name(i));
 }
 
 // Notifications
@@ -423,8 +422,6 @@ void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
-    
-    database_view_update(x);
 }
 
 // Component
