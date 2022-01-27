@@ -315,7 +315,7 @@ void database_view_update(t_database_view *x)
         }
         else
         {
-            // Delte additional rows
+            // Delete additional rows
             
             rowref_sequence refs(num_view_rows - required_items, required_items);
             jdataview_deleterows(x->d_dataview, refs.size(), refs.data());
