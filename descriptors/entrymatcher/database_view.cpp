@@ -45,7 +45,7 @@ void database_view_update(t_database_view *x);
 
 t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
-int database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *ac, t_atom *argv);
+void database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *argc, t_atom *argv);
 
 void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
 void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref rr, long *style, long *align);
@@ -357,21 +357,15 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
 
 // Cell Value
 
-int database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *ac, t_atom *argv)
+void database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *argc, t_atom *argv)
 {
     entries::read_pointer database(x->database);
 
     long column_index = get_index_from_colname(colname);
     long row_index = map_rowref_to_index(x, rr);
 
-    // FIX - not really sure if this is correct (method sig / who owsn memory??)
-    //ac is defo a pointer, but a pointer to what exactly (always seems to be a long of 16)
-    //*ac = 1;
-    //setting argv seems to work so given the pointer indirection it's likely that's right
-    
+    *argc = 1;
     database->get_atom(argv, row_index, column_index);
-    
-    return MAX_ERR_NONE;
 }
 
 // Cell Text and Style
