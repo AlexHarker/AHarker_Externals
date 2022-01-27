@@ -54,6 +54,7 @@ void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref 
 
 void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr);
 void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv);
+void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr);
 
 void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options);
 void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec *record);
@@ -138,7 +139,7 @@ void database_view_init()
 
     class_addmethod(c, (method) database_view_editstarted, "editstarted", A_CANT, 0);
     class_addmethod(c, (method) database_view_celledited, "editvalue", A_CANT, 0);
-    class_addmethod(c, (method) database_view_editstarted, "editended", A_CANT, 0);
+    class_addmethod(c, (method) database_view_editended, "editended", A_CANT, 0);
     
     class_addmethod(c, (method) database_view_dummycompare, "__never_called", A_CANT, 0);
     
@@ -427,7 +428,7 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     }
 }
 
-void database_view_cellended(t_database_view *x, t_symbol *colname, t_rowref rr)
+void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
