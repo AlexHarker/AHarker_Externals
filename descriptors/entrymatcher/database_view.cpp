@@ -25,9 +25,7 @@ struct t_database_view
     t_object *database_object;
     
     entries *database;
-    
-    bool in_edit;
-    
+        
     t_atom edit_identifier;
     
     bool sort_direction;
@@ -184,7 +182,7 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
         jdataview_setscrollvisible(x->d_dataview, 1, 1);
      
         x->database = nullptr;
-        x->in_edit = false;
+
         atom_setobj(&x->edit_identifier, nullptr);
         
         attr_dictionary_process(x, d);
@@ -236,9 +234,9 @@ void database_view_set_database(t_database_view *x, t_object *database_object, e
 
 void database_view_update(t_database_view *x)
 {
-    // Don't update if there isn't a database, or we are editing
+    // Don't update if there isn't a database
     
-    if (!x->database || x->in_edit)
+    if (!x->database)
         return;
     
     entries::read_pointer database(x->database);
@@ -412,8 +410,7 @@ void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref r
 {
     entries::read_pointer database(x->database);
     long row_index = map_rowref_to_index(x, rr);
-    
-    x->in_edit = true;
+        
     database->get_entry_identifier(&x->edit_identifier, row_index);
 }
 
@@ -432,7 +429,6 @@ void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
-    x->in_edit = false;
     
     database_view_update(x);
 }
