@@ -47,6 +47,8 @@ void database_view_update(t_database_view *x);
 
 t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
 
+int database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *ac, t_atom *argv);
+
 void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen);
 void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref rr, long *style, long *align);
 
@@ -130,11 +132,13 @@ void database_view_init()
     
     class_addmethod(c, (method) database_view_notify, "notify", A_CANT, 0);
 
+    class_addmethod(c, (method) database_view_getcellvalue, "getcellvalue", A_CANT, 0);
     class_addmethod(c, (method) database_view_getcelltext, "getcelltext", A_CANT, 0);
     class_addmethod(c, (method) database_view_getcellstyle, "getcellstyle", A_CANT, 0);
 
     class_addmethod(c, (method) database_view_editstarted, "editstarted", A_CANT, 0);
     class_addmethod(c, (method) database_view_celledited, "editvalue", A_CANT, 0);
+    class_addmethod(c, (method) database_view_editstarted, "editended", A_CANT, 0);
     
     class_addmethod(c, (method) database_view_dummycompare, "__never_called", A_CANT, 0);
     
@@ -268,7 +272,8 @@ void database_view_update(t_database_view *x)
                 {
                     jcolumn_sethideable(column, 1);
                     jcolumn_setrowcomponentmsg(column, gensym("component"));
-                    jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), nullptr);
+                    jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), gensym("editended"));
+                    jcolumn_setnumeric(column, !database->get_column_label_mode(i));
                 }
             }
         }
@@ -351,6 +356,25 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
     return jbox_notify((t_jbox *) x, s, msg, sender, data);
 }
 
+// Cell Value
+
+int database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *ac, t_atom *argv)
+{
+    entries::read_pointer database(x->database);
+
+    long column_index = get_index_from_colname(colname);
+    long row_index = map_rowref_to_index(x, rr);
+
+    // FIX - not really sure if this is correct (method sig / who owsn memory??)
+    //ac is defo a pointer, but a pointer to what exactly (always seems to be a long of 16)
+    //*ac = 1;
+    //setting argv seems to work so given the pointer indirection it's likely that's right
+    
+    database->get_atom(argv, row_index, column_index);
+    
+    return MAX_ERR_NONE;
+}
+
 // Cell Text and Style
 
 void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref rr, char *text, long maxlen)
@@ -397,7 +421,14 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     long column_index = get_index_from_colname(colname);
     
     if (argc)
+    {
         x->database->replace_item(&x->edit_identifier, column_index, argv);
+        jdataview_redrawcell(x->d_dataview, colname, rr);
+    }
+}
+
+void database_view_cellended(t_database_view *x, t_symbol *colname, t_rowref rr)
+{
     jdataview_redrawcell(x->d_dataview, colname, rr);
     atom_setobj(&x->edit_identifier, nullptr);
     x->in_edit = false;
