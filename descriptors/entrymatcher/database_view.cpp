@@ -23,6 +23,7 @@ struct t_database_view
     
     t_object *dataview;
     t_object *database_object;
+    t_object *patcherview;
     
     entries *database;
         
@@ -92,6 +93,18 @@ long map_rowref_to_index(t_database_view *x, t_rowref rr)
         return x->row_map[index];
     else
         return x->row_map[x->row_map.size() - index - 1];
+}
+
+t_rowref map_index_to_rowref(t_database_view *x, long index)
+{
+    if (index >= x->row_map.size())
+        return reinterpret_cast<t_rowref>(static_cast<t_ptr_int>(index + 1));
+    
+    auto it = std::find(x->row_map.begin(), x->row_map.end(), index);
+    if (x->sort_direction)
+        return reinterpret_cast<t_rowref>(static_cast<t_ptr_int>(it - x->row_map.begin() + 1));
+    else
+        return reinterpret_cast<t_rowref>(static_cast<t_ptr_int>(x->row_map.end() - it));
 }
 
 struct rowref_sequence : std::vector<t_rowref>
@@ -211,12 +224,14 @@ void database_view_free(t_database_view *x)
 
 void database_view_newpatcherview(t_database_view *x, t_object *patcherview)
 {
+    x->patcherview = patcherview;
     object_attach_byptr(x, patcherview);
     jdataview_patchervis(x->dataview, patcherview, (t_object *) x);
 }
 
 void database_view_freepatcherview(t_database_view *x, t_object *patcherview)
 {
+    x->patcherview = nullptr;
     object_detach_byptr(x, patcherview);
     jdataview_patcherinvis(x->dataview, patcherview);
 }
@@ -466,6 +481,13 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
         long m_column;
     };
     
+    // Find any selection
+    
+    long selection_index = -1;
+    
+    if (jdataview_selectedrowcount(x->dataview))
+        selection_index = map_rowref_to_index(x, *jdataview_getselectedrowsforview(x->dataview, x->patcherview));
+    
     // Get the column and store the sorting direction
     
     long column_index = get_index_from_colname(colname);
@@ -496,4 +518,9 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
         else
             sort(x->row_map, database->num_items(), data_getter(column_index, *x->database));
     }
+    
+    // Move selection
+    
+    if (selection_index >= 0)
+        jdataview_selectcell(x->dataview, get_colname_from_index(0), map_index_to_rowref(x, selection_index));
 }
