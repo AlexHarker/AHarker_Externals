@@ -44,11 +44,14 @@ struct t_entrymatcher
     
     // Outlets
     
-    void *the_indices_outlet;
-    void *the_identifiers_outlet;
-    void *the_distances_outlet;
-    void *the_data_outlet;
+    void *indices_outlet;
+    void *identifiers_outlet;
+    void *distances_outlet;
+    void *data_outlet;
 };
+
+using atom_vector = std::vector<t_atom>;
+constexpr long max_matches = 1024;
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
@@ -56,7 +59,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
 void entrymatcher_dump(t_entrymatcher *x);
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
-void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& database_ptr, long idx, long argc, t_atom *argv);
+bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long argc, t_atom *argv, bool report);
 
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -64,10 +67,9 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 void entrymatcher_match_all(t_entrymatcher *x);
 void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
+long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n_limit, t_atom output[3][max_matches]);
 
-/*****************************************/
-// Basic Object Routines: main, new, free and assist
-/*****************************************/
+// Main
 
 int C74_EXPORT main()
 {
@@ -98,6 +100,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New / Free / Assist
+
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 {
     t_symbol *name = nullptr;
@@ -115,17 +119,17 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     
     t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
     
-    x->the_data_outlet = listout(x);
-    x->the_distances_outlet = listout(x);
-    x->the_identifiers_outlet = outlet_new(x, nullptr);
-    x->the_indices_outlet = listout(x);
+    x->data_outlet = listout(x);
+    x->distances_outlet = listout(x);
+    x->identifiers_outlet = outlet_new(x, nullptr);
+    x->indices_outlet = listout(x);
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     x->matchers = new matchers;
     
     entrymatcher_common<t_entrymatcher>::object_init(x);
 
-    return (x);
+    return x;
 }
 
 void entrymatcher_free(t_entrymatcher *x)
@@ -137,7 +141,7 @@ void entrymatcher_free(t_entrymatcher *x)
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_INLET)
-        sprintf(s,"Entries / Names / Matching Instructions / Lookup Instructions");
+        sprintf(s,"Entries / Names / Instructions");
     else
     {
          switch (a)
@@ -158,58 +162,62 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
     }
 }
 
-/*****************************************/
-// Lookup Routines
-/*****************************************/
+// Lookup Methods
 
 void entrymatcher_dump(t_entrymatcher *x)
 {
+    atom_vector output;
+
     for (long i = 0; ; i++)
     {
-        auto database_ptr = database_getptr_read(x->database_object);
-        
-        if (i >= database_ptr->num_items())
+        if (!entrymatcher_query(x, output, i, 0, nullptr, false))
             break;
-        
-        entrymatcher_lookup_output(x, database_ptr, i, 0, nullptr);
+            
+        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
     }
 }
 
 void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
+    atom_vector output;
+
     if (!argc)
         return;
 
-    auto database_ptr = database_getptr_read(x->database_object);
+    auto database = database_get_read_access(x->database_object);
 
     // Use identifier or index depending on the message received
     
-    long idx = (msg == ps_lookup) ? database_ptr->get_entry_index(argv) : atom_getlong(argv) - 1;
-    entrymatcher_lookup_output(x, database_ptr, idx, --argc, ++argv);
+    long idx = (msg == ps_lookup) ? database.get_entry_index(argv) : atom_getlong(argv) - 1;
+    
+    if (entrymatcher_query(x, output, idx, --argc, ++argv, true))
+        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
+
 }
 
-void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& database_ptr, long idx, long argc, t_atom *argv)
+bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long argc, t_atom *argv, bool report)
 {
-    std::vector<t_atom> output;
+    // N.B. - We cannot output in this function whilst we hold the lock
     
-    long num_items = database_ptr->num_items();
-    long num_columns = database_ptr->num_columns();
-    
-    auto access = database_ptr->get_accessor();
-    
+    auto database = database_get_read_access(x->database_object);
+
+    long num_items = database.num_items();
+    long num_columns = database.num_columns();
+        
     if (idx < 0 || idx >= num_items)
     {
-        object_error((t_object *) x, "entry does not exist");
-        return;
+        if (report)
+            object_error((t_object *) x, "entry does not exist");
+        return false;
     }
     else if (!argc)
     {
+        // If no columns are specified construct a list of all columns for that entry
+
         output.resize(num_columns);
-        
-        // If no columns are specified construct a list of all colums for that entry
-        
+                
         for (long i = 0; i < num_columns; i++)
-            access.get_atom(&output[i], idx, i);
+            database.get_atom(&output[i], idx, i);
     }
     else
     {
@@ -221,52 +229,44 @@ void entrymatcher_lookup_output(t_entrymatcher *x, entries::read_pointer& databa
         {
             // Get column - if not valid output from the first column
             
-            long column = database_ptr->column_from_specifier(argv++);
-            column = (column < -1 || column >= num_columns) ? 0 : column;
+            long column = database.get_column_index(argv++);
+            column = (column < -1) ? 0 : column;
             
             if (column == -1)
-                database_ptr->get_entry_identifier(&output[i], idx);
+                database.get_entry_identifier(idx, &output[i]);
             else
-                access.get_atom(&output[i], idx, column);
+                database.get_atom(&output[i], idx, column);
         }
     }
     
-    // Destroy pointer / lock before output
-    
-    database_ptr.destroy();
-    
-    outlet_list(x->the_data_outlet, nullptr, output.size(), &output[0]);
+    return true;
 }
 
-/*****************************************/
-// Stats Routine
-/*****************************************/
+// Stats Method
 
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    std::vector<t_atom> output(argc);
-    database_getptr_read(x->database_object)->stats(x, output, argc, argv);
+    atom_vector output(argc);
+    database_get_read_access(x->database_object).stats(x, output, argc, argv);
 
     if (output.size())
-        outlet_list(x->the_data_outlet, nullptr, output.size(), &output[0]);
-    else
-        object_error((t_object *) x, "no stats specified");
+        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
 }
 
-/*****************************************/
-// Matchers and Matching Routines
-/*****************************************/
+// Matchers and Matching Methods
 
 // Set the matching criteria
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->matchers->set_matchers(x, argc, argv, database_getptr_read(x->database_object));
+    x->matchers->set_matchers(x, argc, argv, database_get_read_access(x->database_object));
 }
+
+// Handle Matching (no limits)
 
 void entrymatcher_match_all(t_entrymatcher *x)
 {
-    entrymatcher_match(x, 1.0, HUGE_VAL, 1024);
+    entrymatcher_match(x, 1.0, HUGE_VAL, max_matches);
 }
 
 // Handle more complex matching requests from the user
@@ -281,13 +281,13 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
 
     if (argc > 0 && atom_gettype(argv) == A_LONG)
     {
-        n_limit = (argc-- > 0) ? atom_getlong(argv++) : 1024;
+        n_limit = (argc-- > 0) ? atom_getlong(argv++) : max_matches;
         ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
     }
     else
     {
         ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
-        n_limit = (argc-- > 0) ? atom_getlong(argv++) : 1024;
+        n_limit = (argc-- > 0) ? atom_getlong(argv++) : max_matches;
     }
 
     // Limit by a maximum distance value
@@ -297,27 +297,47 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
     // Clip values
     
     ratio_kept = std::min(std::max(ratio_kept, 0.0), 1.0);
-    n_limit = std::min(std::max(n_limit, 0L), 1024L);
+    n_limit = std::min(std::max(n_limit, 0L), max_matches);
     
     // Match
     
     entrymatcher_match(x, ratio_kept, distance_limit, n_limit);
 }
 
-// Handle matching of all types
+// Handle Matching Output
 
 void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
-    t_atom output_identifiers[1024];
-    t_atom output_indices[1024];
-    t_atom output_distances[1024];
+    t_atom output[3][max_matches];
     
-    auto database_ptr = database_getptr_read(x->database_object);
+    long num_matches = entrymatcher_do_match(x, ratio_kept, distance_limit, n_limit, output);
+   
+    // Output if something has been matched, handling the first identifier correctly
+    
+    if (num_matches)
+    {
+        outlet_list(x->distances_outlet, nullptr, num_matches, output[0]);
+        if (atom_gettype(output[1]) == A_SYM)
+            outlet_anything(x->identifiers_outlet, atom_getsym(output[1]), num_matches - 1, output[1] + 1);
+        else
+            outlet_list(x->identifiers_outlet, nullptr, num_matches, output[1]);
+        outlet_list(x->indices_outlet, nullptr, num_matches, output[2]);
+    }
+}
+
+// Do Underlying Matching / Thinning
+
+long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n_limit, t_atom output[3][max_matches])
+{
+    // N.B. We can't output whilst holding the lock
+    
     matchers *matchers = x->matchers;
+
+    auto database = database_get_read_access(x->database_object);
         
     // Calculate potential matches and sort if there are matches
         
-    long num_matches = std::min(matchers->match(database_ptr, ratio_kept, n_limit, true), 1024L);
+    long num_matches = std::min(matchers->match(database, ratio, n_limit, true), max_matches);
 
     // Limit matches by maximum distance if specified
     
@@ -326,30 +346,16 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
         long index = matchers->get_index(i);
         double distance = matchers->get_distance(i);
         
-        if (distance > distance_limit)
+        if (distance > limit)
         {
             num_matches = i;
             break;
         }
         
-        atom_setfloat(output_distances + i, distance);
-        database_ptr->get_entry_identifier(output_identifiers + i, index);
-        atom_setlong(output_indices + i, index + 1);
+        atom_setfloat(output[0] + i, distance);
+        database.get_entry_identifier(index, output[1] + i);
+        atom_setlong(output[2] + i, index + 1);
     }
-
-    // Destroy pointer / lock before output
-
-    database_ptr.destroy();
-
-    // Output if something has been matched, handling identifiers correctly whether the first identifier is numeric, or symbol
     
-    if (num_matches)
-    {
-        outlet_list(x->the_distances_outlet, nullptr, num_matches, output_distances);
-        if (atom_gettype(output_identifiers) == A_SYM)
-            outlet_anything(x->the_identifiers_outlet, atom_getsym(output_identifiers), num_matches - 1, output_identifiers + 1);
-        else
-            outlet_list(x->the_identifiers_outlet, nullptr, num_matches, output_identifiers);
-        outlet_list(x->the_indices_outlet, nullptr, num_matches, output_indices);
-    }
+    return num_matches;
 }

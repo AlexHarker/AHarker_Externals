@@ -6,9 +6,13 @@
 #include <ext_obex.h>
 #include <ext_dictobj.h>
 
+#include "matchers.hpp"
+
 template <class T>
 struct entrymatcher_common
 {
+    using loop_order = matchers::loop_order;
+    
     // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
 
     static void entrymatcher_refer(T *x, t_symbol *name)
@@ -18,32 +22,32 @@ struct entrymatcher_common
 
     static void entrymatcher_clear(T *x)
     {
-        database_getptr_write(x->database_object)->clear();
+        database_get_write_access(x->database_object).clear();
     }
 
     static void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->set_column_label_modes(x, argc, argv);
+        database_get_write_access(x->database_object).set_column_label_modes(x, argc, argv);
     }
 
     static void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->set_column_names(x, argc, argv);
+        database_get_write_access(x->database_object).set_column_names(x, argc, argv);
     }
 
     static void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->add_entry(x, argc, argv);
+        database_get_write_access(x->database_object).add_entry(x, argc, argv);
     }
 
     static void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->remove_entries(x, argc, argv);
+        database_get_write_access(x->database_object).remove_entries(x, argc, argv);
     }
 
     static void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->remove_matched_entries(x, argc, argv);
+        database_get_write_access(x->database_object).remove_matched_entries(x, argc, argv);
     }
 
     // View, User Save and User Load Routines
@@ -53,14 +57,14 @@ struct entrymatcher_common
         database_view(x, x->database_object);
     }
 
-    static void entrymatcher_save(T *x, t_symbol *file)
+    static void entrymatcher_save_file(T *x, t_symbol *file)
     {
-        database_getptr_read(x->database_object)->save((t_object *) x, file);
+        database_get_read_access(x->database_object).save_file((t_object *) x, file);
     }
 
-    static void entrymatcher_load(T *x, t_symbol *file)
+    static void entrymatcher_load_file(T *x, t_symbol *file)
     {
-        database_getptr_write(x->database_object)->load((t_object *) x, file);
+        database_get_write_access(x->database_object).load_file((t_object *) x, file);
     }
 
     // Load and Save (pattr/embedding/parameters etc.)
@@ -69,12 +73,12 @@ struct entrymatcher_common
 
     static t_dictionary *entrymatcher_save_dict(T *x)
     {
-        return database_getptr_read(x->database_object)->save_dictionary(true);
+        return database_get_read_access(x->database_object).save_dictionary(true);
     }
 
     static void entrymatcher_load_dict(T *x, t_dictionary *dict)
     {
-        database_getptr_write(x->database_object)->load_dictionary((t_object*) x, dict);
+        database_get_write_access(x->database_object).load_dictionary((t_object*) x, dict);
     }
 
     static void entrymatcher_dictionary(T *x, t_symbol *dictname)
@@ -106,7 +110,7 @@ struct entrymatcher_common
         }
     }
 
-    // Parameter and pattr Support
+    // Attribute and pattr Support
 
     static t_max_err entrymatcher_getvalueof(T *x, long *argc, t_atom **argv)
     {
@@ -144,7 +148,7 @@ struct entrymatcher_common
 
     static void entrymatcher_audiostyle(T *x, t_atom_long style)
     {
-        x->matchers->set_audio_style(style ? true : false);
+        x->matchers->set_loop_order(style ? loop_order::by_matcher : loop_order::by_item);
     }
 
     // Add Common Routines
@@ -172,8 +176,8 @@ struct entrymatcher_common
 
         class_addmethod(class_pointer, (method) entrymatcher_view, "dblclick", A_CANT, 0);
         class_addmethod(class_pointer, (method) entrymatcher_view, "open", 0);
-        class_addmethod(class_pointer, (method) entrymatcher_save, "write", A_DEFSYM, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_load, "read", A_DEFSYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_save_file, "write", A_DEFSYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_load_file, "read", A_DEFSYM, 0);
 
         class_addmethod(class_pointer, (method) entrymatcher_audiostyle, "audiostyle", A_DEFLONG, 0);
         

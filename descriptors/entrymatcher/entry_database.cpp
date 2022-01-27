@@ -2,13 +2,13 @@
 #include <algorithm>
 #include <string>
 
-#include "entry_database.hpp"
-#include "database_view.hpp"
-
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
-// Entry Database Object Struture
+#include "entry_database.hpp"
+#include "database_view.hpp"
+
+// Entry Database Object Structure
 
 struct t_entry_database
 {
@@ -21,7 +21,7 @@ struct t_entry_database
     t_object *view;
     
     long count;
-    bool notify;
+    bool notify_in_progress;
 };
 
 // Entry Database Definitions
@@ -78,9 +78,9 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Reserve entries, set count to one and set to notify
     
-    x->database.reserve(num_reserved_entries);
+    x->database.get_write_access().reserve(num_reserved_entries);
     x->count = 1;
-    x->notify = true;
+    x->notify_in_progress = false;
     
     // Don't create the view yet
     
@@ -107,12 +107,12 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     static t_symbol *database_modified = gensym(private_strings::database_modified());
     static t_symbol *build_view = gensym(private_strings::build_view());
 
-    if (!x->notify)
+    if (x->notify_in_progress)
     {
         if (x->view)
             object_method(x->view, build_view);
         object_notify(x, database_modified, nullptr);
-        x->notify = true;
+        x->notify_in_progress = false;
     }
 }
 
@@ -153,7 +153,7 @@ void entry_database_release(t_entry_database *x, void *client)
 
 // Find a Database and Attach (if it already exists)
 
-t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *name, void *client)
+t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbol *name, void *client)
 {
     bool found_new = false;
     
@@ -170,11 +170,13 @@ t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *na
     {
         spin_lock_hold(&x->lock);
 
+        // Check that the object is still valid
+        
         if ((found_new = x->count > 0))
             x->count++;
     }
     
-    // Otherwise return the old object
+    // If there is no object found, it's just been deleted or it's the same as prev return the old object
     
     if (!found_new)
         return prev;
@@ -190,7 +192,7 @@ t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *na
 
 // Create a Database Object (or attach if it already exists)
 
-t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
+t_entry_database *entry_database_find_or_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
 {
     // Note that the number of entries is not fixed (this is just the number that are reserved)
     
@@ -201,7 +203,7 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
     
     // See if an object is registered (otherwise make object and register it)
     
-    t_entry_database *x = entry_database_findattach(nullptr, name, client);
+    t_entry_database *x = entry_database_find_and_attach(nullptr, name, client);
     
     if (!x)
     {
@@ -267,13 +269,13 @@ void entry_database_view_removed(t_entry_database *x)
     x->view = nullptr;
 }
 
-// Notify Pointer (notifies clients after write operation)
+// Notifing Access Class (notifies clients after write operation when it destructs)
 
-notify_pointer::~notify_pointer()
+notifying_write_access::~notifying_write_access()
 {    
-    if (m_database->notify)
+    if (!m_database->notify_in_progress)
     {
-        m_database->notify = false;
+        m_database->notify_in_progress = true;
         defer_low(m_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
@@ -284,12 +286,17 @@ notify_pointer::~notify_pointer()
 
 t_entry_database *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return entry_database_create(name, num_reserved_entries, num_columns, x);
+    return entry_database_find_or_create(name, num_reserved_entries, num_columns, x);
 }
 
 t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *prev_database)
 {
-    return entry_database_findattach(prev_database, name,  x);
+    t_entry_database *database = entry_database_find_and_attach(prev_database, name,  x);
+    
+    if (database == prev_database && database->database.get_name() != name)
+        object_error((t_object *) x, "no database %s found!", name->s_name);
+    
+    return database;
 }
 
 void database_release(void *x, t_entry_database *database)
@@ -306,12 +313,12 @@ void database_view(void *x, t_entry_database *database)
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_pointer database_getptr_read(t_entry_database *database)
+entries::read_access database_get_read_access(t_entry_database *database)
 {
-    return entries::read_pointer(&database->database);
+    return database->database.get_read_access();
 }
 
-notify_pointer database_getptr_write(t_entry_database *database)
+notifying_write_access database_get_write_access(t_entry_database *database)
 {
-    return notify_pointer(&database->database, database);
+    return notifying_write_access(database->database, database);
 }

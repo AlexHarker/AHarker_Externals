@@ -70,16 +70,14 @@ bool matchers::needs_scale(t_atom *argv)
     return false;
 }
 
-long matchers::match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const
+long matchers::match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const
 {
-    long num_items = database->num_items();
+    long num_items = database.num_items();
     m_num_matches = 0;
     
     m_results.resize(num_items);
-    
-    const auto access = database->get_accessor();
-    
-    if (!size() || m_audio_style)
+        
+    if (!size() || m_order == loop_order::by_matcher)
     {
         for (long i = 0; i < num_items; i++)
             m_results[i] = result(i, 0.0);
@@ -90,10 +88,10 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     if (!size())
         return num_items;
     
-    if (m_audio_style)
+    if (m_order == loop_order::by_matcher)
     {
         for (auto it = m_matchers.cbegin(); it != m_matchers.cend() && m_num_matches; it++)
-            m_num_matches = it->match(m_results, m_num_matches, access);
+            m_num_matches = it->match(m_results, m_num_matches, database);
     }
     else
     {
@@ -105,7 +103,7 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
             double sum = 0.0;
             
             for (auto it = m_matchers.cbegin(); it != m_matchers.cend() && matched; it++)
-                matched = it->match(i, access, sum);
+                matched = it->match(i, database, sum);
             
             // Store the entry if it is a valid match
             
@@ -123,7 +121,7 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     
     if (size() && (must_sort || num_matches < m_num_matches))
     {
-        if (num_matches < (database->num_items() / 8))
+        if (num_matches < (database.num_items() / 8))
         {
             num_matches = std::min(num_matches, m_num_matches);
             
@@ -140,7 +138,7 @@ long matchers::match(const entries::read_pointer& database, double ratio_matched
     return m_num_matches = num_matches;
 }
 
-void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database)
+void matchers::set_matchers(void *x, long argc, t_atom *argv, const accessor& database)
 {
     // Empty the matchers
     
@@ -158,7 +156,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
         
         // Get the column and test type
         
-        long column = database->column_from_specifier(argv++);
+        long column = database.get_column_index(argv++);
         bool get_scale = needs_scale(argv);
         test type = test_type(argv++);
         argc -= 2;
@@ -170,12 +168,12 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
             object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
             break;
         }
-        else if (column < 0 || column >= database->num_columns())
+        else if (column < 0)
         {
             object_error((t_object *) x, "specified column in matchers message does not exist");
             continue;
         }
-        else if (database->get_column_label_mode(column) && type != test::match)
+        else if (database.get_column_label_mode(column) && type != test::match)
         {
             object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
             continue;
@@ -185,7 +183,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const entries::rea
         
         // Parse values
         
-        if (database->get_column_label_mode(column))
+        if (database.get_column_label_mode(column))
         {
             // If this column is for labels store details of a valid match test (other tests are not valid)
             

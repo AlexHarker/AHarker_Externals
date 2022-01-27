@@ -9,10 +9,6 @@
 
 // N.B. - Only Client Routines and Structures are ezposed (other items are private)
 
-// This structure is opaque from other files
-
-struct t_entry_database;
-
 // Private Strings (for inter max-object communication)
 
 struct private_strings
@@ -24,17 +20,21 @@ struct private_strings
     static const char *set_database() { return "__set_database"; }
 };
 
-// Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
+// This structure is opaque from other files
 
-struct notify_pointer : public entries::write_pointer
+struct t_entry_database;
+
+// Access that Notifies Max Database Object of Write Operations (notifying all clients)
+
+struct notifying_write_access : public entries::write_access
 {
-    notify_pointer(entries *ptr, t_entry_database *database)
-    : entries::write_pointer(ptr), m_database(database) {}
+    notifying_write_access(entries& data, t_entry_database *database)
+    : entries::write_access(data), m_database(database) {}
     
-    notify_pointer(const notify_pointer&) = delete;
-    notify_pointer& operator=(const notify_pointer&) = delete;
-    notify_pointer(notify_pointer&&) = default;
-    ~notify_pointer();
+    notifying_write_access(const notifying_write_access&) = delete;
+    notifying_write_access& operator=(const notifying_write_access&) = delete;
+    notifying_write_access(notifying_write_access&&) = default;
+    ~notifying_write_access();
     
 protected:
 
@@ -50,7 +50,7 @@ void database_view(void *x, t_entry_database *database);
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_pointer database_getptr_read(t_entry_database *database);
-notify_pointer database_getptr_write(t_entry_database *database);
+entries::read_access database_get_read_access(t_entry_database *database);
+notifying_write_access database_get_write_access(t_entry_database *database);
 
 #endif

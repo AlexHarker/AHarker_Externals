@@ -2,21 +2,30 @@
 #ifndef MATCHERS_HPP
 #define MATCHERS_HPP
 
+#include <limits>
+
 #include "atom_types.hpp"
 #include "entry_database.hpp"
 
-#include <limits>
-
 class matchers
 {
+    using accessor = entries::read_access;
+
 public:
     
     enum class test { none, match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
-        
+    enum class loop_order { by_item, by_matcher };
+
     // Constructor and Capacity
     
-    matchers() : m_num_matches(0), m_audio_style(false) {}
-        
+    matchers() : m_num_matches(0), m_order(loop_order::by_item) {}
+    
+    matchers(void *x, long argc, t_atom *argv, const accessor& database)
+    : m_num_matches(0), m_order(loop_order::by_item)
+    {
+        set_matchers(x, argc, argv, database);
+    }
+
     long size() const   { return static_cast<long>(m_matchers.size()); }
     void clear()        { m_matchers.clear(); }
 
@@ -32,7 +41,7 @@ public:
         m_matchers.push_back(matcher(type, column, scale));
     }
     
-    void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
+    void set_matchers(void *x, long argc, t_atom *argv, const accessor& database);
     
     // Add / Set Targets
     
@@ -56,9 +65,9 @@ public:
     
     // Matching
     
-    void set_audio_style(bool style) { m_audio_style = style; }
+    void set_loop_order(loop_order order) { m_order = order; }
 
-    long match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const;
+    long match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const;
     
     // Results
     
@@ -86,7 +95,6 @@ private:
 
     // Useful Types
     
-    using accessor = entries::accessor;
     using target_set = std::vector<t_custom_atom>;
     using results_set = std::vector<result>;
 
@@ -108,7 +116,7 @@ private:
             switch (m_type)
             {
                 case test::match:
-                    if (access->get_column_label_mode(m_column))
+                    if (access.get_column_label_mode(m_column))
                         return compare<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(idx, m_column));
                     else
                         return compare<std::equal_to, double>(access.get_data(idx, m_column));
@@ -131,7 +139,7 @@ private:
             switch (m_type)
             {
                 case test::match:
-                    if (access->get_column_label_mode(m_column))
+                    if (access.get_column_label_mode(m_column))
                         return compare_loop<std::equal_to, t_symbol *>(results, size, access);
                     else
                         return compare_loop<std::equal_to, double>(results, size, access);
@@ -284,7 +292,7 @@ private:
     
     std::vector<matcher> m_matchers;
     
-    bool m_audio_style;
+    loop_order m_order;
 };
 
 #endif
