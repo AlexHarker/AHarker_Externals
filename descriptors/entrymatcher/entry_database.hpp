@@ -9,10 +9,6 @@
 
 // N.B. - Only Client Routines and Structures are ezposed (other items are private)
 
-// This structure is opaque from other files
-
-struct t_entry_database;
-
 // Private Strings (for inter max-object communication)
 
 struct private_strings
@@ -23,6 +19,10 @@ struct private_strings
     static const char *build_view() { return "__build_view"; }
     static const char *set_database() { return "__set_database"; }
 };
+
+// This structure is opaque from other files
+
+struct t_entry_database;
 
 // Access that Notifies Max Database Object of Write Operations (notifying all clients)
 
