@@ -57,14 +57,14 @@ struct entrymatcher_common
         database_view(x, x->database_object);
     }
 
-    static void entrymatcher_save(T *x, t_symbol *file)
+    static void entrymatcher_save_file(T *x, t_symbol *file)
     {
-        database_get_read_access(x->database_object).save((t_object *) x, file);
+        database_get_read_access(x->database_object).save_file((t_object *) x, file);
     }
 
-    static void entrymatcher_load(T *x, t_symbol *file)
+    static void entrymatcher_load_file(T *x, t_symbol *file)
     {
-        database_get_write_access(x->database_object).load((t_object *) x, file);
+        database_get_write_access(x->database_object).load_file((t_object *) x, file);
     }
 
     // Load and Save (pattr/embedding/parameters etc.)
@@ -176,8 +176,8 @@ struct entrymatcher_common
 
         class_addmethod(class_pointer, (method) entrymatcher_view, "dblclick", A_CANT, 0);
         class_addmethod(class_pointer, (method) entrymatcher_view, "open", 0);
-        class_addmethod(class_pointer, (method) entrymatcher_save, "write", A_DEFSYM, 0);
-        class_addmethod(class_pointer, (method) entrymatcher_load, "read", A_DEFSYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_save_file, "write", A_DEFSYM, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_load_file, "read", A_DEFSYM, 0);
 
         class_addmethod(class_pointer, (method) entrymatcher_audiostyle, "audiostyle", A_DEFLONG, 0);
         

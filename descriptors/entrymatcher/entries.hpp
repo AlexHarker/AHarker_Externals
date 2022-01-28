@@ -58,15 +58,8 @@ public:
             m_data.stats(x, output, argc, argv);
         }
 
-        t_dictionary *save_dictionary(bool entries_as_one_key) const
-        {
-            return m_data.save_dictionary(entries_as_one_key);
-        }
-        
-        void save(t_object *x, t_symbol *file) const
-        {
-            return m_data.save(x, file);
-        }
+        t_dictionary *save_dictionary(bool data_one_key) const      { return m_data.save_dictionary(data_one_key); }
+        void save_file(t_object *x, t_symbol *file) const           { return m_data.save_file(x, file); }
 
         // Get Data
         
@@ -156,7 +149,7 @@ public:
 
         // Loading
         
-        void load(t_object *x, t_symbol *file)                  { call_with_lock(&entries::load, x, file); }
+        void load_file(t_object *x, t_symbol *file)             { call_with_lock(&entries::load_file, x, file); }
         void load_dictionary(t_object *x, t_dictionary *dict)   { call_with_lock(&entries::load_dictionary, x, dict); }
         
     private:
@@ -246,7 +239,7 @@ private:
 
     // Loading
     
-    void load(t_object *x, t_symbol *file);
+    void load_file(t_object *x, t_symbol *file);
     void load_dictionary(t_object *x, t_dictionary *dict);
     
     // Data Setter
@@ -310,7 +303,7 @@ private:
     
     // Saving
     
-    void save(t_object *x, t_symbol *file) const;
+    void save_file(t_object *x, t_symbol *file) const;
     t_dictionary *save_dictionary(bool entries_as_one_key) const;
 
     // Data Getters

@@ -548,14 +548,11 @@ double entries::find_percentile(std::vector<double>& sorted_values, double perce
     return sorted_values[idx];
 }
 
-
-/*****************************************/
 // Saving and Loading
-/*****************************************/
 
 // File Save
 
-void entries::save(t_object *x, t_symbol *file) const
+void entries::save_file(t_object *x, t_symbol *file) const
 {
     char filepath[MAX_PATH_CHARS];
     char filename[MAX_FILENAME_CHARS];
@@ -584,10 +581,12 @@ void entries::save(t_object *x, t_symbol *file) const
 
 // File Load
 
-void entries::load(t_object *x, t_symbol *file)
+void entries::load_file(t_object *x, t_symbol *file)
 {
     char filename[MAX_PATH_CHARS];
     short path;
+
+    t_dictionary *dict = nullptr;
 
     t_fourcc type;
     t_fourcc types = 'JSON';
@@ -605,7 +604,6 @@ void entries::load(t_object *x, t_symbol *file)
             return;
     }
     
-    t_dictionary *dict;
     dictionary_read(filename, path, &dict);
     load_dictionary(x, dict);
     object_free(dict);
@@ -613,7 +611,7 @@ void entries::load(t_object *x, t_symbol *file)
 
 // Dictionary Save
 
-t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
+t_dictionary *entries::save_dictionary(bool data_one_key) const
 {
     std::vector<t_atom> args(num_columns() + 1);
     t_dictionary *dict = dictionary_new();
@@ -637,7 +635,7 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
     
     // Data
     
-    if (entries_as_one_key)
+    if (data_one_key)
     {
         std::vector<t_atom> entries(num_items());
 
@@ -675,13 +673,17 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
     return dict;
 }
 
-// Dictionary Load (with lock)
+// Dictionary Load
 
 void entries::load_dictionary(t_object *x, t_dictionary *dict)
 {
     t_max_err err = MAX_ERR_NONE;
+    
     t_dictionary *dict_meta = nullptr;
     t_dictionary *dict_data = nullptr;
+    
+    t_atom *argv;
+    long argc;
     
     if (!dict)
         return;
@@ -693,17 +695,14 @@ void entries::load_dictionary(t_object *x, t_dictionary *dict)
     {
         clear();
         
-        t_atom_long newnum_columns;
-        dictionary_getlong(dict_meta, gensym("num_columns"), &newnum_columns);
+        t_atom_long new_num_columns;
+        dictionary_getlong(dict_meta, gensym("num_columns"), &new_num_columns);
         
-        if (newnum_columns != num_columns())
+        if (new_num_columns != num_columns())
         {
             m_columns.clear();
-            m_columns.resize(newnum_columns);
+            m_columns.resize(new_num_columns);
         }
-        
-        t_atom *argv;
-        long argc;
         
         dictionary_getatoms(dict_meta, gensym("names"), &argc, &argv);
         set_column_names(x, argc, argv);
