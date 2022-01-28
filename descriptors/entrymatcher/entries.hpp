@@ -159,12 +159,12 @@ public:
     
 private:
     
-    struct read_write_pointer : public read_access
+    struct read_write_access : public read_access
     {
-        read_write_pointer(const entries& data)
+        read_write_access(const entries& data)
         : read_access(data), m_promoted(false) {}
         
-        ~read_write_pointer()
+        ~read_write_access()
         {
             if (m_promoted)
             {
@@ -178,10 +178,7 @@ private:
             m_ptr->m_lock.promote();
             m_promoted = true;
         }
-        
-        read_write_pointer(const read_write_pointer&) = delete;
-        read_write_pointer& operator=(const read_write_pointer&) = delete;
-        
+
     private:
         
         bool m_promoted;
@@ -235,7 +232,7 @@ private:
     void set_column_names(void *x, long argc, t_atom *argv);
     void add_entry(void *x, long argc, t_atom *argv);
     void remove_entry(void *x, t_atom *identifier);
-    void remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& indices);
+    void remove_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
     void remove_entries(void *x, long argc, t_atom *argv);
     void remove_matched_entries(void *x, long argc, t_atom *argv);
     void replace_item(t_atom *identifier, long column, t_atom *item);

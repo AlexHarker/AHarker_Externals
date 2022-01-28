@@ -234,7 +234,7 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
     }
     else
     {
-        read_write_pointer database(*this);
+        read_write_access database(*this);
     
         std::vector<long> indices(argc);
         long size = 0;
@@ -263,7 +263,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
     if (!argc)
         return;
     
-    read_write_pointer database(*this);
+    read_write_access database(*this);
     matchers matchers;
     std::vector<long> indices;
     long num_matches = 0;
@@ -299,7 +299,7 @@ long entries::get_order(long idx)
 
 // Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
 
-void entries::remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& sorted_indices)
+void entries::remove_entries(read_write_access& read_locked_database, const std::vector<long>& sorted_indices)
 {
     read_locked_database.promote();
     
