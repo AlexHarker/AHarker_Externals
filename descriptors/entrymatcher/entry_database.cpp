@@ -267,9 +267,9 @@ void entry_database_view_removed(t_entry_database *x)
     x->view = nullptr;
 }
 
-// Notify Pointer (notifies clients after write operation)
+// Notifing Access Class (notifies clients after write operation when it destructs)
 
-notify_pointer::~notify_pointer()
+notifying_modify_access::~notifying_modify_access()
 {    
     if (m_database->notify)
     {
@@ -311,7 +311,7 @@ entries::read_access database_get_read_access(t_entry_database *database)
     return entries::read_access(database->database);
 }
 
-notify_pointer database_get_write_access(t_entry_database *database)
+notifying_modify_access database_get_write_access(t_entry_database *database)
 {
-    return notify_pointer(database->database, database);
+    return notifying_modify_access(database->database, database);
 }
