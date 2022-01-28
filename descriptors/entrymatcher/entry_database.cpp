@@ -8,7 +8,7 @@
 #include "entry_database.hpp"
 #include "database_view.hpp"
 
-// Entry Database Object Struture
+// Entry Database Object Structure
 
 struct t_entry_database
 {
@@ -21,7 +21,7 @@ struct t_entry_database
     t_object *view;
     
     long count;
-    bool notify;
+    bool notify_in_progress;
 };
 
 // Entry Database Definitions
@@ -80,7 +80,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     x->database.get_write_access().reserve(num_reserved_entries);
     x->count = 1;
-    x->notify = true;
+    x->notify_in_progress = false;
     
     // Don't create the view yet
     
@@ -107,12 +107,12 @@ void entry_database_modified(t_entry_database *x, t_symbol *msg, long argc, t_at
     static t_symbol *database_modified = gensym(private_strings::database_modified());
     static t_symbol *build_view = gensym(private_strings::build_view());
 
-    if (!x->notify)
+    if (x->notify_in_progress)
     {
         if (x->view)
             object_method(x->view, build_view);
         object_notify(x, database_modified, nullptr);
-        x->notify = true;
+        x->notify_in_progress = false;
     }
 }
 
@@ -271,9 +271,9 @@ void entry_database_view_removed(t_entry_database *x)
 
 notifying_write_access::~notifying_write_access()
 {    
-    if (m_database->notify)
+    if (!m_database->notify_in_progress)
     {
-        m_database->notify = false;
+        m_database->notify_in_progress = true;
         defer_low(m_database, (method) entry_database_modified, nullptr, 0, nullptr);
     }
 }
