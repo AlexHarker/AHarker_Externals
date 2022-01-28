@@ -294,7 +294,7 @@ t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *pre
     t_entry_database *database = entry_database_find_and_attach(prev_database, name,  x);
     
     if (database == prev_database && database->database.get_name() != name)
-        object_error((t_object *) x, "No database %s found!", name->s_name);
+        object_error((t_object *) x, "no database %s found!", name->s_name);
     
     return database;
 }
