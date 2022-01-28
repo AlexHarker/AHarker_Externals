@@ -26,15 +26,15 @@ struct t_entry_database;
 
 // Access that Notifies Max Database Object of Write Operations (notifying all clients)
 
-struct notifying_modify_access : public entries::modify_access
+struct notifying_write_access : public entries::write_access
 {
-    notifying_modify_access(entries& data, t_entry_database *database)
-    : entries::modify_access(data), m_database(database) {}
+    notifying_write_access(entries& data, t_entry_database *database)
+    : entries::write_access(data), m_database(database) {}
     
-    notifying_modify_access(const notifying_modify_access&) = delete;
-    notifying_modify_access& operator=(const notifying_modify_access&) = delete;
-    notifying_modify_access(notifying_modify_access&&) = default;
-    ~notifying_modify_access();
+    notifying_write_access(const notifying_write_access&) = delete;
+    notifying_write_access& operator=(const notifying_write_access&) = delete;
+    notifying_write_access(notifying_write_access&&) = default;
+    ~notifying_write_access();
     
 protected:
 
@@ -51,6 +51,6 @@ void database_view(void *x, t_entry_database *database);
 // Retrieve Pointers for Reading or Writing
 
 entries::read_access database_get_read_access(t_entry_database *database);
-notifying_modify_access database_get_write_access(t_entry_database *database);
+notifying_write_access database_get_write_access(t_entry_database *database);
 
 #endif

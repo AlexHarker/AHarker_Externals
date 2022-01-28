@@ -96,9 +96,9 @@ public:
         const std::vector<t_custom_atom::category>::const_iterator m_types;
     };
     
-    struct modify_access
+    struct write_access
     {
-        modify_access(entries& data) : m_entries(data) {}
+        write_access(entries& data) : m_entries(data) {}
                 
         // Writing operations
         
@@ -155,8 +155,7 @@ public:
     
     t_symbol *get_name() const { return m_name; }
 
-    modify_access get_modify_access() { return modify_access(*this); }
-    
+    write_access get_write_access() { return write_access(*this); }
 private:
     
     struct read_write_access : public read_access

@@ -78,7 +78,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Reserve entries, set count to one and set to notify
     
-    x->database.get_modify_access().reserve(num_reserved_entries);
+    x->database.get_write_access().reserve(num_reserved_entries);
     x->count = 1;
     x->notify = true;
     
@@ -269,7 +269,7 @@ void entry_database_view_removed(t_entry_database *x)
 
 // Notifing Access Class (notifies clients after write operation when it destructs)
 
-notifying_modify_access::~notifying_modify_access()
+notifying_write_access::~notifying_write_access()
 {    
     if (m_database->notify)
     {
@@ -311,7 +311,7 @@ entries::read_access database_get_read_access(t_entry_database *database)
     return entries::read_access(database->database);
 }
 
-notifying_modify_access database_get_write_access(t_entry_database *database)
+notifying_write_access database_get_write_access(t_entry_database *database)
 {
-    return notifying_modify_access(database->database, database);
+    return notifying_write_access(database->database, database);
 }

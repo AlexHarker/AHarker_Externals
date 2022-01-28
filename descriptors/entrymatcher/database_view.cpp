@@ -426,7 +426,7 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     
     if (argc)
     {
-        x->database->get_modify_access().replace_item(&x->edit_identifier, column_index, argv);
+        x->database->get_write_access().replace_item(&x->edit_identifier, column_index, argv);
         jdataview_redrawcell(x->dataview, colname, rr);
     }
 }
