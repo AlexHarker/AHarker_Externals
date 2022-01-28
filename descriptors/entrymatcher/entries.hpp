@@ -21,12 +21,53 @@ class entries
     
 public:
     
-    class accessor
+    struct read_access
     {
-        friend entries;
+        read_access(const entries& database)
+        : m_ptr(&database)
+        , m_num_columns(database.num_columns())
+        , m_iterator(database.m_entries.cbegin())
+        , m_types(database.m_types.cbegin())
+        {
+            m_ptr->m_lock.acquire_read();
+        }
         
-    public:
-    
+        read_access(const read_access&) = delete;
+        read_access& operator=(const read_access&) = delete;
+        read_access(read_access&&) = default;
+        ~read_access()                                      { destroy(); }
+        
+        void destroy()
+        {
+            if (m_ptr)
+            {
+                m_ptr->m_lock.release_read();
+                m_ptr = nullptr;
+            }
+        }
+        
+        long num_items() const                                  { return m_ptr->num_items(); }
+        long num_columns() const                                { return m_num_columns; }
+      
+        t_symbol *get_column_name(long idx) const               { return m_ptr->get_column_name(idx); }
+        bool get_column_label_mode(long idx) const              { return m_ptr->get_column_label_mode(idx); }
+        void get_entry_identifier(long idx, t_atom *a) const    { return m_ptr->get_entry_identifier(idx, a); }
+        t_custom_atom get_entry_identifier(long idx) const      { return m_ptr->get_entry_identifier(idx); }
+        long get_entry_index(const t_atom *identifier) const    { return m_ptr->get_entry_index(identifier); }
+       
+        long column_from_specifier(const t_atom *specifier) const { return m_ptr->column_from_specifier(specifier); }
+        
+        void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const
+        {
+            m_ptr->stats(x, output, argc, argv);
+        }
+
+        t_dictionary *save_dictionary(bool entries_as_one_key) const { return m_ptr->save_dictionary(entries_as_one_key); }
+        
+        inline std::string get_string(long idx, long column) const { return m_ptr->get_string(idx, column); }
+        
+        void save(t_object *x, t_symbol *file) const { return m_ptr->save(x, file); }
+
         template <typename T = double>
         inline T get_data(long idx, long column) const
         {
@@ -38,120 +79,86 @@ public:
             t_custom_atom(get_untyped(idx, column), m_types[idx * m_num_columns + column]).get_atom(a);
         }
         
-        const entries *operator->() const { return &m_database; }
-                
     protected:
-    
+        
         inline t_untyped_atom get_untyped(long idx, long column) const
         {
             return m_iterator[idx * m_num_columns + column];
         }
         
-        accessor(const entries& database)
-        : m_database(database)
-        , m_num_columns(database.num_columns())
-        , m_iterator(database.m_entries.cbegin())
-        , m_types(database.m_types.cbegin())
-        {}
-        
-        const entries& m_database;
+        const entries *m_ptr;
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
         const std::vector<t_custom_atom::category>::const_iterator m_types;
     };
     
-    struct read_pointer
+    struct modify_access
     {
-        read_pointer(const entries *ptr) : m_ptr(ptr)  { m_ptr->m_lock.acquire_read(); }
-        read_pointer(const read_pointer&) = delete;
-        read_pointer& operator=(const read_pointer&) = delete;
-        read_pointer(read_pointer&&) = default;
-        ~read_pointer()                                      { destroy(); }
+        modify_access(entries& data) : m_entries(data) {}
+                
+        // Writing operations
         
-        void destroy()
+        void reserve(long items)    { call_with_lock(&entries::reserve, items); }
+        void clear()                { call_with_lock(&entries::clear); }
+        
+        void set_column_label_modes(void *x, long argc, t_atom *argv)
         {
-            if (m_ptr)
-            {
-                m_ptr->m_lock.release_read();
-                m_ptr = nullptr;
-            }
+            call_with_lock(&entries::set_column_label_modes, x, argc, argv);
         }
         
-        const entries *operator->() const { return m_ptr; }
+        void set_column_names(void *x, long argc, t_atom *argv)
+        {
+            call_with_lock(&entries::set_column_names, x, argc, argv);
+        }
         
-    protected:
+        void add_entry(void *x, long argc, t_atom *argv)
+        {
+            call_with_lock(&entries::add_entry, x, argc, argv);
+        }
         
-        const entries *m_ptr;
-    };
-    
-    struct write_pointer
-    {
-        write_pointer(entries *ptr) : m_ptr(ptr) {}
-        write_pointer(const write_pointer&) = delete;
-        write_pointer& operator=(const write_pointer&) = delete;
-        write_pointer(write_pointer&&) = default;
-        entries *operator->() const { return m_ptr; }
+        void remove_entries(void *x, long argc, t_atom *argv)
+        {
+            void (entries::*method)(void *, long, t_atom *) = &entries::remove_entries;
+            call_with_lock(method, x, argc, argv);
+        }
         
-    protected:
+        void remove_matched_entries(void *x, long argc, t_atom *argv)
+        {
+            call_with_lock(&entries::remove_matched_entries, x, argc, argv);
+        }
+        void replace_item(t_atom *identifier, long column, t_atom *item)
+        {
+            call_with_lock(&entries::replace_item, identifier, column, item);
+        }
+
+        void load(t_object *x, t_symbol *file)                  { call_with_lock(&entries::load, x, file); }
+        void load_dictionary(t_object *x, t_dictionary *dict)   { call_with_lock(&entries::load_dictionary, x, dict); }
         
-        entries *m_ptr;
+    private:
+        
+        template <typename Method, typename ...Args>
+        void call_with_lock(Method method, Args...args)
+        {
+            write_lock_hold lock(&m_entries.m_lock);
+            (m_entries.*method)(args...);
+        }
+        
+        entries& m_entries;
     };
 
     entries(t_symbol *name, long num_columns)
     : m_name(name) { m_columns.resize(num_columns); }
     
-    accessor get_accessor() const { return accessor(*this); }
+    t_symbol *get_name() const { return m_name; }
 
-    void reserve(long items);
-    void clear();
-    
-    long num_items() const      { return static_cast<long>(m_identifiers.size()); }
-    long num_columns() const    { return static_cast<long>(m_columns.size()); }
-    
-    void set_column_label_modes(void *x, long argc, t_atom *argv);
-    void set_column_names(void *x, long argc, t_atom *argv);
-    void add_entry(void *x, long argc, t_atom *argv);
-    void replace_item(t_atom *identifier, long column, t_atom *item);
-    void remove_entries(void *x, long argc, t_atom *argv);
-    void remove_matched_entries(void *x, long argc, t_atom *argv);
-    
-    t_symbol *get_name() const                              { return m_name; }
-    t_symbol *get_column_name(long idx) const               { return m_columns[idx].m_name; }
-    bool get_column_label_mode(long idx) const              { return m_columns[idx].m_label; }
-    void get_entry_identifier(t_atom *a, long idx) const    { return get_entry_identifier(idx).get_atom(a); }
-    t_custom_atom get_entry_identifier(long idx) const      { return m_identifiers[idx];}
-    long get_entry_index(const t_atom *identifier) const
-    {
-        long order;
-        return search_identifiers(identifier, order);
-    }
-    
-    long column_from_specifier(const t_atom *specifier) const;
-    
-    void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
-    double column_min(long column) const;
-    double column_max(long column) const;
-    double column_mean(long column) const;
-    double column_standard_deviation(long column) const;
-    double column_percentile(long column, double percentile) const;
-    double column_median(long column) const;
-    
-    void view(t_object *database_object) const;
-    void save(t_object *x, t_symbol *file) const;
-    void load(t_object *x, t_symbol *file);
-
-    t_dictionary *save_dictionary(bool entries_as_one_key) const;
-    void load_dictionary(t_object *x, t_dictionary *dict);
-
-    inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
-    inline std::string get_string(long idx, long column) const      { return get_typed(idx, column).get_string(); }
+    modify_access get_modify_access() { return modify_access(*this); }
     
 private:
-
-    struct read_write_pointer : public read_pointer
+    
+    struct read_write_pointer : public read_access
     {
-        read_write_pointer(const entries *ptr)
-        : read_pointer(ptr), m_promoted(false) {}
+        read_write_pointer(const entries& data)
+        : read_access(data), m_promoted(false) {}
         
         ~read_write_pointer()
         {
@@ -176,22 +183,61 @@ private:
         bool m_promoted;
     };
     
+    // Read methods
+    
+    long num_items() const      { return static_cast<long>(m_identifiers.size()); }
+    long num_columns() const    { return static_cast<long>(m_columns.size()); }
+  
+    t_symbol *get_column_name(long idx) const               { return m_columns[idx].m_name; }
+    bool get_column_label_mode(long idx) const              { return m_columns[idx].m_label; }
+    void get_entry_identifier(long idx, t_atom *a)  const   { return get_entry_identifier(idx).get_atom(a); }
+    t_custom_atom get_entry_identifier(long idx) const      { return m_identifiers[idx];}
+    
+    long get_entry_index(const t_atom *identifier) const
+    {
+        long order;
+        return search_identifiers(identifier, order);
+    }
+    
+    long column_from_specifier(const t_atom *specifier) const;
+    
+    void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
+    
+    double column_min(long column) const;
+    double column_max(long column) const;
+    double column_mean(long column) const;
+    double column_standard_deviation(long column) const;
+    double column_percentile(long column, double percentile) const;
+    double column_median(long column) const;
+    
+    void view(t_object *database_object) const;
+    void save(t_object *x, t_symbol *file) const;
+    t_dictionary *save_dictionary(bool entries_as_one_key) const;
+
+    // Data getters
+    
     inline t_untyped_atom get_untyped(long idx, long column) const  { return m_entries[idx * num_columns() + column]; }
     inline t_custom_atom get_typed(long idx, long column) const     { return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]); }
     inline double get_data(long idx, long column) const             { return get_untyped(idx, column).m_value; }
+    inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
+    inline std::string get_string(long idx, long column) const      { return get_typed(idx, column).get_string(); }
     
-    void clear(write_lock_hold &lock);
-    void set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv);
-    void set_column_names(write_lock_hold &lock, void *x, long argc, t_atom *argv);
-    void add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv);
+    // Write methods
+    
+    void reserve(long items);
+    void clear();
+    
+    void set_column_label_modes(void *x, long argc, t_atom *argv);
+    void set_column_names(void *x, long argc, t_atom *argv);
+    void add_entry(void *x, long argc, t_atom *argv);
     void remove_entry(void *x, t_atom *identifier);
     void remove_entries(read_write_pointer& read_locked_database, const std::vector<long>& indices);
-    
-    template <const double& func(const double&, const double&)>
-    struct binary_functor
-    {
-        const double operator()(const double a, const double b) { return func(a, b); }
-    };
+    void remove_entries(void *x, long argc, t_atom *argv);
+    void remove_matched_entries(void *x, long argc, t_atom *argv);
+    void replace_item(t_atom *identifier, long column, t_atom *item);
+
+    void load(t_object *x, t_symbol *file);
+    void load_dictionary(t_object *x, t_dictionary *dict);
     
     double column_standard_deviation(long column, double mean) const;
     void column_sort_values(long column, std::vector<double>& sorted_values) const;

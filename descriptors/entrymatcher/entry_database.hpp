@@ -26,10 +26,10 @@ struct private_strings
 
 // Pointer that Notifies Max Database Object of Write Operations (notifying all clients)
 
-struct notify_pointer : public entries::write_pointer
+struct notify_pointer : public entries::modify_access
 {
-    notify_pointer(entries *ptr, t_entry_database *database)
-    : entries::write_pointer(ptr), m_database(database) {}
+    notify_pointer(entries& data, t_entry_database *database)
+    : entries::modify_access(data), m_database(database) {}
     
     notify_pointer(const notify_pointer&) = delete;
     notify_pointer& operator=(const notify_pointer&) = delete;
@@ -50,7 +50,7 @@ void database_view(void *x, t_entry_database *database);
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_pointer database_getptr_read(t_entry_database *database);
+entries::read_access database_getptr_read(t_entry_database *database);
 notify_pointer database_getptr_write(t_entry_database *database);
 
 #endif

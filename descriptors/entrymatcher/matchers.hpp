@@ -9,6 +9,8 @@
 
 class matchers
 {
+    using accessor = entries::read_access;
+
 public:
     
     enum class test { none, match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
@@ -32,7 +34,7 @@ public:
         m_matchers.push_back(matcher(type, column, scale));
     }
     
-    void set_matchers(void *x, long argc, t_atom *argv, const entries::read_pointer& database);
+    void set_matchers(void *x, long argc, t_atom *argv, const accessor& database);
     
     // Add / Set Targets
     
@@ -58,7 +60,7 @@ public:
     
     void set_audio_style(bool style) { m_audio_style = style; }
 
-    long match(const entries::read_pointer& database, double ratio_matched, long max_matches, bool must_sort) const;
+    long match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const;
     
     // Results
     
@@ -86,7 +88,6 @@ private:
 
     // Useful Types
     
-    using accessor = entries::accessor;
     using target_set = std::vector<t_custom_atom>;
     using results_set = std::vector<result>;
 
@@ -108,7 +109,7 @@ private:
             switch (m_type)
             {
                 case test::match:
-                    if (access->get_column_label_mode(m_column))
+                    if (access.get_column_label_mode(m_column))
                         return compare<std::equal_to, t_symbol *>(access.get_data<t_symbol *>(idx, m_column));
                     else
                         return compare<std::equal_to, double>(access.get_data(idx, m_column));
@@ -131,7 +132,7 @@ private:
             switch (m_type)
             {
                 case test::match:
-                    if (access->get_column_label_mode(m_column))
+                    if (access.get_column_label_mode(m_column))
                         return compare_loop<std::equal_to, t_symbol *>(results, size, access);
                     else
                         return compare_loop<std::equal_to, double>(results, size, access);

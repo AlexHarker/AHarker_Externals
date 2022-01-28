@@ -254,12 +254,12 @@ void database_view_update(t_database_view *x)
     if (!x->database)
         return;
     
-    entries::read_pointer database(x->database);
+    entries::read_access database(*x->database);
         
     // Update columns
     
     const long num_view_columns = jdataview_getnumcolumns(x->dataview);
-    const long required_columns = database->num_columns() + 2;
+    const long required_columns = database.num_columns() + 2;
     
     if (required_columns != num_view_columns)
     {
@@ -290,7 +290,7 @@ void database_view_update(t_database_view *x)
                     jcolumn_sethideable(column, 1);
                     jcolumn_setrowcomponentmsg(column, gensym("component"));
                     jcolumn_setvaluemsg(column, gensym("editvalue"), gensym("editstarted"), gensym("editended"));
-                    jcolumn_setnumeric(column, !database->get_column_label_mode(i));
+                    jcolumn_setnumeric(column, !database.get_column_label_mode(i));
                 }
             }
         }
@@ -308,13 +308,13 @@ void database_view_update(t_database_view *x)
     jcolumn_setlabel(jdataview_getnthcolumn(x->dataview, 0), gensym("#"));
     jcolumn_setlabel(jdataview_getnthcolumn(x->dataview, 1), gensym("identifier"));
         
-    for (long i = 0; i < database->num_columns(); i++)
-        jcolumn_setlabel(jdataview_getnthcolumn(x->dataview,  i + 2), database->get_column_name(i));
+    for (long i = 0; i < database.num_columns(); i++)
+        jcolumn_setlabel(jdataview_getnthcolumn(x->dataview,  i + 2), database.get_column_name(i));
 
     // Update rows
     
     long num_view_rows = jdataview_getnumrows(x->dataview);
-    long required_items = database->num_items();
+    long required_items = database.num_items();
     
     if (num_view_rows != required_items)
     {
@@ -340,8 +340,8 @@ void database_view_update(t_database_view *x)
         }
     }
     
-    for (long i = 0; i < database->num_columns(); i++)
-        jdataview_redrawcolumn(x->dataview, database->get_column_name(i));
+    for (long i = 0; i < database.num_columns(); i++)
+        jdataview_redrawcolumn(x->dataview, database.get_column_name(i));
 }
 
 // Notifications
@@ -373,13 +373,13 @@ t_max_err database_view_notify(t_database_view *x, t_symbol *s, t_symbol *msg, v
 
 void database_view_getcellvalue(t_database_view *x, t_symbol *colname, t_rowref rr, long *argc, t_atom *argv)
 {
-    entries::read_pointer database(x->database);
+    entries::read_access database(*x->database);
 
     long column_index = get_index_from_colname(colname);
     long row_index = map_rowref_to_index(x, rr);
 
     *argc = 1;
-    database->get_atom(argv, row_index, column_index);
+    database.get_atom(argv, row_index, column_index);
 }
 
 // Cell Text and Style
@@ -390,7 +390,7 @@ void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref r
     {
         std::string str;
 
-        entries::read_pointer database(x->database);
+        entries::read_access database(*x->database);
 
         long column_index = get_index_from_colname(colname);
         long row_index = map_rowref_to_index(x, rr);
@@ -398,9 +398,9 @@ void database_view_getcelltext(t_database_view *x, t_symbol *colname, t_rowref r
         if (column_index == COLINDEX_ITEM_NUMBER)
             str = std::to_string(row_index + 1);
         else if (column_index == COLINDEX_IDENTIFIER)
-            str = database->get_entry_identifier(row_index).get_string();
+            str = database.get_entry_identifier(row_index).get_string();
         else
-            str = database->get_string(row_index, column_index);
+            str = database.get_string(row_index, column_index);
 
         strncpy_zero(text, str.c_str(), maxlen - 1);
     }
@@ -416,10 +416,10 @@ void database_view_getcellstyle(t_database_view *x, t_symbol *colname, t_rowref 
 
 void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref rr)
 {
-    entries::read_pointer database(x->database);
+    entries::read_access database(*x->database);
     long row_index = map_rowref_to_index(x, rr);
         
-    database->get_entry_identifier(&x->edit_identifier, row_index);
+    database.get_entry_identifier(row_index, &x->edit_identifier);
 }
 
 void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
@@ -428,7 +428,7 @@ void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr
     
     if (argc)
     {
-        x->database->replace_item(&x->edit_identifier, column_index, argv);
+        x->database->get_modify_access().replace_item(&x->edit_identifier, column_index, argv);
         jdataview_redrawcell(x->dataview, colname, rr);
     }
 }
@@ -443,12 +443,12 @@ void database_view_editended(t_database_view *x, t_symbol *colname, t_rowref rr)
 
 void database_view_component(t_database_view *x, t_symbol *colname, t_rowref rr, long *component, long *options)
 {
-    entries::read_pointer database(x->database);
+    entries::read_access database(*x->database);
     
     long column_index = get_index_from_colname(colname);
     
     *component = JCOLUMN_COMPONENT_TEXTEDITOR;
-    *options = database->get_column_label_mode(column_index) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
+    *options = database.get_column_label_mode(column_index) ? JCOLUMN_TEXT_ONESYMBOL : JCOLUMN_TEXT_FLOAT;
 }
 
 // Sorting
@@ -460,23 +460,22 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
     
     // Sorting accessor functors
     
-    struct identifier_getter
+    struct identifier_getter : public entries::read_access
     {
-        identifier_getter(const entries *database) : m_database(database) {}
-        t_custom_atom operator()(long idx) const { return m_database->get_entry_identifier(idx); }
-        const entries *m_database;
+        identifier_getter(const entries& database) : read_access(database) {}
+        t_custom_atom operator()(long idx) const { return get_entry_identifier(idx); }
     };
     
-    struct string_getter : public entries::accessor
+    struct string_getter : public entries::read_access
     {
-        string_getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
+        string_getter(long column, const entries& database) : entries::read_access(database), m_column(column) {}
         std::string operator()(long idx) const { return get_untyped(idx, m_column).m_symbol->s_name; }
         long m_column;
     };
     
-    struct data_getter : public entries::accessor
+    struct data_getter : public entries::read_access
     {
-        data_getter(long column, const entries& database) : entries::accessor(database), m_column(column) {}
+        data_getter(long column, const entries& database) : entries::read_access(database), m_column(column) {}
         double operator()(long idx) const { return get_data(idx, m_column); }
         long m_column;
     };
@@ -493,13 +492,13 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
     long column_index = get_index_from_colname(colname);
     x->sort_direction = record->p_fwd == JCOLUMN_SORTDIRECTION_FORWARD;
     
-    entries::read_pointer database(x->database);
+    entries::read_access database(*x->database);
     
     // If we are sorted in order, or the row map need resizing, intialise them here
     
-    if (x->row_map.size() != database->num_items() || column_index == COLINDEX_ITEM_NUMBER)
+    if (x->row_map.size() != database.num_items() || column_index == COLINDEX_ITEM_NUMBER)
     {
-        x->row_map.resize(database->num_items());
+        x->row_map.resize(database.num_items());
         std::iota(x->row_map.begin(), x->row_map.end(), 0);
     }
     
@@ -507,16 +506,16 @@ void database_view_sort(t_database_view *x, t_symbol *colname, t_privatesortrec 
     {
         // Sort row map on identifiers
         
-        sort(x->row_map, database->num_items(), identifier_getter(x->database));
+        sort(x->row_map, database.num_items(), identifier_getter(*x->database));
     }
     else if (column_index >= 0)
     {
         // Sort row map on data (using labels or data as per the column)
         
-        if (database->get_column_label_mode(column_index))
-            sort(x->row_map, database->num_items(), string_getter(column_index, *x->database));
+        if (database.get_column_label_mode(column_index))
+            sort(x->row_map, database.num_items(), string_getter(column_index, *x->database));
         else
-            sort(x->row_map, database->num_items(), data_getter(column_index, *x->database));
+            sort(x->row_map, database.num_items(), data_getter(column_index, *x->database));
     }
     
     // Move selection

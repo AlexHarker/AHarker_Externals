@@ -78,7 +78,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Reserve entries, set count to one and set to notify
     
-    x->database.reserve(num_reserved_entries);
+    x->database.get_modify_access().reserve(num_reserved_entries);
     x->count = 1;
     x->notify = true;
     
@@ -306,12 +306,12 @@ void database_view(void *x, t_entry_database *database)
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_pointer database_getptr_read(t_entry_database *database)
+entries::read_access database_getptr_read(t_entry_database *database)
 {
-    return entries::read_pointer(&database->database);
+    return entries::read_access(database->database);
 }
 
 notify_pointer database_getptr_write(t_entry_database *database)
 {
-    return notify_pointer(&database->database, database);
+    return notify_pointer(database->database, database);
 }

@@ -22,21 +22,19 @@ t_symbol *ps_percentile = gensym("percentile");
 
 t_symbol *ps_identfier = gensym("identifier");
 
+template <const double& func(const double&, const double&)>
+struct binary_functor
+{
+    const double operator()(const double a, const double b) { return func(a, b); }
+};
+
 /*****************************************/
 // Column Setup
 /*****************************************/
 
-// Set Column Labels (with lock)
-
-void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
-{
-    write_lock_hold lock(&m_lock);
-    set_column_label_modes(lock, x, argc, argv);
-}
-
 // Set Column Labels (with pre-held lock)
 
-void entries::set_column_label_modes(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
 {
     bool label_modes_changed = false;
     
@@ -53,20 +51,12 @@ void entries::set_column_label_modes(write_lock_hold &lock, void *x, long argc, 
     }
     
     if (label_modes_changed)
-        clear(lock);
-}
-
-// Set Column Names (with lock)
-
-void entries::set_column_names(void *x, long argc, t_atom *argv)
-{
-    write_lock_hold lock(&m_lock);
-    set_column_names(lock, x, argc, argv);
+        clear();
 }
 
 // Set Column Names (with pre-held lock)
 
-void entries::set_column_names(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void entries::set_column_names(void *x, long argc, t_atom *argv)
 {
     if (argc > num_columns())
         object_error((t_object *) x, "more names than columns");
@@ -141,29 +131,19 @@ long entries::column_from_specifier(const t_atom *specifier) const
 // Saving and Loading
 /*****************************************/
 
-// Reserve (with lock)
+// Reserve (with pre-held lock)
 
 void entries::reserve(long items)
 {
-    write_lock_hold lock(&m_lock);
-    
     m_identifiers.reserve(items);
     m_order.reserve(items);
     m_entries.reserve(items * num_columns());
     m_types.reserve(items * num_columns());
 }
 
-// Clear (with lock)
-
-void entries::clear()
-{
-    write_lock_hold lock(&m_lock);
-    clear(lock);
-}
-
 // Clear (with pre-held lock)
 
-void entries::clear(write_lock_hold &lock)
+void entries::clear()
 {
     m_entries.clear();
     m_identifiers.clear();
@@ -175,17 +155,9 @@ void entries::clear(write_lock_hold &lock)
 // Adding / Removing Entries
 /*****************************************/
 
-// Add (with lock)
-
-void entries::add_entry(void *x, long argc, t_atom *argv)
-{
-    write_lock_hold lock(&m_lock);
-    add_entry(lock, x, argc, argv);
-}
-
 // Add (with pre-held lock)
 
-void entries::add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
+void entries::add_entry(void *x, long argc, t_atom *argv)
 {
     if (!argc--)
     {
@@ -232,8 +204,6 @@ void entries::add_entry(write_lock_hold &lock, void *x, long argc, t_atom *argv)
 
 void entries::replace_item(t_atom *identifier, long column, t_atom *item)
 {
-    write_lock_hold lock(&m_lock);
-
     long order;
     long idx = search_identifiers(identifier, order);
     
@@ -264,7 +234,7 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
     }
     else
     {
-        read_write_pointer database(this);
+        read_write_pointer database(*this);
     
         std::vector<long> indices(argc);
         long size = 0;
@@ -293,7 +263,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
     if (!argc)
         return;
     
-    read_write_pointer database(this);
+    read_write_pointer database(*this);
     matchers matchers;
     std::vector<long> indices;
     long num_matches = 0;
@@ -418,8 +388,6 @@ void entries::remove_entries(read_write_pointer& read_locked_database, const std
 
 void entries::remove_entry(void *x, t_atom *identifier)
 {
-    write_lock_hold lock(&m_lock);
-    
     long order;
     long idx = search_identifiers(identifier, order);
     
@@ -703,7 +671,7 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
         {
             t_dictionary *dict_entry = dictionary_new();
             
-            get_entry_identifier(&args[0], i);
+            get_entry_identifier(i, &args[0]);
             
             for (long j = 0; j < num_columns(); j++)
                 get_atom(&args[j + 1], i, j);
@@ -720,7 +688,7 @@ t_dictionary *entries::save_dictionary(bool entries_as_one_key) const
         {
             std::string str("entry_" + std::to_string(i + 1));
             
-            get_entry_identifier(&args[0], i);
+            get_entry_identifier(i, &args[0]);
             
             for (long j = 0; j < num_columns(); j++)
                 get_atom(&args[j + 1], i, j);
@@ -749,8 +717,7 @@ void entries::load_dictionary(t_object *x, t_dictionary *dict)
     
     if (dict_meta && dict_data)
     {
-        write_lock_hold lock(&m_lock);
-        clear(lock);
+        clear();
         
         t_atom_long newnum_columns;
         dictionary_getlong(dict_meta, gensym("num_columns"), &newnum_columns);
@@ -765,10 +732,10 @@ void entries::load_dictionary(t_object *x, t_dictionary *dict)
         long argc;
         
         dictionary_getatoms(dict_meta, gensym("names"), &argc, &argv);
-        set_column_names(lock, x, argc, argv);
+        set_column_names(x, argc, argv);
         
         dictionary_getatoms(dict_meta, gensym("labelmodes"), &argc, &argv);
-        set_column_label_modes(lock, x, argc, argv);
+        set_column_label_modes(x, argc, argv);
         
         // Data
         
@@ -781,7 +748,7 @@ void entries::load_dictionary(t_object *x, t_dictionary *dict)
                 
                 t_dictionary *dict_entry = (t_dictionary *) atom_getobj(argv + i);
                 if ((err = dictionary_getatoms(dict_entry, gensym("entry"), &entry_argc, &entry_argv)) == MAX_ERR_NONE)
-                    add_entry(lock, x, entry_argc, entry_argv);
+                    add_entry(x, entry_argc, entry_argv);
             }
         }
         else
@@ -790,7 +757,7 @@ void entries::load_dictionary(t_object *x, t_dictionary *dict)
             {
                 std::string str("entry_" + std::to_string(i + 1));
                 if ((err = dictionary_getatoms(dict_data, gensym(str.c_str()), &argc, &argv)) == MAX_ERR_NONE)
-                    add_entry(lock, x, argc, argv);
+                    add_entry(x, argc, argv);
             }
         }
     }

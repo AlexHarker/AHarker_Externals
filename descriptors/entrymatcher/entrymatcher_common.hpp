@@ -18,32 +18,32 @@ struct entrymatcher_common
 
     static void entrymatcher_clear(T *x)
     {
-        database_getptr_write(x->database_object)->clear();
+        database_getptr_write(x->database_object).clear();
     }
 
     static void entrymatcher_labelmodes(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->set_column_label_modes(x, argc, argv);
+        database_getptr_write(x->database_object).set_column_label_modes(x, argc, argv);
     }
 
     static void entrymatcher_names(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->set_column_names(x, argc, argv);
+        database_getptr_write(x->database_object).set_column_names(x, argc, argv);
     }
 
     static void entrymatcher_entry(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->add_entry(x, argc, argv);
+        database_getptr_write(x->database_object).add_entry(x, argc, argv);
     }
 
     static void entrymatcher_remove(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->remove_entries(x, argc, argv);
+        database_getptr_write(x->database_object).remove_entries(x, argc, argv);
     }
 
     static void entrymatcher_removeif(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
-        database_getptr_write(x->database_object)->remove_matched_entries(x, argc, argv);
+        database_getptr_write(x->database_object).remove_matched_entries(x, argc, argv);
     }
 
     // View, User Save and User Load Routines
@@ -55,12 +55,12 @@ struct entrymatcher_common
 
     static void entrymatcher_save(T *x, t_symbol *file)
     {
-        database_getptr_read(x->database_object)->save((t_object *) x, file);
+        database_getptr_read(x->database_object).save((t_object *) x, file);
     }
 
     static void entrymatcher_load(T *x, t_symbol *file)
     {
-        database_getptr_write(x->database_object)->load((t_object *) x, file);
+        database_getptr_write(x->database_object).load((t_object *) x, file);
     }
 
     // Load and Save (pattr/embedding/parameters etc.)
@@ -69,12 +69,12 @@ struct entrymatcher_common
 
     static t_dictionary *entrymatcher_save_dict(T *x)
     {
-        return database_getptr_read(x->database_object)->save_dictionary(true);
+        return database_getptr_read(x->database_object).save_dictionary(true);
     }
 
     static void entrymatcher_load_dict(T *x, t_dictionary *dict)
     {
-        database_getptr_write(x->database_object)->load_dictionary((t_object*) x, dict);
+        database_getptr_write(x->database_object).load_dictionary((t_object*) x, dict);
     }
 
     static void entrymatcher_dictionary(T *x, t_symbol *dictname)
