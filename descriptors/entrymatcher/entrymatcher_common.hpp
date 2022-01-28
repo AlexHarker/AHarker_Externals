@@ -6,9 +6,13 @@
 #include <ext_obex.h>
 #include <ext_dictobj.h>
 
+#include "matchers.hpp"
+
 template <class T>
 struct entrymatcher_common
 {
+    using loop_order = matchers::loop_order;
+    
     // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
 
     static void entrymatcher_refer(T *x, t_symbol *name)
@@ -144,7 +148,7 @@ struct entrymatcher_common
 
     static void entrymatcher_audiostyle(T *x, t_atom_long style)
     {
-        x->matchers->set_audio_style(style ? true : false);
+        x->matchers->set_loop_order(style ? loop_order::by_matcher : loop_order::by_item);
     }
 
     // Add Common Routines

@@ -14,10 +14,11 @@ class matchers
 public:
     
     enum class test { none, match, less, greater, less_eq, greater_eq, diff, ratio, diff_reject, ratio_reject };
-        
+    enum class loop_order { by_item, by_matcher };
+
     // Constructor and Capacity
     
-    matchers() : m_num_matches(0), m_audio_style(false) {}
+    matchers() : m_num_matches(0), m_order(loop_order::by_item) {}
         
     long size() const   { return static_cast<long>(m_matchers.size()); }
     void clear()        { m_matchers.clear(); }
@@ -58,7 +59,7 @@ public:
     
     // Matching
     
-    void set_audio_style(bool style) { m_audio_style = style; }
+    void set_loop_order(loop_order order) { m_order = order; }
 
     long match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const;
     
@@ -285,7 +286,7 @@ private:
     
     std::vector<matcher> m_matchers;
     
-    bool m_audio_style;
+    loop_order m_order;
 };
 
 #endif

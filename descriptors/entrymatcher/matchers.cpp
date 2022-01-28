@@ -77,7 +77,7 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     
     m_results.resize(num_items);
         
-    if (!size() || m_audio_style)
+    if (!size() || m_order == loop_order::by_matcher)
     {
         for (long i = 0; i < num_items; i++)
             m_results[i] = result(i, 0.0);
@@ -88,7 +88,7 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     if (!size())
         return num_items;
     
-    if (m_audio_style)
+    if (m_order == loop_order::by_matcher)
     {
         for (auto it = m_matchers.cbegin(); it != m_matchers.cend() && m_num_matches; it++)
             m_num_matches = it->match(m_results, m_num_matches, database);
