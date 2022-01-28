@@ -120,11 +120,9 @@ long entries::column_from_specifier(const t_atom *specifier) const
     return -2;
 }
 
-/*****************************************/
-// Saving and Loading
-/*****************************************/
+// Reserve / Clear
 
-// Reserve (with pre-held lock)
+// Reserve
 
 void entries::reserve(long items)
 {
@@ -134,7 +132,7 @@ void entries::reserve(long items)
     m_types.reserve(items * num_columns());
 }
 
-// Clear (with pre-held lock)
+// Clear
 
 void entries::clear()
 {
