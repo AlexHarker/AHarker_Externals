@@ -24,13 +24,11 @@ public:
     struct read_access
     {
         read_access(const entries& database)
-        : m_ptr(&database)
+        : m_ptr(get_lock(database))
         , m_num_columns(database.num_columns())
         , m_iterator(database.m_entries.cbegin())
         , m_types(database.m_types.cbegin())
-        {
-            m_ptr->m_lock.acquire_read();
-        }
+        {}
         
         read_access(const read_access&) = delete;
         read_access& operator=(const read_access&) = delete;
@@ -84,6 +82,12 @@ public:
         inline t_untyped_atom get_untyped(long idx, long column) const
         {
             return m_iterator[idx * m_num_columns + column];
+        }
+        
+        const entries *get_lock(const entries& ptr)
+        {
+            ptr.m_lock.acquire_read();
+            return &ptr;
         }
         
         const entries *m_ptr;
