@@ -153,7 +153,7 @@ void entry_database_release(t_entry_database *x, void *client)
 
 // Find a Database and Attach (if it already exists)
 
-t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *name, void *client)
+t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbol *name, void *client)
 {
     bool found_new = false;
     
@@ -170,11 +170,13 @@ t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *na
     {
         spin_lock_hold(&x->lock);
 
+        // Check that the object is still valid
+        
         if ((found_new = x->count > 0))
             x->count++;
     }
     
-    // Otherwise return the old object
+    // If there is no object found, it's just been deleted or it's the same as prev return the old object
     
     if (!found_new)
         return prev;
@@ -190,7 +192,7 @@ t_entry_database *entry_database_findattach(t_entry_database *prev, t_symbol *na
 
 // Create a Database Object (or attach if it already exists)
 
-t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
+t_entry_database *entry_database_find_or_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
 {
     // Note that the number of entries is not fixed (this is just the number that are reserved)
     
@@ -201,7 +203,7 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
     
     // See if an object is registered (otherwise make object and register it)
     
-    t_entry_database *x = entry_database_findattach(nullptr, name, client);
+    t_entry_database *x = entry_database_find_and_attach(nullptr, name, client);
     
     if (!x)
     {
@@ -284,12 +286,17 @@ notifying_write_access::~notifying_write_access()
 
 t_entry_database *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return entry_database_create(name, num_reserved_entries, num_columns, x);
+    return entry_database_find_or_create(name, num_reserved_entries, num_columns, x);
 }
 
 t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *prev_database)
 {
-    return entry_database_findattach(prev_database, name,  x);
+    t_entry_database *database = entry_database_find_and_attach(prev_database, name,  x);
+    
+    if (database == prev_database && database->database.get_name() != name)
+        object_error((t_object *) x, "No database %s found!", name->s_name);
+    
+    return database;
 }
 
 void database_release(void *x, t_entry_database *database)
