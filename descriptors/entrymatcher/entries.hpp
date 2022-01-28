@@ -278,11 +278,8 @@ private:
     double column_max(long column) const;
     double column_mean(long column) const;
     double column_standard_deviation(long column, double mean) const;
-    double column_standard_deviation(long column) const;
-    double column_percentile(long column, double percentile) const;
-    double column_median(long column) const;
     
-    // Stats Implementation
+    // Percentile Stats Implementation
      
      void column_sort(long column, std::vector<double>& sorted_values) const;
      double find_percentile(std::vector<double>& sorted_values, double percentile) const;

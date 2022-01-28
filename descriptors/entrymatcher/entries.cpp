@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <limits>
 
 #include "entries.hpp"
 #include "matchers.hpp"
@@ -22,17 +23,9 @@ t_symbol *ps_percentile = gensym("percentile");
 
 t_symbol *ps_identfier = gensym("identifier");
 
-template <const double& func(const double&, const double&)>
-struct binary_functor
-{
-    const double operator()(const double a, const double b) { return func(a, b); }
-};
-
-/*****************************************/
 // Column Setup
-/*****************************************/
 
-// Set Column Labels (with pre-held lock)
+// Set Column Label Modes
 
 void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
 {
@@ -419,14 +412,25 @@ void entries::remove_entry(void *x, t_atom *identifier)
             (*it)--;
 }
 
-/*****************************************/
 // Stats Calculations
-/*****************************************/
+
+// Utility Binary Functor Struct (for min/max statistics)
+
+template <const double& func(const double&, const double&)>
+struct binary_functor
+{
+    const double operator()(const double a, const double b) { return func(a, b); }
+};
+
+// User Function (handles errors and variable queries)
 
 void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const
 {
     if (argc < 2)
+    {
+        object_error((t_object *) x, "no statistics listed");
         return;
+    }
     
     std::vector<double> values;
     double mean = 0.0;
@@ -437,8 +441,18 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
     long column = column_from_specifier(argv++);
     argc--;
 
+    if (column < 0)
+    {
+        object_error((t_object *) x, "invalid column for statistics calculation");
+        return;
+    }
+        
+    // Resize assuming each element is a statistic
+        
     output.resize(argc);
 
+    // Loop over statistics and calculate
+    
     for (i = 0; argc > 0; i++)
     {
         t_symbol *test = atom_getsym(argv++);
@@ -447,48 +461,59 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
         if (test == ps_mean || test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
         {
             if (!mean_calculated)
+            {
                 mean = column_mean(column);
+                mean_calculated = true;
+            }
+            
             if (test == ps_mean)
                 atom_setfloat(&output[i], mean);
             else
                 atom_setfloat(&output[i], column_standard_deviation(column, mean));
-            mean_calculated = true;
         }
         else if (test == ps_median || test == ps_centile || test == ps_percentile)
         {
             double percentile = 50.0;
             
             if (!sorted)
+            {
                 column_sort(column, values);
+                sorted = true;
+            }
+            
             if (test != ps_median)
             {
                 if (argc--)
                     percentile = atom_getfloat(argv++);
                 else
-                    object_error((t_object *) x, "no percentile given for percentile stat");
+                    object_error((t_object *) x, "no percentile given for percentile statistic");
             }
+            
             atom_setfloat(&output[i], find_percentile(values, percentile));
-            sorted = true;
         }
         else if (test == ps_min || test == ps_minimum)
             atom_setfloat(&output[i], column_min(column));
         else if (test == ps_max || test == ps_maximum)
             atom_setfloat(&output[i], column_max(column));
         else
-            object_error((t_object *) x, "unknown stat type");
+            object_error((t_object *) x, "unknown statistic type");
     }
+    
+    // Resize to the correct output size
     
     output.resize(i);
 }
 
+// Specific Statistics
+
 double entries::column_min(long column) const
 {
-    return column_calculate(column, HUGE_VAL, binary_functor<std::min<double> >());
+    return column_calculate(column, std::numeric_limits<double>::infinity(), binary_functor<std::min<double>>());
 }
 
 double entries::column_max(long column) const
 {
-    return column_calculate(column, -HUGE_VAL, binary_functor<std::max<double> >());
+    return column_calculate(column, -std::numeric_limits<double>::infinity(), binary_functor<std::max<double>>());
 }
 
 double entries::column_mean(long column) const
@@ -508,24 +533,6 @@ double entries::column_standard_deviation(long column, double mean) const
     return sqrt(column_calculate(column, 0.0, variance(mean)) / num_items());
 }
 
-double entries::column_standard_deviation(long column) const
-{
-    return column_standard_deviation(column, column_mean(column));
-}
-
-double entries::column_percentile(long column, double percentile) const
-{
-    std::vector<double> values;
-    
-    column_sort(column, values);
-    return find_percentile(values, percentile);
-}
-
-double entries::column_median(long column) const
-{
-    return column_percentile(column, 50.0);
-}
-
 void entries::column_sort(long column, std::vector<double>& sorted_values) const
 {
     sorted_values.resize(num_items());
@@ -543,7 +550,7 @@ double entries::find_percentile(std::vector<double>& sorted_values, double perce
     if (!n_items)
         return std::numeric_limits<double>::quiet_NaN();
     
-    long idx = std::max(0L, std::min((long) round(n_items * (percentile / 100.0)), n_items - 1));
+    long idx = std::max(0L, std::min(static_cast<long>(round(n_items * (percentile / 100.0))), n_items - 1));
     
     return sorted_values[idx];
 }
