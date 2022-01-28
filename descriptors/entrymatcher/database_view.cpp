@@ -175,7 +175,6 @@ void *database_view_new(t_symbol *s, short argc, t_atom *argv)
     
     if (x)
     {
-        create_object(x->database);
         create_object(x->row_map);
      
         // Create and set up the view
@@ -216,7 +215,6 @@ void database_view_free(t_database_view *x)
     
     object_free(x->dataview);
     jbox_free(&x->d_box);
-    destroy_object(x->database);
     destroy_object(x->row_map);
 }
 
