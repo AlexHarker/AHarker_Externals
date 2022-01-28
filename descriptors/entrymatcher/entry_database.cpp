@@ -308,7 +308,7 @@ void database_view(void *x, t_entry_database *database)
 
 entries::read_access database_get_read_access(t_entry_database *database)
 {
-    return entries::read_access(database->database);
+    return database->database.get_read_access();
 }
 
 notifying_write_access database_get_write_access(t_entry_database *database)

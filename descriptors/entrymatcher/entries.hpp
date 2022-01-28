@@ -11,15 +11,9 @@
 
 class entries
 {
-    struct column_info
-    {
-        column_info() : m_name(gensym("")), m_label(false) {}
-        
-        t_symbol *m_name;
-        bool m_label;
-    };
-    
 public:
+    
+    // Read Access (read methods with read locking)
     
     struct read_access
     {
@@ -156,7 +150,17 @@ public:
     t_symbol *get_name() const { return m_name; }
 
     write_access get_write_access() { return write_access(*this); }
+    read_access get_read_access() const { return read_access(*this); }
+
 private:
+    
+    struct column_info
+    {
+        column_info() : m_name(gensym("")), m_label(false) {}
+        
+        t_symbol *m_name;
+        bool m_label;
+    };
     
     struct read_write_access : public read_access
     {
