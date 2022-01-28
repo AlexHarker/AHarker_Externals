@@ -111,14 +111,21 @@ struct t_custom_atom
     
     std::string inline get_string() const
     {
-        switch (m_type)
-        {
-            case category::floating:    return std::to_string(as<double>());
-            case category::integral:    return std::to_string(as<t_atom_long>());
-            case category::conformed:   return std::to_string(deconform());
-            case category::symbolic:    return as<const char *>();
-            default:                    return {};
-        }
+        long size = 0;
+        char *text = nullptr;
+        
+        // Use atom_gettext to match Max's display decisions elsewhere
+        
+        t_atom a;
+        get_atom(&a);
+        atom_gettext(1, &a, &size, &text, OBEX_UTIL_ATOM_GETTEXT_SYM_NO_QUOTE);
+        
+        std::string str(text);
+        
+        if (text)
+            sysmem_freeptr(text);
+    
+        return str;
     }
     
     // Comparisons and ordering (compare is consistent across runs, but ordering is faster)
