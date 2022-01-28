@@ -17,87 +17,107 @@ public:
     
     struct read_access
     {
-        read_access(const entries& database)
-        : m_ptr(get_lock(database))
-        , m_num_columns(database.num_columns())
-        , m_iterator(database.m_entries.cbegin())
-        , m_types(database.m_types.cbegin())
+        // Constructor
+        
+        read_access(const entries& data)
+        : m_data(get_lock(data))
+        , m_unlocked(false)
+        , m_num_columns(data.num_columns())
+        , m_iterator(data.m_entries.cbegin())
+        , m_types(data.m_types.cbegin())
         {}
+        
+        ~read_access()
+        {
+            if (!m_unlocked)
+                m_data.m_lock.release_read();
+        }
+        
+        // Non-copyable, but movable
         
         read_access(const read_access&) = delete;
         read_access& operator=(const read_access&) = delete;
         read_access(read_access&&) = default;
-        ~read_access()                                      { destroy(); }
-        
-        void destroy()
-        {
-            if (m_ptr)
-            {
-                m_ptr->m_lock.release_read();
-                m_ptr = nullptr;
-            }
-        }
-        
-        long num_items() const                                  { return m_ptr->num_items(); }
-        long num_columns() const                                { return m_num_columns; }
       
-        t_symbol *get_column_name(long idx) const               { return m_ptr->get_column_name(idx); }
-        bool get_column_label_mode(long idx) const              { return m_ptr->get_column_label_mode(idx); }
-        void get_entry_identifier(long idx, t_atom *a) const    { return m_ptr->get_entry_identifier(idx, a); }
-        t_custom_atom get_entry_identifier(long idx) const      { return m_ptr->get_entry_identifier(idx); }
-        long get_entry_index(const t_atom *identifier) const    { return m_ptr->get_entry_index(identifier); }
-       
-        long column_from_specifier(const t_atom *specifier) const { return m_ptr->column_from_specifier(specifier); }
+        // Size / Labels / Info
+        
+        long num_items() const                                      { return m_data.num_items(); }
+        long num_columns() const                                    { return m_num_columns; }
+      
+        t_symbol *get_column_name(long idx) const                   { return m_data.get_column_name(idx); }
+        bool get_column_label_mode(long idx) const                  { return m_data.get_column_label_mode(idx); }
+        void get_entry_identifier(long idx, t_atom *a) const        { return m_data.get_entry_identifier(idx, a); }
+        t_custom_atom get_entry_identifier(long idx) const          { return m_data.get_entry_identifier(idx); }
+        long get_entry_index(const t_atom *identifier) const        { return m_data.get_entry_index(identifier); }
+        long column_from_specifier(const t_atom *specifier) const   { return m_data.column_from_specifier(specifier); }
+        
+        // Stats and Saving
         
         void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const
         {
-            m_ptr->stats(x, output, argc, argv);
+            m_data.stats(x, output, argc, argv);
         }
 
-        t_dictionary *save_dictionary(bool entries_as_one_key) const { return m_ptr->save_dictionary(entries_as_one_key); }
+        t_dictionary *save_dictionary(bool entries_as_one_key) const
+        {
+            return m_data.save_dictionary(entries_as_one_key);
+        }
         
-        inline std::string get_string(long idx, long column) const { return m_ptr->get_string(idx, column); }
-        
-        void save(t_object *x, t_symbol *file) const { return m_ptr->save(x, file); }
+        void save(t_object *x, t_symbol *file) const
+        {
+            return m_data.save(x, file);
+        }
 
+        // Get Data
+        
         template <typename T = double>
-        inline T get_data(long idx, long column) const
-        {
-            return get_untyped(idx, column).as<T>();
-        }
-        
-        inline void get_atom(t_atom *a, long idx, long column) const
-        {
-            t_custom_atom(get_untyped(idx, column), m_types[idx * m_num_columns + column]).get_atom(a);
-        }
+        inline T get_data(long idx, long column) const                  { return get_untyped(idx, column).as<T>(); }
+        inline void get_atom(t_atom *a, long idx, long column) const    { get_typed(idx, column).get_atom(a); }
+        inline std::string get_string(long idx, long column) const      { return get_typed(idx, column).get_string(); }
         
     protected:
+        
+        // Helpers
+        
+        inline t_custom_atom get_typed(long idx, long column) const
+        {
+            return t_custom_atom(get_untyped(idx, column), m_types[idx * m_num_columns + column]);
+        }
         
         inline t_untyped_atom get_untyped(long idx, long column) const
         {
             return m_iterator[idx * m_num_columns + column];
         }
         
-        const entries *get_lock(const entries& ptr)
+        const entries& get_lock(const entries& data)
         {
-            ptr.m_lock.acquire_read();
-            return &ptr;
+            data.m_lock.acquire_read();
+            return data;
         }
         
-        const entries *m_ptr;
+        // Data
+        
+        const entries& m_data;
+        bool m_unlocked;
         const long m_num_columns;
         const std::vector<t_untyped_atom>::const_iterator m_iterator;
         const std::vector<t_custom_atom::category>::const_iterator m_types;
     };
     
+    // Write Access (write methods with locking)
+    
     struct write_access
     {
+        // Constructor (freely copyable as the lock is transitory
+        
         write_access(entries& data) : m_entries(data) {}
                 
-        // Writing operations
+        // Reserve / Clear
         
         void reserve(long items)    { call_with_lock(&entries::reserve, items); }
         void clear()                { call_with_lock(&entries::clear); }
+        
+        // Setup Columns
         
         void set_column_label_modes(void *x, long argc, t_atom *argv)
         {
@@ -108,6 +128,8 @@ public:
         {
             call_with_lock(&entries::set_column_names, x, argc, argv);
         }
+        
+        // Add / Remove Entries
         
         void add_entry(void *x, long argc, t_atom *argv)
         {
@@ -124,31 +146,44 @@ public:
         {
             call_with_lock(&entries::remove_matched_entries, x, argc, argv);
         }
+        
+        // Replace an Item (in an entry)
+        
         void replace_item(t_atom *identifier, long column, t_atom *item)
         {
             call_with_lock(&entries::replace_item, identifier, column, item);
         }
 
+        // Loading
+        
         void load(t_object *x, t_symbol *file)                  { call_with_lock(&entries::load, x, file); }
         void load_dictionary(t_object *x, t_dictionary *dict)   { call_with_lock(&entries::load_dictionary, x, dict); }
         
     private:
         
+        // Lock Helper
+        
         template <typename Method, typename ...Args>
-        void call_with_lock(Method method, Args...args)
+        void call_with_lock(Method method, Args&& ...args)
         {
             write_lock_hold lock(&m_entries.m_lock);
             (m_entries.*method)(args...);
         }
         
+        // Data
+        
         entries& m_entries;
     };
 
+    // Constructor / Names
+    
     entries(t_symbol *name, long num_columns)
     : m_name(name) { m_columns.resize(num_columns); }
     
     t_symbol *get_name() const { return m_name; }
 
+    // Accessors
+    
     write_access get_write_access() { return write_access(*this); }
     read_access get_read_access() const { return read_access(*this); }
 
@@ -171,14 +206,14 @@ private:
         {
             if (m_promoted)
             {
-                m_ptr->m_lock.release_write();
-                m_ptr = nullptr;
+                m_data.m_lock.release_write();
+                m_unlocked = true;
             }
         }
         
         void promote()
         {
-            m_ptr->m_lock.promote();
+            m_data.m_lock.promote();
             m_promoted = true;
         }
 
@@ -224,7 +259,6 @@ private:
     inline t_custom_atom get_typed(long idx, long column) const     { return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]); }
     inline double get_data(long idx, long column) const             { return get_untyped(idx, column).m_value; }
     inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
-    inline std::string get_string(long idx, long column) const      { return get_typed(idx, column).get_string(); }
     
     // Write methods
     
