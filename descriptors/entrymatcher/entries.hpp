@@ -5,9 +5,9 @@
 #include <ext.h>
 #include <vector>
 
-#include "atom_types.hpp"
-
 #include <AH_Locks.hpp>
+
+#include "atom_types.hpp"
 
 class entries
 {

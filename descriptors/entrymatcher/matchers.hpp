@@ -2,10 +2,10 @@
 #ifndef MATCHERS_HPP
 #define MATCHERS_HPP
 
+#include <limits>
+
 #include "atom_types.hpp"
 #include "entry_database.hpp"
-
-#include <limits>
 
 class matchers
 {

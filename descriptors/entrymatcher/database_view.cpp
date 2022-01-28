@@ -1,17 +1,15 @@
 
-#include "database_view.hpp"
-#include "entry_database.hpp"
-#include "sort.hpp"
-
-#include "AH_Lifecycle.hpp"
-
 #include <jpatcher_api.h>
 #include <jgraphics.h>
 #include <jdataview.h>
-
 #include <numeric>
 #include <vector>
 
+#include <AH_Lifecycle.hpp>
+
+#include "database_view.hpp"
+#include "entry_database.hpp"
+#include "sort.hpp"
 
 // Globals and Object Structure
 

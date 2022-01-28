@@ -2,11 +2,11 @@
 #include <algorithm>
 #include <string>
 
-#include "entry_database.hpp"
-#include "database_view.hpp"
-
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
+
+#include "entry_database.hpp"
+#include "database_view.hpp"
 
 // Entry Database Object Struture
 
