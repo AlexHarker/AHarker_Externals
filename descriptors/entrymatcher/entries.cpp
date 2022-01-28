@@ -548,32 +548,6 @@ double entries::find_percentile(std::vector<double>& sorted_values, double perce
     return sorted_values[idx];
 }
 
-/*****************************************/
-// View
-/*****************************************/
-
-void entries::view(t_object *database_object) const
-{
-    t_object *editor = (t_object *)object_new(CLASS_NOBOX, gensym("jed"), database_object, 0);
-    std::string str;
-
-    for (long i = 0; i < num_items(); i++)
-    {
-        str.insert(str.size(), get_entry_identifier(i).get_string());
-        
-        for (long j = 0; j < num_columns(); j++)
-        {
-            str.insert(str.size(), " ");
-            str.insert(str.size(), get_typed(i, j).get_string());
-        }
-        
-        if (i != (num_items() - 1))
-            str.insert(str.size(), "\n");
-    }
-    
-    object_method(editor, gensym("settext"), str.c_str(), gensym("utf-8"));
-    object_attr_setsym(editor, gensym("title"), m_name);
-}
 
 /*****************************************/
 // Saving and Loading

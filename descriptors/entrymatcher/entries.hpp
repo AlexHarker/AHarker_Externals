@@ -186,7 +186,7 @@ public:
     
     write_access get_write_access() { return write_access(*this); }
     read_access get_read_access() const { return read_access(*this); }
-
+    
 private:
     
     // Column Info
@@ -225,10 +225,6 @@ private:
         
         bool m_promoted;
     };
-    
-    // TEMP??
-    
-    void view(t_object *database_object) const;
     
     // Write Methods
     
