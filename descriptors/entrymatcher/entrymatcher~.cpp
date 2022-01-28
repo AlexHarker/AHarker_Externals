@@ -196,7 +196,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     
     long max_matchers = x->max_matchers;
     
-    auto database = database_getptr_read(x->database_object);
+    auto database = database_get_read_access(x->database_object);
     
     x->matchers->clear();
     
@@ -277,7 +277,7 @@ t_int *entrymatcher_perform(t_int *w)
     
     random_generator<>& gen = x->gen;
 
-    auto database = database_getptr_read(x->database_object);
+    auto database = database_get_read_access(x->database_object);
     matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
@@ -338,7 +338,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     
     random_generator<>& gen = x->gen;
     
-    auto database = database_getptr_read(x->database_object);
+    auto database = database_get_read_access(x->database_object);
     matchers *matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;

@@ -50,7 +50,7 @@ void database_view(void *x, t_entry_database *database);
 
 // Retrieve Pointers for Reading or Writing
 
-entries::read_access database_getptr_read(t_entry_database *database);
-notify_pointer database_getptr_write(t_entry_database *database);
+entries::read_access database_get_read_access(t_entry_database *database);
+notify_pointer database_get_write_access(t_entry_database *database);
 
 #endif
