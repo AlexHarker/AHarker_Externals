@@ -459,7 +459,7 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
             double percentile = 50.0;
             
             if (!sorted)
-                column_sort_values(column, values);
+                column_sort(column, values);
             if (test != ps_median)
             {
                 if (argc--)
@@ -517,7 +517,7 @@ double entries::column_percentile(long column, double percentile) const
 {
     std::vector<double> values;
     
-    column_sort_values(column, values);
+    column_sort(column, values);
     return find_percentile(values, percentile);
 }
 
@@ -526,7 +526,7 @@ double entries::column_median(long column) const
     return column_percentile(column, 50.0);
 }
 
-void entries::column_sort_values(long column, std::vector<double>& sorted_values) const
+void entries::column_sort(long column, std::vector<double>& sorted_values) const
 {
     sorted_values.resize(num_items());
 

@@ -189,6 +189,8 @@ public:
 
 private:
     
+    // Column Info
+    
     struct column_info
     {
         column_info() : m_name(gensym("")), m_label(false) {}
@@ -196,6 +198,8 @@ private:
         t_symbol *m_name;
         bool m_label;
     };
+    
+    // A Read / Write Access (starts as read with promotion to write)
     
     struct read_write_access : public read_access
     {
@@ -222,7 +226,44 @@ private:
         bool m_promoted;
     };
     
+    // TEMP??
+    
+    void view(t_object *database_object) const;
+    
+    // Write Methods
+    
+    // Global
+    
+    void reserve(long items);
+    void clear();
+    
+    // Setup / Entries / Items
+    
+    void set_column_label_modes(void *x, long argc, t_atom *argv);
+    void set_column_names(void *x, long argc, t_atom *argv);
+    void add_entry(void *x, long argc, t_atom *argv);
+    void remove_entry(void *x, t_atom *identifier);
+    void remove_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
+    void remove_entries(void *x, long argc, t_atom *argv);
+    void remove_matched_entries(void *x, long argc, t_atom *argv);
+    void replace_item(t_atom *identifier, long column, t_atom *item);
+
+    // Loading
+    
+    void load(t_object *x, t_symbol *file);
+    void load_dictionary(t_object *x, t_dictionary *dict);
+    
+    // Data Setter
+    
+    inline void set_data(long idx, long column, const t_custom_atom& data)
+    {
+        m_entries[idx * num_columns() + column] = data.m_data;
+        m_types[idx * num_columns() + column] = data.m_type;
+    }
+    
     // Read methods
+    
+    // Size / Labels / Info
     
     long num_items() const      { return static_cast<long>(m_identifiers.size()); }
     long num_columns() const    { return static_cast<long>(m_columns.size()); }
@@ -240,69 +281,53 @@ private:
     
     long column_from_specifier(const t_atom *specifier) const;
     
+    // Stats
+    
     void stats(void *x, std::vector<t_atom>& output, long argc, t_atom *argv) const;
     
     double column_min(long column) const;
     double column_max(long column) const;
     double column_mean(long column) const;
+    double column_standard_deviation(long column, double mean) const;
     double column_standard_deviation(long column) const;
     double column_percentile(long column, double percentile) const;
     double column_median(long column) const;
     
-    void view(t_object *database_object) const;
+    // Stats Implementation
+     
+     void column_sort(long column, std::vector<double>& sorted_values) const;
+     double find_percentile(std::vector<double>& sorted_values, double percentile) const;
+
+     template <class Op>
+     double column_calculate(long column, const double start_value, Op op) const
+     {
+         double value = start_value;
+     
+         if (column < 0 || m_columns[column].m_label || !num_items())
+             return std::numeric_limits<double>::quiet_NaN();
+         
+         for (long i = 0; i < num_items(); i++)
+             value = op(value, get_data(i, column));
+         
+         return value;
+     }
+    
+    // Saving
+    
     void save(t_object *x, t_symbol *file) const;
     t_dictionary *save_dictionary(bool entries_as_one_key) const;
 
-    // Data getters
+    // Data Getters
     
     inline t_untyped_atom get_untyped(long idx, long column) const  { return m_entries[idx * num_columns() + column]; }
     inline t_custom_atom get_typed(long idx, long column) const     { return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]); }
     inline double get_data(long idx, long column) const             { return get_untyped(idx, column).m_value; }
     inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
-    
-    // Write methods
-    
-    void reserve(long items);
-    void clear();
-    
-    void set_column_label_modes(void *x, long argc, t_atom *argv);
-    void set_column_names(void *x, long argc, t_atom *argv);
-    void add_entry(void *x, long argc, t_atom *argv);
-    void remove_entry(void *x, t_atom *identifier);
-    void remove_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
-    void remove_entries(void *x, long argc, t_atom *argv);
-    void remove_matched_entries(void *x, long argc, t_atom *argv);
-    void replace_item(t_atom *identifier, long column, t_atom *item);
 
-    void load(t_object *x, t_symbol *file);
-    void load_dictionary(t_object *x, t_dictionary *dict);
+    // Ordering
     
-    double column_standard_deviation(long column, double mean) const;
-    void column_sort_values(long column, std::vector<double>& sorted_values) const;
-    double find_percentile(std::vector<double>& sorted_values, double percentile) const;
-
-    template <class Op>
-    double column_calculate(long column, const double start_value, Op op) const
-    {
-        double value = start_value;
-    
-        if (column < 0 || m_columns[column].m_label || !num_items())
-            return std::numeric_limits<double>::quiet_NaN();
-        
-        for (long i = 0; i < num_items(); i++)
-            value = op(value, get_data(i, column));
-        
-        return value;
-    }
-
     long get_order(long idx);
     long search_identifiers(const t_atom *identifier_atom, long& idx) const;
-    
-    inline void set_data(long idx, long column, const t_custom_atom& data)
-    {
-        m_entries[idx * num_columns() + column] = data.m_data;
-        m_types[idx * num_columns() + column] = data.m_type;
-    }
    
     // Data
     
