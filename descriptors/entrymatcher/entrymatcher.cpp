@@ -251,8 +251,6 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
     if (output.size())
         outlet_list(x->data_outlet, nullptr, output.size(), output.data());
-    else
-        object_error((t_object *) x, "no stats specified");
 }
 
 // Matchers and Matching Methods
