@@ -191,25 +191,7 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
     }
 }
 
-// Replace one item
-
-void entries::replace_item(t_atom *identifier, long column, t_atom *item)
-{
-    long order;
-    long idx = search_identifiers(identifier, order);
-    
-    if (idx < 0)
-        return;
-    
-    t_custom_atom data = item;
-    
-    if (m_columns[column].m_label == data.is_symbol())
-        set_data(idx, column, data);
-    else
-        return;
-}
-
-// Remove entries from identifiers (with read pointer - ugraded on next method call to write)
+// Remove Entries from identifiers (with read pointer - ugraded on next method call to write)
 
 void entries::remove_entries(void *x, long argc, t_atom *argv)
 {
@@ -408,6 +390,23 @@ void entries::remove_entry(void *x, t_atom *identifier)
     for ( ; it != m_order.end(); it++)
         if (*it > idx)
             (*it)--;
+}
+
+// Replace One Item (within an entry)
+
+void entries::replace_item(t_atom *identifier, long column, t_atom *item)
+{
+    t_custom_atom data = item;
+    
+    long idx = get_entry_index(identifier);
+    
+    if (idx < 0)
+        return;
+        
+    if (m_columns[column].m_label == data.is_symbol())
+        set_data(idx, column, data);
+    else
+        return;
 }
 
 // Stats Calculations
