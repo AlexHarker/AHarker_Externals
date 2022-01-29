@@ -224,7 +224,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         
         // Check that the arguments are all valid
         
-        if (column >= 0 && column < database.num_columns())
+        if (column >= 0)
         {
             if (argc >= arg_check)
             {

@@ -103,7 +103,10 @@ entries::position_info entries::search_identifiers(const t_atom *identifier_atom
 long entries::get_column_index(const t_atom *specifier) const
 {
     if (atom_gettype(specifier) != A_SYM)
-        return atom_getlong(specifier) - 1;
+    {
+        t_atom_long column = atom_getlong(specifier) - 1;
+        return (column >= -1 && column < num_columns()) ? static_cast<long>(column) : -2;
+    }
     
     t_symbol *column_name = atom_getsym(specifier);
     

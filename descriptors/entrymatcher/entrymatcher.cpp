@@ -230,7 +230,7 @@ bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long a
             // Get column - if not valid output from the first column
             
             long column = database.get_column_index(argv++);
-            column = (column < -1 || column >= num_columns) ? 0 : column;
+            column = (column < -1) ? 0 : column;
             
             if (column == -1)
                 database.get_entry_identifier(idx, &output[i]);

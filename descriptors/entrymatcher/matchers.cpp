@@ -168,7 +168,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const accessor& da
             object_error((t_object *) x, "invalid test / no test specified in unparsed segment of matchers message");
             break;
         }
-        else if (column < 0 || column >= database.num_columns())
+        else if (column < 0)
         {
             object_error((t_object *) x, "specified column in matchers message does not exist");
             continue;
