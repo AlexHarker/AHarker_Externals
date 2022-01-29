@@ -110,7 +110,7 @@ struct entrymatcher_common
         }
     }
 
-    // Parameter and pattr Support
+    // Attribute and pattr Support
 
     static t_max_err entrymatcher_getvalueof(T *x, long *argc, t_atom **argv)
     {

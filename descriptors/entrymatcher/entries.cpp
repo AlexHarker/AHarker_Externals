@@ -47,7 +47,7 @@ void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
         clear();
 }
 
-// Set Column Names (with pre-held lock)
+// Set Column Names
 
 void entries::set_column_names(void *x, long argc, t_atom *argv)
 {
