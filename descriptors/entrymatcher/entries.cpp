@@ -281,7 +281,7 @@ long entries::get_order(long idx)
 
 void entries::delete_entries(std::vector<long>& indices, read_write_access& access)
 {
-    sort(indices, indices.size());
+    sort(indices, static_cast<long>(indices.size()));
     
     long order_start = get_order(indices[0]);
     long offset = indices[0];
@@ -553,7 +553,7 @@ void entries::column_sort(long column, std::vector<double>& sorted_values) const
 
 double entries::find_percentile(std::vector<double>& sorted_values, double percentile) const
 {
-    long n_items = sorted_values.size();
+    long n_items = static_cast<long>(sorted_values.size());
     
     if (!n_items)
         return std::numeric_limits<double>::quiet_NaN();
