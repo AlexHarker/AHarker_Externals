@@ -3,6 +3,7 @@
 #define ENTRIES_HPP
 
 #include <ext.h>
+#include <utility>
 #include <vector>
 
 #include <AH_Locks.hpp>
@@ -107,60 +108,59 @@ public:
                 
         // Reserve / Clear
         
-        void reserve(long items)    { call_with_lock(&entries::reserve, items); }
-        void clear()                { call_with_lock(&entries::clear); }
+        void reserve(long items)    { with_lock(&entries::reserve, items); }
+        void clear()                { with_lock(&entries::clear); }
         
         // Setup Columns
         
         void set_column_label_modes(void *x, long argc, t_atom *argv)
         {
-            call_with_lock(&entries::set_column_label_modes, x, argc, argv);
+            with_lock(&entries::set_column_label_modes, x, argc, argv);
         }
         
         void set_column_names(void *x, long argc, t_atom *argv)
         {
-            call_with_lock(&entries::set_column_names, x, argc, argv);
+            with_lock(&entries::set_column_names, x, argc, argv);
         }
         
         // Add / Remove Entries
         
         void add_entry(void *x, long argc, t_atom *argv)
         {
-            call_with_lock(&entries::add_entry, x, argc, argv);
+            with_lock(&entries::add_entry, x, argc, argv);
         }
         
         void remove_entries(void *x, long argc, t_atom *argv)
         {
-            void (entries::*method)(void *, long, t_atom *) = &entries::remove_entries;
-            call_with_lock(method, x, argc, argv);
+            with_lock(&entries::remove_entries, x, argc, argv);
         }
         
         void remove_matched_entries(void *x, long argc, t_atom *argv)
         {
-            call_with_lock(&entries::remove_matched_entries, x, argc, argv);
+            with_lock(&entries::remove_matched_entries, x, argc, argv);
         }
         
         // Replace an Item (in an entry)
         
         void replace_item(t_atom *identifier, long column, t_atom *item)
         {
-            call_with_lock(&entries::replace_item, identifier, column, item);
+            with_lock(&entries::replace_item, identifier, column, item);
         }
 
         // Loading
         
-        void load_file(t_object *x, t_symbol *file)             { call_with_lock(&entries::load_file, x, file); }
-        void load_dictionary(t_object *x, t_dictionary *dict)   { call_with_lock(&entries::load_dictionary, x, dict); }
+        void load_file(t_object *x, t_symbol *file)             { with_lock(&entries::load_file, x, file); }
+        void load_dictionary(t_object *x, t_dictionary *dict)   { with_lock(&entries::load_dictionary, x, dict); }
         
     private:
         
         // Lock Helper
         
         template <typename Method, typename ...Args>
-        void call_with_lock(Method method, Args&& ...args)
+        void with_lock(Method method, Args&& ...args)
         {
             write_lock_hold lock(&m_entries.m_lock);
-            (m_entries.*method)(args...);
+            (m_entries.*method)(std::forward(args...));
         }
         
         // Data
