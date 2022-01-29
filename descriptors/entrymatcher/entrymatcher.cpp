@@ -229,7 +229,7 @@ bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long a
         {
             // Get column - if not valid output from the first column
             
-            long column = database.column_from_specifier(argv++);
+            long column = database.get_column_index(argv++);
             column = (column < -1 || column >= num_columns) ? 0 : column;
             
             if (column == -1)

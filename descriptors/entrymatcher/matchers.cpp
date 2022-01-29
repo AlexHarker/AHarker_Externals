@@ -156,7 +156,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const accessor& da
         
         // Get the column and test type
         
-        long column = database.column_from_specifier(argv++);
+        long column = database.get_column_index(argv++);
         bool get_scale = needs_scale(argv);
         test type = test_type(argv++);
         argc -= 2;

@@ -204,7 +204,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     {
         // Find the column index for the test and the test type
         
-        long column = database.column_from_specifier(argv++);
+        long column = database.get_column_index(argv++);
         bool get_scale = matchers::needs_scale(argv);
         test type = matchers::test_type(argv++);
         

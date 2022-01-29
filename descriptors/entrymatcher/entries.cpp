@@ -98,9 +98,9 @@ entries::position_info entries::search_identifiers(const t_atom *identifier_atom
     return { -1, -1 };
 }
 
-// Find a Column from Specifier
+// Get a Column Index (for a specifier)
 
-long entries::column_from_specifier(const t_atom *specifier) const
+long entries::get_column_index(const t_atom *specifier) const
 {
     if (atom_gettype(specifier) != A_SYM)
         return atom_getlong(specifier) - 1;
@@ -430,7 +430,7 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
     bool sorted = false;
     long i;
 
-    long column = column_from_specifier(argv++);
+    long column = get_column_index(argv++);
     argc--;
 
     if (column < 0)

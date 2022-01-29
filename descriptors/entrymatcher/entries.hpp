@@ -50,7 +50,7 @@ public:
         void get_entry_identifier(long idx, t_atom *a) const        { return m_data.get_entry_identifier(idx, a); }
         t_custom_atom get_entry_identifier(long idx) const          { return m_data.get_entry_identifier(idx); }
         long get_entry_index(const t_atom *identifier) const        { return m_data.get_entry_index(identifier); }
-        long column_from_specifier(const t_atom *specifier) const   { return m_data.column_from_specifier(specifier); }
+        long get_column_index(const t_atom *specifier) const        { return m_data.get_column_index(specifier); }
         
         // Stats and Saving
         
@@ -269,8 +269,8 @@ private:
     bool get_column_label_mode(long idx) const              { return m_columns[idx].m_label; }
     void get_entry_identifier(long idx, t_atom *a)  const   { return get_entry_identifier(idx).get_atom(a); }
     t_custom_atom get_entry_identifier(long idx) const      { return m_identifiers[idx];}
-    long column_from_specifier(const t_atom *specifier) const;
     long get_entry_index(const t_atom *identifier) const    { return search_identifiers(identifier).m_index; }
+    long get_column_index(const t_atom *specifier) const;
     
     // Stats
     
