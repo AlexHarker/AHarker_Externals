@@ -142,9 +142,9 @@ void entries::reserve(long items)
 
 void entries::clear()
 {
-    m_entries.clear();
     m_identifiers.clear();
     m_order.clear();
+    m_entries.clear();
     m_types.clear();
 }
 
@@ -174,10 +174,10 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
     if (idx < 0)
     {
         idx = num_items();
+        m_identifiers.push_back(t_custom_atom(identifier, false));
+        m_order.insert(m_order.begin() + position.m_order, idx);
         m_entries.resize((idx + 1) * num_columns());
         m_types.resize((idx + 1) * num_columns());
-        m_order.insert(m_order.begin() + position.m_order, idx);
-        m_identifiers.push_back(t_custom_atom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
@@ -251,7 +251,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_writ
         
     if (num_matches && matching.size())
     {
-        std::vector<long> indices(num_matches);;
+        std::vector<long> indices(num_matches);
         
         for (long i = 0; i < num_matches; i++)
             indices[i] = matching.get_index(i);
