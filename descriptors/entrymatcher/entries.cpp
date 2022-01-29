@@ -32,9 +32,10 @@ void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
     bool label_modes_changed = false;
     
     if (argc > num_columns())
+    {
         object_error((t_object *) x, "more label modes than columns");
-    
-    argc = (argc > num_columns()) ? num_columns() : argc;
+        argc = num_columns();
+    }
     
     for (long i = 0; i < argc; i++)
     {
@@ -44,7 +45,11 @@ void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
     }
     
     if (label_modes_changed)
+    {
+        if (num_items())
+            object_error((t_object *) x, "data cleared due to label mode changes");
         clear();
+    }
 }
 
 // Set Column Names
@@ -52,10 +57,11 @@ void entries::set_column_label_modes(void *x, long argc, t_atom *argv)
 void entries::set_column_names(void *x, long argc, t_atom *argv)
 {
     if (argc > num_columns())
+    {
         object_error((t_object *) x, "more names than columns");
-    
-    argc = (argc > num_columns()) ? num_columns() : argc;
-    
+        argc = num_columns();
+    }
+        
     for (long i = 0; i < argc; i++)
         m_columns[i].m_name = atom_getsym(argv++);
 }
@@ -154,6 +160,9 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
         return;
     }
     
+    if (argc > num_columns())
+        object_error((t_object *) x, "more items than columns");
+    
     // Get the identifier, order position and find any prexisting entry with this identifier
     
     t_atom *identifier = argv++;
@@ -175,18 +184,26 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
     
     for (long i = 0; i < num_columns(); i++, argv++)
     {
-        t_custom_atom data = argv;
+        t_custom_atom data(argv);
         
-        if (i < argc && m_columns[i].m_label == data.is_symbol())
-            set_data(idx, i, data);
-        else
+        if (i >= argc || m_columns[i].m_label != data.is_symbol())
         {
             if (i < argc)
                 object_error((t_object *) x, "incorrect type in entry - column number %ld", i + 1);
             
             set_data(idx, i, m_columns[i].m_label ? t_custom_atom(gensym("")) : t_custom_atom());
         }
+        else
+            set_data(idx, i, data);
     }
+}
+
+// Removal Entry Error
+
+void entry_does_not_exist(void *x, t_atom *argv)
+{
+    t_custom_atom a(argv, false);
+    object_error((t_object *) x, "no entry %s to remove", a.get_string().c_str());
 }
 
 // Remove Entries from identifiers (with read pointer - ugraded on next method call to write)
@@ -199,30 +216,30 @@ void entries::remove_entries(void *x, long argc, t_atom *argv, read_write_access
         return;
     }
     
-    if (argc > 1)
+    if (argc == 1)
     {
-        std::vector<long> indices(argc);
-        long size = 0;
-        
-        for (long i = 0; i < argc; i++)
-        {
-            long index = get_entry_index(argv + i);
-            
-            if (index > -1)
-                indices[size++] = index;
-        }
-        
-        indices.resize(size);
-        sort(indices, size);
-        
-        if (size)
-            delete_entries(indices, access);
-    }
-    else
         delete_entry(x, argv, access);
+        return;
+    }
+    
+    std::vector<long> indices;
+    indices.reserve(argc);
+        
+    for (long i = 0; i < argc; i++)
+    {
+        long index = get_entry_index(argv + i);
+        
+        if (index < 0)
+            entry_does_not_exist(x, argv + i);
+        else
+            indices.push_back(index);
+    }
+    
+    if (indices.size())
+        delete_entries(indices, access);
 }
 
-// Remove entries from matching (with read pointer - ugraded on next method call to write)
+// Remove Matching Entries (based on a specific set of matchers)
 
 void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_write_access& access)
 {
@@ -230,7 +247,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_writ
         return;
             
     matchers matching(x, argc, argv, access);
-    long num_matches = matching.match(access, 1.0, 0, true);
+    long num_matches = matching.match(access, 1.0, 0, false);
         
     if (num_matches && matching.size())
     {
@@ -356,7 +373,7 @@ void entries::delete_entry(void *x, t_atom *identifier, read_write_access& acces
     
     if (idx < 0)
     {
-        object_error((t_object *) x, "entry does not exist");
+        entry_does_not_exist(x, identifier);
         return;
     }
  
