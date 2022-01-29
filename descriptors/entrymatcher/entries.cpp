@@ -372,6 +372,7 @@ void entries::delete_entry(void *x, t_atom *identifier, read_write_access& acces
 {
     auto position = search_identifiers(identifier);
     long idx = position.m_index;
+    long data_offset = idx * num_columns();
     
     if (idx < 0)
     {
@@ -383,24 +384,25 @@ void entries::delete_entry(void *x, t_atom *identifier, read_write_access& acces
 
     m_identifiers.erase(m_identifiers.begin() + idx);
     m_order.erase(m_order.begin() + position.m_order);
-    m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
-    m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
+    m_entries.erase(m_entries.begin() + data_offset, m_entries.begin() + data_offset + num_columns());
+    m_types.erase(m_types.begin() + data_offset, m_types.begin() + data_offset + num_columns());
  
+    auto check_and_adjust_order = [&](long &a) { if (a > idx) a--; };
+
     auto it = m_order.begin();
     
     // Unrolled order updating for speed
     
-    for ( ; it < (m_order.end() - 3); it += 4)
+    while (it < (m_order.end() - 3))
     {
-        if (it[0] > idx) it[0]--;
-        if (it[1] > idx) it[1]--;
-        if (it[2] > idx) it[2]--;
-        if (it[3] > idx) it[3]--;
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
     }
     
-    for ( ; it != m_order.end(); it++)
-        if (*it > idx)
-            (*it)--;
+    while (it != m_order.end())
+        check_and_adjust_order(*it++);
 }
 
 // Replace One Item (within an entry)
