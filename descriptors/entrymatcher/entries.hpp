@@ -247,7 +247,7 @@ private:
     void add_entry(void *x, long argc, t_atom *argv);
     void remove_entries(void *x, long argc, t_atom *argv, read_write_access& access);
     void remove_matched_entries(void *x, long argc, t_atom *argv, read_write_access& access);
-    void delete_entries(const std::vector<long>& indices, read_write_access& access);
+    void delete_entries(std::vector<long>& indices, read_write_access& access);
     void delete_entry(void *x, t_atom *identifier, read_write_access& access);
     void replace_item(t_atom *identifier, long column, t_atom *item);
 

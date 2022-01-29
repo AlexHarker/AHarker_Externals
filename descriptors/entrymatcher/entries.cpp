@@ -279,29 +279,31 @@ long entries::get_order(long idx)
 
 // Delete Multiple Entries (from a list of sorted indices (upgrading a read pointer to a write lock))
 
-void entries::delete_entries(const std::vector<long>& sorted_indices, read_write_access& access)
+void entries::delete_entries(std::vector<long>& indices, read_write_access& access)
 {
-    long order_start = get_order(sorted_indices[0]);
-    long offset = sorted_indices[0];
-    long next = sorted_indices[0];
+    sort(indices, indices.size());
+    
+    long order_start = get_order(indices[0]);
+    long offset = indices[0];
+    long next = indices[0];
     long size;
     long end;
-    
+        
     // Setup new order vector
     
     std::vector<long> new_order(num_items());
     std::copy(m_order.begin(), m_order.begin() + offset, new_order.begin());
     
-    for (long i = 0; i < sorted_indices.size(); offset += (next - end))
+    for (long i = 0; i < indices.size(); offset += (next - end))
     {
         long start = next;
         
-        for (++i; i < sorted_indices.size(); i++)
-            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
+        for (++i; i < indices.size(); i++)
+            if (indices[i] > indices[i - 1] + 1)
                 break;
         
-        end = sorted_indices[i - 1] + 1;
-        next = i < sorted_indices.size() ? sorted_indices[i] : num_items();
+        end = indices[i - 1] + 1;
+        next = i < indices.size() ? indices[i] : num_items();
         
         // Mark new order array for deletion
         
@@ -320,16 +322,16 @@ void entries::delete_entries(const std::vector<long>& sorted_indices, read_write
 
     // Remove data
 
-    offset = sorted_indices[0];
+    offset = indices[0];
     
-    for (long i = 0; i < sorted_indices.size(); offset += size)
+    for (long i = 0; i < indices.size(); offset += size)
     {
-        for (++i; i < sorted_indices.size(); i++)
-            if (sorted_indices[i] > sorted_indices[i - 1] + 1)
+        for (++i; i < indices.size(); i++)
+            if (indices[i] > indices[i - 1] + 1)
                 break;
         
-        end = sorted_indices[i - 1] + 1;
-        size = (i < sorted_indices.size() ? sorted_indices[i] : num_items()) - end;
+        end = indices[i - 1] + 1;
+        size = (i < indices.size() ? indices[i] : num_items()) - end;
         
         // Move data
         
