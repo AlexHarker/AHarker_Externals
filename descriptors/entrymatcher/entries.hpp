@@ -131,12 +131,12 @@ public:
         
         void remove_entries(void *x, long argc, t_atom *argv)
         {
-            with_lock(&entries::remove_entries, x, argc, argv);
+            with_read_write_lock(&entries::remove_entries, x, argc, argv);
         }
         
         void remove_matched_entries(void *x, long argc, t_atom *argv)
         {
-            with_lock(&entries::remove_matched_entries, x, argc, argv);
+            with_read_write_lock(&entries::remove_matched_entries, x, argc, argv);
         }
         
         // Replace an Item (in an entry)
@@ -153,13 +153,20 @@ public:
         
     private:
         
-        // Lock Helper
+        // Lock Helpers
         
         template <typename Method, typename ...Args>
         void with_lock(Method method, Args&& ...args)
         {
             write_lock_hold lock(&m_entries.m_lock);
             (m_entries.*method)(args...);
+        }
+        
+        template <typename Method, typename ...Args>
+        void with_read_write_lock(Method method, Args&& ...args)
+        {
+            read_write_access access(m_entries);
+            (m_entries.*method)(args..., access);
         }
         
         // Data
@@ -238,11 +245,11 @@ private:
     void set_column_label_modes(void *x, long argc, t_atom *argv);
     void set_column_names(void *x, long argc, t_atom *argv);
     void add_entry(void *x, long argc, t_atom *argv);
-    void remove_entries(void *x, long argc, t_atom *argv);
-    void remove_matched_entries(void *x, long argc, t_atom *argv);
+    void remove_entries(void *x, long argc, t_atom *argv, read_write_access& access);
+    void remove_matched_entries(void *x, long argc, t_atom *argv, read_write_access& access);
+    void delete_entries(const std::vector<long>& indices, read_write_access& access);
+    void delete_entry(void *x, t_atom *identifier, read_write_access& access);
     void replace_item(t_atom *identifier, long column, t_atom *item);
-    void delete_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
-    void delete_entry(void *x, t_atom *identifier);
 
     // Loading
     

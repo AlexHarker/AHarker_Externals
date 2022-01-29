@@ -191,7 +191,7 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
 
 // Remove Entries from identifiers (with read pointer - ugraded on next method call to write)
 
-void entries::remove_entries(void *x, long argc, t_atom *argv)
+void entries::remove_entries(void *x, long argc, t_atom *argv, read_write_access& access)
 {
     if (!argc)
     {
@@ -201,8 +201,6 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
     
     if (argc > 1)
     {
-        read_write_access database(*this);
-    
         std::vector<long> indices(argc);
         long size = 0;
         
@@ -218,23 +216,21 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
         sort(indices, size);
         
         if (size)
-            delete_entries(database, indices);
+            delete_entries(indices, access);
     }
     else
-        delete_entry(x, argv);
+        delete_entry(x, argv, access);
 }
 
 // Remove entries from matching (with read pointer - ugraded on next method call to write)
 
-void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
+void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_write_access& access)
 {
     if (!argc)
         return;
-    
-    read_write_access database(*this);
-        
-    matchers matching(x, argc, argv, database);
-    long num_matches = matching.match(database, 1.0, 0, true);
+            
+    matchers matching(x, argc, argv, access);
+    long num_matches = matching.match(access, 1.0, 0, true);
         
     if (num_matches && matching.size())
     {
@@ -243,7 +239,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
         for (long i = 0; i < num_matches; i++)
             indices[i] = matching.get_index(i);
         
-        delete_entries(database, indices);
+        delete_entries(indices, access);
     }
 }
 
@@ -266,10 +262,8 @@ long entries::get_order(long idx)
 
 // Delete Multiple Entries (from a list of sorted indices (upgrading a read pointer to a write lock))
 
-void entries::delete_entries(read_write_access& read_locked_database, const std::vector<long>& sorted_indices)
+void entries::delete_entries(const std::vector<long>& sorted_indices, read_write_access& access)
 {
-    read_locked_database.promote();
-    
     long order_start = get_order(sorted_indices[0]);
     long offset = sorted_indices[0];
     long next = sorted_indices[0];
@@ -305,6 +299,8 @@ void entries::delete_entries(read_write_access& read_locked_database, const std:
     
     long new_size = offset;
     
+    access.promote();
+
     // Remove data
 
     offset = sorted_indices[0];
@@ -353,7 +349,7 @@ void entries::delete_entries(read_write_access& read_locked_database, const std:
 
 // Delete a Single Entry
 
-void entries::delete_entry(void *x, t_atom *identifier)
+void entries::delete_entry(void *x, t_atom *identifier, read_write_access& access)
 {
     auto position = search_identifiers(identifier);
     long idx = position.m_index;
@@ -363,7 +359,9 @@ void entries::delete_entry(void *x, t_atom *identifier)
         object_error((t_object *) x, "entry does not exist");
         return;
     }
-    
+ 
+    access.promote();
+
     m_identifiers.erase(m_identifiers.begin() + idx);
     m_order.erase(m_order.begin() + position.m_order);
     m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
