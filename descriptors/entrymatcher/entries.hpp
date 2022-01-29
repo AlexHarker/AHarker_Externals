@@ -192,6 +192,14 @@ private:
         bool m_label;
     };
     
+    // Position Info
+    
+    struct position_info
+    {
+        long m_index;
+        long m_order;
+    };
+    
     // A Read / Write Access (starts as read with promotion to write)
     
     struct read_write_access : public read_access
@@ -261,14 +269,8 @@ private:
     bool get_column_label_mode(long idx) const              { return m_columns[idx].m_label; }
     void get_entry_identifier(long idx, t_atom *a)  const   { return get_entry_identifier(idx).get_atom(a); }
     t_custom_atom get_entry_identifier(long idx) const      { return m_identifiers[idx];}
-    
-    long get_entry_index(const t_atom *identifier) const
-    {
-        long order;
-        return search_identifiers(identifier, order);
-    }
-    
     long column_from_specifier(const t_atom *specifier) const;
+    long get_entry_index(const t_atom *identifier) const    { return search_identifiers(identifier).m_index; }
     
     // Stats
     
@@ -313,7 +315,7 @@ private:
     // Ordering
     
     long get_order(long idx);
-    long search_identifiers(const t_atom *identifier_atom, long& idx) const;
+    position_info search_identifiers(const t_atom *identifier_atom) const;
    
     // Data
     

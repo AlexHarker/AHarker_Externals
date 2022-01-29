@@ -60,30 +60,27 @@ void entries::set_column_names(void *x, long argc, t_atom *argv)
         m_columns[i].m_name = atom_getsym(argv++);
 }
 
-/*****************************************/
 // Find Entries / Columns
-/*****************************************/
 
 // Search Identifiers
 
-long entries::search_identifiers(const t_atom *identifier_atom, long& idx) const
+entries::position_info entries::search_identifiers(const t_atom *identifier_atom) const
 {
     using ordering = t_custom_atom::ordering;
     
     t_custom_atom identifier(identifier_atom, false);
     
-    long gap = idx = num_items() / 2;
-    gap = gap < 1 ? 1 : gap;
+    long idx = num_items() / 2;
+    long gap = std::max(1L, idx);
     
     while (gap && idx < num_items())
     {
-        gap /= 2;
-        gap = gap < 1 ? 1 : gap;
+        gap = std::max(1L, gap / 2);
         
         switch (order(identifier, get_entry_identifier(m_order[idx])))
         {
             case ordering::equal:
-                return m_order[idx];
+                return { m_order[idx], idx };
                 
             case ordering::higher:
                 idx += gap;
@@ -98,7 +95,7 @@ long entries::search_identifiers(const t_atom *identifier_atom, long& idx) const
         }
     }
     
-    return -1;
+    return { -1, -1 };
 }
 
 // Find a Column from Specifier
@@ -159,8 +156,8 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
     // Get the identifier, order position and find any prexisting entry with this identifier
     
     t_atom *identifier = argv++;
-    long order;
-    long idx = search_identifiers(identifier, order);
+    auto position = search_identifiers(identifier);
+    long idx = position.m_index;
 
     // Make a space for a new entry in the case that this identifier does *not* exist
     
@@ -169,7 +166,7 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
         idx = num_items();
         m_entries.resize((idx + 1) * num_columns());
         m_types.resize((idx + 1) * num_columns());
-        m_order.insert(m_order.begin() + order, idx);
+        m_order.insert(m_order.begin() + position.m_order, idx);
         m_identifiers.push_back(t_custom_atom(identifier, false));
     }
 
@@ -214,8 +211,7 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
         
         for (long i = 0; i < argc; i++)
         {
-            long idx;
-            long index = search_identifiers(argv +i, idx);
+            long index = get_entry_index(argv + i);
             
             if (index > -1)
                 indices[size++] = index;
@@ -263,11 +259,10 @@ void copy_range(std::vector<T>& data, long from, long to, long size, long item_s
 long entries::get_order(long idx)
 {
     t_atom identifier;
-    long order;
+
     m_identifiers[idx].get_atom(&identifier);
-    search_identifiers(&identifier, order);
-    
-    return order;
+
+    return search_identifiers(&identifier).m_order;;
 }
 
 // Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
@@ -361,8 +356,8 @@ void entries::remove_entries(read_write_access& read_locked_database, const std:
 
 void entries::remove_entry(void *x, t_atom *identifier)
 {
-    long order;
-    long idx = search_identifiers(identifier, order);
+    auto position = search_identifiers(identifier);
+    long idx = position.m_index;
     
     if (idx < 0)
     {
@@ -371,7 +366,7 @@ void entries::remove_entry(void *x, t_atom *identifier)
     }
     
     m_identifiers.erase(m_identifiers.begin() + idx);
-    m_order.erase(m_order.begin() + order);
+    m_order.erase(m_order.begin() + position.m_order);
     m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
     m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
  
