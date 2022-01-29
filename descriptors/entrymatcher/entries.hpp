@@ -3,7 +3,6 @@
 #define ENTRIES_HPP
 
 #include <ext.h>
-#include <utility>
 #include <vector>
 
 #include <AH_Locks.hpp>
@@ -160,7 +159,7 @@ public:
         void with_lock(Method method, Args&& ...args)
         {
             write_lock_hold lock(&m_entries.m_lock);
-            (m_entries.*method)(std::forward(args...));
+            (m_entries.*method)(args...);
         }
         
         // Data
