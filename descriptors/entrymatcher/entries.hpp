@@ -239,11 +239,11 @@ private:
     void set_column_label_modes(void *x, long argc, t_atom *argv);
     void set_column_names(void *x, long argc, t_atom *argv);
     void add_entry(void *x, long argc, t_atom *argv);
-    void remove_entry(void *x, t_atom *identifier);
-    void remove_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
     void remove_entries(void *x, long argc, t_atom *argv);
     void remove_matched_entries(void *x, long argc, t_atom *argv);
     void replace_item(t_atom *identifier, long column, t_atom *item);
+    void delete_entries(read_write_access& read_locked_database, const std::vector<long>& indices);
+    void delete_entry(void *x, t_atom *identifier);
 
     // Loading
     

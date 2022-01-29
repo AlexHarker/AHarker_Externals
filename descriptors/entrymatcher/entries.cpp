@@ -139,11 +139,9 @@ void entries::clear()
     m_types.clear();
 }
 
-/*****************************************/
 // Adding / Removing Entries
-/*****************************************/
 
-// Add (with pre-held lock)
+// Add
 
 void entries::add_entry(void *x, long argc, t_atom *argv)
 {
@@ -198,11 +196,7 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
         return;
     }
     
-    if (argc == 1)
-    {
-        remove_entry(x, argv);
-    }
-    else
+    if (argc > 1)
     {
         read_write_access database(*this);
     
@@ -221,8 +215,10 @@ void entries::remove_entries(void *x, long argc, t_atom *argv)
         sort(indices, size);
         
         if (size)
-            remove_entries(database, indices);
+            delete_entries(database, indices);
     }
+    else
+        delete_entry(x, argv);
 }
 
 // Remove entries from matching (with read pointer - ugraded on next method call to write)
@@ -233,22 +229,22 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv)
         return;
     
     read_write_access database(*this);
-    matchers matchers;
-    std::vector<long> indices;
-    long num_matches = 0;
-    
-    matchers.set_matchers(x, argc, argv, database);
-    num_matches = matchers.match(database, 1.0, 0, true);
-    indices.resize(num_matches);
         
-    for (long i = 0; i < num_matches; i++)
-        indices[i] = matchers.get_index(i);
+    matchers matching(x, argc, argv, database);
+    long num_matches = matching.match(database, 1.0, 0, true);
         
-    if (num_matches && matchers.size())
-        remove_entries(database, indices);
+    if (num_matches && matching.size())
+    {
+        std::vector<long> indices(num_matches);;
+        
+        for (long i = 0; i < num_matches; i++)
+            indices[i] = matching.get_index(i);
+        
+        delete_entries(database, indices);
+    }
 }
 
-// Helpers for mass removal
+// Helpers for Mass Removal
 
 template <class T>
 void copy_range(std::vector<T>& data, long from, long to, long size, long item_size = 1)
@@ -265,9 +261,9 @@ long entries::get_order(long idx)
     return search_identifiers(&identifier).m_order;;
 }
 
-// Remove multiple entries form sorted indices (upgrading a read pointer to a write lock)
+// Delete Multiple Entries (from a list of sorted indices (upgrading a read pointer to a write lock))
 
-void entries::remove_entries(read_write_access& read_locked_database, const std::vector<long>& sorted_indices)
+void entries::delete_entries(read_write_access& read_locked_database, const std::vector<long>& sorted_indices)
 {
     read_locked_database.promote();
     
@@ -352,9 +348,9 @@ void entries::remove_entries(read_write_access& read_locked_database, const std:
     m_order.resize(new_size);
 }
 
-// Remove a single entry (with lock)
+// Delete a Single Entry
 
-void entries::remove_entry(void *x, t_atom *identifier)
+void entries::delete_entry(void *x, t_atom *identifier)
 {
     auto position = search_identifiers(identifier);
     long idx = position.m_index;
@@ -370,7 +366,7 @@ void entries::remove_entry(void *x, t_atom *identifier)
     m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
     m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
  
-    std::vector<long>::iterator it = m_order.begin();
+    auto it = m_order.begin();
     
     // Unrolled order updating for speed
     

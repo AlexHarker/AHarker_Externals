@@ -19,7 +19,13 @@ public:
     // Constructor and Capacity
     
     matchers() : m_num_matches(0), m_order(loop_order::by_item) {}
-        
+    
+    matchers(void *x, long argc, t_atom *argv, const accessor& database)
+    : m_num_matches(0), m_order(loop_order::by_item)
+    {
+        set_matchers(x, argc, argv, database);
+    }
+
     long size() const   { return static_cast<long>(m_matchers.size()); }
     void clear()        { m_matchers.clear(); }
 
