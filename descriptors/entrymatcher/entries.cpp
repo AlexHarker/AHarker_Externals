@@ -101,7 +101,7 @@ entries::position_info entries::search_identifiers(const t_atom *identifier_atom
         }
     }
     
-    return { -1, -1 };
+    return { -1, idx };
 }
 
 // Get a Column Index (for a specifier)
