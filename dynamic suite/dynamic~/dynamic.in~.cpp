@@ -18,7 +18,7 @@
 #include <dynamic~.hpp>
 
 
-// Class and object structure
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -117,7 +117,7 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
     }
 }
 
-// Perform / DSP
+// Perform
 
 t_int *dynamic_in_perform(t_int *w)
 {
@@ -140,6 +140,8 @@ void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long n
     else
         memset(outs[0], 0, vec_size * sizeof(double));
 }
+
+// DSP
 
 void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count)
 {
