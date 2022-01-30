@@ -459,9 +459,9 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
             }
             
             if (test == ps_mean)
-                atom_setfloat(&output[i], mean);
+                atom_setfloat(output.data() + i, mean);
             else
-                atom_setfloat(&output[i], column_standard_deviation(column, mean));
+                atom_setfloat(output.data() + i, column_standard_deviation(column, mean));
         }
         else if (test == ps_median || test == ps_centile || test == ps_percentile)
         {
@@ -481,12 +481,12 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
                     object_error((t_object *) x, "no percentile given for percentile statistic");
             }
             
-            atom_setfloat(&output[i], find_percentile(values, percentile));
+            atom_setfloat(output.data() + i, find_percentile(values, percentile));
         }
         else if (test == ps_min || test == ps_minimum)
-            atom_setfloat(&output[i], column_min(column));
+            atom_setfloat(output.data() + i, column_min(column));
         else if (test == ps_max || test == ps_maximum)
-            atom_setfloat(&output[i], column_max(column));
+            atom_setfloat(output.data() + i, column_max(column));
         else
             object_error((t_object *) x, "unknown statistic type");
     }
@@ -622,14 +622,14 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
     dictionary_appendlong(dict_meta, gensym("num_columns"), num_columns());
     
     for (long i = 0; i < num_columns(); i++)
-        atom_setsym(&args[i], m_columns[i].m_name);
+        atom_setsym(args.data() + i, m_columns[i].m_name);
     
-    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), &args[0]);
+    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), args.data());
     
     for (long i = 0; i < num_columns(); i++)
-        atom_setlong(&args[i], m_columns[i].m_label);
+        atom_setlong(args.data() + i, m_columns[i].m_label);
     
-    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), &args[0]);
+    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), args.data());
     dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dict_meta);
     
     // Data
@@ -642,16 +642,16 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
         {
             t_dictionary *dict_entry = dictionary_new();
             
-            get_entry_identifier(i, &args[0]);
+            get_entry_identifier(args.data(), i);
             
             for (long j = 0; j < num_columns(); j++)
-                get_atom(&args[j + 1], i, j);
+                get_atom(args.data() + j + 1, i, j);
             
-            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, &args[0]);
-            atom_setobj(&entries[i], dict_entry);
+            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, args.data());
+            atom_setobj(entries.data() + i, dict_entry);
         }
         
-        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), &entries[0]);
+        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), entries.data());
     }
     else
     {
@@ -659,12 +659,12 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
         {
             std::string str("entry_" + std::to_string(i + 1));
             
-            get_entry_identifier(i, &args[0]);
-            
+            get_entry_identifier(args.data(), i);
+
             for (long j = 0; j < num_columns(); j++)
-                get_atom(&args[j + 1], i, j);
+                get_atom(args.data() + j + 1, i, j);
             
-            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, &args[0]);
+            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, args.data());
         }
     }
     dictionary_appenddictionary(dict, gensym("data"), (t_object *) dict_data);
