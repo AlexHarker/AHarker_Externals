@@ -13,9 +13,7 @@
  *
  *  Outgoing triggers are numbered according to voice.
  *  These can be tested using an audio rate comparison to derive triggers for individual voices.
- *
- *  See documentation for more info on limitations / implementation.
- *
+ * *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
@@ -144,8 +142,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     long num_voices = x->num_voices;
     long active_voices = x->active_voices;
     long active_connected = x->active_connected;
-    long voice_number;
-    long i;
+    long voice_idx;
     
     double *free_times = x->free_times;
     
@@ -158,7 +155,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     
     if (x->reset)
     {
-        for (i = 0; i < num_voices; i++)
+        for (long i = 0; i < num_voices; i++)
             free_times[i] = current_time;
         
         current_time = 0.0;
@@ -171,7 +168,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     {
         // Reset variables
         
-        voice_number = 0;
+        voice_idx = 0;
         length = 0.0;
         subsample_offset = 0.0;
         
@@ -182,9 +179,9 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
         {
             // Search for a free and active voice
             
-            for (voice_number = 1; free_times[voice_number - 1] > current_time && voice_number <= active_voices; voice_number++);
+            for (voice_idx = 1; free_times[voice_idx - 1] > current_time && voice_idx <= active_voices; voice_idx++);
             
-            if (voice_number <= active_voices)
+            if (voice_idx <= active_voices)
             {
                 // Get data for trigger
                 
@@ -194,10 +191,10 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
                 if (subsample_offset < 0.0)
                     subsample_offset = 0.0;
                 
-                free_times[voice_number - 1] = current_time + (sr_val * length) - subsample_offset;
+                free_times[voice_idx - 1] = current_time + (sr_val * length) - subsample_offset;
             }
             else
-                voice_number = 0;
+                voice_idx = 0;
         }
         
         // Advance input pointers
