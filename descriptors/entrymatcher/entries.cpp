@@ -295,16 +295,16 @@ void entries::delete_entries(std::vector<long>& indices, read_write_access& acce
     std::vector<long> new_order(num_items());
     long out_idx = indices[0], idx = 0, jdx = 0;
 
-    for (auto it = indices.begin(); it != indices.end() + 1; it++)
+    for (auto it = indices.begin(); it <= indices.end() + 1; it++)
     {
-        for ( ; idx < (it != indices.end() ? *it : num_items()); idx++, jdx++)
+        for ( ; idx < (it < indices.end() ? *it : num_items()); idx++, jdx++)
             new_order[get_order(idx)] = jdx;
         
-        it = std::adjacent_find(it + 1, indices.end(), non_consecutive());
+        it = std::adjacent_find(it, indices.end(), non_consecutive());
        
         // Mark for deletion
-        
-        for ( ; idx < (*it) + 1; idx++)
+
+        for ( ; idx < (it != indices.end() ? (*it) + 1 : *(it - 1) + 1); idx++)
             new_order[get_order(idx)] = -1;
     }
         
@@ -312,18 +312,18 @@ void entries::delete_entries(std::vector<long>& indices, read_write_access& acce
 
     // Remove data
     
-    for (auto it = indices.begin(); it != indices.end(); )
+    for (auto it = indices.begin(); it < indices.end(); )
     {
         it = std::adjacent_find(it, indices.end(), non_consecutive());
 
-        long idx = (*it++) + 1;
-        long jdx = it != indices.end() ? (*it) : num_items();
+        long kdx = it < indices.end() ? (*it) + 1: *(it - 1) + 1;
+        long ldx = ++it < indices.end() ? (*it) : num_items();
         
-        move_data(m_identifiers.begin(), idx, jdx, out_idx);
-        move_data(m_types.begin(), idx, jdx, out_idx, num_columns());
-        move_data(m_entries.begin(), idx, jdx, out_idx, num_columns());
+        move_data(m_identifiers.begin(), kdx, ldx, out_idx);
+        move_data(m_entries.begin(), kdx, ldx, out_idx, num_columns());
+        move_data(m_types.begin(), kdx, ldx, out_idx, num_columns());
         
-        out_idx += (jdx - idx);
+        out_idx += (ldx - kdx);
     }
 
     // Swap order vectors and move data in m_order as marked earlier
