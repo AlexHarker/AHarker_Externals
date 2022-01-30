@@ -101,7 +101,7 @@ entries::position_info entries::search_identifiers(const t_atom *identifier_atom
         }
     }
     
-    return { -1, -1 };
+    return { -1, idx };
 }
 
 // Get a Column Index (for a specifier)
@@ -142,9 +142,9 @@ void entries::reserve(long items)
 
 void entries::clear()
 {
-    m_entries.clear();
     m_identifiers.clear();
     m_order.clear();
+    m_entries.clear();
     m_types.clear();
 }
 
@@ -174,10 +174,10 @@ void entries::add_entry(void *x, long argc, t_atom *argv)
     if (idx < 0)
     {
         idx = num_items();
+        m_identifiers.push_back(t_custom_atom(identifier, false));
+        m_order.insert(m_order.begin() + position.m_order, idx);
         m_entries.resize((idx + 1) * num_columns());
         m_types.resize((idx + 1) * num_columns());
-        m_order.insert(m_order.begin() + position.m_order, idx);
-        m_identifiers.push_back(t_custom_atom(identifier, false));
     }
 
     // Store data of the correct data type but store null data for any unspecified columns / incorrect types
@@ -251,7 +251,7 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_writ
         
     if (num_matches && matching.size())
     {
-        std::vector<long> indices(num_matches);;
+        std::vector<long> indices(num_matches);
         
         for (long i = 0; i < num_matches; i++)
             indices[i] = matching.get_index(i);
@@ -262,10 +262,10 @@ void entries::remove_matched_entries(void *x, long argc, t_atom *argv, read_writ
 
 // Helpers for Mass Removal
 
-template <class T>
-void copy_range(std::vector<T>& data, long from, long to, long size, long item_size = 1)
+template <class Iterator>
+void move_data(Iterator it, long in_begin, long in_end, long out_idx, long item_size = 1)
 {
-    std::copy(data.begin() + (from * item_size), data.begin() + (from + size) * item_size, data.begin() + to * item_size);
+    std::copy(it + (in_begin * item_size), it + (in_end * item_size), it + (out_idx * item_size));
 }
 
 long entries::get_order(long idx)
@@ -274,96 +274,78 @@ long entries::get_order(long idx)
 
     m_identifiers[idx].get_atom(&identifier);
 
-    return search_identifiers(&identifier).m_order;;
+    return search_identifiers(&identifier).m_order;
 }
 
 // Delete Multiple Entries (from a list of sorted indices (upgrading a read pointer to a write lock))
 
 void entries::delete_entries(std::vector<long>& indices, read_write_access& access)
 {
-    sort(indices, indices.size());
+    // Predicates
     
-    long order_start = get_order(indices[0]);
-    long offset = indices[0];
-    long next = indices[0];
-    long size;
-    long end;
-        
+    struct non_consecutive { bool operator()(long &a, const long &b) { return b > a + 1; } };
+    struct for_deletion { bool operator()(const long& a) { return a == -1; } };
+
+    // Sort indices
+    
+    sort(indices, static_cast<long>(indices.size()));
+            
     // Setup new order vector
     
     std::vector<long> new_order(num_items());
-    std::copy(m_order.begin(), m_order.begin() + offset, new_order.begin());
-    
-    for (long i = 0; i < indices.size(); offset += (next - end))
+    long out_idx = indices[0], idx = 0, jdx = 0;
+
+    for (auto it = indices.begin(); it <= indices.end() + 1; it++)
     {
-        long start = next;
+        for ( ; idx < (it < indices.end() ? *it : num_items()); idx++, jdx++)
+            new_order[get_order(idx)] = jdx;
         
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
-                break;
-        
-        end = indices[i - 1] + 1;
-        next = i < indices.size() ? indices[i] : num_items();
-        
-        // Mark new order array for deletion
-        
-        for (long j = start; j < end; j++)
-            new_order[get_order(j)] = -1;
-        
-        // Alter order indices
-        
-        for (long j = end; j < next; j++)
-            new_order[get_order(j)] = (j - end) + offset;
+        it = std::adjacent_find(it, indices.end(), non_consecutive());
+       
+        // Mark for deletion
+
+        for ( ; idx < (it != indices.end() ? (*it) + 1 : *(it - 1) + 1); idx++)
+            new_order[get_order(idx)] = -1;
     }
-    
-    long new_size = offset;
-    
+        
     access.promote();
 
     // Remove data
-
-    offset = indices[0];
     
-    for (long i = 0; i < indices.size(); offset += size)
+    for (auto it = indices.begin(); it < indices.end(); )
     {
-        for (++i; i < indices.size(); i++)
-            if (indices[i] > indices[i - 1] + 1)
-                break;
+        it = std::adjacent_find(it, indices.end(), non_consecutive());
+
+        long kdx = it < indices.end() ? (*it) + 1: *(it - 1) + 1;
+        long ldx = ++it < indices.end() ? (*it) : num_items();
         
-        end = indices[i - 1] + 1;
-        size = (i < indices.size() ? indices[i] : num_items()) - end;
+        move_data(m_identifiers.begin(), kdx, ldx, out_idx);
+        move_data(m_entries.begin(), kdx, ldx, out_idx, num_columns());
+        move_data(m_types.begin(), kdx, ldx, out_idx, num_columns());
         
-        // Move data
-        
-        copy_range(m_identifiers, end, offset, size);
-        copy_range(m_types, end, offset, size, num_columns());
-        copy_range(m_entries, end, offset, size, num_columns());
+        out_idx += (ldx - kdx);
     }
 
-    // Swap order vectors and do deletion
+    // Swap order vectors and move data in m_order as marked earlier
     
     std::swap(m_order, new_order);
-    offset = order_start;
     
-    for (long i = order_start; i < m_order.size(); offset += size)
+    auto out_it = std::find_if(m_order.begin(), m_order.end(), for_deletion());
+    
+    for (auto it = out_it; it != m_order.end(); )
     {
-        for (end = ++i; end < m_order.size(); end++)
-            if (m_order[end] >= 0)
-                break;
+        auto jt = std::find_if_not(it, m_order.end(), for_deletion());
+        it = std::find_if(jt, m_order.end(), for_deletion());
         
-        for (i = end, size = 0; i < m_order.size(); i++, size++)
-            if (m_order[i] < 0)
-                break;
-        
-        copy_range(m_order, end, offset, size);
+        out_it = std::copy(jt, it, out_it);
     }
     
     // Resize storage
-    
-    m_identifiers.resize(new_size);
-    m_entries.resize(new_size * num_columns());
-    m_types.resize(new_size * num_columns());
-    m_order.resize(new_size);
+        
+    m_identifiers.resize(out_idx);
+    m_entries.resize(out_idx * num_columns());
+    m_types.resize(out_idx * num_columns());
+    m_order.resize(out_idx);
 }
 
 // Delete a Single Entry
@@ -372,6 +354,7 @@ void entries::delete_entry(void *x, t_atom *identifier, read_write_access& acces
 {
     auto position = search_identifiers(identifier);
     long idx = position.m_index;
+    long data_offset = idx * num_columns();
     
     if (idx < 0)
     {
@@ -383,24 +366,25 @@ void entries::delete_entry(void *x, t_atom *identifier, read_write_access& acces
 
     m_identifiers.erase(m_identifiers.begin() + idx);
     m_order.erase(m_order.begin() + position.m_order);
-    m_entries.erase(m_entries.begin() + (idx * num_columns()), m_entries.begin() + ((idx + 1) * num_columns()));
-    m_types.erase(m_types.begin() + (idx * num_columns()), m_types.begin() + ((idx + 1) * num_columns()));
+    m_entries.erase(m_entries.begin() + data_offset, m_entries.begin() + data_offset + num_columns());
+    m_types.erase(m_types.begin() + data_offset, m_types.begin() + data_offset + num_columns());
  
+    auto check_and_adjust_order = [&](long &a) { if (a > idx) a--; };
+
     auto it = m_order.begin();
     
     // Unrolled order updating for speed
     
-    for ( ; it < (m_order.end() - 3); it += 4)
+    while (it < (m_order.end() - 3))
     {
-        if (it[0] > idx) it[0]--;
-        if (it[1] > idx) it[1]--;
-        if (it[2] > idx) it[2]--;
-        if (it[3] > idx) it[3]--;
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
+        check_and_adjust_order(*it++);
     }
     
-    for ( ; it != m_order.end(); it++)
-        if (*it > idx)
-            (*it)--;
+    while (it != m_order.end())
+        check_and_adjust_order(*it++);
 }
 
 // Replace One Item (within an entry)
@@ -475,9 +459,9 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
             }
             
             if (test == ps_mean)
-                atom_setfloat(&output[i], mean);
+                atom_setfloat(output.data() + i, mean);
             else
-                atom_setfloat(&output[i], column_standard_deviation(column, mean));
+                atom_setfloat(output.data() + i, column_standard_deviation(column, mean));
         }
         else if (test == ps_median || test == ps_centile || test == ps_percentile)
         {
@@ -497,12 +481,12 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
                     object_error((t_object *) x, "no percentile given for percentile statistic");
             }
             
-            atom_setfloat(&output[i], find_percentile(values, percentile));
+            atom_setfloat(output.data() + i, find_percentile(values, percentile));
         }
         else if (test == ps_min || test == ps_minimum)
-            atom_setfloat(&output[i], column_min(column));
+            atom_setfloat(output.data() + i, column_min(column));
         else if (test == ps_max || test == ps_maximum)
-            atom_setfloat(&output[i], column_max(column));
+            atom_setfloat(output.data() + i, column_max(column));
         else
             object_error((t_object *) x, "unknown statistic type");
     }
@@ -553,7 +537,7 @@ void entries::column_sort(long column, std::vector<double>& sorted_values) const
 
 double entries::find_percentile(std::vector<double>& sorted_values, double percentile) const
 {
-    long n_items = sorted_values.size();
+    long n_items = static_cast<long>(sorted_values.size());
     
     if (!n_items)
         return std::numeric_limits<double>::quiet_NaN();
@@ -638,14 +622,14 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
     dictionary_appendlong(dict_meta, gensym("num_columns"), num_columns());
     
     for (long i = 0; i < num_columns(); i++)
-        atom_setsym(&args[i], m_columns[i].m_name);
+        atom_setsym(args.data() + i, m_columns[i].m_name);
     
-    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), &args[0]);
+    dictionary_appendatoms(dict_meta, gensym("names"), num_columns(), args.data());
     
     for (long i = 0; i < num_columns(); i++)
-        atom_setlong(&args[i], m_columns[i].m_label);
+        atom_setlong(args.data() + i, m_columns[i].m_label);
     
-    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), &args[0]);
+    dictionary_appendatoms(dict_meta, gensym("labelmodes"), num_columns(), args.data());
     dictionary_appenddictionary(dict, gensym("metadata"), (t_object *) dict_meta);
     
     // Data
@@ -658,16 +642,16 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
         {
             t_dictionary *dict_entry = dictionary_new();
             
-            get_entry_identifier(i, &args[0]);
+            get_entry_identifier(args.data(), i);
             
             for (long j = 0; j < num_columns(); j++)
-                get_atom(&args[j + 1], i, j);
+                get_atom(args.data() + j + 1, i, j);
             
-            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, &args[0]);
-            atom_setobj(&entries[i], dict_entry);
+            dictionary_appendatoms(dict_entry, gensym("entry"), num_columns() + 1, args.data());
+            atom_setobj(entries.data() + i, dict_entry);
         }
         
-        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), &entries[0]);
+        dictionary_appendatoms(dict_data, gensym("all_entries"), num_items(), entries.data());
     }
     else
     {
@@ -675,12 +659,12 @@ t_dictionary *entries::save_dictionary(bool data_one_key) const
         {
             std::string str("entry_" + std::to_string(i + 1));
             
-            get_entry_identifier(i, &args[0]);
-            
+            get_entry_identifier(args.data(), i);
+
             for (long j = 0; j < num_columns(); j++)
-                get_atom(&args[j + 1], i, j);
+                get_atom(args.data() + j + 1, i, j);
             
-            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, &args[0]);
+            dictionary_appendatoms(dict_data, gensym(str.c_str()), num_columns() + 1, args.data());
         }
     }
     dictionary_appenddictionary(dict, gensym("data"), (t_object *) dict_data);

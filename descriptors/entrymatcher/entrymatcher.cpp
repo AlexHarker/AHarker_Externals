@@ -217,7 +217,7 @@ bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long a
         output.resize(num_columns);
                 
         for (long i = 0; i < num_columns; i++)
-            database.get_atom(&output[i], idx, i);
+            database.get_atom(output.data() + i, idx, i);
     }
     else
     {
@@ -233,9 +233,9 @@ bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long a
             column = (column < -1) ? 0 : column;
             
             if (column == -1)
-                database.get_entry_identifier(idx, &output[i]);
+                database.get_entry_identifier(output.data() + i, idx);
             else
-                database.get_atom(&output[i], idx, column);
+                database.get_atom(output.data() + i, idx, column);
         }
     }
     
@@ -353,7 +353,7 @@ long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n
         }
         
         atom_setfloat(output[0] + i, distance);
-        database.get_entry_identifier(index, output[1] + i);
+        database.get_entry_identifier(output[1] + i, index);
         atom_setlong(output[2] + i, index + 1);
     }
     

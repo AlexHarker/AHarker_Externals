@@ -415,7 +415,7 @@ void database_view_editstarted(t_database_view *x, t_symbol *colname, t_rowref r
     auto database = x->database->get_read_access();
     long row_index = map_rowref_to_index(x, rr);
         
-    database.get_entry_identifier(row_index, &x->edit_identifier);
+    database.get_entry_identifier(&x->edit_identifier, row_index);
 }
 
 void database_view_celledited(t_database_view *x, t_symbol *colname, t_rowref rr, long argc, t_atom *argv)
