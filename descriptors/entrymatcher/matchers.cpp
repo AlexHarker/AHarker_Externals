@@ -119,12 +119,14 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     // Clip the number of matches
     
     long num_matches = static_cast<long>(round(m_num_matches * ratio_matched));
-    num_matches = (max_matches && m_num_matches > max_matches) ? max_matches : m_num_matches;
-
-    // FIX - better heuristics and more info on what has been sorted...
+    num_matches = (max_matches && max_matches < m_num_matches) ? max_matches : m_num_matches;
+    
+    // Sort the results if needed
     
     if (size() && (must_sort || num_matches < m_num_matches))
     {
+        // FIX - better heuristics and more info on what has been sorted...
+
         if (num_matches < (database.num_items() / 8))
         {
             num_matches = std::min(num_matches, m_num_matches);
