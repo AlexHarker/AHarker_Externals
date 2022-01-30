@@ -8,7 +8,6 @@
  *  Typically voicedrive~ is used in connection with the voicemanager~ object.
  *  In this case it is used as the drive unit for each individual voice of a process.
  *  It can also be used for other sample-accurate timing purposes such as random length ramping.
- *  See documentation for more info on implementation.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
