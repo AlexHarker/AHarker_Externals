@@ -8,8 +8,7 @@
  *
  *  Scaling is set by a parameter message.
  *  Scaling type refers to interpretation of the *input* rather than the output.
- *  E.g. the log setting treats the input as logarithmic and scales exponentially (e.g to control frequency).
- *  See the documentation for more detail on other modes.
+ *  E.g. the log mode treats the input as logarithmic and scales exponentially (e.g to control frequency).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -28,6 +27,9 @@
 #include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
 
+
+// Useful Defines
+
 using max_object_base = t_pxobject;
 const char *object_name = "valconvert~";
 method free_routine = (method) dsp_free;
@@ -36,6 +38,7 @@ using max_object_base = t_object;
 const char *object_name = "valconvert";
 method free_routine = nullptr;
 #endif
+
 
 // Globals and Object Structure
 
@@ -151,7 +154,7 @@ int C74_EXPORT main()
     return 0;
 }
 
-// New / Free / Assist
+// New
 
 void *valconvert_new(t_symbol *msg, long argc, t_atom *argv)
 {
@@ -394,7 +397,7 @@ void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 
 #endif
 
-// Methods to set the scaling
+// Methods to Set Scaling
 
 void convert_power(double &a, double&b, double base, double divisor)
 {
