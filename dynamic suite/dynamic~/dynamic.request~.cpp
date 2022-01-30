@@ -20,7 +20,7 @@
 #include <dynamic~.hpp>
 
 
-// Class and object structure
+// Globals and Object Structure
 
 t_class *this_class;
 

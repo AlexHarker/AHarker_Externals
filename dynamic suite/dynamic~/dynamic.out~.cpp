@@ -20,7 +20,7 @@
 #include <dynamic~.hpp>
 
 
-// Class and object structure
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -32,7 +32,6 @@ struct t_dynamic_out
     long num_sig_outs;
     
     t_atom_long outlet_num;
-    
 };
 
 // Function prototypes
