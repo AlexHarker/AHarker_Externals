@@ -206,7 +206,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
         
         // Output parameters
         
-        *out1++ = voice_number;
+        *out1++ = voice_idx;
         *out2++ = length;
         *out3++ = subsample_offset;
         
