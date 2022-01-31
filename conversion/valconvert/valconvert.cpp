@@ -14,6 +14,7 @@
  *
  */
 
+
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -39,8 +40,20 @@ const char *object_name = "valconvert";
 method free_routine = nullptr;
 #endif
 
+// Globals, Enums and Object Structure
 
-// Globals and Object Structure
+t_class *this_class;
+
+t_symbol *ps_scale;
+t_symbol *ps_log;
+t_symbol *ps_amp;
+t_symbol *ps_pitch;
+t_symbol *ps_exp;
+t_symbol *ps_none;
+t_symbol *ps_iamp;
+t_symbol *ps_ipitch;
+
+t_symbol *ps_list;
 
 enum class conversion_mode
 {
@@ -63,19 +76,6 @@ struct t_valconvert
     
     void *the_outlet;
 };
-
-t_class *this_class;
-
-t_symbol *ps_scale;
-t_symbol *ps_log;
-t_symbol *ps_amp;
-t_symbol *ps_pitch;
-t_symbol *ps_exp;
-t_symbol *ps_none;
-t_symbol *ps_iamp;
-t_symbol *ps_ipitch;
-
-t_symbol *ps_list;
 
 // Function Protoypes
 
