@@ -237,7 +237,7 @@ void entry_database_view(t_entry_database *x)
         ps_parent_patcher->s_thing = nullptr;
         
         atom_setparse(&ac, &av, "@defrect 0 0 600 600 @toolbarvisible 0 @enablehscroll 0 @enablevscroll 0 @noedit 1");
-        attr_args_dictionary(d, ac, av);
+        attr_args_dictionary(d, static_cast<short>(ac), av);
         atom_setobj(&a, d);
         x->view_patch = (t_object *) object_new_typed(CLASS_NOBOX, gensym("jpatcher"),1, &a);
         ps_parent_patcher->s_thing = parent;
