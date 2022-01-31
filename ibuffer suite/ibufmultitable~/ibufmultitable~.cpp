@@ -116,7 +116,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     
     // Arguments
     
-    long non_attr_argc = attr_args_offset(argc, argv);
+    long non_attr_argc = attr_args_offset(static_cast<short>(argc), argv);
     
     x->buffer_name = non_attr_argc > 0 ? atom_getsym(argv + 0) : buffer_name;
     x->start_samp = non_attr_argc > 1 ? atom_getlong(argv + 1) : std::max(start_samp, static_cast<t_atom_long>(0));
@@ -127,7 +127,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
     
     return x;
 }
