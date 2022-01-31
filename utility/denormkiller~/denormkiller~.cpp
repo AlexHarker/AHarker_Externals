@@ -104,4 +104,3 @@ void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double
 {
     object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, nullptr);
 }
-

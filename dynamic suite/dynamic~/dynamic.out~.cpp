@@ -203,4 +203,3 @@ void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double s
     else
         object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform_scalar64, 0, nullptr);
 }
-

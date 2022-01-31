@@ -213,4 +213,3 @@ void clock_delete(t_dynamic_this *x)
     if (x->dynamic_parent)
         object_method(x->dynamic_parent, ps_deletepatch, x->index);
 }
-

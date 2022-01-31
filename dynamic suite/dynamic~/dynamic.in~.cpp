@@ -152,4 +152,3 @@ void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sam
 {
     object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, nullptr);
 }
-
