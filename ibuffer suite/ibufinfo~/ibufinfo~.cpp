@@ -8,10 +8,14 @@
  *
  */
 
+
 #include <ext.h>
 #include <ext_obex.h>
 
 #include <ibuffer_access.hpp>
+
+
+// Globals and Object Structure
 
 t_class *this_class;
 
@@ -26,11 +30,15 @@ struct t_ibufinfo
     void *chans_outlet;
 };
 
+// Function Prototypes
+
 void *ibufinfo_new(t_symbol *buffer_name);
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s);
 
 void ibufinfo_set(t_ibufinfo *x, t_symbol *name);
 void ibufinfo_bang(t_ibufinfo *x);
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -51,6 +59,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Assist
 
 void *ibufinfo_new(t_symbol *buffer_name)
 {
@@ -87,6 +97,8 @@ void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s)
         sprintf(s, "Buffer Name / bang");
     }
 }
+
+// Output / Setting Buffer
 
 void ibufinfo_bang(t_ibufinfo *x)
 {
