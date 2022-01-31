@@ -292,7 +292,7 @@ t_int *valconvert_perform(t_int *w)
 {
     float *in = (float *) w[1];
     float *out = (float *) w[2];
-    long vec_size = w[3];
+    long vec_size = (long) w[3];
     t_valconvert *x = (t_valconvert *) w[4];
     
     valconvert_perform_scalar(x, in, out, vec_size);

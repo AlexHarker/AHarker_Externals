@@ -96,7 +96,7 @@ t_int *rdcblock_perform(t_int *w)
     float *in1 = (float *) w[2];
     float *in2 = (float *) w[3];
     float *out = (float *) w[4];
-    long vec_size = w[5];
+    long vec_size = (long) w[5];
     t_rdcblock *x = (t_rdcblock *) w[6];
     
     double x0, y;
@@ -145,7 +145,7 @@ t_int *rdcblock_perform_inval(t_int *w)
     float *in1 = (float *) w[2];
     float *in2 = (float *) w[3];
     float *out = (float *) w[4];
-    long vec_size = w[5];
+    long vec_size = (long) w[5];
     t_rdcblock *x = (t_rdcblock *) w[6];
     
     double x0, y;

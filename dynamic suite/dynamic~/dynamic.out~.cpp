@@ -139,7 +139,7 @@ void dynamic_out_perform(t_dynamic_out *x, T *in, long N)
 t_int *dynamic_out_perform_scalar(t_int *w)
 {
     float *in = (float *)(w[1]);
-    long vec_size = w[2];
+    long vec_size = (long) w[2];
     t_dynamic_out *x = (t_dynamic_out *)(w[3]);
     
     dynamic_out_perform(x, in, vec_size);
@@ -153,7 +153,7 @@ t_int *dynamic_out_perform(t_int *w)
 {
     using SIMD = SIMDType<float, SIMDLimits<float>::max_size>;
     SIMD *in = (SIMD *)(w[1]);
-    long vec_size = w[2];
+    long vec_size = (long) w[2];
     t_dynamic_out *x = (t_dynamic_out *)(w[3]);
     
     dynamic_out_perform(x, in, vec_size / SIMDLimits<float>::max_size);

@@ -119,7 +119,7 @@ t_int *voicedrive_perform(t_int *w)
     float *out2 = (float *) w[6];
     float *out3 = (float *) w[7];
     float *out4 = (float *) w[8];
-    long vec_size = w[9];
+    long vec_size = (long) w[9];
     t_voicedrive *x = (t_voicedrive *) w[10];
     
     bool interrupt_on = x->interrupt_on;
@@ -205,7 +205,7 @@ t_int *voicedrive_perform_hr(t_int *w)
     float *out3 = (float *) w[7];
     float *out4 = (float *) w[8];
     float *out5 = (float *) w[9];
-    long vec_size = w[10];
+    long vec_size = (long) w[10];
     t_voicedrive *x = (t_voicedrive *) w[11];
     
     bool interrupt_on = x->interrupt_on;

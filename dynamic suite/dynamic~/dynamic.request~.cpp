@@ -134,7 +134,7 @@ t_int *dynamic_request_perform(t_int *w)
 {
     float *in = (float *)(w[1]);
     float *out = (float *)(w[2]);
-    long vec_size = w[3];
+    long vec_size = (long) w[3];
     t_dynamic_request *x = (t_dynamic_request *)(w[4]);
     
     float *from;
@@ -165,7 +165,7 @@ t_int *dynamic_request_perform_small(t_int *w)
 {
     float *in = (float *)(w[1]);
     float *out = (float *)(w[2]);
-    long vec_size = w[3];
+    long vec_size = (long) w[3];
     t_dynamic_request *x = (t_dynamic_request *)(w[4]);
     
     float *from;

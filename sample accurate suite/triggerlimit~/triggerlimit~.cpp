@@ -102,7 +102,7 @@ t_int *triggerlimit_perform(t_int *w)
 {
     float *in = (float *) w[1];
     float *out = (float *) w[2];
-    long vec_size = w[3];
+    long vec_size = (long) w[3];
     t_triggerlimit *x = (t_triggerlimit *) w[4];
     
     t_atom_long limit = x->limit;

@@ -122,7 +122,7 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 t_int *dynamic_in_perform(t_int *w)
 {
     float *out = (float *)(w[1]);
-    long vec_size = w[2];
+    long vec_size = (long) w[2];
     t_dynamic_in *x = (t_dynamic_in *)(w[3]);
     
     if (x->valid)

@@ -142,7 +142,7 @@ t_int *voicemanager_perform(t_int *w)
     float *out1 = (float *) w[5];
     float *out2 = (float *) w[6];
     float *out3 = (float *) w[7];
-    long vec_size = w[8];
+    long vec_size = (long) w[8];
     t_voicemanager *x = (t_voicemanager *) w[9];
     
     long num_voices = x->num_voices;

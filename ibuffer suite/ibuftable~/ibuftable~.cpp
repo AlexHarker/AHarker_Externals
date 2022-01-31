@@ -227,7 +227,7 @@ t_int *ibuftable_perform(t_int *w)
     
     const float *in = (float *) w[2];
     float *out = (float *)(w[3]);
-    long vec_size = w[4];
+    long vec_size = (long) w[4];
     t_ibuftable *x = (t_ibuftable *) w[5];
     
     if (!x->x_obj.z_disabled)

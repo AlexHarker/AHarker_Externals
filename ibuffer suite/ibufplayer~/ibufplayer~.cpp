@@ -495,7 +495,7 @@ t_int *ibufplayer_perform(t_int *w)
     const float *in = reinterpret_cast<float *>(w[2]);
     float **outs = reinterpret_cast<float **>(w[3]);
     float *phase_out = reinterpret_cast<float *>(w[4]);
-    long vec_size = w[5];
+    long vec_size = (long) w[5];
     t_ibufplayer *x = reinterpret_cast<t_ibufplayer *>(w[6]);
     
     double *positions = reinterpret_cast<double *>(alloca(sizeof(double) * vec_size));

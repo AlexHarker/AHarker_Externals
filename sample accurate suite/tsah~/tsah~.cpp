@@ -115,7 +115,7 @@ t_int *tsah_perform(t_int *w)
     float *in = (float *) w[1];
     float *trigger = (float *) w[2];
     float *out = (float *) w[3];
-    long vec_size = w[4];
+    long vec_size = (long) w[4];
     t_tsah *x = (t_tsah *) w[5];
     
     float output = x->last_outputs[0];

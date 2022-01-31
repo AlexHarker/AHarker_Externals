@@ -272,7 +272,7 @@ t_int *entrymatcher_perform(t_int *w)
     float *match_in = (float *) w[2];
     float **matcher_ins = (float **) w[3];
     float *out = (float *) w[4];
-    long vec_size = w[5];
+    long vec_size = (long) w[5];
     t_entrymatcher *x = (t_entrymatcher *) w[6];
     
     random_generator<>& gen = x->gen;

@@ -97,7 +97,7 @@ t_int *rbiquad_perform(t_int *w)
     float *in6 = (float *) w[7];
     float *in7 = (float *) w[8];
     float *out = (float *) w[9];
-    long vec_size = w[10];
+    long vec_size = (long) w[10];
     t_rbiquad *x = (t_rbiquad *) w[11];
     
     double a0, a1, a2, b1, b2, in, y;

@@ -249,7 +249,7 @@ t_int *ibufmultitable_perform(t_int *w)
     const float *in = (float *) w[2];
     const float *offset_in = (float *) w[3];
     float *out = (float *)(w[4]);
-    long vec_size = w[5];
+    long vec_size = (long) w[5];
     t_ibufmultitable *x = (t_ibufmultitable *) w[6];
     
     if (!x->x_obj.z_disabled)
