@@ -2,9 +2,11 @@
 /*
  *  denormkiller~
  *
- *  denormkiller~ is an audio object that turns off denormals on the vector unit (which is also used for most scalar fp maths under OS X).
+ *  denormkiller~ is an audio object that turns off denormals on the vector unit.
+ *  The vector unit is often also used for scalar fp maths (under OS X and Windows).
  *
- *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
+ *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling.
+ *  One object per audio thread is required.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
