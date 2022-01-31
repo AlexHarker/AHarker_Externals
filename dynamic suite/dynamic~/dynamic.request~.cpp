@@ -186,4 +186,3 @@ void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, 
             object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform_small64, 0, nullptr);
     }
 }
-

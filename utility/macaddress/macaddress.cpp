@@ -2,11 +2,14 @@
 /*
  *  macaddress
  *
- *  macaddress is an object for obtaining the MAC address of a computer's wireless hardware, for use as a unique identifier.
+ *  macaddress is an object for obtaining the MAC address of a computer's network hardware.
+ *  The MAC address can be retrieved for a number of different network adapter types
+ *  The MAC address can be used as a unique identifier for identifying computers in a network automatically.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
+
 
 #ifdef __APPLE__
 #include <SystemConfiguration/SystemConfiguration.h>
@@ -23,7 +26,16 @@
 
 #include <string>
 
+
+// Globals, Enums and Object Structure
+
 t_class *this_class;
+
+t_symbol *ps_empty;
+t_symbol *ps_failed;
+t_symbol *ps_any;
+t_symbol *ps_wifi;
+t_symbol *ps_ethernet;
 
 enum class match_type
 {
@@ -43,13 +55,7 @@ struct t_macaddress
     void *output;
 };
 
-
-t_symbol *ps_empty;
-t_symbol *ps_failed;
-t_symbol *ps_any;
-t_symbol *ps_wifi;
-t_symbol *ps_ethernet;
-
+// Function Prototypes
 
 void *macaddress_new(t_symbol *sym);
 void macaddress_bang(t_macaddress *x);
@@ -59,6 +65,7 @@ void macaddress_set_internal(t_macaddress *x, t_symbol *sym);
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -85,6 +92,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New
+
 void *macaddress_new(t_symbol *sym)
 {
     t_macaddress *x = (t_macaddress *) object_alloc(this_class);
@@ -94,6 +103,8 @@ void *macaddress_new(t_symbol *sym)
     
     return x;
 }
+
+// Set Messages
 
 void macaddress_set(t_macaddress *x, t_symbol *sym)
 {
@@ -128,6 +139,8 @@ void macaddress_set_internal(t_macaddress *x, t_symbol *sym)
         x->name = sym;
     }
 }
+
+// Bang Messages + Helper (to output)
 
 #ifdef __APPLE__
 std::string get_string(CFStringRef str)
@@ -310,6 +323,8 @@ void macaddress_bang(t_macaddress *x)
         outlet_anything(x->output, ps_failed, 0, nullptr);
 }
 #endif
+
+// Assist
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s)
 {

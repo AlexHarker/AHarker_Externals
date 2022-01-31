@@ -2,7 +2,8 @@
 /*
  *  depack
  *
- *  depack is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
+ *  depack is a non-typed version of unpack.
+ *  depack is suitbale for situations in which you need to unpack a list or message of unknown, or varying types.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -13,11 +14,11 @@
 #include <ext_obex.h>
 
 
+// Globals and Object Structure
+
 constexpr int max_outlets = 256;
 
-
 t_class *this_class;
-
 
 struct t_depack
 {
@@ -29,6 +30,7 @@ struct t_depack
     void *outlet_array[max_outlets];
 };
 
+// Function Prototypes
 
 void *depack_new(t_atom_long num_outlets);
 void depack_free(t_depack *x);
@@ -42,6 +44,7 @@ void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv);
 
 void depack_assist(t_depack *x, void *b, long m, long a, char *s);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -63,6 +66,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New
 
 void *depack_new(t_atom_long num_outlets)
 {
@@ -88,6 +93,8 @@ void *depack_new(t_atom_long num_outlets)
     return x;
 }
 
+// Message Handling (generic)
+
 void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset)
 {
     long num_outlets = x->num_outlets;
@@ -112,6 +119,8 @@ void depack_do_args(t_depack *x, long argc, t_atom *argv, long offset)
     }
 }
 
+// User Messages
+
 void depack_float(t_depack *x, double value)
 {
     outlet_float(x->outlet_array[0], value);
@@ -132,6 +141,8 @@ void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
     depack_do_args(x, argc, argv, 1);
     outlet_anything(x->outlet_array[0], msg, 0, 0);
 }
+
+// Assist
 
 void depack_assist(t_depack *x, void *b, long m, long a, char *s)
 {
