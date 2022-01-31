@@ -761,7 +761,7 @@ void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count)
     
     // Add to dsp if common routine successful
     
-    if (!dynamicdsp_dsp_common(x, sp[0]->s_n, sp[0]->s_sr))
+    if (!dynamicdsp_dsp_common(x, sp[0]->s_n, static_cast<long>(sp[0]->s_sr)))
         dsp_add(dynamicdsp_perform, 1, x);
 }
 
@@ -769,6 +769,6 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
 {
     // Add to dsp if common routine successful
     
-    if (!dynamicdsp_dsp_common(x, maxvectorsize, samplerate))
+    if (!dynamicdsp_dsp_common(x, maxvectorsize, static_cast<long>(samplerate)))
         object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, nullptr);
 }

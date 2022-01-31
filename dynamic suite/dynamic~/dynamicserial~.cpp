@@ -496,7 +496,7 @@ void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count)
     
     // Add to dsp if common routine successful
     
-    if (!dynamicserial_dsp_common(x, sp[0]->s_n, sp[0]->s_sr))
+    if (!dynamicserial_dsp_common(x, sp[0]->s_n, static_cast<long>(sp[0]->s_sr)))
         dsp_add(dynamicserial_perform, 1, x);
 }
 
@@ -504,7 +504,7 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
 {
     // Add to dsp if common routine successful
     
-    if (!dynamicserial_dsp_common(x, maxvectorsize, samplerate))
+    if (!dynamicserial_dsp_common(x, maxvectorsize, static_cast<long>(samplerate)))
         object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, nullptr);
 }
 
