@@ -392,7 +392,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
     
     // Set default position output
     
-    std::fill_n(phase_out, vec_size, 1.0);
+    std::fill_n(phase_out, vec_size, T(1));
     
     // Check on playback state / new play instruction and decide whether to output
     
@@ -451,7 +451,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
                 
                 if (chan_to_do)
                     ibuffer_read(buffer, outs[i], positions, chan_to_do, i, vol, interp_type);
-                std::fill_n(outs[i] + chan_to_do, (vec_size - chan_to_do), 0);
+                std::fill_n(outs[i] + chan_to_do, (vec_size - chan_to_do), T(0));
             }
         }
     }
@@ -461,7 +461,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
     if (!to_do)
     {
         for (long i = 0; i < obj_n_chans; i++)
-            std::fill_n(outs[i], vec_size, 0);
+            std::fill_n(outs[i], vec_size, T(0));
     }
     
     // Calculate playing flag

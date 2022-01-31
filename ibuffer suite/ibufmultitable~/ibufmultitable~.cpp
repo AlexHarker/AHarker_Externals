@@ -173,9 +173,9 @@ void perform_positions(T *positions, const T *in, const T *offset_in, long num_s
     const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
     const SIMDType<T, N> *v_offset_in = reinterpret_cast<const SIMDType<T, N> *>(offset_in);
     
-    const SIMDType<T, N> mul(end_samp - start_samp);
-    const SIMDType<T, N> add(start_samp);
-    const SIMDType<T, N> end(last_samp);
+    const SIMDType<T, N> mul(static_cast<T>(end_samp - start_samp));
+    const SIMDType<T, N> add(static_cast<T>(start_samp));
+    const SIMDType<T, N> end(static_cast<T>(last_samp));
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
@@ -225,7 +225,7 @@ void perform_core(t_ibufmultitable *x, const T *in, const T *offset_in, T *out, 
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
-        std::fill_n(out, vec_size, 0);
+        std::fill_n(out, vec_size, T(0));
 }
 
 // Perform and DSP
