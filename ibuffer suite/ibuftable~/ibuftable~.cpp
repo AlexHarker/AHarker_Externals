@@ -170,8 +170,8 @@ void perform_positions(T *positions, const T *in, long n_vecs, double start_samp
     SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
     const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
     
-    const SIMDType<T, N> mul(end_samp - start_samp);
-    const SIMDType<T, N> add(start_samp);
+    const SIMDType<T, N> mul(static_cast<T>(end_samp - start_samp));
+    const SIMDType<T, N> add(static_cast<T>(start_samp));
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
@@ -215,7 +215,7 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
     else
-        std::fill_n(out, vec_size, 0);
+        std::fill_n(out, vec_size, T(0));
 }
 
 // Perform and DSP for 32-bit signals

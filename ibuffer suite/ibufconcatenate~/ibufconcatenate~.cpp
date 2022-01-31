@@ -392,7 +392,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 void store(float *lo_res, float *hi_res, double output)
 {
     *lo_res = static_cast<float>(output);
-    *hi_res = output - *lo_res;
+    *hi_res = static_cast<float>(output - *lo_res);
 }
 
 void store(double *lo_res, double *hi_res, double output)
