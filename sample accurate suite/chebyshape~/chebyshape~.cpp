@@ -209,7 +209,7 @@ t_int *chebyshape_perform_dynamic(t_int *w)
         }
         
         FIX_DENORM_FLOAT(out_val);
-        *out++ = (out_val);
+        *out++ = static_cast<float>(out_val);
         j++;
     }
     
@@ -282,7 +282,7 @@ t_int *chebyshape_perform(t_int *w)
         }
         
         FIX_DENORM_FLOAT(out_val);
-        *out++ = out_val;
+        *out++ = static_cast<float>(out_val);
         j++;
     }
     

@@ -251,10 +251,10 @@ void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec
     
     long num_vecs = vec_size / SIMDLimits<T>::max_size;
     
-    VecType mul(x->mul);
-    VecType sub(x->sub);
-    VecType lo(x->lo);
-    VecType hi(x->hi);
+    VecType mul(static_cast<T>(x->mul));
+    VecType sub(static_cast<T>(x->sub));
+    VecType lo(static_cast<T>(x->lo));
+    VecType hi(static_cast<T>(x->hi));
     
     switch (x->mode)
     {

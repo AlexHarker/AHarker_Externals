@@ -138,7 +138,7 @@ t_int *dynamic_request_perform(t_int *w)
     t_dynamic_request *x = (t_dynamic_request *)(w[4]);
     
     float *from;
-    float prev = x->prev;
+    float prev = static_cast<float>(x->prev);
     
     from = (float *) x->sig_ins[x->inlet_num - 1];
     
@@ -169,7 +169,7 @@ t_int *dynamic_request_perform_small(t_int *w)
     t_dynamic_request *x = (t_dynamic_request *)(w[4]);
     
     float *from;
-    float prev = x->prev;
+    float prev = static_cast<float>(x->prev);
     
     from = (float *) x->sig_ins[x->inlet_num - 1];
     

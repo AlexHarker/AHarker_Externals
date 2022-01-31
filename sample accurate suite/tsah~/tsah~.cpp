@@ -118,7 +118,7 @@ t_int *tsah_perform(t_int *w)
     long vec_size = (long) w[4];
     t_tsah *x = (t_tsah *) w[5];
     
-    float output = x->last_outputs[0];
+    float output = static_cast<float>(x->last_outputs[0]);
     
     while (vec_size--)
     {
@@ -144,7 +144,7 @@ t_int *tsah_perform_multiple(t_int *w)
     for (long i = 0; i < num_outlets; i++)
     {
         long vec_size_temp = vec_size;
-        float output_temp = last_outputs[i];
+        float output_temp = static_cast<float>(last_outputs[i]);
         
         float *trigger_ptr = (float *) w[1];
         float *out_ptr = x->sig_outs[i];
