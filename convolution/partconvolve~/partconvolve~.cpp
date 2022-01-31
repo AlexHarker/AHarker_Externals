@@ -58,7 +58,7 @@ long int_log2(long long in, long *inexact)
         out++;
     }
     
-    if (in == 1 << (out - 1))
+    if (in == 1LL << (out - 1))
     {
         out--;
         *inexact = 0;
@@ -300,7 +300,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
     
     // Check whether the fftsize attribute has been set (if not set it)
     
@@ -331,7 +331,7 @@ void partconvolve_max_fft_size_set(t_partconvolve *x, t_atom_long max_fft_size)
     if (max_fft_size_log2 < 0)
     {
         max_fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
-        max_fft_size = 1 << max_fft_size_log2;
+        max_fft_size = 1LL << max_fft_size_log2;
     }
     
     if (max_fft_size_log2 > MAX_FFT_SIZE_LOG2)

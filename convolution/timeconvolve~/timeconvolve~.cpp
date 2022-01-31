@@ -151,7 +151,7 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     // Set attributes from arguments
     
-    attr_args_process(x, argc, argv);
+    attr_args_process(x, static_cast<short>(argc), argv);
     
     // Allocate impulse buffer and input buffer
     
