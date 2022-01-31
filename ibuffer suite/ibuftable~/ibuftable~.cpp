@@ -179,9 +179,10 @@ void perform_positions(T *positions, const T *in, long n_vecs, double start_samp
         v_positions[i] = (mul * min(one, max(zero, *v_in++))) + add;
 }
 
-long clip(const long in, const long max)
+template <typename T>
+T clip(const t_ptr_int in, const t_ptr_int max)
 {
-    return std::min(max, std::max(0L, in));
+    return static_cast<T>(std::min(max, std::max(t_ptr_int(0), in)));
 }
 
 template <class T>
@@ -191,9 +192,9 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
     
     ibuffer_data buffer(x->buffer_name);
     
-    long start_samp = clip(x->start_samp, buffer.get_length() - 1);
-    long end_samp = clip(x->end_samp, buffer.get_length() - 1);
-    long chan = clip(x->chan - 1, buffer.get_num_chans() - 1);
+    double start_samp = clip<double>(x->start_samp, buffer.get_length() - 1);
+    double end_samp = clip<double>(x->end_samp, buffer.get_length() - 1);
+    long chan = clip<long>(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
     
