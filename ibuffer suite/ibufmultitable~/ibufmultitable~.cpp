@@ -2,13 +2,17 @@
 /*
  *  ibufmultitable~
  *
- *  ibufmultitable~ is an efficient object designed for table lookup (for window functions etc.) with multiple functions stored in a single buffer. It is an extended version of the ibufmultitable~ object.
+ *  ibufmultitable~ is an efficient object designed for table lookup (for window functions etc.) for multiple functions.
+ *  The functions stored in a single buffer.
+ *  It is an extended version of the ibufmultitable~ object.
  *
- *  ibufmultitable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.
+ *  ibufmultitable~ features SIMD optimisation and four types of interpolation.
+ *  Linear interpolation and three different kinds of cubic interpolation are supported.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
+
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -19,8 +23,8 @@
 
 #include <algorithm>
 
-t_class *this_class;
 
+t_class *this_class;
 
 struct t_ibufmultitable
 {
@@ -35,6 +39,7 @@ struct t_ibufmultitable
     t_atom_long end_samp;
 };
 
+// Function Prototypes
 
 void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv);
 void ibufmultitable_free(t_ibufmultitable *x);
@@ -49,6 +54,7 @@ void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count);
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -91,6 +97,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Free / Assist
 
 void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -149,6 +157,8 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
         }
     }
 }
+
+// Buffer Setting
 
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
 {
