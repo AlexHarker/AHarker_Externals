@@ -249,10 +249,10 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
     
     long num_vecs = vec_size / SIMDLimits<double>::max_size;
     
-    VecType mul(static_cast<T>(x->mul));
-    VecType sub(static_cast<T>(x->sub));
-    VecType lo(static_cast<T>(x->lo));
-    VecType hi(static_cast<T>(x->hi));
+    VecType mul(x->mul);
+    VecType sub(x->sub);
+    VecType lo(x->lo);
+    VecType hi(x->hi);
     
     switch (x->mode)
     {
