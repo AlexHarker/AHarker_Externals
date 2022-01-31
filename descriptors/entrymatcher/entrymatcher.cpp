@@ -173,7 +173,7 @@ void entrymatcher_dump(t_entrymatcher *x)
         if (!entrymatcher_query(x, output, i, 0, nullptr, false))
             break;
             
-        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
+        outlet_list(x->data_outlet, nullptr, static_cast<short>(output.size()), output.data());
     }
 }
 
@@ -191,7 +191,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
     long idx = (msg == ps_lookup) ? database.get_entry_index(argv) : atom_getlong(argv) - 1;
     
     if (entrymatcher_query(x, output, idx, --argc, ++argv, true))
-        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
+        outlet_list(x->data_outlet, nullptr, static_cast<short>(output.size()), output.data());
 
 }
 
@@ -247,10 +247,10 @@ bool entrymatcher_query(t_entrymatcher *x, atom_vector& output, long idx, long a
 void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
     atom_vector output(argc);
-    database_get_read_access(x->database_object).stats(x, output, argc, argv);
+    database_get_read_access(x->database_object).stats(x, output, static_cast<short>(argc), argv);
 
     if (output.size())
-        outlet_list(x->data_outlet, nullptr, output.size(), output.data());
+        outlet_list(x->data_outlet, nullptr, static_cast<short>(output.size()), output.data());
 }
 
 // Matchers and Matching Methods
@@ -310,7 +310,7 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
 {
     t_atom output[3][max_matches];
     
-    long num_matches = entrymatcher_do_match(x, ratio_kept, distance_limit, n_limit, output);
+    short num_matches = static_cast<short>(entrymatcher_do_match(x, ratio_kept, distance_limit, n_limit, output));
    
     // Output if something has been matched, handling the first identifier correctly
     
