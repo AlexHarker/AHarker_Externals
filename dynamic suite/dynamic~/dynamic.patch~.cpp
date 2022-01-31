@@ -6,8 +6,8 @@
  *  It has now been superceeded by dynamic.this~.
  *
  *  It is included for backwards compatibilty purposes.
- *  dynamic.this~ has a more similar functionality to thispoly~.
- *  It also allows more flexible control over audio muting and voice busy state.
+ *  dynamic.this~ has a more similar functionality to thispoly~ in comparison to dynamic.patch~.
+ *  dynamic.patch~ has less flexible control over audio muting and voice busy state.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -135,4 +135,3 @@ void clock_delete(t_dynamic_patch *x)
     if (x->dynamic_parent)
         object_method(x->dynamic_parent, ps_deletepatch, x->index);
 }
-

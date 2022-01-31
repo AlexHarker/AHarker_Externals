@@ -4,11 +4,13 @@
  *
  *  ibuftable~ is an efficient object designed for table lookup (for window functions etc.).
  *
- *  ibuftable~ features SIMD optimisation and four types of interpolation (linear interpolation and three different kinds of cubic interpolation which can be requested as desired.)
+ *  ibuftable~ features SIMD optimisation and four types of interpolation.
+ *  Linear interpolation and three different kinds of cubic interpolation are supported.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
+
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -18,8 +20,10 @@
 
 #include <algorithm>
 
-t_class *this_class;
 
+// Globals and Object Structure
+
+t_class *this_class;
 
 struct t_ibuftable
 {
@@ -34,6 +38,7 @@ struct t_ibuftable
     t_atom_long end_samp;
 };
 
+// Function Prototypes
 
 void *ibuftable_new(t_symbol *s, long argc, t_atom *argv);
 void ibuftable_free(t_ibuftable *x);
@@ -43,6 +48,8 @@ void ibuftable_set(t_ibuftable *x, t_symbol *s);
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -84,6 +91,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Free / Assist
 
 void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -130,6 +139,8 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Position Input (0-1)");
 }
+
+// Buffer Setting
 
 void ibuftable_set(t_ibuftable *x, t_symbol *s)
 {

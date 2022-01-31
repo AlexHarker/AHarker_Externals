@@ -2,9 +2,11 @@
 /*
  *  denormkiller~
  *
- *  denormkiller~ is an audio object that turns off denormals on the vector unit (which is also used for most scalar fp maths under OS X).
+ *  denormkiller~ is an audio object that turns off denormals on the vector unit.
+ *  The vector unit is often also used for scalar fp maths (under OS X and Windows).
  *
- *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
+ *  This object can remedy problems with third party audio objects that are due to poor or no denormal handling.
+ *  One object per audio thread is required.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -16,14 +18,16 @@
 #include <z_dsp.h>
 
 
-t_class *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
 struct t_denormkiller
 {
     t_pxobject x_obj;
 };
 
+// Function Protypes
 
 void *denormkiller_new();
 void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s);
@@ -31,6 +35,7 @@ void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s);
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -51,6 +56,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New / Assist
+
 void *denormkiller_new()
 {
     t_denormkiller *x = (t_denormkiller *) object_alloc(this_class);
@@ -66,12 +73,16 @@ void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
         sprintf(s, "Dummy");
 }
 
+// Perform
+
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     // replace the old MXCSR setting with the same, except set DAZ and FZ bits to flush denormals to zero
     
     _mm_setcsr(_mm_getcsr() | 0x8040);
 }
+
+// DSP
 
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {

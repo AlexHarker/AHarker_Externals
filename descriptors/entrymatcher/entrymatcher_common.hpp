@@ -144,9 +144,9 @@ struct entrymatcher_common
         }
     }
 
-    // Audiostyle Temporary Routine
+    // Set Loop Order
 
-    static void entrymatcher_audiostyle(T *x, t_atom_long style)
+    static void entrymatcher_loop_order(T *x, t_atom_long style)
     {
         x->matchers->set_loop_order(style ? loop_order::by_matcher : loop_order::by_item);
     }
@@ -179,7 +179,7 @@ struct entrymatcher_common
         class_addmethod(class_pointer, (method) entrymatcher_save_file, "write", A_DEFSYM, 0);
         class_addmethod(class_pointer, (method) entrymatcher_load_file, "read", A_DEFSYM, 0);
 
-        class_addmethod(class_pointer, (method) entrymatcher_audiostyle, "audiostyle", A_DEFLONG, 0);
+        class_addmethod(class_pointer, (method) entrymatcher_loop_order, "looporder", A_DEFLONG, 0);
         
         CLASS_STICKY_CATEGORY(class_pointer, 0, "Storage");
         

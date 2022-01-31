@@ -20,8 +20,8 @@
 
 t_class *this_class;
 
-struct t_threadfilter{
-    
+struct t_threadfilter
+{    
     t_object a_obj;
     
     void *message_out_lo;

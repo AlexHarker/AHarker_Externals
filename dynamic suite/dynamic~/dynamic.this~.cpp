@@ -12,6 +12,7 @@
  *
  */
 
+
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -191,4 +192,3 @@ void clock_delete(t_dynamic_this *x)
     if (x->dynamic_parent)
         object_method(x->dynamic_parent, ps_deletepatch, x->index);
 }
-

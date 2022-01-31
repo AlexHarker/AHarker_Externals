@@ -2,9 +2,8 @@
 /*
  *  recursivefolder
  *
- *  recursivefolder is a version of folder that allows recursive searching of a folder, of either infinite or specified depth.
- *
- *  Based on folder from the Max SDK examples.
+ *  recursivefolder is a version of folder that allows recursive searching of a folder.
+ *  Seraching may be either infinitly recursive or to a specified depth.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -17,8 +16,9 @@
 #include <algorithm>
 
 
-t_class *this_class;
+// Globals and Object Structure
 
+t_class *this_class;
 
 constexpr long max_types = 128;
 
@@ -26,7 +26,6 @@ t_symbol *ps_folder;
 t_symbol *ps_start;
 t_symbol *ps_end;
 t_symbol *ps_empty;
-
 
 struct t_recursive_folder
 {
@@ -44,6 +43,7 @@ struct t_recursive_folder
     long f_outcount;
 };
 
+// Function Prototypes
 
 void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv);
 void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, char *s);
@@ -55,6 +55,8 @@ void recursive_folder_lookup(t_recursive_folder *x);
 short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_symbol *f_name, t_atom_long recursion);
 
 void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv);
+
+// Main
 
 int C74_EXPORT main()
 {
@@ -86,6 +88,7 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New / Assist
 
 void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -113,7 +116,6 @@ void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
     return x;
 }
 
-
 void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_INLET)
@@ -136,16 +138,14 @@ void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, cha
     }
 }
 
-
-// Call search
+// Search (bang)
 
 void recursive_folder_bang(t_recursive_folder *x)
 {
     defer(x, (method) recursive_folder_action, 0, 0, 0);
 }
 
-
-// Set folder name and search
+// Set Folder Name + Search
 
 void recursive_folder_anything(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -154,8 +154,7 @@ void recursive_folder_anything(t_recursive_folder *x, t_symbol *s, long argc, t_
     recursive_folder_bang(x);
 }
 
-
-// If the folder name has changed confirm that it exists - then search it recursively
+// Do Recursive Folder Search
 
 void recursive_folder_action(t_recursive_folder *x)
 {
@@ -191,9 +190,7 @@ void recursive_folder_action(t_recursive_folder *x)
     outlet_int(x->f_countout,x->f_outcount);
 }
 
-
-// Enumerate the items in a folder - matching to types
-// If a folder is found and recursion depth has not been reached then enumerate that folder also
+// Enumerate Items Recursively
 
 short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_symbol *f_name, t_atom_long recursion)
 {
@@ -291,8 +288,7 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
     return started;
 }
 
-
-// Set types to search for
+// Set Search Types
 
 void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_atom *argv)
 {
@@ -315,4 +311,3 @@ void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_ato
         argv++;
     }
 }
-

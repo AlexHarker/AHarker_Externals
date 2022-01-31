@@ -280,72 +280,60 @@ long entries::get_order(long idx)
 // Delete Multiple Entries (from a list of sorted indices (upgrading a read pointer to a write lock))
 
 void entries::delete_entries(std::vector<long>& indices, read_write_access& access)
-{
-    // Predicates
-    
+{    
     struct non_consecutive { bool operator()(long &a, const long &b) { return b > a + 1; } };
-    struct for_deletion { bool operator()(const long& a) { return a == -1; } };
 
     // Sort indices
     
     sort(indices, static_cast<long>(indices.size()));
             
-    // Setup new order vector
+    // Create new order vector
     
     std::vector<long> new_order(num_items());
     long out_idx = indices[0], idx = 0, jdx = 0;
 
     for (auto it = indices.begin(); it <= indices.end() + 1; it++)
     {
+        // Update items that are being retained
+        
         for ( ; idx < (it < indices.end() ? *it : num_items()); idx++, jdx++)
             new_order[get_order(idx)] = jdx;
         
         it = std::adjacent_find(it, indices.end(), non_consecutive());
        
-        // Mark for deletion
+        // Mark those for deletion
 
         for ( ; idx < (it != indices.end() ? (*it) + 1 : *(it - 1) + 1); idx++)
             new_order[get_order(idx)] = -1;
     }
         
+    // Delete and resize
+    
+    std::remove(m_order.begin(), m_order.end(), -1);
+    m_order.resize(jdx);
+    
     access.promote();
 
     // Remove data
     
-    for (auto it = indices.begin(); it < indices.end(); )
+    for (auto it = indices.begin(); it < indices.end(); out_idx += (jdx - idx))
     {
         it = std::adjacent_find(it, indices.end(), non_consecutive());
 
-        long kdx = it < indices.end() ? (*it) + 1: *(it - 1) + 1;
-        long ldx = ++it < indices.end() ? (*it) : num_items();
+        idx = it < indices.end() ? (*it) + 1: *(it - 1) + 1;
+        jdx = ++it < indices.end() ? (*it) : num_items();
         
-        move_data(m_identifiers.begin(), kdx, ldx, out_idx);
-        move_data(m_entries.begin(), kdx, ldx, out_idx, num_columns());
-        move_data(m_types.begin(), kdx, ldx, out_idx, num_columns());
-        
-        out_idx += (ldx - kdx);
+        move_data(m_identifiers.begin(), idx, jdx, out_idx);
+        move_data(m_entries.begin(), idx, jdx, out_idx, num_columns());
+        move_data(m_types.begin(), idx, jdx, out_idx, num_columns());
     }
 
-    // Swap order vectors and move data in m_order as marked earlier
+    // Swap order vectors and resize storage
     
     std::swap(m_order, new_order);
-    
-    auto out_it = std::find_if(m_order.begin(), m_order.end(), for_deletion());
-    
-    for (auto it = out_it; it != m_order.end(); )
-    {
-        auto jt = std::find_if_not(it, m_order.end(), for_deletion());
-        it = std::find_if(jt, m_order.end(), for_deletion());
-        
-        out_it = std::copy(jt, it, out_it);
-    }
-    
-    // Resize storage
-        
     m_identifiers.resize(out_idx);
     m_entries.resize(out_idx * num_columns());
     m_types.resize(out_idx * num_columns());
-    m_order.resize(out_idx);
 }
 
 // Delete a Single Entry

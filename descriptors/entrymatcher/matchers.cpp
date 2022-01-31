@@ -72,21 +72,20 @@ bool matchers::needs_scale(t_atom *argv)
 
 long matchers::match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const
 {
-    long num_items = database.num_items();
     m_num_matches = 0;
     
-    m_results.resize(num_items);
+    m_results.resize(database.num_items());
         
     if (!size() || m_order == loop_order::by_matcher)
     {
-        for (long i = 0; i < num_items; i++)
+        for (long i = 0; i < database.num_items(); i++)
             m_results[i] = result(i, 0.0);
         
-        m_num_matches = num_items;
+        m_num_matches = database.num_items();
     }
 
     if (!size())
-        return num_items;
+        return m_num_matches;
     
     if (m_order == loop_order::by_matcher)
     {
@@ -97,7 +96,7 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     {
         // Assume a match for each entry (for the case of no matchers)
 
-        for (long i = 0; i < num_items; i++)
+        for (long i = 0; i < database.num_items(); i++)
         {
             bool matched = true;
             double sum = 0.0;
@@ -112,15 +111,22 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
         }
     }
     
+    // Clip parameters
+    
     ratio_matched = std::min(std::max(ratio_matched, 0.0), 1.0);
     max_matches = std::max(max_matches, 0L);
+    
+    // Clip the number of matches
+    
     long num_matches = static_cast<long>(round(m_num_matches * ratio_matched));
-    num_matches = (max_matches && m_num_matches > max_matches) ? max_matches : m_num_matches;
-
-    // FIX - better heuristics and more info on what has been sorted...
+    num_matches = (max_matches && max_matches < m_num_matches) ? max_matches : m_num_matches;
+    
+    // Sort the results if needed
     
     if (size() && (must_sort || num_matches < m_num_matches))
     {
+        // FIX - better heuristics and more info on what has been sorted...
+
         if (num_matches < (database.num_items() / 8))
         {
             num_matches = std::min(num_matches, m_num_matches);
