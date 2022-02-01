@@ -189,7 +189,8 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
     
     // Attributes
     
-    long chan = static_cast<long>(std::min(x->chan - 1, std::numeric_limits<int32_t>::max()));
+    t_atom_long chan_max = static_cast<t_atom_long>(std::numeric_limits<long>::max());
+    long chan = static_cast<long>(std::min(x->chan - 1, chan_max));
     t_atom_long offset = x->offset;
     t_atom_long length = x->length;
     
