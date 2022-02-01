@@ -6,7 +6,7 @@
  *
  *  Typically timeconvolve~ is used in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
  *  timeconvolve~ alone is limited to a maximum IR size of 2044 samples.
- *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *  The two objects have similar attributes / arguments and can be combined to design custom partitioning schemes.
  *  Note that the algorithms perform correlation with reversed impulse response coeffients (equivalent to convolution).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
@@ -27,6 +27,7 @@
 
 #include <algorithm>
 #include <limits>
+
 
 // Utility
 
@@ -76,9 +77,9 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
 void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv);
 
-void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L);
+void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L);
 
-void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size);
+void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *out, long vec_size);
 void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
@@ -234,7 +235,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 // Perform
 
 #ifndef __APPLE__
-void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
+void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
     L = pad_length(L);
                    
@@ -261,13 +262,13 @@ void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int 
     }
 }
 #else
-void time_domain_convolve(float *in, VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
+void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
     vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
 }
 #endif
 
-void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, long vec_size)
+void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *out, long vec_size)
 {
     VecType *impulse_buffer = reinterpret_cast<VecType*>(x->impulse_buffer);
     float *input_buffer = x->input_buffer;
@@ -288,7 +289,9 @@ void timeconvolve_perform_internal(t_timeconvolve *x, float *in, float *out, lon
     
     // Do convolution
 
-    time_domain_convolve(input_buffer + 4096 + (input_position - vec_size), impulse_buffer, out, vec_size, impulse_length);
+    const float *current_buffer = input_buffer + 4096 + (input_position - vec_size);
+    
+    time_domain_convolve(current_buffer, impulse_buffer, out, vec_size, impulse_length);
 }
 
 template<class T, class U>
