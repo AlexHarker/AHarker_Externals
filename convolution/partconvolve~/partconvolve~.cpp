@@ -23,6 +23,7 @@
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
+#include <limits>
 
 constexpr static int MIN_FFT_SIZE_LOG2          = 5;
 constexpr static int MAX_FFT_SIZE_LOG2          = 20;
@@ -189,7 +190,7 @@ int C74_EXPORT main()
     CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
     
     CLASS_ATTR_LONG(this_class, "chan", 0L, t_partconvolve, chan);
-    CLASS_ATTR_FILTER_CLIP(this_class, "chan", 1, 4);
+    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
     
     // Add dsp and register
@@ -514,9 +515,9 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
     
     // Attributes
     
+    long chan = static_cast<long>(std::min(x->chan - 1, std::numeric_limits<int32_t>::max()));
     t_atom_long offset = x->offset;
     t_atom_long length = x->length;
-    t_atom_long chan = x->chan - 1;
     
     // Partition variables
     
