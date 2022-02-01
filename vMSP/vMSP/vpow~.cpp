@@ -34,7 +34,7 @@ struct pow_functor
             case inputs::scalar1:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
-                std::fill_n(t, size, val);
+                std::fill_n(t, size, static_cast<T>(val));
                 pow_array(o, i1, t, size);
                 break;
             }
@@ -42,7 +42,7 @@ struct pow_functor
             case inputs::scalar2:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
-                std::fill_n(t, size, val);
+                std::fill_n(t, size, static_cast<T>(val));
                 pow_array(o, t, i2, size);
                 break;
             }
