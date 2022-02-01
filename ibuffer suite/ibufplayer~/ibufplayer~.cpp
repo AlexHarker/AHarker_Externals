@@ -197,7 +197,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     x->playing = false;
     x->input_connected = false;
     x->mode_flag = transport_flag::none;
-    x->obj_n_chans = obj_n_chans;
+    x->obj_n_chans = static_cast<long>(obj_n_chans);
     x->buffer_name = nullptr;
     
     for (long i = 0 ; i < max_num_chans; i++)
