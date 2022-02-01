@@ -194,7 +194,7 @@ int C74_EXPORT main()
     CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
     
     CLASS_ATTR_LONG(this_class, "chan", 0L, t_partconvolve, chan);
-    CLASS_ATTR_FILTER_CLIP(this_class, "chan", 1, 4);
+    CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
     
     // Add dsp and register
