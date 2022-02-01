@@ -24,6 +24,7 @@
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
+#include <limits>
 
 constexpr static int MIN_FFT_SIZE_LOG2          = 5;
 constexpr static int MAX_FFT_SIZE_LOG2          = 20;
@@ -519,9 +520,9 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
     
     // Attributes
     
+    long chan = static_cast<long>(std::min(x->chan - 1, std::numeric_limits<int32_t>::max()));
     t_atom_long offset = x->offset;
     t_atom_long length = x->length;
-    t_atom_long chan = x->chan - 1;
     
     // Partition variables
     
