@@ -367,7 +367,7 @@ template <class T, class U>
 void ibufplayer_update_phase(U *&positions, T *&phases, U &pos, const U &speed, const phase_info &info)
 {
     *positions++ = pos;
-    *phases++ = (pos - info.start()) * info.length_norm();
+    *phases++ = static_cast<T>((pos - info.start()) * info.length_norm());
     pos += speed;
 }
 
@@ -456,7 +456,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
             
             for (long i = 0; i < obj_n_chans; i++)
             {
-                double vol = x->vols[i];
+                T vol = static_cast<T>(x->vols[i]);
                 
                 long chan_to_do = (vol && buffer.get_num_chans() > i) ? to_do : 0;
                 
