@@ -103,7 +103,7 @@ void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *a
 void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
-static __inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
+static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
 void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, long thread_num, long num_active_threads);
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
 t_int *dynamicdsp_perform(t_int *w);
