@@ -9,10 +9,9 @@
  *      1 - entries - store start and end points for items in a buffer by entering them manually.
  *      2 - concatenation - concatenate multiple msp buffers into one buffer, storing start and end points.
  *
- *  The bounds of each chunk can be retrieved either as a message, or as a signal in a sample-accurate manner, according to the mode of the object.
+ *  The bounds of each chunk can be retrieved either as a message, or as a signal (according to the mode chosen).
+ *  When using signals the bounds can be retrieved in a sample-accurate manner.
  *  The ibufconcatedrive~ object can also be used to give sample-accurate playback of only one item at a time.
- *
- *  See the helpfile documentation for more on how this object can be used in practice.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -29,11 +28,11 @@
 #include "ibufconcatenate_info.hpp"
 
 
+// Globals and Object Structure
+
+constexpr int BUFFER_GROW_SIZE = 0x100000;
+
 t_class *this_class;
-
-
-constexpr int BUFFER_GROW_SIZE = 1048576;
-
 
 struct t_ibufconcatenate
 {
@@ -47,6 +46,7 @@ struct t_ibufconcatenate
     void *last_added_out;
 };
 
+// Function Prototypes
 
 void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode);
 void ibufconcatenate_free(t_ibufconcatenate *x);
@@ -64,6 +64,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long in);
 void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -90,6 +91,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New / Free / Assist
 
 void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode)
 {
@@ -177,6 +180,8 @@ void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char 
     }
 }
 
+// Set / Clear
+
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name)
 {
     detach_ibufconcatenate_info(x->attachment);
@@ -188,6 +193,8 @@ void ibufconcatenate_clear(t_ibufconcatenate *x)
     t_ibufconcatenate_info::write_access access(x->attachment);
     access.clear();
 }
+
+// Append
 
 long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name, double &beg, double &end)
 {
@@ -312,6 +319,8 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
         ibufconcatenate_output(x, item, beg, end);
 }
 
+// Entry
+
 void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end)
 {
     // Scope to release lock before calling the output
@@ -326,6 +335,8 @@ void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end)
     ibufconcatenate_output(x, item, beg, end);
 }
 
+// Output (for new entries)
+
 void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double end)
 {
     t_atom list[3];
@@ -339,9 +350,11 @@ void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double 
     outlet_list(x->last_added_out, nullptr, 3, list);
 }
 
+// Helpers
+
 static inline t_ptr_int mstosamps(double ms, double sr)
 {
-    return (t_ptr_int) std::round((ms * sr) / 1000.0);
+    return static_cast<t_ptr_int>(std::round((ms * sr) / 1000.0));
 }
 
 double ibuffer_full_length(t_symbol *name)
@@ -353,6 +366,8 @@ double ibuffer_full_length(t_symbol *name)
     else
         return 0.0;
 }
+
+// Get Item
 
 void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 {
@@ -433,6 +448,8 @@ void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **i
 {
     ibufconcatenate_perform_core(x, ins, outs, vec_size);
 }
+
+// DSP
 
 void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

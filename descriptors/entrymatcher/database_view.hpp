@@ -1,10 +1,10 @@
 
-#ifndef DATABASE_VIEW_HPP
-#define DATABASE_VIEW_HPP
+#ifndef _DATABASE_VIEW_HPP_
+#define _DATABASE_VIEW_HPP_
 
 #include <ext.h>
 #include <ext_obex.h>
 
 void database_view_init();
 
-#endif
+#endif /* _DATABASE_VIEW_HPP_ */

@@ -157,4 +157,4 @@ private:
     std::vector<thread_slot> m_thread_slots;
 };
 
-#endif  /* _THREADSET_HPP_ */
+#endif /* _THREADSET_HPP_ */

@@ -1,6 +1,6 @@
 
-#ifndef ATOM_TYPES_HPP
-#define ATOM_TYPES_HPP
+#ifndef _ATOM_TYPES_HPP_
+#define _ATOM_TYPES_HPP_
 
 #include <ext.h>
 #include <functional>
@@ -193,4 +193,4 @@ private:
     }
 };
 
-#endif
+#endif /* _ATOM_TYPES_HPP_ */

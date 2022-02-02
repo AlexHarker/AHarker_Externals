@@ -1,4 +1,7 @@
 
+#ifndef _CONVERSIONS_HPP_
+#define _CONVERSIONS_HPP_
+
 #include <SIMDSupport.hpp>
 
 #include "vector_loop.hpp"
@@ -43,3 +46,5 @@ void mul_add_const_array(T *io, long size, T mul, T add)
 {
     mul_add_const_array(io, io, size, mul, add);
 }
+
+#endif /* _CONVERSIONS_HPP_ */

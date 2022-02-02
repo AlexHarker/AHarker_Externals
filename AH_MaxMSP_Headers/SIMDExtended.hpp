@@ -1,6 +1,6 @@
 
-#ifndef SIMDEXTENDED
-#define SIMDEXTENDED
+#ifndef _SIMDEXTENDED_HPP_
+#define _SIMDEXTENDED_HPP_
 
 #ifdef __APPLE__
 
@@ -342,5 +342,5 @@ static inline void pow_array(float *out, const float *in1, const float *in2, lon
 
 #endif
 
-#endif  
+#endif /* _SIMDEXTENDED_HPP_ */
 

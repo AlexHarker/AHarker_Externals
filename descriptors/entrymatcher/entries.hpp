@@ -1,6 +1,6 @@
 
-#ifndef ENTRIES_HPP
-#define ENTRIES_HPP
+#ifndef _ENTRIES_HPP_
+#define _ENTRIES_HPP_
 
 #include <ext.h>
 #include <vector>
@@ -336,4 +336,4 @@ private:
     mutable read_write_lock m_lock;
 };
 
-#endif
+#endif /* _ENTRIES_HPP_ */

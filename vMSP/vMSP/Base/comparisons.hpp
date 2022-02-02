@@ -1,6 +1,6 @@
 
-#ifndef COMPARISONS_H
-#define COMPARISONS_H
+#ifndef _COMPARISONS_HPP_
+#define _COMPARISONS_HPP_
 
 static SIMDType<double, 1> mask_one(const SIMDType<double, 1>& a) { return a.mVal ? 1.0 : 0.0; }
 
@@ -18,4 +18,4 @@ struct comparison_functor
     void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
-#endif
+#endif /* _COMPARISONS_HPP_ */

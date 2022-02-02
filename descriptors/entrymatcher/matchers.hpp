@@ -1,6 +1,6 @@
 
-#ifndef MATCHERS_HPP
-#define MATCHERS_HPP
+#ifndef _MATCHERS_HPP_
+#define _MATCHERS_HPP_
 
 #include <limits>
 
@@ -295,4 +295,4 @@ private:
     loop_order m_order;
 };
 
-#endif
+#endif /* _MATCHERS_HPP_ */

@@ -1,6 +1,6 @@
 
-#ifndef VECTOR_LOOP_H
-#define VECTOR_LOOP_H
+#ifndef _VECTOR_LOOP_HPP_
+#define _VECTOR_LOOP_HPP_
 
 template <class Op, class T, typename... Args>
 void vector_loop(T *o, const T *i, long size, Args... args)
@@ -18,4 +18,4 @@ void vector_loop(T *o, const T *i, long size, Args... args)
         *v_o++ = op(*v_i++, args...);
 }
 
-#endif /* VECTOR_LOOPS_H */
+#endif /* _VECTOR_LOOP_HPP_ */
