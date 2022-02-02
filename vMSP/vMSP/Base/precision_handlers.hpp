@@ -1,6 +1,6 @@
 
-#ifndef PRECISION_HANDLERS_H
-#define PRECISION_HANDLERS_H
+#ifndef _PRECISION_HANDLERS_HPP_
+#define _PRECISION_HANDLERS_HPP_
 
 // These allow double precision ouputs to be created from single precision inputs
 
@@ -41,4 +41,4 @@ struct unary_precision_handler
     Op op;
 };
 
-#endif /* PRECISION_HANDLERS_H */
+#endif /* _PRECISION_HANDLERS_HPP_ */

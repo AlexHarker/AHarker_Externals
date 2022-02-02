@@ -1,6 +1,6 @@
 
-#ifndef SORT_HPP
-#define SORT_HPP
+#ifndef _SORT_HPP_
+#define _SORT_HPP_
 
 // Convenience for altering swap flags
 
@@ -83,4 +83,4 @@ void sort(T& indices, long size, const Op& getter)
     }
 }
 
-#endif
+#endif /* _SORT_HPP_ */

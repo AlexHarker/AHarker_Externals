@@ -10,8 +10,8 @@
  */
 
 
-#ifndef _AH_DENORMALS_
-#define _AH_DENORMALS_ 
+#ifndef _AH_DENORMALS_H_
+#define _AH_DENORMALS_H_
 
 #include <ext.h>
 #include <z_dsp.h>
@@ -34,6 +34,6 @@ t_int *denormals_perform(t_int *w)
  	return w + 1;
 }
 
-#endif		/* _AH_DENORMALS_ */
+#endif /* _AH_DENORMALS_H_ */
 
 

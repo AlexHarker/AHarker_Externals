@@ -1,6 +1,6 @@
 
-#ifndef NANS_H
-#define NANS_H
+#ifndef _NANS_HPP_
+#define _NANS_HPP_
 
 #include <cstdint>
 #include <limits>
@@ -61,4 +61,4 @@ struct nan_and_inf_fixer
 
 using nan_fixer = nan_and_inf_fixer<true>;
 
-#endif /* NANS_H */
+#endif /* _NANS_HPP_ */

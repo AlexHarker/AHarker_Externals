@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef _IBUF_CONCATENATE_INFO__
-#define _IBUF_CONCATENATE_INFO__
+#ifndef _IBUFCONCATENATE_INFO_HPP_
+#define _IBUFCONCATENATE_INFO_HPP_
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -223,5 +223,5 @@ static inline void detach_ibufconcatenate_info(t_ibufconcatenate_info *attachmen
         object_free(attachment);
 }
 
-#endif    /*_IBUF_CONCATENATE_INFO__ */
+#endif /*_IBUFCONCATENATE_INFO_HPP_ */
 

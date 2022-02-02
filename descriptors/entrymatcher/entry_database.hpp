@@ -1,6 +1,6 @@
 
-#ifndef ENTRY_DATABASE_HPP
-#define ENTRY_DATABASE_HPP
+#ifndef _ENTRY_DATABASE_HPP_
+#define _ENTRY_DATABASE_HPP_
 
 #include <ext.h>
 #include <ext_obex.h>

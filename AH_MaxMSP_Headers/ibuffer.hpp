@@ -10,8 +10,8 @@
  *
  */
 
-#ifndef IBUFFER_H
-#define IBUFFER_H
+#ifndef _IBUFFER_HPP_
+#define _IBUFFER_HPP_
 
 #include <ext.h>
 #include <z_dsp.h>
@@ -53,5 +53,5 @@ struct t_ibuffer
     void *bang_out;             // bangs on load
 };
 
-#endif        /* IBUFFER_H */
+#endif /* _IBUFFER_HPP_ */
 

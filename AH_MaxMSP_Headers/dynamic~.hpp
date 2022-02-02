@@ -10,8 +10,8 @@
  *
  */
 
-#ifndef _DYNAMIC_INTERFACE_
-#define _DYNAMIC_INTERFACE_
+#ifndef _DYNAMIC_HPP_
+#define _DYNAMIC_HPP_
 
 #include <algorithm>
 
@@ -161,4 +161,4 @@ static inline void dynamic_unregister_listener(void *obj, long index, void *list
     dynamic_object_method(obj, "unregister_listener", index, listener);
 }
 
-#endif  /* _DYNAMIC_INTERFACE_ */
+#endif /* _DYNAMIC_HPP_ */

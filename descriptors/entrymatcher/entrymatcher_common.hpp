@@ -1,6 +1,6 @@
 
-#ifndef ENTRYMATCHER_COMMON_HPP
-#define ENTRYMATCHER_COMMON_HPP
+#ifndef _ENTRYMATCHER_COMMON_HPP_
+#define _ENTRYMATCHER_COMMON_HPP_
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -197,4 +197,4 @@ struct entrymatcher_common
     }
 };
 
-#endif
+#endif /* _ENTRYMATCHER_COMMON_HPP_ */

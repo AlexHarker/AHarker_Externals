@@ -181,4 +181,4 @@ private:
     long m_thread_request;
 };
 
-#endif  /* _PATCHSLOT_HPP_ */
+#endif /* _PATCHSLOT_HPP_ */
