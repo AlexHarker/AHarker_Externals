@@ -70,9 +70,9 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) dynamic_this_assist, "assist", A_CANT, 0);
     
     class_addmethod(this_class, (method) dynamic_this_busy, "int", A_LONG, 0);
-    class_addmethod(this_class, (method) dynamic_this_busy, "busy", A_GIMME, 0);
-    class_addmethod(this_class, (method) dynamic_this_mute, "mute", A_GIMME, 0);
-    class_addmethod(this_class, (method) dynamic_this_flags, "flags", A_GIMME, 0);
+    class_addmethod(this_class, (method) dynamic_this_busy, "busy", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamic_this_mute, "mute", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamic_this_flags, "flags", A_LONG, 0);
     
     class_addmethod(this_class, (method) dynamic_this_bang, "bang", 0);
     class_addmethod(this_class, (method) dynamic_this_bang, "loadbang", A_CANT, 0);
