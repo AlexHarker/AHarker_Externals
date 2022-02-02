@@ -16,7 +16,8 @@
 #include <ext.h>
 #include <z_dsp.h>
 
-// Call this perform routine to turn denormals off in this thread - the second item in the array should be the perform routine you want to call subsequently
+// Call this perform routine to turn denormals off in this thread
+// The second item in the array should be the perform routine you want to call subsequently
 // This routine is only called once, after which the main perform routine is called directly
 
 t_int *denormals_perform(t_int *w)
