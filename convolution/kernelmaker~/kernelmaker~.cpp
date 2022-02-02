@@ -146,6 +146,7 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
         float *out_samps = reinterpret_cast<float *>(target.get_samples());
+        const long num_chans = target.get_num_chans();
 
         offset = (offset < 0) ? 0 : offset;
         
@@ -178,7 +179,7 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
+            out_samps[i * num_chans] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -189,7 +190,7 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
         
         // Now normalise the kernel and set the buffer as dirty
         
-        normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, 0);
+        normalise_kernel(out_samps, length, num_chans, peak_amp, 0);
         target.set_dirty();
     }
 }
@@ -215,7 +216,8 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
         float *out_samps = reinterpret_cast<float *>(target.get_samples());
-        
+        const long num_chans = target.get_num_chans();
+
         offset = (offset < 0) ? 0 : offset;
         
         // Calculate and clip length
@@ -243,7 +245,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
             
             // Store the result
             
-            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
+            out_samps[i * num_chans] = static_cast<float>(current_samp);
             
             // Store the peak abs sample value
             
@@ -252,7 +254,7 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
         
         // Now normalise the kernel and set the buffer as dirty
         
-        normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, x->fades);
+        normalise_kernel(out_samps, length, num_chans, peak_amp, x->fades);
         target.set_dirty();
     }
 }
@@ -278,7 +280,8 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
         float *out_samps = reinterpret_cast<float *>(target.get_samples());
-        
+        const long num_chans = target.get_num_chans();
+
         offset = (offset < 0) ? 0 : offset;
         
         // Calculate and clip length
@@ -294,7 +297,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
             // Ring modulate the two inputs sample and store the result
 
             double current_samp = ibuffer_get_samp(source, i + offset, 0) * ibuffer_get_samp(window, i, 0);
-            out_samps[i * target.get_num_chans()] = static_cast<float>(current_samp);
+            out_samps[i * num_chans] = static_cast<float>(current_samp);
 
             // Store the peak abs sample value
             
@@ -303,7 +306,7 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
         
         // Now normalise the kernel and set the buffer as dirty
         
-        normalise_kernel(out_samps, length, target.get_num_chans(), peak_amp, x->fades);
+        normalise_kernel(out_samps, length, num_chans, peak_amp, x->fades);
         target.set_dirty();
     }
 }
@@ -345,20 +348,21 @@ void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double e
         
         // Create trapezoid
         
-        double length_recip = 1.0 / length;
+        const double length_recip = 1.0 / length;
+        const long num_chans = target.get_num_chans();
         t_ptr_int i;
 
         for (i = 0; i < env1 * length; i++)
-            out_samps[i * target.get_num_chans()] = 0.f;
+            out_samps[i * num_chans] = 0.f;
         for (; i < env2 * length; i++)
-            out_samps[i * target.get_num_chans()] = static_cast<float>(((i * length_recip) - env1) / (env2 - env1));
+            out_samps[i * num_chans] = static_cast<float>(((i * length_recip) - env1) / (env2 - env1));
         for (; i < env3 * length; i++)
-            out_samps[i * target.get_num_chans()] = 1.f;
+            out_samps[i * num_chans] = 1.f;
         for (; i < env4 * length; i++)
-            out_samps[i * target.get_num_chans()] = static_cast<float>(1.f - ((i * length_recip) - env3) / (env4 - env3));
+            out_samps[i * num_chans] = static_cast<float>(1.f - ((i * length_recip) - env3) / (env4 - env3));
 
         for (; i < length; i++)
-            out_samps[i * target.get_num_chans()] = 0.f;
+            out_samps[i * num_chans] = 0.f;
         
         // Set the buffer as dirty
         
