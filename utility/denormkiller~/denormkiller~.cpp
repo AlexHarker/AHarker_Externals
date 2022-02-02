@@ -36,7 +36,7 @@ t_int *denormkiller_perform(t_int *w);
 void denormkiller_dsp(t_denormkiller *x, t_signal **sp, short *count);
 
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -102,7 +102,7 @@ void denormkiller_dsp(t_denormkiller *x, t_signal **sp, short *count)
     dsp_add(denormkiller_perform, 0);
 }
 
-void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, denormkiller_perform64, 0, nullptr);
 }
