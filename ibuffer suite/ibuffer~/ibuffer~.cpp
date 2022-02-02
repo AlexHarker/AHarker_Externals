@@ -352,7 +352,8 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         for (long i = 0; i < channel_order.size(); i++)
         {
-            long channel = atom_getlong(argv + i) - 1;
+            constexpr t_atom_long max_chan = static_cast<long>(std::numeric_limits<uint16_t>::max());
+            long channel = static_cast<long>(std::min(atom_getlong(argv + i) - 1, max_chan));
             channel_order[i] = channel < 0 ? 0 : ((channel > x->channels - 1) ? x->channels - 1 : channel);
         }
         
@@ -397,7 +398,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
                 
                 uint8_t *channels_swap = load_temp.data();
                 
-                for (long j = 0; j < work_chunk; j++, channels_swap += x->channels * sample_size)
+                for (uint32_t j = 0; j < work_chunk; j++, channels_swap += x->channels * sample_size)
                     for (long k = 0; k < channel_order.size(); k++, data += sample_size)
                         memcpy(data, channels_swap + (channel_order[k] * sample_size), sample_size);
             }
