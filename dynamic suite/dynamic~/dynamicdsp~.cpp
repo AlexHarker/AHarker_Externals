@@ -111,7 +111,7 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
-void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -765,10 +765,10 @@ void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count)
         dsp_add(dynamicdsp_perform, 1, x);
 }
 
-void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     // Add to dsp if common routine successful
     
-    if (!dynamicdsp_dsp_common(x, maxvectorsize, static_cast<long>(samplerate)))
+    if (!dynamicdsp_dsp_common(x, max_vec, static_cast<long>(sample_rate)))
         object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, nullptr);
 }
