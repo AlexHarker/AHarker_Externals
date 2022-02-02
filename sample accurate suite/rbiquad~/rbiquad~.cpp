@@ -41,7 +41,7 @@ t_int *rbiquad_perform(t_int *w);
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
-void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -226,7 +226,7 @@ void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
     dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
 }
 
-void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, rbiquad_perform64, 0, nullptr);
 }

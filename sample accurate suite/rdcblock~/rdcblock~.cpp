@@ -45,7 +45,7 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
 void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count);
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -285,7 +285,7 @@ void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count)
         dsp_add(denormals_perform, 6, rdcblock_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
 }
 
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->mode)
         object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform_inval64, 0, nullptr);

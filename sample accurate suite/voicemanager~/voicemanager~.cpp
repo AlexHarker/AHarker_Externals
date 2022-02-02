@@ -61,7 +61,7 @@ t_int *voicemanager_perform(t_int *w);
 void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void voicemanager_dsp(t_voicemanager *x, t_signal **sp, short *count);
-void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -323,9 +323,9 @@ void voicemanager_dsp(t_voicemanager *x, t_signal **sp, short *count)
     dsp_add(voicemanager_perform, 9, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[0]->s_n, x);
 }
 
-void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_val = samplerate / 1000.0;
+    x->sr_val = sample_rate / 1000.0;
     x->active_connected = count[3];
     
     object_method(dsp64, gensym("dsp_add64"), x, voicemanager_perform64, 0, nullptr);
