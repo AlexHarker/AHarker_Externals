@@ -178,23 +178,23 @@ void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
 // Core Perform Routine
 
 template <int N, class T>
-void perform_positions(T *positions, const T *in, const T *offset_in, long num_samps, const double start_samp, const double end_samp, const double last_samp)
+void perform_positions(T *positions, const T *in, const T *offsets, long n_samps, double start, double end, double last)
 {
     SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
     const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
-    const SIMDType<T, N> *v_offset_in = reinterpret_cast<const SIMDType<T, N> *>(offset_in);
+    const SIMDType<T, N> *v_offsets = reinterpret_cast<const SIMDType<T, N> *>(offsets);
     
-    const SIMDType<T, N> mul(static_cast<T>(end_samp - start_samp));
-    const SIMDType<T, N> add(static_cast<T>(start_samp));
-    const SIMDType<T, N> end(static_cast<T>(last_samp));
+    const SIMDType<T, N> mul(static_cast<T>(end - start));
+    const SIMDType<T, N> add(static_cast<T>(start));
+    const SIMDType<T, N> limit(static_cast<T>(last));
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
-    long num_vecs = num_samps / N;
+    long n_vecs = n_samps / N;
     
-    for (long i = 0; i < num_vecs; i++)
+    for (long i = 0; i < n_vecs; i++)
     {
-        SIMDType<T, N> position = min(one, max(zero, *v_in++)) * mul + add + *v_offset_in++;
+        SIMDType<T, N> position = min(one, max(zero, *v_in++)) * mul + add + *v_offsets++;
         v_positions[i] = min(end, max(zero, position));
     }
 }
