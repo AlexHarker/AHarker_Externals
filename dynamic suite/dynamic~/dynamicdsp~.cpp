@@ -130,17 +130,16 @@ long poly_isparent(t_object *p, t_object *mightbeparent)
 
 void poly_appendinstanceifneeded(char *buf, char *name, long instance)
 {
-    long len;
     char seeninstance = false;
     
-    len = strlen(name);
+    long len = static_cast<long>(strlen(name));
+
     // is last character of name a right paren?
     if (len > 3 && name[len - 1] == ')') {
         // look for pattern, digits until left paren
         char seendigit = true;
-        long i;
         
-        for (i = len - 2; i >= 0; i--) {
+        for (long i = len - 2; i >= 0; i--) {
             if (isdigit(name[i])) {
                 seendigit = true;
             } else {
@@ -164,7 +163,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     long i;
     t_symbol *name;
     char buf[1024];
-    char subpatcher = false;
+    bool subpatcher = false;
     
     *title = nullptr;
     
