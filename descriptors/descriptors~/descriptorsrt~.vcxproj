@@ -47,20 +47,6 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\HISSTools_FFT\HISSTools_FFT.c" />
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.c" />
-    <ClCompile Include="descriptors_combsort.c" />
-    <ClCompile Include="descriptors_medianfilter.c" />
-    <ClCompile Include="descriptors_object.c" />
-    <ClCompile Include="descriptors_per_frame_descriptors.c" />
-    <ClCompile Include="descriptors_rt.c" />
-    <ClCompile Include="descriptors_set_descriptors.c" />
-    <ClCompile Include="descriptors_spectralpeaks.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="descriptors_object_structure.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

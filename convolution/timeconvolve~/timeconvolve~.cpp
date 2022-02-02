@@ -247,7 +247,7 @@ void time_domain_convolve(const float *in, const VecType *impulse, float *output
     for (t_ptr_int i = 0; i < N; i++)
     {
         VecType output_accum = VecType(0.f);
-        float *input = in - L + 1 + i;
+        const float *input = in - L + 1 + i;
         
         for (t_ptr_int j = 0; j < L >> 2; j += 4)
         {            
