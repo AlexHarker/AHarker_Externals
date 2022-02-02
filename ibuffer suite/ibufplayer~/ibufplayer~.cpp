@@ -134,7 +134,7 @@ t_int *ibufplayer_perform(t_int *w);
 void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 
 int C74_EXPORT main()
@@ -531,9 +531,9 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
     perform_core(x, ins[0], outs, outs[numouts - 1], outs[numouts - 2], vec_size);
 }
 
-void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_div = 1.0 / samplerate;
+    x->sr_div = 1.0 / sample_rate;
     
     // Set buffer again in case it is no longer valid / extant
     

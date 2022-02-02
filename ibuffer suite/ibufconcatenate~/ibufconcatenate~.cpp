@@ -65,7 +65,7 @@ t_int *ibufconcatenate_perform(t_int *w);
 void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count);
-void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 
 int C74_EXPORT main()
@@ -472,7 +472,7 @@ void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count)
         dsp_add(ibufconcatenate_perform, 7, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[0]->s_n, x);
 }
 
-void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (!x->max_mode)
         object_method(dsp64, gensym("dsp_add64"), x, ibufconcatenate_perform64, 0, nullptr);

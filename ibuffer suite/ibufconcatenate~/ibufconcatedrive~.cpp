@@ -43,7 +43,7 @@ void ibufconcatedrive_free(t_ibufconcatedrive *x);
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s);
 
 void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count);
-void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 t_int *ibufconcatedrive_perform(t_int *w);
 void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
@@ -218,9 +218,9 @@ void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count)
     dsp_add(ibufconcatedrive_perform, 8, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[0]->s_n, x);
 }
 
-void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_const = 1000. / samplerate;
+    x->sr_const = 1000. / sample_rate;
     object_method(dsp64, gensym("dsp_add64"), x, ibufconcatedrive_perform64, 0, nullptr);
 }
 

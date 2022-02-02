@@ -52,7 +52,7 @@ t_int *ibuftable_perform(t_int *w);
 void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count);
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -253,7 +253,7 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
     perform_core(x, ins[0], outs[0], vec_size);
 }
 
-void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     // Set buffer again in case it is no longer valid / extant
     
