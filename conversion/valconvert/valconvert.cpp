@@ -244,17 +244,17 @@ void valconvert_perform_scalar(t_valconvert *x, const T* in, T* out, long vec_si
 template <class T>
 void valconvert_perform_simd_base(t_valconvert *x, const T* in, T* out, long vec_size)
 {
-    using VecType = SIMDType<T, SIMDLimits<T>::max_size>;
+    using vec_type = SIMDType<T, SIMDLimits<T>::max_size>;
     
-    const VecType *in_vec = reinterpret_cast<const VecType *>(in);
-    VecType *out_vec = reinterpret_cast<VecType *>(out);
+    const vec_type *in_vec = reinterpret_cast<const vec_type *>(in);
+    vec_type *out_vec = reinterpret_cast<vec_type *>(out);
     
     long num_vecs = vec_size / SIMDLimits<T>::max_size;
     
-    VecType mul(static_cast<T>(x->mul));
-    VecType sub(static_cast<T>(x->sub));
-    VecType lo(static_cast<T>(x->lo));
-    VecType hi(static_cast<T>(x->hi));
+    vec_type mul(static_cast<T>(x->mul));
+    vec_type sub(static_cast<T>(x->sub));
+    vec_type lo(static_cast<T>(x->lo));
+    vec_type hi(static_cast<T>(x->hi));
     
     switch (x->mode)
     {
