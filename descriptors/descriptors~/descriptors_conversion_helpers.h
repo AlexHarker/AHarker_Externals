@@ -17,7 +17,7 @@
 //#include <AH_Win_Math.h>
 #include "descriptors_constants.h"
 
-static __inline double dbtoa (double db)
+static inline double dbtoa (double db)
 {
 	double a;
 	
@@ -26,7 +26,7 @@ static __inline double dbtoa (double db)
 }
 
 
-static __inline double atodb (double a)
+static inline double atodb (double a)
 {
 	double db;
 	
@@ -42,7 +42,7 @@ static __inline double atodb (double a)
 }
 
 
-static __inline double pow_to_db (double p)
+static inline double pow_to_db (double p)
 {
 	double db;
 	
@@ -57,7 +57,7 @@ static __inline double pow_to_db (double p)
 } 
 
 
-static __inline long freq_to_bin (double freq, double one_over_bin_freq, long num_bins)
+static inline long freq_to_bin (double freq, double one_over_bin_freq, long num_bins)
 {
 	freq *= one_over_bin_freq;
 	
@@ -70,7 +70,7 @@ static __inline long freq_to_bin (double freq, double one_over_bin_freq, long nu
 	return (long) ceil(freq); 
 }
 
-static __inline long get_bin_range (long *min_bin, long *max_bin, double *params, double one_over_bin_freq, long num_bins)
+static inline long get_bin_range (long *min_bin, long *max_bin, double *params, double one_over_bin_freq, long num_bins)
 {
 	*min_bin = freq_to_bin (params[0], one_over_bin_freq, num_bins);
 	*max_bin = freq_to_bin (params[1], one_over_bin_freq, num_bins);

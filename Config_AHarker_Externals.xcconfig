@@ -42,10 +42,6 @@ GENERATE_PKGINFO_FILE = YES
 
 WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement -Wno-deprecated-declarations -Werror
 
-// Allow old-style use of __inline (revise later)
-
-OTHER_CFLAGS = -std=gnu89
-
 // Flags to enforce some build-time checks for the symbols used while not actually performing a hard link
 
 C74_SYM_LINKER_FLAGS = @$(C74SUPPORT)/max-includes/c74_linker_flags.txt

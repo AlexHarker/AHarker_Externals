@@ -34,8 +34,6 @@ struct t_kernelmaker
     t_atom_long fades;
 };
 
-t_symbol *ps_dirty;
-
 // Function Protoypes
 
 void *kernelmaker_new(t_atom_long fades);
@@ -43,17 +41,17 @@ void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s);
 
 void kernelmaker_int(t_kernelmaker *x, t_atom_long fades);
 
-void kernelmaker_window(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length);
+void kernelmaker_wind_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_wind(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *win, t_atom_long offset, t_atom_long size);
 
-void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long slide);
+void kernelmaker_env_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_env(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *env, t_atom_long offset, t_atom_long slide);
 
-void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset);
+void kernelmaker_ring_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_ring(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *modulator, t_atom_long offset);
 
-void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
-void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_atom_long length);
+void kernelmaker_trap_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv);
+void kernelmaker_trap(t_kernelmaker *x, t_symbol *out, double e1, double e2, double e3, double e4, t_atom_long size);
 
 // Main
 
@@ -63,21 +61,19 @@ int C74_EXPORT main()
                             (method) kernelmaker_new,
                             (method) nullptr,
                             sizeof(t_kernelmaker),
-                           (method) nullptr,
+                            (method) nullptr,
                             A_DEFLONG,
                             0);
     
     class_addmethod(this_class, (method) kernelmaker_int, "int", A_LONG, 0);
-    class_addmethod(this_class, (method) kernelmaker_window, "makekernel_wind", A_GIMME, 0);
-    class_addmethod(this_class, (method) kernelmaker_env, "makekernel_env", A_GIMME, 0);
-    class_addmethod(this_class, (method) kernelmaker_ring_mod, "makekernel_ring", A_GIMME, 0);
-    class_addmethod(this_class, (method) kernelmaker_trap, "makekernel_trap", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_wind_call, "makekernel_wind", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_env_call, "makekernel_env", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_ring_call, "makekernel_ring", A_GIMME, 0);
+    class_addmethod(this_class, (method) kernelmaker_trap_call, "makekernel_trap", A_GIMME, 0);
     class_addmethod(this_class, (method) kernelmaker_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
-        
-    ps_dirty = gensym("dirty");
-    
+            
     return 0;
 }
 
@@ -129,19 +125,19 @@ void normalise_kernel(float *out_samps, t_ptr_int length, t_ptr_int num_chans, d
 
 // A kernel windowed by a function stored in a second buffer
 
-void kernelmaker_window(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_wind_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (argc < 5)
         error ("kernelmaker~: not enough argments to message makekernel_wind");
 
-    kernelmaker_window_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
+    kernelmaker_wind(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
-void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long length)
+void kernelmaker_wind(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *win, t_atom_long offset, t_atom_long size)
 {
-    ibuffer_data target(target_name);
-    ibuffer_data source(source_name);
-    ibuffer_data window(window_name);
+    ibuffer_data target(out);
+    ibuffer_data source(in);
+    ibuffer_data window(win);
             
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
@@ -152,24 +148,24 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
         
         // Calculate and clip length
 
-        length = std::min(length, target.get_length());
-        length = std::min(length, source.get_length() - offset);
+        size = std::min(size, target.get_length());
+        size = std::min(size, source.get_length() - offset);
         
         // Zero length if the window is shorter than 513 samples
         
-        length = (window.get_length() < 513) ? 0 : length;
+        size = (window.get_length() < 513) ? 0 : size;
         
-        const double length_recip = 512.0 / length;
+        const double size_recip = 512.0 / size;
         
         double peak_amp = 0.0;
 
-        for (t_ptr_int i = 0; i < length; i++)
+        for (t_ptr_int i = 0; i < size; i++)
         {
             double current_samp = ibuffer_get_samp(source, i + offset, 0);
             
             // Window the next sample
             
-            const double pos = i * length_recip;
+            const double pos = i * size_recip;
             const t_ptr_int ipos = (t_ptr_int) pos;
             const double fract = pos - ipos;
             
@@ -190,7 +186,7 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
         
         // Now normalise the kernel and set the buffer as dirty
         
-        normalise_kernel(out_samps, length, num_chans, peak_amp, 0);
+        normalise_kernel(out_samps, size, num_chans, peak_amp, 0);
         target.set_dirty();
     }
 }
@@ -199,19 +195,19 @@ void kernelmaker_window_internal(t_kernelmaker *x, t_symbol *target_name, t_symb
 
 // Create a kernel windowed by an envelope derived from lowpass filtering the absolute vals of another buffer
 
-void kernelmaker_env(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_env_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (argc < 5)
         error ("kernelmaker~: not enough argments to message makekernel_env");
     
-    kernelmaker_env_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
+    kernelmaker_env(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3), atom_getlong(argv + 4));
 }
 
-void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset, t_atom_long slide)
+void kernelmaker_env(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *env, t_atom_long offset, t_atom_long slide)
 {
-    ibuffer_data target(target_name);
-    ibuffer_data source(source_name);
-    ibuffer_data window(window_name);
+    ibuffer_data target(out);
+    ibuffer_data source(in);
+    ibuffer_data window(env);
         
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
@@ -263,19 +259,19 @@ void kernelmaker_env_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol 
 
 // Create a kernel from a buffer ring modulated using a second buffer
 
-void kernelmaker_ring_mod(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_ring_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (argc < 4)
         error ("kernelmaker~: not enough argments to message makekernel_ring");
     
-    kernelmaker_ring_mod_internal(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3));
+    kernelmaker_ring(x, atom_getsym(argv + 0), atom_getsym(argv + 1), atom_getsym(argv + 2), atom_getlong(argv + 3));
 }
 
-void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_symbol *source_name, t_symbol *window_name, t_atom_long offset)
+void kernelmaker_ring(t_kernelmaker *x, t_symbol *out, t_symbol *in, t_symbol *modulator, t_atom_long offset)
 {
-    ibuffer_data target(target_name);
-    ibuffer_data source(source_name);
-    ibuffer_data window(window_name);
+    ibuffer_data target(out);
+    ibuffer_data source(in);
+    ibuffer_data window(modulator);
             
     if (target.get_type() == kBufferMaxBuffer && target.get_length() && source.get_length() && window.get_length())
     {
@@ -317,51 +313,51 @@ void kernelmaker_ring_mod_internal(t_kernelmaker *x, t_symbol *target_name, t_sy
 // Points are set using the range 0-1 which is scaled over the length of the kernel
 // This mode is intended to be used to create simple bandpass filter kernels for driving partconvolve~ in eq mode
 
-void kernelmaker_trap(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
+void kernelmaker_trap_call(t_kernelmaker *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (argc < 6)
         error ("kernelmaker~: not enough argments to message makekernel_trap");
     
-    kernelmaker_trap_internal(x, atom_getsym(argv + 0), atom_getfloat(argv + 1), atom_getfloat(argv + 2), atom_getfloat(argv + 3), atom_getfloat(argv + 4), atom_getlong(argv + 5));
+    kernelmaker_trap(x, atom_getsym(argv + 0), atom_getfloat(argv + 1), atom_getfloat(argv + 2), atom_getfloat(argv + 3), atom_getfloat(argv + 4), atom_getlong(argv + 5));
 }
 
-void kernelmaker_trap_internal(t_kernelmaker *x, t_symbol *target_name, double env1, double env2, double env3, double env4, t_atom_long length)
+void kernelmaker_trap(t_kernelmaker *x, t_symbol *out, double e1, double e2, double e3, double e4, t_atom_long size)
 {
-    ibuffer_data target(target_name);
+    ibuffer_data target(out);
             
     if (target.get_type() == kBufferMaxBuffer)
     {
-        if (target.get_length() < length)
-            length = target.get_length();
+        if (target.get_length() < size)
+            size = target.get_length();
         
-        if (length < 1)
+        if (size < 1)
             return;
         
         float *out_samps = reinterpret_cast<float *>(target.get_samples());
 
         // Clip envelope points and make sure they are correctly ordered
         
-        env1 = std::min(env1, 1.0);
-        env2 = std::min(std::max(env2, env1), 1.0);
-        env3 = std::min(std::max(env3, env2), 1.0);
-        env4 = std::min(std::max(env4, env3), 1.0);
+        const double env1 = std::min(e1, 1.0);
+        const double env2 = std::min(std::max(e2, e1), 1.0);
+        const double env3 = std::min(std::max(e3, e2), 1.0);
+        const double env4 = std::min(std::max(e4, e3), 1.0);
         
         // Create trapezoid
         
-        const double length_recip = 1.0 / length;
+        const double size_recip = 1.0 / size;
         const long num_chans = target.get_num_chans();
         t_ptr_int i;
 
-        for (i = 0; i < env1 * length; i++)
+        for (i = 0; i < env1 * size; i++)
             out_samps[i * num_chans] = 0.f;
-        for (; i < env2 * length; i++)
-            out_samps[i * num_chans] = static_cast<float>(((i * length_recip) - env1) / (env2 - env1));
-        for (; i < env3 * length; i++)
+        for (; i < env2 * size; i++)
+            out_samps[i * num_chans] = static_cast<float>(((i * size_recip) - env1) / (env2 - env1));
+        for (; i < env3 * size; i++)
             out_samps[i * num_chans] = 1.f;
-        for (; i < env4 * length; i++)
-            out_samps[i * num_chans] = static_cast<float>(1.f - ((i * length_recip) - env3) / (env4 - env3));
+        for (; i < env4 * size; i++)
+            out_samps[i * num_chans] = static_cast<float>(1.f - ((i * size_recip) - env3) / (env4 - env3));
 
-        for (; i < length; i++)
+        for (; i < size; i++)
             out_samps[i * num_chans] = 0.f;
         
         // Set the buffer as dirty

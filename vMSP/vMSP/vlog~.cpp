@@ -50,9 +50,10 @@ struct log_functor
     {
         template <class T>
         T operator()(const T& a) 
-        { 
-            const T::scalar_type min = static_cast<T::scalar_type>(min_constant);
-            return sel(T(min), a, a > T(T::scalar_type(0))); 
+        {
+            using scalar_type = typename T::scalar_type;
+            const scalar_type min = static_cast<scalar_type>(min_constant);
+            return sel(T(min), a, a > T(scalar_type(0))); 
         }
     };
     
