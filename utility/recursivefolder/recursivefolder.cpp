@@ -73,9 +73,9 @@ int C74_EXPORT main()
     class_addmethod(c, (method) recursive_folder_bang, "int", A_LONG, 0);
     class_addmethod(c, (method) recursive_folder_bang, "bang", 0);
     class_addmethod(c, (method) recursive_folder_anything, "anything", A_GIMME, 0);
-    class_addmethod(c, (method) recursive_folder_anything, "symbol",    A_SYM, 0);
-    class_addmethod(c, (method) recursive_folder_types, "types",    A_GIMME, 0);
-    class_addmethod(c, (method) recursive_folder_assist, "assist",    A_CANT, 0);
+    class_addmethod(c, (method) recursive_folder_anything, "symbol", A_SYM, 0);
+    class_addmethod(c, (method) recursive_folder_types, "types", A_GIMME, 0);
+    class_addmethod(c, (method) recursive_folder_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, c);
     this_class = c;

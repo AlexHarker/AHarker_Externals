@@ -5,10 +5,10 @@
 template <class Op, class T, typename... Args>
 void vector_loop(T *o, const T *i, long size, Args... args)
 {
-    using VecType = SIMDType<T, SIMDLimits<T>::max_size>;
+    using vec_type = SIMDType<T, SIMDLimits<T>::max_size>;
     
-    const VecType *v_i = reinterpret_cast<const VecType *>(i);
-    VecType *v_o = reinterpret_cast<VecType *>(o);
+    const vec_type *v_i = reinterpret_cast<const vec_type *>(i);
+    vec_type *v_o = reinterpret_cast<vec_type *>(o);
     
     Op op;
     
