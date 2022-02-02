@@ -399,7 +399,7 @@ t_int *descriptors_perform(t_int *w)
 }
 
 
-void descriptors_dsp (t_descriptors *x, t_signal **sp, short *count)
+void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count)
 {
 	float *samples;
 	
@@ -446,7 +446,7 @@ void descriptors_dsp (t_descriptors *x, t_signal **sp, short *count)
 // It is extravagant to calculate desciptors at 64bit, so for now we simply discard the extra bits at the front end (later this may change)
 
 
-void descriptors_perform64 (t_descriptors *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void descriptors_perform64(t_descriptors *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in1 = ins[0];
 	
@@ -502,7 +502,7 @@ void descriptors_perform64 (t_descriptors *x, t_object *dsp64, double **ins, lon
 }
 
 
-void descriptors_dsp64 (t_descriptors *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
 	float *samples;
 	
