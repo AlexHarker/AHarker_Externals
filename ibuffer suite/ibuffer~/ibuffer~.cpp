@@ -338,8 +338,8 @@ void ibuffer_doload(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         long sample_size = file.getByteDepth();
         
         free(x->memory);
-        x->memory = calloc(sample_size, (x->frames * num_chans_to_load + 64));
-        x->samples = (void *)((char *) x->memory + (16 * sample_size));
+        x->memory = calloc(((num_frames + 4) * num_chans_to_load), sample_size);
+        x->samples = reinterpret_cast<uint8_t *>(x->memory) + (16 * sample_size));
         
         // Bail if no memory
         
