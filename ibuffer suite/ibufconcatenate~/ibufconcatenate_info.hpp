@@ -19,19 +19,26 @@
 #include <vector>
 #include <utility>
 
+#include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
 
-// The ibufconcatenate_info object
+// Class and Object Structure
+
+t_class *info_class;
 
 class t_ibufconcatenate_info
 {
 public:
     
+    // Constructor
+    
     t_ibufconcatenate_info(t_symbol* name)
     : buffer_name(name), max_end(0), user_count(0)
     {}
     
+    // Class for Read Access
+
     class read_access : private read_lock_hold
     {
     public:
@@ -51,6 +58,8 @@ public:
         
         const t_ibufconcatenate_info *m_info;
     };
+    
+    // Class for Write Access
     
     class write_access : private write_lock_hold
     {
@@ -83,6 +92,8 @@ public:
     bool release() { return --user_count == 0; }
     
 private:
+    
+    // Implementation
     
     void clear()
     {
@@ -127,15 +138,15 @@ private:
     {
         return max_end;
     }
-    
-    // FIX - this is currently public to avoid errors
-    
+
 public:
     
+    // N.B. This will be accessed by the Max API
+    
     t_pxobject x_obj;
-    
+        
 private:
-    
+
     t_symbol *buffer_name;
     
     std::vector<std::pair<double, double>> timings;
@@ -147,11 +158,22 @@ private:
     mutable read_write_lock m_lock;
 };
 
-t_class *info_class;
+// Function Prototypes
 
 static void ibufconcatenate_info_setup();
 void *ibufconcatenate_info_new(t_symbol *buffer_name);
 void ibufconcatenate_info_free(t_ibufconcatenate_info *x);
+
+// Namespace Utility
+
+static t_symbol *get_namespace()
+{
+    static t_symbol *namespace_sym = gensym("ibufconcatenate_info_namespace");
+    
+    return namespace_sym;
+}
+
+// Setup (like main)
 
 static void ibufconcatenate_info_setup()
 {
@@ -167,17 +189,19 @@ static void ibufconcatenate_info_setup()
     class_register(CLASS_NOBOX, info_class);
 }
 
+// New / Free
+
 void *ibufconcatenate_info_new(t_symbol *buffer_name)
 {
     t_ibufconcatenate_info *x = (t_ibufconcatenate_info *) object_alloc(info_class);
     
     // Create the struct fully
     
-    new (x) t_ibufconcatenate_info(buffer_name);
+    create_object(x, buffer_name);
     
     // Register the buffer name in a unique namespace
     
-    object_register(gensym("ibufconcatenate_attachment_namespace"), buffer_name, x);
+    object_register(get_namespace(), buffer_name, x);
     
     return x;
 }
@@ -185,10 +209,10 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
 void ibufconcatenate_info_free(t_ibufconcatenate_info *x)
 {
     object_unregister(x);
-    x->~t_ibufconcatenate_info();
+    destroy_object(x);
 }
 
-// Helper functions to attach or create the info
+// Attach / Detach
 
 static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name)
 {
@@ -196,17 +220,19 @@ static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name
     t_atom argv[1];
     atom_setsym(argv, name);
     
+    t_symbol *object_name = gensym("ibufconcatenate_info");
+    
     // first make sure the attachment object is loaded
     
-    if (!class_findbyname(CLASS_NOBOX, gensym("ibufconcatenate_info")))
+    if (!class_findbyname(CLASS_NOBOX, object_name))
         ibufconcatenate_info_setup();
     
     // Search for or create it
     
-    registered = static_cast<t_ibufconcatenate_info *>(object_findregistered (gensym("ibufconcatenate_info_namespace"), name));
+    registered = static_cast<t_ibufconcatenate_info *>(object_findregistered(get_namespace(), name));
     
     if (!registered)
-        registered = static_cast<t_ibufconcatenate_info *>(object_new_typed(CLASS_NOBOX, gensym("ibufconcatenate_info"), 1, argv));
+        registered = static_cast<t_ibufconcatenate_info *>(object_new_typed(CLASS_NOBOX, object_name, 1, argv));
     
     if (registered)
         registered->acquire();
