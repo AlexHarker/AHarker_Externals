@@ -240,11 +240,11 @@ void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long n
 
 void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    using vec_type = SIMDType<T, SIMDLimits<T>::max_size>;
+    using vec_type = SIMDType<double, SIMDLimits<double>::max_size>;
     
     double *out = outs[0];
 
-    const vec_type *in_vec = reinterpret_cast<const vec_type *>(in);
+    const vec_type *in_vec = reinterpret_cast<const vec_type *>(ins[0]);
     vec_type *out_vec = reinterpret_cast<vec_type *>(out);
     
     long num_vecs = vec_size / SIMDLimits<double>::max_size;
