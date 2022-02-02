@@ -158,16 +158,16 @@ public:
     threaded_patch_slot(t_object *owner, t_patcher *parent, t_atom_long index, long num_ins, std::vector<void *> *out_table)
     : patch_slot(owner, parent, index, num_ins, out_table), m_thread_current(0), m_thread_request(0) {}
 
-    void request_thread(long thread)    { m_thread_request = thread; }
-    void update_thread()                { m_thread_current = m_thread_request; }
-    void reset_processed()              { m_processing_lock.release(); }
+    void request_thread(t_atom_long thread)     { m_thread_request = thread; }
+    void update_thread()                        { m_thread_current = m_thread_request; }
+    void reset_processed()                      { m_processing_lock.release(); }
 
     bool process_if_unprocessed(void **outputs)
     {
         return m_processing_lock.attempt() ? process(outputs) : false;
     }
 
-    bool process_if_thread_matches(void **outputs, long thread, long n_threads)
+    bool process_if_thread_matches(void **outputs, t_atom_long thread, t_atom_long n_threads)
     {
         return ((m_thread_current % n_threads) == thread) ? process(outputs) : false;
     }
@@ -177,8 +177,8 @@ private:
     // Threading
 
     thread_lock m_processing_lock;
-    long m_thread_current;
-    long m_thread_request;
+    t_atom_long m_thread_current;
+    t_atom_long m_thread_request;
 };
 
 #endif /* _PATCHSLOT_HPP_ */
