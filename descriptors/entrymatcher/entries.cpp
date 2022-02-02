@@ -309,8 +309,7 @@ void entries::delete_entries(std::vector<long>& indices, read_write_access& acce
         
     // Delete and resize
     
-    std::remove(m_order.begin(), m_order.end(), -1);
-    m_order.resize(jdx);
+    m_order.erase(std::remove(m_order.begin(), m_order.end(), -1), m_order.end());
     
     access.promote();
 
