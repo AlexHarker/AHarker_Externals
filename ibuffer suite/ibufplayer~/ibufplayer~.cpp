@@ -4,9 +4,14 @@
  *
  *  ibufplayer~ is an efficient playback object for ibuffer~ and standard buffer~ objects.
  *
- *  ibufplayer~ features SIMD optimisation, individual channel level controls, reduced CPU usage for integer playback speeds and fixed speed, or varispeed (with a base speed) playback.
- *  It is also features three different kinds of cubic interpolation which can be requested as desired.
- *  It should at least (roughly) as fast as groove~ for worst case scenarios, and faster in various other situations.
+ *  ibufplayer~ has various features:
+ *  - SIMD optimisation
+ *  - individual channel level controls
+ *  - reduced CPU usage for integer playback speeds
+ *  - fixed speed, or varispeed (with a base speed) playback.
+ *  - three different kinds of cubic interpolation which can be requested as desired.
+ *
+ *  It should be roughly as fast as groove~ for worst case scenarios, and faster in various other situations.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -30,8 +35,12 @@
 #include <malloc.h>
 #endif 
 
+
+// Globals and Object Structure
+
 t_class *this_class;
 
+constexpr int max_num_chans = 64;
 
 enum class transport_flag
 {
@@ -39,10 +48,6 @@ enum class transport_flag
     play,
     stop,
 };
-
-constexpr int max_num_chans = 64;
-
-// Main object struct
 
 struct t_ibufplayer
 {
@@ -75,7 +80,7 @@ struct t_ibufplayer
     void *bang_outlet;
 };
 
-// Phase info helper
+// Phase Info Helper
 
 struct phase_info
 {
@@ -118,6 +123,21 @@ private:
     double m_length_norm;
 };
 
+// Helper Functions
+
+double ibuffer_sample_rate(t_symbol *name)
+{
+    return ibuffer_data(name).get_sample_rate();
+}
+// Bang On Complete
+
+void ibufplayer_done_bang(t_ibufplayer *x)
+{
+    outlet_bang(x->bang_outlet);
+}
+
+// Function Prototypes
+
 void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_free(t_ibufplayer *x);
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s);
@@ -128,14 +148,13 @@ void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_stop(t_ibufplayer *x);
 
-void ibufplayer_done_bang(t_ibufplayer *x);
-
 t_int *ibufplayer_perform(t_int *w);
 void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -164,6 +183,8 @@ int C74_EXPORT main()
     
     return 0;
 }
+
+// New  / Free / Assist
 
 void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 {
@@ -247,6 +268,8 @@ void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
     }
 }
 
+// Set Methods
+
 void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
 {
     ibufplayer_set_internal(x, argc ? atom_getsym(argv) : 0);
@@ -271,6 +294,8 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
     }
 }
 
+// Other User Methods
+
 void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 {
     for (long i = 0; i < max_num_chans && i < argc; i++)
@@ -280,11 +305,6 @@ void ibufplayer_vols(t_ibufplayer *x,  t_symbol *s, long argc, t_atom *argv)
 void ibufplayer_stop(t_ibufplayer *x)
 {
     x->mode_flag = transport_flag::stop;
-}
-
-double ibuffer_sample_rate(t_symbol *name)
-{
-    return ibuffer_data(name).get_sample_rate();
 }
 
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
@@ -354,11 +374,6 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
     
     x->sig_control = sig_control ? true : false;
     x->mode_flag = transport_flag::play;
-}
-
-void ibufplayer_done_bang(t_ibufplayer *x)
-{
-    outlet_bang(x->bang_outlet);
 }
 
 // Core Perform Routines
@@ -484,7 +499,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
     x->mode_flag = transport_flag::none;
 }
 
-// Perform and DSP for 32-bit signals
+// Perform
 
 t_int *ibufplayer_perform(t_int *w)
 {
@@ -506,6 +521,13 @@ t_int *ibufplayer_perform(t_int *w)
     return w + 7;
 }
 
+void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+{
+    perform_core(x, ins[0], outs, outs[numouts - 1], outs[numouts - 2], vec_size);
+}
+
+// DSP
+
 void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
 {
     x->sr_div = 1.0 / sp[0]->s_sr;
@@ -522,13 +544,6 @@ void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
         x->float_outs[i] = reinterpret_cast<float *>(sp[i + 1]->s_vec);
     
     dsp_add(denormals_perform, 6, ibufplayer_perform, sp[0]->s_vec, x->float_outs, sp[x->obj_n_chans]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
-
-void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    perform_core(x, ins[0], outs, outs[numouts - 1], outs[numouts - 2], vec_size);
 }
 
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
