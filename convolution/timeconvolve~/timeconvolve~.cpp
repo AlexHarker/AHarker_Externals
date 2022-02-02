@@ -269,7 +269,7 @@ void time_domain_convolve(const float *in, const VecType *impulse, float *output
 #else
 void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
-    vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
+    vDSP_conv(in + 1 - L, 1, reinterpret_cast<const float *>(impulse), 1, output, 1, N, L);
 }
 #endif
 
