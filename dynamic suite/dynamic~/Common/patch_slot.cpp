@@ -270,9 +270,10 @@ void patch_slot::unregister_listener(t_object *listener)
 
 void patch_slot::set_window_name()
 {
-    char index_string[16];
+    constexpr size_t idx_length = 16;
+    char index_string[idx_length];
 
-    snprintf(index_string, 16, " (%lld)", m_user_index);
+    snprintf(index_string, idx_length, " (%lld)", m_user_index);
 
     std::string window_name = std::string(m_name);
     window_name.append(index_string);
