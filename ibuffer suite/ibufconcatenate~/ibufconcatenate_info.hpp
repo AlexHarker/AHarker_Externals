@@ -199,7 +199,7 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
     
     // Create the struct fully
     
-    create_object(x, buffer_name);
+    create_object(*x, buffer_name);
     
     // Register the buffer name in a unique namespace
     
@@ -211,7 +211,7 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
 void ibufconcatenate_info_free(t_ibufconcatenate_info *x)
 {
     object_unregister(x);
-    destroy_object(x);
+    destroy_object(*x);
 }
 
 // Attach / Detach
