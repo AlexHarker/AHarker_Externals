@@ -133,8 +133,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
 
 void partconvolve_max_fft_size_set(t_partconvolve *x, t_atom_long max_fft_size);
 t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
-
-t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data);
+t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv);
 
 void partconvolve_direct(t_partconvolve *x, t_symbol *msg, long argc, t_atom *argv);
 void partconvolve_eq(t_partconvolve *x,  t_symbol *msg, long argc, t_atom *argv);
@@ -174,7 +173,6 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) partconvolve_memoryusage, "memoryusage", 0);
     class_addmethod(this_class, (method) partconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) partconvolve_notify, "notify", A_CANT, 0);
     class_addmethod(this_class, (method) partconvolve_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) partconvolve_dsp64, "dsp64", A_CANT, 0);
     
@@ -187,7 +185,7 @@ int C74_EXPORT main()
     CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
     
     CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
-    CLASS_ATTR_FILTER_MIN(this_class, "length", 0);
+    CLASS_ATTR_ACCESSORS(this_class, "length", nullptr, partconvolve_length_set);
     CLASS_ATTR_LABEL(this_class, "length", 0L, "Impulse Length");
     
     CLASS_ATTR_LONG(this_class, "offset", 0L, t_partconvolve, offset);
@@ -363,18 +361,17 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
     double window_scale;
     
     long inexact = 0;
-    long fft_size_log2;
-    long fft_size;
-    
+         
     const long min_fft_size = 1 << MIN_FFT_SIZE_LOG2;
     const long max_fft_size = 1 << x->max_fft_size_log2;
     
     if (!argc)
         return MAX_ERR_NONE;
     
-    fft_size_log2 = int_log2(atom_getlong(argv), &inexact);
-    
-    if (fft_size_log2 < min_fft_size || fft_size_log2 > max_fft_size)
+    long fft_size_log2 = int_log2(atom_getlong(argv), &inexact);
+    long fft_size =  1 << fft_size_log2;
+
+    if (fft_size < min_fft_size || fft_size > max_fft_size)
     {
         object_error((t_object *) x, "fft size out of range: valid range is %ld to %ld", min_fft_size, max_fft_size);
         return MAX_ERR_NONE;
@@ -421,14 +418,12 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
 
 t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, t_atom *argv)
 {
-    t_atom_long length = atom_getlong(argv);
-    t_atom_long max_impulse_length = x->max_impulse_length;
-    
     if (!argc)
         return MAX_ERR_NONE;
     
-    if (length < 0)
-        length = 0;
+    t_atom_long length = std::max(t_atom_long(0), atom_getlong(argv));
+    t_atom_long max_impulse_length = x->max_impulse_length;
+    
     if (length > max_impulse_length)
     {
         object_error((t_object *) x, "requested length greater than internal buffer size (%ld)", max_impulse_length);
@@ -436,27 +431,6 @@ t_max_err partconvolve_length_set(t_partconvolve *x, t_object *attr, long argc, 
     }
     
     x->length = length;
-    
-    return MAX_ERR_NONE;
-}
-
-t_max_err partconvolve_notify(t_partconvolve *x, t_symbol *s, t_symbol *msg, void *sender, void *data)
-{
-    if (msg == gensym("attr_modified"))
-    {
-        t_symbol *attrname = (t_symbol *) object_method((t_object *)data, gensym("getname"));
-        
-        if (attrname == gensym("length"))
-        {
-            const t_atom_long max_length = x->max_impulse_length;
-            
-            if (x->length > max_length)
-            {
-                object_error((t_object *) x, "requested length greater than internal buffer size (%ld)", max_length);
-                x->length = max_length;
-            }
-        }
-    }
     
     return MAX_ERR_NONE;
 }
