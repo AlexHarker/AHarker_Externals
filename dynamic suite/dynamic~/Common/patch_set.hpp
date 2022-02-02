@@ -428,7 +428,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
     threaded_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
     : patch_set(x, parent, num_ins, num_outs, outs) {}
 
-    bool process_if_thread_matches(t_atom_long index, void **outputs, long thread, long n_threads)
+    bool process_if_thread_matches(t_atom_long index, void **outputs, t_atom_long thread, t_atom_long n_threads)
     {
         return slot_action_result(&threaded_patch_slot::process_if_thread_matches, index, outputs, thread, n_threads);
     }
@@ -438,7 +438,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
         return slot_action_result(&::threaded_patch_slot::process_if_unprocessed, index, outputs);
     }
 
-    void request_thread(t_atom_long index, long thread)
+    void request_thread(t_atom_long index, t_atom_long thread)
     {
         slot_action(&::threaded_patch_slot::request_thread, index, thread);
     }
