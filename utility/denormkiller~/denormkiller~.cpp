@@ -27,7 +27,7 @@ struct t_denormkiller
     t_pxobject x_obj;
 };
 
-// Function Protypes
+// Function Prototypes
 
 void *denormkiller_new();
 void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s);

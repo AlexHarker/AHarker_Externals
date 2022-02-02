@@ -2,10 +2,10 @@
 /*
  *  ibufconcatedrive~
  *
- *  The ibufconcatedrive~ object is high resolution drive object (accumulator) that is internally clipped according to the given items (or chunks) associated with a buffer.
- *  Typically this object forms part of a sample accurate sampler or granulator, and is used in conjunction with play~ or hr.play~ in older versions of max.
- *
- *  See the helpfile documentation for more on how this object can be used in practice.
+ *  The ibufconcatedrive~ object is drive object (accumulator) for use with ibufconcatenate~.
+ *  The accumulator is internally clipped according to the given items (or chunks) associated with a buffer.
+ *  Typically this object forms part of a sample accurate sampler or granulator, and is used in conjunction with play~.
+ *  In older versions of max hr.play~ can be used for high resolution results.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -22,20 +22,23 @@
 #include <limits>
 
 
+// Globals and Object Structure
+
 t_class *this_class;
 
 struct t_ibufconcatedrive
 {
     t_pxobject x_obj;
     
-    double sr_const;
-    double accum;
     double lo;
     double hi;
-    
+    double accum;
+    double sr_const;
+
     t_ibufconcatenate_info *attachment;
 };
 
+// Function Prototypes
 
 void *ibufconcatedrive_new(t_symbol *buffernmae, double init_val);
 void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv);
@@ -48,6 +51,7 @@ void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count
 t_int *ibufconcatedrive_perform(t_int *w);
 void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
+// Main
 
 int C74_EXPORT main()
 {
@@ -71,6 +75,8 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New/ Free
+
 void *ibufconcatedrive_new(t_symbol *buffer_name, double init_val)
 {
     t_ibufconcatedrive *x = (t_ibufconcatedrive *) object_alloc(this_class);
@@ -83,13 +89,22 @@ void *ibufconcatedrive_new(t_symbol *buffer_name, double init_val)
     
     x->accum = init_val;
     
-    x->lo = 0;
-    x->hi = 0;
+    x->lo = 0.0;
+    x->hi = 0.0;
     
     x->attachment = attach_ibufconcatenate_info(buffer_name);
     
     return x;
 }
+
+void ibufconcatedrive_free(t_ibufconcatedrive *x)
+{
+    dsp_free(&x->x_obj);
+    detach_ibufconcatenate_info(x->attachment);
+}
+
+
+// Set Method
 
 void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv)
 {
@@ -102,11 +117,7 @@ void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_at
     }
 }
 
-void ibufconcatedrive_free(t_ibufconcatedrive *x)
-{
-    dsp_free(&x->x_obj);
-    detach_ibufconcatenate_info(x->attachment);
-}
+// Perform
 
 void store(float *lo_res, float *hi_res, double output)
 {
@@ -155,8 +166,8 @@ void ibufconcatedrive_perform_core(t_ibufconcatedrive *x, T **ins, T **outs, lon
             
             // Defaults
             
-            lo = 0.;
-            hi = std::numeric_limits<float>::max();
+            lo = 0.0;
+            hi = std::numeric_limits<T>::max();
             
             access.get_item(item - 1, lo, hi);
         }
@@ -212,17 +223,21 @@ void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double *
     ibufconcatedrive_perform_core(x, ins, outs, vec_size);
 }
 
+// DSP
+
 void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count)
 {
-    x->sr_const = 1000. / sp[0]->s_sr;
+    x->sr_const = 1000.0 / sp[0]->s_sr;
     dsp_add(ibufconcatedrive_perform, 8, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[0]->s_n, x);
 }
 
 void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_const = 1000. / sample_rate;
+    x->sr_const = 1000.0 / sample_rate;
     object_method(dsp64, gensym("dsp_add64"), x, ibufconcatedrive_perform64, 0, nullptr);
 }
+
+// Assist
 
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s)
 {
