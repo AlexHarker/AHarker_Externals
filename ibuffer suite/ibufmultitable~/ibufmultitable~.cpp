@@ -195,7 +195,7 @@ void perform_positions(T *positions, const T *in, const T *offsets, long n_samps
     for (long i = 0; i < n_vecs; i++)
     {
         SIMDType<T, N> position = min(one, max(zero, *v_in++)) * mul + add + *v_offsets++;
-        v_positions[i] = min(end, max(zero, position));
+        v_positions[i] = min(limit, max(zero, position));
     }
 }
 
