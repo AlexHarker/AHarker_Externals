@@ -40,12 +40,13 @@ struct t_counter
 {
     void set_size(long size)        { m_size = size; }
     
+    bool is_newest(long idx) const  { return idx == m_position; }
+
     long count() const              { return m_count; }
     long postion_idx() const        { return m_position; }
-    long oldest_idx() const         { return (m_count - 1 <= m_position ? m_position - m_count : m_size + m_position - m_count) + 1; }
+    long oldest_idx() const         { return (m_position - m_count) + 1 + ((m_count - 1 > m_position) ? m_size : 0); }
     long next_idx() const           { return (m_position >= m_size - 1) ? 0 : m_position + 1; }
-    bool is_newest(long idx) const  { return idx == m_position; }
-        
+
     bool add()
     {
         bool overflow = m_count == m_size;
@@ -310,7 +311,7 @@ void meandev_output_mean_removed(t_meandev *x, t_duration_data *duration);
 t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean);
 t_stats meandev_calc_mean_stats(t_duration_data *duration);
 
-void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message);
+void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message_prefix);
 
 // Main
 
@@ -612,7 +613,7 @@ void meandev_add_data(t_meandev *x, double data, double weight)
 
     if (overflow)
     {
-        meandev_report_overflow(x, time, x->last_post_time_data, "data overwrite: data does not stretch back full duration");
+        meandev_report_overflow(x, time, x->last_post_time_data, "data");
                 
         // Update each duration range in case the data needs to be removed
             
@@ -785,7 +786,7 @@ t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean)
     long time = gettime();
     
     if (duration->mean_data.add(mean, time))
-        meandev_report_overflow(x, time, x->last_post_time_mean, "mean overwrite: data does not stretch back full duration");
+        meandev_report_overflow(x, time, x->last_post_time_mean, "mean");
     
     // Find the minimium times until the next mean should be removed
     
@@ -797,11 +798,11 @@ t_stats meandev_new_mean(t_meandev *x, t_duration_data *duration, double mean)
 
 // Report Overflow
 
-void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message)
+void meandev_report_overflow(t_meandev *x, long time, long& post_time, const char *message_prefix)
 {
     if (x->timed_mode && post_time < time - 1000)
     {
-        object_post((t_object *) x, message);
+        object_post((t_object *) x, "%s overwrite: data does not stretch back full duration", message_prefix);
         post_time = time;
     }
 }

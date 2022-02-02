@@ -5,8 +5,8 @@
  *  partconvolve~ copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution.
  *  It can also be used to perform a simple static FFT-based FIR filter on an incoming signal.
  *
- *  Typically partconvolve~ might be used in conjuction with timeconvolve~ for zero-latency convolution with longer impulses.
- *  The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+ *  Typically timeconvolve~ is used in conjunction with partconvolve~ for zero-latency convolution with longer impulses.
+ *  The two objects have similar attributes / arguments and can be combined to design custom partitioning schemes.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -26,14 +26,6 @@
 #include <algorithm>
 #include <limits>
 
-constexpr static int MIN_FFT_SIZE_LOG2          = 5;
-constexpr static int MAX_FFT_SIZE_LOG2          = 20;
-constexpr static int DEFAULT_MAX_FFT_SIZE_LOG2  = 16;
-constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
-
-// Random number generator
-
-random_generator<> rand_gen;
 
 // Utility
 
@@ -70,9 +62,16 @@ long int_log2(long long in, long *inexact)
     return out;
 }
 
-// Class pointer and structure
+// Globals and Object Structure
 
 t_class *this_class;
+
+random_generator<> rand_gen;
+
+constexpr static int MIN_FFT_SIZE_LOG2          = 5;
+constexpr static int MAX_FFT_SIZE_LOG2          = 20;
+constexpr static int DEFAULT_MAX_FFT_SIZE_LOG2  = 16;
+constexpr static int BUFFER_SIZE_DEFAULT        = 1323000;  // N.B. = 44100 * 30 or 30 seconds at 44.1kHz
 
 struct t_partconvolve
 {
@@ -126,7 +125,7 @@ struct t_partconvolve
     bool eq_flag;               // eq_flag mode on/off
 };
 
-// Funxtion Prototypes
+// Function Prototypes
 
 void partconvolve_free(t_partconvolve *x);
 void *partconvolve_new(t_symbol *s, long argc, t_atom *argv);
@@ -503,7 +502,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
     }
 }
 
-// Partition and Copy the Impulse Responese
+// Partition + Copy the Impulse Responese
 
 void partconvolve_partition(t_partconvolve *x, long direct_flag)
 {
@@ -728,7 +727,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     
     while (vec_remain > 0)
     {
-        // How many samples to deal with this loop (depending on whether there is an fft to do before the end of the signal vector)
+        // Calculate many samples to deal with this loop
         
         long till_next_fft = (fft_size_halved - (rw_counter & hop_mask));
         long hi_counter = (rw_counter + fft_size_halved) & (fft_size - 1);
