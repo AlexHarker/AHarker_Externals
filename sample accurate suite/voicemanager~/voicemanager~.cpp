@@ -76,7 +76,7 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) voicemanager_reset, "reset", 0);
-    class_addmethod(this_class, (method) voicemanager_reset, "active", A_GIMME,0);
+    class_addmethod(this_class, (method) voicemanager_active, "active", A_GIMME, 0);
     class_addmethod(this_class, (method) voicemanager_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method) voicemanager_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) voicemanager_dsp64, "dsp64", A_CANT, 0);
