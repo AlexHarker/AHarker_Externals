@@ -6,7 +6,8 @@ PRODUCT_NAME = $TARGET_NAME
 // Paths
 
 C74SUPPORT = $(SRCROOT)/../../../max-sdk-base/c74support
-HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+C74_HEADERS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon "$(SRCROOT)/../../AH_MaxMSP_Headers" $C74_HEADERS
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
 // To install on build set SKIP_INSTALL to NO and DSTROOT to the desired location
@@ -37,7 +38,7 @@ ARCHS = x86_64 arm64
 WRAPPER_EXTENSION = mxo
 GENERATE_PKGINFO_FILE = YES
 
-// Turn off C99 to minimise time spent working in Visual Studio
+// Increase warnings to minimise time spent working in Visual Studio and turn off unhelpful warnings
 
 WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement -Wno-deprecated-declarations -Werror
 

@@ -36,7 +36,7 @@ void triggerlimit_free(t_triggerlimit *x);
 void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s);
 
 void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -128,7 +128,7 @@ void triggerlimit_perform64(t_triggerlimit *x, t_object *dsp64, double **ins, lo
 
 // DSP
 
-void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     x->count = 0;
     object_method(dsp64, gensym("dsp_add64"), x, triggerlimit_perform64, 0, nullptr);

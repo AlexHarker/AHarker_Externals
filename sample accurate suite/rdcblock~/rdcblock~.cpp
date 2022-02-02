@@ -39,7 +39,7 @@ void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s);
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -169,7 +169,7 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 
 // DSP
 
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->mode)
         object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform_inval64, 0, nullptr);

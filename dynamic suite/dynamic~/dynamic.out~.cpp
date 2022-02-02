@@ -42,10 +42,10 @@ void dynamic_out_assist(t_dynamic_out *x, void *b, long m, long a, char *s);
 
 void dynamic_out_int(t_dynamic_out *x, t_atom_long intin);
 
-void dynamic_out_perform_scalar64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void dynamic_out_perform64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void dynamic_out_dsp64 (t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -150,13 +150,13 @@ void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long
 
 // DSP
 
-void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     constexpr int simd_width = SIMDLimits<double>::max_size;
     
     // Use SIMD routines where possible
     
-    if (maxvectorsize >= simd_width)
+    if (max_vec >= simd_width)
         object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform64, 0, nullptr);
     else
         object_method(dsp64, gensym("dsp_add64"), x, dynamic_out_perform_scalar64, 0, nullptr);

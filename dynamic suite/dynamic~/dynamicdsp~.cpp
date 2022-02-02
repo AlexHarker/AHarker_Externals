@@ -111,7 +111,7 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
-void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -130,17 +130,16 @@ long poly_isparent(t_object *p, t_object *mightbeparent)
 
 void poly_appendinstanceifneeded(char *buf, char *name, long instance)
 {
-    long len;
     char seeninstance = false;
     
-    len = strlen(name);
+    long len = static_cast<long>(strlen(name));
+
     // is last character of name a right paren?
     if (len > 3 && name[len - 1] == ')') {
         // look for pattern, digits until left paren
         char seendigit = true;
-        long i;
         
-        for (i = len - 2; i >= 0; i--) {
+        for (long i = len - 2; i >= 0; i--) {
             if (isdigit(name[i])) {
                 seendigit = true;
             } else {
@@ -164,7 +163,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     long i;
     t_symbol *name;
     char buf[1024];
-    char subpatcher = false;
+    bool subpatcher = false;
     
     *title = nullptr;
     
@@ -765,10 +764,10 @@ void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count)
         dsp_add(dynamicdsp_perform, 1, x);
 }
 
-void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     // Add to dsp if common routine successful
     
-    if (!dynamicdsp_dsp_common(x, maxvectorsize, static_cast<long>(samplerate)))
+    if (!dynamicdsp_dsp_common(x, max_vec, static_cast<long>(sample_rate)))
         object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, nullptr);
 }

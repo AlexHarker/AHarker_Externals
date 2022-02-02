@@ -60,7 +60,7 @@ double randomvals_generate(random_generator<>& gen, window_gauss_params *params,
 
 #ifdef MSP_VERSION
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 #else
 void randomvals_int(t_randomvals *x, t_atom_long value);
 #endif
@@ -222,7 +222,7 @@ void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, randomvals_perform64, 0, nullptr);
 }

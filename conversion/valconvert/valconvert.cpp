@@ -85,7 +85,7 @@ void *valconvert_new(t_symbol *msg, long argc, t_atom *argv);
 
 void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 #else
 
@@ -284,9 +284,9 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
     }
 }
 
-void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    if (maxvectorsize >= SIMDLimits<double>::max_size)
+    if (max_vec >= SIMDLimits<double>::max_size)
         object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform_SIMD64, 0, nullptr);
     else
         object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform64, 0, nullptr);

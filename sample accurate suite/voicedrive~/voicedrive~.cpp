@@ -44,7 +44,7 @@ void voicedrive_free(t_voicedrive *x);
 void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s);
 
 void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -188,9 +188,9 @@ void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_val = samplerate / 1000.0;
+    x->sr_val = sample_rate / 1000.0;
     object_method(dsp64, gensym("dsp_add64"), x, voicedrive_perform64, 0, nullptr);
 }
 

@@ -35,7 +35,7 @@ void ahnoise_free(t_ahnoise *x);
 void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s);
 
 void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -92,7 +92,7 @@ void ahnoise_perform64(t_ahnoise *x, t_object *dsp64, double **ins, long numins,
 
 // DSP
 
-void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, ahnoise_perform64, 0, nullptr);
 }

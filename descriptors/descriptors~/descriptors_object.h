@@ -68,10 +68,10 @@ double calc_pf_descriptor (t_descriptors *x, float *raw_frame, float *windowed_F
 void output_rt (t_descriptors *x);
 
 t_int *descriptors_perform(t_int *w);
-void descriptors_dsp (t_descriptors *x, t_signal **sp, short *count);
+void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count);
 
-void descriptors_perform64 (t_descriptors *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void descriptors_dsp64 (t_descriptors *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void descriptors_perform64(t_descriptors *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Useful curves (pre-calculated for efficiency)
 

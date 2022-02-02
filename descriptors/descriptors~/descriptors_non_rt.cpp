@@ -924,11 +924,11 @@ void calc_descriptors_non_rt(t_descriptors *x)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 
-void descriptors_dsp (t_descriptors *x, t_signal **sp, short *count)
+void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count)
 {
 }
 
 
-void descriptors_dsp64 (t_descriptors *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
 }

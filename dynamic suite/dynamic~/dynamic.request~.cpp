@@ -48,7 +48,7 @@ void dynamic_request_int(t_dynamic_request *x, t_atom_long inlet_num);
 void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -176,11 +176,11 @@ void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, doub
 
 // DSP
 
-void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->valid)
     {
-        if (maxvectorsize > 4)
+        if (max_vec > 4)
             object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform64, 0, nullptr);
         else
             object_method(dsp64, gensym("dsp_add64"), x, dynamic_request_perform_small64, 0, nullptr);

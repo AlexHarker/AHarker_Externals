@@ -80,8 +80,8 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L);
 
 void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *out, long vec_size);
-void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
@@ -242,7 +242,7 @@ void time_domain_convolve(const float *in, const VecType *impulse, float *output
     for (t_ptr_int i = 0; i < N; i++)
     {
         VecType output_accum = VecType(0.f);
-        float *input = in - L + 1 + i;
+        const float *input = in - L + 1 + i;
         
         for (t_ptr_int j = 0; j < L >> 2; j += 4)
         {            
@@ -264,7 +264,7 @@ void time_domain_convolve(const float *in, const VecType *impulse, float *output
 #else
 void time_domain_convolve(const float *in, const VecType *impulse, float *output, t_ptr_int N, t_ptr_int L)
 {
-    vDSP_conv(in + 1 - L, 1, reinterpret_cast<float *>(impulse), 1, output, 1, N, L);
+    vDSP_conv(in + 1 - L, 1, reinterpret_cast<const float *>(impulse), 1, output, 1, N, L);
 }
 #endif
 
@@ -315,7 +315,7 @@ void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, lo
 
 // DSP
 
-void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, timeconvolve_perform64);
 }

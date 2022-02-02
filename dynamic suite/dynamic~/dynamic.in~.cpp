@@ -43,7 +43,7 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num);
 
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -127,7 +127,7 @@ void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, dynamic_in_perform64, 0, nullptr);
 }

@@ -47,7 +47,7 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 void ibufmultitable_set(t_ibufmultitable *x, t_symbol *s);
 
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -235,7 +235,7 @@ void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins
     perform_core(x, ins[0], ins[1], outs[0], vec_size);
 }
 
-void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     // Set buffer again in case it is no longer valid / extant
     

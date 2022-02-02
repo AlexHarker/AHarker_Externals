@@ -43,7 +43,7 @@ void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, doubl
 void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -182,11 +182,11 @@ void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, lo
 
 // DSP
 
-void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->num_outlets > 1)
     {
-        if (maxvectorsize >= 4)
+        if (max_vec >= 4)
             object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64_unroll, 0, nullptr);
         else
             object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64, 0, nullptr);

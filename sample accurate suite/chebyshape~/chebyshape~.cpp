@@ -52,7 +52,7 @@ void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s);
 void chebyshape_perform_dynamic64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -277,7 +277,7 @@ void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     void **sig_ins = x->sig_ins;
     void **coeff_ins = x->coeff_ins;

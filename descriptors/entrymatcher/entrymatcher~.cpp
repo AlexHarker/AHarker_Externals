@@ -63,7 +63,7 @@ t_int *entrymatcher_perform(t_int *w);
 void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
 
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 /*****************************************/
 // Basic Object Routines: main, new, free and assist
@@ -371,7 +371,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     }
 }
 
-void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, entrymatcher_perform64, 0, nullptr);
 }
