@@ -265,7 +265,7 @@ public:
     // 64 bit dsp routine
     
     template <class T>
-    static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+    static void dsp64(T *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
     {
         method perform_routine = (method) perform64_op<T, 1>;
         long routine = 0;
@@ -285,7 +285,7 @@ public:
         
         // Use SIMD code where possible
         
-        if (Vec64 != calculation_type::scalar && ((maxvectorsize / simd_width) > 0))
+        if (Vec64 != calculation_type::scalar && ((max_vec / simd_width) > 0))
             routine += (Vec64 == calculation_type::vector_op) ? 3 : 6;
         
         switch (routine)

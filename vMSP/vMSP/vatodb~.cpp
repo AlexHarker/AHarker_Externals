@@ -3,7 +3,7 @@
  *  vatodb~
  *
  *  vatodb~ is a vectorised version of vatodb~.
- *  This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
+ *  The exact results from this object may vary slightly different to the native Max version in terms of accuracy.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *

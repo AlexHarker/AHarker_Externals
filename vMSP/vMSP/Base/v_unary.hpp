@@ -140,13 +140,13 @@ public:
     // 64 bit dsp routine
     
     template <class T>
-    static void dsp64(T *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+    static void dsp64(T *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
     {
         constexpr int simd_width = SIMDLimits<double>::max_size;
         
         // Default to scalar routine
         
-        bool vector = !(Vec64 != calculation_type::scalar) || ((maxvectorsize / simd_width) > 0);
+        bool vector = !(Vec64 != calculation_type::scalar) || ((max_vec / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform64_op<T, 1>);
         
         // Use SIMD routines if possible
