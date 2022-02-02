@@ -174,7 +174,7 @@ void triggerlimit_dsp(t_triggerlimit *x, t_signal **sp, short *count)
     dsp_add(triggerlimit_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
-void triggerlimit_dsp64 (t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
 {
     x->count = 0;
     object_method(dsp64, gensym("dsp_add64"), x, triggerlimit_perform64, 0, nullptr);

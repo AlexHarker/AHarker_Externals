@@ -44,11 +44,11 @@ void dynamic_out_int(t_dynamic_out *x, t_atom_long intin);
 
 t_int *dynamic_out_perform_scalar(t_int *w);
 t_int *dynamic_out_perform(t_int *w);
-void dynamic_out_perform_scalar64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void dynamic_out_perform64 (t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 void dynamic_out_dsp(t_dynamic_out *x, t_signal **sp, short *count);
-void dynamic_out_dsp64 (t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
 
 // Main
 

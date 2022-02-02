@@ -207,7 +207,7 @@ t_int *ibufconcatedrive_perform(t_int *w)
     return w + 9;
 }
 
-void ibufconcatedrive_perform64 (t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     ibufconcatedrive_perform_core(x, ins, outs, vec_size);
 }
