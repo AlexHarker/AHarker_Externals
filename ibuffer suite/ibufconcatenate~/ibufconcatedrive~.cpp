@@ -41,7 +41,7 @@ struct t_ibufconcatedrive
 // Function Prototypes
 
 void *ibufconcatedrive_new(t_symbol *buffernmae, double init_val);
-void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv);
+void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *buffer_name);
 void ibufconcatedrive_free(t_ibufconcatedrive *x);
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s);
 
@@ -185,17 +185,8 @@ void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double *
     ibufconcatedrive_perform_core(x, ins, outs, vec_size);
 }
 
-<<<<<<< HEAD
-=======
 // DSP
 
-void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count)
-{
-    x->sr_const = 1000.0 / sp[0]->s_sr;
-    dsp_add(ibufconcatedrive_perform, 8, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[0]->s_n, x);
-}
-
->>>>>>> main
 void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     x->sr_const = 1000.0 / sample_rate;
