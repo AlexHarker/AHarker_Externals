@@ -61,7 +61,7 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
 
-    class_addmethod(this_class, (method) ibuftable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibuftable_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibuftable_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method) ibuftable_dsp64, "dsp64", A_CANT, 0);
     

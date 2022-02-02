@@ -50,7 +50,7 @@ int C74_EXPORT main()
                            A_DEFSYM,
                            0);
     
-    class_addmethod(this_class, (method) ibufinfo_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufinfo_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufinfo_bang, "bang", 0);
     
     class_addmethod(this_class, (method) ibufinfo_assist, "assist", A_CANT, 0);

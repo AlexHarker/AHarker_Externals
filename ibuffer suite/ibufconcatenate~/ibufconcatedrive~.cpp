@@ -61,7 +61,7 @@ int C74_EXPORT main()
                            A_DEFFLOAT,
                            0);
     
-    class_addmethod(this_class, (method) ibufconcatedrive_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufconcatedrive_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufconcatedrive_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method) ibufconcatedrive_dsp64, "dsp64", A_CANT, 0);
     
@@ -102,15 +102,10 @@ void ibufconcatedrive_free(t_ibufconcatedrive *x)
 
 // Set Method
 
-void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv)
+void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *buffer_name)
 {
-    t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
-    
-    if (buffer_name)
-    {
-        detach_ibufconcatenate_info(x->attachment);
-        x->attachment = attach_ibufconcatenate_info(buffer_name);
-    }
+    detach_ibufconcatenate_info(x->attachment);
+    x->attachment = attach_ibufconcatenate_info(buffer_name);
 }
 
 // Perform

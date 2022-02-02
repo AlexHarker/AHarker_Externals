@@ -161,7 +161,7 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method) ibufplayer_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufplayer_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufplayer_vols, "vols", A_GIMME, 0);
     class_addmethod(this_class, (method) ibufplayer_play, "play", A_GIMME, 0);
     class_addmethod(this_class, (method) ibufplayer_stop, "stop", 0);
