@@ -155,13 +155,13 @@ void ibuftable_set(t_ibuftable *x, t_symbol *s)
 // Core Perform Routines
 
 template <int N, class T>
-void perform_positions(T *positions, const T *in, long n_vecs, double start_samp, double end_samp)
+void perform_positions(T *positions, const T *in, long n_vecs, double start, double end)
 {
     SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
     const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
     
-    const SIMDType<T, N> mul(static_cast<T>(end_samp - start_samp));
-    const SIMDType<T, N> add(static_cast<T>(start_samp));
+    const SIMDType<T, N> mul(static_cast<T>(end - start));
+    const SIMDType<T, N> add(static_cast<T>(start));
     const SIMDType<T, N> zero(static_cast<T>(0));
     const SIMDType<T, N> one(static_cast<T>(1));
     
