@@ -84,8 +84,8 @@ void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *ou
 t_int *timeconvolve_perform(t_int *w);
 void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count);
 
-void timeconvolve_perform64 (t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void timeconvolve_dsp64 (t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s);
 
@@ -334,7 +334,7 @@ void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
     dsp_add(denormals_perform, 5, timeconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
 }
 
-void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     object_method(dsp64, gensym("dsp_add64"), x, timeconvolve_perform64);
 }
