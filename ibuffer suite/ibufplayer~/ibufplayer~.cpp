@@ -146,13 +146,6 @@ void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_stop(t_ibufplayer *x);
 
-<<<<<<< HEAD
-void ibufplayer_done_bang(t_ibufplayer *x);
-=======
-t_int *ibufplayer_perform(t_int *w);
-void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
->>>>>>> main
-
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
@@ -270,18 +263,9 @@ void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
     }
 }
 
-<<<<<<< HEAD
+// Set Method
+
 void ibufplayer_set(t_ibufplayer *x, t_symbol *s)
-=======
-// Set Methods
-
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibufplayer_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
->>>>>>> main
 {
     ibuffer_data buffer(s);
     
