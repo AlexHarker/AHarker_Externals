@@ -2906,7 +2906,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -2915,7 +2914,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2924,7 +2922,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -2934,7 +2931,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -2943,7 +2939,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2952,7 +2947,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -2962,7 +2956,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -2971,7 +2964,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2980,7 +2972,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -2990,7 +2981,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -2999,7 +2989,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3008,7 +2997,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3018,7 +3006,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3027,7 +3014,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3036,7 +3022,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3046,7 +3031,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3055,7 +3039,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3064,7 +3047,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3074,7 +3056,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3083,7 +3064,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3092,7 +3072,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3102,7 +3081,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3111,7 +3089,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3120,7 +3097,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3130,7 +3106,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3139,7 +3114,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3148,7 +3122,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3158,7 +3131,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3167,7 +3139,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3176,7 +3147,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3186,7 +3156,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3195,7 +3164,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3204,7 +3172,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3214,7 +3181,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3223,7 +3189,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3232,7 +3197,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3242,7 +3206,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3251,7 +3214,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3260,7 +3222,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3270,7 +3231,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3279,7 +3239,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3288,7 +3247,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3298,7 +3256,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3307,7 +3264,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3316,7 +3272,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3326,7 +3281,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Development;
 		};
@@ -3335,7 +3289,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Deployment;
 		};
@@ -3344,7 +3297,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Default;
 		};
@@ -3354,7 +3306,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3363,7 +3314,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3372,7 +3322,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3382,7 +3331,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3391,7 +3339,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3400,7 +3347,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3410,7 +3356,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3419,7 +3364,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3428,7 +3372,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3438,7 +3381,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3447,7 +3389,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3456,7 +3397,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3466,7 +3406,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3475,7 +3414,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3484,7 +3422,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3515,7 +3452,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3532,7 +3468,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3542,7 +3477,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3551,7 +3485,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3560,7 +3493,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3570,7 +3502,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3579,7 +3510,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3588,7 +3518,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3598,7 +3527,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3607,7 +3535,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3616,7 +3543,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3626,7 +3552,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3635,7 +3560,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3644,7 +3568,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3654,7 +3577,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3663,7 +3585,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3672,7 +3593,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3682,7 +3602,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3691,7 +3610,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3700,7 +3618,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3710,7 +3627,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3719,7 +3635,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3728,7 +3643,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3738,7 +3652,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3747,7 +3660,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3756,7 +3668,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3766,7 +3677,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3775,7 +3685,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3784,7 +3693,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3794,7 +3702,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3803,7 +3710,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3812,7 +3718,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3822,7 +3727,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3831,7 +3735,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3840,7 +3743,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -3850,7 +3752,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -3859,7 +3760,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3868,7 +3768,6 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};

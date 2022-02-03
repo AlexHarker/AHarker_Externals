@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <cmath>
 
 #include "matchers.hpp"
 #include "sort.hpp"
@@ -121,21 +122,17 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     long num_matches = static_cast<long>(round(m_num_matches * ratio_matched));
     num_matches = (max_matches && max_matches < m_num_matches) ? max_matches : m_num_matches;
     
-    // Sort the results if needed
+    // Sort the results if needed (less matches to return than found, or sorting has been requested)
     
     if (size() && (must_sort || num_matches < m_num_matches))
     {
-        // FIX - better heuristics and more info on what has been sorted...
+        // N.B. This heuristic is based on empirical testing
+        // In this case we do a partial insertion sort (faster sorting for small numbers of n)...
 
-        if (num_matches < (database.num_items() / 8))
+        if (num_matches < 10 || num_matches < (std::log10(m_num_matches) * 8.0))
         {
-            num_matches = std::min(num_matches, m_num_matches);
-            
-            // Partial insertion sort (faster sorting for small numbers of n)...
-            
             for (long i = 0; i < num_matches; i++)
                 std::swap(m_results[i], (*std::min_element(m_results.begin() + i, m_results.begin() + m_num_matches)));
-           
         }
         else
             sort(m_results, m_num_matches);

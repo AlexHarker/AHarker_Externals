@@ -562,7 +562,7 @@ double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, do
 			sum1 += vals_ptr[i] * current_val * current_val;
 		}
 		
-        // FIX - spread should be the variance, whereas here we report the standard deviation or similar...
+        // NOTE - spread should be the variance, whereas here we report the standard deviation or similar...
         
 		spread = sqrt(sum1 / sum2);
 		sum1 = 0.;
@@ -586,7 +586,7 @@ double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, do
 			sum1 += vals_ptr[i] * current_val * current_val * current_val;
 		}
 		
-        // FIX - shouldn't we divide by sum2 here (see also above)?
+        // NOTE - shouldn't we divide by sum2 here (see also above)?
         
 		return sum1 / (spread * spread * spread);
 	}
@@ -599,7 +599,7 @@ double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, do
 			sum1 += vals_ptr[i] * current_val * current_val * current_val * current_val;
 		}
 		
-        // FIX - shouldn't we divide by sum2 here (see also above)?
+        // NOTE - shouldn't we divide by sum2 here (see also above)?
 
 		return sum1 / (spread * spread * spread * spread);
 	}

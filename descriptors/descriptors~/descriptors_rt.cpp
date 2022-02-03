@@ -218,7 +218,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	x->last_pf_spectralpeaks_med_size = 0;
 	x->last_threshold = DBL_MAX;
 	
-    // FIX - zero-padding may have been previously broken
+    // NOTE - zero-padding may have been previously broken
     
 	// Copy samples to raw frame
 	

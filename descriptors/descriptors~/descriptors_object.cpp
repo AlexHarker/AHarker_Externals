@@ -646,7 +646,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 				
 		case DESCRIPTOR_PF_SPECTRAL_CREST:
 		
-            // FIX - this should be based on the amplitudes, not the energy
+            // NOTE - this should be based on the amplitudes, not the energy (as previously)
             
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
                 descriptor = statCrest(amplitudes + min_bin, max_bin - min_bin);
@@ -831,8 +831,9 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 	
 		case DESCRIPTOR_PF_SPECTRAL_FLATNESS:
 						
-            // FIX - should be based on amplitudes not energy
-			cumulate_ptr1 = cumulate_sq_amps;
+            // NOTE - this should be based on the amplitudes, not the energy (as previously)
+
+            cumulate_ptr1 = cumulate_sq_amps;
 			
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
                 descriptor = statFlatness(amplitudes + min_bin, max_bin - min_bin);

@@ -263,7 +263,6 @@
 					"NO_TRANSLATION_SUPPORT=1",
 					"MSP_VERSION=1",
 				);
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -278,7 +277,6 @@
 					"NO_TRANSLATION_SUPPORT=1",
 					"MSP_VERSION=1",
 				);
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -292,7 +290,6 @@
 					"NO_TRANSLATION_SUPPORT=1",
 					"MSP_VERSION=1",
 				);
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
@@ -404,10 +401,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
@@ -415,10 +410,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -426,9 +419,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
