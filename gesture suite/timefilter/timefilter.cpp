@@ -4,12 +4,12 @@
  *
  *  timefilter is an object for filtering and reordering values in a list of numbers.
  *
- *  timefilter was originally intended for use with lists representing time values as part of a system of gestural representation,
- *  The stored list is first sorted (if desired) either into ascending order or a random order.
- *  Values may then either be thinned (filterd) randomly and/or according to a minimum required distance between values.
- *  The original intention was to originally to avoid events timed too closely together.
+ *  The stored list is first optionally sorted either into ascending order or a random order.
+ *  Values may then either be thinned randomly and/or according to a minimum required distance between values.
  *
- *  The object may be used on lists representing any parameter / in other scenarios than the one from which it takes its name.
+ *  timefilter was created for use with numbers representing time values as part of a system of gestural representation,
+ *  The original intention was to originally to avoid events timed too closely together.
+ *  However, it might also be useful in other scenarios. name.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -40,15 +40,16 @@ struct t_timefilter
 {
     t_object a_obj;
     
-    double stored_list[1024];
-    long stored_length;
-    
-    random_generator<> gen;
     ordering_mode ordering;
     
     double filter;
     double rand_filter;
+
+    double stored_list[1024];
+    long stored_length;
     
+    random_generator<> gen;
+
     void *list_outlet;
 };
 
@@ -129,7 +130,7 @@ void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
         sprintf(s,"List Out");
 }
 
-// List storage
+// List Storage
 
 void timefilter_list(t_timefilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -188,7 +189,7 @@ void timefilter_bang(t_timefilter *x)
                 
                 if (!output_length || fabs(*vals_pointer - last_val) >= filter)
                 {
-                    // Skip ahead if we choose to lose this value so that the filtering works on distance, regardless of ordering...
+                    // If we choose to lose this value skip to the next
                 
                     val = *vals_pointer++;
                     i++;
@@ -206,7 +207,7 @@ void timefilter_bang(t_timefilter *x)
     x->stored_length = 0;
 }
 
-// Filering Parameters
+// User Methods Setting Filtering Parameters
 
 void timefilter_float(t_timefilter *x, double filter)
 {
@@ -233,7 +234,7 @@ void timefilter_reset(t_timefilter *x)
     x->stored_length = 0;
 }
 
-// Sorting functions
+// Sorting Functions
 
 void combsort(double *vals, long num_points)
 {
