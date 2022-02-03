@@ -1,4 +1,16 @@
 
+/*
+ *  gesture_random.cpp
+ *
+ *  This object deals with the randomisation of values based on a specified band or bands.
+ *
+ *  This class also stores the parameters for a given division of bands.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include "gesture_random.hpp"
 
 #include <RandomGenerator.hpp>
@@ -31,7 +43,7 @@ int random_band(t_object *x, t_atom *specifier)
     return 0;
 }
 
-// Calculate an exact value from a given band and a set of band parameters
+// Calculate an exact value from a given band
 
 double gesture_random::band_to_val(t_object *x, int band_in) const
 {
@@ -50,6 +62,8 @@ double gesture_random::band_to_val(t_object *x, int band_in) const
     
     return r * m_convert_val + m_lo;
 }
+
+// Calculate a specific value given a t_atom specifier
 
 double gesture_random::specifier_to_val(t_object *x, t_atom *specifier) const
 {

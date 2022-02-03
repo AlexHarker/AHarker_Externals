@@ -15,12 +15,12 @@
 #include <ext.h>
 //#include <AH_Win_Math.h>
 
-/////////////////////////////// Constants ///////////////////////////////
+// Constants
 
 #define RING_BUFFER_SIZE 33
 #define MAX_N_SEARCH 4096
 
-/////////////////////////////// DB limits ///////////////////////////////
+// DB limits
 
 #define DB_MIN -180.
 #define DB_EPSILON -300.
@@ -29,7 +29,7 @@ extern float POW_MIN;
 extern float LOG_MIN;
 extern double MKL_EQUALISE_MAX_LOG;
 
-//////////////////////// Descriptor flag defines ////////////////////////
+// Descriptor flag defines
 
 #define DO_MEAN 1
 #define DO_STDD 2
@@ -38,7 +38,7 @@ extern double MKL_EQUALISE_MAX_LOG;
 #define DO_RATIO_ABOVE 16
 #define DO_RATIO_BELOW 32
 
-////////////////////////////// PI defines //////////////////////////////
+// PI defines
 
 #define FFTW_PI			 3.14159265358979323846
 #define FFTW_TWOPI		 6.28318530717958647692
@@ -46,13 +46,13 @@ extern double MKL_EQUALISE_MAX_LOG;
 #define FFTW_FOURPI		12.56637061435817295384
 #define FFTW_SIXPI		18.84955592153875943076
 
-/////////////////////////// FFT size defines ///////////////////////////
+// FFT size defines
 
 #define DEFAULT_MAX_FFT_SIZE_LOG2 16
 #define MIN_FFT_SIZE_LOG2 4
 #define MAX_FFT_SIZE_LOG2 20
 
-//////////////////// Descriptor variables and enums ////////////////////
+// Descriptor variables and enums
 
 #define MAX_PF_PARAMS 768
 #define MAX_PF_CALC 512
@@ -105,7 +105,7 @@ enum PBDescriptorType {
 	
 };
 
-/////////////////////////// Statistics enums ///////////////////////////
+// Statistics enums
 
 enum StatisticsType {
 
@@ -144,7 +144,7 @@ enum StatisticsType {
 	STATS_RATIO_BELOW
 } ;
 
-////////////////////////// ThresholdType enums /////////////////////////
+// ThresholdType enums
 
 enum ThresholdType {
 	
@@ -158,7 +158,7 @@ enum ThresholdType {
 	
 };
 
-/////////////////////////// window type enums //////////////////////////
+// window type enums
 
 enum WindowType {
 
@@ -176,7 +176,7 @@ enum WindowType {
 	WIND_RECT
 };
 
-///////////////////////////// Symbols //////////////////////////////////
+// Symbols
 
 extern t_symbol *ps_energy;
 extern t_symbol *ps_energy_ratio;
@@ -209,7 +209,6 @@ extern t_symbol *ps_roughness;
 extern t_symbol *ps_spectral_peaks;
 extern t_symbol *ps_duration;
 
-/////////////////////////////
 
 extern t_symbol *ps_mean;
 extern t_symbol *ps_median;	
@@ -247,7 +246,6 @@ extern t_symbol *ps_ratio_below;
 extern t_symbol *ps_threshold;
 extern t_symbol *ps_masktime;
 
-/////////////////////////////
 
 extern t_symbol *ps_peak_mul;
 extern t_symbol *ps_peak_add;
@@ -256,7 +254,6 @@ extern t_symbol *ps_mean_mul;
 extern t_symbol *ps_mean_add;
 extern t_symbol *ps_mean_db;
 
-/////////////////////////////
 
 extern t_symbol *ps_rectangle;
 extern t_symbol *ps_hann;

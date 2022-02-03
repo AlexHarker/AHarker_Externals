@@ -1,13 +1,15 @@
 
 /*
- *  gesture_convert.h
+ *  gesture_convert.hpp
  *
  *  A header file for the value conversion section of the gesture_maker object.
- *  This code deals with converting the output of each kernel from values normalised 0 to 1 to the final output range and scaling.
+ *
+ *  This object deals with converts the output of a kernel from normalised range to the final output range and scaling.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
+
 
 #ifndef _GESTURE_CONVERT_HPP_
 #define _GESTURE_CONVERT_HPP_

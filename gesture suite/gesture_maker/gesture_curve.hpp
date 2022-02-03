@@ -1,8 +1,21 @@
 
+/*
+ *  gesture_curve.hpp
+ *
+ *  A header file for the curve class of the gesture_maker object.
+ *
+ *  This object deals with the curvature of segments according to a set of stored parameters.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _GESTURE_CURVE_HPP_
 #define _GESTURE_CURVE_HPP_
 
 #include <ext.h>
+
 
 // Curvature Class
 

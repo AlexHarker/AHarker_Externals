@@ -1,4 +1,16 @@
 
+/*
+ *  gesture_random.hpp
+ *
+ *  A header file for the randomisation class of the gesture_maker object.
+ *
+ *  This object deals with the randomisation of values based on a specified band or bands.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _GESTURE_RANDOM_HPP_
 #define _GESTURE_RANDOM_HPP_
 
@@ -14,6 +26,8 @@ class gesture_random
 {
 public:
     
+    // Main Methods
+
     constexpr gesture_random(int num_bands, double lo, double hi, double end_ratio)
     : m_num_bands(num_bands)
     , m_lo(lo)
@@ -30,6 +44,8 @@ public:
     
 private:
     
+    // Variables
+
     const int m_num_bands;
     
     const double m_lo;

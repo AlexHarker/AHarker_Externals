@@ -11,9 +11,7 @@
 #include "descriptors_object.h"
 #include "Statistics.hpp"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////// Common Basics (main / new / assist) ////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Common Basics (main / new / assist)
 
 t_class *this_class;
 
@@ -185,9 +183,8 @@ void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////// FFT params and Window Generation ///////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FFT params and Window Generation
+
 
 
 long int_log2 (long in, long *inexact)
@@ -517,9 +514,9 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////// Zero Ring Buffers //////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Zero Ring Buffers
+
 
 
 void descriptors_zero_ring_buffers (t_descriptors *x, long fft_size)
@@ -541,9 +538,7 @@ void descriptors_zero_ring_buffers (t_descriptors *x, long fft_size)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////// Energy Threshold //////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Energy Threshold
 
 
 void descriptors_energy_thresh (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
@@ -563,9 +558,8 @@ void descriptors_energy_thresh (t_descriptors *x, t_symbol *msg, short argc, t_a
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////// Calculate Raw Per Frame descriptors //////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Calculate Raw Per Frame descriptors
 
 
 double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_frame, FFT_SPLIT_COMPLEX_F raw_fft_frame, long frame_pointer, long num_samps, long fft_size, double **param_ptr)
@@ -631,9 +625,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 4;
 			break;
-		
-		////////////////////////////////////////////////////////
-				
+    
 		case DESCRIPTOR_PF_ENERGY_RATIO:
 		
 			if (get_bin_range(&min_bin, &max_bin, params + 1, one_over_bin_freq, num_bins))
@@ -643,8 +635,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 3;
 			break;
-		
-		////////////////////////////////////////////////////////
 				
 		case DESCRIPTOR_PF_SPECTRAL_ROLLOFF:
 			
@@ -653,8 +643,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 2;
 			break;
-			
-		////////////////////////////////////////////////////////
 				
 		case DESCRIPTOR_PF_SPECTRAL_CREST:
 		
@@ -668,8 +656,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 4;
 			break;
-			
-		////////////////////////////////////////////////////////
 				
 		case DESCRIPTOR_PF_FLUX:
 		
@@ -690,8 +676,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 				
 			*param_ptr += 7;
 			break;
-		
-		////////////////////////////////////////////////////////
 				
 		case DESCRIPTOR_PF_MKL:
 			
@@ -714,8 +698,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 
 			*param_ptr += 8;
 			break;
-
-		////////////////////////////////////////////////////////
 				
 		case DESCRIPTOR_PF_FOOTE:
 			
@@ -732,8 +714,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 
 			*param_ptr += 5;
 			break;
-
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_AVERAGE_AMP_ABS:
 		
@@ -745,8 +725,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			*param_ptr += 2;
 			break;
 		
-		////////////////////////////////////////////////////////
-		
 		case DESCRIPTOR_PF_AVERAGE_AMP_RMS:
 		
 			descriptor = statRMS(raw_frame, num_samps);
@@ -756,8 +734,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 2;
 			break;
-			
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_PEAK_AMP:
 		
@@ -768,8 +744,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 2;
 			break;
-			
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_LOUDNESS:
 		
@@ -783,8 +757,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 2;
 			break;
-			
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_CENTROID_LIN: 
 		case DESCRIPTOR_PF_SPREAD_LIN:
@@ -811,8 +783,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 3;
 			break;
-			
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_CENTROID_LOG: 
 		case DESCRIPTOR_PF_SPREAD_LOG:
@@ -833,8 +803,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			*param_ptr += 3;
 			break;
 		
-		////////////////////////////////////////////////////////
-		
 		case DESCRIPTOR_PF_BRIGHTNESS_LIN: 
 		
 			vals_ptr = amplitudes;
@@ -848,8 +816,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			*param_ptr += 4;
 			break;
 		
-		////////////////////////////////////////////////////////
-		
 		case DESCRIPTOR_PF_BRIGHTNESS_LOG: 
 		
 			vals_ptr = amplitudes;
@@ -862,9 +828,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 4;
 			break;
-
-		////////////////////////////////////////////////////////
-		
+	
 		case DESCRIPTOR_PF_SPECTRAL_FLATNESS:
 						
             // FIX - should be based on amplitudes not energy
@@ -876,8 +840,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 3;
 			break;
-			
-		////////////////////////////////////////////////////////
 		
 		case DESCRIPTOR_PF_NOISE_RATIO:
 		case DESCRIPTOR_PF_NON_NOISE_RATIO:
@@ -891,9 +853,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 2;
 			break;
-
-		////////////////////////////////////////////////////////
-		
+	
 		case DESCRIPTOR_PF_PITCH:
 		case DESCRIPTOR_PF_PITCH_CONFIDENCE:
 	
@@ -904,9 +864,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 							
 			*param_ptr += 2;
 			break;
-			
-		////////////////////////////////////////////////////////
-		
+				
 		case DESCRIPTOR_PF_INHARMONICITY:
 					
 			N = (long) params[1];
@@ -917,9 +875,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			
 			*param_ptr += 4;
 			break;
-		
-		////////////////////////////////////////////////////////
-		
+			
 		case DESCRIPTOR_PF_ROUGHNESS:
 	
 			N = (long) params[1];
@@ -930,9 +886,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 
 			*param_ptr += 3;
 			break;
-			
-		////////////////////////////////////////////////////////
-		
+				
 		case DESCRIPTOR_PF_SPECTRAL_PEAKS:
 	
 			N = (long) params[1];
@@ -954,9 +908,9 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////// Curves Dependent on sr and FFT SIze //////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Curves Dependent on sr and FFT SIze 
+
 
 
 void calc_curves (t_descriptors *x)

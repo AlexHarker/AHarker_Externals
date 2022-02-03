@@ -15,9 +15,9 @@
 #include "descriptors_set_descriptors.h"
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////// Matching for statistics and routine to handle parameters for statistics ////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Matching for statistics and routine to handle parameters for statistics 
+
 
 
 // Get the threshold type from a specifier (or use default if none specified)
@@ -550,9 +550,9 @@ long descriptors_descriptors_statistics(long *pf_output_params, double *pf_calc_
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////// Matching for descriptors ///////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Matching for descriptors 
+
 
 
 // Match only per frame descriptors
@@ -626,9 +626,9 @@ long match_descriptor(t_atom *arg, char rt_flag)
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////// Routines for dealing with different types of descriptors ///////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Routines for dealing with different types of descriptors 
+
 
 
 long descriptors_descriptors_pb (enum PBDescriptorType descriptor_type, double *pb_params, t_atom **argv, short *argc, long num_params, long num_pb_descriptors, long *num_to_output)
@@ -837,7 +837,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 							
 			break;
 		
-		////////////////////////////////////////////////////////
+		
 		
 		case DESCRIPTOR_PF_FLUX:
 		
@@ -889,7 +889,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			break;
 		
-		////////////////////////////////////////////////////////
+		
 				
 		case DESCRIPTOR_PF_MKL:
 		
@@ -948,7 +948,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			break;
 
-		////////////////////////////////////////////////////////
+		
 				
 		case DESCRIPTOR_PF_FOOTE:
 		
@@ -988,7 +988,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			break;
 				
-		////////////////////////////////////////////////////////
+		
 		
 		case DESCRIPTOR_PF_SPECTRAL_ROLLOFF:
 							
@@ -1004,7 +1004,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			break;
 
-		////////////////////////////////////////////////////////
+		
 		
 		case DESCRIPTOR_PF_AVERAGE_AMP_ABS:
 		case DESCRIPTOR_PF_AVERAGE_AMP_RMS:
@@ -1020,7 +1020,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 			
 			break;
 									
-		////////////////////////////////////////////////////////
+		
 		
 		case DESCRIPTOR_PF_CENTROID_LIN: 
 		case DESCRIPTOR_PF_SPREAD_LIN:
@@ -1051,7 +1051,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 							
 			break;
 			
-			////////////////////////////////////////////////////////
+			
 			
 			case DESCRIPTOR_PF_BRIGHTNESS_LIN:
 			case DESCRIPTOR_PF_BRIGHTNESS_LOG:
@@ -1085,7 +1085,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 					
 			break;
 
-		////////////////////////////////////////////////////////
+		
 
 
 			case DESCRIPTOR_PF_NOISE_RATIO:
@@ -1103,7 +1103,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 									
 				break;
 
-			////////////////////////////////////////////////////////
+			
 			
 			case DESCRIPTOR_PF_PITCH:
 			case DESCRIPTOR_PF_PITCH_CONFIDENCE:
@@ -1121,7 +1121,7 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 
 				break;
 								
-			////////////////////////////////////////////////////////
+			
 			
 			case DESCRIPTOR_PF_INHARMONICITY:
 			case DESCRIPTOR_PF_ROUGHNESS:
@@ -1181,9 +1181,9 @@ long descriptors_descriptors_pf (enum PFDescriptorType descriptor_type, double *
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////// Main routines for setting the desciprotrs (by object) ////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Main routines for setting the desciprotrs (by object) 
+
 
 
 void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
