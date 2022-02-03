@@ -3,19 +3,20 @@
  *  entrymatcher~
  *
  *  entrymatcher~ is the audio rate counterpart of entrymatcher, capable of matching with sample-accurate timing.
- *  It is intended primarily for use in granular synthesis applications requiring sample accuracy for audio matching using descriptors.
+ *  It is intended primarily for sample accurate granular synthesis applications requiring descriptor matching
  *
- *  entrymatcher~ does not offer all the features of entrymatcher, and there are some key differences to the max version:
+ *  entrymatcher~ does not offer all features of entrymatcher, and there are some key differences to the max version:
  *
- *  1 - entrymatcher~ takes values for matching at signal rate, and has a different message structure for setting matching criteria.
- *  2 - entrymatcher~ randomly selects a value from all the valid matches and outputs only that one value.
- *  3 - for reasons of efficiency the matching process and the randomisation processes can be triggered separately to allow variation over small time scales, without the expense of recalculating matches.
- *  4 - only numeric data can be used (although entries and columns can still be referred to using symbols).
+ *  1 - entrymatcher~ takes values for matching at signal rate
+ *  2 - entrymatcher~ has a different message structure for setting matching criteria.
+ *  3 - entrymatcher~ randomly selects a value from all the valid matches and outputs only that one value.
+ *  4 - the matching and randomisation processes can be triggered separately to allow efficient rapid variation
+ *  5 - only numeric data can be used (although entries and columns can still be referred to using symbols).
  *
  *  In practice a large number of matching scenarios and data lookup requirements can be satisfied.
  *  The features of the entrymatcher~ object are covered in detail in the helpfile documentation.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -30,11 +31,13 @@
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
 
+
+// Globals and Object Structure
+
 t_class *this_class;
 
 struct t_entrymatcher
 {
-    
     t_pxobject x_obj;
     
     t_entry_database *database_object;
@@ -49,8 +52,10 @@ struct t_entrymatcher
     
     random_generator<> gen;
     
-    float *matcher_ins[256];
+    const float *matcher_ins[256];
 };
+
+// Function Prototypes
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
@@ -60,14 +65,11 @@ void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 
 t_int *entrymatcher_perform(t_int *w);
-void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
-
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
-/*****************************************/
-// Basic Object Routines: main, new, free and assist
-/*****************************************/
+// Main
 
 int C74_EXPORT main()
 {
@@ -94,6 +96,8 @@ int C74_EXPORT main()
         
     return 0;
 }
+
+// New  / Free / Assist
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 {
@@ -164,7 +168,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
                 sprintf(s,"Matched Labels");
                 break;
             case 2:
-                sprintf(s,"Matched distances");
+                sprintf(s,"Matched Distances");
                 break;
             case 3:
                 sprintf(s,"Data from Lookup");
@@ -260,17 +264,15 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     }
 }
 
-/*****************************************/
-// Perform and DSP Routines
-/*****************************************/
+// Perform
 
 t_int *entrymatcher_perform(t_int *w)
 {
     // Set pointers
     
-    float *choose_in = (float *) w[1];
-    float *match_in = (float *) w[2];
-    float **matcher_ins = (float **) w[3];
+    const float *choose_in = (float *) w[1];
+    const float *match_in = (float *) w[2];
+    const float **matcher_ins = (const float **) w[3];
     float *out = (float *) w[4];
     long vec_size = (long) w[5];
     t_entrymatcher *x = (t_entrymatcher *) w[6];
@@ -312,28 +314,13 @@ t_int *entrymatcher_perform(t_int *w)
     return w + 7;
 }
 
-void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
-{
-    float **matcher_ins = x->matcher_ins;
-    long max_matchers = x->max_matchers;
-    
-    for (long i = 0; i < max_matchers; i++)
-        matcher_ins[i] = (float *) sp[i + 2]->s_vec;
-    
-    dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);
-}
-
-/*****************************************/
-// 64bit Perform and DSP Routines
-/*****************************************/
-
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     // Set pointers
     
-    double *choose_in = ins[0];
-    double *match_in = ins[1];
-    double **matcher_ins = ins + 2;
+    const double *choose_in = ins[0];
+    const double *match_in = ins[1];
+    double *const *matcher_ins = ins + 2;
     double *out = outs[0];
     
     random_generator<>& gen = x->gen;
@@ -369,6 +356,19 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
         
         *out++ = (float) index + 1;
     }
+}
+
+// DSP
+
+void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
+{
+    const float **matcher_ins = x->matcher_ins;
+    long max_matchers = x->max_matchers;
+    
+    for (long i = 0; i < max_matchers; i++)
+        matcher_ins[i] = (const float *) sp[i + 2]->s_vec;
+    
+    dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);
 }
 
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
