@@ -2,21 +2,24 @@
 /*
  *  entrymatcher
  *
- *  entrymatcher is an object for finding the most closely matching items in a scalable N-dimensional space, using variable matching criteria.
+ *  entrymatcher finds closely matching items in an N-dimensional space, using variable matching criteria.
  *
- *  The original reason for creating the entrymatcher object was to provide a way of matching audio samples using audio features (or descriptors) that had been calculated using the descriptors~ object.
+ *  Data is added in "entries", which are rows of values (ints, floats or symbols) in a set number of columns.
+ *  Columns are named to allow them to be specified by descriptive name, rather than only by index number.
+ *  Each entry is specified with a unique identifier of any basic max data type.
+ *  This identifer can be used to reference the entry regardless of position in the data set.
  *
- *  Data is added to the object in "entries", which are rows of values (ints, floats or symbols) that fill a specified number of columns.
- *  Columns are named to allow them to be specified by descriptive name, rather than only by index number, making it possible to alter the order and size of data sets easily.
- *  Each entry is specified with an identifier (of any basic max data type), so that it can also be referred to regardless of position in the data set.
- *  Various tests may be performed on each column of data, either individually or in combination, as appropriate to the data (exact match, within given distance, greater than, less than etc.) to determine matching entries.
- *  Values from specified columns may be queried at will (in the case where each entry represents a sample this is useful in retrieving data once a particular sample has been matched).
+ *  To match entries a number of tests may be performed on one or more columns of data.
+ *  These include exact matches, distances to target values and thresholding using comparisons.
  *  Matched entries are returned as a set of lists, with the best (closest) matches first.
  *
- *  In practice a large number of matching scenarios and data lookup requirements can be satisfied.
- *  The features of the entrymatcher object are covered in detail in the helpfile documentation.
+ *  Values from specified columns can also be queried at will.
+ *  Where each entry represents a sample this is useful in retrieving data once a particular sample has been matched.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  entrymatcher is suitable for audio descriptor matching.
+ *  Features can be calculated using the descriptors~ object.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -27,13 +30,19 @@
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
 
+
+// Globals and Object Structure
+
 t_class *this_class;
+
+using atom_vector = std::vector<t_atom>;
 
 t_symbol *ps_lookup = gensym("lookup");
 
+constexpr long max_matches = 1024;
+
 struct t_entrymatcher
 {
-
     t_object x_obj;
     
     t_entry_database *database_object;
@@ -50,8 +59,7 @@ struct t_entrymatcher
     void *data_outlet;
 };
 
-using atom_vector = std::vector<t_atom>;
-constexpr long max_matches = 1024;
+// Function Prototypes
 
 void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv);
 void entrymatcher_free(t_entrymatcher *x);
@@ -65,8 +73,8 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_match_all(t_entrymatcher *x);
-void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
-void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
+void entrymatcher_match(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv);
+void entrymatcher_match_internal(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit);
 long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n_limit, t_atom output[3][max_matches]);
 
 // Main
@@ -82,7 +90,7 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
-    class_addmethod(this_class, (method) entrymatcher_match_user,"match", A_GIMME, 0);
+    class_addmethod(this_class, (method) entrymatcher_match,"match", A_GIMME, 0);
     
     class_addmethod(this_class, (method) entrymatcher_dump, "dump", 0);
     class_addmethod(this_class, (method) entrymatcher_lookup, "lookup", A_GIMME, 0);
@@ -266,12 +274,12 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 
 void entrymatcher_match_all(t_entrymatcher *x)
 {
-    entrymatcher_match(x, 1.0, HUGE_VAL, max_matches);
+    entrymatcher_match_internal(x, 1.0, HUGE_VAL, max_matches);
 }
 
-// Handle more complex matching requests from the user
+// Handle More Complex Matching
 
-void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
+void entrymatcher_match(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *argv)
 {
     double ratio_kept;
     double distance_limit;
@@ -301,12 +309,12 @@ void entrymatcher_match_user(t_entrymatcher *x, t_symbol *msg, short argc, t_ato
     
     // Match
     
-    entrymatcher_match(x, ratio_kept, distance_limit, n_limit);
+    entrymatcher_match_internal(x, ratio_kept, distance_limit, n_limit);
 }
 
-// Handle Matching Output
+// Handle Matching and Output
 
-void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
+void entrymatcher_match_internal(t_entrymatcher *x, double ratio_kept, double distance_limit, long n_limit)
 {
     t_atom output[3][max_matches];
     
@@ -325,11 +333,11 @@ void entrymatcher_match(t_entrymatcher *x, double ratio_kept, double distance_li
     }
 }
 
-// Do Underlying Matching / Thinning
+// Underlying Matching / Thinning
 
 long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n_limit, t_atom output[3][max_matches])
 {
-    // N.B. We can't output whilst holding the lock
+    // N.B. We can't output whilst holding the lock, hence this internal function
     
     matchers *matchers = x->matchers;
 

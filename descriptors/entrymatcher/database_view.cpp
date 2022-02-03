@@ -13,7 +13,7 @@
 
 // Globals and Object Structure
 
-static t_class *database_view_class = nullptr;
+t_class *database_view_class = nullptr;
 
 struct t_database_view
 {
@@ -62,13 +62,13 @@ long database_view_dummycompare(t_rowref a, t_rowref b) { return 1; }
 
 // Column + Row Mappers / Utilities
 
+t_symbol *ps_first_colname = gensym("0");
+
 enum header_column : long
 {
     COLINDEX_ITEM_NUMBER = -2,
     COLINDEX_IDENTIFIER = -1,
 };
-
-t_symbol *ps_first_colname = gensym("0");
 
 t_symbol *get_colname_from_index(long idx)
 {

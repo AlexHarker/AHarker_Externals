@@ -20,12 +20,12 @@
 
 t_class *this_class;
 
-constexpr long max_types = 128;
+t_symbol *ps_folder = gensym("folder");
+t_symbol *ps_start = gensym("start");
+t_symbol *ps_end = gensym("end");
+t_symbol *ps_empty = gensym("empty");
 
-t_symbol *ps_folder;
-t_symbol *ps_start;
-t_symbol *ps_end;
-t_symbol *ps_empty;
+constexpr long max_types = 128;
 
 struct t_recursive_folder
 {
@@ -79,11 +79,6 @@ int C74_EXPORT main()
     
     class_register(CLASS_BOX, c);
     this_class = c;
-    
-    ps_folder = gensym("folder");
-    ps_start = gensym("start");
-    ps_end = gensym("end");
-    ps_empty = gensym("empty");
     
     return 0;
 }

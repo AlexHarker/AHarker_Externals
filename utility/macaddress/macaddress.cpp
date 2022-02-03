@@ -31,11 +31,11 @@
 
 t_class *this_class;
 
-t_symbol *ps_empty;
-t_symbol *ps_failed;
-t_symbol *ps_any;
-t_symbol *ps_wifi;
-t_symbol *ps_ethernet;
+t_symbol *ps_empty = gensym("");
+t_symbol *ps_failed = gensym("failed");
+t_symbol *ps_any = gensym("any");
+t_symbol *ps_wifi = gensym("wifi");
+t_symbol *ps_ethernet = gensym("ethernet");
 
 enum class match_type
 {
@@ -82,12 +82,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) macaddress_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_empty = gensym("");
-    ps_failed = gensym("failed");
-    ps_failed = gensym("any");
-    ps_wifi = gensym("wifi");
-    ps_ethernet = gensym("ethernet");
 
     return 0;
 }

@@ -28,9 +28,9 @@
 
 // Globals
 
-t_symbol *ps_null;
-
 t_class *this_class;
+
+t_symbol *ps_null = gensym("");
 
 // N.B. Object Structure in Header
 
@@ -70,8 +70,6 @@ int C74_EXPORT main()
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
-    
-    ps_null = gensym("");
     
     return 0;
 }

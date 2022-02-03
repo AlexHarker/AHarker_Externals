@@ -46,7 +46,7 @@ constexpr int max_num_events = 256;
 
 t_class *this_class;
     
-t_symbol *ps_list;
+t_symbol *ps_list = gensym("list");
 
 struct t_gesture_maker
 {
@@ -137,9 +137,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) gesture_maker_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_list = gensym("list");
-        
+            
     return 0;
 }
 
