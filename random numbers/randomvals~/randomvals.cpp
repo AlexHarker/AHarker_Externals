@@ -6,8 +6,9 @@
  *
  *  The audio rate version requires triggering to cause output.
  *  It is intended for sample-accurate control, rather than noise generation and this conserves CPU.
- *  The gaussian mode allows the user to combine multiple curves, each with its own parameters for mean (0-1), deviation and weight.
- *  The RNG implementation is expected be of high quality, with a reasonably small state (only a handful of bytes), and a long cycle.
+ *  The gaussian mode allows the user to combine multiple distribution curves.
+ *  Each curve has its own parameters for mean (0-1), deviation and weight.
+ *  The RNG implementation needs to be of high quality, with a small state (only a handful of bytes), and a long cycle.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -27,9 +28,10 @@
 
 // Globals and Object Structure
 
-t_class *this_class;
+using rand_gen = random_generator<>;
+using gauss_params = rand_gen::windowed_gaussian_params;
 
-using window_gauss_params = random_generator<>::windowed_gaussian_params;
+t_class *this_class;
 
 struct t_randomvals
 {
@@ -39,9 +41,9 @@ struct t_randomvals
     t_object a_obj;
 #endif
     
-    random_generator<> gen;
+    rand_gen gen;
     
-    window_gauss_params params[64];
+    gauss_params params[64];
     double weights[64];
     
     long num_params;
@@ -56,7 +58,7 @@ void randomvals_free(t_randomvals *x);
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s);
 void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
 
-double randomvals_generate(random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, bool gauss);
+double randomvals_generate(rand_gen& gen, const gauss_params *params, const double *weights, long n_params, bool gauss);
 
 #ifdef MSP_VERSION
 t_int *randomvals_perform(t_int *w);
@@ -138,7 +140,7 @@ void randomvals_free(t_randomvals *x)
     destroy_object(x->gen);
 }
 
-// List method (parameter setting)
+// List Method (parameter setting)
 
 void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -159,7 +161,7 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
         const double dev = std::max(0.0, atom_getfloat(argv++));
         const double weight = std::max(0.0, atom_getfloat(argv++));
         
-        x->params[i] = window_gauss_params(mean, dev);
+        x->params[i] = gauss_params(mean, dev);
         
         weight_val += weight;
         x->weights[i] = weight_val;
@@ -168,21 +170,21 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv)
     x->num_params = num_params;
 }
 
-// Core generation routine
+// Core Generation Routine
 
-double randomvals_generate(random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, bool gauss)
+double randomvals_generate(rand_gen& gen, const gauss_params *params, const double *weights, long n_params, bool gauss)
 {
     if (gauss)
     {
         // Summed windowed gaussians random distribution
                 
-        const double a = gen.rand_double(weights[num_params - 1]);
+        const double a = gen.rand_double(weights[n_params - 1]);
         
         // Choose a mean and dev pair based on weighting
 
         long i = 0;
         
-        for (; i < num_params - 1; i++)
+        for (; i < n_params - 1; i++)
             if (a <= weights[i])
                 break;
         
@@ -201,8 +203,13 @@ double randomvals_generate(random_generator<>& gen, window_gauss_params *params,
 // Perform (MSP version)
 
 template <typename T>
-void perform_core(const T* in, T *out, random_generator<>& gen, window_gauss_params *params, double *weights, long num_params, long vec_size)
+void perform_core(t_randomvals *x, const T *in, T *out, long vec_size)
 {
+    rand_gen& gen = x->gen;
+    const gauss_params *params = x->params;
+    const double *weights = x->weights;
+    long num_params = x->num_params;
+    
     while (vec_size--)
     {
         T t = *in++;
@@ -222,19 +229,19 @@ t_int *randomvals_perform(t_int *w)
 {
     // Set pointers
     
-    float *in = reinterpret_cast<float *>(w[1]);
+    const float *in = reinterpret_cast<float *>(w[1]);
     float *out = reinterpret_cast<float *>(w[2]);
     long vec_size = static_cast<long>(w[3]);
     t_randomvals *x = reinterpret_cast<t_randomvals *>(w[4]);
     
-    perform_core(in, out, x->gen, x->params, x->weights, x->num_params, vec_size);
+    perform_core(x, in, out, vec_size);
     
     return w + 5;
 }
 
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    perform_core(ins[0], outs[0], x->gen, x->params, x->weights, x->num_params, vec_size);
+    perform_core(x, ins[0], outs[0], vec_size);
 }
 
 // DSP
