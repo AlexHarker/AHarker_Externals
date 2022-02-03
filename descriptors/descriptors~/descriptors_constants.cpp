@@ -36,7 +36,7 @@ t_symbol *ps_roughness;
 t_symbol *ps_spectral_peaks;
 t_symbol *ps_duration;
 
-/////////////////////////////
+
 
 t_symbol *ps_mean;
 t_symbol *ps_median;
@@ -74,7 +74,7 @@ t_symbol *ps_ratio_below;
 t_symbol *ps_threshold;
 t_symbol *ps_masktime;
 
-/////////////////////////////
+
 
 t_symbol *ps_peak_mul;
 t_symbol *ps_peak_add;
@@ -83,7 +83,7 @@ t_symbol *ps_mean_mul;
 t_symbol *ps_mean_add;
 t_symbol *ps_mean_db;
 
-/////////////////////////////
+
 
 t_symbol *ps_rectangle;
 t_symbol *ps_hann;

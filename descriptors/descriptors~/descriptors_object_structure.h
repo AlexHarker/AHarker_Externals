@@ -32,7 +32,7 @@ typedef struct _descriptors
 	t_atom *output_list;
 	long output_length;
 	
-	///////////////////////////////////////// RT Stuff /////////////////////////////////////////
+	// RT Stuff
 	
 	float *rt_buffer;	
 	long rt_memory_size;
@@ -40,7 +40,7 @@ typedef struct _descriptors
 	long write_pointer;
 	long hop_count;
 
-	/////////////////////////////////////// Buffer Stuff //////////////////////////////////////
+	// Buffer Stuff
 	
 	t_symbol *buffer_name;
 
@@ -48,17 +48,17 @@ typedef struct _descriptors
 	long start_point;
 	long end_point;
 
-	/////////////////////// Relevant Sample Rate (buffer or real-time) ////////////////////////
+	// Relevant Sample Rate (buffer or real-time)
 
 	double sr;
 	
-	//////////////////////////////////// Descriptor Stuff /////////////////////////////////////
+	// Descriptor Stuff
 	
 	long descriptor_data_size;
 	double *descriptor_data;
 	void *n_data;
 	
-	//////////////////////////////////////// FFT Stuff ////////////////////////////////////////
+	// FFT Stuff
 	
     FFT_SETUP_F fft_setup_real;	
 
@@ -81,7 +81,7 @@ typedef struct _descriptors
 	char reset_fft;
 	char frame_pointer;
 
-	/////////////////////////////////// Autocorrelation Stuff /////////////////////////////////
+	// Autocorrelation Stuff
 	
 	void *ac_memory;
 	char ac_flag;
@@ -89,18 +89,18 @@ typedef struct _descriptors
 	double last_confidence;
 	double last_threshold;
 	
-	//////////////////////////////////// Median Filter Stuff //////////////////////////////////
+	// Median Filter Stuff
 	
 	void *median_memory;
 	char median_flag;
 	long last_median_span;
 	
-	/////////////////////////////////// Stored Curves Memory /////////////////////////////////
+	// Stored Curves Memory
 	
 	double *loudness_curve;
 	double *log_freq;
 	
-	/////////////////////////////////////// Shape Saves /////////////////////////////////////
+	// Shape Saves
 	
 	char centroid_lin_flag;
 	char spread_lin_flag;
@@ -120,20 +120,20 @@ typedef struct _descriptors
 	double last_centroid_log;
 	double last_spread_log;
 	
-	/////////////////////////////////// Spectral Peaks Saves ////////////////////////////////
+	// Spectral Peaks Saves
 	
 	long last_pf_spectralpeaks_n;
 	long last_pf_spectralpeaks_med_size;
 
-	//////////////////////////////////////// Outlets ////////////////////////////////////////
+	// Outlets
 	
 	void *the_list_outlet;
 	
-	////////////////////////////////////// Output Clock /////////////////////////////////////
+	// Output Clock
 	
 	void *output_rt_clock;
 	
-	//////////////////////////////////////// Params ////////////////////////////////////////
+	// Params 
 	
 	double energy_thresh;
 	long use_energy_thresh;
