@@ -20,6 +20,7 @@
  *
  */
 
+
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>
@@ -173,9 +174,7 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
     }
 }
 
-/*****************************************/
-// Matchers and Matching Routines
-/*****************************************/
+// Set Matching Limits
 
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
@@ -188,7 +187,7 @@ void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
     x->n_limit = std::max(n_limit, 0L);
 }
 
-// Set the matching criteria
+// Set Matching Criteria
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {

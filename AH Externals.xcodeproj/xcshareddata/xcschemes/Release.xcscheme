@@ -14,34 +14,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B82F13061465F9F5007FAC6A"
-               BuildableName = "vMSP"
-               BlueprintName = "vMSP"
-               ReferencedContainer = "container:AH Externals.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B82F12B41465F9C3007FAC6A"
-               BuildableName = "threading"
-               BlueprintName = "threading"
-               ReferencedContainer = "container:AH Externals.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "B82F10231465F901007FAC6A"
                BuildableName = "conversion"
                BlueprintName = "conversion"
@@ -56,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B82F12621465F9C0007FAC6A"
-               BuildableName = "sample accurate library"
-               BlueprintName = "sample accurate library"
+               BlueprintIdentifier = "B82F10751465F905007FAC6A"
+               BuildableName = "convolution"
+               BlueprintName = "convolution"
                ReferencedContainer = "container:AH Externals.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -70,24 +42,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B82F12101465F993007FAC6A"
-               BuildableName = "random numbers"
-               BlueprintName = "random numbers"
-               ReferencedContainer = "container:AH Externals.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B82F13191465FA13007FAC6A"
-               BuildableName = "utility"
-               BlueprintName = "utility"
-               ReferencedContainer = "container:AH Externals.xcodeproj">
+               BlueprintIdentifier = "B8C3050A12606AE500226E73"
+               BuildableName = "Both"
+               BlueprintName = "Both"
+               ReferencedContainer = "container:descriptors/entrymatcher/entrymatcher.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -129,6 +87,90 @@
                BlueprintIdentifier = "B82F116B1465F961007FAC6A"
                BuildableName = "gesture suite"
                BlueprintName = "gesture suite"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B8BEAA810CD67F7700F906C8"
+               BuildableName = "meandev.mxo"
+               BlueprintName = "meandev"
+               ReferencedContainer = "container:miscellaneous/meandev/meandev.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F12101465F993007FAC6A"
+               BuildableName = "random numbers"
+               BlueprintName = "random numbers"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F12621465F9C0007FAC6A"
+               BuildableName = "sample accurate library"
+               BlueprintName = "sample accurate library"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F12B41465F9C3007FAC6A"
+               BuildableName = "threading"
+               BlueprintName = "threading"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F13191465FA13007FAC6A"
+               BuildableName = "utility"
+               BlueprintName = "utility"
+               ReferencedContainer = "container:AH Externals.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B82F13061465F9F5007FAC6A"
+               BuildableName = "vMSP"
+               BlueprintName = "vMSP"
                ReferencedContainer = "container:AH Externals.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

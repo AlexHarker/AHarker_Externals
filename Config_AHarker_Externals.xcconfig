@@ -30,6 +30,7 @@ MACOSX_DEPLOYMENT_TARGET = 10.11
 CLANG_CXX_LANGUAGE_STANDARD = c++14
 CLANG_CXX_LIBRARY = libc++
 CLANG_X86_VECTOR_INSTRUCTIONS = avx
+//CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2
 
 ARCHS = x86_64 arm64
 
@@ -40,7 +41,8 @@ GENERATE_PKGINFO_FILE = YES
 
 // Increase warnings to minimise time spent working in Visual Studio and turn off unhelpful warnings
 
-WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement -Wno-deprecated-declarations -Werror
+WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement
+//-Werror -Wno-deprecated-declarations
 
 // Flags to enforce some build-time checks for the symbols used while not actually performing a hard link
 

@@ -1,4 +1,20 @@
 
+/*
+ *  atom_types.hpp
+ *
+ *  A header file for the custom atom classes for the entrymatcher(~) objects.
+ *
+ *  These custom types serve different purposes:
+ *  - t_untyped_atom deals with storing atoms efficiently separate from their type information.
+ *  - t_custom_atom deals with t_atom_longs that might be stored as doubles for numeric processing.
+ *
+ *  Both types have a variety of useful helper methods for conversion / reading and storing in different ways.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _ATOM_TYPES_HPP_
 #define _ATOM_TYPES_HPP_
 
@@ -6,6 +22,7 @@
 #include <functional>
 #include <vector>
 #include <string>
+
 
 // Untyped Atom (condensed memory storage - the type will likely be stored separately)
 

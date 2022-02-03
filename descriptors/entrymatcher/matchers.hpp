@@ -1,4 +1,17 @@
 
+/*
+ *  matchers.hpp
+ *
+ *  A header file for the matchers class for the entrymatcher(~) objects.
+ *
+ *  This is the class that performs matching.
+ *  The matchers class can store the parameters for multiple matching tests and apply the tests to a set of entries.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _MATCHERS_HPP_
 #define _MATCHERS_HPP_
 
@@ -6,6 +19,7 @@
 
 #include "atom_types.hpp"
 #include "entry_database.hpp"
+
 
 class matchers
 {

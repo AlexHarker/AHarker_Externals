@@ -1,4 +1,15 @@
 
+/*
+ *  entry_database.cpp
+ *
+ *  This Max class wraps an entries underlying database in a Max class.
+ *  Facilities are provided to create, change, release or view the underlying database.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <algorithm>
 #include <string>
 
@@ -7,6 +18,7 @@
 
 #include "entry_database.hpp"
 #include "database_view.hpp"
+
 
 // Entry Database Object Structure
 
@@ -192,7 +204,7 @@ t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbo
 
 // Create a Database Object (or attach if it already exists)
 
-t_entry_database *entry_database_find_or_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
+t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries, t_atom_long num_columns, void *client)
 {
     // Note that the number of entries is not fixed (this is just the number that are reserved)
     
@@ -286,7 +298,7 @@ notifying_write_access::~notifying_write_access()
 
 t_entry_database *database_create(void *x, t_symbol *name, t_atom_long num_reserved_entries, t_atom_long num_columns)
 {
-    return entry_database_find_or_create(name, num_reserved_entries, num_columns, x);
+    return entry_database_create(name, num_reserved_entries, num_columns, x);
 }
 
 t_entry_database *database_change(void *x, t_symbol *name, t_entry_database *prev_database)

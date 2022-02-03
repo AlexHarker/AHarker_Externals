@@ -1,10 +1,22 @@
 
+/*
+ *  matchers.cpp
+ *
+ *  This is the class that performs matching.
+ *  The matchers class can store the parameters for multiple matching tests and apply the tests to a set of entries.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <algorithm>
 #include <functional>
 #include <cmath>
 
 #include "matchers.hpp"
 #include "sort.hpp"
+
 
 // Test Symbols
 
@@ -178,7 +190,7 @@ void matchers::set_matchers(void *x, long argc, t_atom *argv, const accessor& da
         }
         else if (database.get_column_label_mode(column) && type != test::match)
         {
-            object_error((t_object *) x, "incorrect matcher for label type column (should be equals or ==)  column number %ld", column + 1);
+            object_error((t_object *) x, "incorrect matcher for label type column %ld (must be equals)", column + 1);
             continue;
         }
         

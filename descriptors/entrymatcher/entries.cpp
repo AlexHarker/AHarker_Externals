@@ -1,4 +1,16 @@
 
+/*
+ *  entries.cpp
+ *
+ *  This is the core underlying database class for both objects.
+ *  The object is accessed using a nested read / write / read_write access class.
+ *  Most methods of the main class is private but can be reached via an access class which deals correctly with locking.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <algorithm>
 #include <functional>
 #include <cmath>
@@ -8,16 +20,17 @@
 #include "matchers.hpp"
 #include "sort.hpp"
 
+
 t_symbol *ps_mean = gensym("mean");
 t_symbol *ps_min = gensym("min");
 t_symbol *ps_minimum = gensym("minimum");
 t_symbol *ps_max = gensym("max");
 t_symbol *ps_maximum = gensym("maximum");
 t_symbol *ps_median = gensym("median");
-t_symbol *ps_stddev = gensym("stddev");
 t_symbol *ps_deviation = gensym("deviation");
-t_symbol *ps_standard_dev = gensym("standard_dev");
-t_symbol *ps_standard_deviation= gensym("standard_deviation");
+t_symbol *ps_stddev1 = gensym("stddev");
+t_symbol *ps_stddev2 = gensym("standard_dev");
+t_symbol *ps_stddev3= gensym("standard_deviation");
 t_symbol *ps_centile = gensym("centile");
 t_symbol *ps_percentile = gensym("percentile");
 
@@ -437,7 +450,7 @@ void entries::stats(void *x, std::vector<t_atom>& output, long argc, t_atom *arg
         t_symbol *test = atom_getsym(argv++);
         argc--;
         
-        if (test == ps_mean || test == ps_stddev || test == ps_deviation || test == ps_standard_dev || test == ps_standard_deviation)
+        if (test == ps_mean || test == ps_deviation || test == ps_stddev1 || test == ps_stddev2 || test == ps_stddev3)
         {
             if (!mean_calculated)
             {
