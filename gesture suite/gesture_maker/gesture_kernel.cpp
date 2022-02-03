@@ -1,9 +1,10 @@
 
 /*
- *  gesture_kernel.c
+ *  gesture_kernel.cpp
  *
- *  This code deals with storing gestures, resolving variable parameters and calculating output values for either the main or inflection gestures.
- *  A kernel has up to 3 parts, each of which is first calculated as curve between the given output parameters.
+ *  This object deals with storing gestures, resolving parameters and calculating output values for a kernel.
+ *
+ *  A kernel has up to 3 segments, each of which is first calculated as curve between the given output parameters.
  *  Kernel parameters may either be specified directly, or with a certain degree of "random" variability.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.

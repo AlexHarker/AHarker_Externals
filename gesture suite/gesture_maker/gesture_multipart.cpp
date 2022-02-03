@@ -1,10 +1,12 @@
 
 /*
- *  gesture_maker_multipart.c
+ *  gesture_maker_multipart.cpp
  *
- *  This code deals with multipart gestures that are made up of chained kernels.
- *  Note that the inflection kernel parameters will cycle round if there are not as many sets of parameters as inflections.
- *  Note also that each inflection gesture is resolved in realtime, so if values are specified as variable, each realisation will be different, even in the case of parameter cycling.
+ *  This object deals with multipart gestures that are made up of chained kernels for inflections.
+ *
+ *  Inflection kernel parameters will cycle round if there are not as many sets of parameters as inflections.
+ *  Inflection gestures are resolved in realtime.
+ *  Therefore, in the case of variable parameters, each realisation will be different.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *

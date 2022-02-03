@@ -2,24 +2,30 @@
 /*
  *  gesture_maker
  *
- *  gesture_maker is an object for creating multipart gestural control in MaxMSP.
- *  Typically, gesture_maker is used to drive a line~ object for audio rate control, and the output is internally scaled to give useful output for musical control.
+ *  gesture_maker is an object for creating multipart gestural or parameter control.
+ *
+ *  Typically, it might be used to drive a line~ object for audio rate control.
+ *  The output is internally scaled to give useful output for musical control.
  *
  *  Each gesture has two layers - the main layer, and the inflection layer.
- *  Each layer is scaled according to a certain range and scaling type, and the two layers are then combined through multiplication (which is appropriate for most musical cases).
+ *  Each layer is scaled according to a certain range and scaling type.
+  * The two layers are then combined through multiplication (which is appropriate for most musical cases).
  *
- *  The basis of the gesture is the kernel which is made up of up to three curves, which may take a variety of shapes, using power and s-shaped curves.
- *  The main layer has only one kernel shape per gesture - the inflection layer has one or more kernel shapes (as specified), which occur one after the other.
+ *  The basis of the gesture is the kernel which is made up of up to three segments.
+ *  Segements may take a variety of shapes, using a combination of power-based and s-shaped curves.
+ *  The main layer has only one kernel shape per gesture.
+ *  The inflection layer has one or more kernel shapes (as specified), which occur one after the other.
  *  Thus, the gestural model is hierarchical, and this may be extended thorough further linear combinations of gestures.
  *
- *  The shape of each gestural kernel over time can be given with varying degrees of specificity to allow either micro variation of a gesture, or radically different shapes from a single set of values.
- *  The timings of the inflection gestures can also be specified as desired - although these must be specified exactly in a normalised range (0 - 1).
+ *  The shape of each gestural kernel over time can be given with varying degrees of specificity.
+ *  This allows either micro variation of a gesture, or radically different shapes from a single set of values.
+ *  The timings of the inflection gestures can also be specified.
+ *  These must be specified exactly in a normalised range (0 - 1) in relation to the entire gesture.
  *
- *  The object can either be triggered to output values at regular intervals (drive mode) over a specified time period, or to produce output at given points in time (events mode).
+ *  The object can either be triggered in two ways:
+ *  - In drive mode the object outputs values at regular intervals over a specified time period,
+ *  - In events mode the object produces output at speficied points in time.
  *  Additionally, gesture_maker objects may be chained together to control multiple parameters in parallel.
- *
- *  The details of the gesture_maker object are fairly involved, and the concepts are easier to understand in practice, rather than in verbal form.
- *  For this reason - it is probably best to look at the helpfile documentation for further information (it may be wise to do so before examining this code in detail).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -33,6 +39,8 @@
 #include "gesture_convert.hpp"
 #include "gesture_multipart.hpp"
 
+
+// Globals and Object Structure
 
 constexpr int max_num_events = 256;
 
@@ -220,7 +228,7 @@ void gesture_maker_stop(t_gesture_maker *x)
     x->gesture_time = 0;
 }
 
-// Timing and Calculation Methods
+// Timing Methods
 
 void gesture_maker_doclock(t_gesture_maker *x)
 {
@@ -312,6 +320,8 @@ void gesture_maker_drive(t_gesture_maker *x, double val)
     clock_fdelay(x->gesture_clock, 0);
 }
 
+// Chaining Mode
+
 void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv)
 {
     if (argc < 2)
@@ -324,6 +334,8 @@ void gesture_maker_list(t_gesture_maker *x, t_symbol *s, long argc, t_atom *argv
     
     gesture_maker_calc(x, phase, grain_time);
 }
+
+// Calculate
 
 void gesture_maker_calc(t_gesture_maker *x, double phase, double grain_time)
 {

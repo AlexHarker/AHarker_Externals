@@ -1,4 +1,14 @@
 
+/*
+ *  gesture_curve.cpp
+ *
+ *  This object deals with the curvature of segments according to a set of stored parameters.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include "gesture_curve.hpp"
 #include "gesture_random.hpp"
 

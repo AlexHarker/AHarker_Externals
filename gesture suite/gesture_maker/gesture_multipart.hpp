@@ -1,9 +1,10 @@
 
 /*
- *  gesture_maker_multipart.h
+ *  gesture_maker_multipart.hpp
  *
- *  A header file for the multipart section of the gesture_maker object.
- *  This code deals with the multipart nature of the inflection kernel.
+ *  A header file for the multipart class of the gesture_maker object.
+ *
+ *  This object deals with multipart gestures that are made up of chained kernels for inflections.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
