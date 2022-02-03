@@ -164,8 +164,8 @@ public:
 
         // Get and clip inputs
 
-        t_atom_long in1 = argc > 0 ? std::min(std::max(in1, t_atom_long(1)), max_slot) : 1;
-        t_atom_long in2 = argc > 1 ? std::min(std::max(in2, t_atom_long(1)), max_slot) : 1;
+        t_atom_long in1 = argc > 0 ? std::min(std::max(atom_getlong(argv + 0), t_atom_long(1)), max_slot) : 1;
+        t_atom_long in2 = argc > 1 ? std::min(std::max(atom_getlong(argv + 1), t_atom_long(1)), max_slot) : 1;
 
         // Load arguments
 
