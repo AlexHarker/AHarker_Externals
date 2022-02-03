@@ -148,7 +148,7 @@ struct entrymatcher_common
 
     static void entrymatcher_loop_order(T *x, t_atom_long style)
     {
-        x->matchers->set_loop_order(style ? loop_order::by_matcher : loop_order::by_item);
+        x->matchers.set_loop_order(style ? loop_order::by_matcher : loop_order::by_item);
     }
 
     // Add Common Routines

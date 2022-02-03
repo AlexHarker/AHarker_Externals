@@ -26,6 +26,8 @@
 #include <ext.h>
 #include <ext_obex.h>
 
+#include <AH_Lifecycle.hpp>
+
 #include "entry_database.hpp"
 #include "entrymatcher_common.hpp"
 #include "matchers.hpp"
@@ -46,7 +48,7 @@ struct t_entrymatcher
     t_object x_obj;
     
     t_entry_database *database_object;
-    matchers *matchers;
+    matchers matchers;
     
     long embed;
     t_patcher *patcher;
@@ -133,7 +135,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->indices_outlet = listout(x);
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
-    x->matchers = new matchers;
+    create_object(x->matchers);
     
     entrymatcher_common<t_entrymatcher>::object_init(x);
 
@@ -143,7 +145,7 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
 void entrymatcher_free(t_entrymatcher *x)
 {
     database_release(x, x->database_object);
-    delete x->matchers;
+    destroy_object(x->matchers);
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -267,7 +269,7 @@ void entrymatcher_stats(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *arg
 
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    x->matchers->set_matchers(x, argc, argv, database_get_read_access(x->database_object));
+    x->matchers.set_matchers(x, argc, argv, database_get_read_access(x->database_object));
 }
 
 // Handle Matching (no limits)
@@ -339,20 +341,20 @@ long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n
 {
     // N.B. We can't output whilst holding the lock, hence this internal function
     
-    matchers *matchers = x->matchers;
+    matchers& matchers = x->matchers;
 
     auto database = database_get_read_access(x->database_object);
         
     // Calculate potential matches and sort if there are matches
         
-    long num_matches = std::min(matchers->match(database, ratio, n_limit, true), max_matches);
+    long num_matches = std::min(matchers.match(database, ratio, n_limit, true), max_matches);
 
     // Limit matches by maximum distance if specified
     
     for (long i = 0; i < num_matches; i++)
     {
-        long index = matchers->get_index(i);
-        double distance = matchers->get_distance(i);
+        long index = matchers.get_index(i);
+        double distance = matchers.get_distance(i);
         
         if (distance > limit)
         {

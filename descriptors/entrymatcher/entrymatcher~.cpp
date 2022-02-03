@@ -41,7 +41,7 @@ struct t_entrymatcher
     t_pxobject x_obj;
     
     t_entry_database *database_object;
-    matchers *matchers;
+    matchers matchers;
     
     t_patcher *patcher;
     long embed;
@@ -114,13 +114,12 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     
     t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
     
-    create_object(x->gen);
-
     dsp_setup((t_pxobject *) x, 2 + max_matchers);
     outlet_new((t_object *) x, "signal");
     
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
-    x->matchers = new matchers;
+    create_object(x->matchers);
+    create_object(x->gen);
     
     x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));
     x->ratio_kept = 1.0;
@@ -135,7 +134,7 @@ void entrymatcher_free(t_entrymatcher *x)
 {
     dsp_free(&x->x_obj);
     database_release(x, x->database_object);
-    delete x->matchers;
+    destroy_object(x->matchers);
     destroy_object(x->gen);
 }
 
@@ -199,9 +198,9 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     
     auto database = database_get_read_access(x->database_object);
     
-    x->matchers->clear();
+    x->matchers.clear();
     
-    while (argc > 1 && x->matchers->size() < max_matchers)
+    while (argc > 1 && x->matchers.size() < max_matchers)
     {
         // Find the column index for the test and the test type
         
@@ -243,7 +242,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
                 }
                 argc -= arg_check;
                 
-                x->matchers->add_matcher(type, column, scale);
+                x->matchers.add_matcher(type, column, scale);
             }
         }
         else
@@ -254,7 +253,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
     
     if (argc > 0)
     {
-        if (x->matchers->size() < max_matchers)
+        if (x->matchers.size() < max_matchers)
             object_error((t_object *) x, "too many arguments to matchers message for number of specified tests");
         else
             object_error((t_object *) x, "not enough arguments to matchers message to correctly specify final matcher");
@@ -275,12 +274,12 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     random_generator<>& gen = x->gen;
     
     auto database = database_get_read_access(x->database_object);
-    matchers *matchers = x->matchers;
+    matchers& matchers = x->matchers;
     
     double ratio_kept = x->ratio_kept;
 
     long n_limit = x->n_limit;
-    long num_matched_indices = matchers->get_num_matches();
+    long num_matched_indices = matchers.get_num_matches();
     
     for (long i = 0; i < vec_size; i++)
     {
@@ -293,15 +292,15 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
             // Do matching (if requested)
             
             for (long j = 0; j < x->max_matchers; j++)
-                matchers->set_target(j, matcher_ins[j][i]);
+                matchers.set_target(j, matcher_ins[j][i]);
             
-            num_matched_indices = matchers->match(database, ratio_kept, n_limit, true);
+            num_matched_indices = matchers.match(database, ratio_kept, n_limit, true);
         }
         
         // Choose a random entry from the valid list (if requested)
         
         if (*choose_in++ && num_matched_indices)
-            index = matchers->get_index(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
+            index = matchers.get_index(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
         
         *out++ = (float) index + 1;
     }
