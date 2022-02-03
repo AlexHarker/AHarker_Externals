@@ -5,7 +5,7 @@
  *	This header file is used to deal with audio-rate denormals. 
  *	The perform routine here turns off denormals (on the processor) in this thread.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
