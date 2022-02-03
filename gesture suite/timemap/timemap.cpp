@@ -4,16 +4,13 @@
  *
  *  timemap is an object that creates randomised lists of values with definable characteristics.
  *
- *  timemap was iriginally intended to create lists representing timing values as part of a system of gestural representation.
- *  The basic principle to start with a list of equidistant values (between 0 and 1) and operate on it to create the final list.
- *  The list is randomised and warped and scaled to create the final list.
- *  A number of scalings are supported, appropriate to a range of musical parameters (as in the valconvert object).
- *  This results in randomised lists with shapes and charateristics that can be pre-determined by setting the parameters.
- *  The values can be generated directly or alternateively in "streams".
- *  When in a streaming mode the generated values are accumulated through addition or multiplication from an initial value.
- *
- *  The exact functioning of the timemap object is fairly involved and best understood in practice.
- *  See the MaxMSP documentation for further information on its use.
+ *  The process starts with a list of equidistant values (between 0 and 1) which are processed to create the final list.
+ *  The list is randomised, warped and scaled to create the final list.
+ *  Different output scalings are supported, appropriate to a range of musical parameters (as in the valconvert object).
+ *  Values can be generated directly or alternateively in "streams".
+ *  When in a streaming mode generated values are accumulated through addition or multiplication from an initial value.
+
+ *  timemap was originally intended to create lists of timing values as part of a system of gestural representation.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -31,6 +28,8 @@
 
 
 // Globals and Object Structure
+
+using rand_gen = random_generator<>;
 
 t_class *this_class;
 
@@ -69,10 +68,8 @@ struct streaming_parameters
     streaming_mode mode;
 };
 
-struct t_timemap
+struct parameters
 {
-    t_object a_obj;
-    
     double rand_amount;
     double centre;
     double warp;
@@ -86,8 +83,15 @@ struct t_timemap
     t_atom_long max_retries;
 
     bool random_order;
+};
+
+struct t_timemap
+{
+    t_object a_obj;
     
-    random_generator<> gen;
+    parameters params;
+    
+    rand_gen gen;
     
     void *list_outlet;
 };
@@ -100,9 +104,9 @@ void timemap_assist(t_timemap *x, void *b, long m, long a, char *s);
 
 void timemap_calculate(t_timemap *x, t_atom_long num_points);
 
-inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double warp);
+inline double timemap_value(rand_gen& gen, long i, double points_recip, double rand_amount, double centre, double warp);
 double timemap_scale(double val, const scaling_parameters& params);
-bool check_and_insert(random_generator<>& gen, double val, double *vals, long N, double min_dist, double max_dist, bool randomise, const streaming_parameters& stream_params);
+bool check_and_insert(rand_gen& gen, double val, double *vals, long N, const parameters& params);
 
 void timemap_rand_amount(t_timemap *x, double rand_amount);
 void timemap_centre(t_timemap *x, double centre);
@@ -168,13 +172,13 @@ void *timemap_new(double rand_amount, double centre, double warp)
     floatin(x, 2);
     floatin(x, 1);
     
-    x->centre = clip(centre, 0.0, 1.0);
-    x->rand_amount = clip(rand_amount, 0.0, 1.0);
-    x->warp = (warp <= 0.) ? 1.0 : warp;
-    x->min_dist = 0.0;
-    x->max_dist = 1.0;
-    x->max_retries = 10;
-    x->random_order = false;
+    x->params.centre = clip(centre, 0.0, 1.0);
+    x->params.rand_amount = clip(rand_amount, 0.0, 1.0);
+    x->params.warp = (warp <= 0.) ? 1.0 : warp;
+    x->params.min_dist = 0.0;
+    x->params.max_dist = 1.0;
+    x->params.max_retries = 10;
+    x->params.random_order = false;
     
     timemap_scaling(x, gensym("none"), 0, 1);
     timemap_stream(x, 0, 0, 0, 1);
@@ -240,19 +244,8 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     double vals[1024];
     long items[1024];
     
-    const scaling_parameters scale_params = x->scale_params;
-    const streaming_parameters stream_params = x->stream_params;
-
-    const double centre = x->centre;
-    const double rand_amount = x->rand_amount;
-    const double warp = x->warp;
-    const double min_dist = x->min_dist;
-    const double max_dist = x->max_dist;
+    const parameters params = x->params;
     
-    const t_atom_long max_retries = x->max_retries;
-
-    const bool random_order = x->random_order;
-
     long list_length = 0;
     
     if (num_points < 1)
@@ -267,14 +260,14 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
         num_points = 1024;
     }
     
-    if (stream_params.mode != streaming_mode::none)
+    if (params.stream_params.mode != streaming_mode::none)
         num_points--;
 
     const double points_recip = 1.0 / (double) (num_points + 1);
 
     // If the ordering is to be random start with a list of potential items (0 to num_points - 1)
     
-    if (random_order)
+    if (params.random_order)
     {
         for (long i = 0; i < num_points; i++)
             items[i] = i;
@@ -290,11 +283,11 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
         
         // Loop until a suitable value is found (or we reach the maximum number of retries)
         
-        for (bool suitable = false; !suitable && retries < max_retries; retries++)
+        for (bool suitable = false; !suitable && retries < params.max_retries; retries++)
         {
             // Choose which of the remaining divisions to do if the order is random
             
-            if (random_order)
+            if (params.random_order)
             {
                 item_pos = x->gen.rand_int(static_cast<uint32_t>(num_points - (list_length + 1)));
                 item = items[item_pos];
@@ -302,23 +295,23 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
             
             // Generate a new value
             
-            double val = timemap_value(x->gen, item, points_recip, rand_amount, centre, warp);
+            double val = timemap_value(x->gen, item, points_recip, params.rand_amount, params.centre, params.warp);
             
             // Scale if relevant
             
-            if (scale_params.mode != scaling_mode::none)
-                val = timemap_scale(val, scale_params);
+            if (params.scale_params.mode != scaling_mode::none)
+                val = timemap_scale(val, params.scale_params);
             
             // If the value is good then keep it and increase list_length
                         
-            if (check_and_insert(x->gen, val, vals, list_length, min_dist, max_dist, random_order, stream_params))
+            if (check_and_insert(x->gen, val, vals, list_length, params))
             {
                 suitable = true;
                 list_length++;
                 
-                // Maintains a valid list of unused items by replacing the used one with the one about to fall out of the list
+                // Replace the used value with the one about to be removed (maintaing a valid list of unused items)
 
-                if (random_order)
+                if (params.random_order)
                     items[item_pos] = items[num_points - list_length];
             }
         }
@@ -326,7 +319,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
     
     // Do stream mode
     
-    switch (stream_params.mode)
+    switch (params.stream_params.mode)
     {
         case streaming_mode::none:
             for (long i = 0; i < list_length; i++)
@@ -334,11 +327,11 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
             break;
             
         case streaming_mode::additive:
-            timemap_do_stream(output_list, vals, stream_params.init_val, list_length, std::plus<double>());
+            timemap_do_stream(output_list, vals, params.stream_params.init_val, list_length, std::plus<double>());
             break;
             
         case streaming_mode::multiplicative:
-            timemap_do_stream(output_list, vals, stream_params.init_val, list_length, std::multiplies<double>());
+            timemap_do_stream(output_list, vals, params.stream_params.init_val, list_length, std::multiplies<double>());
             break;
     }
     
@@ -347,7 +340,7 @@ void timemap_calculate(t_timemap *x, t_atom_long num_points)
 
 // Value Generation
 
-inline double timemap_value(random_generator<>& gen, long i, double points_recip, double rand_amount, double centre, double warp)
+inline double timemap_value(rand_gen& gen, long i, double points_recip, double rand_amount, double centre, double warp)
 {
     // Start with equally spaced values (in the range 0 to 1)
     
@@ -415,17 +408,17 @@ bool check_stream(double *vals, long pos, long N, double val, double cumulate, d
     return true;
 }
 
-bool check_and_insert(random_generator<>& gen, double val, double *vals, long N, double min_dist, double max_dist, bool randomise, const streaming_parameters& stream_params)
+bool check_and_insert(rand_gen& gen, double val, double *vals, long N, const parameters& params)
 {
-    const double& init_val = stream_params.init_val;
-    const double& min_val = stream_params.min_val;
-    const double& max_val = stream_params.max_val;
+    const double& init_val = params.stream_params.init_val;
+    const double& min_val = params.stream_params.min_val;
+    const double& max_val = params.stream_params.max_val;
     
     long pos;
         
     // Find Position for New Value (if order is random then pick randomly, otherwise find thex correct place)
     
-    if (randomise)
+    if (params.random_order)
         pos = gen.rand_int(static_cast<uint32_t>(N));
     else
     {
@@ -438,25 +431,25 @@ bool check_and_insert(random_generator<>& gen, double val, double *vals, long N,
         pos = j;
     }
     
-    // Check suitability according to the minimum and maximum allowable distances - check for preceding and subsequent values
+    // Check the minimum and maximum allowable distances - both preceding and subsequent values
         
     if (pos)
     {
         const double test = fabs(val - vals[pos - 1]);
-        if ((test < min_dist) || (test > max_dist))
+        if ((test < params.min_dist) || (test > params.max_dist))
             return false;
     }
     
     if (pos < N)
     {
         const double test = fabs(vals[pos] - val);
-        if ((test < min_dist) || (test > max_dist))
+        if ((test < params.min_dist) || (test > params.max_dist))
             return false;
     }
 
     // If we are in stream mode then check that this value will not result in output exceeding the stream bounds
             
-    switch (stream_params.mode)
+    switch (params.stream_params.mode)
     {
         case streaming_mode::none:
             break;
@@ -486,37 +479,37 @@ bool check_and_insert(random_generator<>& gen, double val, double *vals, long N,
 
 void timemap_rand_amount(t_timemap *x, double rand_amount)
 {
-    x->rand_amount = clip(rand_amount, 0.0, 1.0);
+    x->params.rand_amount = clip(rand_amount, 0.0, 1.0);
 }
 
 void timemap_centre(t_timemap *x, double centre)
 {
-    x->centre = clip(centre, 0.0, 1.0);
+    x->params.centre = clip(centre, 0.0, 1.0);
 }
 
 void timemap_warp(t_timemap *x, double warp)
 {
-    x->warp = (warp < 0.0) ? 1.0 : warp;
+    x->params.warp = (warp < 0.0) ? 1.0 : warp;
 }
 
 void timemap_min_dist(t_timemap *x, double min_dist)
 {
-    x->min_dist = fabs(min_dist);
+    x->params.min_dist = fabs(min_dist);
 }
 
 void timemap_max_dist(t_timemap *x, double max_dist)
 {
-    x->max_dist = fabs(max_dist);
+    x->params.max_dist = fabs(max_dist);
 }
 
 void timemap_max_retries(t_timemap *x, t_atom_long max_retries)
 {
-    x->max_retries = (max_retries < 0) ? 0 : max_retries;
+    x->params.max_retries = (max_retries < 0) ? 0 : max_retries;
 }
 
 void timemap_random_order(t_timemap *x, t_atom_long random_order)
 {
-    x->random_order = random_order ? true : false;
+    x->params.random_order = random_order ? true : false;
 }
 
 // Mode Methods
@@ -569,7 +562,7 @@ void timemap_scaling(t_timemap *x, t_symbol *scale_mode_sym, double min_val, dou
         scale_max = exp(scale_max);
     }
     
-    x->scale_params = scaling_parameters { scale_max - scale_min, scale_min, min_val, max_val, mode };
+    x->params.scale_params = scaling_parameters { scale_max - scale_min, scale_min, min_val, max_val, mode };
 }
 
 void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, double min_val, double max_val)
@@ -579,5 +572,5 @@ void timemap_stream(t_timemap *x, t_atom_long stream_mode, double init_val, doub
     mode = (stream_mode == 1) ? streaming_mode::additive : streaming_mode::none;
     mode = (stream_mode > 1) ? streaming_mode::multiplicative : mode;
     
-    x->stream_params = streaming_parameters { init_val, min_val, max_val, mode };
+    x->params.stream_params = streaming_parameters { init_val, min_val, max_val, mode };
 }
