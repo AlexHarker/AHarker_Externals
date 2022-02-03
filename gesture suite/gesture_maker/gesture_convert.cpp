@@ -17,10 +17,10 @@
 // Symbols
 
 t_symbol *ps_scale = gensym("scale");
-t_symbol *ps_log = gensym("log");;
-t_symbol *ps_amp = gensym("amp");;
-t_symbol *ps_pitch = gensym("pitch");;
-t_symbol *ps_none = gensym("none");;
+t_symbol *ps_log = gensym("log");
+t_symbol *ps_amp = gensym("amp");
+t_symbol *ps_pitch = gensym("pitch");
+t_symbol *ps_none = gensym("none");
 
 t_symbol *ps_Scale = gensym("Scale");
 t_symbol *ps_Log = gensym("Log");

@@ -20,9 +20,9 @@
 
 t_class *this_class;
 
-t_symbol *ps_int;
-t_symbol *ps_float;
-t_symbol *ps_bang;
+t_symbol *ps_int = gensym("int");
+t_symbol *ps_float = gensym("float");
+t_symbol *ps_bang = gensym("bang");
 
 struct t_schedulemessage
 {
@@ -67,10 +67,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) schedulemessage_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_int = gensym("int");
-    ps_float = gensym("float");
-    ps_bang = gensym("bang");
     
     return 0;
 }

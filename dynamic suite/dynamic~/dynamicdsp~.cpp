@@ -42,8 +42,8 @@
 
 t_class *this_class;
 
-t_symbol *ps_args;
-t_symbol *ps_declareio;
+t_symbol *ps_args = gensym("args");
+t_symbol *ps_declareio = gensym("declareio");
 
 static t_ptr_uint sig_size;
 
@@ -248,9 +248,6 @@ int C74_EXPORT main()
     class_dspinit(this_class);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_args = gensym("args");
-    ps_declareio = gensym("declareio");
     
     sig_size = ((maxversion() & 0x3FFF) >= 0x600) ? sizeof(double) : sizeof(float);
     

@@ -24,7 +24,7 @@
 
 t_class *this_class;
 
-t_symbol *ps_deletepatch;
+t_symbol *ps_deletepatch = gensym("deletepatch");
 
 struct t_dynamic_this
 {
@@ -84,9 +84,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) dynamic_this_delete, "delete", 0);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_deletepatch = gensym("deletepatch");
-    
+        
     return 0;
 }
 

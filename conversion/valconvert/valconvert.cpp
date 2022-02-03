@@ -44,16 +44,16 @@ method free_routine = nullptr;
 
 t_class *this_class;
 
-t_symbol *ps_scale;
-t_symbol *ps_log;
-t_symbol *ps_amp;
-t_symbol *ps_pitch;
-t_symbol *ps_exp;
-t_symbol *ps_none;
-t_symbol *ps_iamp;
-t_symbol *ps_ipitch;
+t_symbol *ps_scale = gensym("scale");
+t_symbol *ps_log = gensym("log");
+t_symbol *ps_amp = gensym("amp");
+t_symbol *ps_pitch = gensym("pitch");
+t_symbol *ps_exp = gensym("exp");
+t_symbol *ps_iamp = gensym("iamp");
+t_symbol *ps_ipitch = gensym("ipitch");
+t_symbol *ps_none = gensym("none");
 
-t_symbol *ps_list;
+t_symbol *ps_list = gensym("list");
 
 enum class conversion_mode
 {
@@ -139,18 +139,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) valconvert_assist, "assist", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
-    
-    ps_scale = gensym("scale");
-    ps_log = gensym("log");
-    ps_amp = gensym("amp");
-    ps_pitch = gensym("pitch");
-    ps_exp = gensym("exp");
-    ps_iamp = gensym("iamp");
-    ps_ipitch = gensym("ipitch");
-    ps_none = gensym("none");
-    
-    ps_list = gensym("list");
-    
+        
     return 0;
 }
 

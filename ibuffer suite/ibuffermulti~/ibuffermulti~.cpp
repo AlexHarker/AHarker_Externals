@@ -22,11 +22,11 @@
 
 // Globals and Object Structure
 
-t_symbol *ps_set;
-t_symbol *ps_replace;
-t_symbol *ps_valid;
-
 t_class *this_class;
+
+t_symbol *ps_set = gensym("set");
+t_symbol *ps_replace = gensym("replace");
+t_symbol *ps_valid = gensym("valid");
 
 struct t_ibuffermulti
 {
@@ -65,10 +65,6 @@ int C74_EXPORT main()
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
-    
-    ps_set = gensym("set");
-    ps_replace = gensym("replace");
-    ps_valid = gensym("valid");
     
     return 0;
 }
