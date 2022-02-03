@@ -273,7 +273,7 @@ void patch_slot::set_window_name()
     constexpr size_t idx_length = 16;
     char index_string[idx_length];
 
-    snprintf(index_string, idx_length, " (%lld)", m_user_index);
+    snprintf(index_string, idx_length, " (%lld)", static_cast<long long>(m_user_index));
 
     std::string window_name = std::string(m_name);
     window_name.append(index_string);
