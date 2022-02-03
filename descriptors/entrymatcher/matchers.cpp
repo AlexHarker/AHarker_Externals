@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <cmath>
 
 #include "matchers.hpp"
 #include "sort.hpp"
