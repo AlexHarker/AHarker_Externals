@@ -1,6 +1,22 @@
 
+/*
+ *  sort.hpp
+ *
+ *  A header file with sort functionality for the entrymatcher(~) objects.
+ *
+ *  There are a variety of sorts:
+ *  - Directly on data in an array / vector
+ *  - On indices with separate data arrays / vectors
+ *  - On indices with a getter functor
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _SORT_HPP_
 #define _SORT_HPP_
+
 
 // Convenience for altering swap flags
 
@@ -9,30 +25,6 @@ bool swap(T& a, T& b)
 {
     std::swap(a, b);
     return true;
-}
-
-// An ascending order index sort (combsort11 algorithm)
-
-template <class T, class U>
-void sort(T& indices, U& values, long size)
-{
-    long gap = size;
-    bool swaps = true;
-    long i;
-    
-    while (gap > 1 || swaps)
-    {
-        if (gap > 1)
-        {
-            gap = (gap * 10) / 13;
-            if (gap == 9 || gap == 10) gap = 11;
-            if (gap < 1) gap = 1;
-        }
-        
-        for (i = 0, swaps = false; i + gap < size; i++)
-            if (values[indices[i]] > values[indices[i + gap]])
-                swaps = swap(indices[i], indices[i + gap]);
-    }
 }
 
 // An ascending order sort (combsort11 algorithm)
@@ -56,6 +48,30 @@ void sort(T& values, long size)
         for (i = 0, swaps = false; i + gap < size; i++)
             if (values[i] > values[i + gap])
                 swaps = swap(values[i], values[i + gap]);
+    }
+}
+
+// An ascending order index sort (combsort11 algorithm)
+
+template <class T, class U>
+void sort(T& indices, U& values, long size)
+{
+    long gap = size;
+    bool swaps = true;
+    long i;
+    
+    while (gap > 1 || swaps)
+    {
+        if (gap > 1)
+        {
+            gap = (gap * 10) / 13;
+            if (gap == 9 || gap == 10) gap = 11;
+            if (gap < 1) gap = 1;
+        }
+        
+        for (i = 0, swaps = false; i + gap < size; i++)
+            if (values[indices[i]] > values[indices[i + gap]])
+                swaps = swap(indices[i], indices[i + gap]);
     }
 }
 

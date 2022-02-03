@@ -1,10 +1,22 @@
 
+/*
+ *  matchers.cpp
+ *
+ *  This is the class that performs matching.
+ *  The matchers class can store the parameters for multiple matching tests and apply the tests to a set of entries.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <algorithm>
 #include <functional>
 #include <cmath>
 
 #include "matchers.hpp"
 #include "sort.hpp"
+
 
 // Test Symbols
 

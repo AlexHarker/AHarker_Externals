@@ -1,4 +1,21 @@
 
+/*
+ *  entrymatcher_common.hpp
+ *
+ *  A header file with common functionaility for the entrymatcher(~) objects.
+ *
+ *  This class holds a number of useful static Max methods.
+ *
+ *  - The Max object structures are passed by template argument
+ *  - The Max object structures mist contain several expected fields
+ *  - The code for each object should call class_add in its main routine.
+ *  - The code for each object should call object_init in its new routine.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _ENTRYMATCHER_COMMON_HPP_
 #define _ENTRYMATCHER_COMMON_HPP_
 
@@ -7,6 +24,7 @@
 #include <ext_dictobj.h>
 
 #include "matchers.hpp"
+
 
 template <class T>
 struct entrymatcher_common

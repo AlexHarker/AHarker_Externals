@@ -1,4 +1,16 @@
 
+/*
+ *  database_view.cpp
+ *
+ *  This Max class handles a dataview in an associated patcher for viewing a database.
+ *  The init routine is called by entry_database.
+ *  All other communication is handled via the Max API
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <jpatcher_api.h>
 #include <jgraphics.h>
 #include <jdataview.h>
@@ -10,6 +22,7 @@
 #include "database_view.hpp"
 #include "entry_database.hpp"
 #include "sort.hpp"
+
 
 // Globals and Object Structure
 

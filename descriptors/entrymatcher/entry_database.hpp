@@ -1,4 +1,19 @@
 
+/*
+ *  entry_database.hpp
+ *
+ *  A header file for the entry_database Max class for the entrymatcher(~) objects.
+ *
+ *  This Max class wraps an entries underlying database in a Max class.
+ *  Facilities are provided to create, change, release or view the underlying database.
+ *
+ *  N.B. - Only client routines and structures are exposed here (other items are private)
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _ENTRY_DATABASE_HPP_
 #define _ENTRY_DATABASE_HPP_
 
@@ -7,7 +22,6 @@
 
 #include "entries.hpp"
 
-// N.B. - Only Client Routines and Structures are ezposed (other items are private)
 
 // Private Strings (for inter max-object communication)
 

@@ -1,4 +1,15 @@
 
+/*
+ *  entry_database.cpp
+ *
+ *  This Max class wraps an entries underlying database in a Max class.
+ *  Facilities are provided to create, change, release or view the underlying database.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <algorithm>
 #include <string>
 
@@ -7,6 +18,7 @@
 
 #include "entry_database.hpp"
 #include "database_view.hpp"
+
 
 // Entry Database Object Structure
 

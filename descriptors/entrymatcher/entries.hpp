@@ -1,4 +1,18 @@
 
+/*
+ *  entries.hpp
+ *
+ *  A header file for the entries class for the entrymatcher(~) objects.
+ *
+ *  This is the core underlying database class for both objects.
+ *  The object is accessed using a nested read / write / read_write access class.
+ *  Most methods of the main class is private but can be reached via an access class which deals correctly with locking.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _ENTRIES_HPP_
 #define _ENTRIES_HPP_
 
@@ -8,6 +22,7 @@
 #include <AH_Locks.hpp>
 
 #include "atom_types.hpp"
+
 
 class entries
 {
@@ -312,11 +327,15 @@ private:
     t_dictionary *save_dictionary(bool entries_as_one_key) const;
 
     // Data Getters
+
+    inline t_custom_atom get_typed(long idx, long column) const
+    {
+        return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]);
+    }
     
-    inline t_untyped_atom get_untyped(long idx, long column) const  { return m_entries[idx * num_columns() + column]; }
-    inline t_custom_atom get_typed(long idx, long column) const     { return t_custom_atom(get_untyped(idx, column), m_types[idx * num_columns() + column]); }
     inline double get_data(long idx, long column) const             { return get_untyped(idx, column).m_value; }
     inline void get_atom(t_atom *a, long idx, long column) const    { return get_typed(idx, column).get_atom(a); }
+    inline t_untyped_atom get_untyped(long idx, long column) const  { return m_entries[idx * num_columns() + column]; }
 
     // Ordering
     
