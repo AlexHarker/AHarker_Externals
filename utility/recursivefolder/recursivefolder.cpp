@@ -195,7 +195,7 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
     t_fileinfo info;
     t_fourcc type;
     
-    t_atom out_atom[2];
+    t_atom out_atom[3];
     
     bool match;
     
