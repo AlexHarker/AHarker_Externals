@@ -4,7 +4,7 @@
  *
  *  ibuffer~ loads audio files into memory in integer format (or float format if relevant) which they have on disk.
  *
- *  ibuufer~ can mitigate large memory requirements by loading in 16 bit or 24 bit formats to save space.
+ *  ibuffer~ can mitigate large memory requirements by loading in 16 bit or 24 bit formats to save space.
  *  It supports 16, 24 and 32 integer formats, as well as 32 bit floating point format.
  *  Either all channgels can be loaded or a specified list of channels.
  *  There are a corresponding set of playback and other objects that also function with standard MSP buffers.
