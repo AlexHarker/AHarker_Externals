@@ -117,7 +117,7 @@ void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode)
         x->data_out = listout(x);
     }
     
-    x->attachment = attach_ibufconcatenate_info(buffer_name);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, nullptr);
     x->max_mode = max_mode;
     
     return x;
@@ -188,8 +188,7 @@ void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char 
 
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name)
 {
-    detach_ibufconcatenate_info(x->attachment);
-    x->attachment = attach_ibufconcatenate_info(buffer_name);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, x->attachment);
 }
 
 void ibufconcatenate_clear(t_ibufconcatenate *x)

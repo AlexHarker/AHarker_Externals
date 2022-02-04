@@ -23,6 +23,7 @@
 
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
+#include <AH_Private_Object.hpp>
 
 
 // Class and Object Structure
@@ -36,7 +37,7 @@ public:
     // Constructor
     
     t_ibufconcatenate_info(t_symbol* name)
-    : buffer_name(name), max_end(0), user_count(0)
+    : buffer_name(name), max_end(0)
     {}
     
     // Class for Read Access
@@ -89,10 +90,7 @@ public:
         
         t_ibufconcatenate_info *m_info;
     };
-    
-    void acquire() { user_count++; }
-    bool release() { return --user_count == 0; }
-    
+
 private:
     
     // Implementation
@@ -146,6 +144,7 @@ public:
     // N.B. This will be accessed by the Max API
     
     t_pxobject x_obj;
+    t_private_count m_count;
         
 private:
 
@@ -154,9 +153,7 @@ private:
     std::vector<std::pair<double, double>> timings;
     
     double max_end;
-    
-    long user_count;
-    
+        
     mutable read_write_lock m_lock;
 };
 
@@ -201,10 +198,6 @@ void *ibufconcatenate_info_new(t_symbol *buffer_name)
     
     create_object(*x, buffer_name);
     
-    // Register the buffer name in a unique namespace
-    
-    object_register(get_namespace(), buffer_name, x);
-    
     return x;
 }
 
@@ -216,7 +209,7 @@ void ibufconcatenate_info_free(t_ibufconcatenate_info *x)
 
 // Attach / Detach
 
-static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name)
+static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name, t_ibufconcatenate_info *prev)
 {
     t_ibufconcatenate_info *registered;
     t_atom argv[1];
@@ -231,24 +224,17 @@ static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name
     
     // Search for or create it
     
-    registered = static_cast<t_ibufconcatenate_info *>(object_findregistered(get_namespace(), name));
+    registered = private_object_find_retain(prev, name, get_namespace());
     
     if (!registered)
-        registered = static_cast<t_ibufconcatenate_info *>(object_new_typed(CLASS_NOBOX, object_name, 1, argv));
-    
-    if (registered)
-        registered->acquire();
+        registered = private_object_create<t_ibufconcatenate_info>(object_name, name, get_namespace(), 1, argv);
     
     return registered;
 }
 
 static inline void detach_ibufconcatenate_info(t_ibufconcatenate_info *attachment)
 {
-    if (!attachment)
-        return;
-    
-    if (attachment->release())
-        object_free(attachment);
+    private_object_release(attachment);
 }
 
 #endif /*_IBUFCONCATENATE_INFO_HPP_ */

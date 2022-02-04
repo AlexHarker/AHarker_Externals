@@ -92,7 +92,7 @@ void *ibufconcatedrive_new(t_symbol *buffer_name, double init_val)
     x->lo = 0.0;
     x->hi = 0.0;
     
-    x->attachment = attach_ibufconcatenate_info(buffer_name);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, nullptr);
     
     return x;
 }
@@ -111,10 +111,7 @@ void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_at
     t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
     
     if (buffer_name)
-    {
-        detach_ibufconcatenate_info(x->attachment);
-        x->attachment = attach_ibufconcatenate_info(buffer_name);
-    }
+        x->attachment = attach_ibufconcatenate_info(buffer_name, x->attachment);
 }
 
 // Perform

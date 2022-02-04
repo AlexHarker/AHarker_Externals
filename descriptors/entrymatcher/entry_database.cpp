@@ -15,7 +15,7 @@
 
 #include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
-#include <AH_Locks.hpp>
+#include <AH_Private_Object.hpp>
 
 #include "entry_database.hpp"
 #include "database_view.hpp"
@@ -28,12 +28,12 @@ struct t_entry_database
     t_object a_obj;
     
     entries database;
-    thread_lock lock;
     
     t_object *view_patch;
     t_object *view;
     
-    long count;
+    t_private_count m_count;
+    
     bool notify_in_progress;
 };
 
@@ -86,13 +86,12 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Construct the database and lock
     
-    create_object(x->lock);
+    create_object(x->m_count);
     create_object(x->database, name, limit_int<long>(num_columns));
     
     // Reserve entries, set count to one and set to notify
     
     x->database.get_write_access().reserve(limit_int<long>(num_reserved_entries));
-    x->count = 1;
     x->notify_in_progress = false;
     
     // Don't create the view yet
@@ -106,7 +105,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x)
 {
     destroy_object(x->database);
-    destroy_object(x->lock);
+    destroy_object(x->m_count);
    
     // Destroy view patch (which destroys the view)
     
@@ -140,8 +139,6 @@ void entry_database_deferred_deletion(t_entry_database *x, t_symbol *msg, long a
 
 void entry_database_release(t_entry_database *x, void *client)
 {
-    bool last_client = false;
-    
     if (x)
     {
         // Complete notifications before the object is released
@@ -149,18 +146,7 @@ void entry_database_release(t_entry_database *x, void *client)
         entry_database_modified(x, nullptr, 0, nullptr);
         object_detach(ps_private_namespace, x->database.get_name(), client);
         
-        // Decrease the count with the lock held
-        
-        spin_lock_hold(&x->lock);
-        last_client = (--x->count <= 0);
-    }
-    
-    // If this is the last client then free the object (deferlow in case the pointer is hanging around)
-    
-    if (last_client)
-    {
-        object_unregister(x);
-        defer_low(x, (method) entry_database_deferred_deletion, nullptr, 0, nullptr);
+        private_object_release(x);
     }
 }
 
@@ -168,8 +154,6 @@ void entry_database_release(t_entry_database *x, void *client)
 
 t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbol *name, void *client)
 {
-    bool found_new = false;
-    
     // Make sure the max database class exists
     
     if (!class_findbyname(CLASS_NOBOX, ps_database_classname))
@@ -177,21 +161,11 @@ t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbo
     
     // See if an object is registered with this name that is still active nad if so increase the count
     
-    t_entry_database *x = (t_entry_database *) object_findregistered(ps_private_namespace, name);
-    
-    if (x && x != prev)
-    {
-        spin_lock_hold(&x->lock);
+    t_entry_database *x = private_object_find_retain(prev, name, ps_private_namespace);
 
-        // Check that the object is still valid
-        
-        if ((found_new = x->count > 0))
-            x->count++;
-    }
+    // If the two objects are the same do nothing
     
-    // If there is no object found, it's just been deleted or it's the same as prev return the old object
-    
-    if (!found_new)
+    if (prev == x)
         return prev;
     
     // Release the old object and attach to the new
@@ -220,8 +194,7 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
     
     if (!x)
     {
-        x = (t_entry_database *) object_new_typed(CLASS_NOBOX, ps_database_classname, 3, argv);
-        x = (t_entry_database *) object_register(ps_private_namespace, name, x);
+        x = private_object_create<t_entry_database>(name, ps_database_classname, ps_private_namespace, 3, argv);
         object_attach(ps_private_namespace, name, client);
     }
     
