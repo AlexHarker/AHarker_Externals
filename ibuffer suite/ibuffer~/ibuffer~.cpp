@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "AudioFile/IAudioFile.h"
-
+#include <AH_Int_Handler.hpp>
 #include <ibuffer.hpp>
 
 
@@ -350,8 +350,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         for (long i = 0; i < channel_order.size(); i++)
         {
-            constexpr t_atom_long max_chan = static_cast<long>(std::numeric_limits<uint16_t>::max());
-            long channel = static_cast<long>(std::min(atom_getlong(argv + i) - 1, max_chan));
+            long channel = limit_int<long, uint16_t>(atom_getlong(argv + i) - 1);
             channel_order[i] = channel < 0 ? 0 : ((channel > x->channels - 1) ? x->channels - 1 : channel);
         }
         

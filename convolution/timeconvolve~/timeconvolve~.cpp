@@ -20,6 +20,7 @@
 
 #include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
+#include <AH_Int_Handler.hpp>
 #include <ibuffer_access.hpp>
 
 #ifdef __APPLE__
@@ -27,7 +28,6 @@
 #endif
 
 #include <algorithm>
-#include <limits>
 
 
 // Utility
@@ -190,8 +190,7 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
     
     // Attributes
     
-    t_atom_long chan_max = static_cast<t_atom_long>(std::numeric_limits<long>::max());
-    long chan = static_cast<long>(std::min(x->chan - 1, chan_max));
+    long chan = limit_int<long>(x->chan - 1);
     t_atom_long offset = x->offset;
     t_atom_long length = x->length;
     
