@@ -2,6 +2,7 @@
 #ifndef _AH_INT_HANDLER_HPP_
 #define _AH_INT_HANDLER_HPP_
 
+#include <ext.h>
 #include <limits>
 
 template <class T, class U = T>

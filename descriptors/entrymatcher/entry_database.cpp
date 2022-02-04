@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <string>
 
+#include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
@@ -86,11 +87,11 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     // Construct the database and lock
     
     create_object(x->lock);
-    create_object(x->database, name, num_columns);
+    create_object(x->database, name, limit_int<long>(num_columns));
     
     // Reserve entries, set count to one and set to notify
     
-    x->database.get_write_access().reserve(num_reserved_entries);
+    x->database.get_write_access().reserve(limit_int<long>(num_reserved_entries));
     x->count = 1;
     x->notify_in_progress = false;
     
