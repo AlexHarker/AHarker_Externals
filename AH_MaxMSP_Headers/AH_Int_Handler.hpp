@@ -3,6 +3,7 @@
 #define _AH_INT_HANDLER_HPP_
 
 #include <ext.h>
+#include <algorithm>
 #include <limits>
 
 template <class T, class U = T>
