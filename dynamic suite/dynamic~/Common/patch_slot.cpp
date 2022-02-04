@@ -165,7 +165,7 @@ patch_slot::load_error patch_slot::load(long vec_size, long sampling_rate, bool 
 
     // Finish loading (which fires loadbang and sets the valid flag)
 
-    return load_finished(load_error::nothing_loaded, saved_loadupdate);
+    return load_finished(load_error::none, saved_loadupdate);
 }
 
 patch_slot::load_error patch_slot::load_finished(load_error error, short saved_loadupdate)
