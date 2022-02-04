@@ -131,8 +131,8 @@ patch_slot::load_error patch_slot::load(long vec_size, long sampling_rate, bool 
     symbol_binding vis("inhibit_subpatcher_vis", reinterpret_cast<void *>(-1));
     symbol_binding PAT("#P", m_parent);
 
-    // Load the patch (don't interrupt dsp and use )
-
+    // Load the patch (don't interrupt dsp or send loadbang yet)
+    
     short saved_loadupdate = dsp_setloadupdate(false);
     loadbang_suspend();
     m_patch = reinterpret_cast<t_patcher *>(intload(name, m_path, 0 , static_cast<short>(m_argc), m_argv, false));
@@ -165,7 +165,7 @@ patch_slot::load_error patch_slot::load(long vec_size, long sampling_rate, bool 
 
     // Finish loading (which fires loadbang and sets the valid flag)
 
-    return load_finished(load_error::nothing_loaded, saved_loadupdate);
+    return load_finished(load_error::none, saved_loadupdate);
 }
 
 patch_slot::load_error patch_slot::load_finished(load_error error, short saved_loadupdate)

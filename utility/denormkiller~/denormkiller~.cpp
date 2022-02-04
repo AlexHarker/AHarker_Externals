@@ -17,6 +17,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <SIMDSupport.hpp>
+
 
 // Globals and Object Structure
 
@@ -76,10 +78,8 @@ void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
 // Perform
 
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    // replace the old MXCSR setting with the same, except set DAZ and FZ bits to flush denormals to zero
-    
-    _mm_setcsr(_mm_getcsr() | 0x8040);
+{    
+    SIMDDenormals::off();
 }
 
 // DSP

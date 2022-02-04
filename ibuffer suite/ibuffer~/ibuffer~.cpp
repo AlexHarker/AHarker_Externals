@@ -4,7 +4,7 @@
  *
  *  ibuffer~ loads audio files into memory in integer format (or float format if relevant) which they have on disk.
  *
- *  ibuufer~ can mitigate large memory requirements by loading in 16 bit or 24 bit formats to save space.
+ *  ibuffer~ can mitigate large memory requirements by loading in 16 bit or 24 bit formats to save space.
  *  It supports 16, 24 and 32 integer formats, as well as 32 bit floating point format.
  *  Either all channgels can be loaded or a specified list of channels.
  *  There are a corresponding set of playback and other objects that also function with standard MSP buffers.
@@ -22,7 +22,7 @@
 #include <vector>
 
 #include "AudioFile/IAudioFile.h"
-
+#include <AH_Int_Handler.hpp>
 #include <ibuffer.hpp>
 
 
@@ -350,8 +350,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         for (long i = 0; i < channel_order.size(); i++)
         {
-            constexpr t_atom_long max_chan = static_cast<long>(std::numeric_limits<uint16_t>::max());
-            long channel = static_cast<long>(std::min(atom_getlong(argv + i) - 1, max_chan));
+            long channel = limit_int<long, uint16_t>(atom_getlong(argv + i) - 1);
             channel_order[i] = channel < 0 ? 0 : ((channel > x->channels - 1) ? x->channels - 1 : channel);
         }
         

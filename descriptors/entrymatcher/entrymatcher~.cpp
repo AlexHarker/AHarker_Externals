@@ -25,6 +25,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
 #include <RandomGenerator.hpp>
 
@@ -110,22 +111,22 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
         name = symbol_unique();
     
     t_atom_long num_reserved_entries = (argc > 2) ? atom_getlong(argv++) : 0;
-    t_atom_long num_columns = argc  ? atom_getlong(argv++) : 0;
-    t_atom_long max_matchers = (argc > 1)  ? atom_getlong(argv++) : 0;
+    t_atom_long num_columns = argc ? atom_getlong(argv++) : 0;
+    t_atom_long max_matchers = (argc > 1) ? atom_getlong(argv++) : 0;
     
     t_entrymatcher *x = (t_entrymatcher *) object_alloc(this_class);
-    
-    dsp_setup((t_pxobject *) x, 2 + max_matchers);
-    outlet_new((t_object *) x, "signal");
-    
+   
     x->database_object = database_create(x, name, num_reserved_entries, num_columns);
     create_object(x->matchers);
     create_object(x->gen);
     
-    x->max_matchers = std::max(std::min(max_matchers, t_atom_long(256)), t_atom_long(1));
+    x->max_matchers = std::max(std::min(limit_int<long>(max_matchers), 256L), 1L);
     x->ratio_kept = 1.0;
     x->n_limit = 0;
     
+    dsp_setup((t_pxobject*)x, 2 + x->max_matchers);
+    outlet_new((t_object*)x, "signal");
+
     entrymatcher_common<t_entrymatcher>::object_init(x);
 
     return x;
@@ -178,8 +179,8 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    long n_limit = argc > 0 ?  atom_getlong(argv + 0): 0;
-    double ratio_kept = argc > 1 ?  atom_getfloat(argv + 1) : 1.0;
+    long n_limit = argc > 0 ? limit_int<long>(atom_getlong(argv + 0)) : 0;
+    double ratio_kept = argc > 1 ? atom_getfloat(argv + 1) : 1.0;
     
     // Clip values
     

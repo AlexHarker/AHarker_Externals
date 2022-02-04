@@ -18,12 +18,12 @@
 #include <z_dsp.h>
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
+#include <AH_Int_Handler.hpp>
 #include <RandomGenerator.hpp>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
-#include <limits>
 
 
 // Utility
@@ -494,8 +494,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
     
     // Attributes
     
-    t_atom_long chan_max = static_cast<t_atom_long>(std::numeric_limits<long>::max());
-    long chan = static_cast<long>(std::min(x->chan - 1, chan_max));
+    long chan = limit_int<long>(x->chan - 1);
     t_atom_long offset = x->offset;
     t_atom_long length = x->length;
     

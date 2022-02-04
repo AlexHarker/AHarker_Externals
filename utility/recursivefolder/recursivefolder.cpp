@@ -3,7 +3,7 @@
  *  recursivefolder
  *
  *  recursivefolder is a version of folder that allows recursive searching of a folder.
- *  Seraching may be either infinitly recursive or to a specified depth.
+ *  Searching may be either infinitly recursive or to a specified depth.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -38,9 +38,11 @@ struct t_recursive_folder
     
     t_atom_long f_recursion;
     long f_numtypes;
-    
-    void *f_countout;
-    long f_outcount;
+
+    long f_count;
+
+    void *f_info_out;
+    void *f_count_out;
 };
 
 // Function Prototypes
@@ -89,13 +91,13 @@ void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
 {
     t_recursive_folder *x = (t_recursive_folder *) object_alloc(this_class);
     
-    x->f_countout = intout((t_object *) x);
-    outlet_new((t_object *) x, nullptr);
+    x->f_count_out = intout((t_object *) x);
+    x->f_info_out = outlet_new((t_object *) x, nullptr);
     
     x->f_input = 0;
     x->f_numtypes = 0;
     x->f_path = 0;
-    x->f_outcount = 0;
+    x->f_count = 0;
     x->f_recursion = 0;
     
     if (argc)
@@ -157,7 +159,7 @@ void recursive_folder_action(t_recursive_folder *x)
     t_filepath path;
     short err;
     char char_null = 0;
-    x->f_outcount = 0;
+    x->f_count = 0;
     
     if (x->f_path == 0)
     {
@@ -182,7 +184,7 @@ void recursive_folder_action(t_recursive_folder *x)
             recursive_folder_enumerate(x, x->f_path, gensym(fullname), 0);
     }
     
-    outlet_int(x->f_countout,x->f_outcount);
+    outlet_int(x->f_count_out, x->f_count);
 }
 
 // Enumerate Items Recursively
@@ -193,7 +195,7 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
     t_fileinfo info;
     t_fourcc type;
     
-    t_atom out_atom[2];
+    t_atom out_atom[3];
     
     bool match;
     
@@ -244,19 +246,19 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
         if (match)
         {
             if (!started)
-                outlet_anything(x->f_ob.o_outlet, ps_folder, 2L, out_atom);
+                outlet_anything(x->f_info_out, ps_folder, 2L, out_atom);
             
             path_topathname(f_path, name, fullname);
             
-            outlet_anything(x->f_ob.o_outlet, gensym(fullname), 0 , 0);
-            x->f_outcount++;
+            outlet_anything(x->f_info_out, gensym(fullname), 0 , nullptr);
+            x->f_count++;
             started |= 2;
         }
         
         if (type == 'fold' && (!x->f_recursion || x->f_recursion - 1 > recursion))
         {
             if (!started)
-                outlet_anything(x->f_ob.o_outlet, ps_folder, 2, out_atom);
+                outlet_anything(x->f_info_out, ps_folder, 2, out_atom);
             
             path_topathname(f_path, name, fullname);
             if (!path_frompathname(fullname, &new_path, tempname))
@@ -268,13 +270,13 @@ short recursive_folder_enumerate(t_recursive_folder *x, t_filepath f_path, t_sym
     if (!started)
     {
         atom_setsym(out_atom, ps_empty);
-        outlet_anything(x->f_ob.o_outlet, ps_folder, 2, out_atom);
+        outlet_anything(x->f_info_out, ps_folder, 2, out_atom);
     }
     else
     {
         atom_setsym(out_atom, ps_end);
         atom_setlong(out_atom + 2, started / 2);
-        outlet_anything(x->f_ob.o_outlet, ps_folder, 3, out_atom);
+        outlet_anything(x->f_info_out, ps_folder, 3, out_atom);
     }
     
     if (!started)

@@ -3,6 +3,7 @@
 #define SIMDSUPPORT_HPP
 
 #include <algorithm>
+#include <bitset>
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
@@ -11,6 +12,7 @@
 #if defined(__arm__) || defined(__arm64)
 #include <arm_neon.h>
 #include <memory.h>
+#include <fenv.h>
 #define SIMD_COMPILER_SUPPORT_NEON 1
 #elif defined(__APPLE__) || defined(__linux__) || defined(_WIN32)
 #if defined(_WIN32)
@@ -41,8 +43,8 @@
 template<class T>
 struct SIMDLimits
 {
-    static const int max_size = 1;
-    static const int byte_width = sizeof(T);
+    static constexpr int max_size = 1;
+    static constexpr int byte_width = sizeof(T);
 };
 
 #if defined(__AVX512F__)
@@ -51,15 +53,15 @@ struct SIMDLimits
 template<>
 struct SIMDLimits<double>
 {
-    static const int max_size = 8;
-    static const int byte_width = 64;
+    static constexpr int max_size = 8;
+    static constexpr int byte_width = 64;
 };
 
 template<>
 struct SIMDLimits<float>
 {
-    static const int max_size = 16;
-    static const int byte_width = 64;
+    static constexpr int max_size = 16;
+    static constexpr int byte_width = 64;
 };
 
 #elif defined(__AVX__)
@@ -68,15 +70,15 @@ struct SIMDLimits<float>
 template<>
 struct SIMDLimits<double>
 {
-    static const int max_size = 4;
-    static const int byte_width = 32;
+    static constexpr int max_size = 4;
+    static constexpr int byte_width = 32;
 };
 
 template<>
 struct SIMDLimits<float>
 {
-    static const int max_size = 8;
-    static const int byte_width = 32;
+    static constexpr int max_size = 8;
+    static constexpr int byte_width = 32;
 };
 
 #elif defined(__SSE__) || defined(__arm__) || defined(__arm64)
@@ -86,16 +88,16 @@ struct SIMDLimits<float>
 template<>
 struct SIMDLimits<double>
 {
-    static const int max_size = 2;
-    static const int byte_width = 16;
+    static constexpr int max_size = 2;
+    static constexpr int byte_width = 16;
 };
 #endif
 
 template<>
 struct SIMDLimits<float>
 {
-    static const int max_size = 4;
-    static const int byte_width = 16;
+    static constexpr int max_size = 4;
+    static constexpr int byte_width = 16;
 };
 
 #else
@@ -150,12 +152,117 @@ void deallocate_aligned(T *ptr)
 
 #endif
 
+// ******************** Denormal Handling ******************** //
+
+struct SIMDDenormals
+{
+    using denormal_flags = std::bitset<2>;
+    using platform_flags = std::bitset<32>;
+    
+    static denormal_flags make_flags(bool daz, bool ftz)
+    {
+        denormal_flags denormal_state(0);
+        denormal_state.set(0, daz);
+        denormal_state.set(1, ftz);
+        return denormal_state;
+    }
+    
+    // Platform-specific get and set for flags
+    
+#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_VEC128)
+#if defined SIMD_COMPILER_SUPPORT_NEON
+#if defined(__arm64)
+    static denormal_flags flags()
+    {
+        fenv_t env;
+        fegetenv(&env);
+        return make_flags(false, env.__fpcr & __fpcr_flush_to_zero);
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        fenv_t env;
+        fegetenv(&env);
+    
+        if (flags.test(1))
+            env.__fpcr |= __fpcr_flush_to_zero;
+        else
+            env.__fpcr ^= __fpcr_flush_to_zero;
+
+        fesetenv(&env);
+    }
+#else
+    static denormal_flags flags()
+    {
+        fenv_t env;
+        fegetenv(&env);
+        return make_flags(false, env.__fpscr & __fpscr_flush_to_zero);
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        fenv_t env;
+        fegetenv(&env);
+    
+        if (flags.test(1))
+            env.__fpscr |= & __fpscr_flush_to_zero;
+        else
+            env.__fpscr |= ^ __fpscr_flush_to_zero;
+            
+        fesetenv(&env);
+    }
+#endif
+       
+#else
+    static denormal_flags flags()
+    {
+        platform_flags csr(_mm_getcsr());
+        return make_flags(csr.test(6), csr.test(15));
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        platform_flags csr(_mm_getcsr());
+        csr.set(6, flags.test(0));
+        csr.set(15, flags.test(1));
+        _mm_setcsr(static_cast<unsigned int>(csr.to_ulong()));
+    }
+#endif
+#else
+    static denormal_flags flags() { return 0; }
+    static void set(denormal_flags flags) {}
+#endif
+    
+    // Set off
+    
+    void static off() { set(0x3); }
+    
+    // Set denomal handling using RAII
+    
+    SIMDDenormals() : mFlags(flags())
+    {
+        off();
+    }
+    
+    SIMDDenormals(const SIMDDenormals&) = delete;
+    SIMDDenormals& operator=(const SIMDDenormals&) = delete;
+    
+    ~SIMDDenormals()
+    {
+        set(mFlags);
+    }
+
+private:
+    
+    denormal_flags mFlags;
+};
+
 // ******************** Basic Data Type Definitions ******************** //
 
 template <class T, class U, int vec_size>
 struct SIMDVector
 {
-    static const int size = vec_size;
+    static constexpr int size = vec_size;
     typedef T scalar_type;
     
     SIMDVector() {}
@@ -174,8 +281,8 @@ struct SizedVector
 {
     using SV = SizedVector;
     using VecType = SIMDType<T, vec_size>;
-    static const int size = final_size;
-    static const int array_size = final_size / vec_size;
+    static constexpr int size = final_size;
+    static constexpr int array_size = final_size / vec_size;
     
     SizedVector() {}
     SizedVector(const T& a) { static_iterate<>().set(*this, a); }
@@ -295,7 +402,7 @@ private:
 template<>
 struct SIMDType<double, 1>
 {
-    static const int size = 1;
+    static constexpr int size = 1;
     typedef double scalar_type;
     
     SIMDType() {}
@@ -336,7 +443,7 @@ struct SIMDType<double, 1>
 template<>
 struct SIMDType<float, 1>
 {
-    static const int size = 1;
+    static constexpr int size = 1;
     typedef float scalar_type;
     
     SIMDType() {}
@@ -381,7 +488,7 @@ struct SIMDType<float, 1>
 template<>
 struct SIMDType<float, 2>
 {
-    static const int size = 1;
+    static constexpr int size = 1;
     typedef float scalar_type;
     
     SIMDType() {}
@@ -995,7 +1102,7 @@ T select(const SIMDType<T, N>& a, const SIMDType<T, N>& b, const SIMDType<T, N>&
 
 static inline SIMDType<double, 1> abs(const SIMDType<double, 1> a)
 {
-    const static uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+    constexpr uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     
     uint64_t temp = *(reinterpret_cast<const uint64_t *>(&a)) & bit_mask_64;
     return *(reinterpret_cast<double *>(&temp));
@@ -1003,7 +1110,7 @@ static inline SIMDType<double, 1> abs(const SIMDType<double, 1> a)
 
 static inline SIMDType<float, 1> abs(const SIMDType<float, 1> a)
 {
-    const static uint32_t bit_mask_32 = 0x7FFFFFFFU;
+    constexpr uint32_t bit_mask_32 = 0x7FFFFFFFU;
     
     uint32_t temp = *(reinterpret_cast<const uint32_t *>(&a)) & bit_mask_32;
     return *(reinterpret_cast<float *>(&temp));
@@ -1012,7 +1119,7 @@ static inline SIMDType<float, 1> abs(const SIMDType<float, 1> a)
 template <int N>
 SIMDType<double, N> abs(const SIMDType<double, N> a)
 {
-    const static uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
+    constexpr uint64_t bit_mask_64 = 0x7FFFFFFFFFFFFFFFU;
     const double bit_mask_64d = *(reinterpret_cast<const double *>(&bit_mask_64));
     
     return a & SIMDType<double, N>(bit_mask_64d);
@@ -1021,7 +1128,7 @@ SIMDType<double, N> abs(const SIMDType<double, N> a)
 template <int N>
 SIMDType<float, N> abs(const SIMDType<float, N> a)
 {
-    const static uint32_t bit_mask_32 = 0x7FFFFFFFU;
+    constexpr uint32_t bit_mask_32 = 0x7FFFFFFFU;
     const float bit_mask_32f = *(reinterpret_cast<const float *>(&bit_mask_32));
     
     return a & SIMDType<float, N>(bit_mask_32f);

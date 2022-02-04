@@ -27,6 +27,7 @@
 #include <ext.h>
 #include <ext_obex.h>
 
+#include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
 
 #include "entry_database.hpp"
@@ -199,7 +200,7 @@ void entrymatcher_lookup(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *ar
 
     // Use identifier or index depending on the message received
     
-    long idx = (msg == ps_lookup) ? database.get_entry_index(argv) : atom_getlong(argv) - 1;
+    long idx = (msg == ps_lookup) ? database.get_entry_index(argv) : limit_int<long>(atom_getlong(argv) - 1);
     
     if (entrymatcher_query(x, output, idx, --argc, ++argv, true))
         outlet_list(x->data_outlet, nullptr, static_cast<short>(output.size()), output.data());
@@ -292,13 +293,13 @@ void entrymatcher_match(t_entrymatcher *x, t_symbol *msg, short argc, t_atom *ar
 
     if (argc > 0 && atom_gettype(argv) == A_LONG)
     {
-        n_limit = (argc-- > 0) ? atom_getlong(argv++) : max_matches;
+        n_limit = (argc-- > 0) ? limit_int<long>(atom_getlong(argv++)) : max_matches;
         ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
     }
     else
     {
         ratio_kept = (argc-- > 0) ? atom_getfloat(argv++) : 1.0;
-        n_limit = (argc-- > 0) ? atom_getlong(argv++) : max_matches;
+        n_limit = (argc-- > 0) ? limit_int<long>(atom_getlong(argv++)) : max_matches;
     }
 
     // Limit by a maximum distance value

@@ -609,13 +609,10 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
 {
     long num_sig_outs = x->num_sig_outs;
     
-    // Turn off denormals
-    
-#if defined( __i386__ ) || defined( __x86_64__ )
-    int oldMXCSR = _mm_getcsr();                        // read the old MXCSR setting
-    _mm_setcsr(oldMXCSR | 0x8040);                        // write the new MXCSR setting setting DAZ and FZ bits
-#endif
-    
+    // Turn off denormals using RAII
+
+    SIMDDenormals denormal_handler;
+        
     // Zero outputs
     
     for (long i = 0; i < num_sig_outs; i++)
@@ -638,12 +635,6 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
             x->patch_set->process_if_unprocessed(i, sig_outs);
         }
     }
-    
-    // return denormals to previous state
-    
-#if defined( __i386__ ) || defined( __x86_64__ )
-    _mm_setcsr(oldMXCSR);
-#endif
 }
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
