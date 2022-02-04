@@ -3,7 +3,7 @@
  *  recursivefolder
  *
  *  recursivefolder is a version of folder that allows recursive searching of a folder.
- *  Seraching may be either infinitly recursive or to a specified depth.
+ *  Searching may be either infinitly recursive or to a specified depth.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
