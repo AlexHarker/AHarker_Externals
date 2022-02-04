@@ -16,6 +16,11 @@ struct t_private_count
     long count = 1;
 };
 
+// Private Count Getter
+
+template <class T>
+using private_count_getter = t_private_count&(T&);
+
 // Create a Private Object
 
 template <class T>
@@ -36,18 +41,18 @@ void private_object_deferred_deletion(T *x, t_symbol *msg, long argc, t_atom *ar
 // Release a Private Object (deleting if necessary)
 
 template <class T>
-void private_object_release(T *x)
+void private_object_release(T *x, private_count_getter<T> get)
 {
     if (!x)
         return;
                 
     // Decrease the count with the lock held
         
-    spin_lock_hold(&x->m_count.lock);
+    spin_lock_hold(&get(*x).lock);
     
     // If this is the last client then unregister and free the object (deferlow in case the pointer is hanging around)
     
-    if (--x->m_count.count <= 0)
+    if (--get(*x).count <= 0)
     {
         object_unregister(x);
         defer_low(x, (method) private_object_deferred_deletion<T>, nullptr, 0, nullptr);
@@ -57,7 +62,7 @@ void private_object_release(T *x)
 // Find and Retain an Object
 
 template <class T>
-T *private_object_find_retain(T *prev, t_symbol *name, t_symbol *s_namespace)
+T *private_object_find_retain(T *prev, t_symbol *name, t_symbol *s_namespace, private_count_getter<T> get)
 {
     // See if an object is registered with this name that is still active and if so increase the count
     
@@ -68,13 +73,13 @@ T *private_object_find_retain(T *prev, t_symbol *name, t_symbol *s_namespace)
     {
         // Check that the object is still valid
 
-        spin_lock_hold(&x->m_count.lock);
+        spin_lock_hold(&get(*x).lock);
         
-        if ((found = x->m_count.count > 0))
-            x->m_count.count++;
+        if ((found = get(*x).count > 0))
+            get(*x).count++;
     }
     
-    // If there is no object found, it's just been deleted or it's the same as prev return the old object
+    // If there is no object found (it has just been deleted or it is the same as prev) return the old object
     
     return found ? x : prev;
 }

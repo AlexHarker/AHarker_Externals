@@ -32,10 +32,17 @@ struct t_entry_database
     t_object *view_patch;
     t_object *view;
     
-    t_private_count m_count;
+    t_private_count count;
     
     bool notify_in_progress;
 };
+
+// Private Object Helper
+
+static t_private_count& get_count(t_entry_database& x)
+{
+    return x.count;
+}
 
 // Entry Database Definitions
 
@@ -86,7 +93,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
     
     // Construct the database and lock
     
-    create_object(x->m_count);
+    create_object(x->count);
     create_object(x->database, name, limit_int<long>(num_columns));
     
     // Reserve entries, set count to one and set to notify
@@ -105,7 +112,7 @@ void *entry_database_new(t_symbol *name, t_atom_long num_reserved_entries, t_ato
 void entry_database_free(t_entry_database *x)
 {
     destroy_object(x->database);
-    destroy_object(x->m_count);
+    destroy_object(x->count);
    
     // Destroy view patch (which destroys the view)
     
@@ -146,7 +153,7 @@ void entry_database_release(t_entry_database *x, void *client)
         entry_database_modified(x, nullptr, 0, nullptr);
         object_detach(ps_private_namespace, x->database.get_name(), client);
         
-        private_object_release(x);
+        private_object_release(x, &get_count);
     }
 }
 
@@ -161,7 +168,7 @@ t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbo
     
     // See if an object is registered with this name that is still active nad if so increase the count
     
-    t_entry_database *x = private_object_find_retain(prev, name, ps_private_namespace);
+    t_entry_database *x = private_object_find_retain(prev, name, ps_private_namespace, &get_count);
 
     // If the two objects are the same do nothing
     

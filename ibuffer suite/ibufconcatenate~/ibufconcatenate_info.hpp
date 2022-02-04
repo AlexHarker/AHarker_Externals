@@ -141,11 +141,11 @@ private:
 
 public:
     
-    // N.B. This will be accessed by the Max API
+    // N.B. These will be accessed by the Max API
     
     t_pxobject x_obj;
     t_private_count m_count;
-        
+
 private:
 
     t_symbol *buffer_name;
@@ -156,6 +156,13 @@ private:
         
     mutable read_write_lock m_lock;
 };
+
+// Private Object Helper
+
+static t_private_count& get_count(t_ibufconcatenate_info& x)
+{
+    return x.m_count;
+}
 
 // Function Prototypes
 
@@ -224,7 +231,7 @@ static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name
     
     // Search for or create it
     
-    registered = private_object_find_retain(prev, name, get_namespace());
+    registered = private_object_find_retain(prev, name, get_namespace(), &get_count);
     
     if (!registered)
         registered = private_object_create<t_ibufconcatenate_info>(object_name, name, get_namespace(), 1, argv);
@@ -234,7 +241,7 @@ static inline t_ibufconcatenate_info *attach_ibufconcatenate_info(t_symbol *name
 
 static inline void detach_ibufconcatenate_info(t_ibufconcatenate_info *attachment)
 {
-    private_object_release(attachment);
+    private_object_release(attachment, &get_count);
 }
 
 #endif /*_IBUFCONCATENATE_INFO_HPP_ */
