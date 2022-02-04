@@ -3,6 +3,7 @@
 #define SIMDSUPPORT_HPP
 
 #include <algorithm>
+#include <bitset>
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
@@ -11,6 +12,7 @@
 #if defined(__arm__) || defined(__arm64)
 #include <arm_neon.h>
 #include <memory.h>
+#include <fenv.h>
 #define SIMD_COMPILER_SUPPORT_NEON 1
 #elif defined(__APPLE__) || defined(__linux__) || defined(_WIN32)
 #if defined(_WIN32)
@@ -149,6 +151,111 @@ void deallocate_aligned(T *ptr)
 }
 
 #endif
+
+// ******************** Denormal Handling ******************** //
+
+struct SIMDDenormals
+{
+    using denormal_flags = std::bitset<2>;
+    using platform_flags = std::bitset<32>;
+    
+    static denormal_flags make_flags(bool daz, bool ftz)
+    {
+        denormal_flags denormal_state(0);
+        denormal_state.set(0, daz);
+        denormal_state.set(1, ftz);
+        return denormal_state;
+    }
+    
+    // Platform-specific get and set for flags
+    
+#if (SIMD_COMPILER_SUPPORT_LEVEL >= SIMD_COMPILER_SUPPORT_VEC128)
+#if defined SIMD_COMPILER_SUPPORT_NEON
+#if defined(__arm64)
+    static denormal_flags flags()
+    {
+        fenv_t env;
+        fegetenv(&env);
+        return make_flags(false, env.__fpcr & __fpcr_flush_to_zero);
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        fenv_t env;
+        fegetenv(&env);
+    
+        if (flags.test(1))
+            env.__fpcr |= __fpcr_flush_to_zero;
+        else
+            env.__fpcr ^= __fpcr_flush_to_zero;
+
+        fesetenv(&env);
+    }
+#else
+    static denormal_flags flags()
+    {
+        fenv_t env;
+        fegetenv(&env);
+        return make_flags(false, env.__fpscr & __fpscr_flush_to_zero);
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        fenv_t env;
+        fegetenv(&env);
+    
+        if (flags.test(1))
+            env.__fpscr |= & __fpscr_flush_to_zero;
+        else
+            env.__fpscr |= ^ __fpscr_flush_to_zero;
+            
+        fesetenv(&env);
+    }
+#endif
+       
+#else
+    static denormal_flags flags()
+    {
+        platform_flags csr(_mm_getcsr());
+        return make_flags(csr.test(6), csr.test(15));
+    }
+    
+    static void set(denormal_flags flags)
+    {
+        platform_flags csr(_mm_getcsr());
+        csr.set(6, flags.test(0));
+        csr.set(15, flags.test(1));
+        _mm_setcsr(static_cast<unsigned int>(csr.to_ulong()));
+    }
+#endif
+#else
+    static denormal_flags flags() { return 0; }
+    static void set(denormal_flags flags) {}
+#endif
+    
+    // Set off
+    
+    void static off() { set(0x3); }
+    
+    // Set denomal handling using RAII
+    
+    SIMDDenormals() : mFlags(flags())
+    {
+        off();
+    }
+    
+    SIMDDenormals(const SIMDDenormals&) = delete;
+    SIMDDenormals& operator=(const SIMDDenormals&) = delete;
+    
+    ~SIMDDenormals()
+    {
+        set(mFlags);
+    }
+
+private:
+    
+    denormal_flags mFlags;
+};
 
 // ******************** Basic Data Type Definitions ******************** //
 
