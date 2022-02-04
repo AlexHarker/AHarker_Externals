@@ -125,7 +125,7 @@ void ibuffermulti_clear_internal(t_ibuffermulti *x, t_symbol *s, short argc, t_a
 void ibuffermulti_load(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
 {
     if (argc)
-        defer(x, (method) ibuffermulti_load, s, argc, argv);
+        defer(x, (method) ibuffermulti_load_internal, s, argc, argv);
 }
 
 void ibuffermulti_load_internal(t_ibuffermulti *x, t_symbol *s, short argc, t_atom *argv)
