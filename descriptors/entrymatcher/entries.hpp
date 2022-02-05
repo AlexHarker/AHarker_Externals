@@ -125,6 +125,11 @@ public:
         void reserve(long items)    { with_lock(&entries::reserve, items); }
         void clear()                { with_lock(&entries::clear); }
         
+        // Column resize
+        
+        void ensure_columns(long columns) { with_lock(&entries::ensure_columns, columns); }
+        void resize_columns(long columns) { with_lock(&entries::resize_columns, columns); }
+    
         // Setup Columns
         
         void set_column_label_modes(void *x, long argc, t_atom *argv)
@@ -191,8 +196,8 @@ public:
 
     // Constructor / Names
     
-    entries(t_symbol *name, long num_columns)
-    : m_name(name) { m_columns.resize(num_columns); }
+    entries(t_symbol *name, long columns)
+    : m_name(name), m_columns(columns), m_reserved(0) {}
     
     t_symbol *get_name() const { return m_name; }
 
@@ -253,6 +258,8 @@ private:
     // Global
     
     void reserve(long items);
+    void ensure_columns(long columns);
+    void resize_columns(long columns);
     void clear();
     
     // Setup / Entries / Items
@@ -352,6 +359,8 @@ private:
     std::vector<t_untyped_atom> m_entries;
     std::vector<t_custom_atom::category> m_types;
 
+    long m_reserved;
+    
     mutable read_write_lock m_lock;
 };
 

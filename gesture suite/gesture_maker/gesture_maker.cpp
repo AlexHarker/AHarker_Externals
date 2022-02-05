@@ -67,7 +67,7 @@ struct t_gesture_maker
     double gesture_length;
     double gesture_time;
     
-    void *gesture_clock;
+    t_clock *gesture_clock;
     
     void *gesture_drive_out;
     void *gesture_done_out;
@@ -168,8 +168,7 @@ void *gesture_maker_new()
 
 void gesture_maker_free(t_gesture_maker *x)
 {
-    if (x->gesture_clock)
-        freeobject((t_object *) x->gesture_clock);
+    object_free((t_object *) x->gesture_clock);
 }
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)

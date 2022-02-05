@@ -52,6 +52,9 @@ struct t_entrymatcher
     long n_limit;
     double ratio_kept;
     
+    bool invalid_matchers;
+    t_clock *invalid_clock;
+    
     random_generator<> gen;
     
     const float *matcher_ins[256];
@@ -65,6 +68,8 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s);
 
 void entrymatcher_limit(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
 void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *argv);
+
+void entrymatcher_tick(t_entrymatcher *x);
 
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
@@ -123,9 +128,12 @@ void *entrymatcher_new(t_symbol *sym, long argc, t_atom *argv)
     x->max_matchers = std::max(std::min(limit_int<long>(max_matchers), 256L), 1L);
     x->ratio_kept = 1.0;
     x->n_limit = 0;
+    x->invalid_matchers = false;
     
-    dsp_setup((t_pxobject*)x, 2 + x->max_matchers);
-    outlet_new((t_object*)x, "signal");
+    x->invalid_clock = clock_new(x, (method) entrymatcher_tick);
+    
+    dsp_setup((t_pxobject*) x, 2 + x->max_matchers);
+    outlet_new((t_object*) x, "signal");
 
     entrymatcher_common<t_entrymatcher>::object_init(x);
 
@@ -138,6 +146,7 @@ void entrymatcher_free(t_entrymatcher *x)
     database_release(x, x->database_object);
     destroy_object(x->matchers);
     destroy_object(x->gen);
+    object_free(x->invalid_clock);
 }
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
@@ -258,6 +267,15 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
         else
             object_error((t_object *) x, "not enough arguments to matchers message to correctly specify final matcher");
     }
+    
+    x->invalid_matchers = false;
+}
+
+// Invalid matchers clock
+
+void entrymatcher_tick(t_entrymatcher *x)
+{
+    object_error((t_object *) x, "matchers are not currently valid for this database");
 }
 
 // Perform
@@ -280,6 +298,18 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
 
     long n_limit = x->n_limit;
     long num_matched_indices = matchers.get_num_matches();
+    
+    if (!matchers.validate(database))
+    {
+        if (!x->invalid_matchers)
+        {
+            clock_set(x->invalid_clock, 0);
+            x->invalid_matchers = true;
+        }
+        
+        while (vec_size--)
+            *out++ = 0.0;
+    }
     
     for (long i = 0; i < vec_size; i++)
     {

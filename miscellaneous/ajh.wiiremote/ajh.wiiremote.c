@@ -960,7 +960,7 @@ void *ajhwiiremote_new(t_symbol *s, short ac, t_atom *av)
 
 void ajhwiiremote_free(t_ajhwiiremote *x)
 {
-	freeobject((t_object *) x->data_clock);
+    object_free((t_object *) x->data_clock);
 	wiiremote_destroy(x->wiiremote);
 }
 

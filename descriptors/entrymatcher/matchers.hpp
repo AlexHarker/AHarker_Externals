@@ -81,6 +81,8 @@ public:
     
     void set_loop_order(loop_order order) { m_order = order; }
 
+    bool validate(const accessor& database) const;
+
     long match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const;
     
     // Results
@@ -170,6 +172,11 @@ private:
                 default:                  return size;
             }
         }
+        
+        // Getters
+        
+        test get_test() const { return m_type; }
+        long get_column() const { return m_column; }
         
         // Set Targets
         

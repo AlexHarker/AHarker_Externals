@@ -347,6 +347,14 @@ long entrymatcher_do_match(t_entrymatcher *x, double ratio, double limit, long n
 
     auto database = database_get_read_access(x->database_object);
         
+    // Validate matchers
+    
+    if (!matchers.validate(database))
+    {
+        object_error((t_object *) x, "matchers are not currently valid for this database");
+        return 0;
+    }
+    
     // Calculate potential matches and sort if there are matches
         
     long num_matches = std::min(matchers.match(database, ratio, n_limit, true), max_matches);

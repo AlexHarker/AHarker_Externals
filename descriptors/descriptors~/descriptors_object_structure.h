@@ -131,7 +131,7 @@ typedef struct _descriptors
 	
 	// Output Clock
 	
-	void *output_rt_clock;
+	t_clock *output_rt_clock;
 	
 	// Params 
 	

@@ -32,7 +32,7 @@ struct t_dynamic_patch
     t_object x_obj;
     
     void *m_outlet;
-    void *m_clock;
+    t_clock *m_clock;
     
     long index;
     
@@ -94,7 +94,7 @@ void *dynamic_patch_new(t_atom_long state)
 
 void dynamic_patch_free(t_dynamic_patch *x)
 {
-    freeobject((t_object *) x->m_clock);
+    object_free((t_object *) x->m_clock);
 }
 
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s)

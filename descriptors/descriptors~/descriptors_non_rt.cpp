@@ -154,8 +154,7 @@ void descriptors_free(t_descriptors *x)
 {
 	ALIGNED_FREE (x->window);
 	hisstools_destroy_setup(x->fft_setup_real);
-	if (x->output_rt_clock) 
-		freeobject((t_object *) x->output_rt_clock);
+    object_free((t_object *) x->output_rt_clock);
 }
 
 

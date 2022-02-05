@@ -170,9 +170,9 @@ t_entry_database *entry_database_find_and_attach(t_entry_database *prev, t_symbo
     
     t_entry_database *x = private_object_find_retain(prev, name, ps_private_namespace, &get_count);
 
-    // If the two objects are the same do nothing
+    // If the two objects are the same or no object is found do nothing
     
-    if (prev == x)
+    if (!x || prev == x)
         return prev;
     
     // Release the old object and attach to the new
@@ -201,8 +201,14 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
     
     if (!x)
     {
-        x = private_object_create<t_entry_database>(name, ps_database_classname, ps_private_namespace, 3, argv);
+        x = private_object_create<t_entry_database>(ps_database_classname, name, ps_private_namespace, 3, argv);
         object_attach(ps_private_namespace, name, client);
+    }
+    else
+    {
+        auto access = x->database.get_write_access();
+        access.ensure_columns(limit_int<long>(num_columns));
+        access.reserve(limit_int<long>(num_entries));
     }
     
     return x;

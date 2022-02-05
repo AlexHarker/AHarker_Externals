@@ -83,6 +83,26 @@ bool matchers::needs_scale(t_atom *argv)
     return false;
 }
 
+// Validate Matchers (aginst a database)
+
+bool matchers::validate(const accessor& database) const
+{
+    for (auto it = m_matchers.begin(); it != m_matchers.end(); it++)
+    {
+        long column = it->get_column();
+        
+        if (column < 0 || column >= database.num_columns())
+            return false;
+        
+        if (database.get_column_label_mode(column) && it->get_test() != test::match)
+            return false;
+    }
+    
+    return true;
+}
+
+// Match
+
 long matchers::match(const accessor& database, double ratio_matched, long max_matches, bool must_sort) const
 {
     m_num_matches = 0;
@@ -152,6 +172,8 @@ long matchers::match(const accessor& database, double ratio_matched, long max_ma
     
     return m_num_matches = num_matches;
 }
+
+// Set Matchers
 
 void matchers::set_matchers(void *x, long argc, t_atom *argv, const accessor& database)
 {

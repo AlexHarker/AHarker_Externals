@@ -157,7 +157,6 @@ void deallocate_aligned(T *ptr)
 struct SIMDDenormals
 {
     using denormal_flags = std::bitset<2>;
-    using platform_flags = std::bitset<32>;
     
     static denormal_flags make_flags(bool daz, bool ftz)
     {
@@ -216,13 +215,13 @@ struct SIMDDenormals
 #else
     static denormal_flags flags()
     {
-        platform_flags csr(_mm_getcsr());
+        std::bitset<32> csr(_mm_getcsr());
         return make_flags(csr.test(6), csr.test(15));
     }
     
     static void set(denormal_flags flags)
     {
-        platform_flags csr(_mm_getcsr());
+        std::bitset<32> csr(_mm_getcsr());
         csr.set(6, flags.test(0));
         csr.set(15, flags.test(1));
         _mm_setcsr(static_cast<unsigned int>(csr.to_ulong()));
