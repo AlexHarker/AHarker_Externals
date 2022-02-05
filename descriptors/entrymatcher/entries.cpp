@@ -36,6 +36,19 @@ t_symbol *ps_percentile = gensym("percentile");
 
 t_symbol *ps_identfier = gensym("identifier");
 
+// Column Size
+
+// Ensure A Minimum Column Size (only if empty)
+
+void entries::ensure_columns(long columns)
+{
+    if (num_items() || columns <= num_columns())
+        return;
+ 
+    m_columns.resize(columns);
+    reserve(m_reserved);
+}
+
 // Column Setup
 
 // Set Column Label Modes
@@ -149,6 +162,8 @@ void entries::reserve(long items)
     m_order.reserve(items);
     m_entries.reserve(items * num_columns());
     m_types.reserve(items * num_columns());
+    
+    m_reserved = std::max(m_reserved, items);
 }
 
 // Clear
