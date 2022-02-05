@@ -29,7 +29,7 @@ struct symbol_binding
 
 void delete_patch(t_object *patch, t_symbol *s, short argc, t_atom *argv)
 {
-    freeobject(patch);
+    object_free(patch);
 }
 
 // Set subpatcher association
@@ -209,8 +209,7 @@ void patch_slot::compile_dsp(long vec_size, long sampling_rate, bool force_when_
     {
         // Free the old dspchain
 
-        if (m_dspchain)
-            freeobject(reinterpret_cast<t_object *>(m_dspchain));
+        object_free(reinterpret_cast<t_object *>(m_dspchain));
 
         // Recompile
 
@@ -221,8 +220,7 @@ void patch_slot::compile_dsp(long vec_size, long sampling_rate, bool force_when_
 
         if (m_dspchain && m_dspchain->c_broken)
         {
-            if (m_dspchain)
-                freeobject(reinterpret_cast<t_object *>(m_dspchain));
+            object_free(reinterpret_cast<t_object *>(m_dspchain));
 
             m_dspchain = dspchain_compile(m_patch, vec_size, sampling_rate);
         }
@@ -348,8 +346,7 @@ void patch_slot::unlink_outlets(t_patcher *p)
 
 void patch_slot::free_patch()
 {
-    if (m_dspchain)
-        freeobject(reinterpret_cast<t_object *>(m_dspchain));
+    object_free(reinterpret_cast<t_object *>(m_dspchain));
 
     if (m_patch)
     {

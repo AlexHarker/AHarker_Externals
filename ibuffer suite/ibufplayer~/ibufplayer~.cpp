@@ -76,7 +76,7 @@ struct t_ibufplayer
     
     float *float_outs[max_num_chans];
     
-    void *done_clock;
+    t_clock *done_clock;
     void *bang_outlet;
 };
 
@@ -238,7 +238,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 void ibufplayer_free(t_ibufplayer *x)
 {
     dsp_free(&x->x_obj);
-    freeobject(static_cast<t_object *>(x->done_clock));
+    object_free(static_cast<t_object *>(x->done_clock));
 }
 
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
