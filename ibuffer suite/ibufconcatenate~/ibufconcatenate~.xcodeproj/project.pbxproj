@@ -6,21 +6,6 @@
 	objectVersion = 42;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		B88E3A9711CE72A000FD3E96 /* ibufconcatenate objects */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "ibufconcatenate objects" */;
-			buildPhases = (
-			);
-			dependencies = (
-				B88E3A9C11CE72A600FD3E96 /* PBXTargetDependency */,
-				B88E3AA011CE72A900FD3E96 /* PBXTargetDependency */,
-			);
-			name = "ibufconcatenate objects";
-			productName = All;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		B8691F5F11CE77610083DB47 /* ibufconcatedrive~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B88E3A7C11CE728100FD3E96 /* ibufconcatedrive~.cpp */; };
 		B88E3A7F11CE729300FD3E96 /* ibufconcatenate_info.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info.hpp */; };
@@ -28,23 +13,6 @@
 		B8B8F83F11CE46F800D06092 /* ibufconcatenate~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8B8F83E11CE46F800D06092 /* ibufconcatenate~.cpp */; };
 		B8B8F85C11CE511700D06092 /* ibufconcatenate_info.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8B8F85B11CE511700D06092 /* ibufconcatenate_info.hpp */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B88E3A9B11CE72A600FD3E96 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "ibufconcatenate~";
-		};
-		B88E3A9F11CE72A900FD3E96 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B88E3A7D11CE729300FD3E96;
-			remoteInfo = "ibufconcatenate~ copy";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B81F571D0D2422E0000D5E50 /* ibufconcatenate~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufconcatenate~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,7 +159,6 @@
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* ibufconcatenate~ */,
 				B88E3A7D11CE729300FD3E96 /* ibufconcatedrive~ */,
-				B88E3A9711CE72A000FD3E96 /* ibufconcatenate objects */,
 			);
 		};
 /* End PBXProject section */
@@ -249,19 +216,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B88E3A9C11CE72A600FD3E96 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D01CCC60486CAD60068D4B7 /* ibufconcatenate~ */;
-			targetProxy = B88E3A9B11CE72A600FD3E96 /* PBXContainerItemProxy */;
-		};
-		B88E3AA011CE72A900FD3E96 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B88E3A7D11CE729300FD3E96 /* ibufconcatedrive~ */;
-			targetProxy = B88E3A9F11CE72A900FD3E96 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
@@ -423,30 +377,6 @@
 			};
 			name = Default;
 		};
-		B88E3A9811CE72A000FD3E96 /* Development */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Development;
-		};
-		B88E3A9911CE72A000FD3E96 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Deployment;
-		};
-		B88E3A9A11CE72A000FD3E96 /* Default */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89EF5D910EB78CA00D86409 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Default;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -476,16 +406,6 @@
 				B88E3A8B11CE729300FD3E96 /* Development */,
 				B88E3A8C11CE729300FD3E96 /* Deployment */,
 				B88E3A8D11CE729300FD3E96 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		B88E3AB911CE739700FD3E96 /* Build configuration list for PBXAggregateTarget "ibufconcatenate objects" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B88E3A9811CE72A000FD3E96 /* Development */,
-				B88E3A9911CE72A000FD3E96 /* Deployment */,
-				B88E3A9A11CE72A000FD3E96 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
