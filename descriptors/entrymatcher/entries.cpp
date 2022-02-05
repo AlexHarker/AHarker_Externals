@@ -49,6 +49,59 @@ void entries::ensure_columns(long columns)
     reserve(m_reserved);
 }
 
+void entries::resize_columns(long columns)
+{
+    if (columns < num_columns())
+    {
+        auto it = m_entries.begin();
+        auto jt = m_types.begin();
+            
+        // Move data into place and resize
+            
+        for (long i = 1; i < num_items(); i++)
+        {
+            std::copy(it + i * num_columns(), it + (i + 1) * num_columns(), it + i * columns);
+            std::copy(jt + i * num_columns(), jt + (i + 1) * num_columns(), jt + i * columns);
+        }
+        
+        m_entries.resize(num_items() * columns);
+        m_types.resize(num_items() * columns);
+    }
+    else if (columns > num_columns())
+    {
+        long prev_columns = num_columns();
+        
+        // Resize
+        
+        m_entries.resize(num_items() * columns);
+        m_types.resize(num_items() * columns);
+        
+        auto it = m_entries.begin();
+        auto jt = m_types.begin();
+        
+        // Move data into place and fill gaps
+        
+        for (long i = num_items(); i > 0; i--)
+        {
+            if (i > 1)
+            {
+                std::copy_backward(it + (i - 1) * prev_columns, it + i * prev_columns, it + i * columns);
+                std::copy_backward(jt + (i - 1) * prev_columns, jt + i * prev_columns, jt + i * columns);
+            }
+            std::fill_n(it + ((i - 1) * columns) + prev_columns, columns - prev_columns, t_custom_atom().m_data);
+            std::fill_n(jt + ((i - 1) * columns) + prev_columns, columns - prev_columns, t_custom_atom().m_type);
+        }
+        
+        // Reserve to ensure enough space
+        
+        reserve(m_reserved);
+    }
+    
+    // Finally resize the columns
+    
+    m_columns.resize(columns);
+}
+
 // Column Setup
 
 // Set Column Label Modes

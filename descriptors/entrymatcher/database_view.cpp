@@ -308,7 +308,7 @@ void database_view_update(t_database_view *x)
             // Delete unused columns
             
             for (long i = required_columns; i < num_view_columns; i++)
-                jdataview_deletecolumn(x->dataview, jdataview_getnthcolumn(x->dataview, i));
+                jdataview_deletecolumn(x->dataview, jdataview_getnamedcolumn(x->dataview, get_colname_from_index(i)));
         }
     }
 

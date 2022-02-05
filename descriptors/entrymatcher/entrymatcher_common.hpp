@@ -23,6 +23,8 @@
 #include <ext_obex.h>
 #include <ext_dictobj.h>
 
+#include <AH_Int_Handler.hpp>
+
 #include "matchers.hpp"
 
 
@@ -30,6 +32,13 @@ template <class T>
 struct entrymatcher_common
 {
     using loop_order = matchers::loop_order;
+    
+    // Resize Columns
+    
+    static void entrymatcher_resize(T *x, t_atom_long columns)
+    {
+        database_get_write_access(x->database_object).resize_columns(limit_int<long>(columns));
+    }
     
     // Entry Routines: Refer, Clear, Labelmodes, Names, Entry and Removal
 
@@ -114,7 +123,7 @@ struct entrymatcher_common
     static void entrymatcher_save_patcher(T *x, t_dictionary *dict)
     {
         if (x->embed)
-            dictionary_appenddictionary(dict, gensym("database"), (t_object *) entrymatcher_save_dict(x));
+            dictionary_appenddictionary(dict, gensym("entrymatcher_database"), (t_object *) entrymatcher_save_dict(x));
     }
 
     static void entrymatcher_load_patcher(T *x)
@@ -123,7 +132,7 @@ struct entrymatcher_common
         
         if ((dict = (t_dictionary *) gensym("#D")->s_thing))
         {
-            dictionary_getdictionary(dict, gensym("database"), (t_object**) &dict);
+            dictionary_getdictionary(dict, gensym("entrymatcher_database"), (t_object**) &dict);
             entrymatcher_load_dict(x, dict);
         }
     }
@@ -173,11 +182,13 @@ struct entrymatcher_common
 
     static void class_add(t_class *class_pointer)
     {
+        class_addmethod(class_pointer, (method) entrymatcher_resize, "resize", A_LONG, 0);
+
         class_addmethod(class_pointer, (method) entrymatcher_refer, "refer", A_SYM, 0);
         
         class_addmethod(class_pointer, (method) entrymatcher_clear, "clear", 0);
         class_addmethod(class_pointer, (method) entrymatcher_clear, "reset", 0);
-     
+
         class_addmethod(class_pointer, (method) entrymatcher_entry, "entry", A_GIMME, 0);
         class_addmethod(class_pointer, (method) entrymatcher_remove, "remove", A_GIMME, 0);
         class_addmethod(class_pointer, (method) entrymatcher_removeif, "removeif", A_GIMME, 0);

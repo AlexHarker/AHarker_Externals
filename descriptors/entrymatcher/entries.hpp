@@ -127,11 +127,9 @@ public:
         
         // Column resize
         
-        void ensure_columns(long columns)
-        {
-            with_lock(&entries::ensure_columns, columns);
-        }
-        
+        void ensure_columns(long columns) { with_lock(&entries::ensure_columns, columns); }
+        void resize_columns(long columns) { with_lock(&entries::resize_columns, columns); }
+    
         // Setup Columns
         
         void set_column_label_modes(void *x, long argc, t_atom *argv)
@@ -261,6 +259,7 @@ private:
     
     void reserve(long items);
     void ensure_columns(long columns);
+    void resize_columns(long columns);
     void clear();
     
     // Setup / Entries / Items
