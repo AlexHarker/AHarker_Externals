@@ -204,6 +204,12 @@ t_entry_database *entry_database_create(t_symbol *name, t_atom_long num_entries,
         x = private_object_create<t_entry_database>(ps_database_classname, name, ps_private_namespace, 3, argv);
         object_attach(ps_private_namespace, name, client);
     }
+    else
+    {
+        auto access = x->database.get_write_access();
+        access.ensure_columns(limit_int<long>(num_columns));
+        access.reserve(limit_int<long>(num_entries));
+    }
     
     return x;
 }
