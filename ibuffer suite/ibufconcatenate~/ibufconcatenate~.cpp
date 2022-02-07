@@ -242,11 +242,11 @@ long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name
             
             target.set_size_in_samples(new_size);
             
-            if (required_length >= target.get_length())
+            if (required_length <= target.get_length())
                 std::copy_n(temp.m_ptr, old_size, static_cast<float *>(target.get_samples()));
         }
         
-        if (required_length < target.get_length())
+        if (required_length > target.get_length())
         {
             error ("ibufconcatenate: no room left in buffer");
             return -1;
