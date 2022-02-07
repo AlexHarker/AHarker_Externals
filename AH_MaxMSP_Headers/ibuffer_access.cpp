@@ -79,9 +79,9 @@ void ibuffer_data::set_size_in_samples(t_atom_long size)
     {
         t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
         
-        ATOMIC_INCREMENT(&(buffer)->b_inuse);
-        object_method_typed(buffer_object, gensym("sizeinsamps"), 1, temp_atom, temp_atom + 1);
         ATOMIC_DECREMENT(&(buffer)->b_inuse);
+        object_method_typed(buffer_object, gensym("sizeinsamps"), 1, temp_atom, temp_atom + 1);
+        ATOMIC_INCREMENT(&(buffer)->b_inuse);
         
         samples = (void *) buffer->b_samples;
         length = buffer->b_frames;

@@ -6,21 +6,6 @@
 	objectVersion = 42;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		B8FE3F4010986CAE00780AF9 /* descriptors objects */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = B8FE3F4910986CB800780AF9 /* Build configuration list for PBXAggregateTarget "descriptors objects" */;
-			buildPhases = (
-			);
-			dependencies = (
-				B8FE3F4210986CB200780AF9 /* PBXTargetDependency */,
-				B8FE3F4410986CB200780AF9 /* PBXTargetDependency */,
-			);
-			name = "descriptors objects";
-			productName = Both;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		B815E6C61F5B2B2200ADF1CA /* descriptors_constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */; };
 		B815E6C71F5B2B2200ADF1CA /* descriptors_constants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */; };
@@ -45,23 +30,6 @@
 		B8FE3F2310986C1000780AF9 /* descriptors_statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */; };
 		B8FE3F2410986C1000780AF9 /* descriptors_set_descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B8FE3F4110986CB200780AF9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
-			remoteInfo = "Descriptors~";
-		};
-		B8FE3F4310986CB200780AF9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B8FE3F1910986C1000780AF9;
-			remoteInfo = "DescriptorsRT~";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
@@ -244,7 +212,6 @@
 			targets = (
 				8D01CCC60486CAD60068D4B7 /* descriptors~ */,
 				B8FE3F1910986C1000780AF9 /* descriptorsrt~ */,
-				B8FE3F4010986CAE00780AF9 /* descriptors objects */,
 			);
 		};
 /* End PBXProject section */
@@ -321,19 +288,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B8FE3F4210986CB200780AF9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8D01CCC60486CAD60068D4B7 /* descriptors~ */;
-			targetProxy = B8FE3F4110986CB200780AF9 /* PBXContainerItemProxy */;
-		};
-		B8FE3F4410986CB200780AF9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B8FE3F1910986C1000780AF9 /* descriptorsrt~ */;
-			targetProxy = B8FE3F4310986CB200780AF9 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
@@ -498,30 +452,6 @@
 			};
 			name = Default;
 		};
-		B8FE3F4A10986CB800780AF9 /* Development */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Development;
-		};
-		B8FE3F4B10986CB800780AF9 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Deployment;
-		};
-		B8FE3F4C10986CB800780AF9 /* Default */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-			};
-			name = Default;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -551,16 +481,6 @@
 				B8FE3F2F10986C1000780AF9 /* Development */,
 				B8FE3F3010986C1000780AF9 /* Deployment */,
 				B8FE3F3110986C1000780AF9 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		B8FE3F4910986CB800780AF9 /* Build configuration list for PBXAggregateTarget "descriptors objects" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B8FE3F4A10986CB800780AF9 /* Development */,
-				B8FE3F4B10986CB800780AF9 /* Deployment */,
-				B8FE3F4C10986CB800780AF9 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
