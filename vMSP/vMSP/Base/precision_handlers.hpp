@@ -2,18 +2,25 @@
 #ifndef _PRECISION_HANDLERS_HPP_
 #define _PRECISION_HANDLERS_HPP_
 
-// These allow double precision ouputs to be created from single precision inputs
+// Class For Using Single Precision Array Handlers for Double Precision IO
 
 template <typename Op>
 struct unary_precision_handler
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return op(a); }
+    // Scalar Operators
+    
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return op(a);
+    }
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         const SIMDType<float, 1> b = op(static_cast<float>(a.mVal));
         return SIMDType<double, 1>(b.mVal);
     }
+    
+    // Array Operators
     
     void operator()(float *o, float *i, long size)
     {

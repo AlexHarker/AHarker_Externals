@@ -2,6 +2,8 @@
 #ifndef _VECTOR_LOOP_HPP_
 #define _VECTOR_LOOP_HPP_
 
+// Run Vector Functor On Array
+
 template <class Op, class T, typename... Args>
 void vector_loop(T *o, const T *i, long size, Args... args)
 {

@@ -9,9 +9,12 @@
 #include "SIMDSupport.hpp"
 #include <AH_Denormals.h>
 
+
+// Calculation Type Enum
+
 enum class calculation_type { scalar, vector_op, vector_array };
 
-// Object structure
+// Unary Class
 
 template<typename Functor, calculation_type Vec32, calculation_type Vec64>
 class v_unary
@@ -19,7 +22,7 @@ class v_unary
     
 public:
     
-    // Main routine
+    // Main
     
     template <typename T>
     static int setup(const char *object_name)
@@ -45,7 +48,7 @@ public:
         return 0;
     }
     
-    // Free routine
+    // Free
     
     template <class T>
     static void free_object(T *x)
@@ -53,7 +56,7 @@ public:
         dsp_free(&x->m_obj);
     }
     
-    // New routine
+    // New
     
     template <class T>
     static void *new_object()
@@ -66,7 +69,7 @@ public:
         return x;
     }
     
-    // 32 bit dsp routine
+    // 32 bit DSP
     
     template <typename T, calculation_type C = Vec32>
     static method dsp_vector_select(std::enable_if_t<C == calculation_type::scalar, T *>)
@@ -116,7 +119,7 @@ public:
         dsp_add(denormals_perform, 5, current_perform_routine, sp[0]->s_vec, sp[1]->s_vec, vec_size, x);
     }
     
-    // 32 bit perform return wrapper
+    // 32 bit Perform Return Wrapper
     
     template <void PerformRoutine(t_int *w)>
     static t_int *perform(t_int *w)
@@ -126,7 +129,7 @@ public:
         return w + 6;
     }
     
-    // 32 bit perform routine (SIMD - array)
+    // 32 bit Perform (SIMD - array)
     
     template <class T>
     static void perform_array(t_int *w)
@@ -136,7 +139,7 @@ public:
         x->m_functor(reinterpret_cast<float *>(w[3]), reinterpret_cast<float *>(w[2]), static_cast<long>(w[4]));
     }
     
-    // 32 bit perform routine (SIMD - op)
+    // 32 bit Perform (SIMD - op)
     
     template <class T, int N>
     static void perform_op(t_int *w)
@@ -152,7 +155,7 @@ public:
             *out1++ = functor(*in1++);
     }
     
-    // 64 bit dsp routine
+    // 64 bit DSP
     
     template <typename T, calculation_type C = Vec64>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, T *>)
@@ -194,7 +197,7 @@ public:
         object_method(dsp64, gensym("dsp_add64"), x, current_perform_routine, 0, 0);
     }
     
-    // 64 bit perform routine (SIMD - array)
+    // 64 bit Perform (SIMD - array)
     
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -202,7 +205,7 @@ public:
          x->m_functor(outs[0], ins[0], vec_size);
     }
     
-    // 64 bit perform routine (SIMD - op)
+    // 64 bit Perform (SIMD - op)
     
     template <class T, int N>
     static void perform64_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -218,7 +221,7 @@ public:
             *out1++ = functor(*in1++);
     }
     
-    // Assist routine
+    // Assist
     
     static void assist(v_unary *x, void *b, long m, long a, char *s)
     {

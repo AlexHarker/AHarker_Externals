@@ -10,14 +10,19 @@
 #include "SIMDSupport.hpp"
 #include <AH_Denormals.h>
 
+
+// Type Enums
+
 enum class calculation_type { scalar, vector_op, vector_array };
 enum class inputs { binary, scalar1, scalar2 };
 
-// Object structure
+// Binary Class
 
 template<typename Functor, calculation_type Vec32, calculation_type Vec64, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
+    // Denormal Fixing
+    
     static float fix_denorm(const float a)
     {
         float b = a;
@@ -30,7 +35,7 @@ class v_binary
     
 public:
     
-    // Main routine
+    // Main
     
     template <typename T>
     static int setup(const char *object_name)
@@ -59,7 +64,7 @@ public:
         return 0;
     }
     
-    // Free routine
+    // Free
     
     template <class T>
     static void free_object(T *x)
@@ -67,7 +72,7 @@ public:
         dsp_free(&x->m_obj);
     }
     
-    // New routine
+    // New
     
     template <class T>
     static void *new_object(double double_val)
@@ -82,7 +87,7 @@ public:
         return x;
     }
     
-    // Float input routine
+    // Float Input
     
     template <class T>
     static void float_in(T *x, double value)
@@ -90,7 +95,7 @@ public:
         x->m_val = value;
     }
     
-    // Int input routine
+    // Int Input
     
     template <class T>
     static void int_in(T *x, t_atom_long value)
@@ -98,7 +103,7 @@ public:
         x->m_val = static_cast<double>(value);
     }
     
-    // 32 bit dsp routine
+    // 32 bit DSP
    
     template <typename T, calculation_type C = Vec32>
     static method dsp_vector_select(std::enable_if_t<C == calculation_type::scalar, int> routine)
@@ -187,7 +192,7 @@ public:
         dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size, x);
     }
     
-    // 32 bit perform return wrapper
+    // 32 bit Perform Return Wrapper
     
     template<void perform_routine(t_int *w)>
     static t_int *perform(t_int *w)
@@ -197,7 +202,7 @@ public:
         return w + 7;
     }
     
-    // 32 bit perform routine with LHS signal-rate input (SIMD - array)
+    // 32 bit Perform with One LHS Signal Input (SIMD - array)
 
     template <class T>
     static void perform_single1_array(t_int *w)
@@ -207,7 +212,7 @@ public:
         x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::scalar1);
     }
     
-    // 32 bit perform routine with RHS signal-rate input (SIMD - array)
+    // 32 bit Perform with One RHS Signal Input (SIMD - array)
 
     template <class T>
     static void perform_single2_array(t_int *w)
@@ -217,7 +222,7 @@ public:
         x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::scalar2);
     }
     
-    // 32 bit perform routine with two signal-rate inputs (SIMD - array)
+    // 32 bit Perform with Two Signal Inputs (SIMD - array)
     
     template <class T>
     static void perform_array(t_int *w)
@@ -227,7 +232,7 @@ public:
         x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::binary);
     }
     
-    // 32 bit perform routine with first operand only at signal-rate (SIMD - op)
+    // 32 bit Perform with One LHS Signal Input (SIMD - op)
     
     template <class T, int N>
     static void perform_single1_op(t_int *w)
@@ -247,7 +252,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, float_val));
     }
     
-    // 32 bit perform routine with second operand only at signal-rate (SIMD - op)
+    // 32 bit Perform with One RHS Signal Input (SIMD - op)
     
     template <class T, int N>
     static void perform_single2_op(t_int *w)
@@ -267,7 +272,7 @@ public:
             *out1++ = fix_denorm(functor(float_val, *in2++));
     }
     
-    // 32 bit perform routine with two signal-rate inputs (SIMD - op)
+    // 32 bit Perform with Two Signal Inputs (SIMD - op)
     
     template <class T, int N>
     static void perform_op(t_int *w)
@@ -286,7 +291,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, *in2++));
     }
     
-    // 64 bit dsp routine
+    // 64 bit DSP
     
     template <typename T, calculation_type C = Vec64>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, int> routine)
@@ -357,7 +362,7 @@ public:
         object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, 0);
     }
     
-    // 64 bit perform routine with one LHS signal-rate input (SIMD - op)
+    // 64 bit Perform with One LHS Signal Input (SIMD - op)
 
     template <class T, int N>
     static void perform64_single1_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -375,7 +380,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, double_val));
     }
     
-    // 64 bit perform routine with one RHS signal-rate input (SIMD - op)
+    // 64 bit Perform with One RHS Signal Input (SIMD - op)
     
     template <class T, int N>
     static void perform64_single2_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -393,7 +398,7 @@ public:
             *out1++ = fix_denorm(functor(double_val, *in2++));
     }
     
-    // 64 bit perform routine with two signal-rate inputs (SIMD - op)
+    // 64 bit Perform with Two Signal Inputs (SIMD - op)
     
     template <class T, int N>
     static void perform64_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -410,7 +415,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, *in2++));
     }
     
-    // 64 bit perform routine with one LHS signal-rate input (SIMD - array)
+    // 64 bit Peform with One LHS Signal Input (SIMD - array)
     
     template <class T>
     static void perform64_single1_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -418,7 +423,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar1);
     }
     
-    // 64 bit perform routine with one RHS signal-rate input (SIMD - array)
+    // 64 bit Perform with One RHS Signal Input (SIMD - array)
     
     template <class T>
     static void perform64_single2_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -426,7 +431,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar2);
     }
     
-    // 64 bit perform routine with two signal-rate inputs (SIMD - array)
+    // 64 bit Perform with Two Signal Inputs (SIMD - array)
     
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -434,7 +439,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::binary);
     }
     
-    // Assist routine
+    // Assist
     
     static void assist(v_binary *x, void *b, long m, long a, char *s)
     {
