@@ -4,6 +4,7 @@
 #include <z_dsp.h>
 
 #include <string>
+#include <type_traits>
 
 #include "SIMDSupport.hpp"
 
