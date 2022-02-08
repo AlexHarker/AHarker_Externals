@@ -1,4 +1,13 @@
 
+/*
+ *  v_binary.hpp
+ *
+ *  A header file that provides a base class for binary vMSP objects.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
 
 #include <ext.h>
 #include <ext_obex.h>
@@ -68,7 +77,7 @@ public:
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 2);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
         
-        x->m_val = double_val;
+        float_in(x, double_val);
 
         return x;
     }

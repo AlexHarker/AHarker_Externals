@@ -1,6 +1,17 @@
 
+/*
+ *  comparisons.hpp
+ *
+ *  A header file with helper a functor for comparison functions.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _COMPARISONS_HPP_
 #define _COMPARISONS_HPP_
+
 
 // Functions for converting alls bits on to 1 for output
 

@@ -1,6 +1,17 @@
 
+/*
+ *  vector_loop.hpp
+ *
+ *  A header file with loop helper for array vector functions.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _VECTOR_LOOP_HPP_
 #define _VECTOR_LOOP_HPP_
+
 
 // Run Vector Functor On Array
 

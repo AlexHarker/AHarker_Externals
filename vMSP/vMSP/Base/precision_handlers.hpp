@@ -1,6 +1,17 @@
 
+/*
+ *  precision_handlers.hpp
+ *
+ *  A header file that allows double precision objects to calculate in single precision in vMSP objects.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _PRECISION_HANDLERS_HPP_
 #define _PRECISION_HANDLERS_HPP_
+
 
 // Class For Using Single Precision Array Handlers for Double Precision IO
 
@@ -16,7 +27,7 @@ struct unary_precision_handler
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
-        const SIMDType<float, 1> b = op(static_cast<float>(a.mVal));
+        const SIMDType<float, 1> b = op(SIMDType<float, 1>(static_cast<float>(a.mVal)));
         return SIMDType<double, 1>(b.mVal);
     }
     
