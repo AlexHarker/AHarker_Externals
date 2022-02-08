@@ -14,25 +14,13 @@
 #include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct atodb_functor
 {
     static const double atodb_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return a.mVal > 0.f ? nan_fixer()(20.f * log10f(a.mVal)) : -999.f;
-    }
-    
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
-    {
-        return a.mVal > 0.0 ? nan_fixer()(20.0 * log10(a.mVal)) : -999.0;
-    }
-    
-    struct input_fixer
-    {
-        template <class T>
-        T operator()(const T& a) { return and_not(a < T(0.0), a); }
-    };
+    // IO Limiting Functors
     
     template <int N>
     static SIMDType<float, N> is_negative_inf(const SIMDType<float, N>& a)
@@ -52,11 +40,29 @@ struct atodb_functor
         return a == v_neg_inf_64;
     }
     
+    struct input_fixer
+    {
+        template <class T>
+        T operator()(const T& a) { return and_not(a < T(0.0), a); }
+    };
+    
     struct output_fixer
     {
         template <class T>
         T operator()(const T& a) { return sel(nan_fixer()(a), T(-999), is_negative_inf(a)); }
     };
+    
+    // Ops + Array Operators
+
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    {
+        return a.mVal <= 0.f ?  -999.f : nan_fixer()(20.f * log10f(a.mVal));
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return a.mVal <= 0.0 ? -999.0 : nan_fixer()(20.0 * log10(a.mVal));
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
@@ -68,11 +74,15 @@ struct atodb_functor
     }
 };
 
-// Initialise constants
+// Initialise Constants
 
 const double atodb_functor::atodb_constant = 20.0 / log(10.0);
 
-typedef v_unary<atodb_functor, calculation_type::vector_array, calculation_type::vector_array> vatodb;
+// Type Alias
+
+using vatodb = v_unary<atodb_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

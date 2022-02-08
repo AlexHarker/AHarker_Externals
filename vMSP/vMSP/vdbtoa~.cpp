@@ -14,6 +14,8 @@
 #include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct dbtoa_functor
 {
     static const double dbtoa_constant;
@@ -37,11 +39,15 @@ struct dbtoa_functor
     }
 };
 
-// Initialise constants
+// Initialise Constants
 
 const double dbtoa_functor::dbtoa_constant = log(10.0) / 20.0;
 
-typedef v_unary<dbtoa_functor, calculation_type::vector_array, calculation_type::vector_array> vdbtoa;
+// Type Alias
+
+using vdbtoa = v_unary<dbtoa_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {
