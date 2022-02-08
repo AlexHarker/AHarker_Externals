@@ -8,8 +8,10 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
 #include "Base/nans.hpp"
+
 
 // Functor
 

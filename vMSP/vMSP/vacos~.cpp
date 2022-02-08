@@ -8,9 +8,11 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
+
 
 // Functor
 

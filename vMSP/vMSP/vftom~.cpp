@@ -9,10 +9,12 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include "Base/conversions.hpp"
 #include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
+
 
 // Functor
 

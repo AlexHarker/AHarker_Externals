@@ -8,8 +8,10 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
+
 
 // Functor
 
