@@ -12,8 +12,16 @@
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct atanh_functor
 {
+    struct zero_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return and_not(abs(a) >= T(1.0), a); }
+    };
+    
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return abs(a).mVal >= 1.f ? 0.f : atanhf(a.mVal);
@@ -24,12 +32,6 @@ struct atanh_functor
         return abs(a).mVal >= 1.0 ? 0.0 : atanh(a.mVal);
     }
     
-    struct zero_functor
-    {
-        template <class T>
-        T operator()(const T& a) { return and_not(abs(a) >= T(1.0), a); }
-    };
-    
     template <class T>
     void operator()(T *o, T *i, long size)
     {
@@ -38,7 +40,11 @@ struct atanh_functor
     }
 };
 
-typedef v_unary<atanh_functor, calculation_type::vector_array, calculation_type::vector_array> vatanh;
+// Type Alias
+
+using vatanh = v_unary<atanh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

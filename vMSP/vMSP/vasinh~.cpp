@@ -11,6 +11,8 @@
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct asinh_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return asinhf(a.mVal); }
@@ -20,7 +22,11 @@ struct asinh_functor
     void operator()(T *o, T *i, long size) { asinh_array(o, i, size); }
 };
 
-typedef v_unary<asinh_functor, calculation_type::vector_array, calculation_type::vector_array> vasinh;
+// Type Alias
+
+using vasinh = v_unary<asinh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

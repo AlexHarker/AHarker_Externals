@@ -11,6 +11,8 @@
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct atan_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return atanf(a.mVal); }
@@ -20,7 +22,11 @@ struct atan_functor
     void operator()(T *o, T *i, long size) { atan_array(o, i, size); }
 };
 
-typedef v_unary<atan_functor, calculation_type::vector_array, calculation_type::vector_array> vatan;
+// Type Aliase
+
+using vatan = v_unary<atan_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

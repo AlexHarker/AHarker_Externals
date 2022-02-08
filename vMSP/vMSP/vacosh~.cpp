@@ -12,8 +12,16 @@
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct acosh_functor
 {
+    struct replace_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
+    };
+    
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return a.mVal < 1.f ? 0.f : acoshf(a.mVal);
@@ -24,12 +32,6 @@ struct acosh_functor
         return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
     }
     
-    struct replace_functor
-    {
-        template <class T>
-        T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
-    };
-    
     template <class T>
     void operator()(T *o, T *i, long size)
     {
@@ -38,7 +40,11 @@ struct acosh_functor
     }
 };
 
-typedef v_unary<acosh_functor, calculation_type::vector_array, calculation_type::vector_array> vacosh;
+// Type Alias
+
+using vacosh = v_unary<acosh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

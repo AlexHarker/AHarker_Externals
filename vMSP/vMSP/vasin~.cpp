@@ -14,6 +14,12 @@
 
 struct asin_functor
 {
+    struct zero_functor
+    {
+        template <class T>
+        T operator()(const T& a) { return and_not(abs(a) > T(1.0), a); }
+    };
+    
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return abs(a).mVal > 1.f ? 0.f : asinf(a.mVal);
@@ -23,12 +29,6 @@ struct asin_functor
     {
         return abs(a).mVal > 1.0 ? 0.0 : asin(a.mVal);
     }
-    
-    struct zero_functor
-    {
-        template <class T>
-        T operator()(const T& a) { return and_not(abs(a) > T(1.0), a); }
-    };
     
     template <class T>
     void operator()(T *o, T *i, long size)
