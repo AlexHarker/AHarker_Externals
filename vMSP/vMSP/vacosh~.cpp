@@ -16,11 +16,15 @@
 
 struct acosh_functor
 {
+    // Input Limiting Functor
+    
     struct replace_functor
     {
         template <class T>
         T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
     };
+    
+    // Ops + Array Operators
     
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {

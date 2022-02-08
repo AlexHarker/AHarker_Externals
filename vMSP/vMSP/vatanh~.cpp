@@ -16,12 +16,16 @@
 
 struct atanh_functor
 {
+    // Input Limiting Functor
+
     struct zero_functor
     {
         template <class T>
         T operator()(const T& a) { return and_not(abs(a) >= T(1.0), a); }
     };
     
+    // Ops + Array Operators
+
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return abs(a).mVal >= 1.f ? 0.f : atanhf(a.mVal);

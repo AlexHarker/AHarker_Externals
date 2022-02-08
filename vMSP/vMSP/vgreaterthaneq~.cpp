@@ -15,7 +15,8 @@
 
 struct greater_eq
 {
-    template <class T> T operator()(const T a, const T b) { return a >= b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a >= b; }
 };
 
 // Type Alias

@@ -16,12 +16,16 @@
 
 struct acos_functor
 {
+    // Input Limiting Functor
+
     struct replace_functor
     {
         template <class T>
         T operator()(const T& a) { return sel(a, T(1.0), abs(a) > T(1.0)); }
     };
     
+    // Ops + Array Operators
+
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
     {
         return abs(a).mVal > 1.f ? 0.f : acosf(a.mVal);
