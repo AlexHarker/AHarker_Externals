@@ -118,12 +118,7 @@ struct log_functor
             }
         }
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a, const T b) { return a; }
-    
+        
     double m_base = 1.0;
     double m_base_mul = 0.0;
 };
