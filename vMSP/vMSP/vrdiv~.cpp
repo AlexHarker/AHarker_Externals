@@ -34,7 +34,7 @@ template <class T>
 void vrdiv::float_in(T *x, double value)
 {
     x->m_val = value;
-    x->m_functor.m_recip = 1.0 / value;
+    x->m_functor.m_recip = nan_fixer()(1.0 / value);
 }
 
 // Specialise Perform Routines with LHS Signal Only (use multiply by reciprocal)
