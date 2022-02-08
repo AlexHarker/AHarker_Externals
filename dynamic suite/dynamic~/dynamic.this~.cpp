@@ -111,7 +111,7 @@ void *dynamic_this_new(t_atom_long on, t_atom_long busy)
 
 void dynamic_this_free(t_dynamic_this *x)
 {
-    object_free((t_object *) x->m_clock);
+    object_free(x->m_clock);
     dynamic_unregister_listener(x->dynamic_parent, x->index, x);
 }
 

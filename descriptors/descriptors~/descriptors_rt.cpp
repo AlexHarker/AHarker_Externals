@@ -79,7 +79,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	
 	if (!allocated_memory)
 	{
-		post ("descriptors(rt)~: couldn't allocate memory");
+		post("descriptors(rt)~: couldn't allocate memory");
 		return (0);
 	}
 	
@@ -132,7 +132,7 @@ void descriptors_free(t_descriptors *x)
 	ALIGNED_FREE (x->window);
 	ALIGNED_FREE (x->rt_buffer);
 	hisstools_destroy_setup(x->fft_setup_real);
-    object_free((t_object *) x->output_rt_clock);
+    object_free(x->output_rt_clock);
 }
 
 

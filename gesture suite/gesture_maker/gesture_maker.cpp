@@ -168,7 +168,7 @@ void *gesture_maker_new()
 
 void gesture_maker_free(t_gesture_maker *x)
 {
-    object_free((t_object *) x->gesture_clock);
+    object_free(x->gesture_clock);
 }
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)

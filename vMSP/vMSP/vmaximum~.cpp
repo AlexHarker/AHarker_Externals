@@ -8,7 +8,11 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
+
+
+// Functor
 
 struct maximum_functor
 {
@@ -18,7 +22,11 @@ struct maximum_functor
     T operator()(const T a, const T b) { return max(b, a); }
 };
 
-typedef v_binary<maximum_functor, calculation_type::vector_op> vmaximum;
+// Type Alias
+
+using vmaximum = v_binary<maximum_functor, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

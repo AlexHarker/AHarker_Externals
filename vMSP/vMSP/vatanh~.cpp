@@ -8,22 +8,30 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
+
+// Functor
+
 struct atanh_functor
-{    
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
-    {
-        return abs(a).mVal >= 1.0 ? 0.0 : atanh(a.mVal);
-    }
-    
+{
+    // Input Limiting Functor
+
     struct zero_functor
     {
         template <class T>
         T operator()(const T& a) { return and_not(abs(a) >= T(1.0), a); }
     };
+    
+    // Ops + Array Operators
+
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return abs(a).mVal >= 1.0 ? 0.0 : atanh(a.mVal);
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
@@ -33,7 +41,11 @@ struct atanh_functor
     }
 };
 
-typedef v_unary<atanh_functor, calculation_type::vector_array> vatanh;
+// Type Alias
+
+using vatanh = v_unary<atanh_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

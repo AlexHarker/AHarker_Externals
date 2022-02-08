@@ -8,8 +8,12 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct tanh_functor
 {
@@ -19,7 +23,11 @@ struct tanh_functor
     void operator()(T *o, T *i, long size) { tanh_array(o, i, size); }
 };
 
-typedef v_unary<tanh_functor, calculation_type::vector_array> vtanh;
+// Type Alias
+
+using vtanh = v_unary<tanh_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

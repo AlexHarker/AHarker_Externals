@@ -8,7 +8,11 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
+
+
+// Functor
 
 struct plus_functor
 {
@@ -16,7 +20,11 @@ struct plus_functor
     T operator()(const T a, const T b) { return a + b; }
 };
 
-typedef v_binary<plus_functor, calculation_type::vector_op> vplus;
+// Type Alias
+
+using vplus = v_binary<plus_functor, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

@@ -8,22 +8,30 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
 
+
+// Functor
+
 struct acosh_functor
 {
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
-    {
-        return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
-    }
+    // Input Limiting Functor
     
     struct replace_functor
     {
         template <class T>
         T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
     };
+    
+    // Ops + Array Operators
+ 
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
+    }
     
     template <class T>
     void operator()(T *o, T *i, long size)
@@ -33,7 +41,11 @@ struct acosh_functor
     }
 };
 
-typedef v_unary<acosh_functor, calculation_type::vector_array> vacosh;
+// Type Alias
+
+using vacosh = v_unary<acosh_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

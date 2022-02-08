@@ -2,16 +2,20 @@
 #ifndef _NANS_HPP_
 #define _NANS_HPP_
 
+
 #include <cstdint>
 #include <limits>
 
 #include "vector_loop.hpp"
 
-// For fixing nans
+
+// Struct For Fixing Nans
 
 template <bool FixInfs>
 struct nan_and_inf_fixer
 {
+    // Raw Scalar Operators for Fixing Nans (+ Infs)
+    
     double operator()(const double a)
     {
         uint64_t a_int = *reinterpret_cast<const uint64_t *>(&a);
@@ -22,7 +26,11 @@ struct nan_and_inf_fixer
         return ((a_int & 0x7FF0000000000000ULL) == 0x7FF0000000000000ULL) && (a_int & 0x000FFFFFFFFFFFFFULL) ? 0.0 : a;
     }
     
+    // Scalar Fixing Operators
+    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)     { return operator()(a.mVal); }
+    
+    // Vector Fixing Operators
     
     template <class T, int N>
     SIMDType<T, N> operator()(const SIMDType<T, N> a)
@@ -35,18 +43,16 @@ struct nan_and_inf_fixer
         return and_not(and_not(v_inf == abs(a), v_inf == (a & v_inf)), a);
     }
     
-    struct nan_loop_fixer
-    {
-        template <class T>
-        T operator()(const T& a, nan_and_inf_fixer& op) { return op(a); }
-    };
+    // Array Fixer
     
     template <class T>
     void operator()(T *io, long size)
     {
-        vector_loop<nan_loop_fixer>(io, io, size, *this);
+        vector_loop<nan_and_inf_fixer>(io, io, size);
     }
 };
+
+// Type Alias
 
 using nan_fixer = nan_and_inf_fixer<true>;
 

@@ -8,15 +8,24 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
 #include "Base/comparisons.hpp"
 
+
+// Functor
+
 struct equal
 {
-    template <class T> T operator()(const T a, const T b) { return a == b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a == b; }
 };
 
-typedef v_binary<comparison_functor<equal>, calculation_type::vector_op> vequals;
+// Type Alias
+
+using vequals = v_binary<comparison_functor<equal>, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

@@ -614,7 +614,7 @@ Boolean serviceReadQueue(WiiRemoteRef wiiremote, Boolean force)
 	
 	//if (!force && OSAtomicCompareAndSwap32Barrier(0, 1, &wiiremote->ReadWait) == false)
 	//{
-	//	post ("FAIL READ");
+	//	post("FAIL READ");
 	//	return true;
 	//}
 		
@@ -625,7 +625,7 @@ Boolean serviceReadQueue(WiiRemoteRef wiiremote, Boolean force)
 	}
 
 	CurrentPtr = OSAtomicIncrement32(&wiiremote->QueueReadPtr);
-	post ("DO READ %ld %x", wiiremote->QueueLength, wiiremote->ReadAddressQueue[CurrentPtr % READ_QUEUE_LENGTH]);
+	post("DO READ %ld %x", wiiremote->QueueLength, wiiremote->ReadAddressQueue[CurrentPtr % READ_QUEUE_LENGTH]);
 
 	if (!(CurrentPtr % READ_QUEUE_LENGTH))
 		OSAtomicAdd32(-READ_QUEUE_LENGTH, &wiiremote->QueueReadPtr);
@@ -640,7 +640,7 @@ Boolean serviceReadQueue(WiiRemoteRef wiiremote, Boolean force)
 	//else
 	//{
 	//	wiiremote->MPSearch = 0;
-	//	post ("no");
+	//	post("no");
 	//}
 	
 	OSAtomicDecrement32(&wiiremote->QueueLength);
@@ -709,7 +709,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 	
 	if (dp[4] & 0x0F && read_address != 0x00F0)			// 0x00F0 - will sort out this error later
 	{
-		post ("INSANE");
+		post("INSANE");
 		serviceReadQueue(wiiremote, true);
 		return;					
 	}
@@ -723,7 +723,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 		
 		case 0x0000:							
  					
-			post ("HERE YOU GO");
+			post("HERE YOU GO");
 			if (!(dp[4] & 0x0F) && MotionPlusMode != MotionPlusIgnore && (dp[21] == 0x04 || dp[21] == 0x05 || dp[21] == 0x07 || dp[21] == 0x00) && dp[22] == 0x05)
 			{
 				if (expType == WiiExpNotAttached || MotionPlusMode == MotionPlusPreferMP)
@@ -748,7 +748,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 			if (connectType == WiiConnectReset) // && expType == WiiExpUninitialised) 
 				connectType = WiiConnectStandardExpansion;
 			
-			post ("MP CHECK");
+			post("MP CHECK");
 			handleExpansionAttachment (wiiremote, connectType, true);
 		
 			serviceReadQueue(wiiremote, true);
@@ -784,7 +784,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 				// The expansion status has changed
 				
 				wiiremote->expType = expType;
-				post ("ID CHECK");
+				post("ID CHECK");
 				if (expType != WiiExpNotAttached && expType != WiiExpUninitialised)
 				{
 					// Reset flags
@@ -811,7 +811,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 			
 			if (OSAtomicCompareAndSwap32Barrier(1, 1, &wiiremote->ExpansionInit) == true)									
 			{
-				post ("TRY AGAIN %x %x", expType, dp[4]);
+				post("TRY AGAIN %x %x", expType, dp[4]);
 				if (++wiiremote->ConnectionSafety >= 5)
 					handleExpansionAttachment (wiiremote, WiiConnectReset, true);
 				else
@@ -824,7 +824,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 			else
 			{
 				// Reset flags
-				post ("WE ARE DONE");
+				post("WE ARE DONE");
 				handleExpansionAttachment (wiiremote, WiiConnectReset, true);												
 			}
 
@@ -837,7 +837,7 @@ void handlereadData(WiiRemoteRef wiiremote, unsigned char *dp, size_t dataLength
 
 			if (expType == WiiExpUninitialised && MotionPlusMode != MotionPlusPreferMP && !(dp[4] & 0x0F))									
 			{
-				post ("INIT %ld", expType == WiiExpUninitialised && MotionPlusMode != MotionPlusPreferMP);
+				post("INIT %ld", expType == WiiExpUninitialised && MotionPlusMode != MotionPlusPreferMP);
 				handleExpansionAttachment (wiiremote, WiiConnectStandardExpansion, false);
 			}
 			
@@ -977,7 +977,7 @@ void handleExpansionAttachment (WiiRemoteRef wiiremote, WiiExpansionConnectType 
 	
 	if (MustAttach == false && Test == false) 
 	{
-		post ("FAIL EXT");
+		post("FAIL EXT");
 		return;
 	}
 	
@@ -1014,7 +1014,7 @@ void handleExpansionAttachment (WiiRemoteRef wiiremote, WiiExpansionConnectType 
 		case WiiConnectMotionPlus:
 		
 			// Motion Plus
-			post ("MP");
+			post("MP");
 			if (expType == WiiMotionPlusNunchuk || expType == WiiMotionPlusClassic)
 				writeData(wiiremote, (darr){0x04}, 0x04A400FE, 1);						// make MotionPlus active alone (it's currently in passthorough mode)
 			else
@@ -1025,7 +1025,7 @@ void handleExpansionAttachment (WiiRemoteRef wiiremote, WiiExpansionConnectType 
 			break;
 			
 		case WiiConnectMotionPlusNunchuk:
-			post ("MP+NK");
+			post("MP+NK");
 			// Motion Plus + Nunchuk
 		
 			writeData(wiiremote, (darr){0x55}, 0x04A600F0, 1);							// intialise Motion Plus - unencrypted
@@ -1033,7 +1033,7 @@ void handleExpansionAttachment (WiiRemoteRef wiiremote, WiiExpansionConnectType 
 			break;
 			
 		case WiiConnectMotionPlusClassic:
-			post ("MP+CC");
+			post("MP+CC");
 			// Motion Plus + Classic Controller
 					
 			writeData(wiiremote, (darr){0x55}, 0x04A600F0, 1);							// intialise Motion Plus - unencrypted
@@ -1048,7 +1048,7 @@ void handleExpansionAttachment (WiiRemoteRef wiiremote, WiiExpansionConnectType 
 			
 			if (WiiMotionPlusTest(expType))
 			{
-				post ("MP CONNECTED");
+				post("MP CONNECTED");
 				handleExpansionAttachment(wiiremote, WiiConnectReset, true);								
 			}
 			post("search");

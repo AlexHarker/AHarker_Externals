@@ -8,15 +8,24 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
 #include "Base/comparisons.hpp"
 
+
+// Functor
+
 struct less
 {
-    template <class T> T operator()(const T a, const T b) { return a < b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a < b; }
 };
 
-typedef v_binary<comparison_functor<less>, calculation_type::vector_op> vlessthan;
+// Type Alias
+
+using vlessthan = v_binary<comparison_functor<less>, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

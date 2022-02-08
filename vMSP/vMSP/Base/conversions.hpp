@@ -2,9 +2,13 @@
 #ifndef _CONVERSIONS_HPP_
 #define _CONVERSIONS_HPP_
 
+
 #include <SIMDSupport.hpp>
 
 #include "vector_loop.hpp"
+
+
+// Functors
 
 struct mul_functor
 {
@@ -18,8 +22,10 @@ struct mul_add_functor
     T operator()(const T& a, const T& mul, T& add) { return a * mul + add; }
 };
 
+// Array Functions
+
 template <class T>
-static void mul_const_array(T *o, const T *i, long size, T mul)
+void mul_const_array(T *o, const T *i, long size, T mul)
 {
     SIMDType<T, SIMDLimits<T>::max_size> v_mul(mul);
     

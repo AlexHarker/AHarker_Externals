@@ -9,10 +9,14 @@
  *
  */
 
+
 #include "Base/v_unary.hpp"
 #include "Base/conversions.hpp"
 #include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct mtof_functor
 {
@@ -33,12 +37,16 @@ struct mtof_functor
     }
 };
 
-// Initialise constants
+// Initialise Constants
 
 const double mtof_functor::mtof_mul_constant = log(2.0) / 12.0;
 const double mtof_functor::mtof_add_constant = log(440.0) - (log(2.0) * 69.0 / 12.0);
 
-typedef v_unary<mtof_functor, calculation_type::vector_array> vmtof;
+// Type Alias
+
+using vmtof = v_unary<mtof_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

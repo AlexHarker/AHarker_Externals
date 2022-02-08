@@ -9,14 +9,19 @@
 
 #include "SIMDSupport.hpp"
 
+
+// Type Enums
+
 enum class calculation_type { scalar, vector_op, vector_array };
 enum class inputs { binary, scalar1, scalar2 };
 
-// Object structure
+// Binary Class
 
 template<typename Functor, calculation_type Type, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
+    // Denormal Fixing
+    
     static float fix_denorm(const float a)
     {
         float b = a;
@@ -29,13 +34,12 @@ class v_binary
     
 public:
     
-    // Main routine
+    // Main
     
     template <typename T>
     static int setup(const char *object_name)
     {
-        t_class **C = getClassPointer<T>();
-        *accessClassName<T>() = object_name;
+        t_class **C = get_class_pointer<T>();
         
         *C = class_new(object_name,
                        (method) new_object<T>,
@@ -53,12 +57,12 @@ public:
         class_dspinit(*C);
         class_register(CLASS_BOX, *C);
                 
-        post ("%s - using vector version by Alex Harker", object_name);
+        post("%s - using vector version by Alex Harker", object_name);
         
         return 0;
     }
     
-    // Free routine
+    // Free
     
     template <class T>
     static void free_object(T *x)
@@ -66,12 +70,12 @@ public:
         dsp_free(&x->m_obj);
     }
     
-    // New routine
+    // New
     
     template <class T>
     static void *new_object(double double_val)
     {
-        T *x = static_cast<T *>(object_alloc(*getClassPointer<T>()));
+        T *x = static_cast<T *>(object_alloc(*get_class_pointer<T>()));
         
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 2);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
@@ -81,7 +85,7 @@ public:
         return x;
     }
     
-    // Float input routine
+    // Float Input
     
     template <class T>
     static void float_in(T *x, double value)
@@ -89,15 +93,15 @@ public:
         x->m_val = value;
     }
     
-    // Int input routine
+    // Int Input
     
     template <class T>
     static void int_in(T *x, t_atom_long value)
     {
         x->m_val = static_cast<double>(value);
     }
-    
-    // 64 bit dsp routine
+
+    // 64 bit DSP
     
     template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, int> routine)
@@ -168,7 +172,7 @@ public:
         object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, 0);
     }
     
-    // 64 bit perform routine with one LHS signal-rate input (SIMD - op)
+    // 64 bit Perform with One LHS Signal Input (SIMD - op)
 
     template <class T, int N>
     static void perform64_single1_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -186,7 +190,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, double_val));
     }
     
-    // 64 bit perform routine with one RHS signal-rate input (SIMD - op)
+    // 64 bit Perform with One RHS Signal Input (SIMD - op)
     
     template <class T, int N>
     static void perform64_single2_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -204,7 +208,7 @@ public:
             *out1++ = fix_denorm(functor(double_val, *in2++));
     }
     
-    // 64 bit perform routine with two signal-rate inputs (SIMD - op)
+    // 64 bit Perform with Two Signal Inputs (SIMD - op)
     
     template <class T, int N>
     static void perform64_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -221,7 +225,7 @@ public:
             *out1++ = fix_denorm(functor(*in1++, *in2++));
     }
     
-    // 64 bit perform routine with one LHS signal-rate input (SIMD - array)
+    // 64 bit Peform with One LHS Signal Input (SIMD - array)
     
     template <class T>
     static void perform64_single1_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -229,7 +233,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar1);
     }
     
-    // 64 bit perform routine with one RHS signal-rate input (SIMD - array)
+    // 64 bit Perform with One RHS Signal Input (SIMD - array)
     
     template <class T>
     static void perform64_single2_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -237,7 +241,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar2);
     }
     
-    // 64 bit perform routine with two signal-rate inputs (SIMD - array)
+    // 64 bit Perform with Two Signal Inputs (SIMD - array)
     
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
@@ -245,7 +249,7 @@ public:
         x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::binary);
     }
     
-    // Assist routine
+    // Assist
     
     static void assist(v_binary *x, void *b, long m, long a, char *s)
     {
@@ -267,20 +271,14 @@ public:
     
 private:
     
-    // Static Items
+    // Static Class Pointer
     
-    template <class T> static t_class **getClassPointer()
+    template <class T>
+    static t_class **get_class_pointer()
     {
         static t_class *C;
         
         return &C;
-    }
-    
-    template <class T> static std::string *accessClassName()
-    {
-        static std::string str;
-        
-        return &str;
     }
     
     // Data

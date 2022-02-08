@@ -8,8 +8,12 @@
  *
  */
 
+
 #include "Base/v_binary.hpp"
 #include "Base/nans.hpp"
+
+
+// Functor
 
 struct times_functor
 {
@@ -17,7 +21,11 @@ struct times_functor
     T operator()(const T a, const T b) { return nan_fixer()(a * b); }
 };
 
-typedef v_binary<times_functor, calculation_type::vector_op> vtimes;
+// Type Alias
+
+using vtimes = v_binary<times_functor, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

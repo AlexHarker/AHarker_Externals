@@ -209,7 +209,7 @@ void patch_slot::compile_dsp(long vec_size, long sampling_rate, bool force_when_
     {
         // Free the old dspchain
 
-        object_free(reinterpret_cast<t_object *>(m_dspchain));
+        object_free(m_dspchain);
 
         // Recompile
 
@@ -220,7 +220,7 @@ void patch_slot::compile_dsp(long vec_size, long sampling_rate, bool force_when_
 
         if (m_dspchain && m_dspchain->c_broken)
         {
-            object_free(reinterpret_cast<t_object *>(m_dspchain));
+            object_free(m_dspchain);
 
             m_dspchain = dspchain_compile(m_patch, vec_size, sampling_rate);
         }
@@ -346,13 +346,13 @@ void patch_slot::unlink_outlets(t_patcher *p)
 
 void patch_slot::free_patch()
 {
-    object_free(reinterpret_cast<t_object *>(m_dspchain));
+    object_free(m_dspchain);
 
     if (m_patch)
     {
         // Remove pointers to ins, unlink outlets, close window and free the patch
 
-        for (std::vector< std::vector<void *> >::iterator it = m_in_table.begin(); it != m_in_table.end(); it++)
+        for (std::vector<std::vector<void *>>::iterator it = m_in_table.begin(); it != m_in_table.end(); it++)
             it->clear();
         patcher_traverse<&patch_slot::unlink_outlets>(m_patch, nullptr, m_owner);
         close_window();
