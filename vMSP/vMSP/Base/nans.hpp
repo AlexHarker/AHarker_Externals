@@ -46,16 +46,11 @@ struct nan_and_inf_fixer
         return and_not(and_not(v_inf == abs(a), v_inf == (a & v_inf)), a);
     }
     
-    struct nan_loop_fixer
-    {
-        template <class T>
-        T operator()(const T& a, nan_and_inf_fixer& op) { return op(a); }
-    };
     
     template <class T>
     void operator()(T *io, long size)
     {
-        vector_loop<nan_loop_fixer>(io, io, size, *this);
+        vector_loop<nan_and_inf_fixer>(io, io, size);
     }
 };
 
