@@ -24,7 +24,7 @@ struct atan_functor
     void operator()(T *o, T *i, long size) { atan_array(o, i, size); }
 };
 
-// Type Aliase
+// Type Alias
 
 using vatan = v_unary<atan_functor, calculation_type::vector_array, calculation_type::vector_array>;
 
