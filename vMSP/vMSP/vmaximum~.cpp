@@ -12,12 +12,10 @@
 
 struct maximum_functor
 {
+    // N.B. operand ordering gives an exact match to Max's operation with nan inputs
+
     template <class T>
-    T operator()(const T a, const T b) { return max(a, b); }
-    
-    // Empty Implementations
-    
-    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
+    T operator()(const T a, const T b) { return max(b, a); }
 };
 
 typedef v_binary<maximum_functor, calculation_type::vector_op> vmaximum;

@@ -53,11 +53,6 @@ struct pow_functor
         }
         nan_fixer()(o, size);
     }
-    
-    // Empty Implementations
-   
-    template <class T>
-    T operator()(const T a, const T b) { return a; }
 };
 
 typedef v_binary<pow_functor, calculation_type::vector_array> vpow;

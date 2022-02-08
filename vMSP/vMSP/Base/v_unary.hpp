@@ -65,25 +65,42 @@ public:
 
     // 64 bit dsp routine
     
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, T *>)
+    {
+        // Scalar
+        
+        return reinterpret_cast<method>(perform64_op<T, 1>);
+    }
+    
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, T *>)
+    {
+        // Vector Op
+
+        constexpr int simd_width = SIMDLimits<double>::max_size;
+        return reinterpret_cast<method>(perform64_op<T, simd_width>);
+    }
+    
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, T *>)
+    {
+        // Vector Array
+    
+        return reinterpret_cast<method>(perform64_array<T>);
+    }
+    
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
     {
-        constexpr int simd_width = SIMDLimits<double>::max_size;
-        
         // Default to scalar routine
         
-        bool vector = !(Type != calculation_type::scalar) || ((max_vec / simd_width) > 0);
         method current_perform_routine = reinterpret_cast<method>(perform64_op<T, 1>);
         
         // Use SIMD routines if possible
 
-        if (vector)
-        {
-            if (Type == calculation_type::vector_array)
-                current_perform_routine = reinterpret_cast<method>(perform64_array<T>);
-            else
-                current_perform_routine = reinterpret_cast<method>(perform64_op<T, simd_width>);
-        }
+        if ((Type != calculation_type::scalar) && ((max_vec / SIMDLimits<double>::max_size) > 0))
+            current_perform_routine = dsp_vector_select64<T>(x);
         
         object_method(dsp64, gensym("dsp_add64"), x, current_perform_routine, 0, 0);
     }

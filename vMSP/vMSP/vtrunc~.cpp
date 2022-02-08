@@ -14,10 +14,6 @@ struct trunc_functor
 {
     template <class T>
     T operator()(const T a) { return trunc(a); }
-    
-    // Empty Implementations
-    
-    void operator()(double *o, double *i, long size) {}
 };
 
 typedef v_unary<trunc_functor, calculation_type::vector_op> vtrunc;

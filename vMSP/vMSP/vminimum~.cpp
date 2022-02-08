@@ -12,12 +12,10 @@
 
 struct minimum_functor
 {
+    // N.B. operand ordering gives an exact match to Max's operation with nan inputs
+    
     template <class T>
-    T operator()(const T a, const T b) { return min(a, b); }
-    
-    // Empty Implementations
-    
-    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
+    T operator()(const T a, const T b) { return min(b, a); }
 };
 
 typedef v_binary<minimum_functor, calculation_type::vector_op> vminimum;

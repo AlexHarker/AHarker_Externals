@@ -15,10 +15,6 @@ struct times_functor
 {
     template <class T>
     T operator()(const T a, const T b) { return nan_fixer()(a * b); }
-    
-    // Empty Implementations
-
-    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
 typedef v_binary<times_functor, calculation_type::vector_op> vtimes;

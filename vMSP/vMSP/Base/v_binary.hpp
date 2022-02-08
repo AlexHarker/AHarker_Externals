@@ -5,6 +5,7 @@
 #include <z_dsp.h>
 
 #include <string>
+#include <type_traits>
 
 #include "SIMDSupport.hpp"
 
@@ -98,12 +99,52 @@ public:
     
     // 64 bit dsp routine
     
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, int> routine)
+    {
+        // Scalar
+        
+        switch (routine)
+        {
+            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, 1>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, 1>);
+            default:    return reinterpret_cast<method>(perform64_op<T, 1>);
+        }
+    }
+    
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, int> routine)
+    {
+        // Vector Op
+
+        constexpr int simd_width = SIMDLimits<double>::max_size;
+        
+        switch (routine)
+        {
+            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, simd_width>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, simd_width>);
+            default:    return reinterpret_cast<method>(perform64_op<T, simd_width>);
+        }
+    }
+    
+    template <typename T, calculation_type C = Type>
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, int> routine)
+    {
+        // Vector Array
+    
+        switch (routine)
+        {
+            case 1:     return reinterpret_cast<method>(perform64_single1_array<T>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_array<T>);
+            default:    return reinterpret_cast<method>(perform64_array<T>);
+        }
+    }
+    
     template <class T>
     static void dsp64(T *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
     {
         method perform_routine = (method) perform64_op<T, 1>;
-        long routine = 0;
-        constexpr int simd_width = SIMDLimits<double>::max_size;
+        int routine = 0;
         
         // If nothing is connected then don't do anything here....
             
@@ -119,29 +160,10 @@ public:
         
         // Use SIMD code where possible
         
-        if (Type != calculation_type::scalar && ((max_vec / simd_width) > 0))
-            routine += (Type == calculation_type::vector_op) ? 3 : 6;
-        
-        switch (routine)
-        {
-            // Scalar
-                
-            case 0:     perform_routine = (method) perform64_op<T, 1>;                      break;
-            case 1:     perform_routine = (method) perform64_single1_op<T, 1>;              break;
-            case 2:     perform_routine = (method) perform64_single2_op<T, 1>;              break;
-                
-            // Vector op
-                
-            case 3:     perform_routine = (method) perform64_op<T, simd_width>;             break;
-            case 4:     perform_routine = (method) perform64_single1_op<T, simd_width>;     break;
-            case 5:     perform_routine = (method) perform64_single2_op<T, simd_width>;     break;
-                
-            // Vector array
-                
-            case 6:     perform_routine = (method) perform64_array<T>;                      break;
-            case 7:     perform_routine = (method) perform64_single1_array<T>;              break;
-            case 8:     perform_routine = (method) perform64_single2_array<T>;              break;
-        }
+        if (Type != calculation_type::scalar && ((max_vec / SIMDLimits<double>::max_size) > 0))
+            perform_routine = dsp_vector_select64<T>(routine);
+        else
+            perform_routine = dsp_vector_select64<T, calculation_type::scalar>(routine);
         
         object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, 0);
     }

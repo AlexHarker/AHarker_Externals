@@ -32,12 +32,7 @@ struct unary_precision_handler
         for (long it = 0; it < size; it++)
             o[it] = of[it];
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
-    
+  
     Op op;
 };
 

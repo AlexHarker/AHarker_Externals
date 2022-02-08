@@ -12,10 +12,6 @@ struct comparison_functor
 {
     template <class T>
     T operator()(const T a, const T b) { return mask_one(Op()(a, b)); }
-    
-    // Empty Implementations
-    
-    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
 #endif /* _COMPARISONS_HPP_ */

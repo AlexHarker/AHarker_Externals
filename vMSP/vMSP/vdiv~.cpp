@@ -21,10 +21,6 @@ struct div_functor
         
         return sel(zero, a / b, b != zero);
     }
-    
-    // Empty Implementations
-
-    void operator()(double *o, double *i1, double *i2, long size, double val, inputs type) {}
 };
 
 typedef v_binary<div_functor, calculation_type::vector_op> vdiv;

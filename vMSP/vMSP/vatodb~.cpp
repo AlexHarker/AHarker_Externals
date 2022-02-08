@@ -52,11 +52,6 @@ struct atodb_functor
         mul_const_array(o, size, T(atodb_constant));
         vector_loop<output_fixer>(o, o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 // Initialise constants
