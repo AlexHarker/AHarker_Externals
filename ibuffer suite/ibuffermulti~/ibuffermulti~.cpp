@@ -137,7 +137,7 @@ void ibuffermulti_load_internal(t_ibuffermulti *x, t_symbol *s, short argc, t_at
         void *force_load = newinstance(gensym("ibuffer~"), 0, 0);
         
         if (force_load)
-            object_free(static_cast<t_object *>(force_load));
+            object_free(force_load);
     }
     
     // Return a properly allocated object (may still return nullptr if the .mxo is not present)
@@ -166,7 +166,7 @@ void ibuffermulti_load_internal(t_ibuffermulti *x, t_symbol *s, short argc, t_at
         x->buffers.push_back(ibuffer);
     else
     {
-        object_error(reinterpret_cast<t_object *>(x), "could not load ibuffer~");
+        object_error((t_object *) x, "could not load ibuffer~");
         object_free(ibuffer);
     }
     

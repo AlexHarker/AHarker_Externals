@@ -222,8 +222,8 @@ struct t_duration_data
     
     ~t_duration_data()
     {
-        object_free((t_object *) f_data_clock);
-        object_free((t_object *) f_mean_clock);
+        object_free(f_data_clock);
+        object_free(f_mean_clock);
     }
     
     long age_span() const { return max_age - min_age; }
@@ -518,7 +518,7 @@ void meandev_free(t_meandev *x)
 {
     destroy_object(x->data);
     
-    object_free((t_object *) x->f_proxy);
+    object_free(x->f_proxy);
         
     delete[] x->durations;
 }

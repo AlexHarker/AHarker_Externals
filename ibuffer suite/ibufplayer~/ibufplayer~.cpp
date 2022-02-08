@@ -238,7 +238,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
 void ibufplayer_free(t_ibufplayer *x)
 {
     dsp_free(&x->x_obj);
-    object_free(static_cast<t_object *>(x->done_clock));
+    object_free(x->done_clock);
 }
 
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)

@@ -115,7 +115,7 @@ void *randfloats_new()
 void randfloats_free(t_randfloats *x)
 {
     for (long i = 0; i < 2; i++)
-        object_free((t_object *) x->f_proxies[i]);
+        object_free(x->f_proxies[i]);
     
     destroy_object(x->gen);
 }
