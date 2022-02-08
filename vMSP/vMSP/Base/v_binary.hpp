@@ -35,8 +35,7 @@ public:
     template <typename T>
     static int setup(const char *object_name)
     {
-        t_class **C = getClassPointer<T>();
-        *accessClassName<T>() = object_name;
+        t_class **C = get_class_pointer<T>();
         
         *C = class_new(object_name,
                        (method) new_object<T>,
@@ -73,7 +72,7 @@ public:
     template <class T>
     static void *new_object(double double_val)
     {
-        T *x = static_cast<T *>(object_alloc(*getClassPointer<T>()));
+        T *x = static_cast<T *>(object_alloc(*get_class_pointer<T>()));
         
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 2);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
@@ -174,7 +173,7 @@ public:
         {
             if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
             {
-                object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
+                object_error((t_object *) x, "handed a misaligned signal vector - update to Max 5.1.3 or later");
             }
             else
                 use_vec = true;
@@ -457,20 +456,14 @@ public:
     
 private:
     
-    // Static Items
+    // Static Class Pointer
     
-    template <class T> static t_class **getClassPointer()
+    template <class T>
+    static t_class **get_class_pointer()
     {
         static t_class *C;
         
         return &C;
-    }
-    
-    template <class T> static std::string *accessClassName()
-    {
-        static std::string str;
-        
-        return &str;
     }
     
     // Data
