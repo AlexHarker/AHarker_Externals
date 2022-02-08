@@ -762,6 +762,8 @@
 			children = (
 				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,
 				B8E3962A1096172C0081D095 /* vlog~.cpp */,
+				B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */,
+				B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */,
 				B8E493CF1095A79000A88A63 /* vminus~.cpp */,
 				B8E492E81095A2FA00A88A63 /* vplus~.cpp */,
 				B8FE3FA0109875BE00780AF9 /* vpow~.cpp */,
@@ -771,8 +773,6 @@
 				B8E492E21095A2EA00A88A63 /* vtimes~.cpp */,
 				B8E39595109613C90081D095 /* vabs~.cpp */,
 				B8E39627109617180081D095 /* vtrunc~.cpp */,
-				B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */,
-				B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */,
 				B8E492EE1095A30E00A88A63 /* vequals~.cpp */,
 				B8E3937D1095B8990081D095 /* vnotequals~.cpp */,
 				B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */,
