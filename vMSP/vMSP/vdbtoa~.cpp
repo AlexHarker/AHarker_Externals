@@ -35,11 +35,6 @@ struct dbtoa_functor
         exp_array(o, o, size);
         nan_fixer()(o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 // Initialise constants

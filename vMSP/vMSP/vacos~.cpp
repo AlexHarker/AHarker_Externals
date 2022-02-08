@@ -36,11 +36,6 @@ struct acos_functor
         vector_loop<replace_functor>(o, i, size);
         acos_array(o, o, size);
     }
-    
-    // Empty Implementations
-
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 typedef v_unary<acos_functor, calculation_type::vector_array, calculation_type::vector_array> vacos;

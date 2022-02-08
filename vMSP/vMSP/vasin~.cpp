@@ -36,11 +36,6 @@ struct asin_functor
         vector_loop<zero_functor>(o, i, size);
         asin_array(o, o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 typedef v_unary<asin_functor, calculation_type::vector_array, calculation_type::vector_array> vasin;

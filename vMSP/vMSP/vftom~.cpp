@@ -37,11 +37,6 @@ struct ftom_functor
         mul_add_const_array(o, size, T(ftom_mul_constant), T(ftom_add_constant));
         nan_fixer()(o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 // Initialise constants

@@ -36,11 +36,6 @@ struct atanh_functor
         vector_loop<zero_functor>(o, i, size);
         atanh_array(o, o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
 typedef v_unary<atanh_functor, calculation_type::vector_array, calculation_type::vector_array> vatanh;
