@@ -20,18 +20,6 @@ enum class inputs { binary, scalar1, scalar2 };
 template<typename Functor, calculation_type Type, bool FirstInputAlwaysSignal = false>
 class v_binary
 {
-    // Denormal Fixing
-    
-    static float fix_denorm(const float a)
-    {
-        float b = a;
-        FIX_DENORM_FLOAT(b);
-        return b;
-    }
-
-    template <class T>
-    static T fix_denorm(const T a) { return a; }
-    
 public:
     
     // Main
@@ -187,7 +175,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
         
         while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, double_val));
+            *out1++ = functor(*in1++, double_val);
     }
     
     // 64 bit Perform with One RHS Signal Input (SIMD - op)
@@ -205,7 +193,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
 
         while (vec_size--)
-            *out1++ = fix_denorm(functor(double_val, *in2++));
+            *out1++ = functor(double_val, *in2++);
     }
     
     // 64 bit Perform with Two Signal Inputs (SIMD - op)
@@ -222,7 +210,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
 
         while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, *in2++));
+            *out1++ = functor(*in1++, *in2++);
     }
     
     // 64 bit Peform with One LHS Signal Input (SIMD - array)
