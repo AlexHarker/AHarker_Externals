@@ -11,6 +11,8 @@
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct sinx_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return sinf(a.mVal); }
@@ -20,7 +22,11 @@ struct sinx_functor
     void operator()(T *o, T *i, long size) { sin_array(o, i, size); }
 };
 
-typedef v_unary<sinx_functor, calculation_type::vector_array, calculation_type::vector_array> vsinx;
+// Type Alias
+
+using vsinx = v_unary<sinx_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

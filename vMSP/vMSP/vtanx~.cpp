@@ -11,6 +11,8 @@
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct tanx_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return tanf(a.mVal); }
@@ -20,7 +22,11 @@ struct tanx_functor
     void operator()(T *o, T *i, long size) { tan_array(o, i, size); }
 };
 
-typedef v_unary<tanx_functor, calculation_type::vector_array, calculation_type::vector_array> vtanx;
+// Type Alias
+
+using vtanx = v_unary<tanx_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

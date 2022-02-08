@@ -11,6 +11,8 @@
 #include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
 
+// Functor
+
 struct cosh_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return coshf(a.mVal); }
@@ -20,7 +22,11 @@ struct cosh_functor
     void operator()(T *o, T *i, long size) { cosh_array(o, i, size); }
 };
 
-typedef v_unary<cosh_functor, calculation_type::vector_array, calculation_type::vector_array> vcosh;
+// Type Alias
+
+using vcosh = v_unary<cosh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {
