@@ -108,24 +108,24 @@ public:
         
         switch (routine)
         {
-            case 1:     return (method) perform<perform_single1_op<T, 1>>;
-            case 2:     return (method) perform<perform_single2_op<T, 1>>;
-            default:    return (method) perform<perform_op<T, 1>>;
+            case 1:     return reinterpret_cast<method>(perform<perform_single1_op<T, 1>>);
+            case 2:     return reinterpret_cast<method>(perform<perform_single2_op<T, 1>>);
+            default:    return reinterpret_cast<method>(perform<perform_op<T, 1>>);
         }
     }
     
     template <typename T, calculation_type C = Vec32>
     static method dsp_vector_select(std::enable_if_t<C == calculation_type::vector_op, int> routine)
     {
-        constexpr int simd_width = SIMDLimits<float>::max_size;
-
         // Vector Op
+
+        constexpr int simd_width = SIMDLimits<float>::max_size;
         
         switch (routine)
         {
-            case 1:     return (method) perform<perform_single1_op<T, simd_width>>;
-            case 2:     return (method) perform<perform_single2_op<T, simd_width>>;
-            default:    return (method) perform<perform_op<T, simd_width>>;
+            case 1:     return reinterpret_cast<method>(perform<perform_single1_op<T, simd_width>>);
+            case 2:     return reinterpret_cast<method>(perform<perform_single2_op<T, simd_width>>);
+            default:    return reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
         }
     }
     
@@ -136,9 +136,9 @@ public:
     
         switch (routine)
         {
-            case 1:     return (method) perform<perform_single1_array<T>>;
-            case 2:     return (method) perform<perform_single2_array<T>>;
-            default:    return (method) perform<perform_array<T>>;
+            case 1:     return reinterpret_cast<method>(perform<perform_single1_array<T>>);
+            case 2:     return reinterpret_cast<method>(perform<perform_single2_array<T>>);
+            default:    return reinterpret_cast<method>(perform<perform_array<T>>);
         }
     }
     
@@ -298,24 +298,24 @@ public:
         
         switch (routine)
         {
-            case 1:     return (method) perform64_single1_op<T, 1>;
-            case 2:     return (method) perform64_single2_op<T, 1>;
-            default:    return (method) perform64_op<T, 1>;
+            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, 1>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, 1>);
+            default:    return reinterpret_cast<method>(perform64_op<T, 1>);
         }
     }
     
     template <typename T, calculation_type C = Vec64>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, int> routine)
     {
-        constexpr int simd_width = SIMDLimits<double>::max_size;
-
         // Vector Op
+
+        constexpr int simd_width = SIMDLimits<double>::max_size;
         
         switch (routine)
         {
-            case 1:     return (method) perform64_single1_op<T, simd_width>;
-            case 2:     return (method) perform64_single2_op<T, simd_width>;
-            default:    return (method) perform64_op<T, simd_width>;
+            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, simd_width>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, simd_width>);
+            default:    return reinterpret_cast<method>(perform64_op<T, simd_width>);
         }
     }
     
@@ -326,9 +326,9 @@ public:
     
         switch (routine)
         {
-            case 1:     return (method) perform64_single1_array<T>;
-            case 2:     return (method) perform64_single2_array<T>;
-            default:    return (method) perform64_array<T>;
+            case 1:     return reinterpret_cast<method>(perform64_single1_array<T>);
+            case 2:     return reinterpret_cast<method>(perform64_single2_array<T>);
+            default:    return reinterpret_cast<method>(perform64_array<T>);
         }
     }
     
