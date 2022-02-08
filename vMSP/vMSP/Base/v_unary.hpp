@@ -1,4 +1,14 @@
 
+/*
+ *  v_unary.hpp
+ *
+ *  A header file that provides a base class for unary vMSP objects.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #include <ext.h>
 #include <ext_obex.h>
 #include <z_dsp.h>

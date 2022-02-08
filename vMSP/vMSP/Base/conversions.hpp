@@ -1,7 +1,16 @@
 
+/*
+ *  conversion.hpp
+ *
+ *  A header file with helpers for linear conversions.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _CONVERSIONS_HPP_
 #define _CONVERSIONS_HPP_
-
 
 #include <SIMDSupport.hpp>
 

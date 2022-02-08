@@ -1,6 +1,17 @@
 
+/*
+ *  precision_handlers.hpp
+ *
+ *  A header file that allows double precision objects to calculate in single precision in vMSP objects.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _PRECISION_HANDLERS_HPP_
 #define _PRECISION_HANDLERS_HPP_
+
 
 // Class For Using Single Precision Array Handlers for Double Precision IO
 

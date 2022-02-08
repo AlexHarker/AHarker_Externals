@@ -1,7 +1,16 @@
 
+/*
+ *  nans.hpp
+ *
+ *  A header file for dealing with nans in vMSP objects.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
 #ifndef _NANS_HPP_
 #define _NANS_HPP_
-
 
 #include <cstdint>
 #include <limits>
