@@ -10,13 +10,19 @@
 
 #include "Base/v_binary.hpp"
 
+// Functor
+
 struct minus_functor
 {
     template <class T>
     T operator()(const T a, const T b) { return a - b; }
 };
 
-typedef v_binary<minus_functor, calculation_type::vector_op, calculation_type::vector_op> vminus;
+// Type Alias
+
+using vminus = v_binary<minus_functor, calculation_type::vector_op, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

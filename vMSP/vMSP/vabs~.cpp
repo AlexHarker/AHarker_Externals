@@ -10,13 +10,19 @@
 
 #include "Base/v_unary.hpp"
 
+// Functor
+
 struct abs_functor
 {
     template <class T>
     T operator()(const T a) { return abs(a); }
 };
 
-typedef v_unary<abs_functor, calculation_type::vector_op, calculation_type::vector_op> vabs;
+// Type Alias
+
+using vabs = v_unary<abs_functor, calculation_type::vector_op, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

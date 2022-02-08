@@ -11,12 +11,18 @@
 #include "Base/v_binary.hpp"
 #include "Base/comparisons.hpp"
 
+// Functor
+
 struct greater
 {
     template <class T> T operator()(const T a, const T b) { return a > b; }
 };
 
-typedef v_binary<comparison_functor<greater>, calculation_type::vector_op, calculation_type::vector_op> vgreaterthan;
+// Type Alias
+
+using vgreaterthan = v_binary<comparison_functor<greater>, calculation_type::vector_op, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

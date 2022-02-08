@@ -10,6 +10,8 @@
 
 #include "Base/v_binary.hpp"
 
+// Functor
+
 struct minimum_functor
 {
     // N.B. operand ordering gives an exact match to Max's operation with nan inputs
@@ -18,7 +20,11 @@ struct minimum_functor
     T operator()(const T a, const T b) { return min(b, a); }
 };
 
-typedef v_binary<minimum_functor, calculation_type::vector_op, calculation_type::vector_op> vminimum;
+// Type Alias
+
+using vminimum = v_binary<minimum_functor, calculation_type::vector_op, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

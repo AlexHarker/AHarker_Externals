@@ -10,13 +10,19 @@
 
 #include "Base/v_unary.hpp"
 
+// Functor
+
 struct trunc_functor
 {
     template <class T>
     T operator()(const T a) { return trunc(a); }
 };
 
-typedef v_unary<trunc_functor, calculation_type::vector_op, calculation_type::vector_op> vtrunc;
+// Type Alias
+
+using vtrunc = v_unary<trunc_functor, calculation_type::vector_op, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {
