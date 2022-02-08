@@ -145,11 +145,9 @@ public:
     template <class T>
     static void dsp(T *x, t_signal **sp, short *count)
     {
-        constexpr int simd_width = SIMDLimits<float>::max_size;
-
         int routine = 0;
         bool use_vec = false;
-        long vec_size_val = sp[0]->s_n;
+        long vec_size = sp[0]->s_n;
 
         float *used_input1 = reinterpret_cast<float *>(sp[0]->s_vec);
         float *used_input2 = reinterpret_cast<float *>(sp[1]->s_vec);
@@ -163,7 +161,7 @@ public:
         if (!count[1] && !count[0])
             return;
         
-        // Choose scalr routines as needed
+        // Choose scalar routines as needed
         
         if (!count[0])
             routine = FirstInputAlwaysSignal ? 1 : 2;
@@ -172,7 +170,7 @@ public:
 
         // Use SIMD code where possible
         
-        if (Vec32 != calculation_type::scalar && ((sp[0]->s_n / simd_width) > 0))
+        if (Vec32 != calculation_type::scalar && ((vec_size / SIMDLimits<float>::max_size) > 0))
         {
             if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
             {
@@ -187,7 +185,7 @@ public:
         else
             perform_routine = dsp_vector_select<T, calculation_type::scalar>(routine);
         
-        dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size_val, x);
+        dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size, x);
     }
     
     // 32 bit perform return wrapper

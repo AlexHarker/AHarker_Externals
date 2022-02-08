@@ -95,35 +95,30 @@ public:
     
     template <class T>
     static void dsp(T *x, t_signal **sp, short *count)
-    {
-        constexpr int simd_width = SIMDLimits<float>::max_size;
-        
+    {        
         // Default to scalar routine
         
         method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1>>);
-        long vec_size_val = sp[0]->s_n;
+        long vec_size = sp[0]->s_n;
 
         // Use SIMD routines if possible
         
-        if ((Vec32 != calculation_type::scalar) && ((sp[0]->s_n / simd_width) > 0))
+        if ((Vec32 != calculation_type::scalar) && ((vec_size / SIMDLimits<float>::max_size) > 0))
         {
             // Check memory alignment of all relevant vectors
             
             if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
                 object_error(reinterpret_cast<t_object *>(x), "handed a misaligned signal vector - update to Max 5.1.3 or later", accessClassName<T>()->c_str());
             else
-            {
-                vec_size_val /= simd_width;
                 dsp_vector_select<T>(x);
-            }
         }
         
-        dsp_add(denormals_perform, 5, current_perform_routine, sp[0]->s_vec, sp[1]->s_vec, vec_size_val, x);
+        dsp_add(denormals_perform, 5, current_perform_routine, sp[0]->s_vec, sp[1]->s_vec, vec_size, x);
     }
     
     // 32 bit perform return wrapper
     
-    template<void PerformRoutine(t_int *w)>
+    template <void PerformRoutine(t_int *w)>
     static t_int *perform(t_int *w)
     {
         PerformRoutine(w);
@@ -148,7 +143,7 @@ public:
     {
         SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
         SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        long vec_size = static_cast<long>(w[4]);
+        long vec_size = static_cast<long>(w[4]) / SIMDType<float, N>::size;
         T *x = reinterpret_cast<T *>(w[5]);
 
         Functor &functor = x->m_functor;
