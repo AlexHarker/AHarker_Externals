@@ -352,7 +352,7 @@ void patch_slot::free_patch()
     {
         // Remove pointers to ins, unlink outlets, close window and free the patch
 
-        for (std::vector< std::vector<void *> >::iterator it = m_in_table.begin(); it != m_in_table.end(); it++)
+        for (std::vector<std::vector<void *>>::iterator it = m_in_table.begin(); it != m_in_table.end(); it++)
             it->clear();
         patcher_traverse<&patch_slot::unlink_outlets>(m_patch, nullptr, m_owner);
         close_window();
