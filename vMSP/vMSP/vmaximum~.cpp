@@ -12,8 +12,10 @@
 
 struct maximum_functor
 {
+    // N.B. operand ordering gives an exact match to Max's operation with nan inputs
+
     template <class T>
-    T operator()(const T a, const T b) { return max(a, b); }
+    T operator()(const T a, const T b) { return max(b, a); }
     
     // Empty Implementations
     

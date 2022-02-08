@@ -12,8 +12,10 @@
 
 struct minimum_functor
 {
+    // N.B. operand ordering gives an exact match to Max's operation with nan inputs
+    
     template <class T>
-    T operator()(const T a, const T b) { return min(a, b); }
+    T operator()(const T a, const T b) { return min(b, a); }
     
     // Empty Implementations
     
