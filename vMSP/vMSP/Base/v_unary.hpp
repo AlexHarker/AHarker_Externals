@@ -41,7 +41,7 @@ public:
         class_dspinit(*C);
         class_register(CLASS_BOX, *C);
                 
-        post ("%s - using vector version by Alex Harker", object_name);
+        post("%s - using vector version by Alex Harker", object_name);
         
         return 0;
     }

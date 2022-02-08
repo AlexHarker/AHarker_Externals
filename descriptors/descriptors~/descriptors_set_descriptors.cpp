@@ -1301,7 +1301,7 @@ void descriptors_descriptors_non_rt (t_descriptors *x, t_symbol *msg, short argc
 	x->num_pf_descriptors = num_pf_descriptors;
 	x->output_length = output_pos;
 	if (x->descriptor_feedback)
-		post ("descriptors(rt)~: set %ld descriptors", num_pf_descriptors + num_pb_descriptors);
+		post("descriptors(rt)~: set %ld descriptors", num_pf_descriptors + num_pb_descriptors);
 }
 
 
@@ -1372,7 +1372,7 @@ void descriptors_descriptors_rt(t_descriptors *x, t_symbol *msg, short argc, t_a
 	x->num_pf_descriptors = num_pf_descriptors;
 	x->output_length = output_pos;
 	if (x->descriptor_feedback)
-		post ("descriptors(rt)~: set %ld descriptors", num_pf_descriptors);
+		post("descriptors(rt)~: set %ld descriptors", num_pf_descriptors);
 }
 
 

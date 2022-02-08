@@ -620,7 +620,7 @@ void ajhwiiremote_connect(t_ajhwiiremote *x)
 {
 	if (wiiremote_isconnected(x->wiiremote))
 	{
-		post ("Already Connected!!");
+		post("Already Connected!!");
 		outlet_anything(x->statusOut, ps_connected, 0, 0);		
 	}
 	else
@@ -858,7 +858,7 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 	{
 		case WiiPost:
 			
-			post (String);
+			post(String);
 			break;
 			
 		case WiiErr:
@@ -869,7 +869,7 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 		case WiiDebug:
 		
 			#ifdef WII_DEBUG 
-			post (String);
+			post(String);
 			#endif
 			break;
 			
@@ -881,17 +881,17 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 			
 			switch (((WiiRemoteRef) wiiremote)->expType)
 			{
-				case WiiExpNotAttached:			post ("expansion change - not attached");							break;
-				case WiiExpUninitialised:		post ("expansion change - not intialised");							break;
-				case WiiNunchuk:				post ("expansion change - nunchuk");								break;
-				case WiiClassicController:		post ("expansion change - classic controller");						break;
-				case WiiGuitarHeroGuitar:		post ("expansion change - guitar hero guitar");						break;
-				case WiiGuitarHeroDrums:		post ("expansion change - guitar hero drums");						break;
-				case WiiMotionPlus:				post ("expansion change - motion plus");							break;
-				case WiiMotionPlusNunchuk:		post ("expansion change - motion plus with nunchuk");				break;
-				case WiiMotionPlusClassic:		post ("expansion change - motion plus with classic controller");	break;
-				case WiiExpNotTested:			post ("expansion change - not tested");								break;
-				default:						post ("expansion change - unknown device %x", ((WiiRemoteRef) wiiremote)->expType);
+				case WiiExpNotAttached:			post("expansion change - not attached");							break;
+				case WiiExpUninitialised:		post("expansion change - not intialised");							break;
+				case WiiNunchuk:				post("expansion change - nunchuk");								break;
+				case WiiClassicController:		post("expansion change - classic controller");						break;
+				case WiiGuitarHeroGuitar:		post("expansion change - guitar hero guitar");						break;
+				case WiiGuitarHeroDrums:		post("expansion change - guitar hero drums");						break;
+				case WiiMotionPlus:				post("expansion change - motion plus");							break;
+				case WiiMotionPlusNunchuk:		post("expansion change - motion plus with nunchuk");				break;
+				case WiiMotionPlusClassic:		post("expansion change - motion plus with classic controller");	break;
+				case WiiExpNotTested:			post("expansion change - not tested");								break;
+				default:						post("expansion change - unknown device %x", ((WiiRemoteRef) wiiremote)->expType);
 			}
 			break;
 	}

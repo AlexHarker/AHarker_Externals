@@ -79,7 +79,7 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	
 	if (!allocated_memory)
 	{
-		post ("descriptors(rt)~: couldn't allocate memory");
+		post("descriptors(rt)~: couldn't allocate memory");
 		return (0);
 	}
 	
