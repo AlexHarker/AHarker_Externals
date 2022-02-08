@@ -16,7 +16,7 @@ struct unary_precision_handler
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
-        const SIMDType<float, 1> b = op(static_cast<float>(a.mVal));
+        const SIMDType<float, 1> b = op(SIMDType<float, 1>(static_cast<float>(a.mVal)));
         return SIMDType<double, 1>(b.mVal);
     }
     
