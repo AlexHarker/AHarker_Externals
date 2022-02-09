@@ -227,8 +227,8 @@ public:
     template <class T, int N>
     static void perform_single1_op(t_int *w)
     {
-        SIMDType<float, N> *in1 = reinterpret_cast< SIMDType<float, N> *>(w[2]);
-        SIMDType<float, N> *out1 = reinterpret_cast< SIMDType<float, N> *>(w[4]);
+        SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
+        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[4]);
         long vec_size = static_cast<long>(w[5]);
         T *x = reinterpret_cast<T *>(w[6]);
 
@@ -247,8 +247,8 @@ public:
     template <class T, int N>
     static void perform_single2_op(t_int *w)
     {
-        SIMDType<float, N> *in2 = reinterpret_cast< SIMDType<float, N> *>(w[3]);
-        SIMDType<float, N> *out1 = reinterpret_cast< SIMDType<float, N> *>(w[4]);
+        SIMDType<float, N> *in2 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
+        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[4]);
         long vec_size = static_cast<long>(w[5]);
         T *x = reinterpret_cast<T *>(w[6]);
         
