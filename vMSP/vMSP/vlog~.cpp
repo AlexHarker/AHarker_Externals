@@ -25,16 +25,32 @@ struct log_functor
 {
     static constexpr double min_constant = 0.0000000001;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
+    // IO Limiting Functors
+
+    struct replace_input_functor
     {
-        float min_constant_f = static_cast<float>(min_constant);
-        return static_cast<float>(logf(a.mVal > 0.0 ? a.mVal : min_constant_f)) * static_cast<float>(update_base(b.mVal));
-    }
+        template <class T>
+        T operator()(const T& a)
+        {
+            using scalar = typename T::scalar_type;
+            const scalar min = static_cast<scalar>(min_constant);
+            return sel(T(min), a, a > T(scalar(0)));
+        }
+    };
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
+    struct replace_base_functor
     {
-        return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
-    }
+        template <class T>
+        T operator()(const T& a)
+        {
+            using scalar = typename T::scalar_type;
+            const scalar e = static_cast<scalar>(M_E);
+            const T b = sel(a, T(e), a == T(scalar(0)));
+            return sel(b, T(std::numeric_limits<scalar>::infinity()), b == T(1.0));
+        }
+    };
+    
+    // Base Update
     
     double update_base(double base)
     {
@@ -51,29 +67,19 @@ struct log_functor
         
         return m_base_mul;
     }
-
-    struct replace_input_functor
-    {
-        template <class T>
-        T operator()(const T& a) 
-        {
-            using scalar_type = typename T::scalar_type;
-            const scalar_type min = static_cast<scalar_type>(min_constant);
-            return sel(T(min), a, a > T(scalar_type(0))); 
-        }
-    };
     
-    struct replace_base_functor
+    // Ops + Array Operators
+
+    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
     {
-        template <class T>
-        T operator()(const T& a)
-        {
-            using scalar = typename T::scalar_type;
-            const scalar e = static_cast<scalar>(M_E);
-            const T b = sel(a, T(e), a == T(scalar(0)));
-            return sel(b, T(std::numeric_limits<scalar>::infinity()), b == T(1.0));
-        }
-    };
+        float min_constant_f = static_cast<float>(min_constant);
+        return logf(a.mVal > 0.0 ? a.mVal : min_constant_f) * static_cast<float>(update_base(b.mVal));
+    }
+    
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
+    {
+        return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
+    }
     
     template <class T>
     void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
@@ -82,7 +88,7 @@ struct log_functor
         
         switch (type)
         {
-            // N.B. - there is no signal/float input for log~ so if there's only one connection we take this route
+            // N.B. - the first input is always a signal, so if there's only one connection we take this route
                 
             case inputs::scalar1:
             case inputs::scalar2:
@@ -123,7 +129,11 @@ struct log_functor
     double m_base_mul = 0.0;
 };
 
-typedef v_binary<log_functor, calculation_type::vector_array, calculation_type::vector_array, true> vlog;
+// Type Alias
+
+using vlog = v_binary<log_functor, calculation_type::vector_array, calculation_type::vector_array, true, true>;
+
+// Main
 
 int C74_EXPORT main()
 {
