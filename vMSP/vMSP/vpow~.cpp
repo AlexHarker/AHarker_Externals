@@ -23,6 +23,8 @@
 
 struct pow_functor
 {
+    double m_exp = 1.0;
+    
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
     {
         return nan_fixer()(powf(b.mVal, a.mVal));
@@ -36,13 +38,15 @@ struct pow_functor
     template <class T>
     void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
+        // N.B. ordering of bases / exponents
+        
         switch (type)
         {
             case inputs::scalar1:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, static_cast<T>(val));
-                pow_array(o, i1, t, size);
+                pow_array(o, t, i1, size);
                 break;
             }
                 
@@ -50,12 +54,12 @@ struct pow_functor
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, static_cast<T>(val));
-                pow_array(o, t, i2, size);
+                pow_array(o, i2, t, size);
                 break;
             }
                 
             case inputs::binary:
-                pow_array(o, i1, i2, size);
+                pow_array(o, i2, i1, size);
                 break;
         }
 
@@ -66,6 +70,28 @@ struct pow_functor
 // Type Alias
 
 using vpow = v_binary<pow_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Specialise Value In
+
+template<>
+void vpow::value_in(double value, long inlet)
+{
+    if (inlet)
+        m_value = value;
+    else
+        m_functor.m_exp = value;
+}
+
+// Specialise Value Retrieval
+
+template<>
+double vpow::get_value(long inlet) const
+{
+    if (inlet)
+        return m_value;
+    else
+        return m_functor.m_exp;
+}
 
 // Main
 

@@ -91,17 +91,17 @@ public:
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 2);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
         
-        float_in(x, double_val);
+        x->value_in(double_val, 1);
 
         return x;
     }
-    
+
     // Float Input
     
     template <class T>
     static void float_in(T *x, double value)
     {
-        x->m_val = value;
+        x->value_in(value, proxy_getinlet((t_object *) x));
     }
     
     // Int Input
@@ -109,7 +109,7 @@ public:
     template <class T>
     static void int_in(T *x, t_atom_long value)
     {
-        x->m_val = static_cast<double>(value);
+        float_in(x, static_cast<double>(value));
     }
     
     // 32 bit DSP
@@ -218,7 +218,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::scalar1);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(1), inputs::scalar1);
     }
     
     // 32 bit Perform with One RHS Signal Input (SIMD - array)
@@ -228,7 +228,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::scalar2);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(0), inputs::scalar2);
     }
     
     // 32 bit Perform with Two Signal Inputs (SIMD - array)
@@ -238,7 +238,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->m_val, inputs::binary);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(0), inputs::binary);
     }
     
     // 32 bit Perform with One LHS Signal Input (SIMD - op)
@@ -253,7 +253,7 @@ public:
 
         Functor &functor = x->m_functor;
 
-        SIMDType<float, N> float_val(static_cast<float>(x->m_val));
+        SIMDType<float, N> float_val(static_cast<float>(x->get_value(1)));
         
         vec_size /= SIMDType<float, N>::size;
 
@@ -273,7 +273,7 @@ public:
         
         Functor &functor = x->m_functor;
 
-        SIMDType<float, N> float_val(static_cast<float>(x->m_val));
+        SIMDType<float, N> float_val(static_cast<float>(x->get_value(0)));
 
         vec_size /= SIMDType<float, N>::size;
     
@@ -381,7 +381,7 @@ public:
         SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->m_val);
+        SIMDType<double, N> double_val(x->get_value(1));
         
         vec_size /= SIMDType<double, N>::size;
         
@@ -399,7 +399,7 @@ public:
         SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->m_val);
+        SIMDType<double, N> double_val(x->get_value(0));
 
         vec_size /= SIMDType<double, N>::size;
 
@@ -429,7 +429,7 @@ public:
     template <class T>
     static void perform64_single1_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar1);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(1), inputs::scalar1);
     }
     
     // 64 bit Perform with One RHS Signal Input (SIMD - array)
@@ -437,7 +437,7 @@ public:
     template <class T>
     static void perform64_single2_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar2);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(0), inputs::scalar2);
     }
     
     // 64 bit Perform with Two Signal Inputs (SIMD - array)
@@ -445,7 +445,7 @@ public:
     template <class T>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::binary);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(0), inputs::binary);
     }
     
     // Assist
@@ -470,6 +470,20 @@ public:
     
 private:
     
+    // Value In (specialise if the inlet is important)
+    
+    void value_in(double value, long inlet)
+    {
+        m_value = value;
+    }
+    
+    // Get Value
+    
+    double get_value(long inlet) const
+    {
+        return m_value;
+    }
+    
     // Static Class Pointer
     
     template <class T>
@@ -484,7 +498,7 @@ private:
     
     t_pxobject m_obj;
     
-    double m_val;
+    double m_value;
         
     Functor m_functor;
 };
