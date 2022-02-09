@@ -54,7 +54,7 @@ void sort(T& values, long size)
 // An ascending order index sort (combsort11 algorithm)
 
 template <class T, class U>
-void sort(T& indices, U& values, long size)
+void sort(T& indices, const U& values, long size)
 {
     long gap = size;
     bool swaps = true;
