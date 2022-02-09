@@ -97,6 +97,29 @@ double vpow::get_value(inputs ins) const
         return m_functor.m_exp;
 }
 
+// Specialise Perform Routines with No Signals (zero output)
+
+template<>
+template<>
+void vpow::perform_single1_op<vpow, 1, inputs::none>(t_int *w)
+{
+    float *out = reinterpret_cast<float *>(w[4]);
+    long vec_size = static_cast<long>(w[5]);
+
+    while (vec_size--)
+        *out++ = 0.f;
+}
+
+template<>
+template<>
+void vpow::perform64_single1_op <vpow, 1, inputs::none>(vpow *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+{
+    double *out = reinterpret_cast<double *>(outs[0]);
+    
+    while (vec_size--)
+        *out++ = 0.0;
+}
+
 // Main
 
 int C74_EXPORT main()

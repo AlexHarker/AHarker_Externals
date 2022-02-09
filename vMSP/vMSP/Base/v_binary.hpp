@@ -121,8 +121,8 @@ public:
         
         switch (ins)
         {
-            case inputs::none:  // fall through
-            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, 1>>);
+            case inputs::none:  return reinterpret_cast<method>(perform<perform_single1_op<T, 1, inputs::none>>);
+            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, 1, inputs::lhs>>);
             case inputs::rhs:   return reinterpret_cast<method>(perform<perform_single2_op<T, 1>>);
             default:            return reinterpret_cast<method>(perform<perform_op<T, 1>>);
         }
@@ -133,14 +133,14 @@ public:
     {
         // Vector Op
 
-        constexpr int simd_width = SIMDLimits<float>::max_size;
+        constexpr int vec_size = SIMDLimits<float>::max_size;
         
         switch (ins)
         {
-            case inputs::none:  // fall through
-            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, simd_width>>);
-            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_single2_op<T, simd_width>>);
-            default:            return reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
+            case inputs::none:  return reinterpret_cast<method>(perform<perform_single1_op<T, vec_size, inputs::none>>);
+            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, vec_size, inputs::lhs>>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_single2_op<T, vec_size>>);
+            default:            return reinterpret_cast<method>(perform<perform_op<T, vec_size>>);
         }
     }
     
@@ -224,7 +224,7 @@ public:
     
     // 32 bit Perform with One LHS Signal Input (SIMD - op)
     
-    template <class T, int N>
+    template <class T, int N, inputs Ins>
     static void perform_single1_op(t_int *w)
     {
         SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
@@ -290,8 +290,8 @@ public:
         
         switch (ins)
         {
-            case inputs::none:  // fall through
-            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, 1>);
+            case inputs::none:  return reinterpret_cast<method>(perform64_single1_op<T, 1, inputs::none>);
+            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, 1, inputs::lhs>);
             case inputs::rhs:   return reinterpret_cast<method>(perform64_single2_op<T, 1>);
             default:            return reinterpret_cast<method>(perform64_op<T, 1>);
         }
@@ -302,14 +302,14 @@ public:
     {
         // Vector Op
 
-        constexpr int simd_width = SIMDLimits<double>::max_size;
+        constexpr int vec_size = SIMDLimits<double>::max_size;
         
         switch (ins)
         {
-            case inputs::none:  // fall through
-            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, simd_width>);
-            case inputs::rhs:   return reinterpret_cast<method>(perform64_single2_op<T, simd_width>);
-            default:            return reinterpret_cast<method>(perform64_op<T, simd_width>);
+            case inputs::none:  return reinterpret_cast<method>(perform64_single1_op<T, vec_size, inputs::none>);
+            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, vec_size, inputs::lhs>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform64_single2_op<T, vec_size>);
+            default:            return reinterpret_cast<method>(perform64_op<T, vec_size>);
         }
     }
     
@@ -354,7 +354,7 @@ public:
     
     // 64 bit Perform with One LHS Signal Input (SIMD - op)
 
-    template <class T, int N>
+    template <class T, int N, inputs Ins>
     static void perform64_single1_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
         Functor &functor = x->m_functor;
