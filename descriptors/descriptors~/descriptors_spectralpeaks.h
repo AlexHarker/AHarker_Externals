@@ -16,7 +16,6 @@
 
 #include "descriptors_object_structure.h"
 #include "descriptors_conversion_helpers.h"
-#include "descriptors_medianfilter.h"
 #include "descriptors_sort.hpp"
 
 //#include <AH_VectorOpsExtended.h>

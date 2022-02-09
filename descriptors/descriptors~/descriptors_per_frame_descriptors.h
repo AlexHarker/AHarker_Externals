@@ -17,7 +17,6 @@
 
 #include "descriptors_object_structure.h"
 #include "descriptors_constants.h"
-#include "descriptors_medianfilter.h"
 #include "descriptors_spectralpeaks.h"
 
 

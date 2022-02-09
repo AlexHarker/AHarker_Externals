@@ -14,6 +14,7 @@
  */
 
 #include "descriptors_per_frame_descriptors.h"
+#include "descriptors_medianfilter.hpp"
 #include <SIMDSupport.hpp>
 
 // Energy 
@@ -620,7 +621,9 @@ double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amp
 	
 	if (sum2)
 	{
-		medianfilter_float(x, median_indices, median_amplitudes, amplitudes, num_bins, median_span);
+        // FIX - check median span
+        percentilefilter(median_amplitudes, amplitudes, num_bins, 50.0, median_span, kEdgeFold);
+//		medianfilter(median_amplitudes, amplitudes, num_bins, median_span);
 		
 		for (i = 0; i < num_bins; i++)
 			sum1 += median_amplitudes[i] * median_amplitudes[i];
