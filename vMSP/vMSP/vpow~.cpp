@@ -19,6 +19,8 @@
 #include <malloc.h>
 #endif 
 
+// Functor
+
 struct pow_functor
 {
     SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
@@ -56,11 +58,16 @@ struct pow_functor
                 pow_array(o, i1, i2, size);
                 break;
         }
+
         nan_fixer()(o, size);
     }
 };
 
-typedef v_binary<pow_functor, calculation_type::vector_array, calculation_type::vector_array> vpow;
+// Type Alias
+
+using vpow = v_binary<pow_functor, calculation_type::vector_array, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {
