@@ -13,8 +13,6 @@
 #ifndef _DESCRIPTORS_STATS_
 #define _DESCRIPTORS_STATS_
 
-#include "descriptors_combsort.h"
-
 // Common statistical values
 
 double calc_mean_and_time_centroid (double *current_data, long num_frames, double *time_centroid_ret, double frame_to_ms_val);

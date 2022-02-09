@@ -92,39 +92,7 @@ void combsort_indices_double (long *indices, double *data, long num_points)
 
 // Sorts spectral peaks in-place (frequencies and amplitudes) into decescending amplitude order (double precision) 
 
-void combsort_peaks_double(double *amps, double *freqs, long num_peaks)		
-{
-	double f_temp;
-	double a_temp;
-	long gap = num_peaks;
-	long swaps = 1;
-	long i;
-	
-	while (gap > 1 || swaps)
-	{
-		if (gap > 1)
-		{
-			gap = (gap * 10) / 13;
-			if (gap == 9 || gap == 10) 
-				gap = 11;
-			if (gap < 1) gap = 1;
-		}
-		
-		for (i = 0, swaps = 0; i + gap < num_peaks; i++)
-		{
-			if (amps[i] < amps[i + gap])
-			{
-				a_temp = amps[i];
-				f_temp = freqs[i];
-				amps[i] = amps[i + gap];
-				freqs[i] = freqs[i + gap];
-				amps[i + gap] = a_temp;
-				freqs[i + gap] = f_temp;
-				swaps = 1;	
-			}
-		}
-	}
-}
+
 
 
 

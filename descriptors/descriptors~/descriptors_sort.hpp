@@ -1,22 +1,19 @@
 
 /*
- *  sort.hpp
+ *  descriptors_sort.hpp
  *
- *  A header file with sort functionality for the entrymatcher(~) objects.
+ *	A header file for the sort routines in the descriptors~ and descriptorsrt~ objects.
+ *	This code deals with various sorting operations in the descriptors~ and descriptorsrt~ objects.
  *
- *  There are a variety of sorts:
- *  - Directly on data in an array / vector
- *  - On indices with separate data arrays / vectors
- *  - On indices with a getter functor
- *
- *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *  Copyright 2010 Alex Harker. All rights reserved.
  *
  */
 
 
-#ifndef _SORT_HPP_
-#define _SORT_HPP_
+#ifndef _DESCRIPTORS_SORT_HPP_
+#define _DESCRIPTORS_SORT_HPP_
 
+// Sorting Routines
 
 // Convenience for altering swap flags
 
@@ -74,14 +71,13 @@ void sort(T& indices, const U& values, long size)
                 swaps = swap(indices[i], indices[i + gap]);
     }
 }
-
-// An ascending order index sort with a getter (combsort11 algorithm)
-
-template <class T, typename Op>
-void sort(T& indices, long size, const Op& getter)
+/*
+void combsort_peaks_double(double *amps, double *freqs, long num_peaks)
 {
-    long gap = size;
-    bool swaps = true;
+    double f_temp;
+    double a_temp;
+    long gap = num_peaks;
+    long swaps = 1;
     long i;
     
     while (gap > 1 || swaps)
@@ -89,14 +85,26 @@ void sort(T& indices, long size, const Op& getter)
         if (gap > 1)
         {
             gap = (gap * 10) / 13;
-            if (gap == 9 || gap == 10) gap = 11;
+            if (gap == 9 || gap == 10)
+                gap = 11;
             if (gap < 1) gap = 1;
         }
         
-        for (i = 0, swaps = false; i + gap < size; i++)
-            if (getter(indices[i]) > getter(indices[i + gap]))
-                swaps = swap(indices[i], indices[i + gap]);
+        for (i = 0, swaps = 0; i + gap < num_peaks; i++)
+        {
+            if (amps[i] < amps[i + gap])
+            {
+                a_temp = amps[i];
+                f_temp = freqs[i];
+                amps[i] = amps[i + gap];
+                freqs[i] = freqs[i + gap];
+                amps[i + gap] = a_temp;
+                freqs[i + gap] = f_temp;
+                swaps = 1;
+            }
+        }
     }
-}
+}*/
+void sort_peaks(double *amps, double *freqs, long num_peaks);
 
-#endif /* _SORT_HPP_ */
+#endif	/* _DESCRIPTORS_SORT_HPP_ */

@@ -17,6 +17,7 @@
 
 
 #include "descriptors_object.h"
+#include <SIMDSupport.hpp>
 
 
 // Object Basics (main / new / free)
@@ -129,8 +130,8 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 void descriptors_free(t_descriptors *x)
 {
 	dsp_free(&x->x_obj);
-	ALIGNED_FREE (x->window);
-	ALIGNED_FREE (x->rt_buffer);
+	ALIGNED_FREE(x->window);
+	ALIGNED_FREE(x->rt_buffer);
 	hisstools_destroy_setup(x->fft_setup_real);
     object_free(x->output_rt_clock);
 }
@@ -142,6 +143,8 @@ void descriptors_free(t_descriptors *x)
 
 void calc_descriptors_rt (t_descriptors *x, float *samples)
 {
+    using VecType = SIMDType<float, SIMDLimits<float>::max_size>;
+
 	t_atom *output_list = x->output_list;
 	
 	// FFT Variables
@@ -168,19 +171,6 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	float *freqs = (float *) x->n_data;
 	float *amps = freqs + fft_size_halved;
 	
-	vFloat *v_window = (vFloat *) window;
-	vFloat *v_sq_amplitudes = (vFloat *) sq_amplitudes;
-#if (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
-	vFloat *v_log_amplitudes = (vFloat *) log_amplitudes;
-#endif
-	vFloat *v_raw_frame = (vFloat *) raw_frame;
-	vFloat *v_windowed_frame = (vFloat *) windowed_frame;
-	vFloat *real_data;
-	vFloat *imag_data;
-	
-#if (defined F32_VEC_LOG_OP)
-	vFloat v_half = {0.5, 0.5, 0.5, 0.5};
-#endif
 #if (defined F32_VEC_LOG_OP || defined F32_VEC_LOG_ARRAY)
 	vFloat v_pow_min = {POW_MIN, POW_MIN, POW_MIN, POW_MIN};
 #endif
@@ -201,8 +191,12 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	raw_fft_frame.realp = windowed_frame + fft_size;
 	raw_fft_frame.imagp = raw_fft_frame.realp + fft_size_halved;
 	
-	real_data = (vFloat *) raw_fft_frame.realp;
-	imag_data = (vFloat *) raw_fft_frame.imagp;
+    VecType *v_raw_frame = reinterpret_cast<VecType *>(raw_frame);
+    VecType *v_windowed_frame = reinterpret_cast<VecType *>(windowed_frame);
+    VecType *v_window = reinterpret_cast<VecType *>(window);
+    VecType *v_sq_amplitudes = reinterpret_cast<VecType *>(sq_amplitudes);
+    VecType *real_data = reinterpret_cast<VecType *>(raw_fft_frame.realp);
+    VecType *imag_data = reinterpret_cast<VecType *>(raw_fft_frame.imagp);
 
 	if (!num_pf_descriptors) 
 		return;
@@ -232,7 +226,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	// Apply window
 	
 	for (i = 0; i < window_size >> 2; i++)
-		v_windowed_frame[i] = F32_VEC_MUL_OP(v_raw_frame[i], v_window[i]);
+		v_windowed_frame[i] = v_raw_frame[i] * v_window[i];
 	for (i <<= 2; i < window_size; i++)
 		windowed_frame[i] = raw_frame[i] * window[i];
 	
@@ -247,7 +241,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	// Calulate Square amplitudes (leaving the raw data also in case phase is needed for some descriptor added later)
 	
 	for (i = 0; i < fft_size_halved >> 2; i++)
-		v_sq_amplitudes[i] = F32_VEC_ADD_OP(F32_VEC_MUL_OP(real_data[i], real_data[i]), F32_VEC_MUL_OP(imag_data[i], imag_data[i]));
+		v_sq_amplitudes[i] = (real_data[i] * real_data[i]) + (imag_data[i] * imag_data[i]);
 		
 	// Calculate log amplitudes
 	
@@ -405,8 +399,8 @@ void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count)
 	
 	if (rt_memory_size < mem_required)
 	{
-		ALIGNED_FREE (x->rt_buffer);
-		x->rt_buffer = (float *) ALIGNED_MALLOC (mem_required * sizeof (float));
+		ALIGNED_FREE(x->rt_buffer);
+		x->rt_buffer = (float *) ALIGNED_MALLOC(mem_required * sizeof (float));
 		x->rt_memory_size = mem_required;
 	}
 		
@@ -424,7 +418,7 @@ void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count)
 		for (i = 0; i < mem_required; i++)
 			samples[i] = 0.0;
 	
-		dsp_add ((t_perfroutine)descriptors_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
+		dsp_add((t_perfroutine)descriptors_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
 	}
 	else 
 		x->rt_memory_size = 0;
@@ -499,22 +493,22 @@ void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double s
 	
 	long rt_memory_size = x->rt_memory_size;
 	long num_samps = x->max_fft_size;
-	long mem_required = 2 * (num_samps + maxvectorsize);
+	long mem_required = 2 * (num_samps + max_vec);
 	long i;
 	
 	// Allocate memory if none (or not enough) has been allocated
 	
 	if (rt_memory_size < mem_required)
 	{
-		ALIGNED_FREE (x->rt_buffer);
-		x->rt_buffer = (float *) ALIGNED_MALLOC (mem_required * sizeof (float));
+		ALIGNED_FREE(x->rt_buffer);
+		x->rt_buffer = (float *) ALIGNED_MALLOC(mem_required * sizeof (float));
 		x->rt_memory_size = mem_required;
 	}
 	
 	// Set variables
 	
 	x->write_pointer = 0;
-	x->sr = samplerate;
+	x->sr = sample_rate;
 	
 	// If memory is correctly allocated then zero the sample buffer and add the dp routine
 	

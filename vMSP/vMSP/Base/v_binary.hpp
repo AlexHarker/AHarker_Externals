@@ -22,11 +22,11 @@
 // Type Enums
 
 enum class calculation_type { scalar, vector_op, vector_array };
-enum class inputs { binary, scalar1, scalar2 };
+enum class inputs { both, lhs, rhs, none };
 
 // Binary Class
 
-template<typename Functor, calculation_type Type, bool FirstInputAlwaysSignal = false>
+template<typename Functor, calculation_type Type, bool LHSIn = true, bool LHSSig = false>
 class v_binary
 {
 public:
@@ -77,17 +77,17 @@ public:
         dsp_setup(reinterpret_cast<t_pxobject *>(&x->m_obj), 2);
         outlet_new(reinterpret_cast<t_object *>(x),"signal");
         
-        float_in(x, double_val);
+        x->value_in(double_val, 1);
 
         return x;
     }
-    
+
     // Float Input
     
     template <class T>
     static void float_in(T *x, double value)
     {
-        x->m_val = value;
+        x->value_in(value, proxy_getinlet((t_object *) x));
     }
     
     // Int Input
@@ -95,49 +95,52 @@ public:
     template <class T>
     static void int_in(T *x, t_atom_long value)
     {
-        x->m_val = static_cast<double>(value);
+        float_in(x, static_cast<double>(value));
     }
 
     // 64 bit DSP
-    
+
     template <typename T, calculation_type C = Type>
-    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, int> routine)
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, inputs> ins)
     {
         // Scalar
         
-        switch (routine)
+        switch (ins)
         {
-            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, 1>);
-            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, 1>);
-            default:    return reinterpret_cast<method>(perform64_op<T, 1>);
+            case inputs::none:  // fall through
+            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, 1>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform64_single2_op<T, 1>);
+            default:            return reinterpret_cast<method>(perform64_op<T, 1>);
         }
     }
     
     template <typename T, calculation_type C = Type>
-    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, int> routine)
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, inputs> ins)
     {
         // Vector Op
 
         constexpr int simd_width = SIMDLimits<double>::max_size;
         
-        switch (routine)
+        switch (ins)
         {
-            case 1:     return reinterpret_cast<method>(perform64_single1_op<T, simd_width>);
-            case 2:     return reinterpret_cast<method>(perform64_single2_op<T, simd_width>);
-            default:    return reinterpret_cast<method>(perform64_op<T, simd_width>);
+            case inputs::none:  // fall through
+            case inputs::lhs:   return reinterpret_cast<method>(perform64_single1_op<T, simd_width>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform64_single2_op<T, simd_width>);
+            default:            return reinterpret_cast<method>(perform64_op<T, simd_width>);
         }
     }
     
     template <typename T, calculation_type C = Type>
-    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, int> routine)
+    static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, inputs> ins)
     {
         // Vector Array
     
-        switch (routine)
+        switch (ins)
         {
-            case 1:     return reinterpret_cast<method>(perform64_single1_array<T>);
-            case 2:     return reinterpret_cast<method>(perform64_single2_array<T>);
-            default:    return reinterpret_cast<method>(perform64_array<T>);
+            case inputs::none:  return reinterpret_cast<method>(perform64_array<T, inputs::none>);
+            case inputs::lhs:   return reinterpret_cast<method>(perform64_array<T, inputs::lhs>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform64_array<T, inputs::rhs>);
+            default:            return reinterpret_cast<method>(perform64_array<T, inputs::both>);
         }
     }
     
@@ -145,26 +148,23 @@ public:
     static void dsp64(T *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
     {
         method perform_routine = (method) perform64_op<T, 1>;
-        int routine = 0;
+        inputs ins = inputs::none;
         
-        // If nothing is connected then don't do anything here....
-            
-        if (!count[1] && !count[0])
-            return;
+        // Choose routines as needed
         
-        // Choose scalar routines as needed
-        
-        if (!count[0])
-            routine = FirstInputAlwaysSignal ? 1 : 2;
-        else if (!count[1])
-            routine = 1;
+        if (count[0] && count[1])
+            ins = inputs::both;
+        else if (count[0] || LHSSig)
+            ins = inputs::lhs;
+        else if (count[1])
+            ins = inputs::rhs;
         
         // Use SIMD code where possible
         
         if (Type != calculation_type::scalar && ((max_vec / SIMDLimits<double>::max_size) > 0))
-            perform_routine = dsp_vector_select64<T>(routine);
+            perform_routine = dsp_vector_select64<T>(ins);
         else
-            perform_routine = dsp_vector_select64<T, calculation_type::scalar>(routine);
+            perform_routine = dsp_vector_select64<T, calculation_type::scalar>(ins);
         
         object_method(dsp64, gensym("dsp_add64"), x, perform_routine, 0, 0);
     }
@@ -179,7 +179,7 @@ public:
         SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->m_val);
+        SIMDType<double, N> double_val(x->get_value(1));
         
         vec_size /= SIMDType<double, N>::size;
         
@@ -197,7 +197,7 @@ public:
         SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->m_val);
+        SIMDType<double, N> double_val(x->get_value(0));
 
         vec_size /= SIMDType<double, N>::size;
 
@@ -222,28 +222,12 @@ public:
             *out1++ = functor(*in1++, *in2++);
     }
     
-    // 64 bit Peform with One LHS Signal Input (SIMD - array)
+    // 64 bit Perform with Variable Inputs (SIMD - array)
     
-    template <class T>
-    static void perform64_single1_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-    {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar1);
-    }
-    
-    // 64 bit Perform with One RHS Signal Input (SIMD - array)
-    
-    template <class T>
-    static void perform64_single2_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-    {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::scalar2);
-    }
-    
-    // 64 bit Perform with Two Signal Inputs (SIMD - array)
-    
-    template <class T>
+    template <class T, inputs Ins>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->m_val, inputs::binary);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(0), Ins);
     }
     
     // Assist
@@ -268,6 +252,21 @@ public:
     
 private:
     
+    // Value In (specialise if the inlet is important)
+    
+    void value_in(double value, long inlet)
+    {
+        if (LHSIn || inlet)
+            m_value = value;
+    }
+    
+    // Get Value
+    
+    double get_value(long inlet) const
+    {
+        return m_value;
+    }
+    
     // Static Class Pointer
     
     template <class T>
@@ -282,7 +281,7 @@ private:
     
     t_pxobject m_obj;
     
-    double m_val;
+    double m_value;
         
     Functor m_functor;
 };

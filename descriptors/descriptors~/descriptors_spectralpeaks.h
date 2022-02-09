@@ -16,21 +16,20 @@
 
 #include "descriptors_object_structure.h"
 #include "descriptors_conversion_helpers.h"
-#include "descriptors_medianfilter.h"
-#include "descriptors_combsort.h"
+#include "descriptors_sort.hpp"
 
 //#include <AH_VectorOpsExtended.h>
 
 // Double precision spectral peak finding
 
-void spectralpeaks_double (double *amplitudes, double *median_amplitudes, long num_bins, double *freqs, double *amps, double bin_freq, double log_thresh);
-double peakcorrection_double (double *amplitudes, long bin, long num_bins, double *better_amp);
+void spectralpeaks(double *amplitudes, double *median_amplitudes, long num_bins, double *freqs, double *amps, double bin_freq, double log_thresh);
+double peakcorrection(double *amplitudes, long bin, long num_bins, double *better_amp);
 
 // Single precision spectral peak finding
 
-void spectralpeaks_medianmask_float (t_descriptors *x, long * median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, long median_span, long num_bins, char *mask, long N, float *freqs, float *amps, float bin_freq, float log_thresh);
-void spectralpeaks_float (float *amplitudes, float *log_amplitudes, float *median_amplitudes, long num_bins, float *freqs, float *amps, float bin_freq, float log_thresh);
-float peakcorrection_float (float *amplitudes, long bin, long num_bins, float *better_amp);
+void spectralpeaks_medianmask(t_descriptors *x, long * median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, long median_span, long num_bins, char *mask, long N, float *freqs, float *amps, float bin_freq, float log_thresh);
+void spectralpeaks(float *amplitudes, float *log_amplitudes, float *median_amplitudes, long num_bins, float *freqs, float *amps, float bin_freq, float log_thresh);
+float peakcorrection(float *amplitudes, long bin, long num_bins, float *better_amp);
 
 
 #endif /* _DESCRIPTORS_SPECTRALPEAKS_ */

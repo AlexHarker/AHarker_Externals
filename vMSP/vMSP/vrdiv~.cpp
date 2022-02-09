@@ -29,14 +29,13 @@ struct rdiv_functor
 
 using vrdiv = v_binary<rdiv_functor, calculation_type::vector_op>;
 
-// Specialise Float In
+// Specialise Value In
 
 template<>
-template <class T>
-void vrdiv::float_in(T *x, double value)
+void vrdiv::value_in(double value, long inlet)
 {
-    x->m_val = nan_fixer()(value);
-    x->m_functor.m_recip = nan_fixer()(1.0 / value);
+    m_value = nan_fixer()(value);
+    m_functor.m_recip = nan_fixer()(1.0 / value);
 }
 
 // Specialise Perform Routine with LHS Signal Only (use multiply by reciprocal)

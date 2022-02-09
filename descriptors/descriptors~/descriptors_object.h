@@ -25,7 +25,6 @@
 #include "descriptors_object_structure.h"
 #include "descriptors_conversion_helpers.h"
 #include "descriptors_per_frame_descriptors.h"
-#include "descriptors_medianfilter.h"
 #include "descriptors_spectralpeaks.h"
 #include "descriptors_statistics.h"
 #include "descriptors_set_descriptors.h"

@@ -4,6 +4,8 @@
  *
  *  A header file that allows double precision objects to calculate in single precision in vMSP objects.
  *
+ *  At present this is not in use but unary functors could be wrapped using this to emulate MSP.
+ *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */

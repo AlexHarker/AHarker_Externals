@@ -13,7 +13,6 @@
 #define _DESCRIPTORS_CONSTANTS_
 
 #include <ext.h>
-//#include <AH_Win_Math.h>
 
 // Constants
 
@@ -40,11 +39,7 @@ extern double MKL_EQUALISE_MAX_LOG;
 
 // PI defines
 
-#define FFTW_PI			 3.14159265358979323846
 #define FFTW_TWOPI		 6.28318530717958647692
-#define FFTW_THREEPI	 9.42477796076937971538
-#define FFTW_FOURPI		12.56637061435817295384
-#define FFTW_SIXPI		18.84955592153875943076
 
 // FFT size defines
 
@@ -97,8 +92,8 @@ enum PFDescriptorType {
 	DESCRIPTOR_PF_SPECTRAL_PEAKS		= 29
 };
 
-enum PBDescriptorType {
-
+enum PBDescriptorType
+{
 	DESCRIPTOR_PB_NONE				= 0,
 	DESCRIPTOR_PB_DURATION			= 1,
 	DESCRIPTOR_PB_SPECTRAL_PEAKS	= 2
@@ -107,8 +102,8 @@ enum PBDescriptorType {
 
 // Statistics enums
 
-enum StatisticsType {
-
+enum StatisticsType
+{
 	STATS_NONE,
 	STATS_MEAN,
 	STATS_MEDIAN,
@@ -146,8 +141,8 @@ enum StatisticsType {
 
 // ThresholdType enums
 
-enum ThresholdType {
-	
+enum ThresholdType
+{
 	THRESH_ABS,
 	THRESH_PEAK_MUL,
 	THRESH_PEAK_DB,
@@ -155,13 +150,12 @@ enum ThresholdType {
 	THRESH_MEAN_MUL,
 	THRESH_MEAN_DB,
 	THRESH_MEAN_ADD
-	
 };
 
 // window type enums
 
-enum WindowType {
-
+enum WindowType
+{
 	WIND_HANN,
 	WIND_HAMMING,
 	WIND_KAISER,

@@ -23,7 +23,7 @@ struct greater
 
 // Type Alias
 
-using vgreaterthan = v_binary<comparison_functor<greater>, calculation_type::vector_op>;
+using vgreaterthan = v_binary_comparison<greater>;
 
 // Main
 

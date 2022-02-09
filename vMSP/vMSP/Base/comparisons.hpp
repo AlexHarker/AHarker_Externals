@@ -23,10 +23,15 @@ T mask_one(const T& a) { return a & static_cast<typename T::scalar_type>(1); }
 // Generic Comparison Functor
 
 template<typename Op>
-struct comparison_functor
+struct comparison
 {
     template <class T>
     T operator()(const T a, const T b) { return mask_one(Op()(a, b)); }
 };
+
+// Type Aliasing Helper
+
+template <class T>
+using v_binary_comparison = v_binary<comparison<T>, calculation_type::vector_op, false>;
 
 #endif /* _COMPARISONS_HPP_ */

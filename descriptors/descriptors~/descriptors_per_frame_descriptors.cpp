@@ -13,14 +13,11 @@
  *
  */
 
-
 #include "descriptors_per_frame_descriptors.h"
-
-
+#include "descriptors_medianfilter.hpp"
+#include <SIMDSupport.hpp>
 
 // Energy 
-
-
 
 double get_energy(double *cumulate_ptr, long min_bin, long max_bin, double energy_compensation)
 { 
@@ -30,11 +27,7 @@ double get_energy(double *cumulate_ptr, long min_bin, long max_bin, double energ
 	return cumulate_ptr[max_bin - 1] * energy_compensation;
 }
 
-
-
-// Energy Ratio 
-
-
+// Energy Ratio
 
 double get_energy_ratio(double *cumulate_ptr, long num_bins, long min_bin, long max_bin)
 {
@@ -47,11 +40,7 @@ double get_energy_ratio(double *cumulate_ptr, long num_bins, long min_bin, long 
 		return DBL_MAX;
 }
 
-
-
-// Rolloff 
-
-
+// Rolloff
 
 double get_spectral_rolloff(double *cumulate_ptr, long num_bins, double bin_freq, double threshold)
 {
@@ -70,11 +59,7 @@ double get_spectral_rolloff(double *cumulate_ptr, long num_bins, double bin_freq
 	return DBL_MAX;
 }
 
-
-
-// Spectral Crest 
-
-
+// Spectral Crest
 
 double get_spectral_crest(float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin)
 {
@@ -98,11 +83,7 @@ double get_spectral_crest(float *vals_ptr, double *cumulate_ptr, long min_bin, l
 	return DBL_MAX;
 }
 
-
-
-// Spectral Flux Distance Measure 
-
-
+// Spectral Flux Distance Measure
 
 double get_flux(float *frame1, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char square_flag, char forward_only)
 {
@@ -189,11 +170,7 @@ double get_flux(float *frame1, float *frame2, double *cumulate_ptr1, double *cum
 	return sum;
 }
 
-
-
-// Modified Kullback-Leibler Spectral Distance Measure 
-
-
+// Modified Kullback-Leibler Spectral Distance Measure
 
 double get_mkl(float *log_frame1, float *log_frame2, float *frame2, double *cumulate_ptr1, double *cumulate_ptr2, long min_bin, long max_bin, char norm_flag, char forward_only, char weight_frame2, double log_thresh)
 {
@@ -283,11 +260,7 @@ double get_mkl(float *log_frame1, float *log_frame2, float *frame2, double *cumu
 	return sum / (double) (2 * (max_bin - min_bin));
 }
 
-
-
-// Foote Spectral Distance Measure 
-
-
+// Foote Spectral Distance Measure
 
 double get_foote(float *frame1, float *frame2, long min_bin, long max_bin, char forward_only)
 {
@@ -336,11 +309,7 @@ double get_foote(float *frame1, float *frame2, long min_bin, long max_bin, char 
 	return DBL_MAX;
 }
 
-
-
-// Average Amplitude ABS 
-
-
+// Average Amplitude ABS
 
 double get_average_amp_abs(float *raw_frame, long num_samps)
 {
@@ -353,11 +322,7 @@ double get_average_amp_abs(float *raw_frame, long num_samps)
 	return sum / (double) num_samps;
 }
 
-
-
-// Average Amplitude RMS 
-
-
+// Average Amplitude RMS
 
 double get_average_amp_rms(float *raw_frame, long num_samps)
 {
@@ -370,11 +335,7 @@ double get_average_amp_rms(float *raw_frame, long num_samps)
 	return sqrt(sum / (double) num_samps);
 }
 
-
-
-// Peak Amplitude ABS 
-
-
+// Peak Amplitude ABS
 
 double get_amp_peak(float *raw_frame, long num_samps)
 {
@@ -392,11 +353,7 @@ double get_amp_peak(float *raw_frame, long num_samps)
 	return peak;
 }
 
-
-
-// Loudness 
-
-
+// Loudness
 
 double get_loudness(float *sq_amplitudes, double *loudness_curve, long num_bins, double energy_compensation)	
 {
@@ -409,11 +366,7 @@ double get_loudness(float *sq_amplitudes, double *loudness_curve, long num_bins,
 	return sum * energy_compensation;
 }
 
-
-
-// Shape Linear 
-
-
+// Shape Linear
 
 double get_shape_lin(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin, enum PFDescriptorType shape_type)
 {
@@ -506,11 +459,7 @@ double get_shape_lin(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, lo
 	return DBL_MAX;				
 }
 
-
-
-// Shape Log 
-
-
+// Shape Log
 
 double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, double *log_freq, long min_bin, long max_bin, enum PFDescriptorType shape_type)
 {
@@ -609,11 +558,7 @@ double get_shape_log(t_descriptors *x, float *vals_ptr, double *cumulate_ptr, do
 	return DBL_MAX;
 }
 
-
-
-// Brightness Linear 
-
-
+// Brightness Linear
 
 double get_brightness_lin(t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, long num_bins, long min_bin, long max_bin, double bin_freq, double threshold)
 {
@@ -626,11 +571,7 @@ double get_brightness_lin(t_descriptors *x, float *raw_frame, float *ac_coeffici
 	return DBL_MAX;
 }
 
-
-
-// Brightness Log 
-
-
+// Brightness Log
 
 double get_brightness_log(t_descriptors *x, float *raw_frame, float *ac_coefficients, float * vals_ptr, double *cumulate_ptr, double *log_freq, long num_bins, long min_bin, long max_bin, double threshold)
 {
@@ -643,11 +584,7 @@ double get_brightness_log(t_descriptors *x, float *raw_frame, float *ac_coeffici
 	return DBL_MAX;
 }
 
-
-
-// Spectral Flatness Measure 
-
-
+// Spectral Flatness Measure
 
 double get_sfm(float *log_amplitudes, double *cumulate_ptr, long min_bin, long max_bin)
 {
@@ -671,11 +608,7 @@ double get_sfm(float *log_amplitudes, double *cumulate_ptr, long min_bin, long m
 	return DBL_MAX;
 }
 
-
-
-// Noise Ratio 
-
-
+// Noise Ratio
 
 double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *sq_amplitudes, double *cumulate_ptr, double *log_freq, long num_bins, long median_span)
 {
@@ -688,7 +621,9 @@ double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amp
 	
 	if (sum2)
 	{
-		medianfilter_float (x, median_indices, median_amplitudes, amplitudes, num_bins, median_span);
+        // FIX - check median span
+        percentilefilter(median_amplitudes, amplitudes, num_bins, 50.0, median_span, kEdgeFold);
+//		medianfilter(median_amplitudes, amplitudes, num_bins, median_span);
 		
 		for (i = 0; i < num_bins; i++)
 			sum1 += median_amplitudes[i] * median_amplitudes[i];
@@ -703,11 +638,7 @@ double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amp
 	return DBL_MAX;
 }
 
-
-
-// Inharmonicity 
-
-
+// Inharmonicity
 
 double get_inharmonicity(t_descriptors *x, long *median_indices, float *median_amplitudes, float *amplitudes, float *log_amplitudes, float *raw_frame, float *ac_coefficients, float *freqs, float *amps, char *mask, long num_bins, long N, long median_span, double bin_freq, double threshold)
 {
@@ -758,11 +689,7 @@ double get_inharmonicity(t_descriptors *x, long *median_indices, float *median_a
 	return DBL_MAX;
 }
 
-
-
-// Routines for Autocorrelation Pitch Detection 
-
-
+// Routines for Autocorrelation Pitch Detection
 
 void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
 {
@@ -812,16 +739,16 @@ void calc_ac_coefficients(t_descriptors *x, float *raw_frame)
     hisstools_rifft(fft_setup_real, &full_fft_frame, ac_coefficients, fft_size_log2);
 }
 
-
 void complex_mult_conjugate(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, long length, float scale)
 {
-	vFloat *in_real1 = (vFloat *) in1.realp;
-	vFloat *in_imag1 = (vFloat *) in1.imagp;
-	vFloat *in_real2 = (vFloat *) in2.realp;
-	vFloat *in_imag2 = (vFloat *) in2.imagp;
+    using VecType = SIMDType<float, SIMDLimits<float>::max_size>;
+    
+    VecType *in_real1 = reinterpret_cast<VecType *>(in1.realp);
+    VecType *in_imag1 = reinterpret_cast<VecType *>(in1.imagp);
+    VecType *in_real2 = reinterpret_cast<VecType *>(in2.realp);
+    VecType *in_imag2 = reinterpret_cast<VecType *>(in2.imagp);
 	
-	vFloat vscale = {scale, scale, scale, scale};
-	vFloat in_real1_temp, in_real2_temp, in_imag1_temp, in_imag2_temp;
+    VecType vscale(scale);
 	
 	long i;
 	
@@ -833,20 +760,19 @@ void complex_mult_conjugate(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, lo
 	
 	for (i = 0; i < length >> 2; i++)
 	{
-		in_real1_temp = in_real1[i];
-		in_real2_temp = in_real2[i];
-		in_imag1_temp = in_imag1[i];
-		in_imag2_temp = in_imag2[i];
+        VecType in_real1_temp = in_real1[i];
+        VecType in_real2_temp = in_real2[i];
+        VecType in_imag1_temp = in_imag1[i];
+        VecType in_imag2_temp = in_imag2[i];
 		
-		in_real1[i] = F32_VEC_MUL_OP(F32_VEC_ADD_OP(F32_VEC_MUL_OP(in_real1_temp, in_real2_temp), F32_VEC_MUL_OP(in_imag1_temp, in_imag2_temp)), vscale);
-		in_imag1[i] = F32_VEC_MUL_OP(F32_VEC_SUB_OP(F32_VEC_MUL_OP(in_imag1_temp, in_real2_temp), F32_VEC_MUL_OP(in_real1_temp, in_imag2_temp)), vscale);
+		in_real1[i] = ((in_real1_temp * in_real2_temp) + (in_imag1_temp * in_imag2_temp)) * vscale;
+		in_imag1[i] = ((in_imag1_temp * in_real2_temp) - (in_real1_temp * in_imag2_temp)) * vscale;
 	}
 	
 	in1.imagp[0] = (nyquist1 * nyquist2) * scale;
 }
 
-
-double get_pitch (t_descriptors *x, float *raw_frame, float *ac_coeff, long length, double threshold, double *confidence_ret)
+double get_pitch(t_descriptors *x, float *raw_frame, float *ac_coeff, long length, double threshold, double *confidence_ret)
 {
 	long end_first = length;
 	long no_pitch = 0;
@@ -947,11 +873,7 @@ double get_pitch (t_descriptors *x, float *raw_frame, float *ac_coeff, long leng
 	return corrected_bin_freq;
 }
 
-
-
-// Routine for Calculating Roughness 
-
-
+// Routine for Calculating Roughness
 
 // This roughness calulator takes num_sines partials (freq and amplitude pairs) - ordering is unimportant
 
@@ -966,7 +888,6 @@ double get_pitch (t_descriptors *x, float *raw_frame, float *ac_coeff, long leng
 // where x is the interval between two partials expressed in critical bandwidths, and a is the interval for maximum roughness (about 0.25 CBs),
 // and i is an index (power) of about 2.  (NB: I [ie. Richard Parncutt]invented this function; H&K used a look-up table.) 
 // Critical bandwidth CBW is given by P&L's function, as cited by H&K.
-
 
 double get_roughness(float *freqs, float *amps, long num_sines)
 {

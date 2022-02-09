@@ -9,13 +9,15 @@
  */
 
 #include "descriptors_object.h"
-#include "Statistics.hpp"
+#include <SIMDSupport.hpp>
+#include <Statistics.hpp>
+#include <WindowFunctions.hpp>
 
 // Common Basics (main / new / assist)
 
 t_class *this_class;
 
-void descriptors_main_common ()
+void descriptors_main_common()
 {
 	// Setup class basics
 	
@@ -128,8 +130,7 @@ void descriptors_main_common ()
 	MKL_EQUALISE_MAX_LOG = log(pow(10, DB_MAX_MKL_EQUAL) * 20.);
 }
 
-
-void descriptors_new_common (t_descriptors *x, long max_fft_size_log2, long desciptor_feedback)
+void descriptors_new_common(t_descriptors *x, long max_fft_size_log2, long desciptor_feedback)
 {
 	// Initialise variables
 	
@@ -169,7 +170,6 @@ void descriptors_new_common (t_descriptors *x, long max_fft_size_log2, long desc
 		descriptors_fft_params_internal (x, 4096, 0, 0, ps_nullsym);	
 }
 
-
 void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
@@ -182,9 +182,7 @@ void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
     }
 }
 
-
 // FFT params and Window Generation
-
 
 
 long int_log2 (long in, long *inexact)
@@ -214,8 +212,7 @@ long int_log2 (long in, long *inexact)
 	return out;
 }
 
-
-long descriptors_max_fft_size (t_descriptors *x, long max_fft_size)
+long descriptors_max_fft_size(t_descriptors *x, long max_fft_size)
 {
 	// Returns the max fft size log 2 after checking range and value
 	
@@ -243,8 +240,7 @@ long descriptors_max_fft_size (t_descriptors *x, long max_fft_size)
 	return max_fft_size_log2;
 }
 
-
-void descriptors_fft_params (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
 	// Load in args as relevant
 	
@@ -262,7 +258,7 @@ void descriptors_fft_params (t_descriptors *x, t_symbol *msg, short argc, t_atom
 	descriptors_fft_params_internal(x, fft_size, hop_size, window_size, window_type);
 }
 	
-void descriptors_fft_params_internal (t_descriptors *x, long fft_size, long hop_size, long window_size, t_symbol *window_type)
+void descriptors_fft_params_internal(t_descriptors *x, long fft_size, long hop_size, long window_size, t_symbol *window_type)
 {
 	enum WindowType window_select = WIND_HANN;
 	
@@ -334,10 +330,11 @@ void descriptors_fft_params_internal (t_descriptors *x, long fft_size, long hop_
 	
 }
 
-
 void descriptors_generate_window(t_descriptors *x, float *window, long window_size, long fft_size, enum WindowType window_select)
 {
-	FFT_SETUP_F fft_setup_real = x->fft_setup_real;
+    using VecType = SIMDType<float, SIMDLimits<float>::max_size>;
+
+    FFT_SETUP_F fft_setup_real = x->fft_setup_real;
 	
 	FFT_SPLIT_COMPLEX_F raw_fft_frame;
 	
@@ -347,10 +344,6 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	long fft_size_halved = fft_size >> 1;
 	long fft_size_log2 = x->fft_size_log2;
 		
-	vFloat *v_amplitudes = (vFloat *) amplitudes;
-	vFloat *real_data;
-	vFloat *imag_data;
-	
 	float scale;
 	
 	double gain = 0.;
@@ -365,112 +358,31 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	raw_fft_frame.realp = raw_frame + fft_size;
 	raw_fft_frame.imagp = raw_fft_frame.realp + fft_size_halved;
 	
-	real_data = (vFloat *) raw_fft_frame.realp;
-	imag_data = (vFloat *) raw_fft_frame.imagp;
+    VecType *v_amplitudes = reinterpret_cast<VecType *>(amplitudes);
+    VecType *real_data = reinterpret_cast<VecType *>(raw_fft_frame.realp);
+    VecType *imag_data = reinterpret_cast<VecType *>(raw_fft_frame.imagp);
 
+    // FIX - parameters where needed.
+    
+    window_functions::params params;
+    
 	switch (window_select)
 	{
-		case WIND_RECT:
-			for (i = 0; i < window_size; i++)
-				window[i] = 1.f;
-			break;
-
-		case WIND_HANN:
-			for (i = 0; i < window_size; i++)
-				window[i] = 0.5 - (0.5 * cos(FFTW_TWOPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_HAMMING:
-			for (i = 0; i < window_size; i++)
-				window[i] = 0.54347826 - (0.45652174 * cos(FFTW_TWOPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_KAISER:
-			
+        case WIND_RECT:     window_functions::rect(window, window_size, 0, window_size, params);        break;
+        case WIND_HANN:     window_functions::hann(window, window_size, 0, window_size, params);        break;
+        case WIND_HAMMING:  window_functions::hamming(window, window_size, 0, window_size, params);     break;
+        case WIND_KAISER:   window_functions::kaiser(window, window_size, 0, window_size, params);     break;
+            //(x_sq = 46.24;)
 			// First find bessel function of alpha
 			
-			x_sq = 46.24;
-			new_term = 0.25 * x_sq;
-			b_func = 1.0;
-			j = 2;
-			
-			// Gives maximum accuracy
-			
-			while (new_term)	
-			{
-				b_func += new_term;
-				alpha_bessel_recip = (1.0 / (4.0 * (double) j * (double) j));
-				new_term = new_term * x_sq * (1.0 / (4.0 * (double) j * (double) j));
-				j++;
-			}
-				
-				alpha_bessel_recip = 1 / b_func;
-			
-			// Now create kaiser window
-			
-			for (i = 0; i < window_size; i++)
-			{
-				temp = ((2.0 * (double) i) - ((double) window_size - 1.0));
-				temp = temp / window_size;
-				temp *= temp;
-				x_sq = (1 - temp) * 46.24;
-				new_term = 0.25 * x_sq;
-				b_func = 1;
-				j = 2;
-				
-				// Gives maximum accuracy
-				
-				while (new_term)	
-				{
-					b_func += new_term;
-					new_term = new_term * x_sq * (1.0 / (4.0 * (double) j * (double) j));
-					j++;
-				}
-				window[i] = b_func * alpha_bessel_recip;
-			}
-			break;
-
-		case WIND_TRIANGLE:
-			for (i = 0; i < (window_size >> 1); i++)
-				window[i] = (double) i / (double) (window_size >> 1);
-			for (; i < window_size; i++)
-				window[i] = (double) (((double) window_size - 1) - (double) i) / (double) (window_size >> 1);
-			break;
-
-		case WIND_BLACKMAN:
-			for (i = 0; i < window_size; i++)
-				window[i] = 0.42659071 - (0.49656062 * cos(FFTW_TWOPI * ((double) i / (double) window_size))) + (0.07684867 * cos(FFTW_FOURPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_BLACKMAN_62:
-			for (i = 0; i < window_size; i++)
-				window[i] = (0.44859f - 0.49364f * cos(FFTW_TWOPI * ((double) i / (double) window_size)) + 0.05677f * cos(FFTW_FOURPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_BLACKMAN_70:
-			for (i = 0; i < window_size; i++)
-				window[i] = (0.42323f - 0.49755f * cos(FFTW_TWOPI * ((double) i / (double) window_size)) + 0.07922f * cos(FFTW_FOURPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_BLACKMAN_74:
-			for (i = 0; i < window_size; i++)
-				window[i] = (0.402217f - 0.49703f * cos(FFTW_TWOPI * ((double) i / (double) window_size)) + 0.09892f * cos(FFTW_FOURPI * ((double) i / (double) window_size)) - 0.00188 * cos(FFTW_THREEPI * ((double) i / (double) window_size)));
-		break;
-
-		case WIND_BLACKMAN_92:
-			for (i = 0; i < window_size; i++)
-				window[i] = (0.35875f - 0.48829f * cos(FFTW_TWOPI * ((double) i / (double) window_size)) + 0.14128f * cos(FFTW_FOURPI * ((double) i / (double) window_size)) - 0.01168 * cos(FFTW_THREEPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_BLACKMAN_HARRIS:
-			for (i = 0; i < window_size; i++)
-				window[i] = 0.35875 - (0.48829 * cos(FFTW_TWOPI * ((double) i / (double) window_size))) + (0.14128 * cos(FFTW_FOURPI * ((double) i / (double) window_size))) - (0.01168 * cos(FFTW_SIXPI * ((double) i / (double) window_size)));
-			break;
-
-		case WIND_FLAT_TOP:
-			for (i = 0; i < window_size; i++)
-				window[i] = 0.2810639 - (0.5208972 * cos(FFTW_TWOPI * ((double) i / (double) window_size))) + (0.1980399 * cos(FFTW_FOURPI * ((double) i / (double) window_size)));
-			break;
+        case WIND_TRIANGLE: window_functions::triangle(window, window_size, 0, window_size, params);     break;
+        case WIND_BLACKMAN: window_functions::exact_blackman(window, window_size, 0, window_size, params);     break;
+        case WIND_BLACKMAN_62:  window_functions::blackman_harris_62dB(window, window_size, 0, window_size, params);        break;
+        case WIND_BLACKMAN_70:  window_functions::blackman_harris_71dB(window, window_size, 0, window_size, params);        break;
+        case WIND_BLACKMAN_74:  window_functions::blackman_harris_74dB(window, window_size, 0, window_size, params);        break;
+        case WIND_BLACKMAN_92: window_functions::blackman_harris_92dB(window, window_size, 0, window_size, params);         break;
+        case WIND_BLACKMAN_HARRIS:  window_functions::blackman_harris_92dB(window, window_size, 0, window_size, params);    break;
+        case WIND_FLAT_TOP: window_functions::ni_flat_top(window, window_size, 0, window_size, params);     break;
 	}
 	
 	// Calculate the gain of the window
@@ -501,7 +413,7 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	// Calulate square amplitudes
 		
 	for (i = 0; i < fft_size_halved >> 2; i++)
-		v_amplitudes[i] = F32_VEC_ADD_OP(F32_VEC_MUL_OP(real_data[i], real_data[i]), F32_VEC_MUL_OP(imag_data[i], imag_data[i]));
+		v_amplitudes[i] = (real_data[i] * real_data[i]) + (imag_data[i] * imag_data[i]);
 		
 	// Now sum 
 
@@ -513,11 +425,7 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 	x->energy_compensation = 1.0 / gain;
 }
 
-
-
 // Zero Ring Buffers
-
-
 
 void descriptors_zero_ring_buffers (t_descriptors *x, long fft_size)
 {
@@ -537,9 +445,7 @@ void descriptors_zero_ring_buffers (t_descriptors *x, long fft_size)
 		*cumulate_buffer++ = 0.;
 }
 
-
 // Energy Threshold
-
 
 void descriptors_energy_thresh (t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
@@ -557,10 +463,7 @@ void descriptors_energy_thresh (t_descriptors *x, t_symbol *msg, short argc, t_a
 		error("descriptors(rt)~: too many arguments to energythresh message");
 }
 
-
-
 // Calculate Raw Per Frame descriptors
-
 
 double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_frame, FFT_SPLIT_COMPLEX_F raw_fft_frame, long frame_pointer, long num_samps, long fft_size, double **param_ptr)
 {
@@ -620,7 +523,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			{
 				//descriptor = get_energy(cumulate_sq_amps, min_bin, max_bin, x->energy_compensation);
                 descriptor = statSumSquares(amplitudes + min_bin, max_bin - min_bin) * x->energy_compensation;
-				if (params[3]) descriptor = pow_to_db (descriptor);	
+				if (params[3]) descriptor = pow_to_db(descriptor);
 			}
 			
 			*param_ptr += 4;
@@ -652,7 +555,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
                 descriptor = statCrest(amplitudes + min_bin, max_bin - min_bin);
 				//descriptor = get_spectral_crest(amplitudes, cumulate_amplitudes, min_bin, max_bin);
 			
-			if (params[3]) descriptor = pow_to_db (descriptor);
+			if (params[3]) descriptor = pow_to_db(descriptor);
 			
 			*param_ptr += 4;
 			break;
@@ -720,7 +623,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
             descriptor = statSumAbs(raw_frame, num_samps);
 			//descriptor = get_average_amp_abs(raw_frame, num_samps);
 			if (params[1]) 
-				descriptor = atodb (descriptor);
+				descriptor = atodb(descriptor);
 			
 			*param_ptr += 2;
 			break;
@@ -730,7 +633,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			descriptor = statRMS(raw_frame, num_samps);
             // descriptor = get_average_amp_rms(raw_frame, num_samps);
 			if (params[1])
-				descriptor = atodb (descriptor);
+				descriptor = atodb(descriptor);
 			
 			*param_ptr += 2;
 			break;
@@ -740,7 +643,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
             // descriptor = get_amp_peak(raw_frame, num_samps);
             descriptor = statMax(raw_frame, num_samps);
 			if (params[1]) 
-				descriptor = atodb (descriptor);
+				descriptor = atodb(descriptor);
 			
 			*param_ptr += 2;
 			break;
@@ -882,7 +785,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			N = (long) params[1];
 			median_span = (long) params[2];
 		
-			spectralpeaks_medianmask_float (x, median_indices, median_amplitudes, amplitudes, log_amplitudes, median_span, num_bins, mask, N, freqs, amps, bin_freq, (-90. / 20.) * log(10.));
+			spectralpeaks_medianmask_float(x, median_indices, median_amplitudes, amplitudes, log_amplitudes, median_span, num_bins, mask, N, freqs, amps, bin_freq, (-90. / 20.) * log(10.));
 			descriptor = get_roughness (freqs, amps, N);
 
 			*param_ptr += 3;
@@ -893,7 +796,7 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 			N = (long) params[1];
 			median_span = (long) params[2];
 			
-			spectralpeaks_medianmask_float (x, median_indices, median_amplitudes, amplitudes, log_amplitudes, median_span, num_bins, mask, N, freqs, amps, bin_freq, (-90. / 20.) * log(10.));
+			spectralpeaks_medianmask_float(x, median_indices, median_amplitudes, amplitudes, log_amplitudes, median_span, num_bins, mask, N, freqs, amps, bin_freq, (-90. / 20.) * log(10.));
 		
 			// NB - return DBL_MAX here - it's not a valid single descriptor
 			
@@ -908,49 +811,40 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 		return descriptor;
 }
 
-
-
 // Curves Dependent on sr and FFT SIze 
 
-
-
-void calc_curves (t_descriptors *x)
+void calc_curves(t_descriptors *x)
 {
 	long fft_size_halved = x->fft_size >> 1;
 	double bin_freq = x->sr / (double) x->fft_size;
 	
-	
-	calc_log_freq_curve (x->log_freq, fft_size_halved, bin_freq);
-	calc_loudness_curve (x->loudness_curve, fft_size_halved, bin_freq);
+	calc_log_freq_curve(x->log_freq, fft_size_halved, bin_freq);
+	calc_loudness_curve(x->loudness_curve, fft_size_halved, bin_freq);
 }
 
 
-void calc_log_freq_curve (double *log_freq, long num_bins, double bin_freq)
+void calc_log_freq_curve(double *log_freq, long num_bins, double bin_freq)
 {
-	long i;
-		
 	log_freq[0] = log2(0.00001);
 	
-	for (i = 1; i < num_bins; i++)
+	for (long i = 1; i < num_bins; i++)
 		log_freq[i] = log2((double) i * bin_freq);
 }
 
 
-void calc_loudness_curve (double *loudness_curve, long num_bins, double bin_freq)
+void calc_loudness_curve(double *loudness_curve, long num_bins, double bin_freq)
 {
-	long i;
-	double f;
 	double freq_mult = bin_freq / 1000.;
 	
-	for (i = 0; i < num_bins; i++)
+	for (long i = 0; i < num_bins; i++)
 	{
-		f = i * freq_mult;
+        double f = i * freq_mult;
 		loudness_curve[i] = pow(10., (-3.64 * pow(f, -0.8) + 6.5 * exp(-0.6 * (f - 3.3) * (f - 3.3)) - (0.001 * (f * f * f * f))) / 20.);
 	}
 	
 	// Now square it to get a power curve (so we can do a straight multiply later)
 	
-	for (i = 0; i < num_bins; i++)
+	for (long i = 0; i < num_bins; i++)
 		loudness_curve[i] *= loudness_curve[i];
 }
 
