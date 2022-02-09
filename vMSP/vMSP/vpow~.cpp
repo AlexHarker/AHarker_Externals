@@ -42,7 +42,11 @@ struct pow_functor
         
         switch (type)
         {
-            case inputs::scalar1:
+            case inputs::none:
+                std::fill_n(o, size, static_cast<T>(0));
+                return;
+                
+            case inputs::lhs:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, static_cast<T>(val));
@@ -50,7 +54,7 @@ struct pow_functor
                 break;
             }
                 
-            case inputs::scalar2:
+            case inputs::rhs:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
                 std::fill_n(t, size, static_cast<T>(val));
@@ -58,7 +62,7 @@ struct pow_functor
                 break;
             }
                 
-            case inputs::binary:
+            case inputs::both:
                 pow_array(o, i2, i1, size);
                 break;
         }

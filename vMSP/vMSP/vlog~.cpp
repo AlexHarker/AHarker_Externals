@@ -88,10 +88,11 @@ struct log_functor
         
         switch (type)
         {
-            // N.B. - the first input is always a signal, so if there's only one connection we take this route
+            // N.B. - the lhs input is always a signal, so if there's less than twp connections we take this route
                 
-            case inputs::scalar1:
-            case inputs::scalar2:
+            case inputs::none:
+            case inputs::lhs:
+            case inputs::rhs:
             {
                 const T mul = static_cast<T>(update_base(val));
                 
@@ -101,7 +102,7 @@ struct log_functor
                 break;
             }
                 
-            case inputs::binary:
+            case inputs::both:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
 
