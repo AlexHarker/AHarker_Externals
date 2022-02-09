@@ -41,7 +41,7 @@ void vdiv::value_in(double value, long inlet)
 // Specialise Perform Routine with LHS Signal Only (use multiply by reciprocal)
 
 template<>
-template <class T, int N>
+template <class T, int N, inputs Ins>
 void vdiv::perform64_single1_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {    
     SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);

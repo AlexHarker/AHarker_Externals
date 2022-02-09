@@ -84,12 +84,24 @@ void vpow::value_in(double value, long inlet)
 // Specialise Value Retrieval
 
 template<>
-double vpow::get_value(long inlet) const
+double vpow::get_value(inputs ins) const
 {
-    if (inlet)
+    if (ins == inputs::lhs)
         return m_value;
     else
         return m_functor.m_exp;
+}
+
+// Specialise Perform Routine with No Signals (zero output)
+
+template<>
+template<>
+void vpow::perform64_single1_op <vpow, 1, inputs::none>(vpow *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
+{
+    double *out = reinterpret_cast<double *>(outs[0]);
+    
+    while (vec_size--)
+        *out++ = 0.0;
 }
 
 // Main
