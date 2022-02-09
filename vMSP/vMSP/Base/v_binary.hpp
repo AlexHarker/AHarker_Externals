@@ -151,9 +151,10 @@ public:
     
         switch (ins)
         {
-            case 1:     return reinterpret_cast<method>(perform<perform_array<T, inputs::lhs>>);
-            case 2:     return reinterpret_cast<method>(perform<perform_array<T, inputs::rhs>>);
-            default:    return reinterpret_cast<method>(perform<perform_array<T, inputs::both>>);
+            case inputs::none:  // fall through
+            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_array<T, inputs::lhs>>);
+            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_array<T, inputs::rhs>>);
+            default:            return reinterpret_cast<method>(perform<perform_array<T, inputs::both>>);
         }
     }
     
