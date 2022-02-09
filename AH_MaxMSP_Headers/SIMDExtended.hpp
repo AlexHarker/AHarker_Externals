@@ -90,10 +90,12 @@ static inline void exp_array(double *out, const double *in, long length)
     vvexp(out, in, &pass_length);
 }
 
-static inline void pow_array(double *out, const double *in1, const double *in2, long length)
+static inline void pow_array(double *out, const double *bases, const double *exponents, long length)
 {
+    // N.B. argument ordering
+
     int pass_length = static_cast<int>(length);
-    vvpow(out, in1, in2, &pass_length);
+    vvpow(out, exponents, bases, &pass_length);
 }
 
 static inline void sin_array(float *out, const float *in, long length)
@@ -180,10 +182,12 @@ static inline void exp_array(float *out, const float *in, long length)
     vvexpf(out, in, &pass_length);
 }
 
-static inline void pow_array(float *out, const float *in1, const float *in2, long length)
+static inline void pow_array(float *out, const float *bases, const float *exponents, long length)
 {
+    // N.B. argument ordering
+    
     int pass_length = static_cast<int>(length);
-    vvpowf(out, in1, in2, &pass_length);
+    vvpowf(out, exponents, bases, &pass_length);
 }
 
 #else
@@ -260,9 +264,11 @@ static inline void exp_array(double *out, const double *in, long length)
     vdExp(length, in, out);
 }
 
-static inline void pow_array(double *out, const double *in1, const double *in2, long length)
+static inline void pow_array(double *out, const double *bases, const double *exponents, long length)
 {
-    vdPow(length, in1, in2, out);
+    // N.B. argument ordering
+
+    vdPow(length, bases, exponents, out);
 }
 
 static inline void sin_array(float *out, const float *in, long length)
@@ -335,9 +341,11 @@ static inline void exp_array(float *out, const float *in, long length)
     vsExp(length, in, out);
 }
 
-static inline void pow_array(float *out, const float *in1, const float *in2, long length)
+static inline void pow_array(float *out, const float *bases, const float *exponents, long length)
 {
-    vsPow(length, in1, in2, out);
+    // N.B. argument ordering
+
+    vsPow(length, bases, exponents, out);
 }
 
 #endif
