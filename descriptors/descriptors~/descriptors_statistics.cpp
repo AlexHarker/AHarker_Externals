@@ -11,6 +11,7 @@
 
 
 #include "descriptors_statistics.h"
+#include "descriptors_sort.hpp"
 
 
 
@@ -18,7 +19,7 @@
 
 
 
-double calc_mean_and_time_centroid (double *current_data, long num_frames, double *time_centroid_ret, double frame_to_ms_val)
+double calc_mean_and_time_centroid(double *current_data, long num_frames, double *time_centroid_ret, double frame_to_ms_val)
 {
 	// The time centroid is the average of the time values weighted by value
 	// This will return the time around which the data is weighted most highly
@@ -54,7 +55,7 @@ double calc_mean_and_time_centroid (double *current_data, long num_frames, doubl
 }
 
 
-double calc_standard_deviation (double *current_data, long num_frames, double mean)
+double calc_standard_deviation(double *current_data, long num_frames, double mean)
 {
 	double current_val;
 	double sum = 0;
@@ -80,13 +81,13 @@ double calc_standard_deviation (double *current_data, long num_frames, double me
 }
 
 
-double calc_median (double *current_data, long num_frames)
+double calc_median(double *current_data, long num_frames)
 {
 	long i;
 	
 	// Sort data
 	
-	combsort_double (current_data, num_frames);
+	sort(current_data, num_frames);
 
 	// Pick the value that is at the halfway point through the *valid* results
 	
@@ -108,7 +109,7 @@ double calc_median (double *current_data, long num_frames)
 
 // This routine spplies a mask based on the last found position for any of the below n value searches
 
-void n_search_mask (char *mask, long num_frames, long pos, long mask_size)
+void n_search_mask(char *mask, long num_frames, long pos, long mask_size)
 {
 	long from = pos - mask_size;
 	long to = pos + mask_size + 1;
@@ -126,7 +127,7 @@ void n_search_mask (char *mask, long num_frames, long pos, long mask_size)
 
 // Find the N maximum values, with a mask preventing close toegther values from being chosen
 
-void calc_n_max (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double frame_to_ms_val)
+void calc_n_max(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double frame_to_ms_val)
 {
 	double current_val;
 	double max = -DBL_MAX;
@@ -164,7 +165,7 @@ void calc_n_max (double *current_data, long num_frames, long mask_size, char *ma
 		
 		// Apply the mask and store the found values
 		
-		n_search_mask (mask, num_frames, max_pos, mask_size);
+		n_search_mask(mask, num_frames, max_pos, mask_size);
 		n_max[j] = max;
 		n_max_pos[j] = max_pos * frame_to_ms_val;
 	}
@@ -181,7 +182,7 @@ void calc_n_max (double *current_data, long num_frames, long mask_size, char *ma
 
 // Find the N minimum values, with a mask preventing close toegther values from being chosen
 
-void calc_n_min (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double frame_to_ms_val)
+void calc_n_min(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double frame_to_ms_val)
 {
 	double current_val;
 	double min = DBL_MAX;
@@ -219,7 +220,7 @@ void calc_n_min (double *current_data, long num_frames, long mask_size, char *ma
 
 		// Apply the mask and store the found values
 
-		n_search_mask (mask, num_frames, min_pos, mask_size);
+		n_search_mask(mask, num_frames, min_pos, mask_size);
 		n_min[j] = min;
 		n_min_pos[j] = min_pos  * frame_to_ms_val;
 	}
@@ -237,7 +238,7 @@ void calc_n_min (double *current_data, long num_frames, long mask_size, char *ma
 
 // Find the N peak values (values that are larger than the two surrounding values), with a mask preventing close toegther values from being chosen
 
-void calc_n_peak (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double frame_to_ms_val)
+void calc_n_peak(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double frame_to_ms_val)
 {
 	double current_val;
 	double prev_val;
@@ -317,7 +318,7 @@ void calc_n_peak (double *current_data, long num_frames, long mask_size, char *m
 
 		// Apply the mask and store the found values
 
-		n_search_mask (mask, num_frames, max_pos, mask_size);
+		n_search_mask(mask, num_frames, max_pos, mask_size);
 		n_max[j] = max;
 		n_max_pos[j] = max_pos * frame_to_ms_val;
 	}
@@ -335,7 +336,7 @@ void calc_n_peak (double *current_data, long num_frames, long mask_size, char *m
 
 // Find the N trough values (values that are smaller than the two surrounding values), with a mask preventing close toegther values from being chosen
 
-void calc_n_trough (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double frame_to_ms_val)
+void calc_n_trough(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double frame_to_ms_val)
 {
 	double current_val, prev_val, next_val, min, new_min;
 	long min_pos, new_min_pos;
@@ -412,7 +413,7 @@ void calc_n_trough (double *current_data, long num_frames, long mask_size, char 
 
 		// Apply the mask and store the found values
 
-		n_search_mask (mask, num_frames, min_pos, mask_size);
+		n_search_mask(mask, num_frames, min_pos, mask_size);
 		n_min[j] = min;
 		n_min_pos[j] = min_pos * frame_to_ms_val;
 	}
@@ -434,7 +435,7 @@ void calc_n_trough (double *current_data, long num_frames, long mask_size, char 
 
 // This routine spplies a mask based on the last found position for any of the below threshold searches, as well as returning the two crossing points
 
-long threshold_search_mask (double *current_data, char *mask, long num_frames, long peak_pos, long mask_size, char above_flag, double threshold, long *cross_point2_ret)
+long threshold_search_mask(double *current_data, char *mask, long num_frames, long peak_pos, long mask_size, char above_flag, double threshold, long *cross_point2_ret)
 {
 	double current_val;
 	long from = peak_pos - mask_size;
@@ -507,7 +508,7 @@ long threshold_search_mask (double *current_data, char *mask, long num_frames, l
 
 // Find the N peak values and crossing points that cross above the specified threshold (with masking as above)
 
-void calc_n_thresh_cross_above (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double *cross_pos1, double *cross_pos2, double threshold, double frame_to_ms_val)
+void calc_n_thresh_cross_above(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_max, double *n_max_pos, double *cross_pos1, double *cross_pos2, double threshold, double frame_to_ms_val)
 {
 	double current_val, prev_val, next_val, max, new_max;
 	long cross_point1, cross_point2;
@@ -581,7 +582,7 @@ void calc_n_thresh_cross_above (double *current_data, long num_frames, long mask
 
 		// Do msking and store values
 		
-		cross_point1 = threshold_search_mask (current_data, mask, num_frames, max_pos, mask_size, 1, threshold, &cross_point2);
+		cross_point1 = threshold_search_mask(current_data, mask, num_frames, max_pos, mask_size, 1, threshold, &cross_point2);
 		n_max[j] = max;
 		n_max_pos[j] = max_pos * frame_to_ms_val;
 		cross_pos1[j] = cross_point1 * frame_to_ms_val;
@@ -602,7 +603,7 @@ void calc_n_thresh_cross_above (double *current_data, long num_frames, long mask
 
 // Find the N trough values and crossing points that cross below the specified threshold (with masking as above)
 
-void calc_n_thresh_cross_below (double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double *cross_pos1, double *cross_pos2, double threshold, double frame_to_ms_val)
+void calc_n_thresh_cross_below(double *current_data, long num_frames, long mask_size, char *mask, long N, double *n_min, double *n_min_pos, double *cross_pos1, double *cross_pos2, double threshold, double frame_to_ms_val)
 {
 	double current_val, prev_val, next_val, min, new_min;
 	long cross_point1, cross_point2;
@@ -683,7 +684,7 @@ void calc_n_thresh_cross_below (double *current_data, long num_frames, long mask
 		
 		// Do msking and store values
 
-		cross_point1 = threshold_search_mask (current_data, mask, num_frames, min_pos, mask_size, 0, threshold, &cross_point2);
+		cross_point1 = threshold_search_mask(current_data, mask, num_frames, min_pos, mask_size, 0, threshold, &cross_point2);
 		n_min[j] = min;
 		n_min_pos[j] = min_pos * frame_to_ms_val;
 		cross_pos1[j] = cross_point1 * frame_to_ms_val;
@@ -709,7 +710,7 @@ void calc_n_thresh_cross_below (double *current_data, long num_frames, long mask
 
 // Find the longest N periods that cross above the specified threshold (with masking as above)
 
-void calc_longest_crossing_points_above (double *current_data, long num_frames, long mask_size, long N, double *n_val, double *cross1, double *cross2, double threshold, double frame_to_ms_val)
+void calc_longest_crossing_points_above(double *current_data, long num_frames, long mask_size, long N, double *n_val, double *cross1, double *cross2, double threshold, double frame_to_ms_val)
 {
 	double current_val;
 	double length;
@@ -793,7 +794,7 @@ void calc_longest_crossing_points_above (double *current_data, long num_frames, 
 
 // Find the longest N periods that cross below the specified threshold (with masking as above)
 
-void calc_longest_crossing_points_below (double *current_data, long num_frames, long mask_size, long N, double *n_val, double *cross1, double *cross2, double threshold, double frame_to_ms_val)
+void calc_longest_crossing_points_below(double *current_data, long num_frames, long mask_size, long N, double *n_val, double *cross1, double *cross2, double threshold, double frame_to_ms_val)
 {
 	double current_val;
 	double length;
@@ -882,7 +883,7 @@ void calc_longest_crossing_points_below (double *current_data, long num_frames, 
 
 // This routine calculates the ratio of values above, or below the specified threshold
 
-double calc_threshold_ratio (double *current_data, long num_frames, char above_flag, double threshold)
+double calc_threshold_ratio(double *current_data, long num_frames, char above_flag, double threshold)
 {
 	double current_val;
 	long num_crossed = 0;

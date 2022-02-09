@@ -14,7 +14,6 @@
 #define _DESCRIPTORS_PFDESCRIPTORS_
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
-#include <AH_VectorOps.h>
 
 #include "descriptors_object_structure.h"
 #include "descriptors_constants.h"
@@ -25,8 +24,8 @@
 // Energy and basic spectral derivatives
 
 //double get_energy (double *cumulate_sq_amps, long min_bin, long max_bin, double energy_compensation);
-double get_energy_ratio (double *cumulate_sq_amps, long num_bins, long min_bin, long max_bin);
-double get_spectral_rolloff (double *cumulate_sq_amps, long num_bins, double bin_freq, double threshold);
+//double get_energy_ratio (double *cumulate_sq_amps, long num_bins, long min_bin, long max_bin);
+//double get_spectral_rolloff (double *cumulate_sq_amps, long num_bins, double bin_freq, double threshold);
 //double get_spectral_crest (float *vals_ptr, double *cumulate_ptr, long min_bin, long max_bin);
 
 // Spectral difference measures

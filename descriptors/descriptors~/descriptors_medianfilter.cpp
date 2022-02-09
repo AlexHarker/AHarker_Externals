@@ -80,7 +80,7 @@ void medianfilter_double (long *indices, double *medians, double *data, long num
 
 
 
-long medianfilter_insert_double (long *indices, double *data, long num_points, long insert_index)
+long medianfilter_insert_double(long *indices, double *data, long num_points, long insert_index)
 {
 	double insert_val = data[insert_index];
 	long gap = num_points >> 1;

@@ -18,22 +18,14 @@
 
 
 #include "descriptors_object_structure.h"
-#include "descriptors_combsort.h"
+#include "descriptors_sort.hpp"
 
 
 // Double precision median filter functions 
 
-void medianfilter_double (long *indices, double *medians, double *data, long num_points, long median_span);
-long medianfilter_insert_double (long *indices, double *data, long num_points, long insert_index);
-void medianfilter_switch_double (long *indices, double *data, long num_points, long insert_index, long remove_index);
-long medianfilter_remove_double (long *indices, double *data, long num_points, long remove_index);
-
-// Single precision median filter functions
-
-void medianfilter_float (t_descriptors *x, long *indices, float *medians, float *data, long num_points, long median_span);
-long medianfilter_insert_float (long *indices, float *data, long num_points, long insert_index);
-void medianfilter_switch_float (long *indices, float *data, long num_points, long insert_index, long remove_index);
-long medianfilter_remove_float (long *indices, float *data, long num_points, long remove_index);
-
+void medianfilter(long *indices, double *medians, double *data, long num_points, long median_span);
+long medianfilter_insert(long *indices, double *data, long num_points, long insert_index);
+void medianfilter_switch(long *indices, double *data, long num_points, long insert_index, long remove_index);
+long medianfilter_remove(long *indices, double *data, long num_points, long remove_index);
 
 #endif /* _DESCRIPTORS_MEDIAN_FILTER_ */

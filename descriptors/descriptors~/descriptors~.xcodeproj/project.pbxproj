@@ -18,7 +18,6 @@
 		B8D158260F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */; };
 		B8E7A6CA0EE19C47004ABE12 /* descriptors_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */; };
 		B8F3820D0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp */; };
-		B8F3825B0F23B80000B7D3E0 /* descriptors_combsort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382590F23B80000B7D3E0 /* descriptors_combsort.cpp */; };
 		B8F382680F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */; };
 		B8F3829C0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */; };
 		B8F382F50F23BD5300B7D3E0 /* descriptors_statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */; };
@@ -26,14 +25,12 @@
 		B8FE3F1F10986C1000780AF9 /* descriptors_per_frame_descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */; };
 		B8FE3F2010986C1000780AF9 /* descriptors_medianfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp */; };
 		B8FE3F2110986C1000780AF9 /* descriptors_spectralpeaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */; };
-		B8FE3F2210986C1000780AF9 /* descriptors_combsort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382590F23B80000B7D3E0 /* descriptors_combsort.cpp */; };
 		B8FE3F2310986C1000780AF9 /* descriptors_statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */; };
 		B8FE3F2410986C1000780AF9 /* descriptors_set_descriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
-		B815E6C81F5B5B1100ADF1CA /* Statistics.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Statistics.hpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B84BD78B10E81358002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
@@ -49,8 +46,7 @@
 		B8F3820A0F23B58E00B7D3E0 /* descriptors_medianfilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_medianfilter.h; sourceTree = "<group>"; };
 		B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_medianfilter.cpp; sourceTree = "<group>"; };
 		B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_conversion_helpers.h; sourceTree = "<group>"; };
-		B8F382580F23B80000B7D3E0 /* descriptors_combsort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_combsort.h; sourceTree = "<group>"; };
-		B8F382590F23B80000B7D3E0 /* descriptors_combsort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_combsort.cpp; sourceTree = "<group>"; };
+		B8F382580F23B80000B7D3E0 /* descriptors_sort.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = descriptors_sort.hpp; sourceTree = "<group>"; };
 		B8F382650F23B88000B7D3E0 /* descriptors_spectralpeaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_spectralpeaks.h; sourceTree = "<group>"; };
 		B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_spectralpeaks.cpp; sourceTree = "<group>"; };
 		B8F382990F23BA2F00B7D3E0 /* descriptors_set_descriptors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_set_descriptors.h; sourceTree = "<group>"; };
@@ -91,7 +87,6 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B815E6C81F5B5B1100ADF1CA /* Statistics.hpp */,
 				B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */,
 				B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */,
 				B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */,
@@ -101,8 +96,7 @@
 				B8D1585D0F23B21B00DA592C /* descriptors_constants.h */,
 				B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */,
 				B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */,
-				B8F382580F23B80000B7D3E0 /* descriptors_combsort.h */,
-				B8F382590F23B80000B7D3E0 /* descriptors_combsort.cpp */,
+				B8F382580F23B80000B7D3E0 /* descriptors_sort.hpp */,
 				B8F3820A0F23B58E00B7D3E0 /* descriptors_medianfilter.h */,
 				B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp */,
 				B8F382650F23B88000B7D3E0 /* descriptors_spectralpeaks.h */,
@@ -260,7 +254,6 @@
 				B815E6C61F5B2B2200ADF1CA /* descriptors_constants.cpp in Sources */,
 				B8F3820D0F23B58E00B7D3E0 /* descriptors_medianfilter.cpp in Sources */,
 				B8F382680F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp in Sources */,
-				B8F3825B0F23B80000B7D3E0 /* descriptors_combsort.cpp in Sources */,
 				B8F382F50F23BD5300B7D3E0 /* descriptors_statistics.cpp in Sources */,
 				B8F3829C0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp in Sources */,
 				B84BD78C10E81358002288DB /* ibuffer_access.cpp in Sources */,
@@ -279,7 +272,6 @@
 				B8FE3F1F10986C1000780AF9 /* descriptors_per_frame_descriptors.cpp in Sources */,
 				B8FE3F2010986C1000780AF9 /* descriptors_medianfilter.cpp in Sources */,
 				B8FE3F2110986C1000780AF9 /* descriptors_spectralpeaks.cpp in Sources */,
-				B8FE3F2210986C1000780AF9 /* descriptors_combsort.cpp in Sources */,
 				B8FE3F2310986C1000780AF9 /* descriptors_statistics.cpp in Sources */,
 				B8FE3F2410986C1000780AF9 /* descriptors_set_descriptors.cpp in Sources */,
 				B84BD78D10E81358002288DB /* ibuffer_access.cpp in Sources */,
