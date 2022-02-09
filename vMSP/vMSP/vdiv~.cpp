@@ -17,15 +17,10 @@
 
 struct div_functor
 {
+    // N.B - the behaviour of div~ is different with some NaN inputs
+
     template <class T>
-    T operator()(const T a, const T b)
-    {
-        static const T zero(static_cast<typename T::scalar_type>(0));
-        
-        // N.B - the exact behaviour of div~ is different when a is NaN and b is zero, but it uses a * (1/b)
-        
-        return sel(zero, a / b, b != zero);
-    }
+    T operator()(const T a, const T b) { return nan_fixer()(a / b); }
     
     double m_recip;
 };
@@ -40,7 +35,7 @@ template<>
 template <class T>
 void vdiv::float_in(T *x, double value)
 {
-    x->m_val = value;
+    x->m_val = nan_fixer()(value);
     x->m_functor.m_recip = nan_fixer()(1.0 / value);
 }
 
@@ -60,7 +55,7 @@ void vdiv::perform_single1_op(t_int *w)
     vec_size /= SIMDType<float, N>::size;
 
     while (vec_size--)
-        *out1++ = fix_denorm(*in1++ * float_val);
+        *out1++ = fix_denorm(nan_fixer()(*in1++ * float_val));
 }
 
 template<>
@@ -75,7 +70,7 @@ void vdiv::perform64_single1_op(T *x, t_object *dsp64, double **ins, long numins
     vec_size /= SIMDType<double, N>::size;
 
     while (vec_size--)
-        *out1++ = fix_denorm(*in1++ * double_val);
+        *out1++ = fix_denorm(nan_fixer()(*in1++ * double_val));
 }
 
 // Main

@@ -17,6 +17,8 @@
 
 struct rdiv_functor
 {
+    // N.B - the behaviour of rdiv~ is different with some NaN inputs
+
     template <class T>
     T operator()(const T a, const T b) { return nan_fixer()(b / a); }
     
@@ -33,7 +35,7 @@ template<>
 template <class T>
 void vrdiv::float_in(T *x, double value)
 {
-    x->m_val = value;
+    x->m_val = nan_fixer()(value);
     x->m_functor.m_recip = nan_fixer()(1.0 / value);
 }
 
@@ -53,7 +55,7 @@ void vrdiv::perform_single2_op(t_int *w)
     vec_size /= SIMDType<float, N>::size;
 
     while (vec_size--)
-        *out1++ = fix_denorm(float_val * *in2++);
+        *out1++ = fix_denorm(nan_fixer()(float_val * *in2++));
 }
 
 template<>
@@ -68,7 +70,7 @@ void vrdiv::perform64_single2_op(T *x, t_object *dsp64, double **ins, long numin
     vec_size /= SIMDType<double, N>::size;
 
     while (vec_size--)
-        *out1++ = fix_denorm(double_val * *in2++);
+        *out1++ = fix_denorm(nan_fixer()(double_val * *in2++));
 }
 
 // Main
