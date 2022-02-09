@@ -219,7 +219,7 @@ public:
     {
         T *x = reinterpret_cast<T *>(w[6]);
         
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(0), Ins);
+        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(Ins), Ins);
     }
     
     // 32 bit Perform with One LHS Signal Input (SIMD - op)
@@ -234,7 +234,7 @@ public:
 
         Functor &functor = x->m_functor;
 
-        SIMDType<float, N> float_val(static_cast<float>(x->get_value(1)));
+        SIMDType<float, N> float_val(static_cast<float>(x->get_value(inputs::lhs)));
         
         vec_size /= SIMDType<float, N>::size;
 
@@ -254,7 +254,7 @@ public:
         
         Functor &functor = x->m_functor;
 
-        SIMDType<float, N> float_val(static_cast<float>(x->get_value(0)));
+        SIMDType<float, N> float_val(static_cast<float>(x->get_value(inputs::rhs)));
 
         vec_size /= SIMDType<float, N>::size;
     
@@ -362,7 +362,7 @@ public:
         SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->get_value(1));
+        SIMDType<double, N> double_val(x->get_value(inputs::lhs));
         
         vec_size /= SIMDType<double, N>::size;
         
@@ -380,7 +380,7 @@ public:
         SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
         SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->get_value(0));
+        SIMDType<double, N> double_val(x->get_value(inputs::rhs));
 
         vec_size /= SIMDType<double, N>::size;
 
@@ -410,7 +410,7 @@ public:
     template <class T, inputs Ins>
     static void perform64_array(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
     {
-        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(0), Ins);
+        x->m_functor(outs[0], ins[0], ins[1], vec_size, x->get_value(Ins), Ins);
     }
     
     // Assist
@@ -445,7 +445,7 @@ private:
     
     // Get Value
     
-    double get_value(long inlet) const
+    double get_value(inputs ins) const
     {
         return m_value;
     }
