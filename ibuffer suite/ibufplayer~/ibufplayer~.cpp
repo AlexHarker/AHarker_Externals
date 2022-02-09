@@ -28,12 +28,6 @@
 #include <limits>
 #include <algorithm>
 
-#ifdef __APPLE__
-#include <alloca.h>
-#else
-#include <malloc.h>
-#endif 
-
 
 // Globals and Object Structure
 
