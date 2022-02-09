@@ -27,7 +27,7 @@ enum class inputs { binary, scalar1, scalar2 };
 
 // Binary Class
 
-template<typename Functor, calculation_type Vec32, calculation_type Vec64, bool FirstInputAlwaysSignal = false>
+template<typename Functor, calculation_type Vec32, calculation_type Vec64, bool LHSIn = true, bool LHSSig = false>
 class v_binary
 {
     // Denormal Fixing
@@ -169,17 +169,12 @@ public:
         
         method perform_routine = (method) perform<perform_op<T, 1>>;
         
-        // If nothing is connected then don't do anything here....
+        // Choose routines as needed
         
-        if (!count[1] && !count[0])
-            return;
-        
-        // Choose scalar routines as needed
-        
-        if (!count[0])
-            routine = FirstInputAlwaysSignal ? 1 : 2;
-        else if (!count[1])
+        if (!count[1])
             routine = 1;
+        else if (!count[0])
+            routine = LHSSig ? 1 : 2;
 
         // Use SIMD code where possible
         
@@ -349,17 +344,12 @@ public:
         method perform_routine = (method) perform64_op<T, 1>;
         int routine = 0;
         
-        // If nothing is connected then don't do anything here....
-            
-        if (!count[1] && !count[0])
-            return;
+        // Choose routines as needed
         
-        // Choose scalar routines as needed
-        
-        if (!count[0])
-            routine = FirstInputAlwaysSignal ? 1 : 2;
-        else if (!count[1])
+        if (!count[1])
             routine = 1;
+        else if (!count[0])
+            routine = LHSSig ? 1 : 2;
         
         // Use SIMD code where possible
         
@@ -474,7 +464,8 @@ private:
     
     void value_in(double value, long inlet)
     {
-        m_value = value;
+        if (LHSIn || inlet)
+            m_value = value;
     }
     
     // Get Value

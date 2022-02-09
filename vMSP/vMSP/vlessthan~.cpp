@@ -23,7 +23,7 @@ struct less
 
 // Type Alias
 
-using vlessthan = v_binary<comparison_functor<less>, calculation_type::vector_op, calculation_type::vector_op>;
+using vlessthan = v_binary_comparison<less>;
 
 // Main
 

@@ -23,7 +23,7 @@ struct equal
 
 // Type Alias
 
-using vequals = v_binary<comparison_functor<equal>, calculation_type::vector_op, calculation_type::vector_op>;
+using vequals = v_binary_comparison<equal>;
 
 // Main
 

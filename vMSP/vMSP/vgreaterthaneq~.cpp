@@ -23,7 +23,7 @@ struct greater_eq
 
 // Type Alias
 
-using vgreaterthaneq = v_binary<comparison_functor<greater_eq>, calculation_type::vector_op, calculation_type::vector_op>;
+using vgreaterthaneq = v_binary_comparison<greater_eq>;
 
 // Main
 

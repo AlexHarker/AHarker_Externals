@@ -23,7 +23,7 @@ struct less_eq
 
 // Type Alias
 
-using vlessthaneq = v_binary<comparison_functor<less_eq>, calculation_type::vector_op, calculation_type::vector_op>;
+using vlessthaneq = v_binary_comparison<less_eq>;
 
 // Main
 

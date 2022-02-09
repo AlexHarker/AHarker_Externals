@@ -23,7 +23,7 @@ struct not_equal
 
 // Type Alias
 
-using vnotequals = v_binary<comparison_functor<not_equal>, calculation_type::vector_op, calculation_type::vector_op>;
+using vnotequals = v_binary_comparison<not_equal>;
 
 // Main
 
