@@ -89,9 +89,9 @@ void vpow::value_in(double value, long inlet)
 // Specialise Value Retrieval
 
 template<>
-double vpow::get_value(long inlet) const
+double vpow::get_value(inputs ins) const
 {
-    if (inlet)
+    if (ins == inputs::lhs)
         return m_value;
     else
         return m_functor.m_exp;
