@@ -32,6 +32,8 @@
 /* Begin PBXFileReference section */
 		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_modules.hpp; sourceTree = "<group>"; };
+		B8472B9527B533D000C60F79 /* descriptors_graph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_graph.hpp; sourceTree = "<group>"; };
 		B84BD78B10E81358002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
 		B89327980F23C48E002D6F23 /* descriptors_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_object.h; sourceTree = "<group>"; };
@@ -92,6 +94,8 @@
 				B8D158410F23B0FF00DA592C /* descriptors_object_structure.h */,
 				B89327980F23C48E002D6F23 /* descriptors_object.h */,
 				B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */,
+				B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */,
+				B8472B9527B533D000C60F79 /* descriptors_graph.hpp */,
 				B8D1585D0F23B21B00DA592C /* descriptors_constants.h */,
 				B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */,
 				B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */,

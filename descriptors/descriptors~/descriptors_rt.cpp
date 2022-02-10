@@ -19,8 +19,9 @@
 #include "descriptors_object.h"
 #include <SIMDSupport.hpp>
 
+#include "descriptors_graph.hpp"
 
-// Object Basics (main / new / free)
+// Main
 
 int C74_EXPORT main()
 {
@@ -41,8 +42,9 @@ int C74_EXPORT main()
 	return 0;
 }
 
+// New / Free
 
-void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
+void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptors *x = (t_descriptors *) object_alloc(this_class);
 	
@@ -126,7 +128,6 @@ void *descriptors_new (t_symbol *s, short argc, t_atom *argv)
 	return x;
 }
 
-
 void descriptors_free(t_descriptors *x)
 {
 	dsp_free(&x->x_obj);
@@ -136,12 +137,9 @@ void descriptors_free(t_descriptors *x)
     object_free(x->output_rt_clock);
 }
 
-
-
 // Handle RT Descriptor Calculation
 
-
-void calc_descriptors_rt (t_descriptors *x, float *samples)
+void calc_descriptors_rt(t_descriptors *x, float *samples)
 {
     using VecType = SIMDType<float, SIMDLimits<float>::max_size>;
 
@@ -313,7 +311,7 @@ void calc_descriptors_rt (t_descriptors *x, float *samples)
 	
 	// Output - call A clock To do this!
 	
-	clock_delay (x->output_rt_clock, 0);
+	clock_delay(x->output_rt_clock, 0);
 }
 
 
