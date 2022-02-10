@@ -14,9 +14,10 @@ class graph;
 struct global_params
 {
     long m_fft_size_log2;
-    long m_fft_size;
     long m_frame_size;
     long m_hop_size;
+    
+    long fft_size() const { return 1 << m_fft_size_log2; }
 };
 
 // Any Module (internal or user)
@@ -29,7 +30,7 @@ struct module
     
     virtual void add_requirements(graph& g) {}
     
-    virtual void prepare(global_params& params) {}
+    virtual void prepare(const global_params& params) {}
     virtual void calculate(const double *frame, long size) = 0;
 };
 

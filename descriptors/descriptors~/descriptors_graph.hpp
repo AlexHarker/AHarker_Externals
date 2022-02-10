@@ -23,14 +23,15 @@ public:
         m_installed_modules.push_back({ gensym(name), setup });
     }
     
-    module *add_requirement(module *m)
+    template <class T>
+    T *add_requirement(T *m)
     {
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
         {
             if ((*it)->is_the_same(m))
             {
                 delete m;
-                return it->get();
+                return dynamic_cast<T *>(it->get());
             }
         }
         
@@ -40,7 +41,7 @@ public:
         return m;
     }
     
-    void build(global_params& params, long argc, t_atom *argv)
+    void build(const global_params& params, long argc, t_atom *argv)
     {
         user_module_setup next;
         
@@ -52,10 +53,15 @@ public:
             
             long argc_end = next_setup(argc_begin + 1, argc, argv, next);
             auto m = ((*setup)(params, argc_end - (argc_begin + 1), argv + argc_begin + 1));
-            m_outputs.push_back(dynamic_cast<user_module *>(add_requirement(m)));
+            m_outputs.push_back(add_requirement(m));
             argc_begin = argc_end;
         }
             
+        prepare(params);
+    }
+    
+    void prepare(const global_params& params)
+    {
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
             (*it)->prepare(params);
     }

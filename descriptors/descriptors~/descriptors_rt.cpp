@@ -24,10 +24,10 @@
 #include <vector>
 
 #include <AH_Lifecycle.hpp>
-#include <HISSTools_FFT/HISSTools_FFT.h>
 
 #include "descriptors_graph.hpp"
 #include "descriptors_level_modules.hpp"
+#include "descriptors_spectral_modules.hpp"
 
 
 // Globals and Object Structure

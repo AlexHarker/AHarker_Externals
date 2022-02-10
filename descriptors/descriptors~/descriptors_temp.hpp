@@ -102,16 +102,15 @@ void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop
         object_error((t_object *) x, "fft_size must be power of two - using %ld", 1 << fft_size_log2);
     
     x->params.m_fft_size_log2 = fft_size_log2;
-    x->params.m_fft_size = fft_size = 1 << fft_size_log2;
 
     // Set hop size (default to overlap of two)
     
-    x->params.m_hop_size = hop_size > 0 ? hop_size : x->params.m_fft_size >> 1;
+    x->params.m_hop_size = hop_size > 0 ? hop_size : x->params.fft_size() >> 1;
     x->hop_count = x->params.m_hop_size;
     
     // Set window size (default to fft size and clip at fft_size)
     
-    x->params.m_frame_size = std::min(frame_size > 0 ? frame_size : x->params.m_fft_size, x->params.m_fft_size);
+    x->params.m_frame_size = std::min(frame_size > 0 ? frame_size : x->params.fft_size(), x->params.fft_size());
     x->reset = true;
 
     /*
