@@ -145,7 +145,7 @@ double statSum(const T input, size_t size)
 template <class T>
 double statSumAbs(const T input, size_t size)
 {
-    return statSum(ModifiedData<T, Absolute>(input), size);
+    return statSum(ModifiedData<const T, Absolute>(input), size);
 }
 
 template <class T>
