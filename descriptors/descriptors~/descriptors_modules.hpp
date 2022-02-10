@@ -5,6 +5,10 @@
 #include <ext.h>
 #include <vector>
 
+// Forward Declaration
+
+class graph;
+
 // Global Parameters
 
 struct global_params
@@ -23,10 +27,10 @@ struct module
     
     //bool operator == (const module& = 0);
     
-    virtual void prepare() {}
-    virtual void calculate(double *frame, long size) = 0;
+    virtual void add_requirements(graph& g) {}
     
-    virtual void requires(std::vector<module *> modules) {}
+    virtual void prepare(global_params& params) {}
+    virtual void calculate(double *frame, long size) = 0;
 };
 
 // A User Module

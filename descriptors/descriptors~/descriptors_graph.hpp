@@ -23,11 +23,32 @@ public:
         m_installed_modules.push_back({ gensym(name), setup });
     }
     
-    void build()
+    module *add_requirement(module *m)
     {
+        // FIX - search for the same module in the graph and only add if needed
         
+        m->add_requirements(*this);
+        m_modules.push_back(std::unique_ptr<module>(m));
+        
+        return m;
+    }
+    
+    void build(global_params& params, long argc, t_atom *argv)
+    {
+        user_module_setup setup;
+        
+        long argc_begin = next_setup(0, argc, argv, setup);
+        
+        while (argc_begin < argc)
+        {
+            long argc_end = next_setup(argc_begin + 1, argc, argv, setup);
+            auto m = ((*setup)(params, argc_end - (argc_begin + 1), argv + argc_begin + 1));
+            m_outputs.push_back(dynamic_cast<user_module *>(add_requirement(m)));
+            argc_begin = argc_end;
+        }
+            
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
-            (*it)->prepare();
+            (*it)->prepare(params);
     }
     
     void run(double *frame, long size)
@@ -46,6 +67,15 @@ public:
         return output_size;
     }
     
+    long next_setup(long idx, long argc, t_atom *argv, user_module_setup& setup)
+    {
+        for (long i = idx; i < argc; i++)
+            if ((setup = setup_from_atom(argv + i)))
+                return i;
+        
+        return argc;
+    }
+    
     user_module_setup setup_from_atom(t_atom *a)
     {
         for (auto it = m_installed_modules.begin(); it != m_installed_modules.end(); it++)
@@ -57,7 +87,7 @@ public:
     
     std::vector<user_setups> m_installed_modules;
     std::vector<std::unique_ptr<module>> m_modules;
-    std::vector<std::unique_ptr<user_module>> m_outputs;
+    std::vector<user_module *> m_outputs;
 };
 
 #endif /* _DESCRIPTORS_GRAPH_HPP_ */
