@@ -57,6 +57,19 @@ public:
             (*it)->calculate(frame, size);
     }
     
+    void output(t_atom *argv)
+    {
+        for (auto it = m_outputs.begin(); it != m_outputs.end(); it++)
+        {
+            size_t length = (*it)->get_output_size();
+            
+            for (size_t i = 0; i < length; i++)
+                atom_setfloat(argv + i, (*it)->get_output(i));
+                
+            argv += length;
+        }
+    }
+    
     size_t size()
     {
         size_t output_size = 0;

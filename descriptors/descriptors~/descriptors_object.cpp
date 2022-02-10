@@ -326,7 +326,6 @@ void descriptors_fft_params_internal(t_descriptors *x, long fft_size, long hop_s
 	
 	x->window_size = window_size;
 	x->reset_fft = 1;
-	
 }
 
 void descriptors_generate_window(t_descriptors *x, float *window, long window_size, long fft_size, enum WindowType window_select)

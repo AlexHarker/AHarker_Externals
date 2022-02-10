@@ -13,6 +13,7 @@ class graph;
 
 struct global_params
 {
+    long m_fft_size_log2;
     long m_fft_size;
     long m_frame_size;
     long m_hop_size;
