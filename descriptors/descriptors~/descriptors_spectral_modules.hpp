@@ -528,6 +528,7 @@ struct module_lin_centroid : module_spectral<module_lin_centroid>
     
     void prepare(const global_params& params) override
     {
+        module_spectral::prepare(params);
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
@@ -551,6 +552,7 @@ struct module_lin_spread : module_spectral<module_lin_spread>
     
     void prepare(const global_params& params) override
     {
+        module_spectral::prepare(params);
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
