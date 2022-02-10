@@ -260,7 +260,7 @@ struct module_spectral_db : module_spectral<T>
 {
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        const T *m = dynamic_cast<const T *>(module_spectral<T>::setup(params, argc, argv));
+        T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, argc, argv));
         
         m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
         
