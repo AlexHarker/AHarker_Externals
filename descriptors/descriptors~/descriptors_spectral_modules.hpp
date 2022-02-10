@@ -9,6 +9,8 @@
 #include <HISSTools_FFT/HISSTools_FFT.h>
 #include <SIMDSupport.hpp>
 
+#include <cmath>
+
 using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // UNDERLYING RAII DATA TYPES
@@ -280,5 +282,129 @@ private:
     module_power_spectrum *m_power_module;
     aligned_vector m_spectrum;
 };
+
+// Spectral Flatness Module
+
+// USES ENERGY OR AMPS?
+
+struct module_sfm : module_spectral<module_sfm>
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        return module_spectral::setup(argc, argv);
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        const double *amplitudes = m_amplitude_module->get_frame();
+                
+        m_value = statFlatness(amplitudes + m_min_bin, m_max_bin - m_min_bin);
+    }
+    
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    aligned_vector m_spectrum;
+};
+
+// Loudness Module
+
+struct module_loudness : user_module_single
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        module_loudness *m = new module_loudness();
+        
+        m->m_report_db = argc ? atom_getfloat(argv) : true;
+        
+        return m;
+    }
+    
+    bool is_the_same(const module *m) const override
+    {
+        const module_loudness *m_typed = dynamic_cast<const module_loudness *>(m);
+        
+        return m_typed && m_typed->m_report_db == m_report_db;
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        long size = (params.fft_size() >> 1) + 1;
+        
+        if (m_loudness_curve.size() != size)
+        {
+            m_loudness_curve.resize((params.fft_size() >> 1) + 1);
+            
+            double *curve = m_loudness_curve.data();
+            
+            const double freq_mul = (params.m_sr / 1000.0) / params.fft_size();
+            
+            for (long i = 0; i < size; i++)
+            {
+                const double f = i * freq_mul;
+                const double fo = f - 3.3;
+                const double fo2 = fo * fo;
+                const double f2 = f * f;
+                const double f4 = f2 * f2;
+                const double a = pow(10.0, (-3.64 * pow(f, -0.8) + 6.5 * exp(-0.6 * fo2) - (0.001 * f4)) / 20.0);
+                
+                curve[i] = a * a;
+            }
+        }
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_power_module = g.add_requirement(new module_power_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        const double *curve_frame = m_loudness_curve.data();
+        const double *power_frame = m_power_module->get_frame();
+                
+        const VecType *curve = reinterpret_cast<const VecType *>(curve_frame);
+        const VecType *power = reinterpret_cast<const VecType *>(power_frame);
+        VecType sum(0.0);
+
+        long nyquist = m_power_module->num_bins() - 1;
+        long loop_size = nyquist / VecType::size;
+        
+        // Calculate amplitude spectrum
+        
+        for (long i = 0; i < loop_size; i++)
+            sum += power[i] * curve[i];
+        
+        // Nyquist Value
+       
+        double p = power_frame[nyquist] * curve_frame[nyquist];
+
+        // Sum
+        
+        double store_sum[VecType::size];
+        sum.store(store_sum);
+        
+        for (int i = 0; i < VecType::size; i++)
+            p += store_sum[i];
+        
+        // FIX - requires energy compensation
+                
+        m_value = m_report_db ? pow_to_db(p) : sqrt(p);
+    }
+    
+private:
+    
+    module_power_spectrum *m_power_module;
+    aligned_vector m_loudness_curve;
+    bool m_report_db;
+};
+
+
+
 
 #endif /* __DESCRIPTORS_SPECTRAL_MODULES_HPP__ */
