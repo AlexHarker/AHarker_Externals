@@ -27,6 +27,7 @@
 #include <HISSTools_FFT/HISSTools_FFT.h>
 
 #include "descriptors_graph.hpp"
+#include "descriptors_level_modules.hpp"
 
 
 // Globals and Object Structure
@@ -143,6 +144,8 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	x->max_fft_size_log2 = max_fft_size_log2;
 	x->max_fft_size = 1 << (max_fft_size_log2);
 	
+    descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
+    
 	dsp_setup((t_pxobject *) x, 1);
 			
 	// Allocate a clock and call the common new routine
@@ -185,7 +188,12 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 {
     auto graph = new class graph();
     
+    graph->add_module("abs", module_average_abs_amp::setup);
+    graph->add_module("rms", module_average_rms_amp::setup);
+    graph->add_module("peakamp", module_peak_amp::setup);
+                      
     graph->build(x->params, argc, argv);
+    x->output_list.resize(graph->size());
     
     x->m_graph.reset(graph);
 }

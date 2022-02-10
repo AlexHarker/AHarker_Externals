@@ -23,15 +23,14 @@ struct global_params
 
 struct module
 {
-    module();
-    virtual ~module() = 0;
+    virtual ~module() {};
     
     //bool operator == (const module& = 0);
     
     virtual void add_requirements(graph& g) {}
     
     virtual void prepare(global_params& params) {}
-    virtual void calculate(double *frame, long size) = 0;
+    virtual void calculate(const double *frame, long size) = 0;
 };
 
 // A User Module
@@ -53,7 +52,7 @@ struct user_module_single : user_module
     size_t get_output_size() const override { return 1; }
     double get_output(size_t idx) const override { return m_value; }
     
-private:
+protected:
     
     double m_value;
 };
@@ -65,7 +64,7 @@ struct user_module_vector : user_module
     size_t get_output_size() const override { return m_values.size(); }
     double get_output(size_t idx) const override { return m_values[idx]; }
     
-private:
+protected:
     
     std::vector<double> m_values;
 };
