@@ -601,4 +601,88 @@ private:
     module_amplitude_spectrum *m_amplitude_module;
 };
 
+// Spectral Log Shape Modules
+
+struct module_log_centroid : module_spectral<module_log_centroid>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        module_spectral::prepare(params);
+        m_bin_freq = params.m_sr / params.fft_size();
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statLogCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    double m_bin_freq;
+};
+
+struct module_log_spread : module_spectral<module_log_spread>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        module_spectral::prepare(params);
+        m_bin_freq = params.m_sr / params.fft_size();
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statLogSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    double m_bin_freq;
+};
+
+struct module_log_skewness : module_spectral<module_log_skewness>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statLogSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+};
+
+struct module_log_kurtosis : module_spectral<module_log_kurtosis>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statLogKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+};
+
 #endif /* __DESCRIPTORS_SPECTRAL_MODULES_HPP__ */

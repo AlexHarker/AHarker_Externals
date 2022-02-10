@@ -199,6 +199,10 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("lin_spread", module_lin_spread::setup);
     graph->add_module("lin_skewness", module_lin_skewness::setup);
     graph->add_module("lin_kurtosis", module_lin_kurtosis::setup);
+    graph->add_module("log_centroid", module_log_centroid::setup);
+    graph->add_module("log_spread", module_log_spread::setup);
+    graph->add_module("log_skewness", module_log_skewness::setup);
+    graph->add_module("log_kurtosis", module_log_kurtosis::setup);
 
     
     graph->build(x->params, argc, argv);
