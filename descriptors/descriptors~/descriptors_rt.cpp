@@ -189,6 +189,7 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("abs", module_average_abs_amp::setup);
     graph->add_module("rms", module_average_rms_amp::setup);
     graph->add_module("peakamp", module_peak_amp::setup);
+    graph->add_module("energy", module_energy::setup);
     graph->add_module("energy_ratio", module_energy_ratio::setup);
     graph->add_module("sfm", module_sfm::setup);
     graph->add_module("loudness", module_loudness::setup);

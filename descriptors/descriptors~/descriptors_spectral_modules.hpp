@@ -404,6 +404,47 @@ private:
     bool m_report_db;
 };
 
+// Energy Module
+
+struct module_energy : module_spectral<module_energy>
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        module_energy *m = module_spectral::setup(argc, argv);
+        
+        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
+        
+        return m;
+    }
+    
+    bool is_the_same(const module *m) const override
+    {
+        const module_energy *m_typed = dynamic_cast<const module_energy *>(m);
+        
+        return module_spectral::is_the_same(m) && m_typed->m_report_db == m_report_db;
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_power_module = g.add_requirement(new module_power_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        const double *power = m_power_module->get_frame();
+
+        const double energy = statSumSquares(power + m_min_bin, m_max_bin - m_min_bin);
+
+        // FIX - requires energy compensation
+                
+        m_value = m_report_db ? pow_to_db(energy) : energy;
+    }
+    
+private:
+    
+    module_power_spectrum *m_power_module;
+    bool m_report_db;
+};
 
 
 
