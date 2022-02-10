@@ -14,8 +14,7 @@ struct module_level : user_module_single
     {
         T *m = new T();
         
-        if (argc)
-            m->m_report_db = atom_getfloat(argv);
+        m->m_report_db = argc ? atom_getfloat(argv) : true;
         
         return m;
     }

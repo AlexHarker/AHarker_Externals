@@ -117,6 +117,8 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) descriptorsrt_assist, "assist", A_CANT, 0);
 
+    class_dspinit(this_class);
+    
 	class_register(CLASS_BOX, this_class);
 	
 	return 0;
@@ -128,7 +130,6 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptorsrt *x = (t_descriptorsrt *) object_alloc(this_class);
 	
-	long descriptor_feedback = 0;
 	long max_fft_size_in = 0;
 
 	// Get arguments 
@@ -136,7 +137,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	if (argc) 
 		max_fft_size_in = atom_getlong(argv++);
 	if (argc > 1) 
-		descriptor_feedback = atom_getlong(argv++);
+		x->descriptors_feedback = atom_getlong(argv++);
 	
 	// Set maximum fft size
 	
@@ -152,7 +153,8 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	
 	x->output_clock = clock_new(x, (method) descriptorsrt_output);
     x->sr = 44100.0;
-    	
+    x->m_outlet = listout(x);
+
     create_object(x->output_list);
     create_object(x->rt_buffer);
     create_object(x->m_graph);

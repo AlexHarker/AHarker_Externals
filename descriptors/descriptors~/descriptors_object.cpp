@@ -165,7 +165,6 @@ void descriptors_new_common(t_descriptors *x, long max_fft_size_log2, long desci
 	
 	if (1 << max_fft_size_log2 < 4096)
 		descriptors_fft_params_internal (x, 1 << max_fft_size_log2, 0, 0, ps_nullsym);	
-
 	else
 		descriptors_fft_params_internal (x, 4096, 0, 0, ps_nullsym);	
 }

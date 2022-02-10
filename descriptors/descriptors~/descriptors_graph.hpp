@@ -35,13 +35,15 @@ public:
     
     void build(global_params& params, long argc, t_atom *argv)
     {
-        user_module_setup setup;
+        user_module_setup next;
         
-        long argc_begin = next_setup(0, argc, argv, setup);
+        long argc_begin = next_setup(0, argc, argv, next);
         
         while (argc_begin < argc)
         {
-            long argc_end = next_setup(argc_begin + 1, argc, argv, setup);
+            user_module_setup setup = next;
+            
+            long argc_end = next_setup(argc_begin + 1, argc, argv, next);
             auto m = ((*setup)(params, argc_end - (argc_begin + 1), argv + argc_begin + 1));
             m_outputs.push_back(dynamic_cast<user_module *>(add_requirement(m)));
             argc_begin = argc_end;
