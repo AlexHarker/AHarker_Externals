@@ -448,6 +448,48 @@ private:
     bool m_report_db;
 };
 
+// Spectral Crest Module
+
+struct module_spectral_crest : module_spectral<module_spectral_crest>
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        module_spectral_crest *m = module_spectral::setup(argc, argv);
+        
+        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
+        
+        return m;
+    }
+    
+    bool is_the_same(const module *m) const override
+    {
+        const module_spectral_crest *m_typed = dynamic_cast<const module_spectral_crest *>(m);
+        
+        return module_spectral::is_the_same(m) && m_typed->m_report_db == m_report_db;
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        const double *amps = m_amplitude_module->get_frame();
+
+        const double crest = statCrest(amps + m_min_bin, m_max_bin - m_min_bin);
+
+        // FIX - check this
+                
+        m_value = m_report_db ? atodb(crest) : crest;
+    }
+    
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    bool m_report_db;
+};
+
 // Rolloff Module
 
 struct module_rolloff : user_module_single
