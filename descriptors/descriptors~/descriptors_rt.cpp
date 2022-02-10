@@ -54,10 +54,6 @@ struct t_descriptorsrt
     
     bool reset;
     
-    // Sample Rate
-
-    double sr;
-    
     // General Parameters
     
     double energy_thresh;
@@ -152,7 +148,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	// Allocate a clock and call the common new routine
 	
 	x->output_clock = clock_new(x, (method) descriptorsrt_output);
-    x->sr = 44100.0;
+    x->params.m_sr = 44100.0;
     x->m_outlet = listout(x);
 
     create_object(x->output_list);
@@ -193,7 +189,8 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("abs", module_average_abs_amp::setup);
     graph->add_module("rms", module_average_rms_amp::setup);
     graph->add_module("peakamp", module_peak_amp::setup);
-                      
+    graph->add_module("energy_ratio", module_energy_ratio::setup);
+
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
     
@@ -348,7 +345,7 @@ void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
     // Set variables
     
     x->rw_counter = 0;
-    x->sr = sp[0]->s_sr;
+    x->params.m_sr = sp[0]->s_sr;
 
     // Add the perform routine
 
@@ -364,7 +361,7 @@ void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, doub
 	// Set variables
 	
 	x->rw_counter = 0;
-	x->sr = sample_rate;
+    x->params.m_sr = sample_rate;
 	
 	// Add the perform routine
 	

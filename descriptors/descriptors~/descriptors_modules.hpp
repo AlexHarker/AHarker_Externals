@@ -16,6 +16,7 @@ struct global_params
     long m_fft_size_log2;
     long m_frame_size;
     long m_hop_size;
+    double m_sr;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
 };

@@ -111,27 +111,9 @@ void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop
     // Set window size (default to fft size and clip at fft_size)
     
     x->params.m_frame_size = std::min(frame_size > 0 ? frame_size : x->params.fft_size(), x->params.fft_size());
+
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
+        
     x->reset = true;
-
-    /*
-     
-     enum WindowType window_select = WIND_HANN;
-
-    // Set window type
-    
-    if (window_type == ps_rectangle) window_select = WIND_RECT;
-    if (window_type == ps_hamming) window_select = WIND_HAMMING;
-    if (window_type == ps_kaiser) window_select = WIND_KAISER;
-    if (window_type == ps_triangle) window_select = WIND_TRIANGLE;
-    if (window_type == ps_blackman) window_select = WIND_BLACKMAN;
-    if (window_type == ps_blackman62) window_select = WIND_BLACKMAN_62;
-    if (window_type == ps_blackman70) window_select = WIND_BLACKMAN_70;
-    if (window_type == ps_blackman74) window_select = WIND_BLACKMAN_74;
-    if (window_type == ps_blackman92) window_select = WIND_BLACKMAN_92;
-    if (window_type == ps_blackman_harris) window_select = WIND_BLACKMAN_HARRIS;
-    if (window_type == ps_flattop) window_select = WIND_FLAT_TOP;
-    
-    if (!window_select && window_type != ps_hann && window_type != ps_nullsym)
-        error ("descriptors: window type not recognised - using hann window");
-    */
 }
