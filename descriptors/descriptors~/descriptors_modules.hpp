@@ -25,7 +25,7 @@ struct module
 {
     virtual ~module() {};
     
-    //bool operator == (const module& = 0);
+    virtual bool is_the_same(const module *m) const = 0;
     
     virtual void add_requirements(graph& g) {}
     

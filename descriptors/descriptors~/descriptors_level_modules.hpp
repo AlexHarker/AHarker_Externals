@@ -7,9 +7,9 @@
 #include "descriptors_modules.hpp"
 #include "descriptors_conversion_helpers.h"
 
+template <class T>
 struct module_level : user_module_single
 {
-    template <class T>
     static T *setup(long argc, t_atom *argv)
     {
         T *m = new T();
@@ -19,6 +19,13 @@ struct module_level : user_module_single
         return m;
     }
     
+    bool is_the_same(const module *m) const override
+    {
+        const T *m_typed = dynamic_cast<const T *>(m);
+        
+        return m_typed && m_typed->m_report_db == m_report_db;
+    }
+
     void set(double value)
     {
         m_value = m_report_db ? atodb(value) : value;
@@ -29,11 +36,11 @@ private:
     bool m_report_db;
 };
 
-struct module_average_abs_amp : module_level
+struct module_average_abs_amp : module_level<module_average_abs_amp>
 {
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        return module_level::setup<module_average_abs_amp>(argc, argv);
+        return module_level::setup(argc, argv);
     }
     
     void calculate(const double *frame, long size) override
@@ -42,11 +49,11 @@ struct module_average_abs_amp : module_level
     }
 };
 
-struct module_average_rms_amp : module_level
+struct module_average_rms_amp : module_level<module_average_rms_amp>
 {
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        return module_level::setup<module_average_rms_amp>(argc, argv);
+        return module_level::setup(argc, argv);
     }
     
     void calculate(const double *frame, long size) override
@@ -55,11 +62,11 @@ struct module_average_rms_amp : module_level
     }
 };
 
-struct module_peak_amp : module_level
+struct module_peak_amp : module_level<module_peak_amp>
 {
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        return module_level::setup<module_peak_amp>(argc, argv);
+        return module_level::setup(argc, argv);
     }
     
     void calculate(const double *frame, long size) override

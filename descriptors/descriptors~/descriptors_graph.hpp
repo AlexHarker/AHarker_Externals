@@ -25,7 +25,14 @@ public:
     
     module *add_requirement(module *m)
     {
-        // FIX - search for the same module in the graph and only add if needed
+        for (auto it = m_modules.begin(); it != m_modules.end(); it++)
+        {
+            if ((*it)->is_the_same(m))
+            {
+                delete m;
+                return it->get();
+            }
+        }
         
         m->add_requirements(*this);
         m_modules.push_back(std::unique_ptr<module>(m));
