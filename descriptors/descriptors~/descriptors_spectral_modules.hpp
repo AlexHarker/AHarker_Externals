@@ -223,7 +223,7 @@ private:
 template <class T>
 struct module_spectral : user_module_single
 {
-    static T *setup(long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
         T *m = new T();
         
@@ -253,17 +253,38 @@ protected:
     long m_max_bin;
 };
 
+// Spectral Crest Module
+
+template <class T>
+struct module_spectral_db : module_spectral<T>
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        const T *m = dynamic_cast<const T *>(module_spectral<T>::setup(params, argc, argv));
+        
+        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
+        
+        return m;
+    }
+    
+    bool is_the_same(const module *m) const override
+    {
+        const T *m_typed = dynamic_cast<const T *>(m);
+        
+        return module_spectral<T>::is_the_same(m) && m_typed->m_report_db == m_report_db;
+    }
+    
+protected:
+    
+    bool m_report_db;
+};
+
 // Energy Ratio Module
 
 // USES ENERGY OR AMPS?
 
 struct module_energy_ratio : module_spectral<module_energy_ratio>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
-    {
-        return module_spectral::setup(argc, argv);
-    }
-    
     void add_requirements(graph& g) override
     {
         m_power_module = g.add_requirement(new module_power_spectrum());
@@ -289,11 +310,6 @@ private:
 
 struct module_sfm : module_spectral<module_sfm>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
-    {
-        return module_spectral::setup(argc, argv);
-    }
-    
     void add_requirements(graph& g) override
     {
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
@@ -408,24 +424,8 @@ private:
 
 // Energy Module
 
-struct module_energy : module_spectral<module_energy>
+struct module_energy : module_spectral_db<module_energy>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
-    {
-        module_energy *m = module_spectral::setup(argc, argv);
-        
-        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
-        
-        return m;
-    }
-    
-    bool is_the_same(const module *m) const override
-    {
-        const module_energy *m_typed = dynamic_cast<const module_energy *>(m);
-        
-        return module_spectral::is_the_same(m) && m_typed->m_report_db == m_report_db;
-    }
-    
     void add_requirements(graph& g) override
     {
         m_power_module = g.add_requirement(new module_power_spectrum());
@@ -445,29 +445,12 @@ struct module_energy : module_spectral<module_energy>
 private:
     
     module_power_spectrum *m_power_module;
-    bool m_report_db;
 };
 
 // Spectral Crest Module
 
-struct module_spectral_crest : module_spectral<module_spectral_crest>
+struct module_spectral_crest : module_spectral_db<module_spectral_crest>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
-    {
-        module_spectral_crest *m = module_spectral::setup(argc, argv);
-        
-        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
-        
-        return m;
-    }
-    
-    bool is_the_same(const module *m) const override
-    {
-        const module_spectral_crest *m_typed = dynamic_cast<const module_spectral_crest *>(m);
-        
-        return module_spectral::is_the_same(m) && m_typed->m_report_db == m_report_db;
-    }
-    
     void add_requirements(graph& g) override
     {
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
@@ -487,7 +470,6 @@ struct module_spectral_crest : module_spectral<module_spectral_crest>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
-    bool m_report_db;
 };
 
 // Rolloff Module
@@ -532,6 +514,89 @@ private:
     module_power_spectrum *m_power_module;
     double m_centile;
     double m_bin_freq;
+};
+
+
+// Spectral Linear Shape Modules
+
+struct module_lin_centroid : module_spectral<module_lin_centroid>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_bin_freq = params.m_sr / params.fft_size();
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    double m_bin_freq;
+};
+
+struct module_lin_spread : module_spectral<module_lin_spread>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_bin_freq = params.m_sr / params.fft_size();
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    double m_bin_freq;
+};
+
+struct module_lin_skewness : module_spectral<module_lin_skewness>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+};
+
+struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
+{
+    void add_requirements(graph& g) override
+    {
+        m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        m_value = statKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
 };
 
 #endif /* __DESCRIPTORS_SPECTRAL_MODULES_HPP__ */

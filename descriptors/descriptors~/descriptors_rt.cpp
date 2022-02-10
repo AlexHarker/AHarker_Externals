@@ -195,7 +195,12 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("sfm", module_sfm::setup);
     graph->add_module("rolloff", module_rolloff::setup);
     graph->add_module("loudness", module_loudness::setup);
+    graph->add_module("lin_centroid", module_lin_centroid::setup);
+    graph->add_module("lin_spread", module_lin_spread::setup);
+    graph->add_module("lin_skewness", module_lin_skewness::setup);
+    graph->add_module("lin_kurtosis", module_lin_kurtosis::setup);
 
+    
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
     
