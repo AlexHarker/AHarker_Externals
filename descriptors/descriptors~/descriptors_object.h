@@ -74,7 +74,6 @@ void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double s
 
 // Useful curves (pre-calculated for efficiency)
 
-void calc_curves (t_descriptors *x);
 void calc_log_freq_curve (double *log_freq, long num_bins, double bin_freq);
 void calc_loudness_curve (double *loudness_curve, long num_bins, double bin_freq);
 

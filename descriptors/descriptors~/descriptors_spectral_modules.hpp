@@ -334,6 +334,8 @@ struct module_loudness : user_module_single
     
     void prepare(const global_params& params) override
     {
+        // FIX - check sr
+        
         long size = (params.fft_size() >> 1) + 1;
         
         if (m_loudness_curve.size() != size)
@@ -446,6 +448,48 @@ private:
     bool m_report_db;
 };
 
+// Rolloff Module
 
+struct module_rolloff : user_module_single
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    {
+        module_rolloff *m = new module_rolloff();
+        
+        m->m_centile = (argc ? atom_getfloat(argv) : 0.95) * 100.0;
+        
+        return m;
+    }
+    
+    bool is_the_same(const module *m) const override
+    {
+        const module_rolloff *m_typed = dynamic_cast<const module_rolloff *>(m);
+        
+        return m_typed && m_typed->m_centile == m_centile;
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_power_module = g.add_requirement(new module_power_spectrum());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_bin_freq = params.m_sr / params.fft_size();
+    }
+    
+    void calculate(const double *frame, long size) override
+    {
+        const double bin = statPDFPercentile(m_power_module->get_frame(), m_centile, m_power_module->num_bins());
+        
+        m_value = bin * m_bin_freq;
+    }
+    
+private:
+    
+    module_power_spectrum *m_power_module;
+    double m_centile;
+    double m_bin_freq;
+};
 
 #endif /* __DESCRIPTORS_SPECTRAL_MODULES_HPP__ */

@@ -810,16 +810,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 
 // Curves Dependent on sr and FFT SIze 
 
-void calc_curves(t_descriptors *x)
-{
-	long fft_size_halved = x->fft_size >> 1;
-	double bin_freq = x->sr / (double) x->fft_size;
-	
-	calc_log_freq_curve(x->log_freq, fft_size_halved, bin_freq);
-	calc_loudness_curve(x->loudness_curve, fft_size_halved, bin_freq);
-}
-
-
 void calc_log_freq_curve(double *log_freq, long num_bins, double bin_freq)
 {
 	log_freq[0] = log2(0.00001);
