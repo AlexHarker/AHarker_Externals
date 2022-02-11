@@ -3,7 +3,6 @@
 #define _MODULES_CORE_HPP_
 
 #include "descriptors_modules.hpp"
-#include "descriptors_graph.hpp"
 #include "processing_containers.hpp"
 
 // A Generic Core Module
@@ -99,6 +98,13 @@ private:
     fft_split m_full_frame;
     fft_split m_half_frame;
     aligned_vector m_coefficients;
+};
+
+// Ring Buffer
+
+struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
+{
+    void calculate(const global_params& params, const double *frame, long size) override {}
 };
 
 #endif /* _MODULES_CORE_HPP_ */

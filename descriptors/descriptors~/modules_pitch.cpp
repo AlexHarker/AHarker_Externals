@@ -1,5 +1,6 @@
 
 #include "modules_pitch.hpp"
+#include "descriptors_graph.hpp"
 
 #include <algorithm>
 #include <limits>

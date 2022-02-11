@@ -1,5 +1,6 @@
 
 #include "modules_core.hpp"
+#include "descriptors_graph.hpp"
 
 #include <WindowFunctions.hpp>
 
