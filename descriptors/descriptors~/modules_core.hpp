@@ -106,6 +106,23 @@ private:
     const long m_median_span;
 };
 
+
+// Ring Buffer
+
+struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
+{
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+    const double *get_frame(long frame_lag) const { return nullptr; }
+    void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
+    
+private:
+    
+    long m_max_lag = 0;
+};
+
 // Autocorrelation Module
 
 struct module_autocorrelation : module_core<module_autocorrelation>
@@ -122,13 +139,6 @@ private:
     fft_split m_full_frame;
     fft_split m_half_frame;
     aligned_vector m_coefficients;
-};
-
-// Ring Buffer
-
-struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
-{
-    void calculate(const global_params& params, const double *frame, long size) override {}
 };
 
 #endif /* _MODULES_CORE_HPP_ */

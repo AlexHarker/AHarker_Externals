@@ -215,6 +215,23 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
     m_filter(m_spectrum.data(), power, params.num_bins(), 50.0, m_median_span, median_filter<double>::Edges::Fold);
 }
 
+// Spectrum Ring Buffer Module
+
+void module_spectrum_ring_buffer::add_requirements(graph& g)
+{
+    
+}
+
+void module_spectrum_ring_buffer::prepare(const global_params& params)
+{
+    
+}
+
+void module_spectrum_ring_buffer::calculate(const global_params& params, const double *frame, long size)
+{
+    
+}
+
 // Autocorrelation Module
 
 void module_autocorrelation::prepare(const global_params& params)

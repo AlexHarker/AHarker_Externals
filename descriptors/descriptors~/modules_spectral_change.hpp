@@ -5,6 +5,8 @@
 #include "modules_spectral.hpp"
 #include "descriptors_graph.hpp"
 
+#include <algorithm>
+
 // A Generic Spectral Change Module
 
 template <class T>
@@ -13,11 +15,18 @@ struct module_spectral_change : module_spectral<T>
     void add_requirements(graph& g) override
     {
         m_ring_buffer_module = g.add_requirement(new module_spectrum_ring_buffer());
+        m_ring_buffer_module->request_lag(m_frame_lag);
     }
 
-private:
+    void set_lag(long lag)
+    {
+        m_frame_lag = std::max(0L, lag);
+    }
+    
+protected:
     
     module_spectrum_ring_buffer *m_ring_buffer_module;
+    long m_frame_lag;
 };
 
 // Foote Module
@@ -31,7 +40,6 @@ struct module_foote : module_spectral_change<module_foote>
 private:
     
     bool m_forward_only;
-    long m_frames_back;
 };
 
 // Flux Module
@@ -46,7 +54,7 @@ private:
         
     bool m_forward_only;
     bool m_normalise_spectrum;
-    long m_frames_back;
+    bool m_square_flag;
 };
 
 // MKL Module
@@ -63,7 +71,6 @@ private:
     bool m_forward_only;
     bool m_normalise_spectrum;
     bool m_weight_second_frame;
-    long m_frames_back;
 };
 
 #endif /* _MODULES_SPECTRAL_CHANGE_HPP_ */

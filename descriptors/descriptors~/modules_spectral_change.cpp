@@ -2,6 +2,8 @@
 #include "modules_spectral_change.hpp"
 #include "descriptors_graph.hpp"
 
+#include <Statistics.hpp>
+
 #include <cmath>
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
@@ -13,8 +15,8 @@ user_module *module_foote::setup(const global_params& params, long argc, t_atom 
     module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, argc, argv));
     
     m->m_forward_only = argc > 2 ? atom_getfloat(argv + 3) : true;
-    m->m_frames_back = argc > 3 ? atom_getlong(argv + 4) : 1;
-    
+    m->set_lag(argc > 3 ? atom_getlong(argv + 3) : 1);
+
     return m;
 }
 
@@ -22,7 +24,7 @@ bool module_foote::is_the_same(const module *m) const
 {
     const module_foote *m_typed = dynamic_cast<const module_foote *>(m);
     
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_frames_back == m_frames_back;
+    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_frame_lag == m_frame_lag;
 }
 
 void module_foote::calculate(const global_params& params, const double *frame, long size)
@@ -31,8 +33,8 @@ void module_foote::calculate(const global_params& params, const double *frame, l
     double norm_sum2 = 0.0;
     double sum = 0.0;
  
-    double *frame1;
-    double *frame2;
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
     
     auto bin_calculate = [&](double value1, double value2)
     {
@@ -70,8 +72,9 @@ user_module *module_flux::setup(const global_params& params, long argc, t_atom *
     module_flux *m = dynamic_cast<module_flux *>(module_spectral::setup(params, argc, argv));
     
     m->m_forward_only = argc > 2 ? atom_getfloat(argv + 3) : true;
-    m->m_normalise_spectrum = argc > 3 ? atom_getlong(argv + 4) : false;
-    m->m_frames_back = argc > 4 ? atom_getlong(argv + 5) : 1;
+    m->m_square_flag = argc > 3 ? atom_getfloat(argv + 4) : true;
+    m->m_normalise_spectrum = argc > 4 ? atom_getlong(argv + 5) : false;
+    m->set_lag(argc > 5 ? atom_getlong(argv + 5) : 1);
     
     return m;
 }
@@ -80,7 +83,7 @@ bool module_flux::is_the_same(const module *m) const
 {
     const module_flux *m_typed = dynamic_cast<const module_flux *>(m);
     
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_frames_back == m_frames_back;
+    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_frame_lag == m_frame_lag;
 }
     
 void module_flux::calculate(const global_params& params, const double *frame, long size)
@@ -89,27 +92,21 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     double norm_factor2 = 1.0;
     double sum = 0.0;
     
-    double *frame1;
-    double *frame2;
-    bool square_flag; // FIX
-    
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
+   
+    // FIX - check!!!
+
     if (m_normalise_spectrum)
     {
-        // FIX
-        /*
-        norm_factor1 = cumulate_ptr1[max_bin - 1];
-        if (min_bin)
-            norm_factor1 -= cumulate_ptr1[min_bin - 1];
-        norm_factor2 = cumulate_ptr2[max_bin - 1];
-        if (min_bin)
-            norm_factor2 -= cumulate_ptr2[min_bin - 1];*/
+        norm_factor1 = statSum(frame1 + m_min_bin, m_max_bin - m_min_bin);
+        norm_factor2 = statSum(frame2 + m_min_bin, m_max_bin - m_min_bin);
     }
     
-    // FIX - check!!!
     norm_factor1 = norm_factor1 ? norm_factor1 = 1.0 / norm_factor1 : 1.0;
     norm_factor2 = norm_factor1 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
     
-    if (square_flag)
+    if (m_square_flag)
     {
         if (m_forward_only)
         {
@@ -160,7 +157,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
         }
     }
     
-    m_value = square_flag ? sqrt(sum) : sum;
+    m_value = m_square_flag ? sqrt(sum) : sum;
 }
 
 // MKL Module
@@ -173,7 +170,7 @@ user_module *module_mkl::setup(const global_params& params, long argc, t_atom *a
     m->m_forward_only = argc > 3 ? atom_getfloat(argv + 3) : true;
     m->m_weight_second_frame = argc > 4 ? atom_getlong(argv + 4) : false;
     m->m_normalise_spectrum = argc > 5 ? atom_getlong(argv + 5) : true;
-    m->m_frames_back = argc > 6 ? atom_getlong(argv + 6) : 1;
+    m->set_lag(argc > 6 ? atom_getlong(argv + 6) : 1);
 
     return m;
 }
@@ -182,7 +179,7 @@ bool module_mkl::is_the_same(const module *m) const
 {
     const module_mkl *m_typed = dynamic_cast<const module_mkl *>(m);
     
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_weight_second_frame == m_weight_second_frame && m_typed->m_frames_back == m_frames_back && m_typed->m_threshold == m_threshold;
+    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_weight_second_frame == m_weight_second_frame && m_typed->m_frame_lag == m_frame_lag && m_typed->m_threshold == m_threshold;
 }
     
 void module_mkl::calculate(const global_params& params, const double *frame, long size)
@@ -194,9 +191,9 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     // FIX
     
     const double log_thresh = m_threshold;
-    double *frame2;
     double *log_frame1;
     double *log_frame2;
+    const double *frame2 = m_ring_buffer_module->get_frame(m_frame_lag);
     
     if (m_normalise_spectrum)
     {
