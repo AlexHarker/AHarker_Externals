@@ -25,8 +25,8 @@ void module_autocorrelation::calculate(const global_params& params, const double
 {
     using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
-    auto full_frame = m_full_frame.get();
-    auto half_frame = m_half_frame.get();
+    auto full_frame = m_full_frame.data();
+    auto half_frame = m_half_frame.data();
     
     VecType *real1 = reinterpret_cast<VecType *>(full_frame.realp);
     VecType *imag1 = reinterpret_cast<VecType *>(full_frame.imagp);
