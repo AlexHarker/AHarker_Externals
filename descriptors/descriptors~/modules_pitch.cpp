@@ -125,7 +125,7 @@ void module_pitch::calculate(const global_params& params, const double *frame, l
     else
     {
         m_value = infinity();
-        m_confidence = 0.0;
+        m_confidence = *std::max_element(first, end);
     }
 }
 

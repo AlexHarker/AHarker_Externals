@@ -32,7 +32,7 @@ struct module_pitch_base : user_module_single
 
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        const double threshold = argc > 0 ? atom_getfloat(argv + 2) : 0.68;
+        const double threshold = argc > 0 ? atom_getfloat(argv) : 0.68;
         return new T(threshold);
     }
     
