@@ -49,7 +49,7 @@ private:
 
 // Harmonic Ratio Module
 
-struct module_harmonic_ratio : module_noise_measure<module_noise_ratio>
+struct module_harmonic_ratio : module_noise_measure<module_harmonic_ratio>
 {
     module_harmonic_ratio(long median_span) : module_noise_measure(median_span) {}
 

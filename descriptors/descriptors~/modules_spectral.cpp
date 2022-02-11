@@ -139,7 +139,7 @@ void module_energy::calculate(const global_params& params, const double *frame, 
 {
     const double *power = m_power_module->get_frame();
 
-    const double energy = statSumSquares(power + m_min_bin, m_max_bin - m_min_bin);
+    const double energy = statSum(power + m_min_bin, m_max_bin - m_min_bin);
 
     // FIX - requires energy compensation
             

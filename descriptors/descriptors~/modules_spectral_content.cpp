@@ -47,6 +47,6 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
     
     if (noise_ratio != infinity())
         m_value = 1.0 - noise_ratio;
-    
-    m_value = infinity();
+    else
+        m_value = infinity();
 }
