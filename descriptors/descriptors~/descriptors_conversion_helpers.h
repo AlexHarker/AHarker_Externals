@@ -32,17 +32,10 @@ static inline double pow_to_db(double p)
     return std::max(10.0 * log10(p), DB_MIN);
 } 
 
-static long freq_to_bin(double freq, double sr, long nyquist_bin)
+static inline long freq_to_bin(double freq, double sr, long nyquist_bin)
 {
     const double bin = 2.0 * nyquist_bin * (freq / sr);
 	return std::min(std::max(static_cast<long>(ceil(bin)), 0L), nyquist_bin);
 }
-
-static void get_bin_range(long& min_bin, long& max_bin, double lo_freq, double hi_freq, double sr, long nyquist_bin)
-{
-	min_bin = freq_to_bin(lo_freq, sr, nyquist_bin);
-	max_bin = freq_to_bin(hi_freq, sr, nyquist_bin);
-}
-
 
 #endif /* _CONVERSION_HELPERS_ */
