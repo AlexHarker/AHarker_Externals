@@ -29,7 +29,7 @@ struct module_level : user_module_single
     
 private:
     
-    bool m_report_db;
+    const bool m_report_db;
 };
 
 // Level Modules

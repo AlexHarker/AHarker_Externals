@@ -4,6 +4,7 @@
 
 #include "descriptors_modules.hpp"
 #include "processing_containers.hpp"
+#include "descriptors_medianfilter.hpp"
 
 // A Generic Core Module
 
@@ -80,6 +81,29 @@ private:
     
     module_power_spectrum *m_power_module;
     aligned_vector m_spectrum;
+};
+
+// Median Power Spectrum Module
+
+struct module_median_power_spectrum : module
+{
+    module_median_power_spectrum(long median_span)
+    : m_filter(median_span), m_median_span(median_span) {}
+    
+    bool is_the_same(const module *m) const override;
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+    const double *get_frame() const { return m_spectrum.data(); }
+    long num_bins() const { return static_cast<long>(m_spectrum.size()); }
+    
+private:
+    
+    module_power_spectrum *m_power_module;
+    median_filter<double> m_filter;
+    aligned_vector m_spectrum;
+    const long m_median_span;
 };
 
 // Autocorrelation Module

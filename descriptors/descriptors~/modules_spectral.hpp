@@ -60,6 +60,11 @@ struct module_spectral_db : module_spectral<T>
         return m;
     }
     
+    module_spectral_db() : module_spectral<T>(), m_report_db(true) {}
+    
+    module_spectral_db(double lo_freq, double hi_freq, bool report_db)
+    : module_spectral<T>(lo_freq, hi_freq), m_report_db(report_db) {}
+    
     bool is_the_same(const module *m) const override
     {
         const T *m_typed = dynamic_cast<const T *>(m);
@@ -119,6 +124,10 @@ private:
 
 struct module_energy : module_spectral_db<module_energy>
 {
+    module_energy() {}
+    module_energy(double lo_freq, double hi_freq, bool report_db)
+    : module_spectral_db(lo_freq, hi_freq, report_db) {}
+    
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     

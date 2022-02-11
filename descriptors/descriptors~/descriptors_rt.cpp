@@ -26,8 +26,11 @@
 #include <AH_Lifecycle.hpp>
 
 #include "descriptors_graph.hpp"
+#include "modules_core.hpp"
 #include "modules_level.hpp"
 #include "modules_spectral.hpp"
+#include "modules_spectral_change.hpp"
+#include "modules_spectral_content.hpp"
 #include "modules_pitch.hpp"
 
 
@@ -208,7 +211,9 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("confidence", module_confidence::setup);
     graph->add_module("lin_brightness", module_lin_brightness::setup);
     graph->add_module("log_brightness", module_log_brightness::setup);
-    
+    graph->add_module("noise_ratio", module_noise_ratio::setup);
+    graph->add_module("harmonic_ratio", module_harmonic_ratio::setup);
+
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
     

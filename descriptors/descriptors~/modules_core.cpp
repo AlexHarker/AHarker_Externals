@@ -189,6 +189,32 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
     m_spectrum.data()[nyquist] = sqrt(power_frame[nyquist]);
 }
 
+// Median Power Spectrum Module
+
+bool module_median_power_spectrum::is_the_same(const module *m) const
+{
+    auto m_typed = dynamic_cast<const module_median_power_spectrum *>(m);
+    
+    return m_typed && m_typed->m_median_span == m_median_span;
+}
+
+void module_median_power_spectrum::add_requirements(graph& g)
+{
+    m_power_module = g.add_requirement(new module_power_spectrum());
+}
+
+void module_median_power_spectrum::prepare(const global_params& params)
+{
+    m_spectrum.resize((params.fft_size() >> 1) + 1);
+}
+
+void module_median_power_spectrum::calculate(const global_params& params, const double *frame, long size)
+{
+    const double *power = m_power_module->get_frame();
+
+    m_filter(m_spectrum.data(), power, num_bins(), 50.0, m_median_span, median_filter<double>::Edges::Fold);
+}
+
 // Autocorrelation Module
 
 void module_autocorrelation::prepare(const global_params& params)
