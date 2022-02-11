@@ -85,7 +85,7 @@ private:
 template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
+    : table_fetcher(data.get_length(), 1.0 / ((int64_t) 1 << (bit_scale - 1))), samples(((T *) data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
     
     T operator()(intptr_t offset)   { return samples[offset * num_chans]; }
     double get(intptr_t offset)     { return bit_scale != 1 ? scale * operator()(offset) : operator()(offset); }
@@ -97,7 +97,7 @@ template <class T, int64_t bit_scale> struct fetch : public table_fetcher<float>
 template<> struct fetch<int32_t, 24> : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-    : table_fetcher(1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
+    : table_fetcher(data.get_length(), 1.0 / ((int64_t) 1 << 31)), samples(((uint8_t *) data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
     
     int32_t operator()(intptr_t offset)
     {
@@ -164,13 +164,13 @@ t_max_err ibuf_interp_attribute_set(T *x, t_attr *a, long argc, t_atom *argv)
         t_symbol *type = atom_getsym(argv);
         
         if (type == gensym("linear"))
-            x->interp_type = kInterpLinear;
+            x->interp_type = InterpType::Linear;
         else if (type == gensym("hermite"))
-            x->interp_type = kInterpCubicHermite;
+            x->interp_type = InterpType::CubicHermite;
         else if (type == gensym("bspline"))
-            x->interp_type = kInterpCubicBSpline;
+            x->interp_type = InterpType::CubicBSpline;
         else if (type == gensym("lagrange"))
-            x->interp_type = kInterpCubicLagrange;
+            x->interp_type = InterpType::CubicLagrange;
         else
             object_error((t_object *) x, "%s: no interpolation mode %s", object_classname(x)->s_name,  type->s_name);
     }
@@ -198,10 +198,10 @@ t_max_err ibuf_interp_attribute_get(T *x, t_object *attr, long *argc, t_atom **a
         
         switch (x->interp_type)
         {
-            case kInterpLinear:             atom_setsym(*argv, gensym("linear"));       break;
-            case kInterpCubicHermite:       atom_setsym(*argv, gensym("hermite"));      break;
-            case kInterpCubicBSpline:       atom_setsym(*argv, gensym("bspline"));      break;
-            case kInterpCubicLagrange:      atom_setsym(*argv, gensym("lagrange"));     break;
+            case InterpType::Linear:            atom_setsym(*argv, gensym("linear"));       break;
+            case InterpType::CubicHermite:      atom_setsym(*argv, gensym("hermite"));      break;
+            case InterpType::CubicBSpline:      atom_setsym(*argv, gensym("bspline"));      break;
+            case InterpType::CubicLagrange:     atom_setsym(*argv, gensym("lagrange"));     break;
             
             default:
                 atom_setsym(*argv, gensym("linear"));

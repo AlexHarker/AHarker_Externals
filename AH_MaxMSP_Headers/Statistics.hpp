@@ -304,14 +304,14 @@ template <class T>
 double statSpread(const T input, size_t size)
 {
     double centroid = statCentroid(input, size);
-    return statWeightedSum(IndexDiffOp<Pow2>(centroid), input, size) / statSum(input, size);
+    return sqrt(statWeightedSum(IndexDiffOp<Pow2>(centroid), input, size) / statSum(input, size));
 }
 
 template <class T>
 double statSkewness(const T input, size_t size)
 {
     double centroid = statCentroid(input, size);
-    double spreadNorm = Pow3()(sqrt(statSpread(input, size)));
+    double spreadNorm = Pow3()(statSpread(input, size));
     return statWeightedSum(IndexDiffOp<Pow3>(centroid), input, size) / (spreadNorm * statSum(input, size));
 }
 
@@ -319,7 +319,7 @@ template <class T>
 double statKurtosis(const T input, size_t size)
 {
     double centroid = statCentroid(input, size);
-    double spreadNorm = Pow2()(statSpread(input, size));
+    double spreadNorm = Pow4()(statSpread(input, size));
     return statWeightedSum(IndexDiffOp<Pow4>(centroid), input, size) / (spreadNorm * statSum(input, size));
 }
 
@@ -328,30 +328,30 @@ double statKurtosis(const T input, size_t size)
 template <class T>
 double statLogCentroid(const T input, size_t size)
 {
-    return exp2(statWeightedSum(LogIndex(), LogWidth<T>(input), size) / (statSum(LogWidth<T>(input), size)));
+    return exp2(statWeightedSum(LogIndex(), LogWidth<const T>(input), size) / (statSum(LogWidth<const T>(input), size)));
 }
 
 template <class T>
 double statLogSpread(const T input, size_t size)
 {
     double centroid = statLogCentroid(input, size);
-    return statWeightedSum(LogIndexDiffOp<Pow2>(log2(centroid)), LogWidth<T>(input), size) / (statSum(LogWidth<T>(input), size));
+    return sqrt(statWeightedSum(LogIndexDiffOp<Pow2>(log2(centroid)), LogWidth<const T>(input), size) / (statSum(LogWidth<const T>(input), size)));
 }
 
 template <class T>
 double statLogSkewness(const T input, size_t size)
 {
     double centroid = statLogCentroid(input, size);
-    double spreadNorm = Pow3()(sqrt(statLogSpread(input, size)));
-    return statWeightedSum(LogIndexDiffOp<Pow3>(log2(centroid)), LogWidth<T>(input), size) / (spreadNorm * statSum(LogWidth<T>(input), size));
+    double spreadNorm = Pow3()(statLogSpread(input, size));
+    return statWeightedSum(LogIndexDiffOp<Pow3>(log2(centroid)), LogWidth<const T>(input), size) / (spreadNorm * statSum(LogWidth<const T>(input), size));
 }
 
 template <class T>
 double statLogKurtosis(const T input, size_t size)
 {
     double centroid = statCentroid(input, size);
-    double spreadNorm = Pow2()(statLogSpread(input, size));
-    return statWeightedSum(LogIndexDiffOp<Pow4>(log2(centroid)), LogWidth<T>(input), size) / (spreadNorm * statSum(LogWidth<T>(input), size));
+    double spreadNorm = Pow4()(statLogSpread(input, size));
+    return statWeightedSum(LogIndexDiffOp<Pow4>(log2(centroid)), LogWidth<const T>(input), size) / (spreadNorm * statSum(LogWidth<const T>(input), size));
 }
 
 // Flatness

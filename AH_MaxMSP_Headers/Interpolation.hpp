@@ -1,13 +1,10 @@
 
-#ifndef INTERPOLATION_H
-#define INTERPOLATION_H
+#ifndef INTERPOLATION_HPP
+#define INTERPOLATION_HPP
 
 // Enumeration of interpolation types
 
-enum InterpType
-{
-    kInterpNone, kInterpLinear, kInterpCubicHermite, kInterpCubicBSpline, kInterpCubicLagrange
-};
+enum class InterpType { None, Linear, CubicHermite, CubicLagrange, CubicBSpline };
 
 // Linear
 
