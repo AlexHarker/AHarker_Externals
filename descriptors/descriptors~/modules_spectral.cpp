@@ -22,7 +22,7 @@ void module_energy_ratio::calculate(const global_params& params, const double *f
     // FIX - USES ENERGY OR AMPS?
 
     const double *power = m_power_module->get_frame();
-    long num_bins = m_power_module->num_bins();
+    long num_bins = params.num_bins();
             
     m_value = statSumSquares(power + m_min_bin, m_max_bin - m_min_bin) / statSumSquares(power, num_bins);
 }
@@ -70,17 +70,17 @@ void module_loudness::prepare(const global_params& params)
 {
     // FIX - check sr
     
-    long size = (params.fft_size() >> 1) + 1;
+    long num_bins = params.num_bins();
     
-    if (m_loudness_curve.size() != size)
+    if (m_loudness_curve.size() != num_bins)
     {
-        m_loudness_curve.resize((params.fft_size() >> 1) + 1);
+        m_loudness_curve.resize(num_bins);
         
         double *curve = m_loudness_curve.data();
         
         const double freq_mul = (params.m_sr / 1000.0) / params.fft_size();
         
-        for (long i = 0; i < size; i++)
+        for (long i = 0; i < num_bins; i++)
         {
             const double f = i * freq_mul;
             const double fo = f - 3.3;
@@ -103,7 +103,7 @@ void module_loudness::calculate(const global_params& params, const double *frame
     const VecType *power = reinterpret_cast<const VecType *>(power_frame);
     VecType sum(0.0);
 
-    long nyquist = m_power_module->num_bins() - 1;
+    long nyquist = params.num_bins() - 1;
     long loop_size = nyquist / VecType::size;
     
     // Calculate amplitude spectrum
@@ -189,7 +189,7 @@ void module_rolloff::add_requirements(graph& g)
 
 void module_rolloff::calculate(const global_params& params, const double *frame, long size)
 {
-    const double bin = statPDFPercentile(m_power_module->get_frame(), m_centile, m_power_module->num_bins());
+    const double bin = statPDFPercentile(m_power_module->get_frame(), m_centile, params.num_bins());
     
     m_value = bin * params.bin_freq();
 }

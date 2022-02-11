@@ -6,6 +6,9 @@
 #include "processing_containers.hpp"
 #include "descriptors_medianfilter.hpp"
 
+#include <algorithm>
+#include <vector>
+
 // A Generic Core Module
 
 template <class T>
@@ -58,7 +61,6 @@ struct module_power_spectrum : module_core<module_power_spectrum>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_frame() const { return m_spectrum.data(); }
-    long num_bins() const { return static_cast<long>(m_spectrum.size()); }
 
 private:
     
@@ -75,7 +77,6 @@ struct module_amplitude_spectrum : module_core<module_amplitude_spectrum>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_frame() const { return m_spectrum.data(); }
-    long num_bins() const { return static_cast<long>(m_spectrum.size()); }
     
 private:
     
@@ -96,7 +97,6 @@ struct module_median_power_spectrum : module
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_frame() const { return m_spectrum.data(); }
-    long num_bins() const { return static_cast<long>(m_spectrum.size()); }
     
 private:
     

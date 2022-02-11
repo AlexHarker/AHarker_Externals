@@ -134,7 +134,7 @@ void module_power_spectrum::add_requirements(graph& g)
 
 void module_power_spectrum::prepare(const global_params& params)
 {
-    m_spectrum.resize((params.fft_size() >> 1) + 1);
+    m_spectrum.resize(params.num_bins());
 }
 
 void module_power_spectrum::calculate(const global_params& params, const double *frame, long size)
@@ -144,7 +144,7 @@ void module_power_spectrum::calculate(const global_params& params, const double 
     VecType *power = reinterpret_cast<VecType *>(m_spectrum.data());
     const VecType *real = reinterpret_cast<const VecType *>(fft_frame.realp);
     const VecType *imag = reinterpret_cast<const VecType *>(fft_frame.imagp);
-    long nyquist = num_bins() - 1;
+    long nyquist = params.num_bins() - 1;
     long loop_size = nyquist / VecType::size;
     
     // Calculate power spectrum
@@ -167,7 +167,7 @@ void module_amplitude_spectrum::add_requirements(graph& g)
 
 void module_amplitude_spectrum::prepare(const global_params& params)
 {
-    m_spectrum.resize((params.fft_size() >> 1) + 1);
+    m_spectrum.resize(params.num_bins());
 }
 
 void module_amplitude_spectrum::calculate(const global_params& params, const double *frame, long size)
@@ -176,7 +176,7 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
     
     VecType *amps = reinterpret_cast<VecType *>(m_spectrum.data());
     const VecType *power = reinterpret_cast<const VecType *>(power_frame);
-    long nyquist = num_bins() - 1;
+    long nyquist = params.num_bins() - 1;
     long loop_size = nyquist / VecType::size;
     
     // Calculate amplitude spectrum
@@ -205,14 +205,14 @@ void module_median_power_spectrum::add_requirements(graph& g)
 
 void module_median_power_spectrum::prepare(const global_params& params)
 {
-    m_spectrum.resize((params.fft_size() >> 1) + 1);
+    m_spectrum.resize(params.num_bins());
 }
 
 void module_median_power_spectrum::calculate(const global_params& params, const double *frame, long size)
 {
     const double *power = m_power_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, num_bins(), 50.0, m_median_span, median_filter<double>::Edges::Fold);
+    m_filter(m_spectrum.data(), power, params.num_bins(), 50.0, m_median_span, median_filter<double>::Edges::Fold);
 }
 
 // Autocorrelation Module

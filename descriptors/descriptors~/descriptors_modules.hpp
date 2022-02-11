@@ -20,6 +20,7 @@ struct global_params
     t_symbol *m_window_type;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
+    long num_bins() const { return (fft_size() >> 1) + 1; }
     double bin_freq() const { return m_sr / fft_size(); }
 };
 
