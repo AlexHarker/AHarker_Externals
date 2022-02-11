@@ -213,6 +213,9 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
          */
     }
     
+#define DB_MAX_MKL_EQUAL -140.
+    double MKL_EQUALISE_MAX_LOG = log(pow(10, DB_MAX_MKL_EQUAL) * 20.);
+    
     const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), MKL_EQUALISE_MAX_LOG);
     
     if (norm_factor2)
