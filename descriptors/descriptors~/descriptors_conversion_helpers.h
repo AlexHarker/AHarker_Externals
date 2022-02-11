@@ -17,17 +17,17 @@
 
 #include <algorithm>
 
-static double dbtoa(double db)
+static inline double dbtoa(double db)
 {
 	return pow(10, db / 20.0);
 }
 
-static double atodb(double a)
+static inline double atodb(double a)
 {
 	return std::max(20.0 * log10(a), DB_MIN);
 }
 
-static double pow_to_db(double p)
+static inline double pow_to_db(double p)
 {
     return std::max(10.0 * log10(p), DB_MIN);
 } 
