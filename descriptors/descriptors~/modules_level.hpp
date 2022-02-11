@@ -10,6 +10,8 @@
 template <class T>
 struct module_level : user_module_single
 {
+    module_level() : m_report_db(true) {}
+    
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
         T *m = new T();
@@ -37,7 +39,7 @@ private:
 
 struct module_average_abs_amp : module_level<module_average_abs_amp>
 {
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         set(statSumAbs(frame, size) / size);
     }
@@ -45,7 +47,7 @@ struct module_average_abs_amp : module_level<module_average_abs_amp>
 
 struct module_average_rms_amp : module_level<module_average_rms_amp>
 {
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         set(statRMS(frame, size));
     }
@@ -53,7 +55,7 @@ struct module_average_rms_amp : module_level<module_average_rms_amp>
 
 struct module_peak_amp : module_level<module_peak_amp>
 {
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         set(statMax(frame, size));
     }

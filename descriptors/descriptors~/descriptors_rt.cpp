@@ -204,7 +204,10 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("log_spread", module_log_spread::setup);
     graph->add_module("log_skewness", module_log_skewness::setup);
     graph->add_module("log_kurtosis", module_log_kurtosis::setup);
-
+    graph->add_module("pitch", module_pitch::setup);
+    graph->add_module("confidence", module_confidence::setup);
+    graph->add_module("lin_brightness", module_lin_brightness::setup);
+    graph->add_module("log_brightness", module_log_brightness::setup);
     
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
@@ -232,7 +235,7 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
     if (graph)
     {
         
-        graph->run(samples, x->params.m_frame_size);
+        graph->run(x->params, samples, x->params.m_frame_size);
         graph->output(x->output_list.data());
         
         // Call clock to output

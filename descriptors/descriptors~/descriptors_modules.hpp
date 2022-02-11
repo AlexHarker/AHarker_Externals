@@ -19,6 +19,7 @@ struct global_params
     double m_sr;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
+    double bin_freq() const { return m_sr / fft_size(); }
 };
 
 // Any Module (internal or user)
@@ -32,7 +33,7 @@ struct module
     virtual void add_requirements(graph& g) {}
     
     virtual void prepare(const global_params& params) {}
-    virtual void calculate(const double *frame, long size) = 0;
+    virtual void calculate(const global_params& params, const double *frame, long size) = 0;
 };
 
 // A User Module

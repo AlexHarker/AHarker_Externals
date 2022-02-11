@@ -749,16 +749,14 @@ void complex_mult_conjugate(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, lo
     VecType *in_imag2 = reinterpret_cast<VecType *>(in2.imagp);
 	
     VecType vscale(scale);
-	
-	long i;
-	
+    
 	float nyquist1 = in1.imagp[0];
 	float nyquist2 = in2.imagp[0];
 		
 	in1.imagp[0] = 0.f;
 	in2.imagp[0] = 0.f;	
 	
-	for (i = 0; i < length >> 2; i++)
+	for (long i = 0; i < length >> 2; i++)
 	{
         VecType in_real1_temp = in_real1[i];
         VecType in_real2_temp = in_real2[i];

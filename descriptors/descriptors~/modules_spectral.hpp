@@ -98,7 +98,7 @@ struct module_fft : module
         m_fft_setup.resize(params.m_fft_size_log2);
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         // Apply window
 /*
@@ -139,7 +139,7 @@ struct module_power_spectrum : module
         m_spectrum.resize((params.fft_size() >> 1) + 1);
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         auto fft_frame = m_fft_module->get_frame();
         
@@ -189,7 +189,7 @@ struct module_amplitude_spectrum : module
         m_spectrum.resize((params.fft_size() >> 1) + 1);
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *power_frame = m_power_module->get_frame();
         
@@ -233,6 +233,11 @@ struct module_spectral : user_module_single
         return m;
     }
     
+    module_spectral() : m_lo_freq(0.0), m_hi_freq(0.0), m_min_bin(0), m_max_bin(0) {}
+    
+    module_spectral(double lo_freq, double hi_freq)
+    : m_lo_freq(lo_freq), m_hi_freq(hi_freq), m_min_bin(0), m_max_bin(0) {}
+    
     bool is_the_same(const module *m) const override
     {
         const T *m_typed = dynamic_cast<const T *>(m);
@@ -253,7 +258,7 @@ protected:
     long m_max_bin;
 };
 
-// Spectral Crest Module
+// Spectral Module With dB flag
 
 template <class T>
 struct module_spectral_db : module_spectral<T>
@@ -290,7 +295,7 @@ struct module_energy_ratio : module_spectral<module_energy_ratio>
         m_power_module = g.add_requirement(new module_power_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *power = m_power_module->get_frame();
         long num_bins = m_power_module->num_bins();
@@ -315,7 +320,7 @@ struct module_sfm : module_spectral<module_sfm>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *amplitudes = m_amplitude_module->get_frame();
                 
@@ -381,7 +386,7 @@ struct module_loudness : user_module_single
         m_power_module = g.add_requirement(new module_power_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *curve_frame = m_loudness_curve.data();
         const double *power_frame = m_power_module->get_frame();
@@ -431,7 +436,7 @@ struct module_energy : module_spectral_db<module_energy>
         m_power_module = g.add_requirement(new module_power_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *power = m_power_module->get_frame();
 
@@ -456,7 +461,7 @@ struct module_spectral_crest : module_spectral_db<module_spectral_crest>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double *amps = m_amplitude_module->get_frame();
 
@@ -502,7 +507,7 @@ struct module_rolloff : user_module_single
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         const double bin = statPDFPercentile(m_power_module->get_frame(), m_centile, m_power_module->num_bins());
         
@@ -521,6 +526,11 @@ private:
 
 struct module_lin_centroid : module_spectral<module_lin_centroid>
 {
+    module_lin_centroid() {}
+    
+    module_lin_centroid(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override
     {
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
@@ -532,7 +542,7 @@ struct module_lin_centroid : module_spectral<module_lin_centroid>
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
     }
@@ -556,7 +566,7 @@ struct module_lin_spread : module_spectral<module_lin_spread>
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
     }
@@ -574,7 +584,7 @@ struct module_lin_skewness : module_spectral<module_lin_skewness>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
     }
@@ -591,7 +601,7 @@ struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
     }
@@ -605,6 +615,11 @@ private:
 
 struct module_log_centroid : module_spectral<module_log_centroid>
 {
+    module_log_centroid() {}
+    
+    module_log_centroid(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override
     {
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
@@ -616,7 +631,7 @@ struct module_log_centroid : module_spectral<module_log_centroid>
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statLogCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * m_bin_freq;
     }
@@ -640,7 +655,7 @@ struct module_log_spread : module_spectral<module_log_spread>
         m_bin_freq = params.m_sr / params.fft_size();
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statLogSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
     }
@@ -658,7 +673,7 @@ struct module_log_skewness : module_spectral<module_log_skewness>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statLogSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
     }
@@ -675,7 +690,7 @@ struct module_log_kurtosis : module_spectral<module_log_kurtosis>
         m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
     }
     
-    void calculate(const double *frame, long size) override
+    void calculate(const global_params& params, const double *frame, long size) override
     {
         m_value = statLogKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
     }
