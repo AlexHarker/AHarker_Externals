@@ -18,7 +18,7 @@ struct module_spectral : user_module_single
         m->m_lo_freq = argc > 0 ? atom_getfloat(argv + 0) : 0.0;
         m->m_hi_freq = argc > 1 ? atom_getfloat(argv + 1) : 192000.0;
 
-        return new T();
+        return m;
     }
     
     module_spectral() : m_lo_freq(0.0), m_hi_freq(0.0), m_min_bin(0), m_max_bin(0) {}

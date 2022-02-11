@@ -30,8 +30,8 @@ void module_noise_ratio::calculate(const global_params& params, const double *fr
         
         m_value = std::min(1.0, median_sum / power_sum);
     }
-    
-    m_value = infinity();
+    else
+        m_value = infinity();
 }
 
 // Harmonic Ratio
