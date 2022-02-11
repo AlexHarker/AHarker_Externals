@@ -97,6 +97,7 @@ struct module_window : module
     
     void prepare(const global_params& params) override
     {
+        m_windowed_frame.resize(params.m_frame_size);
         m_window.resize(params.m_frame_size);
         
         double *window = m_window.data();
