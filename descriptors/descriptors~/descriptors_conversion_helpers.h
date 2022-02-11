@@ -15,6 +15,8 @@
 
 #include "descriptors_constants.h"
 
+#include <algorithm>
+
 static double dbtoa(double db)
 {
 	return pow(10, db / 20.0);

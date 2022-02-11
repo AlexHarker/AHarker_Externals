@@ -7,6 +7,7 @@
 #include "descriptors_graph.hpp"
 
 #include <HISSTools_FFT/HISSTools_FFT.h>
+#include <Statistics.hpp>
 #include <SIMDSupport.hpp>
 
 #include <cmath>

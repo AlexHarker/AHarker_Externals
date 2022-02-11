@@ -2,23 +2,18 @@
 #ifndef _MODULES_LEVEL_HPP_
 #define _MODULES_LEVEL_HPP_
 
-#include <Statistics.hpp>
-
 #include "descriptors_modules.hpp"
 #include "descriptors_conversion_helpers.h"
 
 template <class T>
 struct module_level : user_module_single
 {
-    module_level() : m_report_db(true) {}
+    module_level(bool report_db) : m_report_db(report_db) {}
     
     static user_module *setup(const global_params& params, long argc, t_atom *argv)
     {
-        T *m = new T();
-        
-        m->m_report_db = argc ? atom_getfloat(argv) : true;
-        
-        return m;
+        const bool report_db = argc ? atom_getfloat(argv) : true;
+        return new T(report_db);
     }
     
     bool is_the_same(const module *m) const override
@@ -37,28 +32,33 @@ private:
     bool m_report_db;
 };
 
+// Level Modules
+
+// Abs Module
+
 struct module_average_abs_amp : module_level<module_average_abs_amp>
 {
-    void calculate(const global_params& params, const double *frame, long size) override
-    {
-        set(statSumAbs(frame, size) / size);
-    }
+    module_average_abs_amp(bool report_db) : module_level(report_db) {}
+    
+    void calculate(const global_params& params, const double *frame, long size) override;
 };
+
+// RMS Module
 
 struct module_average_rms_amp : module_level<module_average_rms_amp>
 {
-    void calculate(const global_params& params, const double *frame, long size) override
-    {
-        set(statRMS(frame, size));
-    }
+    module_average_rms_amp(bool report_db) : module_level(report_db) {}
+
+    void calculate(const global_params& params, const double *frame, long size) override;
 };
+
+// Peak Amp Module
 
 struct module_peak_amp : module_level<module_peak_amp>
 {
-    void calculate(const global_params& params, const double *frame, long size) override
-    {
-        set(statMax(frame, size));
-    }
+    module_peak_amp(bool report_db) : module_level(report_db) {}
+
+    void calculate(const global_params& params, const double *frame, long size) override;
 };
 
 #endif /* _MODULES_LEVEL_HPP_ */
