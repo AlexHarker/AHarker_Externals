@@ -3,6 +3,7 @@
 #include "descriptors_graph.hpp"
 
 #include <algorithm>
+#include <Statistics.hpp>
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
@@ -19,17 +20,11 @@ void module_noise_ratio::calculate(const global_params& params, const double *fr
     const double *median_power = m_median_power_module->get_frame();
     long num_bins = m_median_power_module->num_bins();
 
+    // FIX - check median span
+    // FIX - requires energy compensation
+            
     if (power_sum)
-    {
-        // FIX - check median span
-        
-        double median_sum = 0.0;
-
-        for (long i = 0; i < num_bins; i++)
-            median_sum += median_power[i];
-        
-        m_value = std::min(1.0, median_sum / power_sum);
-    }
+        m_value = std::min(1.0, statSum(median_power, num_bins / power_sum);
     else
         m_value = infinity();
 }
