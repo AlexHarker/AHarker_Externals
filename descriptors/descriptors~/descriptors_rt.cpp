@@ -213,7 +213,9 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("log_brightness", module_log_brightness::setup);
     graph->add_module("noise_ratio", module_noise_ratio::setup);
     graph->add_module("harmonic_ratio", module_harmonic_ratio::setup);
-
+    graph->add_module("foote", module_foote::setup);
+    graph->add_module("flux", module_flux::setup);
+    
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
     

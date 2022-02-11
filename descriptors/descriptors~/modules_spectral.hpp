@@ -35,7 +35,8 @@ struct module_spectral : user_module_single
     
     void prepare(const global_params& params) override
     {
-        get_bin_range(m_min_bin, m_max_bin, m_lo_freq, m_hi_freq, params.m_sr, params.fft_size() / 2);
+        m_min_bin = freq_to_bin(m_lo_freq, params.m_sr, params.fft_size() / 2);
+        m_max_bin = freq_to_bin(m_hi_freq, params.m_sr, params.fft_size() / 2);
     }
     
 protected:

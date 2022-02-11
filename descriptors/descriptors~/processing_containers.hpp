@@ -16,6 +16,23 @@ struct aligned_vector
     aligned_vector(const aligned_vector&) = delete;
     aligned_vector& operator=(const aligned_vector&) = delete;
     
+    // Moveable
+    
+    aligned_vector(aligned_vector&& b)
+    {
+        m_ptr = b.m_ptr;
+        m_size = b.m_size;
+        b.m_ptr = nullptr;
+    }
+    
+    aligned_vector& operator=(aligned_vector&& b)
+    {
+        m_ptr = b.m_ptr;
+        m_size = b.m_size;
+        b.m_ptr = nullptr;
+        return *this;
+    }
+    
     void resize(size_t size)
     {
         if (size != m_size)

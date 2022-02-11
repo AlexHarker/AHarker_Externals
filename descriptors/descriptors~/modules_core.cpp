@@ -219,17 +219,33 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
 
 void module_spectrum_ring_buffer::add_requirements(graph& g)
 {
-    
+    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
 }
 
 void module_spectrum_ring_buffer::prepare(const global_params& params)
 {
+    // FIX
+    m_max_lag = std::min(m_max_lag, 20L);
     
+    for (long i = 0; i < m_max_lag; i++)
+    {
+        m_spectra.emplace_back(params.num_bins());
+        std::fill_n(m_spectra.back().data(), params.num_bins(), 0.0);
+    }
 }
 
 void module_spectrum_ring_buffer::calculate(const global_params& params, const double *frame, long size)
 {
+    const double *spectrum = m_amplitude_module->get_frame();
     
+    m_counter = m_counter + 1 % m_max_lag;
+    
+    std::copy_n(spectrum, params.num_bins(), m_spectra[m_counter].data());
+}
+
+long module_spectrum_ring_buffer::get_idx(long lag) const
+{
+    return (m_max_lag + (m_counter - std::min(m_max_lag, lag))) % m_max_lag;
 }
 
 // Autocorrelation Module
