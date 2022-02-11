@@ -2,6 +2,9 @@
 #include "modules_pitch.hpp"
 
 #include <algorithm>
+#include <limits>
+
+constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Autocorrelation Module
 
@@ -121,7 +124,7 @@ void module_pitch::calculate(const global_params& params, const double *frame, l
     }
     else
     {
-        m_value = DBL_MAX;
+        m_value = infinity();
         m_confidence = 0.0;
     }
 }
@@ -151,8 +154,10 @@ void module_lin_brightness::calculate(const global_params& params, const double 
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
     
-    //if (pitch > 10. && pitch != DBL_MAX && centroid != DBL_MAX)
-    m_value = centroid / pitch;
+    if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
+        m_value = centroid / pitch;
+    else
+        m_value = infinity();
 }
 
 // Brightness Log
@@ -168,6 +173,8 @@ void module_log_brightness::calculate(const global_params& params, const double 
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
     
-    //if (pitch > 10. && pitch != DBL_MAX && centroid != DBL_MAX)
-    m_value = centroid / pitch;
+    if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
+        m_value = centroid / pitch;
+    else
+        m_value = infinity();
 }
