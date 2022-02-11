@@ -13,6 +13,10 @@
 		B85830C927B67E3C0083BA8E /* modules_pitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830C727B67E3C0083BA8E /* modules_pitch.cpp */; };
 		B85830CB27B680F10083BA8E /* modules_level.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830CA27B680F10083BA8E /* modules_level.cpp */; };
 		B85830CC27B680F10083BA8E /* modules_level.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830CA27B680F10083BA8E /* modules_level.cpp */; };
+		B85830CF27B692510083BA8E /* modules_spectral_change.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830CD27B692510083BA8E /* modules_spectral_change.cpp */; };
+		B85830D027B692510083BA8E /* modules_spectral_change.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830CD27B692510083BA8E /* modules_spectral_change.cpp */; };
+		B85830D127B692510083BA8E /* modules_spectral_change.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85830CE27B692510083BA8E /* modules_spectral_change.hpp */; };
+		B85830D227B692510083BA8E /* modules_spectral_change.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85830CE27B692510083BA8E /* modules_spectral_change.hpp */; };
 		B862CA9A145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */; };
 		B862CA9B145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */; };
 		B8A49AB4110C6EF000738FDC /* descriptors_non_rt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */; };
@@ -37,6 +41,8 @@
 		B85830A127B6551F0083BA8E /* modules_pitch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_pitch.hpp; sourceTree = "<group>"; };
 		B85830C727B67E3C0083BA8E /* modules_pitch.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_pitch.cpp; sourceTree = "<group>"; };
 		B85830CA27B680F10083BA8E /* modules_level.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_level.cpp; sourceTree = "<group>"; };
+		B85830CD27B692510083BA8E /* modules_spectral_change.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_spectral_change.cpp; sourceTree = "<group>"; };
+		B85830CE27B692510083BA8E /* modules_spectral_change.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_spectral_change.hpp; sourceTree = "<group>"; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
 		B89327980F23C48E002D6F23 /* descriptors_object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_object.h; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -98,6 +104,8 @@
 				B8472B9727B5659000C60F79 /* modules_level.hpp */,
 				B85830CA27B680F10083BA8E /* modules_level.cpp */,
 				B8472B9827B57C0900C60F79 /* modules_spectral.hpp */,
+				B85830CE27B692510083BA8E /* modules_spectral_change.hpp */,
+				B85830CD27B692510083BA8E /* modules_spectral_change.cpp */,
 				B85830A127B6551F0083BA8E /* modules_pitch.hpp */,
 				B85830C727B67E3C0083BA8E /* modules_pitch.cpp */,
 				B8F382580F23B80000B7D3E0 /* descriptors_sort.hpp */,
@@ -138,6 +146,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B85830D127B692510083BA8E /* modules_spectral_change.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +154,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B85830D227B692510083BA8E /* modules_spectral_change.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B85830CF27B692510083BA8E /* modules_spectral_change.cpp in Sources */,
 				B8E7A6CA0EE19C47004ABE12 /* descriptors_object.cpp in Sources */,
 				B85830C827B67E3C0083BA8E /* modules_pitch.cpp in Sources */,
 				B8D158260F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp in Sources */,
@@ -278,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B85830D027B692510083BA8E /* modules_spectral_change.cpp in Sources */,
 				B8A49AB7110C6F0200738FDC /* descriptors_rt.cpp in Sources */,
 				B85830C927B67E3C0083BA8E /* modules_pitch.cpp in Sources */,
 				B85830CC27B680F10083BA8E /* modules_level.cpp in Sources */,

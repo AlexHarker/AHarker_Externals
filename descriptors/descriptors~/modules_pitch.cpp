@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <limits>
 
-constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
+static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Autocorrelation Module
 
