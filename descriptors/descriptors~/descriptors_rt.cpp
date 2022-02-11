@@ -26,8 +26,9 @@
 #include <AH_Lifecycle.hpp>
 
 #include "descriptors_graph.hpp"
-#include "descriptors_level_modules.hpp"
-#include "descriptors_spectral_modules.hpp"
+#include "modules_level.hpp"
+#include "modules_spectral.hpp"
+#include "modules_pitch.hpp"
 
 
 // Globals and Object Structure

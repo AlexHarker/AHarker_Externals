@@ -1,6 +1,6 @@
 
-#ifndef __DESCRIPTORS_SPECTRAL_MODULES_HPP__
-#define __DESCRIPTORS_SPECTRAL_MODULES_HPP__
+#ifndef _MODULES_SPECTRAL_HPP_
+#define _MODULES_SPECTRAL_HPP_
 
 #include "descriptors_conversion_helpers.h"
 #include "descriptors_modules.hpp"
@@ -685,4 +685,4 @@ private:
     module_amplitude_spectrum *m_amplitude_module;
 };
 
-#endif /* __DESCRIPTORS_SPECTRAL_MODULES_HPP__ */
+#endif /* _MODULES_SPECTRAL_HPP_ */

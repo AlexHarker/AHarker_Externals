@@ -1,6 +1,6 @@
 
-#ifndef __DESCRIPTORS_LEVEL_MODULES_HPP__
-#define __DESCRIPTORS_LEVEL_MODULES_HPP__
+#ifndef _MODULES_LEVEL_HPP_
+#define _MODULES_LEVEL_HPP_
 
 #include <Statistics.hpp>
 
@@ -22,7 +22,6 @@ struct module_level : user_module_single
     bool is_the_same(const module *m) const override
     {
         const T *m_typed = dynamic_cast<const T *>(m);
-        
         return m_typed && m_typed->m_report_db == m_report_db;
     }
 
@@ -60,4 +59,4 @@ struct module_peak_amp : module_level<module_peak_amp>
     }
 };
 
-#endif /* __DESCRIPTORS_LEVEL_MODULES_HPP__ */
+#endif /* _MODULES_LEVEL_HPP_ */
