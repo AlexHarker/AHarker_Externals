@@ -6,11 +6,21 @@
 #include "descriptors_graph.hpp"
 #include "processing_containers.hpp"
 
+// A Generic Core Module
+
+template <class T>
+struct module_core : module
+{
+    bool is_the_same(const module *m) const override
+    {
+        return dynamic_cast<const T *>(m);
+    }
+};
+
 // Windowing Module
 
-struct module_window : module
+struct module_window : module_core<module_window>
 {
-    bool is_the_same(const module *m) const override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
@@ -24,9 +34,8 @@ private:
 
 // FFT Module
 
-struct module_fft : module
+struct module_fft : module_core<module_fft>
 {
-    bool is_the_same(const module *m) const override;
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -42,9 +51,8 @@ private:
 
 // Power Spectrum Module
 
-struct module_power_spectrum : module
+struct module_power_spectrum : module_core<module_power_spectrum>
 {
-    bool is_the_same(const module *m) const override;
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -60,9 +68,8 @@ private:
 
 // Amplitude Spectrum Module
 
-struct module_amplitude_spectrum : module
+struct module_amplitude_spectrum : module_core<module_amplitude_spectrum>
 {
-    bool is_the_same(const module *m) const override;
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -74,6 +81,24 @@ private:
     
     module_power_spectrum *m_power_module;
     aligned_vector m_spectrum;
+};
+
+// Autocorrelation Module
+
+struct module_autocorrelation : module_core<module_autocorrelation>
+{
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+    const double *get_coefficients() const { return m_coefficients.data(); }
+    long get_length() const { return static_cast<long>(m_coefficients.size()); }
+
+private:
+    
+    fft_setup m_fft_setup;
+    fft_split m_full_frame;
+    fft_split m_half_frame;
+    aligned_vector m_coefficients;
 };
 
 #endif /* _MODULES_CORE_HPP_ */

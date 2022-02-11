@@ -10,11 +10,6 @@ using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Windowing Module
 
-bool module_window::is_the_same(const module *m) const
-{
-    return dynamic_cast<const module_window *>(m);
-}
-
 void module_window::prepare(const global_params& params)
 {
     m_windowed_frame.resize(params.m_frame_size);
@@ -107,11 +102,6 @@ void module_window::calculate(const global_params& params, const double *frame, 
 
 // FFT Module
 
-bool module_fft::is_the_same(const module *m) const
-{
-    return dynamic_cast<const module_fft *>(m);
-}
-
 void module_fft::add_requirements(graph& g)
 {
     m_window_module = g.add_requirement(new module_window());
@@ -135,11 +125,6 @@ void module_fft::calculate(const global_params& params, const double *frame, lon
 }
 
 // Power Spectrum Module
-
-bool module_power_spectrum::is_the_same(const module *m) const
-{
-    return dynamic_cast<const module_power_spectrum *>(m);
-}
 
 void module_power_spectrum::add_requirements(graph& g)
 {
@@ -174,11 +159,6 @@ void module_power_spectrum::calculate(const global_params& params, const double 
 
 // Amplitude Spectrum Module
 
-bool module_amplitude_spectrum::is_the_same(const module *m) const
-{
-    return dynamic_cast<const module_amplitude_spectrum *>(m);
-}
-
 void module_amplitude_spectrum::add_requirements(graph& g)
 {
     m_power_module = g.add_requirement(new module_power_spectrum());
@@ -206,4 +186,68 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
     // Do Nyquist Value
     
     m_spectrum.data()[nyquist] = sqrt(power_frame[nyquist]);
+}
+
+// Autocorrelation Module
+
+void module_autocorrelation::prepare(const global_params& params)
+{
+    m_fft_setup.resize(params.m_fft_size_log2);
+    m_full_frame.resize(params.fft_size());;
+    m_half_frame.resize(params.fft_size());;
+    m_coefficients.resize(params.fft_size());
+}
+
+void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
+{
+    using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
+
+    auto full_frame = m_full_frame.data();
+    auto half_frame = m_half_frame.data();
+    
+    VecType *real1 = reinterpret_cast<VecType *>(full_frame.realp);
+    VecType *imag1 = reinterpret_cast<VecType *>(full_frame.imagp);
+    VecType *real2 = reinterpret_cast<VecType *>(half_frame.realp);
+    VecType *imag2 = reinterpret_cast<VecType *>(half_frame.imagp);
+        
+    double scale = 0.0;
+    
+    // Calculate normalisation factor
+    
+    for (long i = 0; i < (size >> 1); i++)
+        scale += frame[i] * frame[i];
+        
+    scale = 0.25 / (get_length() * scale);
+        
+    // Do ffts straight into position with zero padding (one half the size of the other)
+    
+    hisstools_rfft(m_fft_setup.get(), frame, &full_frame, size, m_fft_setup.size());
+    hisstools_rfft(m_fft_setup.get(), frame, &half_frame, (size >> 1), m_fft_setup.size());
+        
+    // Calculate ac coefficients
+    
+    VecType vscale(scale);
+    
+    const double nyquist1 = full_frame.imagp[0];
+    const double nyquist2 = half_frame.imagp[0];
+        
+    full_frame.imagp[0] = 0.0;
+    half_frame.imagp[0] = 0.0;
+    
+    for (long i = 0; i < size / (2 * VecType::size); i++)
+    {
+        const VecType r1 = real1[i];
+        const VecType i1 = imag1[i];
+        const VecType r2 = real2[i];
+        const VecType i2 = imag2[i];
+        
+        real1[i] = ((r1 * r2) + (i1 * i2)) * vscale;
+        imag1[i] = ((i1 * r2) - (r1 * i2)) * vscale;
+    }
+    
+    full_frame.imagp[0] = (nyquist1 * nyquist2) * scale;
+        
+    // Inverse fft
+        
+    hisstools_rifft(m_fft_setup.get(), &full_frame, m_coefficients.data(), m_fft_setup.size());
 }

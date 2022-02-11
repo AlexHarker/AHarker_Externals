@@ -4,25 +4,6 @@
 
 #include "modules_spectral.hpp"
 
-// Autocorrelation Module
-
-struct module_autocorrelation : module
-{
-    bool is_the_same(const module *m) const override;
-    void prepare(const global_params& params) override;
-    void calculate(const global_params& params, const double *frame, long size) override;
-    
-    const double *get_coefficients() const { return m_coefficients.data(); }
-    long get_length() const { return static_cast<long>(m_coefficients.size()); }
-
-private:
-    
-    fft_setup m_fft_setup;
-    fft_split m_full_frame;
-    fft_split m_half_frame;
-    aligned_vector m_coefficients;
-};
-
 // Pitch Modules
 
 template <class T>
