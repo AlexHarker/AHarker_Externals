@@ -8,7 +8,7 @@ static constexpr double infinity() { return std::numeric_limits<double>::infinit
 
 // Foote Module
 
-module_foote *module_foote::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_foote::setup(const global_params& params, long argc, t_atom *argv)
 {
     module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, argc, argv));
     
@@ -23,11 +23,6 @@ bool module_foote::is_the_same(const module *m) const
     const module_foote *m_typed = dynamic_cast<const module_foote *>(m);
     
     return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_frames_back == m_frames_back;
-}
-
-void module_foote::add_requirements(graph& g)
-{
-    m_ring_buffer_module = g.add_requirement(new module_spectrum_ring_buffer());
 }
 
 void module_foote::calculate(const global_params& params, const double *frame, long size)
@@ -70,7 +65,7 @@ void module_foote::calculate(const global_params& params, const double *frame, l
 
 // Flux Module
 
-module_flux *module_flux::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_flux::setup(const global_params& params, long argc, t_atom *argv)
 {
     module_flux *m = dynamic_cast<module_flux *>(module_spectral::setup(params, argc, argv));
     
@@ -86,11 +81,6 @@ bool module_flux::is_the_same(const module *m) const
     const module_flux *m_typed = dynamic_cast<const module_flux *>(m);
     
     return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_frames_back == m_frames_back;
-}
-
-void module_flux::add_requirements(graph& g)
-{
-    m_ring_buffer_module = g.add_requirement(new module_spectrum_ring_buffer());
 }
     
 void module_flux::calculate(const global_params& params, const double *frame, long size)
@@ -115,6 +105,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             norm_factor2 -= cumulate_ptr2[min_bin - 1];*/
     }
     
+    // FIX - check!!!
     norm_factor1 = norm_factor1 ? norm_factor1 = 1.0 / norm_factor1 : 1.0;
     norm_factor2 = norm_factor1 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
     
@@ -170,5 +161,120 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     }
     
     m_value = square_flag ? sqrt(sum) : sum;
+}
+
+// MKL Module
+
+user_module *module_mkl::setup(const global_params& params, long argc, t_atom *argv)
+{
+    module_mkl *m = dynamic_cast<module_mkl *>(module_spectral::setup(params, argc, argv));
+    
+    m->m_threshold = argc > 2 ? atom_getfloat(argv + 2) : -300.0;
+    m->m_forward_only = argc > 3 ? atom_getfloat(argv + 3) : true;
+    m->m_weight_second_frame = argc > 4 ? atom_getlong(argv + 4) : false;
+    m->m_normalise_spectrum = argc > 5 ? atom_getlong(argv + 5) : true;
+    m->m_frames_back = argc > 6 ? atom_getlong(argv + 6) : 1;
+
+    return m;
+}
+
+bool module_mkl::is_the_same(const module *m) const
+{
+    const module_mkl *m_typed = dynamic_cast<const module_mkl *>(m);
+    
+    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_weight_second_frame == m_weight_second_frame && m_typed->m_frames_back == m_frames_back && m_typed->m_threshold == m_threshold;
+}
+    
+void module_mkl::calculate(const global_params& params, const double *frame, long size)
+{
+    double norm_factor1 = 1.0;
+    double norm_factor2 = 1.0;
+    double sum = 0.0;
+    
+    // FIX
+    
+    const double log_thresh = m_threshold;
+    double *frame2;
+    double *log_frame1;
+    double *log_frame2;
+    
+    if (m_normalise_spectrum)
+    {
+        // FIX
+        
+        /*
+        norm_factor1 = cumulate_ptr1[max_bin - 1];
+        if (min_bin)
+            norm_factor1 -= cumulate_ptr1[min_bin - 1];
+        norm_factor2 = cumulate_ptr2[max_bin - 1];
+        if (min_bin)
+            norm_factor2 -= cumulate_ptr2[min_bin - 1];
+        if (!norm_factor1) norm_factor1 = sqrt(POW_MIN) * (double) (max_bin - min_bin);
+         */
+    }
+    
+    const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), MKL_EQUALISE_MAX_LOG);
+    
+    if (norm_factor2)
+        norm_factor1 = 1. / norm_factor2;
+    else
+        norm_factor2 = 1.;
+    
+    if (m_weight_second_frame)
+    {
+        if (m_forward_only)
+        {
+            // Forward changes only weighting by the second frame
+            
+            for (long i = m_min_bin; i < m_max_bin; i++)
+            {
+                double current_val = log_frame2[i] - log_frame1[i];
+                current_val += log_norm_factor;
+                if (current_val > 0 && log_frame2[i] >= log_thresh)
+                    sum += current_val * frame2[i] * norm_factor2;
+            }
+        }
+        else
+        {
+            // Both changes weighting by the second frame
+            
+            for (long i = m_min_bin; i < m_max_bin; i++)
+            {
+                double current_val = log_frame2[i] - log_frame1[i];
+                current_val += log_norm_factor;
+                if (log_frame2[i] >= log_thresh)
+                    sum += current_val * frame2[i] * norm_factor2;
+            }
+        }
+    }
+    else
+    {
+        if (m_forward_only)
+        {
+            // Forward changes only
+            
+            for (long i = m_min_bin; i < m_max_bin; i++)
+            {
+                double current_val = log_frame2[i] - log_frame1[i];
+                current_val += log_norm_factor;
+                if (current_val > 0 && log_frame2[i] >= log_thresh)
+                    sum += current_val;
+            }
+        }
+        else
+        {
+            // Both changes
+            
+            for (long i = m_min_bin; i < m_max_bin; i++)
+            {
+                double current_val = log_frame2[i] - log_frame1[i];
+                current_val += log_norm_factor;
+                if (log_frame2[i] >= log_thresh)
+                    sum += current_val;
+            }
+        }
+    }
+    
+    m_value = sum / static_cast<double>(2 * (m_max_bin - m_min_bin));
 }
 
