@@ -107,9 +107,28 @@ private:
 };
 
 
-// Ring Buffer
+// Ring Buffer Modules
 
 struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
+{
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+    const double *get_frame(long frame_lag) const { return m_spectra[get_idx(frame_lag)].data(); }
+    void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
+    
+private:
+    
+    long get_idx(long lag) const;
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    std::vector<aligned_vector> m_spectra;
+    long m_counter = 0;
+    long m_max_lag = 0;
+};
+
+struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_buffer>
 {
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;

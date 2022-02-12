@@ -62,11 +62,13 @@ private:
 struct module_mkl : module_spectral_change<module_mkl>
 {
     static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    void add_requirements(graph& g) override;
     bool is_the_same(const module *m) const override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
 private:
         
+    module_log_spectrum_ring_buffer *m_log_ring_buffer_module;
     double m_threshold;
     bool m_forward_only;
     bool m_normalise_spectrum;
