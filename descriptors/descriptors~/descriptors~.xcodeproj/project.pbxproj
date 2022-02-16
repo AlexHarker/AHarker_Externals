@@ -40,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B80C537227BD11D100A7637C /* descriptors_edges.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_edges.hpp; sourceTree = "<group>"; };
 		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_modules.hpp; sourceTree = "<group>"; };
@@ -66,6 +67,7 @@
 		B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_per_frame_descriptors.cpp; sourceTree = "<group>"; };
 		B8D158410F23B0FF00DA592C /* descriptors_object_structure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_object_structure.h; sourceTree = "<group>"; };
 		B8D1585D0F23B21B00DA592C /* descriptors_constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_constants.h; sourceTree = "<group>"; };
+		B8D5FA2327BB1C6D00D20EE7 /* descriptors_peakfinder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_peakfinder.hpp; sourceTree = "<group>"; };
 		B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_object.cpp; sourceTree = "<group>"; };
 		B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = descriptors_medianfilter.hpp; sourceTree = "<group>"; };
 		B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_conversion_helpers.h; sourceTree = "<group>"; };
@@ -127,6 +129,8 @@
 				B85830C727B67E3C0083BA8E /* modules_pitch.cpp */,
 				B8F382580F23B80000B7D3E0 /* descriptors_sort.hpp */,
 				B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.hpp */,
+				B80C537227BD11D100A7637C /* descriptors_edges.hpp */,
+				B8D5FA2327BB1C6D00D20EE7 /* descriptors_peakfinder.hpp */,
 				B8472B9627B55F9F00C60F79 /* descriptors_temp.hpp */,
 				B8D158410F23B0FF00DA592C /* descriptors_object_structure.h */,
 				B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */,

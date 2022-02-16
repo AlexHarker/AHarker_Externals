@@ -5,6 +5,7 @@
 #include "descriptors_modules.hpp"
 #include "processing_containers.hpp"
 #include "descriptors_medianfilter.hpp"
+#include "descriptors_peakfinder.hpp"
 
 #include <algorithm>
 #include <vector>
