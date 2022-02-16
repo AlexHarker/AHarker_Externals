@@ -4,53 +4,70 @@
 #define _PEAKFINDER_HPP_
 
 #include "descriptors_edges.hpp"
+#include "descriptors_sort.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <vector>
 
 template <class T>
+class peak_finder;
+
+template <class T>
 class peak_set
 {
+    friend peak_finder<T>;
+    
 public:
     
     struct peak_data
     {
         uintptr_t m_index;
+        uintptr_t m_begin;
         uintptr_t m_end;
         T m_position;
         T m_value;
         
-        bool operator > (const peak_data& b) { return m_value > b.m_value; }
+        bool operator > (const peak_data& b) const { return m_value > b.m_value; }
     };
     
     peak_set(uintptr_t max_size)
     {
-        m_peaks.resize(max_size >> 1);
+        m_peaks.resize(max_size);
+        m_indices.resize(max_size);
     }
 
     uintptr_t num_peaks() const { return m_num_peaks; }
+    
+    const peak_data& by_value(size_t idx) const { return m_peaks[m_indices[idx]]; }
+    const peak_data& operator [](size_t idx) const { return m_peaks[idx]; }
 
-    T peak_value(uintptr_t idx) const { return m_peaks[idx].m_value; }
-    T peak_position(uintptr_t idx) const { return m_peaks[idx].m_position; }
-    uintptr_t peak_index(uintptr_t idx) const { return m_peaks[idx].m_index; }
-    uintptr_t peak_begin(uintptr_t idx) const { return idx ? m_peaks[idx - 1].m_position : 0; }
-    uintptr_t peak_end(uintptr_t idx) const { return m_peaks[idx].m_end; }
+private:
     
-    peak_data&  operator [](size_t idx) { return m_peaks[idx]; }
-    
+    // Modifying contents
+
     void clear() { m_num_peaks = 0; }
     size_t capacity() { return m_peaks.size(); }
+
+    peak_data& operator [](size_t idx) { return m_peaks[idx]; }
 
     void add_peak(const peak_data& peak)
     {
         if (num_peaks() < capacity())
             m_peaks[m_num_peaks++] = peak;
     }
+    
+    void complete()
+    {
+        // FIX descending
+        
+        sort(m_indices, m_peaks, m_num_peaks);
+    };
 
-private:
+    // Data
     
     uintptr_t m_num_peaks;
+    std::vector<uintptr_t> m_indices;
     std::vector<peak_data> m_peaks;
 };
 
@@ -128,28 +145,24 @@ public:
             case 4:  find_peaks<check_for_peak<4>>(peaks, size, threshold);  break;
         }
         
-        // Find boundaries
+        // Find boundaries (note by default all boundaries span the entire space)
         
         switch (params.bounds)
         {
             case Boundaries::Midpoint:
-                for (unsigned long i = 0; i < peaks.num_peaks() - 1; i++)
-                    peaks[i].m_end = (peaks[i].m_index + peaks[i].m_index) >> 1;
+                for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
+                    peaks[i + 1].m_begin = peaks[i].m_end = (peaks[i].m_index + peaks[i].m_index) >> 1;
                 break;
                 
             case Boundaries::Minimum:
-                for (unsigned long i = 0; i < peaks.num_peaks() - 1; i++)
+                for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
                 {
                     auto it = std::min_element(data + peaks[i].m_index + 1, data + peaks[i + 1].m_index);
-                    peaks[i].m_end = iterator_delta(data, it);
+                    peaks[i + 1].m_begin = peaks[i].m_end = iterator_delta(data, it);
                 }
                 break;
         }
-        
-        // Final end point
-        
-        peaks[peaks.num_peaks() - 1].m_end = size;
-        
+                        
         // If required create a single peak at the maximum, (place central to multiple consecutive maxima)
         
         if (!peaks.num_peaks() && params.always_detect)
@@ -164,9 +177,9 @@ public:
             uintptr_t centre = (beg + end) >> 1;
             
             if (data[centre] == data[beg])
-                peaks.add_peak({ centre, 0, static_cast<double>(centre), *max_it });
+                peaks.add_peak({ centre, 0, size, static_cast<double>(centre), *max_it });
             else
-                peaks.add_peak({ beg, 0, static_cast<double>(beg), *max_it });
+                peaks.add_peak({ beg, 0, size, static_cast<double>(beg), *max_it });
         }
 
         // Refine peaks
@@ -177,6 +190,8 @@ public:
             case Refine::Parabolic:         refine_peaks<refine_parabolic>(peaks);          break;
             case Refine::ParabolicLog:      refine_peaks<refine_parabolic_log>(peaks);      break;
         }
+        
+        peaks.complete();
     }
     
 private:
@@ -186,13 +201,13 @@ private:
     template <typename U>
     uintptr_t iterator_delta(U a, U b)
     {
-        return static_cast<unsigned long>(std::distance(a, b));
+        return static_cast<uintptr_t>(std::distance(a, b));
     }
     
     // Edge Copying
 
     template <class U>
-    void copy_edges(U data, unsigned long size)
+    void copy_edges(U data, uintptr_t size)
     {
         T *stored = stored_data();
 
@@ -212,7 +227,7 @@ private:
                 
         for (uintptr_t i = 0; i < size; i++)
             if (Func(data++, threshold))
-                peaks.add_peak({ i, 0, static_cast<double>(i), *data });
+                peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
     }
 
     template <int N>
@@ -253,11 +268,11 @@ private:
 
         const double max_neighbour = std::max(data[idx-1], data[idx+1]);
         const double limit = std::max(max_neighbour * 0.0001, std::numeric_limits<double>::min());
-        auto log_lim = [&](double x) { return log(std::max(x, limit)); };
+        auto log_lim = [&](double x) { return std::log(std::max(x, limit)); };
         double value;
         
         parabolic_interp(value, peak.m_value, log_lim(data[idx-1]), log_lim(data[idx]), log_lim(data[idx+1]));
-        peak.m_value = exp(value);
+        peak.m_value = std::exp(value);
     }
     
     // Parabolic interpolator
