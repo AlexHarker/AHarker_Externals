@@ -213,7 +213,12 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
 {
     const double *power = m_power_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, params.num_bins(), 50.0, m_median_span, median_filter<double>::Edges::Fold);
+    peak_set<double> peaks(20);
+    peak_finder<double> finder(200);
+    
+    finder.detect(peaks, frame, size);
+    
+    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_span, median_filter<double>::Edges::Fold, 50.0);
 }
 
 // Spectrum Ring Buffer Module

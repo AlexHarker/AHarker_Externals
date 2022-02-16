@@ -11,7 +11,7 @@ class median_filter
 {
 public:
     
-    median_filter(long max_width) : m_data(max_width), m_indices(max_width){}
+    median_filter(uintptr_t max_width) : m_data(max_width), m_indices(max_width){}
     
     // Enum for options (if implementing all)
 
@@ -19,7 +19,7 @@ public:
 
     // Process
 
-    void operator()(T *output, const T *input, long size, double percentile, long width, Edges edges, T pad = 0.0)
+    void operator()(T *output, const T *input, uintptr_t size, uintptr_t width, Edges edges, double percentile, T pad = 0.0)
     {
         uintptr_t pos = static_cast<uintptr_t>(std::round(percentile * (width - 1) / 100.0));
         pos = std::min(pos, static_cast<uintptr_t>(width - 1));
@@ -52,7 +52,7 @@ private:
         for (intptr_t i = 0; i < width; i++)
             data[i] = in(i - o1);
 
-        sort(indices, data, width);
+        sort_ascending(indices, data, width);
         out[0] = data[indices[pos]];
 
         // Do other values using insertion

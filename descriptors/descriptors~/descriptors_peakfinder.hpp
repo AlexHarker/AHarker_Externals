@@ -29,6 +29,7 @@ public:
         T m_value;
         
         bool operator > (const peak_data& b) const { return m_value > b.m_value; }
+        bool operator < (const peak_data& b) const { return m_value < b.m_value; }
     };
     
     peak_set(uintptr_t max_size)
@@ -59,9 +60,7 @@ private:
     
     void complete()
     {
-        // FIX descending
-        
-        sort(m_indices, m_peaks, m_num_peaks);
+        sort_descending(m_indices, m_peaks.data(), m_num_peaks);
     };
 
     // Data
