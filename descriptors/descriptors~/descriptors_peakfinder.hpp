@@ -32,17 +32,21 @@ public:
         bool operator < (const peak_data& b) const { return m_value < b.m_value; }
     };
     
-    peak_set(uintptr_t max_size)
-    {
-        m_peaks.resize(max_size);
-        m_indices.resize(max_size);
-    }
+    peak_set() {}
+    peak_set(uintptr_t max_size) { resize(max_size); }
 
     uintptr_t num_peaks() const { return m_num_peaks; }
     
     const peak_data& by_value(size_t idx) const { return m_peaks[m_indices[idx]]; }
     const peak_data& operator [](size_t idx) const { return m_peaks[idx]; }
 
+    void resize(uintptr_t max_size)
+    {
+        clear();
+        m_peaks.resize(max_size);
+        m_indices.resize(max_size);
+    }
+    
 private:
     
     // Modifying contents
@@ -96,7 +100,10 @@ public:
         T pad_value = 0.0;
     };
     
-    peak_finder(uintptr_t max_size)
+    peak_finder() {}
+    peak_finder(uintptr_t max_size) { resize(padded_size(max_size)); }
+    
+    void resize(uintptr_t max_size)
     {
         m_padded_data.resize(padded_size(max_size));
     }
