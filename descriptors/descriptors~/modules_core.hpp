@@ -107,6 +107,25 @@ private:
     const long m_median_span;
 };
 
+// Peak Detection Module
+
+struct module_peak_detection : module_core<module_peak_detection>
+{
+    using peak_list = peak_set<double>;
+    using peak_detector = peak_finder<double>;
+
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+    const peak_list& get_peaks() const { return m_peaks; }
+
+private:
+    
+    module_amplitude_spectrum *m_amplitude_module;
+    peak_list m_peaks;
+    peak_detector m_detector;
+};
 
 // Ring Buffer Modules
 
