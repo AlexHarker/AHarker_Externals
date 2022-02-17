@@ -4,6 +4,7 @@
 
 #include "modules_core.hpp"
 #include "modules_spectral.hpp"
+#include "modules_pitch.hpp"
 
 // Generic Noise Measure Module
 
@@ -79,6 +80,27 @@ private:
     
     const long m_num_peaks;
     module_peak_detection *m_peak_detection_module;
+};
+
+// Inharmonicity Module
+
+struct module_inharmonicity : user_module_single
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+        
+    module_inharmonicity(long num_peaks, double threshold)
+    : m_num_peaks(num_peaks), m_threshold(threshold) {}
+    
+    bool is_the_same(const module *m) const override;
+    void add_requirements(graph& g) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+private:
+    
+    const long m_num_peaks;
+    const double m_threshold;
+    module_peak_detection *m_peak_detection_module;
+    module_pitch *m_pitch_module;
 };
 
 #endif /* _MODULES_SPECTRAL_CONTENT_HPP_ */
