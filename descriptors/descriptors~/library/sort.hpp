@@ -1,16 +1,6 @@
 
-/*
- *  descriptors_sort.hpp
- *
- *	A header file for the sort routines in the descriptors~ and descriptorsrt~ objects.
- *	This code deals with various sorting operations in the descriptors~ and descriptorsrt~ objects.
- *
- *  Copyright 2010 Alex Harker. All rights reserved.
- *
- */
-
-#ifndef _DESCRIPTORS_SORT_HPP_
-#define _DESCRIPTORS_SORT_HPP_
+#ifndef _SORT_HPP_
+#define _SORT_HPP_
 
 #include <algorithm>
 

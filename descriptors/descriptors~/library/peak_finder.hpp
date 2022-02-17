@@ -1,10 +1,9 @@
 
+#ifndef _PEAK_FINDER_HPP_
+#define _PEAK_FINDER_HPP_
 
-#ifndef _PEAKFINDER_HPP_
-#define _PEAKFINDER_HPP_
-
-#include "descriptors_edges.hpp"
-#include "descriptors_sort.hpp"
+#include "edges.hpp"
+#include "sort.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -326,4 +325,4 @@ private:
     std::vector<T> m_padded_data;
 };
 
-#endif /* _PEAKFINDER_HPP_ */
+#endif /* _PEAK_FINDER_HPP_ */

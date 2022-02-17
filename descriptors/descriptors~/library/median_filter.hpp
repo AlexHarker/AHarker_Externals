@@ -1,7 +1,9 @@
 
+#ifndef _MEDIAN_FILTER_HPP_
+#define _MEDIAN_FILTER_HPP_
 
-#include "descriptors_edges.hpp"
-#include "descriptors_sort.hpp"
+#include "edges.hpp"
+#include "sort.hpp"
 
 #include <cmath>
 #include <vector>
@@ -103,3 +105,5 @@ private:
     std::vector<T> m_data;
     std::vector<uintptr_t> m_indices;
 };
+
+#endif /* _MEDIAN_FILTER_HPP_ */
