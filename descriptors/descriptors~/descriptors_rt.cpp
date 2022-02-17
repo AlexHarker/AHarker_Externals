@@ -216,6 +216,7 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("foote", module_foote::setup);
     graph->add_module("flux", module_flux::setup);
     graph->add_module("mkl", module_mkl::setup);
+    graph->add_module("spectral_peaks", module_spectral_peaks::setup);
 
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());
