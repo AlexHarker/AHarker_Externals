@@ -3,7 +3,7 @@
 #define _MODULES_LEVEL_HPP_
 
 #include "descriptors_modules.hpp"
-#include "descriptors_conversion_helpers.h"
+#include "conversion_helpers.hpp"
 
 template <class T>
 struct module_level : user_module_single

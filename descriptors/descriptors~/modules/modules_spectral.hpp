@@ -2,8 +2,7 @@
 #ifndef _MODULES_SPECTRAL_HPP_
 #define _MODULES_SPECTRAL_HPP_
 
-#include "descriptors_conversion_helpers.h"
-
+#include "conversion_helpers.hpp"
 #include "modules_core.hpp"
 
 // Basic Spectral Module

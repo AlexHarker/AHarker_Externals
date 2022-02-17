@@ -9,7 +9,6 @@
  *
  */
 
-
 #ifndef _CONVERSION_HELPERS_
 #define _CONVERSION_HELPERS_
 

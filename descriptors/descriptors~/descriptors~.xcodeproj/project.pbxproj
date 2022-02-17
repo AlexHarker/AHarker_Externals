@@ -71,7 +71,7 @@
 		B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_object.cpp; sourceTree = "<group>"; };
 		B8E9C47727BEAB7E009B6B31 /* descriptors_sort.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_sort.cpp; sourceTree = "<group>"; };
 		B8F3820B0F23B58E00B7D3E0 /* median_filter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = median_filter.hpp; sourceTree = "<group>"; };
-		B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_conversion_helpers.h; sourceTree = "<group>"; };
+		B8F382280F23B6AE00B7D3E0 /* conversion_helpers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = conversion_helpers.hpp; sourceTree = "<group>"; };
 		B8F382580F23B80000B7D3E0 /* sort.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sort.hpp; sourceTree = "<group>"; };
 		B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_spectralpeaks.cpp; sourceTree = "<group>"; };
 		B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_set_descriptors.cpp; sourceTree = "<group>"; };
@@ -113,7 +113,6 @@
 				B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */,
 				B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */,
 				B8472B9627B55F9F00C60F79 /* descriptors_temp.hpp */,
-				B8F382280F23B6AE00B7D3E0 /* descriptors_conversion_helpers.h */,
 				B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */,
 				B8472B9527B533D000C60F79 /* descriptors_graph.hpp */,
 				B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */,
@@ -137,6 +136,7 @@
 		B8E9C47427BEA9C6009B6B31 /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				B8F382280F23B6AE00B7D3E0 /* conversion_helpers.hpp */,
 				B85830D927B6B4110083BA8E /* processing_containers.hpp */,
 				B85830D427B6B3930083BA8E /* modules_core.hpp */,
 				B85830D327B6B3930083BA8E /* modules_core.cpp */,
