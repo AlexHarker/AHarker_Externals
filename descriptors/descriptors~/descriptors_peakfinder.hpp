@@ -123,7 +123,7 @@ private:
         
         // If there is no data or the size is too big there are no peaks
         
-        if (!size || size > max_size())
+        if (!size || size > max_size() || peaks.capacity() < (size / (neighbours + 1)))
             return;
                                    
         // Copy input and prepare edges
