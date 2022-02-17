@@ -218,6 +218,7 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     graph->add_module("mkl", module_mkl::setup);
     graph->add_module("spectral_peaks", module_spectral_peaks::setup);
     graph->add_module("inharmonicity", module_inharmonicity::setup);
+    graph->add_module("roughness", module_roughness::setup);
 
     graph->build(x->params, argc, argv);
     x->output_list.resize(graph->size());

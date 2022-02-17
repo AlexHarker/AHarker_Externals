@@ -3,6 +3,7 @@
 #include "descriptors_graph.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <Statistics.hpp>
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
@@ -126,7 +127,7 @@ void module_inharmonicity::calculate(const global_params& params, const double *
     
     const double pitch = m_pitch_module->get_output(0);
 
-    // If there is apitch vlue calculate the inharmonicity
+    // If there is a pitch value calculate the inharmonicity
     
     if (pitch != infinity())
     {
@@ -150,4 +151,122 @@ void module_inharmonicity::calculate(const global_params& params, const double *
     
     m_value = sum2 ? sum1 / sum2 : infinity();
 }
+
+// Roughness Module
+
+user_module *module_roughness::setup(const global_params& params, long argc, t_atom *argv)
+{
+    long num_peaks = argc > 0 ? atom_getlong(argv + 0) : 10;
+
+    return new module_roughness(num_peaks);
+}
+    
+bool module_roughness::is_the_same(const module *m) const
+{
+    const module_roughness *m_typed = dynamic_cast<const module_roughness *>(m);
+    
+    return m_typed && m_typed->m_num_peaks == m_num_peaks;
+}
+
+void module_roughness::add_requirements(graph& g)
+{
+    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+}
+
+void module_roughness::calculate(const global_params& params, const double *frame, long size)
+{
+    auto peaks = m_peak_detection_module->get_peaks();
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+
+    double sum1 = 0.0;
+    double sum2 = 0.0;
+    
+    const double pitch = m_pitch_module->get_output(0);
+
+    // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
+
+    // Code adapated from Richard Parncutt (Mcgill University / Univeristy of Graz)
+    // Richard Parncutt's current webpage is: http://www.uni-graz.at/richard.parncutt/
+    // The code can be found at: http://www.uni-graz.at/richard.parncutt/computerprograms.html
+    // The original comments from the code are reproduced in an adapted form below.
+
+    // Implementation of Hutchinson & Knopoff (1978) (H&K), which is based on Plomp & Levelt (1965) (P&L)
+    // The "standard curve" of P&L is represented by the function
+    //
+    // g(x) = [e * (x/a) * exp (-x/a)] ^ i, x < 1.2 = 0, x > 1.2
+    //
+    // where:
+    // - x is the interval between two partials expressed in critical bandwidths
+    // - a is the interval for maximum roughness (about 0.25 CBs),
+    // - i is an index (power) of about 2.
+    //
+    // (NB: I [ie. Richard Parncutt] invented this function; H&K used a look-up table)
+    //
+    // Critical bandwidth CBW is given by P&L's function, as cited by H&K.
+   
+    // Constants for analytic version of standard curve of P&L:
+        
+    constexpr double cb_int0 = 0.25;                   // interval for max roughness (P&L: ca. 0.25)
+    constexpr double cb_int1 = 1.2;                    // interval beyond which roughness is negligible (P&L: 1.2)
+    constexpr double index = 2.0;                      // for standard curve of P&L (bigger index => narrower curve)
+    constexpr double cb_int0_recip = 1.0 / cb_int0;
+    
+    // for calculating H&K Eq. (3)
+    
+    double min_amp = 0.0;
+    double numerator = 0.0;
+    double denominator = 0.0;
+            
+    for (long i = 0; i < num_valid_peaks; i++)
+    {
+        auto& peak1 = peaks.by_value(i);
+        const double freq1 = peak1.m_position * params.bin_freq();
+        const double amp1 = peak1.m_value;
+        
+        if (freq1 > 0 && amp1)
+        {
+            for (long j = i + 1; j < num_valid_peaks; j++)
+            {
+                auto& peak2 = peaks.by_value(j);
+                const double freq2 = peak2.m_position * params.bin_freq();
+                const double amp2 = peak2.m_value;;
+                
+                if (freq2 > 0 && amp2)
+                {
+                    // mean frequency of two cpts
+                    
+                    const double mean_freq = (freq1 + freq2) / 2.0;
+                    
+                    // The below is from H&K p. 5
+                    // cbw - critical bandwidth according to P&L, H&K
+                    // cb_int = interval between two partials in critical bandwidths
+                    
+                    const double cbw = 1.72 * pow(mean_freq, 0.65);
+                    const double cb_int = (fabs(freq1 - freq2)) / cbw;
+                    
+                    // (Otherwise roughness is negligible) (save computing time)
+                    
+                    if (cb_int < cb_int1)
+                    {
+                        const double ratio = cb_int * cb_int0_recip;
+
+                        // Below approximates P&L Fig. 10, H&K Fig. 1
+                        
+                        const double standard_curve = pow((M_E * ratio) * exp(-ratio), index);
+                        numerator += amp1 * amp2 * standard_curve;
+                    }
+                    denominator += amp1 * amp1;
+                    min_amp = std::min(min_amp, amp1);
+                }
+            }
+        }
+    }
+        
+    // This hack allows the algorithm to work without needing the partials in a particular order
+        
+    denominator -= min_amp * min_amp;
+        
+    m_value = denominator ? (numerator / denominator) : infinity();
+}
+
 

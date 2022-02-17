@@ -103,4 +103,24 @@ private:
     module_pitch *m_pitch_module;
 };
 
+// Roughness Module
+
+struct module_roughness : user_module_single
+{
+    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+        
+    module_roughness(long num_peaks)
+    : m_num_peaks(num_peaks) {}
+    
+    bool is_the_same(const module *m) const override;
+    void add_requirements(graph& g) override;
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+private:
+    
+    const long m_num_peaks;
+    module_peak_detection *m_peak_detection_module;
+    module_pitch *m_pitch_module;
+};
+
 #endif /* _MODULES_SPECTRAL_CONTENT_HPP_ */
