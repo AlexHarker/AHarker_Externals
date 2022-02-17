@@ -120,7 +120,6 @@ private:
     
     const long m_num_peaks;
     module_peak_detection *m_peak_detection_module;
-    module_pitch *m_pitch_module;
 };
 
 #endif /* _MODULES_SPECTRAL_CONTENT_HPP_ */

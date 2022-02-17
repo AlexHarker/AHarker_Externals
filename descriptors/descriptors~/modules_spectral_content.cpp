@@ -181,8 +181,6 @@ void module_roughness::calculate(const global_params& params, const double *fram
     double sum1 = 0.0;
     double sum2 = 0.0;
     
-    const double pitch = m_pitch_module->get_output(0);
-
     // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
 
     // Code adapated from Richard Parncutt (Mcgill University / Univeristy of Graz)
