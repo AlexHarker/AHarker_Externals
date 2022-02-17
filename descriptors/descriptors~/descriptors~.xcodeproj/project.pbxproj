@@ -114,19 +114,7 @@
 				B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */,
 				B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */,
 				B8472B9527B533D000C60F79 /* descriptors_graph.hpp */,
-				B85830D927B6B4110083BA8E /* processing_containers.hpp */,
-				B85830D427B6B3930083BA8E /* modules_core.hpp */,
-				B85830D327B6B3930083BA8E /* modules_core.cpp */,
-				B8472B9727B5659000C60F79 /* modules_level.hpp */,
-				B85830CA27B680F10083BA8E /* modules_level.cpp */,
-				B8472B9827B57C0900C60F79 /* modules_spectral.hpp */,
-				B85830DA27B6B94C0083BA8E /* modules_spectral.cpp */,
-				B85830CE27B692510083BA8E /* modules_spectral_change.hpp */,
-				B85830CD27B692510083BA8E /* modules_spectral_change.cpp */,
-				B85830E227B6D5A20083BA8E /* modules_spectral_content.hpp */,
-				B85830E127B6D5A20083BA8E /* modules_spectral_content.cpp */,
-				B85830A127B6551F0083BA8E /* modules_pitch.hpp */,
-				B85830C727B67E3C0083BA8E /* modules_pitch.cpp */,
+				B8E9C47427BEA9C6009B6B31 /* modules */,
 				B8F382580F23B80000B7D3E0 /* descriptors_sort.hpp */,
 				B8F3820B0F23B58E00B7D3E0 /* descriptors_medianfilter.hpp */,
 				B80C537227BD11D100A7637C /* descriptors_edges.hpp */,
@@ -153,6 +141,26 @@
 				B8FE3F3210986C1000780AF9 /* descriptorsrt~.mxo */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B8E9C47427BEA9C6009B6B31 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				B85830D927B6B4110083BA8E /* processing_containers.hpp */,
+				B85830D427B6B3930083BA8E /* modules_core.hpp */,
+				B85830D327B6B3930083BA8E /* modules_core.cpp */,
+				B8472B9727B5659000C60F79 /* modules_level.hpp */,
+				B85830CA27B680F10083BA8E /* modules_level.cpp */,
+				B8472B9827B57C0900C60F79 /* modules_spectral.hpp */,
+				B85830DA27B6B94C0083BA8E /* modules_spectral.cpp */,
+				B85830CE27B692510083BA8E /* modules_spectral_change.hpp */,
+				B85830CD27B692510083BA8E /* modules_spectral_change.cpp */,
+				B85830E227B6D5A20083BA8E /* modules_spectral_content.hpp */,
+				B85830E127B6D5A20083BA8E /* modules_spectral_content.cpp */,
+				B85830A127B6551F0083BA8E /* modules_pitch.hpp */,
+				B85830C727B67E3C0083BA8E /* modules_pitch.cpp */,
+			);
+			path = modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
