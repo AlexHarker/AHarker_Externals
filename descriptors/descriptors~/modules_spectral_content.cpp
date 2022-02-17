@@ -178,9 +178,6 @@ void module_roughness::calculate(const global_params& params, const double *fram
     auto peaks = m_peak_detection_module->get_peaks();
     long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
 
-    double sum1 = 0.0;
-    double sum2 = 0.0;
-    
     // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
 
     // Code adapated from Richard Parncutt (Mcgill University / Univeristy of Graz)
