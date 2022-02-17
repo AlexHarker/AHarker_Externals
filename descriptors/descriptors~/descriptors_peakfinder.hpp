@@ -289,7 +289,7 @@ private:
         auto log_lim = [&](double x) { return std::log(std::max(x, limit)); };
         double value;
         
-        parabolic_interp(value, peak.m_value, log_lim(data[idx-1]), log_lim(data[idx]), log_lim(data[idx+1]));
+        parabolic_interp(peak.m_position, value, log_lim(data[idx-1]), log_lim(data[idx]), log_lim(data[idx+1]));
         peak.m_value = std::exp(value);
     }
     
