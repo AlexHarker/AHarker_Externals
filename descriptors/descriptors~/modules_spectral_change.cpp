@@ -10,12 +10,12 @@ static constexpr double infinity() { return std::numeric_limits<double>::infinit
 
 // Foote Module
 
-user_module *module_foote::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_foote::setup(const global_params& params, module_arguments& args)
 {
-    module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, argc, argv));
+    module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
     
-    m->m_forward_only = argc > 2 ? atom_getfloat(argv + 3) : true;
-    m->set_lag(argc > 3 ? atom_getlong(argv + 3) : 1);
+    m->m_forward_only = args.get_bool(true);
+    m->set_lag(args.get_long(1));
 
     return m;
 }
@@ -67,14 +67,14 @@ void module_foote::calculate(const global_params& params, const double *frame, l
 
 // Flux Module
 
-user_module *module_flux::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_flux::setup(const global_params& params, module_arguments& args)
 {
-    module_flux *m = dynamic_cast<module_flux *>(module_spectral::setup(params, argc, argv));
+    module_flux *m = dynamic_cast<module_flux *>(module_spectral::setup(params, args));
     
-    m->m_forward_only = argc > 2 ? atom_getfloat(argv + 3) : true;
-    m->m_square_flag = argc > 3 ? atom_getfloat(argv + 4) : true;
-    m->m_normalise_spectrum = argc > 4 ? atom_getlong(argv + 5) : false;
-    m->set_lag(argc > 5 ? atom_getlong(argv + 5) : 1);
+    m->m_forward_only = args.get_bool(true);
+    m->m_square_flag = args.get_bool(true);
+    m->m_normalise_spectrum = args.get_bool(false);
+    m->set_lag(args.get_long(1));
     
     return m;
 }
@@ -162,15 +162,15 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
 
 // MKL Module
 
-user_module *module_mkl::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_mkl::setup(const global_params& params, module_arguments& args)
 {
-    module_mkl *m = dynamic_cast<module_mkl *>(module_spectral::setup(params, argc, argv));
+    module_mkl *m = dynamic_cast<module_mkl *>(module_spectral::setup(params, args));
     
-    m->m_threshold = argc > 2 ? atom_getfloat(argv + 2) : -300.0;
-    m->m_forward_only = argc > 3 ? atom_getfloat(argv + 3) : true;
-    m->m_weight_second_frame = argc > 4 ? atom_getlong(argv + 4) : false;
-    m->m_normalise_spectrum = argc > 5 ? atom_getlong(argv + 5) : true;
-    m->set_lag(argc > 6 ? atom_getlong(argv + 6) : 1);
+    m->m_threshold = args.get_double(-300.0);
+    m->m_forward_only = args.get_bool(true);
+    m->m_weight_second_frame = args.get_bool(false);
+    m->m_normalise_spectrum = args.get_bool(true);
+    m->set_lag(args.get_long(1));
 
     return m;
 }

@@ -52,7 +52,8 @@ public:
             user_module_setup setup = next;
             
             long argc_end = next_setup(argc_begin + 1, argc, argv, next);
-            auto m = ((*setup)(params, argc_end - (argc_begin + 1), argv + argc_begin + 1));
+            module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
+            auto m = (*setup)(params, args);
             m_outputs.push_back(add_requirement(m));
             argc_begin = argc_end;
         }

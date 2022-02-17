@@ -24,6 +24,38 @@ struct global_params
     double bin_freq() const { return m_sr / fft_size(); }
 };
 
+// Module Arguments
+
+class module_arguments
+{
+public:
+    
+    module_arguments(long argc, t_atom *argv)
+    : m_argc(argc), m_argv(argv) {}
+    
+    bool get_bool(bool default_value)
+    {
+        return (m_argc-- > 0) ? atom_getfloat(m_argv++) : default_value;
+    }
+    
+    long get_long(long default_value)
+    {
+        return (m_argc-- > 0) ? atom_getlong(m_argv++) : default_value;
+    }
+    
+    double get_double(double default_value)
+    {
+        return (m_argc-- > 0) ? atom_getfloat(m_argv++) : default_value;
+    }
+    
+    long argc() const { return m_argc; }
+    
+private:
+    
+    long m_argc;
+    t_atom *m_argv;
+};
+
 // Any Module (internal or user)
 
 struct module
@@ -48,7 +80,7 @@ struct user_module : module
 
 // This is the signature for setting up a user module
 
-typedef user_module *(*user_module_setup)(const global_params& globals, long argc, t_atom *argv);
+typedef user_module *(*user_module_setup)(const global_params&, module_arguments&);
 
 // A Helper For Single Values Modules
 

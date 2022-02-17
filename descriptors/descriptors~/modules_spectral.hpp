@@ -11,12 +11,12 @@
 template <class T>
 struct module_spectral : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
         T *m = new T();
         
-        m->m_lo_freq = argc > 0 ? atom_getfloat(argv + 0) : 0.0;
-        m->m_hi_freq = argc > 1 ? atom_getfloat(argv + 1) : 192000.0;
+        m->m_lo_freq = args.get_double(0.0);
+        m->m_hi_freq = args.get_double(192000.0);
 
         return m;
     }
@@ -52,11 +52,11 @@ protected:
 template <class T>
 struct module_spectral_db : module_spectral<T>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
-        T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, argc, argv));
+        T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, args));
         
-        m->m_report_db = argc > 2 ? atom_getfloat(argv + 2) : true;
+        m->m_report_db = args.get_bool(true);
         
         return m;
     }
@@ -108,7 +108,11 @@ private:
 
 struct module_loudness : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
+    module_loudness(bool report_db)
+    : m_report_db(report_db) {}
+    
     bool is_the_same(const module *m) const override;
     void prepare(const global_params& params) override;
     void add_requirements(graph& g) override;
@@ -118,7 +122,7 @@ private:
     
     module_power_spectrum *m_power_module;
     aligned_vector m_loudness_curve;
-    bool m_report_db;
+    const bool m_report_db;
 };
 
 // Energy Module
@@ -153,7 +157,8 @@ private:
 
 struct module_rolloff : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
     bool is_the_same(const module *m) const override;
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;

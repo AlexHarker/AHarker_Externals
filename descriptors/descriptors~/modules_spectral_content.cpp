@@ -48,11 +48,9 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
 
 // Spectral Peaks Module
 
-user_module *module_spectral_peaks::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    long num_peaks = argc > 0 ? atom_getlong(argv + 0) : 10;
-
-    return new module_spectral_peaks(num_peaks);
+    return new module_spectral_peaks(args.get_long(10));
 }
     
 bool module_spectral_peaks::module_spectral_peaks::is_the_same(const module *m) const
@@ -96,10 +94,10 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 
 // Inharmonicity Module
 
-user_module *module_inharmonicity::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_inharmonicity::setup(const global_params& params, module_arguments& args)
 {
-    long num_peaks = argc > 0 ? atom_getlong(argv + 0) : 10;
-    double threshold = argc > 1 ? atom_getfloat(argv + 1) : 0.68;
+    long num_peaks = args.get_long(10);
+    double threshold = args.get_double(0.68);
 
     return new module_inharmonicity(num_peaks, threshold);
 }
@@ -154,11 +152,9 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 
 // Roughness Module
 
-user_module *module_roughness::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
-    long num_peaks = argc > 0 ? atom_getlong(argv + 0) : 10;
-
-    return new module_roughness(num_peaks);
+    return new module_roughness(args.get_long(10));
 }
     
 bool module_roughness::is_the_same(const module *m) const

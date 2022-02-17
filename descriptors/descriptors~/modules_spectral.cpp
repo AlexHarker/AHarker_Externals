@@ -45,13 +45,9 @@ void module_sfm::calculate(const global_params& params, const double *frame, lon
 
 // Loudness Module
 
-user_module *module_loudness::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_loudness::setup(const global_params& params, module_arguments& args)
 {
-    module_loudness *m = new module_loudness();
-    
-    m->m_report_db = argc ? atom_getfloat(argv) : true;
-    
-    return m;
+    return  new module_loudness(args.get_bool(true));
 }
     
 bool module_loudness::is_the_same(const module *m) const
@@ -166,11 +162,11 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
 // Rolloff Module
 
-user_module *module_rolloff::setup(const global_params& params, long argc, t_atom *argv)
+user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
     module_rolloff *m = new module_rolloff();
     
-    m->m_centile = (argc ? atom_getfloat(argv) : 0.95) * 100.0;
+    m->m_centile = args.get_double(0.95) * 100.0;
     
     return m;
 }

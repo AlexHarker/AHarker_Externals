@@ -10,10 +10,9 @@ struct module_level : user_module_single
 {
     module_level(bool report_db) : m_report_db(report_db) {}
     
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
-        const bool report_db = argc ? atom_getfloat(argv) : true;
-        return new T(report_db);
+        return new T(args.get_bool(true));
     }
     
     bool is_the_same(const module *m) const override

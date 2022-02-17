@@ -11,9 +11,9 @@
 template <class T>
 struct module_noise_measure : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
-        long median_span = argc > 0 ? atom_getlong(argv + 0) : 15;
+        long median_span = args.get_long(15);
 
         return new T(median_span);
     }
@@ -66,7 +66,7 @@ private:
 
 struct module_spectral_peaks : user_module_vector
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
         
     module_spectral_peaks(long num_peaks)
     : m_num_peaks(num_peaks) {}
@@ -86,7 +86,7 @@ private:
 
 struct module_inharmonicity : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
         
     module_inharmonicity(long num_peaks, double threshold)
     : m_num_peaks(num_peaks), m_threshold(threshold) {}
@@ -107,7 +107,7 @@ private:
 
 struct module_roughness : user_module_single
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
         
     module_roughness(long num_peaks)
     : m_num_peaks(num_peaks) {}

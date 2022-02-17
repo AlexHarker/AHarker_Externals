@@ -11,10 +11,9 @@ struct module_pitch_base : user_module_single
 {
     module_pitch_base(double threshold) : m_threshold(threshold) {}
 
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
-        const double threshold = argc > 0 ? atom_getfloat(argv) : 0.68;
-        return new T(threshold);
+        return new T(args.get_double(0.68));
     }
     
     bool is_the_same(const module *m) const override
@@ -64,11 +63,11 @@ private:
 template <class T>
 struct module_brightness : module_spectral<T>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv)
+    static user_module *setup(const global_params& params, module_arguments& args)
     {
-        T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, argc, argv));
+        T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, args));
         
-        m->m_threshold = argc > 2 ? atom_getfloat(argv + 2) : 0.68;
+        m->m_threshold = args.get_double(0.68);
         
         return m;
     }

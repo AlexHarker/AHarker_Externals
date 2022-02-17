@@ -33,7 +33,8 @@ protected:
 
 struct module_foote : module_spectral_change<module_foote>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
     bool is_the_same(const module *m) const override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
@@ -46,7 +47,8 @@ private:
 
 struct module_flux : module_spectral_change<module_flux>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
     bool is_the_same(const module *m) const override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
@@ -61,7 +63,8 @@ private:
 
 struct module_mkl : module_spectral_change<module_mkl>
 {
-    static user_module *setup(const global_params& params, long argc, t_atom *argv);
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
     void add_requirements(graph& g) override;
     bool is_the_same(const module *m) const override;
     void calculate(const global_params& params, const double *frame, long size) override;
