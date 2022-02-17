@@ -73,7 +73,7 @@ private:
 template <class T>
 class peak_finder
 {
-    static constexpr int pad_size = 4;
+    enum constants : int { pad_size = 4 };
     
     using peak_data = typename peak_set<T>::peak_data;
     
@@ -115,7 +115,7 @@ private:
     
     void detect(peak_set<T>& peaks, const T *data, const T *mask, uintptr_t size, const options& params)
     {
-        int neighbours = std::min(std::max(1, params.neighbours), pad_size);
+        int neighbours = std::min(std::max(1, params.neighbours), static_cast<int>(pad_size));
         
         // Clear Peaks
         
@@ -306,7 +306,7 @@ private:
     
     // Helpers
     
-    uintptr_t padded_size(uintptr_t size) { return size - 2 * pad_size; }
+    uintptr_t padded_size(uintptr_t size) { return size + 2 * pad_size; }
     uintptr_t max_size() { return m_padded_data.size() - 2 * pad_size; }
     
     T *stored_data() { return m_padded_data.data() + pad_size; }
