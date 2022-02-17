@@ -82,7 +82,7 @@ void descriptors_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_ato
 void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
 {
     long inexact = 0;
-    long fft_size_log2 = int_log2 (fft_size, &inexact);
+    long fft_size_log2 = int_log2(fft_size, &inexact);
 
     // Check for valid fft size
     

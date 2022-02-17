@@ -8,20 +8,38 @@
 #include <memory>
 #include <vector>
 
-class graph
+class setup_list
 {
+public:
+    
     struct user_setups
     {
         t_symbol *m_name;
         user_module_setup m_setup;
     };
     
-public:
-    
     void add_module(const char *name, user_module_setup setup)
     {
-        m_installed_modules.push_back({ gensym(name), setup });
+        m_setups.push_back({ gensym(name), setup });
     }
+    
+    user_module_setup setup_from_atom(t_atom *a) const
+    {
+        for (auto it = m_setups.begin(); it != m_setups.end(); it++)
+            if (atom_gettype(a) == A_SYM && atom_getsym(a) == it->m_name)
+                return it->m_setup;
+                
+        return nullptr;
+    }
+    
+private:
+    
+    std::vector<user_setups> m_setups;
+};
+
+class graph
+{
+public:
     
     template <class T>
     T *add_requirement(T *m)
@@ -41,17 +59,17 @@ public:
         return m;
     }
     
-    void build(const global_params& params, long argc, t_atom *argv)
+    void build(const setup_list& setups, const global_params& params, long argc, t_atom *argv)
     {
         user_module_setup next;
         
-        long argc_begin = next_setup(0, argc, argv, next);
+        long argc_begin = next_setup(setups, 0, argc, argv, next);
         
         while (argc_begin < argc)
         {
             user_module_setup setup = next;
             
-            long argc_end = next_setup(argc_begin + 1, argc, argv, next);
+            long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
             module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
             auto m = (*setup)(params, args);
             m_outputs.push_back(add_requirement(m));
@@ -96,25 +114,15 @@ public:
         return output_size;
     }
     
-    long next_setup(long idx, long argc, t_atom *argv, user_module_setup& setup)
+    long next_setup(const setup_list& setups, long idx, long argc, t_atom *argv, user_module_setup& setup)
     {
         for (long i = idx; i < argc; i++)
-            if ((setup = setup_from_atom(argv + i)))
+            if ((setup = setups.setup_from_atom(argv + i)))
                 return i;
         
         return argc;
     }
     
-    user_module_setup setup_from_atom(t_atom *a)
-    {
-        for (auto it = m_installed_modules.begin(); it != m_installed_modules.end(); it++)
-            if (atom_gettype(a) == A_SYM && atom_getsym(a) == it->m_name)
-                return it->m_setup;
-                
-        return nullptr;
-    }
-    
-    std::vector<user_setups> m_installed_modules;
     std::vector<std::unique_ptr<module>> m_modules;
     std::vector<user_module *> m_outputs;
 };

@@ -38,6 +38,8 @@
 
 t_class *this_class;
 
+setup_list s_setups;
+
 struct t_descriptorsrt
 {
     t_pxobject x_obj;
@@ -121,6 +123,36 @@ int C74_EXPORT main()
     
 	class_register(CLASS_BOX, this_class);
 	
+    s_setups.add_module("abs", module_average_abs_amp::setup);
+    s_setups.add_module("rms", module_average_rms_amp::setup);
+    s_setups.add_module("peakamp", module_peak_amp::setup);
+    s_setups.add_module("energy", module_energy::setup);
+    s_setups.add_module("energy_ratio", module_energy_ratio::setup);
+    s_setups.add_module("spectral_crest", module_spectral_crest::setup);
+    s_setups.add_module("sfm", module_sfm::setup);
+    s_setups.add_module("rolloff", module_rolloff::setup);
+    s_setups.add_module("loudness", module_loudness::setup);
+    s_setups.add_module("lin_centroid", module_lin_centroid::setup);
+    s_setups.add_module("lin_spread", module_lin_spread::setup);
+    s_setups.add_module("lin_skewness", module_lin_skewness::setup);
+    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
+    s_setups.add_module("log_centroid", module_log_centroid::setup);
+    s_setups.add_module("log_spread", module_log_spread::setup);
+    s_setups.add_module("log_skewness", module_log_skewness::setup);
+    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);
+    s_setups.add_module("pitch", module_pitch::setup);
+    s_setups.add_module("confidence", module_confidence::setup);
+    s_setups.add_module("lin_brightness", module_lin_brightness::setup);
+    s_setups.add_module("log_brightness", module_log_brightness::setup);
+    s_setups.add_module("noise_ratio", module_noise_ratio::setup);
+    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);
+    s_setups.add_module("foote", module_foote::setup);
+    s_setups.add_module("flux", module_flux::setup);
+    s_setups.add_module("mkl", module_mkl::setup);
+    s_setups.add_module("spectral_peaks", module_spectral_peaks::setup);
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);
+    s_setups.add_module("roughness", module_roughness::setup);
+
 	return 0;
 }
 
@@ -190,39 +222,8 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 {
     auto graph = new class graph();
     
-    graph->add_module("abs", module_average_abs_amp::setup);
-    graph->add_module("rms", module_average_rms_amp::setup);
-    graph->add_module("peakamp", module_peak_amp::setup);
-    graph->add_module("energy", module_energy::setup);
-    graph->add_module("energy_ratio", module_energy_ratio::setup);
-    graph->add_module("spectral_crest", module_spectral_crest::setup);
-    graph->add_module("sfm", module_sfm::setup);
-    graph->add_module("rolloff", module_rolloff::setup);
-    graph->add_module("loudness", module_loudness::setup);
-    graph->add_module("lin_centroid", module_lin_centroid::setup);
-    graph->add_module("lin_spread", module_lin_spread::setup);
-    graph->add_module("lin_skewness", module_lin_skewness::setup);
-    graph->add_module("lin_kurtosis", module_lin_kurtosis::setup);
-    graph->add_module("log_centroid", module_log_centroid::setup);
-    graph->add_module("log_spread", module_log_spread::setup);
-    graph->add_module("log_skewness", module_log_skewness::setup);
-    graph->add_module("log_kurtosis", module_log_kurtosis::setup);
-    graph->add_module("pitch", module_pitch::setup);
-    graph->add_module("confidence", module_confidence::setup);
-    graph->add_module("lin_brightness", module_lin_brightness::setup);
-    graph->add_module("log_brightness", module_log_brightness::setup);
-    graph->add_module("noise_ratio", module_noise_ratio::setup);
-    graph->add_module("harmonic_ratio", module_harmonic_ratio::setup);
-    graph->add_module("foote", module_foote::setup);
-    graph->add_module("flux", module_flux::setup);
-    graph->add_module("mkl", module_mkl::setup);
-    graph->add_module("spectral_peaks", module_spectral_peaks::setup);
-    graph->add_module("inharmonicity", module_inharmonicity::setup);
-    graph->add_module("roughness", module_roughness::setup);
-
-    graph->build(x->params, argc, argv);
+    graph->build(s_setups, x->params, argc, argv);
     x->output_list.resize(graph->size());
-    
     x->m_graph.reset(graph);
 }
 
