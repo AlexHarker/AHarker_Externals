@@ -165,20 +165,23 @@ private:
         
         // Find boundaries (note by default all boundaries span the entire space)
         
-        switch (params.bounds)
+        if (peaks.num_peaks())
         {
-            case Boundaries::Midpoint:
-                for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
-                    peaks[i + 1].m_begin = peaks[i].m_end = (peaks[i].m_index + peaks[i].m_index) >> 1;
-                break;
+            switch (params.bounds)
+            {
+                case Boundaries::Midpoint:
+                    for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
+                        peaks[i + 1].m_begin = peaks[i].m_end = (peaks[i].m_index + peaks[i].m_index) >> 1;
+                    break;
                 
-            case Boundaries::Minimum:
-                for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
-                {
-                    auto it = std::min_element(data + peaks[i].m_index + 1, data + peaks[i + 1].m_index);
-                    peaks[i + 1].m_begin = peaks[i].m_end = iterator_delta(data, it);
-                }
-                break;
+                case Boundaries::Minimum:
+                    for (uintptr_t i = 0; i < peaks.num_peaks() - 1; i++)
+                    {
+                        auto it = std::min_element(data + peaks[i].m_index + 1, data + peaks[i + 1].m_index);
+                        peaks[i + 1].m_begin = peaks[i].m_end = iterator_delta(data, it);
+                    }
+                    break;
+            }
         }
                         
         // If required create a single peak at the maximum, (place central to multiple consecutive maxima)
