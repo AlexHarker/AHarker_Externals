@@ -85,7 +85,7 @@ public:
     enum class Refine { None, Parabolic, ParabolicLog  };
     enum class Boundaries { Midpoint, Minimum };
 
-    struct parameters
+    struct options
     {
         Edges edges = Edges::Fold;
         Refine refine = Refine::ParabolicLog;
@@ -101,7 +101,19 @@ public:
         m_padded_data.resize(padded_size(max_size));
     }
     
-    void detect(peak_set<T>& peaks, const T *data, uintptr_t size, const parameters& params = parameters())
+    void operator()(peak_set<T>& peaks, const T *data, uintptr_t size, const options& params = options())
+    {
+        detect(peaks, data, nullptr, size, params);
+    }
+    
+    void operator()(peak_set<T>& peaks, const T *data, const T *mask, uintptr_t size, const options& params = options())
+    {
+        detect(peaks, data, mask, size, params);
+    }
+    
+private:
+    
+    void detect(peak_set<T>& peaks, const T *data, const T *mask, uintptr_t size, const options& params)
     {
         int neighbours = std::min(std::max(1, params.neighbours), pad_size);
         
@@ -138,10 +150,10 @@ public:
         
         switch (neighbours)
         {
-            case 1:  find_peaks<check_for_peak<1>>(peaks, size, threshold);  break;
-            case 2:  find_peaks<check_for_peak<2>>(peaks, size, threshold);  break;
-            case 3:  find_peaks<check_for_peak<3>>(peaks, size, threshold);  break;
-            case 4:  find_peaks<check_for_peak<4>>(peaks, size, threshold);  break;
+            case 1:  find_peaks<check_for_peak<1>>(peaks, size, mask, threshold);  break;
+            case 2:  find_peaks<check_for_peak<2>>(peaks, size, mask, threshold);  break;
+            case 3:  find_peaks<check_for_peak<3>>(peaks, size, mask, threshold);  break;
+            case 4:  find_peaks<check_for_peak<4>>(peaks, size, mask, threshold);  break;
         }
         
         // Find boundaries (note by default all boundaries span the entire space)
@@ -192,9 +204,7 @@ public:
         
         peaks.complete();
     }
-    
-private:
-    
+        
     // Iterator Helper
     
     template <typename U>
@@ -220,13 +230,22 @@ private:
     // Peak Finding
 
     template <bool Func(const T *, double)>
-    void find_peaks(peak_set<T>& peaks, uintptr_t size, T threshold)
+    void find_peaks(peak_set<T>& peaks, uintptr_t size, const T *mask, T threshold)
     {
         const T *data = stored_data();
                 
-        for (uintptr_t i = 0; i < size; i++)
-            if (Func(data++, threshold))
-                peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
+        if (mask)
+        {
+            for (uintptr_t i = 0; i < size; i++)
+                if (Func(data++, *mask++))
+                    peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
+        }
+        else
+        {
+            for (uintptr_t i = 0; i < size; i++)
+                if (Func(data++, threshold))
+                    peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
+        }
     }
 
     template <int N>
