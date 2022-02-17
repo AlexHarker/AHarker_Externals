@@ -247,7 +247,7 @@ private:
         if (mask)
         {
             for (uintptr_t i = 0; i < size; i++)
-                if (Func(data++, *mask++))
+                if (Func(data++, std::max(*mask++, threshold)))
                     peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
         }
         else
