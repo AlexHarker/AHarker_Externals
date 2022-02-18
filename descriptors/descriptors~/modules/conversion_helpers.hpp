@@ -1,6 +1,6 @@
 
 /*
- *  descriptors_conversion_helpers.h
+ *  conversion_helpers.hpp
  *
  *	Various conversion routines for the descriptors~ and descriptorsrst~ objects.
  *	All routines are declared static inline to allowing inling from multiple source files without linking issues.
@@ -9,12 +9,15 @@
  *
  */
 
-#ifndef _CONVERSION_HELPERS_
-#define _CONVERSION_HELPERS_
-
-#include "descriptors_constants.h"
+#ifndef _CONVERSION_HELPERS_HPP_
+#define _CONVERSION_HELPERS_HPP_
 
 #include <algorithm>
+
+static inline constexpr double db_min()
+{
+    return -180.0;
+}
 
 static inline double dbtoa(double db)
 {
@@ -23,12 +26,12 @@ static inline double dbtoa(double db)
 
 static inline double atodb(double a)
 {
-	return std::max(20.0 * log10(a), DB_MIN);
+	return std::max(20.0 * log10(a), db_min());
 }
 
 static inline double pow_to_db(double p)
 {
-    return std::max(10.0 * log10(p), DB_MIN);
+    return std::max(10.0 * log10(p), db_min());
 } 
 
 static inline long freq_to_bin(double freq, double sr, long nyquist_bin)
@@ -37,4 +40,4 @@ static inline long freq_to_bin(double freq, double sr, long nyquist_bin)
 	return std::min(std::max(static_cast<long>(ceil(bin)), 0L), nyquist_bin);
 }
 
-#endif /* _CONVERSION_HELPERS_ */
+#endif /* _CONVERSION_HELPERS_HPP_ */
