@@ -154,8 +154,8 @@ user_module *module_mkl::setup(const global_params& params, module_arguments& ar
     
     m->m_threshold = args.get_double(-300.0);
     m->m_forward_only = args.get_bool(true);
-    m->m_weight_second_frame = args.get_bool(false);
-    m->m_normalise_spectrum = args.get_bool(true);
+    m->m_weight = args.get_bool(false);
+    m->m_normalise_spectra = args.get_bool(true);
     m->set_lag(args.get_long(1));
 
     return m;
@@ -182,7 +182,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
     const double *frame2 = m_ring_buffer_module->get_frame(0);
     
-    if (m_normalise_spectrum)
+    if (m_normalise_spectra)
     {
         norm_factor1 = statSum(frame1 + m_min_bin, m_max_bin - m_min_bin);
         norm_factor2 = statSum(frame2 + m_min_bin, m_max_bin - m_min_bin);
@@ -209,7 +209,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     */
     norm_factor2 = norm_factor1 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
 
-    if (m_weight_second_frame)
+    if (m_weight)
     {
         if (m_forward_only)
         {

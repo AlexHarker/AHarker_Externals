@@ -57,7 +57,8 @@ struct module_flux : module_spectral_change<module_flux>
     
     auto get_params() const
     {
-        return std::make_tuple(module_spectral_change::get_params(), m_forward_only, m_normalise_spectrum, m_square_flag);
+        using base = module_spectral_change;
+        return std::make_tuple(base::get_params(), m_forward_only, m_normalise_spectrum, m_square_flag);
     }
 
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -77,7 +78,8 @@ struct module_mkl : module_spectral_change<module_mkl>
     
     auto get_params() const
     {
-        return std::make_tuple(module_spectral_change::get_params(), m_threshold, m_forward_only, m_normalise_spectrum, m_weight_second_frame);
+        using base = module_spectral_change;
+        return std::make_tuple(base::get_params(), m_threshold, m_forward_only, m_normalise_spectra, m_weight);
     }
 
     void add_requirements(graph& g) override;
@@ -88,8 +90,8 @@ private:
     module_log_spectrum_ring_buffer *m_log_ring_buffer_module;
     double m_threshold;
     bool m_forward_only;
-    bool m_normalise_spectrum;
-    bool m_weight_second_frame;
+    bool m_normalise_spectra;
+    bool m_weight;
 };
 
 #endif /* _MODULES_SPECTRAL_CHANGE_HPP_ */
