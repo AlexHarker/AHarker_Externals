@@ -6,7 +6,7 @@
 #include "conversion_helpers.hpp"
 
 template <class T>
-struct module_level : user_module_single
+struct module_level : user_module_single<T>
 {
     module_level(bool report_db) : m_report_db(report_db) {}
     
@@ -15,15 +15,11 @@ struct module_level : user_module_single
         return new T(args.get_bool(true));
     }
     
-    bool is_the_same(const module *m) const override
-    {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        return m_typed && m_typed->m_report_db == m_report_db;
-    }
+    auto get_params() const { return std::make_tuple(m_report_db); }
 
     void set(double value)
     {
-        m_value = m_report_db ? atodb(value) : value;
+        user_module_single<T>::m_value = m_report_db ? atodb(value) : value;
     }
     
 private:

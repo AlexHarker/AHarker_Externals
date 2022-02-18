@@ -49,13 +49,6 @@ user_module *module_loudness::setup(const global_params& params, module_argument
 {
     return  new module_loudness(args.get_bool(true));
 }
-    
-bool module_loudness::is_the_same(const module *m) const
-{
-    const module_loudness *m_typed = dynamic_cast<const module_loudness *>(m);
-    
-    return m_typed && m_typed->m_report_db == m_report_db;
-}
 
 void module_loudness::add_requirements(graph& g)
 {
@@ -165,13 +158,6 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
     return new module_rolloff(args.get_double(0.95) * 100.0);
-}
-
-bool module_rolloff::is_the_same(const module *m) const
-{
-    const module_rolloff *m_typed = dynamic_cast<const module_rolloff *>(m);
-    
-    return m_typed && m_typed->m_centile == m_centile;
 }
 
 void module_rolloff::add_requirements(graph& g)

@@ -20,13 +20,6 @@ user_module *module_foote::setup(const global_params& params, module_arguments& 
     return m;
 }
 
-bool module_foote::is_the_same(const module *m) const
-{
-    const module_foote *m_typed = dynamic_cast<const module_foote *>(m);
-    
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_frame_lag == m_frame_lag;
-}
-
 void module_foote::calculate(const global_params& params, const double *frame, long size)
 {
     double norm_sum1 = 0.0;
@@ -77,13 +70,6 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     m->set_lag(args.get_long(1));
     
     return m;
-}
-
-bool module_flux::is_the_same(const module *m) const
-{
-    const module_flux *m_typed = dynamic_cast<const module_flux *>(m);
-    
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_frame_lag == m_frame_lag;
 }
     
 void module_flux::calculate(const global_params& params, const double *frame, long size)
@@ -180,13 +166,6 @@ void module_mkl::add_requirements(graph& g)
     module_spectral_change::add_requirements(g);
     m_log_ring_buffer_module = g.add_requirement(new module_log_spectrum_ring_buffer());
     m_log_ring_buffer_module->request_lag(m_frame_lag);
-}
-
-bool module_mkl::is_the_same(const module *m) const
-{
-    const module_mkl *m_typed = dynamic_cast<const module_mkl *>(m);
-    
-    return module_spectral::is_the_same(m) && m_typed->m_forward_only == m_forward_only && m_typed->m_normalise_spectrum == m_normalise_spectrum && m_typed->m_weight_second_frame == m_weight_second_frame && m_typed->m_frame_lag == m_frame_lag && m_typed->m_threshold == m_threshold;
 }
     
 void module_mkl::calculate(const global_params& params, const double *frame, long size)

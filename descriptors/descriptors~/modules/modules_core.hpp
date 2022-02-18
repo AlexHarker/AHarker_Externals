@@ -14,12 +14,9 @@
 // A Generic Core Module
 
 template <class T>
-struct module_core : module
+struct module_core : comparable_module<T>
 {
-    bool is_the_same(const module *m) const override
-    {
-        return dynamic_cast<const T *>(m);
-    }
+    auto get_params() const { return std::make_tuple(); }
 };
 
 // Windowing Module
@@ -88,12 +85,13 @@ private:
 
 // Median Power Spectrum Module
 
-struct module_median_power_spectrum : module
+struct module_median_power_spectrum : comparable_module<module_median_power_spectrum>
 {
     module_median_power_spectrum(long median_span)
     : m_filter(median_span), m_median_span(median_span) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_median_span); }
+    
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;

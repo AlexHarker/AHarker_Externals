@@ -2,7 +2,10 @@
 #ifndef _DESCRIPTORS_MODULES_HPP_
 #define _DESCRIPTORS_MODULES_HPP_
 
+// N.B. We don't use <tuple> here but it will be used for get_params() in comparing modules
+
 #include <ext.h>
+#include <tuple>
 #include <vector>
 
 // Forward Declaration
@@ -82,9 +85,24 @@ struct user_module : module
 
 typedef user_module *(*user_module_setup)(const global_params&, module_arguments&);
 
+// Comparison Helper Template
+
+template <class T, class Module = module>
+struct comparable_module : Module
+{
+    bool is_the_same(const module *m) const override
+    {
+        const T *a = static_cast<const T *>(this);
+        const T *b = dynamic_cast<const T *>(m);
+        
+        return b && a->get_params() == b->get_params();
+    }
+};
+
 // A Helper For Single Values Modules
 
-struct user_module_single : user_module
+template <class T>
+struct user_module_single : comparable_module<T, user_module>
 {
     size_t get_output_size() const override { return 1; }
     double get_output(size_t idx) const override { return m_value; }
@@ -96,7 +114,8 @@ protected:
 
 // A Helper For Multiple Values Modules
 
-struct user_module_vector : user_module
+template <class T>
+struct user_module_vector : comparable_module<T, user_module>
 {
     size_t get_output_size() const override { return m_values.size(); }
     double get_output(size_t idx) const override { return m_values[idx]; }

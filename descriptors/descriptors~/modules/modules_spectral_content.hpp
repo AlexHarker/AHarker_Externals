@@ -9,7 +9,7 @@
 // Generic Noise Measure Module
 
 template <class T>
-struct module_noise_measure : user_module_single
+struct module_noise_measure : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
@@ -21,12 +21,7 @@ struct module_noise_measure : user_module_single
     module_noise_measure(long median_span)
     : m_median_span(median_span) {}
     
-    bool is_the_same(const module *m) const override
-    {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        
-        return m_typed && m_typed->m_median_span == m_median_span;
-    }
+    auto get_params() const { return std::make_tuple(m_median_span); }
     
 protected:
     
@@ -64,14 +59,15 @@ private:
 
 // Spectral Peaks Module
 
-struct module_spectral_peaks : user_module_vector
+struct module_spectral_peaks : user_module_vector<module_spectral_peaks>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
     module_spectral_peaks(long num_peaks)
     : m_num_peaks(num_peaks) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_num_peaks); }
+
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -84,14 +80,15 @@ private:
 
 // Inharmonicity Module
 
-struct module_inharmonicity : user_module_single
+struct module_inharmonicity : user_module_single<module_inharmonicity>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
     module_inharmonicity(long num_peaks, double threshold)
     : m_num_peaks(num_peaks), m_threshold(threshold) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_num_peaks, m_threshold); }
+
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
@@ -105,14 +102,15 @@ private:
 
 // Roughness Module
 
-struct module_roughness : user_module_single
+struct module_roughness : user_module_single<module_roughness>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
     module_roughness(long num_peaks)
     : m_num_peaks(num_peaks) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_num_peaks); }
+
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     

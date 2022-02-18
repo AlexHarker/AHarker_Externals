@@ -52,13 +52,6 @@ user_module *module_spectral_peaks::setup(const global_params& params, module_ar
 {
     return new module_spectral_peaks(args.get_long(10));
 }
-    
-bool module_spectral_peaks::module_spectral_peaks::is_the_same(const module *m) const
-{
-    const module_spectral_peaks *m_typed = dynamic_cast<const module_spectral_peaks *>(m);
-    
-    return m_typed && m_typed->m_num_peaks == m_num_peaks;
-}
 
 void module_spectral_peaks::add_requirements(graph& g)
 {
@@ -100,13 +93,6 @@ user_module *module_inharmonicity::setup(const global_params& params, module_arg
     double threshold = args.get_double(0.68);
 
     return new module_inharmonicity(num_peaks, threshold);
-}
-    
-bool module_inharmonicity::is_the_same(const module *m) const
-{
-    const module_inharmonicity *m_typed = dynamic_cast<const module_inharmonicity *>(m);
-    
-    return m_typed && m_typed->m_num_peaks == m_num_peaks && m_typed->m_threshold == m_threshold;
 }
 
 void module_inharmonicity::add_requirements(graph& g)
@@ -155,13 +141,6 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
     return new module_roughness(args.get_long(10));
-}
-    
-bool module_roughness::is_the_same(const module *m) const
-{
-    const module_roughness *m_typed = dynamic_cast<const module_roughness *>(m);
-    
-    return m_typed && m_typed->m_num_peaks == m_num_peaks;
 }
 
 void module_roughness::add_requirements(graph& g)

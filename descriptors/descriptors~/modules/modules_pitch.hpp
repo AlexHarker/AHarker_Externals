@@ -7,7 +7,7 @@
 // Pitch Modules
 
 template <class T>
-struct module_pitch_base : user_module_single
+struct module_pitch_base : user_module_single<T>
 {
     module_pitch_base(double threshold) : m_threshold(threshold) {}
 
@@ -16,11 +16,7 @@ struct module_pitch_base : user_module_single
         return new T(args.get_double(0.68));
     }
     
-    bool is_the_same(const module *m) const override
-    {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        return m_typed && m_typed->m_threshold == m_threshold;
-    }
+    auto get_params() const { return std::make_tuple(m_threshold); }
     
 protected:
     
@@ -72,11 +68,7 @@ struct module_brightness : module_spectral<T>
         return m;
     }
     
-    bool is_the_same(const module *m) const override
-    {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        return module_spectral<T>::is_the_same(m) && m_typed->m_threshold == m_threshold;
-    }
+    auto get_params() const { return std::make_tuple(module_spectral<T>::get_params(), m_threshold); }
     
 protected:
     

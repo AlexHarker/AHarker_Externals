@@ -8,7 +8,7 @@
 // Basic Spectral Module
 
 template <class T>
-struct module_spectral : user_module_single
+struct module_spectral : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
@@ -25,12 +25,7 @@ struct module_spectral : user_module_single
     module_spectral(double lo_freq, double hi_freq)
     : m_lo_freq(lo_freq), m_hi_freq(hi_freq), m_min_bin(0), m_max_bin(0) {}
     
-    bool is_the_same(const module *m) const override
-    {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        
-        return m_typed && m_typed->m_lo_freq == m_lo_freq && m_typed->m_hi_freq == m_hi_freq;
-    }
+    auto get_params() const { return std::make_tuple(m_lo_freq, m_hi_freq); }
     
     void prepare(const global_params& params) override
     {
@@ -65,11 +60,9 @@ struct module_spectral_db : module_spectral<T>
     module_spectral_db(double lo_freq, double hi_freq, bool report_db)
     : module_spectral<T>(lo_freq, hi_freq), m_report_db(report_db) {}
     
-    bool is_the_same(const module *m) const override
+    auto get_params() const
     {
-        const T *m_typed = dynamic_cast<const T *>(m);
-        
-        return module_spectral<T>::is_the_same(m) && m_typed->m_report_db == m_report_db;
+        return std::make_tuple(module_spectral<T>::get_params(), m_report_db);
     }
     
 protected:
@@ -105,14 +98,15 @@ private:
 
 // Loudness Module
 
-struct module_loudness : user_module_single
+struct module_loudness : user_module_single<module_loudness>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
     
     module_loudness(bool report_db)
     : m_report_db(report_db) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_report_db); }
+    
     void prepare(const global_params& params) override;
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -154,14 +148,15 @@ private:
 
 // Rolloff Module
 
-struct module_rolloff : user_module_single
+struct module_rolloff : user_module_single<module_rolloff>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
     
     module_rolloff(double centile)
     : m_centile(centile) {}
     
-    bool is_the_same(const module *m) const override;
+    auto get_params() const { return std::make_tuple(m_centile); }
+
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     

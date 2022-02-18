@@ -192,13 +192,6 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
 
 // Median Power Spectrum Module
 
-bool module_median_power_spectrum::is_the_same(const module *m) const
-{
-    auto m_typed = dynamic_cast<const module_median_power_spectrum *>(m);
-    
-    return m_typed && m_typed->m_median_span == m_median_span;
-}
-
 void module_median_power_spectrum::add_requirements(graph& g)
 {
     m_power_module = g.add_requirement(new module_power_spectrum());
