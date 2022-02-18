@@ -158,6 +158,9 @@ struct module_rolloff : user_module_single
 {
     static user_module *setup(const global_params& params, module_arguments& args);
     
+    module_rolloff(double centile)
+    : m_centile(centile) {}
+    
     bool is_the_same(const module *m) const override;
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -165,7 +168,7 @@ struct module_rolloff : user_module_single
 private:
     
     module_power_spectrum *m_power_module;
-    double m_centile;
+    const double m_centile;
 };
 
 // Spectral Linear Shape Modules

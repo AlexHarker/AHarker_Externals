@@ -78,8 +78,8 @@ struct module_spectral_peaks : user_module_vector
     
 private:
     
-    const long m_num_peaks;
     module_peak_detection *m_peak_detection_module;
+    const long m_num_peaks;
 };
 
 // Inharmonicity Module
@@ -97,10 +97,10 @@ struct module_inharmonicity : user_module_single
     
 private:
     
-    const long m_num_peaks;
-    const double m_threshold;
     module_peak_detection *m_peak_detection_module;
     module_pitch *m_pitch_module;
+    const long m_num_peaks;
+    const double m_threshold;
 };
 
 // Roughness Module
@@ -118,8 +118,8 @@ struct module_roughness : user_module_single
     
 private:
     
-    const long m_num_peaks;
     module_peak_detection *m_peak_detection_module;
+    const long m_num_peaks;
 };
 
 #endif /* _MODULES_SPECTRAL_CONTENT_HPP_ */

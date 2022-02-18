@@ -164,11 +164,7 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
 user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
-    module_rolloff *m = new module_rolloff();
-    
-    m->m_centile = args.get_double(0.95) * 100.0;
-    
-    return m;
+    return new module_rolloff(args.get_double(0.95) * 100.0);
 }
 
 bool module_rolloff::is_the_same(const module *m) const

@@ -24,7 +24,7 @@ struct module_pitch_base : user_module_single
     
 protected:
     
-    double m_threshold;
+    const double m_threshold;
 };
 
 // Pitch Module
