@@ -1,5 +1,5 @@
 
-#include "modules_spectral_content.hpp"
+#include "modules_content.hpp"
 #include "descriptors_graph.hpp"
 
 #include <algorithm>

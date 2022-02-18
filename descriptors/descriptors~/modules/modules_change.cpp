@@ -1,5 +1,5 @@
 
-#include "modules_spectral_change.hpp"
+#include "modules_change.hpp"
 #include "descriptors_graph.hpp"
 
 #include <Statistics.hpp>

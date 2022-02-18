@@ -27,12 +27,11 @@
 
 #include "descriptors_graph.hpp"
 #include "modules_core.hpp"
+#include "modules_change.hpp"
+#include "modules_content.hpp"
 #include "modules_level.hpp"
-#include "modules_spectral.hpp"
-#include "modules_spectral_change.hpp"
-#include "modules_spectral_content.hpp"
 #include "modules_pitch.hpp"
-
+#include "modules_spectral.hpp"
 
 // Globals and Object Structure
 
