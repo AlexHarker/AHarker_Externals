@@ -250,7 +250,9 @@ void combsort(double *vals, long num_points)
             if (gap < 1) gap = 1;
         }
         
-        for (long i = 0, swaps = 0; i + gap < num_points; i++)
+        swaps = false;
+        
+        for (long i = 0; i + gap < num_points; i++)
         {
             if (vals[i] > vals[i + gap])
             {
