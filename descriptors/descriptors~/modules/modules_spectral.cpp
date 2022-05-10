@@ -157,7 +157,7 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
 user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
-    return new module_rolloff(args.get_double(0.95) * 100.0);
+    return new module_rolloff(args.get_double(0.95, 0.0, 1.0) * 100.0);
 }
 
 void module_rolloff::add_requirements(graph& g)

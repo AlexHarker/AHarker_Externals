@@ -13,7 +13,7 @@ struct module_pitch_base : user_module_single<T>
 
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        return new T(args.get_double(0.68));
+        return new T(args.get_double(0.68, 0.0, 1.0));
     }
     
     auto get_params() const { return std::make_tuple(m_threshold); }
@@ -63,7 +63,7 @@ struct module_brightness : module_spectral<T>
     {
         T *m = dynamic_cast<T *>(module_spectral<T>::setup(params, args));
         
-        m->m_threshold = args.get_double(0.68);
+        m->m_threshold = args.get_double(0.68, 0.0, 1.0);
         
         return m;
     }

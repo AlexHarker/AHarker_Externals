@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
+
 #include <Statistics.hpp>
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
@@ -50,7 +52,7 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
 
 user_module *module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    return new module_spectral_peaks(args.get_long(10));
+    return new module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
 }
 
 void module_spectral_peaks::add_requirements(graph& g)
@@ -89,8 +91,8 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 
 user_module *module_inharmonicity::setup(const global_params& params, module_arguments& args)
 {
-    long num_peaks = args.get_long(10);
-    double threshold = args.get_double(0.68);
+    long num_peaks = args.get_long(10, 1, std::numeric_limits<long>::max());
+    double threshold = args.get_double(0.68, 0.0, 1.0);
 
     return new module_inharmonicity(num_peaks, threshold);
 }
@@ -140,7 +142,7 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 
 user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
-    return new module_roughness(args.get_long(10));
+    return new module_roughness(args.get_long(10, 1, std::numeric_limits<long>::max()));
 }
 
 void module_roughness::add_requirements(graph& g)

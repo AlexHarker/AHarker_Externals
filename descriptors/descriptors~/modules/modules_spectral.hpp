@@ -5,6 +5,8 @@
 #include "conversion_helpers.hpp"
 #include "modules_core.hpp"
 
+#include <limits>
+
 // Basic Spectral Module
 
 template <class T>
@@ -12,10 +14,12 @@ struct module_spectral : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
+        const double infinity = std::numeric_limits<double>::infinity();
+        
         T *m = new T();
         
-        m->m_lo_freq = args.get_double(0.0);
-        m->m_hi_freq = args.get_double(192000.0);
+        m->m_lo_freq = args.get_double(0.0, 0.0, infinity);
+        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity);
 
         return m;
     }

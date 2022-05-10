@@ -254,9 +254,6 @@ void module_spectrum_ring_buffer::add_requirements(graph& g)
 
 void module_spectrum_ring_buffer::prepare(const global_params& params)
 {
-    // FIX
-    m_max_lag = std::min(m_max_lag, 20L);
-    
     for (long i = 0; i < m_max_lag + 1; i++)
     {
         m_spectra.emplace_back(params.num_bins());
@@ -287,9 +284,6 @@ void module_log_spectrum_ring_buffer::add_requirements(graph& g)
 
 void module_log_spectrum_ring_buffer::prepare(const global_params& params)
 {
-    // FIX
-    m_max_lag = std::min(m_max_lag, 20L);
-    
     for (long i = 0; i < m_max_lag + 1; i++)
     {
         m_spectra.emplace_back(params.num_bins());

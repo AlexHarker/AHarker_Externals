@@ -41,19 +41,22 @@ public:
         return (m_argc-- > 0) ? atom_getfloat(m_argv++) : default_value;
     }
     
-    long get_long(long default_value)
+    long get_long(long default_value, long lo, long hi)
     {
         return (m_argc-- > 0) ? atom_getlong(m_argv++) : default_value;
     }
     
-    double get_double(double default_value)
+    double get_double(double default_value, double lo, double hi)
     {
-        return (m_argc-- > 0) ? atom_getfloat(m_argv++) : default_value;
+        return (m_argc-- > 0) ? clip(atom_getfloat(m_argv++), lo, hi) : default_value;
     }
     
     long argc() const { return m_argc; }
     
 private:
+    
+    template <class T>
+    T clip(T value, T lo, T hi) { return std::min(std::max(value, lo), hi); }
     
     long m_argc;
     t_atom *m_argv;
