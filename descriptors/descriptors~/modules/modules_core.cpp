@@ -2,6 +2,7 @@
 #include "modules_core.hpp"
 #include "descriptors_graph.hpp"
 
+#include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
 #include <WindowFunctions.hpp>
 
@@ -91,15 +92,30 @@ void module_window::prepare(const global_params& params)
     x->energy_compensation = 1.0 / gain;*/
 }
 
+template <class T>
+void multiply_loop(T *out, const T *a, const T *b, uintptr_t size)
+{
+    for (uintptr_t i = 0; i < size; i++)
+        *out++ = *a++ * *b++;
+}
+
 void module_window::calculate(const global_params& params, const double *frame, long size)
 {
+    constexpr long v_size = SIMDLimits<double>::max_size;
+    using V = SIMDType<double, v_size>;
+
     double* windowed_frame = m_windowed_frame.data();
-    double* window = m_window.data();
-            
-    // FIX - vectorise
+    const double* window = m_window.data();
+     
+    V *v_windowed_frame = reinterpret_cast<V *>(windowed_frame);
+    const V *v_frame = reinterpret_cast<const V *>(frame);
+    const V *v_window = reinterpret_cast<const V *>(window);
     
-    for (long i = 0; i < size; i++)
-        windowed_frame[i] = frame[i] * window[i];
+    long v_loop = size / v_size;
+    long vs_loop = v_size * v_size;
+        
+    multiply_loop(v_windowed_frame, v_frame, v_window, v_loop);
+    multiply_loop(windowed_frame + vs_loop, frame + vs_loop, window + vs_loop, size - vs_loop);
 }
 
 // FFT Module
