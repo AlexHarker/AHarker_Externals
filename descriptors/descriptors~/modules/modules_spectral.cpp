@@ -54,12 +54,10 @@ void module_loudness::add_requirements(graph& g)
 }
 
 void module_loudness::prepare(const global_params& params)
-{
-    // FIX - check sr
-    
+{    
     long num_bins = params.num_bins();
     
-    if (m_loudness_curve.size() != num_bins)
+    if (m_loudness_curve.size() != num_bins || m_sr != params.m_sr)
     {
         m_loudness_curve.resize(num_bins);
         

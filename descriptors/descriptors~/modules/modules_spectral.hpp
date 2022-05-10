@@ -107,7 +107,7 @@ struct module_loudness : user_module_single<module_loudness>
     static user_module *setup(const global_params& params, module_arguments& args);
     
     module_loudness(bool report_db)
-    : m_report_db(report_db) {}
+    : m_sr(0), m_report_db(report_db) {}
     
     auto get_params() const { return std::make_tuple(m_report_db); }
     
@@ -119,6 +119,7 @@ private:
     
     module_power_spectrum *m_power_module;
     aligned_vector m_loudness_curve;
+    double m_sr;
     const bool m_report_db;
 };
 
