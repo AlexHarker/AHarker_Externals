@@ -83,7 +83,7 @@ private:
 
 struct fft_setup
 {
-    fft_setup() : m_size(0) {}
+    fft_setup() : m_fft_setup(nullptr), m_size(0) {}
     fft_setup(size_t size) : fft_setup() { resize(size); }
     ~fft_setup() { hisstools_destroy_setup(m_fft_setup); }
     

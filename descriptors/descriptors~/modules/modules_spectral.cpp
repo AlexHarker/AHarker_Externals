@@ -19,8 +19,6 @@ void module_energy_ratio::add_requirements(graph& g)
 
 void module_energy_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    // FIX - USES ENERGY OR AMPS?
-
     const double *power = m_power_module->get_frame();
     long num_bins = params.num_bins();
             
@@ -112,8 +110,8 @@ void module_loudness::calculate(const global_params& params, const double *frame
     for (int i = 0; i < VecType::size; i++)
         p += store_sum[i];
     
-    // FIX - requires energy compensation
-            
+    p *= m_power_module->get_energy_compensation();
+                
     m_value = m_report_db ? pow_to_db(p) : sqrt(p);
 }
 
@@ -128,9 +126,9 @@ void module_energy::calculate(const global_params& params, const double *frame, 
 {
     const double *power = m_power_module->get_frame();
 
-    const double energy = statSum(power + m_min_bin, m_max_bin - m_min_bin);
+    double energy = statSum(power + m_min_bin, m_max_bin - m_min_bin);
 
-    // FIX - requires energy compensation
+    energy *= m_power_module->get_energy_compensation();
             
     m_value = m_report_db ? pow_to_db(energy) : energy;
 }

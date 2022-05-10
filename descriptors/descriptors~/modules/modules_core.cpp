@@ -11,10 +11,36 @@
 
 using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
+// Power Spectrum Helper
+
+void calculate_power_spectrum(double *spectrum, const FFT_SPLIT_COMPLEX_D &fft_frame, long num_bins)
+{
+    VecType *power = reinterpret_cast<VecType *>(spectrum);
+    const VecType *real = reinterpret_cast<const VecType *>(fft_frame.realp);
+    const VecType *imag = reinterpret_cast<const VecType *>(fft_frame.imagp);
+    long nyquist = num_bins - 1;
+    long loop_size = nyquist / VecType::size;
+    
+    // Calculate power spectrum
+    
+    for (long i = 0; i < loop_size; i++)
+        power[i] = (real[i] * real[i]) + (imag[i] * imag[i]);
+    
+    // Calculate DC and Nyquist Values (replace any previous values)
+    
+    spectrum[0] = fft_frame.realp[0] * fft_frame.realp[0];
+    spectrum[nyquist] = fft_frame.imagp[0] * fft_frame.imagp[0];
+}
+
 // Windowing Module
 
 void module_window::prepare(const global_params& params)
 {
+    auto gain_compensation = [](double *data, long size)
+    {
+        return 1.0 / std::accumulate(data, data + size, 0.0);
+    };
+    
     m_windowed_frame.resize(params.m_frame_size);
     m_window.resize(params.m_frame_size);
     
@@ -56,40 +82,31 @@ void module_window::prepare(const global_params& params)
     
     // Calculate the gain of the window and apply compensation
     
-    double gain = 1.0 / std::accumulate(window, window + window_size, 0.0);
+    double gain = gain_compensation(window, window_size);
     std::transform(window, window + window_size, window, [&](double a) { return a * gain; });
     
-    /*
-         using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
     // Calculate the energy gain of the window
 
-    // Copy window
+    auto frame_size = params.m_frame_size;
+    auto fft_size_log2 = params.m_fft_size_log2;
+    auto num_bins = params.num_bins();
+    auto fft_size = params.fft_size();
+    
+    fft_setup setup(fft_size_log2);
+    aligned_vector raw_frame(frame_size);
+    aligned_vector power_spectrum(num_bins);
+    fft_split spectrum(params.fft_size());
 
-    for (i = 0; i < window_size; i++)
-        raw_frame[i] = window[i] * sin((8 * FFTW_TWOPI * (double) i) / (double) fft_size);
-        
-    // Do fft with zero padding
-        
-    hisstools_rfft(fft_setup_real, raw_frame, &raw_fft_frame, window_size, fft_size_log2);
-    
-    // Zero nyquist bin (have to match what is done elsewhere)
-    
-    raw_fft_frame.imagp[0] = 0.f;
-    
-    // Calulate square amplitudes
-        
-    for (i = 0; i < fft_size_halved >> 2; i++)
-        v_amplitudes[i] = (real_data[i] * real_data[i]) + (imag_data[i] * imag_data[i]);
-        
-    // Now sum
+    // Create window
 
-    for (i = 0, gain = 0.0; i < fft_size_halved; i++)
-        gain += amplitudes[i];
+    for (long i = 0; i < frame_size; i++)
+        raw_frame.data()[i] = window[i] * sin((16.0 * M_PI * i) / fft_size);
         
-    // N.B. - the window has been scaled for amplitude gain
-    
-    x->energy_compensation = 1.0 / gain;*/
+    // Do fft / calculate power spectrum / calculate energy compensation
+        
+    hisstools_rfft(setup.get(), raw_frame.data(), &spectrum.data(), frame_size, fft_size_log2);
+    calculate_power_spectrum(power_spectrum.data(), spectrum.data(), num_bins);
+    m_energy_compensation = gain_compensation(power_spectrum.data(), num_bins);
 }
 
 template <class T>
@@ -129,6 +146,7 @@ void module_fft::prepare(const global_params& params)
 {
     m_fft_frame.resize(params.fft_size());
     m_fft_setup.resize(params.m_fft_size_log2);
+    m_energy_compensation = m_window_module->get_energy_compensation();
 }
 
 void module_fft::calculate(const global_params& params, const double *frame, long size)
@@ -152,27 +170,12 @@ void module_power_spectrum::add_requirements(graph& g)
 void module_power_spectrum::prepare(const global_params& params)
 {
     m_spectrum.resize(params.num_bins());
+    m_energy_compensation = m_fft_module->get_energy_compensation();
 }
 
 void module_power_spectrum::calculate(const global_params& params, const double *frame, long size)
 {
-    auto fft_frame = m_fft_module->get_frame();
-    
-    VecType *power = reinterpret_cast<VecType *>(m_spectrum.data());
-    const VecType *real = reinterpret_cast<const VecType *>(fft_frame.realp);
-    const VecType *imag = reinterpret_cast<const VecType *>(fft_frame.imagp);
-    long nyquist = params.num_bins() - 1;
-    long loop_size = nyquist / VecType::size;
-    
-    // Calculate power spectrum
-    
-    for (long i = 0; i < loop_size; i++)
-        power[i] = (real[i] * real[i]) + (imag[i] * imag[i]);
-    
-    // Calculate DC and Nyquist Values
-    
-    m_spectrum.data()[0] = fft_frame.realp[0] * fft_frame.realp[0];
-    m_spectrum.data()[nyquist] = fft_frame.imagp[0] * fft_frame.imagp[0];
+    calculate_power_spectrum(m_spectrum.data(), m_fft_module->get_frame(), params.num_bins());
 }
 
 // Amplitude Spectrum Module

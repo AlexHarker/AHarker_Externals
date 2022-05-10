@@ -27,9 +27,11 @@ struct module_window : module_core<module_window>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_frame() const { return m_windowed_frame.data(); }
+    const double get_energy_compensation() const { return m_energy_compensation; }
 
 private:
     
+    double m_energy_compensation;
     aligned_vector m_window;
     aligned_vector m_windowed_frame;
 };
@@ -43,12 +45,14 @@ struct module_fft : module_core<module_fft>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const FFT_SPLIT_COMPLEX_D& get_frame() const { return m_fft_frame.data(); }
-    
+    const double get_energy_compensation() const { return m_energy_compensation; }
+
 private:
     
     module_window *m_window_module;
     fft_setup m_fft_setup;
     fft_split m_fft_frame;
+    double m_energy_compensation;
 };
 
 // Power Spectrum Module
@@ -60,11 +64,13 @@ struct module_power_spectrum : module_core<module_power_spectrum>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_frame() const { return m_spectrum.data(); }
+    const double get_energy_compensation() const { return m_energy_compensation; }
 
 private:
     
     module_fft *m_fft_module;
     aligned_vector m_spectrum;
+    double m_energy_compensation;
 };
 
 // Amplitude Spectrum Module
