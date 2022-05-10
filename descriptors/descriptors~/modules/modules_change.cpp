@@ -81,8 +81,6 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
     const double *frame2 = m_ring_buffer_module->get_frame(0);
    
-    // FIX - check!!!
-
     if (m_normalise_spectrum)
     {
         norm_factor1 = statSum(frame1 + m_min_bin, m_max_bin - m_min_bin);
@@ -90,7 +88,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     }
     
     norm_factor1 = norm_factor1 ? norm_factor1 = 1.0 / norm_factor1 : 1.0;
-    norm_factor2 = norm_factor1 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
+    norm_factor2 = norm_factor2 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
     
     if (m_square_flag)
     {
@@ -101,7 +99,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                if (current_val < 0.) current_val = 0.;
+                if (current_val < 0.0) current_val = 0.0;
                 current_val *= current_val;
                 sum += current_val;
             }
@@ -127,7 +125,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                if (current_val < 0.) current_val = 0.;
+                if (current_val < 0.0) current_val = 0.0;
                 sum += current_val;
             }
         }
