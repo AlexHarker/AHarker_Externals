@@ -241,12 +241,11 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 
     // FIX - add energy thresh stuff
     
-    //if (!x->use_energy_thresh || cumulate_sq_amps[fft_size_halved - 1] > x->energy_thresh)
+    //if (x->energy_thresh || cumulate_sq_amps[fft_size_halved - 1] > x->energy_thresh)
 
     if (graph)
     {
-        
-        graph->run(x->params, samples, x->params.m_frame_size);
+        graph->run(x->params, samples);
         graph->output(x->output_list.data());
         
         // Call clock to output

@@ -85,10 +85,10 @@ public:
             (*it)->prepare(params);
     }
     
-    void run(const global_params& params, double *frame, long size)
+    void run(const global_params& params, const double *frame)
     {
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
-            (*it)->calculate(params, frame, size);
+            (*it)->calculate(params, frame, params.m_frame_size);
     }
     
     void output(t_atom *argv)
