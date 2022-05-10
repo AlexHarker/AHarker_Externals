@@ -153,7 +153,7 @@ void module_power_spectrum::calculate(const global_params& params, const double 
     for (long i = 0; i < loop_size; i++)
         power[i] = (real[i] * real[i]) + (imag[i] * imag[i]);
     
-    // Fix DC and Nyquist Values
+    // Calculate DC and Nyquist Values
     
     m_spectrum.data()[0] = fft_frame.realp[0] * fft_frame.realp[0];
     m_spectrum.data()[nyquist] = fft_frame.imagp[0] * fft_frame.imagp[0];
