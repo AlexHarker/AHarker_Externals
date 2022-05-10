@@ -61,7 +61,6 @@ struct t_descriptorsrt
     
     // General Parameters
     
-    double energy_thresh;
     bool descriptors_feedback;
     
     // Descriptors
@@ -90,6 +89,7 @@ void descriptorsrt_free(t_descriptorsrt *x);
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s);
 
 void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
 
 void descriptorsrt_output(t_descriptorsrt *x);
 void descriptorsrt_calculate(t_descriptorsrt *x, double *samples);
@@ -111,7 +111,7 @@ int C74_EXPORT main()
 	
 	class_addmethod(this_class, (method) descriptorsrt_descriptors, "descriptors", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
-    //class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
     
     class_addmethod(this_class, (method) descriptorsrt_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) descriptorsrt_dsp64, "dsp64", A_CANT, 0);
@@ -183,6 +183,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	// Allocate a clock and call the common new routine
 	
 	x->output_clock = clock_new(x, (method) descriptorsrt_output);
+    x->params.m_energy_threshold = dbtoa(-180.0);
     x->params.m_sr = 44100.0;
     x->m_outlet = listout(x);
 
@@ -226,6 +227,19 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     x->m_graph.reset(graph);
 }
 
+// Energy Threshold
+
+void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
+{    
+    if (argc)
+        x->params.m_energy_threshold = dbtoa(atom_getfloat(argv));
+    else
+        x->params.m_energy_threshold = 0.0;
+    
+    if (argc > 2)
+        object_error((t_object *) x, "too many arguments to energythresh message");
+}
+
 // RT Output
 
 void descriptorsrt_output(t_descriptorsrt *x)
@@ -245,12 +259,14 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 
     if (graph)
     {
-        graph->run(x->params, samples);
-        graph->output(x->output_list.data());
+        if (graph->run(x->params, samples))
+        {
+            graph->output(x->output_list.data());
         
-        // Call clock to output
+            // Call clock to output
         
-        clock_delay(x->output_clock, 0);
+            clock_delay(x->output_clock, 0);
+        }
     }
 }
 

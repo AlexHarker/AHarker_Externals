@@ -28,9 +28,11 @@ struct module_window : module_core<module_window>
     
     const double *get_frame() const { return m_windowed_frame.data(); }
     const double get_energy_compensation() const { return m_energy_compensation; }
+    const double get_rms_compensation() const { return m_rms_compensation; }
 
 private:
     
+    double m_rms_compensation;
     double m_energy_compensation;
     aligned_vector m_window;
     aligned_vector m_windowed_frame;

@@ -4,6 +4,7 @@
 
 #include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
+#include <Statistics.hpp>
 #include <WindowFunctions.hpp>
 
 #include <algorithm>
@@ -107,6 +108,7 @@ void module_window::prepare(const global_params& params)
     hisstools_rfft(setup.get(), raw_frame.data(), &spectrum.data(), frame_size, fft_size_log2);
     calculate_power_spectrum(power_spectrum.data(), spectrum.data(), num_bins);
     m_energy_compensation = gain_compensation(power_spectrum.data(), num_bins);
+    m_rms_compensation = 1.0 / statRMS(raw_frame.data(), frame_size);
 }
 
 template <class T>

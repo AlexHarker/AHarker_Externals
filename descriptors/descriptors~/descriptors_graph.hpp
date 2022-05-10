@@ -3,6 +3,8 @@
 #define _DESCRIPTORS_GRAPH_HPP_
 
 #include "descriptors_modules.hpp"
+#include "modules/modules_core.hpp"
+#include "modules/modules_level.hpp"
 
 #include <ext.h>
 #include <memory>
@@ -37,6 +39,43 @@ private:
     std::vector<user_setups> m_setups;
 };
 
+class energy_threshold
+{
+public:
+    
+    energy_threshold(double threshold)
+    : m_threshold(threshold)
+    , m_energy_module(false)
+    {}
+    
+    void prepare(const global_params& params)
+    {
+        m_window.prepare(params);
+        m_energy_module.prepare(params);
+    }
+    
+    bool check(const global_params& params, const double *frame)
+    {
+        m_window.calculate(params, frame, params.m_frame_size);
+        m_energy_module.calculate(params, m_window.get_frame(), params.m_frame_size);
+        
+        double level = m_energy_module.get_output(0) * m_window.get_rms_compensation();
+    
+        return level < m_threshold;
+    }
+    
+    module_window *get_window_module()
+    {
+        return &m_window;
+    }
+    
+private:
+    
+    double m_threshold;
+    module_window m_window;
+    module_average_rms_amp m_energy_module;
+};
+
 class graph
 {
 public:
@@ -44,6 +83,16 @@ public:
     template <class T>
     T *add_requirement(T *m)
     {
+        // Check the window for energy threshold first
+        
+        if (m_threshold && m_threshold->get_window_module()->is_the_same(m))
+        {
+            delete m;
+            return dynamic_cast<T *>(m_threshold->get_window_module());
+        }
+        
+        // Check other modules
+        
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
         {
             if ((*it)->is_the_same(m))
@@ -65,6 +114,9 @@ public:
         
         long argc_begin = next_setup(setups, 0, argc, argv, next);
         
+        if (params.m_energy_threshold)
+            m_threshold = std::unique_ptr<energy_threshold>(new energy_threshold(params.m_energy_threshold));
+        
         while (argc_begin < argc)
         {
             user_module_setup setup = next;
@@ -81,14 +133,22 @@ public:
     
     void prepare(const global_params& params)
     {
+        if (m_threshold)
+            m_threshold->prepare(params);
+        
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
             (*it)->prepare(params);
     }
     
-    void run(const global_params& params, const double *frame)
+    bool run(const global_params& params, const double *frame)
     {
+        if (m_threshold && m_threshold->check(params, frame))
+            return false;
+            
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)
             (*it)->calculate(params, frame, params.m_frame_size);
+        
+        return true;
     }
     
     void output(t_atom *argv)
@@ -122,7 +182,8 @@ public:
         
         return argc;
     }
-    
+
+    std::unique_ptr<energy_threshold> m_threshold;
     std::vector<std::unique_ptr<module>> m_modules;
     std::vector<user_module *> m_outputs;
 };

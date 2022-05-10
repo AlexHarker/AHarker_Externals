@@ -20,6 +20,7 @@ struct global_params
     long m_frame_size;
     long m_hop_size;
     double m_sr;
+    double m_energy_threshold;
     t_symbol *m_window_type;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
