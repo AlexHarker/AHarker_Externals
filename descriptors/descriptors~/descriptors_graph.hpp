@@ -44,8 +44,7 @@ class energy_threshold
 public:
     
     energy_threshold(double threshold)
-    : m_threshold(threshold)
-    , m_energy_module(false)
+    : m_energy_module(false)
     {}
     
     void prepare(const global_params& params)
@@ -57,11 +56,15 @@ public:
     bool check(const global_params& params, const double *frame)
     {
         m_window.calculate(params, frame, params.m_frame_size);
+        
+        if (!params.m_energy_threshold)
+            return false;
+            
         m_energy_module.calculate(params, m_window.get_frame(), params.m_frame_size);
         
         double level = m_energy_module.get_output(0) * m_window.get_rms_compensation();
     
-        return level < m_threshold;
+        return level < params.m_energy_threshold;
     }
     
     module_window *get_window_module()
@@ -71,7 +74,6 @@ public:
     
 private:
     
-    double m_threshold;
     module_window m_window;
     module_average_rms_amp m_energy_module;
 };
@@ -85,7 +87,7 @@ public:
     {
         // Check the window for energy threshold first
         
-        if (m_threshold && m_threshold->get_window_module()->is_the_same(m))
+        if (m_threshold->get_window_module()->is_the_same(m))
         {
             delete m;
             return dynamic_cast<T *>(m_threshold->get_window_module());
@@ -114,8 +116,7 @@ public:
         
         long argc_begin = next_setup(setups, 0, argc, argv, next);
         
-        if (params.m_energy_threshold)
-            m_threshold = std::unique_ptr<energy_threshold>(new energy_threshold(params.m_energy_threshold));
+        m_threshold = std::unique_ptr<energy_threshold>(new energy_threshold(params.m_energy_threshold));
         
         while (argc_begin < argc)
         {
@@ -142,7 +143,7 @@ public:
     
     bool run(const global_params& params, const double *frame)
     {
-        if (m_threshold && m_threshold->check(params, frame))
+        if (m_threshold->check(params, frame))
             return false;
             
         for (auto it = m_modules.begin(); it != m_modules.end(); it++)

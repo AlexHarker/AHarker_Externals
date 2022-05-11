@@ -230,7 +230,7 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 // Energy Threshold
 
 void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
-{    
+{
     if (argc)
         x->params.m_energy_threshold = dbtoa(atom_getfloat(argv));
     else
