@@ -358,8 +358,6 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
     VecType *v_amplitudes = reinterpret_cast<VecType *>(amplitudes);
     VecType *real_data = reinterpret_cast<VecType *>(raw_fft_frame.realp);
     VecType *imag_data = reinterpret_cast<VecType *>(raw_fft_frame.imagp);
-
-    // FIX - parameters where needed.
     
     window_functions::params params;
     

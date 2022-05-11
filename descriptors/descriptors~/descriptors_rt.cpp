@@ -253,10 +253,6 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 {
     auto& graph = x->m_graph;
 
-    // FIX - add energy thresh stuff
-    
-    //if (x->energy_thresh || cumulate_sq_amps[fft_size_halved - 1] > x->energy_thresh)
-
     if (graph)
     {
         if (graph->run(x->params, samples))

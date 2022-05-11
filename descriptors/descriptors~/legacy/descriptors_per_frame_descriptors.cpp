@@ -621,7 +621,6 @@ double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amp
 	
 	if (sum2)
 	{
-        // FIX - check median span
         percentilefilter(median_amplitudes, amplitudes, num_bins, 50.0, median_span, kEdgeFold);
 //		medianfilter(median_amplitudes, amplitudes, num_bins, median_span);
 		
