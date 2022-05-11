@@ -34,7 +34,7 @@ void module_sfm::add_requirements(graph& g)
 
 void module_sfm::calculate(const global_params& params, const double *frame, long size)
 {
-    // FIX - USES ENERGY OR AMPS?
+    // FIX - Currently uses amplitudes (does not match previous version)
 
     const double *amplitudes = m_amplitude_module->get_frame();
             
@@ -144,7 +144,7 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
     const double crest = statCrest(amps + m_min_bin, m_max_bin - m_min_bin);
 
-    // FIX - check this
+    // FIX - check this - it's unclear how to calculate this one (what is amp vs energy)
             
     m_value = m_report_db ? atodb(crest) : crest;
 }

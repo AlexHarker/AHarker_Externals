@@ -49,8 +49,6 @@ void module_window::prepare(const global_params& params)
     uint32_t window_size = static_cast<uint32_t>(m_window.size());
 
     t_symbol *window_type = params.m_window_type;
-
-    // FIX - check and consider other parameters (just does kaiser)
     
     window_functions::params win_params(6.8);
     
