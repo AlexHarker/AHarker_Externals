@@ -50,8 +50,9 @@ void module_window::prepare(const global_params& params)
 
     t_symbol *window_type = params.m_window_type;
 
-    // FIX - parameters where needed.
-    window_functions::params win_params;
+    // FIX - check and consider other parameters (just does kaiser)
+    
+    window_functions::params win_params(6.8);
     
     if (window_type == gensym("rect"))
         window_functions::rect(window, window_size, 0, window_size, win_params);
@@ -59,10 +60,9 @@ void module_window::prepare(const global_params& params)
         window_functions::hamming(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("kaiser"))
         window_functions::kaiser(window, window_size, 0, window_size, win_params);
-            //(x_sq = 46.24;)
-    else if (window_type == gensym("blackman"))
-        window_functions::triangle(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("triangle"))
+        window_functions::triangle(window, window_size, 0, window_size, win_params);
+    else if (window_type == gensym("blackman"))
         window_functions::exact_blackman(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman62"))
         window_functions::blackman_harris_62dB(window, window_size, 0, window_size, win_params);
