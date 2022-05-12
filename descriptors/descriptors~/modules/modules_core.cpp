@@ -296,11 +296,17 @@ void module_log_spectrum_ring_buffer::prepare(const global_params& params)
 
 void module_log_spectrum_ring_buffer::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *spectrum = m_amplitude_module->get_frame();
+    const double *spectrum_in = m_amplitude_module->get_frame();
+    double *spectrum_out = m_spectra[m_counter].data();
+    
+    const double log_min = log(dbtoa(db_calc_min()));
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
+        
+    log_array(spectrum_out, spectrum_in, params.num_bins());
     
-    log_array(m_spectra[m_counter].data(), spectrum, params.num_bins());
+    for (long i = 0; i < params.num_bins(); i++)
+        spectrum_out[i] = std::max(spectrum_out[i], log_min);
 }
 
 long module_log_spectrum_ring_buffer::get_idx(long lag) const
