@@ -142,9 +142,11 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 {
     const double *amps = m_amplitude_module->get_frame();
 
-    const double crest = statCrest(amps + m_min_bin, m_max_bin - m_min_bin);
+    // N.B. - This doesn't use statCrest as the denominator is simply the mean
 
-    // FIX - check this - it's unclear how to calculate this one (what is amp vs energy)
+    const double max = statMax(amps + m_min_bin, m_max_bin - m_min_bin);
+    const double mean = statMean(amps + m_min_bin, m_max_bin - m_min_bin);
+    const double crest = max / mean;
             
     m_value = m_report_db ? atodb(crest) : crest;
 }
