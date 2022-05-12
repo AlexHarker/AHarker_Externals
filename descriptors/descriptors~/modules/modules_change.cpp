@@ -15,7 +15,7 @@ user_module *module_foote::setup(const global_params& params, module_arguments& 
     module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
     
     m->m_forward_only = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 16));
+    m->set_lag(args.get_long(1, 1, 33));
 
     return m;
 }
@@ -67,7 +67,7 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     m->m_forward_only = args.get_bool(true);
     m->m_square_flag = args.get_bool(true);
     m->m_normalise_spectrum = args.get_bool(false);
-    m->set_lag(args.get_long(1, 1, 16));
+    m->set_lag(args.get_long(1, 1, 33));
     
     return m;
 }
@@ -154,7 +154,7 @@ user_module *module_mkl::setup(const global_params& params, module_arguments& ar
     m->m_forward_only = args.get_bool(true);
     m->m_weight = args.get_bool(false);
     m->m_normalise_spectra = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 16));
+    m->set_lag(args.get_long(1, 1, 33));
 
     return m;
 }
@@ -168,12 +168,14 @@ void module_mkl::add_requirements(graph& g)
     
 void module_mkl::calculate(const global_params& params, const double *frame, long size)
 {
+    constexpr double DB_MAX_MKL_EQUAL = -140.0;
+    const double MKL_EQUALISE_MAX_LOG = log(pow(10.0, DB_MAX_MKL_EQUAL) * 20.0);
+    const double norm_min = sqrt(db_to_pow(db_pow_min()));
+
     double norm_factor1 = 1.0;
     double norm_factor2 = 1.0;
     double sum = 0.0;
-    
-    // FIX
-    
+        
     const double log_thresh = log(dbtoa(m_threshold));
     const double *log_frame1 = m_log_ring_buffer_module->get_frame(m_frame_lag);
     const double *log_frame2 = m_log_ring_buffer_module->get_frame(0);
@@ -185,27 +187,15 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
         norm_factor1 = statSum(frame1 + m_min_bin, m_max_bin - m_min_bin);
         norm_factor2 = statSum(frame2 + m_min_bin, m_max_bin - m_min_bin);
      
-        // FIX
-
-        /*
         if (!norm_factor1)
-         norm_factor1 = sqrt(POW_MIN) * (double) (max_bin - min_bin);
-         */
+            norm_factor1 = norm_min * static_cast<double>(m_max_bin - m_min_bin);
     }
-    
-#define DB_MAX_MKL_EQUAL -140.
-    double MKL_EQUALISE_MAX_LOG = log(pow(10.0, DB_MAX_MKL_EQUAL) * 20.0);
     
     const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), MKL_EQUALISE_MAX_LOG);
     
-    // FIX - note the seetming error here...
-    /*
-    if (norm_factor2)
-        norm_factor1 = 1.0 / norm_factor2;
-    else
-        norm_factor2 = 1.0;
-    */
-    norm_factor2 = norm_factor1 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
+    // FIX - note that there was an error in the original code here...
+  
+    norm_factor2 = norm_factor2 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
 
     if (m_weight)
     {
@@ -215,7 +205,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = log_frame2[i] - log_frame1[i] + log_norm_factor;
+                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
                 if (current_val > 0 && log_frame2[i] >= log_thresh)
                     sum += current_val * frame2[i] * norm_factor2;
             }
@@ -226,7 +216,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = log_frame2[i] - log_frame1[i]  + log_norm_factor;
+                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
                 if (log_frame2[i] >= log_thresh)
                     sum += current_val * frame2[i] * norm_factor2;
             }
@@ -240,7 +230,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = log_frame2[i] - log_frame1[i] + log_norm_factor;
+                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
                 if (current_val > 0 && log_frame2[i] >= log_thresh)
                     sum += current_val;
             }
@@ -251,7 +241,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = log_frame2[i] - log_frame1[i]  + log_norm_factor;
+                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
                 if (log_frame2[i] >= log_thresh)
                     sum += current_val;
             }

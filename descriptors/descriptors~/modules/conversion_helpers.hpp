@@ -14,7 +14,12 @@
 
 #include <algorithm>
 
-static inline constexpr double db_min()
+static inline constexpr double db_calc_min()
+{
+    return -300.0;
+}
+
+static inline constexpr double db_convert_min()
 {
     return -180.0;
 }
@@ -26,12 +31,17 @@ static inline double dbtoa(double db)
 
 static inline double atodb(double a)
 {
-	return std::max(20.0 * log10(a), db_min());
+	return std::max(20.0 * log10(a), db_convert_min());
+}
+
+static inline double db_to_pow(double db)
+{
+    return pow(10, db / 20.0);
 }
 
 static inline double pow_to_db(double p)
 {
-    return std::max(10.0 * log10(p), db_min());
+    return std::max(10.0 * log10(p), db_convert_min());
 } 
 
 static inline long freq_to_bin(double freq, double sr, long nyquist_bin)
