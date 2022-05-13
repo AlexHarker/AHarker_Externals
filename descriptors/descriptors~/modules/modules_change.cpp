@@ -170,7 +170,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
 {
     constexpr double DB_MAX_MKL_EQUAL = -140.0;
     const double MKL_EQUALISE_MAX_LOG = log(pow(10.0, DB_MAX_MKL_EQUAL) * 20.0);
-    const double norm_min = sqrt(db_to_pow(db_pow_min()));
+    const double norm_min = sqrt(db_to_pow(db_calc_min()));
 
     double norm_factor1 = 1.0;
     double norm_factor2 = 1.0;
