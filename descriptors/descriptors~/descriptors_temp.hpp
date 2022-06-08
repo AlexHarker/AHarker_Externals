@@ -112,7 +112,7 @@ void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop
     
     x->params.m_frame_size = std::min(frame_size > 0 ? frame_size : x->params.fft_size(), x->params.fft_size());
 
-    // FIX - error check
+    // FIX - error checks
     
     x->params.m_window_type = window_type;
     
