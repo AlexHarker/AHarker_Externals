@@ -32,7 +32,7 @@ namespace impl
             return std::max(1L, gap);
         }
 
-        // An ascending order sort (combsort11 algorithm)
+        // An ordered sort (combsort11 algorithm)
 
         template <class Compare, class T>
         static void sort(T& values, long size)
