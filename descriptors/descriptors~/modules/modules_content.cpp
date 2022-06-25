@@ -23,7 +23,7 @@ void module_noise_ratio::calculate(const global_params& params, const double *fr
     const double *median_power = m_median_power_module->get_frame();
             
     if (power_sum)
-        m_value = std::min(1.0, statSum(median_power, params.num_bins()) / power_sum);
+        m_value = std::min(1.0, stat_sum(median_power, params.num_bins()) / power_sum);
     else
         m_value = infinity();
 }

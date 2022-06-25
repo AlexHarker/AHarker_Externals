@@ -22,7 +22,7 @@ void module_energy_ratio::calculate(const global_params& params, const double *f
     const double *power = m_power_module->get_frame();
     long num_bins = params.num_bins();
             
-    m_value = statSumSquares(power + m_min_bin, m_max_bin - m_min_bin) / statSumSquares(power, num_bins);
+    m_value = stat_sum_squares(power + m_min_bin, m_max_bin - m_min_bin) / stat_sum_squares(power, num_bins);
 }
 
 // Spectral Flatness Module
@@ -38,7 +38,7 @@ void module_sfm::calculate(const global_params& params, const double *frame, lon
 
     const double *amplitudes = m_amplitude_module->get_frame();
             
-    m_value = statFlatness(amplitudes + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_flatness(amplitudes + m_min_bin, m_max_bin - m_min_bin);
 }
 
 // Loudness Module
@@ -124,7 +124,7 @@ void module_energy::calculate(const global_params& params, const double *frame, 
 {
     const double *power = m_power_module->get_frame();
 
-    double energy = statSum(power + m_min_bin, m_max_bin - m_min_bin);
+    double energy = stat_sum(power + m_min_bin, m_max_bin - m_min_bin);
 
     energy *= m_power_module->get_energy_compensation();
             
@@ -144,8 +144,8 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
     // N.B. - This doesn't use statCrest as the denominator is simply the mean
 
-    const double max = statMax(amps + m_min_bin, m_max_bin - m_min_bin);
-    const double mean = statMean(amps + m_min_bin, m_max_bin - m_min_bin);
+    const double max = stat_max(amps + m_min_bin, m_max_bin - m_min_bin);
+    const double mean = stat_mean(amps + m_min_bin, m_max_bin - m_min_bin);
     const double crest = max / mean;
             
     m_value = m_report_db ? atodb(crest) : crest;
@@ -165,7 +165,7 @@ void module_rolloff::add_requirements(graph& g)
 
 void module_rolloff::calculate(const global_params& params, const double *frame, long size)
 {
-    const double bin = statPDFPercentile(m_power_module->get_frame(), m_centile, params.num_bins());
+    const double bin = stat_pdf_percentile(m_power_module->get_frame(), m_centile, params.num_bins());
     
     m_value = bin * params.bin_freq();
 }
@@ -181,7 +181,7 @@ void module_lin_centroid::add_requirements(graph& g)
 
 void module_lin_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    m_value = stat_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
 }
 
 // Spread
@@ -193,7 +193,7 @@ void module_lin_spread::add_requirements(graph& g)
 
 void module_lin_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    m_value = stat_spread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
 }
 
 // Skewness
@@ -205,7 +205,7 @@ void module_lin_skewness::add_requirements(graph& g)
 
 void module_lin_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_skewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
 }
 
 // Kurtosis
@@ -217,7 +217,7 @@ void module_lin_kurtosis::add_requirements(graph& g)
 
 void module_lin_kurtosis::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_kurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
 }
 
 // Spectral Log Shape Modules
@@ -231,7 +231,7 @@ void module_log_centroid::add_requirements(graph& g)
 
 void module_log_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statLogCentroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    m_value = stat_log_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
 }
 
 // Spread
@@ -243,7 +243,7 @@ void module_log_spread::add_requirements(graph& g)
 
 void module_log_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statLogSpread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_log_spread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
 }
 
 // Skewness
@@ -255,7 +255,7 @@ void module_log_skewness::add_requirements(graph& g)
 
 void module_log_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = statLogSkewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_log_skewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
 }
 
 // Kurtosis
@@ -267,5 +267,5 @@ void module_log_kurtosis::add_requirements(graph& g)
 
 void module_log_kurtosis::calculate(const global_params& params, const double *frame, long size) 
 {
-    m_value = statLogKurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    m_value = stat_log_kurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
 }
