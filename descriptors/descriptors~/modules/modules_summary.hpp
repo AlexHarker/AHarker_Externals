@@ -18,13 +18,13 @@ struct summary_module_single : summary_module, user_module_single<T>
 
 // Length
 
-struct summary_module_length : summary_module_single<summary_module_length>
+struct summary_module_duration : summary_module_single<summary_module_duration>
 {
-    summary_module_length() : summary_module_single(true) {}
+    summary_module_duration() : summary_module_single(true) {}
     
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        return new summary_module_length();
+        return new summary_module_duration();
     }
     
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }

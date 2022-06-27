@@ -152,7 +152,7 @@ int C74_EXPORT main()
     s_setups.add_module("time_centroid", stat_module_centroid::setup);
     s_setups.add_module("range", stat_module_range::setup);
     
-    s_setups.add_module("length", summary_module_length::setup);
+    s_setups.add_module("duration", summary_module_duration::setup);
 
 	return 0;
 }
