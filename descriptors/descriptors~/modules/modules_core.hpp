@@ -36,8 +36,8 @@ private:
     double m_energy_compensation;
     t_symbol *m_window_type = nullptr;
     long m_frame_size = 0;
-    aligned_vector m_window;
-    aligned_vector m_windowed_frame;
+    aligned_vector<> m_window;
+    aligned_vector<> m_windowed_frame;
 };
 
 // FFT Module
@@ -73,7 +73,7 @@ struct module_power_spectrum : module_core<module_power_spectrum>
 private:
     
     module_fft *m_fft_module;
-    aligned_vector m_spectrum;
+    aligned_vector<> m_spectrum;
     double m_energy_compensation;
 };
 
@@ -90,7 +90,7 @@ struct module_amplitude_spectrum : module_core<module_amplitude_spectrum>
 private:
     
     module_power_spectrum *m_power_module;
-    aligned_vector m_spectrum;
+    aligned_vector<> m_spectrum;
 };
 
 // Median Power Spectrum Module
@@ -112,7 +112,7 @@ private:
     
     module_power_spectrum *m_power_module;
     median_filter<double> m_filter;
-    aligned_vector m_spectrum;
+    aligned_vector<> m_spectrum;
     const long m_median_span;
 };
 
@@ -152,7 +152,7 @@ private:
     long get_idx(long lag) const;
     
     module_amplitude_spectrum *m_amplitude_module;
-    std::vector<aligned_vector> m_spectra;
+    std::vector<aligned_vector<>> m_spectra;
     long m_counter = 0;
     long m_max_lag = 0;
 };
@@ -171,7 +171,7 @@ private:
     long get_idx(long lag) const;
     
     module_amplitude_spectrum *m_amplitude_module;
-    std::vector<aligned_vector> m_spectra;
+    std::vector<aligned_vector<>> m_spectra;
     long m_counter = 0;
     long m_max_lag = 0;
 };
@@ -191,7 +191,7 @@ private:
     fft_setup m_fft_setup;
     fft_split m_full_frame;
     fft_split m_half_frame;
-    aligned_vector m_coefficients;
+    aligned_vector<> m_coefficients;
 };
 
 #endif /* _MODULES_CORE_HPP_ */

@@ -84,7 +84,7 @@ struct module_energy_ratio : module_spectral<module_energy_ratio>
 private:
     
     module_power_spectrum *m_power_module;
-    aligned_vector m_spectrum;
+    aligned_vector<> m_spectrum;
 };
 
 // Spectral Flatness Module
@@ -97,7 +97,7 @@ struct module_sfm : module_spectral<module_sfm>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
-    aligned_vector m_spectrum;
+    aligned_vector<> m_spectrum;
 };
 
 // Loudness Module
@@ -118,7 +118,7 @@ struct module_loudness : user_module_single<module_loudness>
 private:
     
     module_power_spectrum *m_power_module;
-    aligned_vector m_loudness_curve;
+    aligned_vector<> m_loudness_curve;
     double m_sr;
     const bool m_report_db;
 };

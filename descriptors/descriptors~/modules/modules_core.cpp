@@ -98,8 +98,8 @@ void module_window::prepare(const global_params& params)
     auto fft_size = params.fft_size();
     
     fft_setup setup(fft_size_log2);
-    aligned_vector raw_frame(frame_size);
-    aligned_vector power_spectrum(num_bins);
+    aligned_vector<> raw_frame(frame_size);
+    aligned_vector<> power_spectrum(num_bins);
     fft_split spectrum(params.fft_size());
 
     // Create window

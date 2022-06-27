@@ -7,6 +7,7 @@
 
 // A Memory Aligned Vector
 
+template <class T = double>
 struct aligned_vector
 {
     aligned_vector() : m_ptr(nullptr), m_size(0) {}
@@ -38,17 +39,17 @@ struct aligned_vector
         if (size != m_size)
         {
             deallocate_aligned(m_ptr);
-            m_ptr = allocate_aligned<double>(size);
+            m_ptr = allocate_aligned<T>(size);
             m_size = size;
         }
     }
     
-    double *data() const { return m_ptr; }
+    T *data() const { return m_ptr; }
     size_t size() const { return m_size; }
     
 private:
 
-    double *m_ptr;
+    T *m_ptr;
     size_t m_size;
 };
 
@@ -75,7 +76,7 @@ struct fft_split
 
 private:
 
-    aligned_vector m_vector;
+    aligned_vector<> m_vector;
     FFT_SPLIT_COMPLEX_D m_split;
 };
 
