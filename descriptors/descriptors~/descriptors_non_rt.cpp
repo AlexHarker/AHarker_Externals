@@ -17,10 +17,85 @@
  */
 
 
-#include "descriptors_object.h"
 
+#include <ext.h>
+#include <ext_obex.h>
+#include <z_dsp.h>
+
+#include <algorithm>
+#include <memory>
+#include <vector>
+
+#include <AH_Lifecycle.hpp>
 #include <ibuffer_access.hpp>
 
+#include "descriptors_graph.hpp"
+#include "descriptors_summary_graph.hpp"
+
+#include "modules_core.hpp"
+#include "modules_change.hpp"
+#include "modules_content.hpp"
+#include "modules_level.hpp"
+#include "modules_pitch.hpp"
+#include "modules_spectral.hpp"
+#include "modules_summary.hpp"
+
+// Globals and Object Structure
+
+t_class *this_class;
+
+setup_list s_setups;
+
+struct t_descriptors
+{
+    t_pxobject x_obj;
+    
+    // FFT / Scheduling Data
+    
+    long max_fft_size_log2;
+    long max_fft_size;
+    
+    // FIX
+    
+    long hop_count;
+    
+    global_params params;
+    
+    bool reset;
+    
+    // General Parameters
+    
+    bool descriptors_feedback;
+    
+    // Descriptors
+    
+    std::unique_ptr<summary_graph> m_graph;
+    
+    // Output List
+    
+    std::vector<t_atom> output_list;
+    
+    // Outlet
+    
+    void *m_outlet;
+    
+    // Output Clock
+    
+    t_clock *output_clock;
+};
+
+#include "descriptors_temp.hpp"
+
+// Function Prototypes
+
+void *descriptors_new(t_symbol *s, short argc, t_atom *argv);
+void descriptors_free(t_descriptors *x);
+void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s);
+
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+
+void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
 // Object Basics (main / new / free)
 
@@ -36,15 +111,49 @@ int C74_EXPORT main()
 	
 	class_addmethod(this_class, (method) descriptors_analyse, "analyse", A_GIMME, 0);
 	class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
-	class_addmethod(this_class, (method) descriptors_descriptors_non_rt, "descriptors", A_GIMME, 0);
 	
-	descriptors_main_common();
-	
+    class_addmethod(this_class, (method) descriptors_descriptors, "descriptors", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_fft_params<t_descriptors>, "fftparams", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
+
 	class_register(CLASS_BOX, this_class);
 	
+    s_setups.add_module("abs", module_average_abs_amp::setup);
+    s_setups.add_module("rms", module_average_rms_amp::setup);
+    s_setups.add_module("peakamp", module_peak_amp::setup);
+    s_setups.add_module("energy", module_energy::setup);
+    s_setups.add_module("energy_ratio", module_energy_ratio::setup);
+    s_setups.add_module("spectral_crest", module_spectral_crest::setup);
+    s_setups.add_module("sfm", module_sfm::setup);
+    s_setups.add_module("rolloff", module_rolloff::setup);
+    s_setups.add_module("loudness", module_loudness::setup);
+    s_setups.add_module("lin_centroid", module_lin_centroid::setup);
+    s_setups.add_module("lin_spread", module_lin_spread::setup);
+    s_setups.add_module("lin_skewness", module_lin_skewness::setup);
+    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
+    s_setups.add_module("log_centroid", module_log_centroid::setup);
+    s_setups.add_module("log_spread", module_log_spread::setup);
+    s_setups.add_module("log_skewness", module_log_skewness::setup);
+    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);
+    s_setups.add_module("pitch", module_pitch::setup);
+    s_setups.add_module("confidence", module_confidence::setup);
+    s_setups.add_module("lin_brightness", module_lin_brightness::setup);
+    s_setups.add_module("log_brightness", module_log_brightness::setup);
+    s_setups.add_module("noise_ratio", module_noise_ratio::setup);
+    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);
+    s_setups.add_module("foote", module_foote::setup);
+    s_setups.add_module("flux", module_flux::setup);
+    s_setups.add_module("mkl", module_mkl::setup);
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);
+    s_setups.add_module("roughness", module_roughness::setup);
+
+    s_setups.add_module("mean", stat_module_mean::setup);
+    s_setups.add_module("standard_dev", stat_module_stddev::setup);
+    s_setups.add_module("time_centroid", stat_module_centroid::setup);
+    s_setups.add_module("range", stat_module_range::setup);
+    
 	return 0;
 }
-
 
 void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
@@ -55,14 +164,6 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 	long max_fft_size;
 	long descriptor_data_size = 0;
 	long descriptor_feedback = 0;
-	
-	long mask_max_size = MAX_N_SEARCH;
-	long n_search_memory_size = MAX_N_SEARCH * 22;
-
-	void *allocated_memory;
-
-	if (!x)
-		return 0;
 
 	// Get arguments 
 
@@ -79,105 +180,58 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 	x->max_fft_size_log2 = max_fft_size_log2;
 	x->max_fft_size = max_fft_size = 1 << (max_fft_size_log2);
 
-	// This below sorts out the z_compile crash
-	
-	dsp_setup((t_pxobject *) x, 0);					
-	
-	// Allocate 4Mb of memory for the descriptors as a default
-	
-	if(!descriptor_data_size) descriptor_data_size = 4194304;			
-	
-	if (n_search_memory_size < (2 * (max_fft_size >> 1))) n_search_memory_size = (2 * (max_fft_size >> 1));
-	if (mask_max_size < (max_fft_size >> 1)) mask_max_size = max_fft_size >> 1;
-	
-	// Allocate memory
+    descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
 
-	 allocated_memory = ALIGNED_MALLOC(
-		descriptor_data_size + (n_search_memory_size * 22 * sizeof(double)) + (mask_max_size * sizeof(char)) + (max_fft_size * sizeof(float)) + + ((max_fft_size * 3) * sizeof(float)) + ((max_fft_size >> 1) * 3 * RING_BUFFER_SIZE * sizeof(float))
-		+ (max_fft_size * 3 * sizeof(float)) + (max_fft_size * (sizeof(double) + sizeof(long))) + ((max_fft_size >> 1) * sizeof(double)) + (max_fft_size * RING_BUFFER_SIZE * sizeof(double)) + ((max_fft_size >> 1) * sizeof(double)) 
-		+ ((max_fft_size >> 1) * sizeof(double)) + (MAX_OUTPUT * sizeof(t_atom)));
-	
-	if (!allocated_memory)
-	{
-		error ("descriptors(rt)~: couldn't allocate memory");
-		return 0;
-	}
-	
-	// Assign pointers (aligned pointers first)
-	// N.B. x->window must be the first allocation - this is the pointer that is freed.
-
-	x->window = (float *) allocated_memory;
-	allocated_memory = (void *) ((float *) allocated_memory + max_fft_size);	
-	
-	x->fft_memory = allocated_memory;
-	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
-	
-	x->amps_buffer = (float *) allocated_memory;
-	allocated_memory = (void *) ((float *) allocated_memory + ((max_fft_size >> 1) * 3 * RING_BUFFER_SIZE));
-	
-	x->ac_memory = allocated_memory;
-	allocated_memory = (void *) ((float *) allocated_memory + (max_fft_size * 3));
-
-	x->descriptor_data = (double *) allocated_memory;
-	x->descriptor_data_size = descriptor_data_size; 	
-	allocated_memory = (void *) ((char *) allocated_memory + descriptor_data_size);			
-	
-	x->n_data = allocated_memory;
-	allocated_memory = (void *) ((char *) ((double *) allocated_memory + n_search_memory_size) + mask_max_size);
-	
-	x->median_memory = allocated_memory;
-	allocated_memory = (void *) ((long *) ((double *) allocated_memory + max_fft_size) + max_fft_size);
-	
-	x->summed_amplitudes = (double *) allocated_memory;
-	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
-	
-	x->cumulate = (double *) allocated_memory;
-	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size * RING_BUFFER_SIZE));
-	
-	x->loudness_curve = (double *) allocated_memory;
-	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
-	
-	x->log_freq = (double *) allocated_memory;
-	allocated_memory = (void *) ((double *) allocated_memory + (max_fft_size >> 1));
-	
-	x->output_list = (t_atom *) allocated_memory;
-	
-	x->output_rt_clock = 0;
-	
-	descriptors_new_common (x, max_fft_size_log2, descriptor_feedback);
-
-	return x;
+    create_object(x->output_list);
+    create_object(x->m_graph);
+    
+    return x;
 }
-
 
 void descriptors_free(t_descriptors *x)
 {
-	ALIGNED_FREE (x->window);
-	hisstools_destroy_setup(x->fft_setup_real);
-    object_free(x->output_rt_clock);
+    destroy_object(x->output_list);
+    destroy_object(x->m_graph);
 }
 
+// Set Descriptors
+
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    auto graph = new class summary_graph();
+    
+    graph->build(s_setups, x->params, argc, argv);
+    x->output_list.resize(graph->size());
+    x->m_graph.reset(graph);
+}
+
+// Energy Threshold
+
+void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    if (argc)
+        x->params.m_energy_threshold = dbtoa(atom_getfloat(argv));
+    else
+        x->params.m_energy_threshold = 0.0;
+    
+    if (argc > 2)
+        object_error((t_object *) x, "too many arguments to energythresh message");
+}
 
 // User Routines For Performing Analysis
 
-
-
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
-	t_symbol *buffer_name = 0;
+	t_symbol *buffer_name = nullptr;
 	
-	double sr;
-	double mstosamps_val;
-	double start_point_ms = 0.;
-	double end_point_ms = 0.;
-	
-	long buffer_chan = 1;
-	
-	if (!x->descriptor_data_size) return;
+    t_atom_long buffer_chan = 1;
+
+    double start_point_ms = 0.0;
+	double end_point_ms = 0.0;
 	
 	if (argc && atom_gettype(argv) != A_SYM)
 	{
-		error ("descriptors(rt)~: no buffer name given for analysis");
+        object_error((t_object *)x, "no buffer name given for analysis");
 		return;
 	}
 	
@@ -186,13 +240,13 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 	// Get arguments
 	
 	if (argc > 1) 
-		buffer_chan = atom_getlong (argv + 1);
+		buffer_chan = atom_getlong(argv + 1);
 	if (argc > 2) 
-		start_point_ms = atom_getfloat (argv + 2);
+		start_point_ms = atom_getfloat(argv + 2);
 	if (argc > 3) 
-		end_point_ms = atom_getfloat (argv + 3);		
+		end_point_ms = atom_getfloat(argv + 3);
 	if (argc > 4) 
-		error ("descriptors(rt)~: too many arguments to analyse function");
+		object_error((t_object *)x, "too many arguments to analyse function");
 	
 	// Check the buffer
 	
@@ -200,38 +254,80 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 	
     if (buffer.get_type() == kBufferNone)
 	{
-		error ("descriptors~: buffer not found");
+        object_error((t_object *)x, "buffer not found");
 		return;
 	}
-	
-	x->buffer_name = buffer_name;
-	
+		
 	// Calculate lengths
 	
-	sr = x->sr = buffer.get_sample_rate();
-	mstosamps_val = sr / 1000.0;
+    double mstosamps_mul = buffer.get_sample_rate() / 1000.0;
+
+    start_point_ms = std::max(0.0, start_point_ms);
+    end_point_ms = std::max(0.0, end_point_ms);
+    buffer_chan = std::max(t_atom_long(1), buffer_chan) - 1;
 	
-	if (start_point_ms < 0) 
-		start_point_ms = 0;
-	if (end_point_ms < 0) 
-		return;
-	
-	if (buffer_chan < 1) 
-		buffer_chan = 1;
-	
+    if ((start_point_ms && end_point_ms <= start_point_ms) || end_point_ms < 0.0)
+        return;
+    
 	// Store variables
 	
-	x->start_point = start_point_ms * mstosamps_val;
-	x->end_point = end_point_ms * mstosamps_val;
-	x->buffer_chan = buffer_chan - 1;
-	
-	calc_descriptors_non_rt(x);
+	long start_point = start_point_ms * mstosamps_mul;
+    long end_point = end_point_ms * mstosamps_mul;
+	    
+    // Access buffer and increment pointer
+    
+    if (!buffer.get_sample_rate())
+    {
+        object_error((t_object *) x, "could not access buffer");
+        return;
+    }
+    
+    // Range check buffer access variables and calculate numer of frames
+    
+    if (buffer.get_num_chans() < buffer_chan + 1)
+        buffer_chan = buffer_chan % buffer.get_num_chans();
+    
+    auto signal_length = buffer.get_length();
+    if (end_point && end_point < signal_length)
+        signal_length = end_point;
+    signal_length -= start_point;
+    
+    x->params.m_signal_length = signal_length;
+    x->params.m_sr = buffer.get_sample_rate();
+    
+    if (x->params.num_frames() < 1)
+    {
+        object_error((t_object *) x, "zero length file or segment");
+        return;
+    }
+    
+    // FIX - could this be a lamda to grab samples, or just pass the ibuffer?
+    
+    std::vector<double> samples(signal_length);
+    
+    ibuffer_get_samps(buffer, samples.data(), start_point + start_point, signal_length, buffer_chan);
+    
+    auto& graph = x->m_graph;
+    
+    if (!graph)
+        object_error((t_object *) x, "no descriptors set");
+    
+    graph->prepare(x->params);
+    graph->run(x->params, samples.data());
+    graph->output(x->output_list.data());
+    
+    // Release buffer
+    
+    buffer.release();
+    
+    // Output
+    
+    outlet_list(x->m_outlet, nullptr, static_cast<short>(x->output_list.size()), x->output_list.data());
 }
-
 
 // Handle Non RT descriptor Calculation
 
-
+/*
 void calc_descriptors_non_rt(t_descriptors *x)
 {
 	t_atom *output_list = x->output_list;
@@ -324,9 +420,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	char *mask = (char *) ((double *) n_min + (22 * MAX_N_SEARCH));
 
-	// Buffer variables
-	
-    ibuffer_data buffer(x->buffer_name);
+
 		
 	// Buffer access variables
 	
@@ -380,50 +474,22 @@ void calc_descriptors_non_rt(t_descriptors *x)
 	
 	if (num_pf_descriptors + num_pb_descriptors <= 0)
 	{
-		error("descriptors(rt)~: no descriptors set");
 		return;
 	}
 	
-	// Access buffer and increment pointer
+    samps_to_ms_val = 1000. / sr;
+    frame_to_ms_val = hop_size * 1000. / sr;
+    ms_to_frame_val = sr / (hop_size * 1000.);
+    bin_freq = sr / (double) fft_size;
+     
+     // If the sample rate is different from the last one used, recalculate curves for the new sample rates
+     
+     if (sr != x->sr)
+     calc_curves(x);
+     x->sr = sr;
     
-	if (!buffer.get_sample_rate())
-	{
-		error ("descriptors~: could not access buffer");
-		return;
-	}
-		
-	sr = buffer.get_sample_rate();
-	samps_to_ms_val = 1000. / sr;
-	frame_to_ms_val = hop_size * 1000. / sr;
-	ms_to_frame_val = sr / (hop_size * 1000.);
-	bin_freq = sr / (double) fft_size;
-
-	// If the sample rate is different from the last one used, recalculate curves for the new sample rates
-	
-	if (sr != x->sr) 
-		calc_curves(x);
-	x->sr = sr;
-	
-	// Range check buffer access variables and calculate numer of frames
-	
-	if (buffer.get_num_chans() < buffer_chan + 1)
-		buffer_chan = buffer_chan % buffer.get_num_chans();
-    
-    file_length = buffer.get_length();
-	if (end_point && end_point < file_length)
-		file_length = end_point;
-	file_length -= start_point;
-	
-	num_frames = (long) ceil((double) file_length / (double) hop_size);
-	
-	if (num_frames < 1)
-	{
-		error("descriptors~: zero length file or segment");
-		return;
-	}
-	
 	num_frames_recip = 1. / num_frames;
-	
+    
 	// See how many descriptors we can calculate per loop (hopefully all of them, but this allows more conservative memory allocation)
 	
 	num_pf_descriptors_per_loop = descriptor_data_size / (num_frames * sizeof(double));
@@ -582,7 +648,7 @@ void calc_descriptors_non_rt(t_descriptors *x)
 
 		// Derive outputs from the raw per frame data
 
-		for (j = from_pf_descriptor; j <  to_pf_descriptor; j++)
+		for (j = from_pf_descriptor; j < to_pf_descriptor; j++)
 		{
 			// N.B. Only calculate what we need of the below
 
@@ -901,26 +967,5 @@ void calc_descriptors_non_rt(t_descriptors *x)
 					break;
 		}
 	}
-	
-	// Release buffer
-	
-    buffer.release();
-
-	// Output
-	
-	outlet_list (x->the_list_outlet, nullptr, output_length, output_list);
 }
-
-
-// Dummy DSP Routine
-
-
-
-void descriptors_dsp(t_descriptors *x, t_signal **sp, short *count)
-{
-}
-
-
-void descriptors_dsp64(t_descriptors *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
-{
-}
+*/
