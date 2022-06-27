@@ -16,7 +16,7 @@ struct summary_module_single : summary_module, user_module_single<T>
     summary_module_single(bool no_index = false) : summary_module(no_index) {}
 };
 
-// Length
+// Duration
 
 struct summary_module_duration : summary_module_single<summary_module_duration>
 {
@@ -87,6 +87,29 @@ struct stat_module_range : stat_module_simple<stat_module_range>
         m_value = stat_max(data, size) - stat_min(data, size);
     }
 };
+
+struct stat_module_median : stat_module_simple<stat_module_median>
+{
+    void prepare(const global_params& params) override
+    {
+        m_indices.resize(params.num_frames());
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        long *indices = m_indices.data();
+        
+        sort_ascending(indices, data, size);
+        m_value = data[indices[size >> 1]];
+    }
+    
+private:
+    
+    aligned_vector<long> m_indices;
+};
+
+
+
 /*
 struct stat_module_ratio_above : stats_module_single<stat_module_ratio_above>
 {
