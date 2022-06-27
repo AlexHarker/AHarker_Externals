@@ -11,7 +11,31 @@
 #include <vector>
 
 template <class T>
-struct summary_module_single : summary_module, user_module_single<T> {};
+struct summary_module_single : summary_module, user_module_single<T>
+{
+    summary_module_single(bool no_index = false) : summary_module(no_index) {}
+};
+
+// Length
+
+struct summary_module_length : summary_module_single<summary_module_length>
+{
+    summary_module_length() : summary_module_single(true) {}
+    
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        return new summary_module_length();
+    }
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        m_value = 1000.0  * params.m_signal_length / params.m_sr;
+    }
+};
+
+// Stats
 
 template <class T>
 struct stat_module_simple : summary_module_single<T>

@@ -152,6 +152,8 @@ int C74_EXPORT main()
     s_setups.add_module("time_centroid", stat_module_centroid::setup);
     s_setups.add_module("range", stat_module_range::setup);
     
+    s_setups.add_module("length", summary_module_length::setup);
+
 	return 0;
 }
 
@@ -181,6 +183,8 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 	x->max_fft_size = max_fft_size = 1 << (max_fft_size_log2);
 
     descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
+
+    x->m_outlet = listout(x);
 
     create_object(x->output_list);
     create_object(x->m_graph);
@@ -222,13 +226,21 @@ void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_at
 
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
+    auto& graph = x->m_graph;
+
 	t_symbol *buffer_name = nullptr;
 	
     t_atom_long buffer_chan = 1;
 
     double start_point_ms = 0.0;
 	double end_point_ms = 0.0;
-	
+
+    if (!graph)
+    {
+        object_error((t_object *) x, "no descriptors set");
+        return;
+    }
+    
 	if (argc && atom_gettype(argv) != A_SYM)
 	{
         object_error((t_object *)x, "no buffer name given for analysis");
@@ -306,12 +318,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     std::vector<double> samples(signal_length);
     
     ibuffer_get_samps(buffer, samples.data(), start_point + start_point, signal_length, buffer_chan);
-    
-    auto& graph = x->m_graph;
-    
-    if (!graph)
-        object_error((t_object *) x, "no descriptors set");
-    
+        
     graph->prepare(x->params);
     graph->run(x->params, samples.data());
     graph->output(x->output_list.data());

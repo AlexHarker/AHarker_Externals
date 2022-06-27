@@ -47,6 +47,7 @@ void summary_graph::prepare(const global_params& params)
     for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
         (*it)->prepare(params);
     
+    m_frame.resize(params.m_frame_size);
     m_temp_data.resize(graph::size() * params.num_frames());
 }
     

@@ -10,12 +10,14 @@
 
 struct summary_module
 {
-    size_t get_index() const { return m_index; }
-    void set_index(size_t index) { m_index = index; }
-    
+    summary_module(bool no_index) : m_no_index(no_index), m_index(-1) {}
     virtual ~summary_module() {}
-    
-    size_t m_index = -1;
+
+    size_t get_index() const { return m_index; }
+    void set_index(size_t index) { m_index = m_no_index ? -1 : index; }
+        
+    bool m_no_index;
+    size_t m_index;
 };
 
 class summary_graph : private graph
