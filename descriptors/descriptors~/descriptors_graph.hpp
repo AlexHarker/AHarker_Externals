@@ -54,45 +54,32 @@ public:
     template <class T>
     T *add_requirement(T *m)
     {
-        // Check the window for energy threshold first
-        
-        if (m_threshold->get_window_module()->is_the_same(m))
-        {
-            delete m;
-            return dynamic_cast<T *>(m_threshold->get_window_module());
-        }
-        
-        // Check other modules
-        
-        for (auto it = m_modules.begin(); it != m_modules.end(); it++)
-        {
-            if ((*it)->is_the_same(m))
-            {
-                delete m;
-                return dynamic_cast<T *>(it->get());
-            }
-        }
-        
-        m->add_requirements(*this);
-        m_modules.push_back(std::unique_ptr<module>(m));
-        
-        return m;
+        return dynamic_cast<T *>(add_requirement_impl(m));
     }
     
     void build(const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     void prepare(const global_params& params);
     bool run(const global_params& params, const double *frame);
     
-    void output(t_atom *argv);
-    size_t size();
+    void output(t_atom *argv) { output(m_outputs, argv); }
+    size_t size() { return size(m_outputs); }
     
 protected:
     
     void build_energy_threshold(const global_params& params);
-    void build_module(const global_params& params, user_module_setup setup, module_arguments& args);
+    void add_user_module(user_module *m);
     
     long next_setup(const setup_list& setups, long idx, long argc, t_atom *argv, user_module_setup& setup);
     
+    void output(std::vector<user_module *>& output_modules, t_atom *argv);
+    size_t size(std::vector<user_module *>& output_modules);
+
+    // This allows the stats graph to override the implementation
+    
+    virtual module *add_requirement_impl(module *m);
+    
+private:
+
     std::unique_ptr<energy_threshold> m_threshold;
     std::vector<std::unique_ptr<module>> m_modules;
     std::vector<user_module *> m_outputs;

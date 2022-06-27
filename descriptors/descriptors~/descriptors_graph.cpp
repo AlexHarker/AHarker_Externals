@@ -41,6 +41,33 @@ bool energy_threshold::check(const global_params& params, const double *frame)
 
 // Graph
     
+module *graph::add_requirement_impl(module *m)
+{
+    // Check the window for energy threshold first
+    
+    if (m_threshold->get_window_module()->is_the_same(m))
+    {
+        delete m;
+        return m_threshold->get_window_module();
+    }
+    
+    // Check other modules
+    
+    for (auto it = m_modules.begin(); it != m_modules.end(); it++)
+    {
+        if ((*it)->is_the_same(m))
+        {
+            delete m;
+            return it->get();
+        }
+    }
+    
+    m->add_requirements(*this);
+    m_modules.push_back(std::unique_ptr<module>(m));
+    
+    return m;
+}
+
 void graph::build(const setup_list& setups, const global_params& params, long argc, t_atom *argv)
 {
     user_module_setup next;
@@ -55,7 +82,7 @@ void graph::build(const setup_list& setups, const global_params& params, long ar
             
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
         module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
-        build_module(params, setup, args);
+        add_user_module((*setup)(params, args));
         argc_begin = argc_end;
     }
         
@@ -81,38 +108,14 @@ bool graph::run(const global_params& params, const double *frame)
         
     return true;
 }
-    
-void graph::output(t_atom *argv)
-{
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); it++)
-    {
-        size_t length = (*it)->get_output_size();
         
-        for (size_t i = 0; i < length; i++)
-            atom_setfloat(argv + i, (*it)->get_output(i));
-        
-        argv += length;
-    }
-}
-    
-size_t graph::size()
-{
-    size_t output_size = 0;
-    
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); it++)
-        output_size += (*it)->get_output_size();
-    
-    return output_size;
-}
-    
 void graph::build_energy_threshold(const global_params& params)
 {
     m_threshold = std::unique_ptr<energy_threshold>(new energy_threshold(params.m_energy_threshold));
 }
     
-void graph::build_module(const global_params& params, user_module_setup setup, module_arguments& args)
+void graph::add_user_module(user_module *m)
 {
-    auto m = (*setup)(params, args);
     m_outputs.push_back(add_requirement(m));
 }
     
@@ -123,4 +126,27 @@ long graph::next_setup(const setup_list& setups, long idx, long argc, t_atom *ar
             return i;
         
     return argc;
+}
+
+void graph::output(std::vector<user_module *>& output_modules, t_atom *argv)
+{
+    for (auto it = output_modules.begin(); it != output_modules.end(); it++)
+    {
+        size_t length = (*it)->get_output_size();
+        
+        for (size_t i = 0; i < length; i++)
+            atom_setfloat(argv + i, (*it)->get_output(i));
+        
+        argv += length;
+    }
+}
+
+size_t graph::size(std::vector<user_module *>& output_modules)
+{
+    size_t output_size = 0;
+    
+    for (auto it = output_modules.begin(); it != output_modules.end(); it++)
+        output_size += (*it)->get_output_size();
+    
+    return output_size;
 }
