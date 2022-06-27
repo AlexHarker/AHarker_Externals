@@ -71,10 +71,10 @@ void summary_graph::run(const global_params& params, const double *input)
         graph::run(params, m_frame.data());
         
         for (long j = 0; j < graph::size(); j++)
-            m_temp_data[i * params.num_frames() + j] = graph::get_output(j, 0);
+            m_temp_data[j * params.num_frames() + i] = graph::get_output(j, 0);
     }
     
-    // Run stats
+    // Run stats and summary descriptors
         
     for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
     {
