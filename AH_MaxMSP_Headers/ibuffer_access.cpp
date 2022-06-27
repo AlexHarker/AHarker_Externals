@@ -75,7 +75,7 @@ void ibuffer_data::set_size_in_samples(t_atom_long size)
     
     atom_setlong(temp_atom, size);
     
-    if (buffer_type == kBufferMaxBuffer && buffer->b_samples)
+    if (buffer_type == kBufferMaxBuffer && samples)
     {
         t_buffer *buffer = reinterpret_cast<t_buffer *>(buffer_object);
         
@@ -102,7 +102,7 @@ void ibuffer_data::release()
 
 void ibuffer_data::release_buffer()
 {
-    if (buffer_object && buffer->b_samples)
+    if (buffer_object && samples)
     {
         if (ob_sym(buffer_object) == ps_buffer)
             ATOMIC_DECREMENT(&((t_buffer *)buffer_object)->b_inuse);
