@@ -56,7 +56,7 @@ struct stat_module_simple : summary_module_single<T>
 
 // Mean
 
-// FIX - all of these need to ignore spurios values I think
+// FIX - all of these need to ignore spurious values I think
 
 struct stat_module_mean : stat_module_simple<stat_module_mean>
 {
@@ -114,39 +114,9 @@ private:
     aligned_vector<long> m_indices;
 };
 
+// Finding Stats
 
-
-/*
-struct stat_module_ratio_above : stats_module_single<stat_module_ratio_above>
-{
-    // FIX - set threshold
-    
-    void calculate(const double *data, long size) override
-    {
-        m_value = stat_ratio_above(data, m_threshold, size);
-    }
-    
-private:
-    
-    double m_threshold;
-};
-
-struct stat_module_ratio_below : stats_module_single<stat_module_ratio_below>
-{
-    // FIX - set threshold
-    
-    void calculate(const double *data, long size) override
-    {
-        m_value = stat_ratio_below(data, m_threshold, size);
-    }
-    
-private:
-    
-    double m_threshold;
-};
-
-*/
-
+// Generic underlying finding module
 
 template <class Condition>
 struct find_n : summary_module, comparable_module<find_n<Condition>>
@@ -159,14 +129,14 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     {
         m_mask.resize(params.num_frames());
         m_pos.resize(m_n);
-        
-        // FIX - This is probably coming in here
-        
-        m_mask_span = 0;
     }
     
     void calculate(const global_params& params, const double *data, long size) override
     {
+        // FIX - This is probably coming in here
+
+        long mask_span = 0;
+        
         // Reset the mask
         
         for (long j = 0; j < size; j++)
@@ -188,7 +158,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
             
             if (pos != -1)
             {
-                for (long j = std::max(0L, pos - m_mask_span); j < std::min(pos + m_mask_span + 1, size); j++)
+                for (long j = std::max(0L, pos - mask_span); j < std::min(pos + mask_span + 1, size); j++)
                     m_mask[j] = true;
                 
                 m_pos.data()[i] = pos;
@@ -206,15 +176,18 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     const long *get_positions() const { return m_pos.data(); }
     long get_n() const { return m_n; }
     
+private:
+    
     // FIX - use common mask/mask params for efficiency
     
     std::vector<bool> m_mask;
-    long m_mask_span;
     
     aligned_vector<long> m_pos;
     long m_n;
     Condition m_cond;
 };
+
+// Generic finding user module
 
 template <class Condition, bool Pos>
 struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>>
@@ -243,7 +216,7 @@ struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        const auto infinity = std::numeric_limits<double>::infinity();
+        constexpr auto infinity = std::numeric_limits<double>::infinity();
         
         const long *positions = m_finder->get_positions();
         
@@ -274,32 +247,37 @@ private:
     finder_module *m_finder;
 };
 
-template <typename Op>
-struct stat_condition_single
+// Condition templates
+
+template <template <class T> class Op>
+struct condition_single
 {
     bool operator()(const double *data, long i, long pos, long size)
     {
-        return pos == -1 || Op()(data[i], data[pos]);
+        return pos == -1 || Op<double>()(data[i], data[pos]);
     }
 };
 
-template <typename Op>
-struct stat_condition_triple
+template <template <class T> class Op>
+struct condition_triple
 {
     bool operator()(const double *data, long i, long pos, long size)
     {
-        bool is_triple = i && i < size && Op()(data[i], data[i-1]) && Op()(data[i], data[i+1]);
-        return is_triple && stat_condition_single<Op>()(data, i, pos, size);
+        Op<double> op;
+        bool is_triple = i && i < size && op(data[i], data[i-1]) && op(data[i], data[i+1]);
+        return is_triple && condition_single<Op>()(data, i, pos, size);
     }
 };
 
-using stat_module_max = stat_find_n_user<stat_condition_single<std::greater<double>>, false>;
-using stat_module_min = stat_find_n_user<stat_condition_single<std::less<double>>, false>;
-using stat_module_max_pos = stat_find_n_user<stat_condition_single<std::greater<double>>, true>;
-using stat_module_min_pos = stat_find_n_user<stat_condition_single<std::less<double>>, true>;
-using stat_module_peak = stat_find_n_user<stat_condition_triple<std::greater<double>>, false>;
-using stat_module_trough = stat_find_n_user<stat_condition_triple<std::less<double>>, false>;
-using stat_module_peak_pos = stat_find_n_user<stat_condition_triple<std::greater<double>>, true>;
-using stat_module_trough_pos = stat_find_n_user<stat_condition_triple<std::less<double>>, true>;
+// Final user module types
+
+using stat_module_max = stat_find_n_user<condition_single<std::greater>, false>;
+using stat_module_min = stat_find_n_user<condition_single<std::less>, false>;
+using stat_module_max_pos = stat_find_n_user<condition_single<std::greater>, true>;
+using stat_module_min_pos = stat_find_n_user<condition_single<std::less>, true>;
+using stat_module_peak = stat_find_n_user<condition_triple<std::greater>, false>;
+using stat_module_trough = stat_find_n_user<condition_triple<std::less>, false>;
+using stat_module_peak_pos = stat_find_n_user<condition_triple<std::greater>, true>;
+using stat_module_trough_pos = stat_find_n_user<condition_triple<std::less>, true>;
 
 #endif /* _SUMMARY_MODULES_HPP_ */
