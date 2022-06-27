@@ -150,7 +150,7 @@ int C74_EXPORT main()
     s_setups.add_module("mean", stat_module_mean::setup);
     s_setups.add_module("standard_dev", stat_module_stddev::setup);
     s_setups.add_module("time_centroid", stat_module_centroid::setup);
-    s_setups.add_module("median", stat_module_mean::setup);
+    s_setups.add_module("median", stat_module_median::setup);
     s_setups.add_module("range", stat_module_range::setup);
     
     s_setups.add_module("duration", summary_module_duration::setup);
