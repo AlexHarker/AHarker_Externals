@@ -73,7 +73,9 @@ protected:
     
     void output(std::vector<user_module *>& output_modules, t_atom *argv);
     size_t size(std::vector<user_module *>& output_modules);
-
+    
+    double get_output(long idx, long jdx) { return m_outputs[idx]->get_output(jdx); }
+        
     // This allows the stats graph to override the implementation
     
     virtual module *add_requirement_impl(module *m);

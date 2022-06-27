@@ -19,10 +19,14 @@ struct global_params
     long m_fft_size_log2;
     long m_frame_size;
     long m_hop_size;
+    long m_signal_length;
     double m_sr;
     double m_energy_threshold;
     t_symbol *m_window_type;
     
+    // FIX - ceil??
+    
+    long num_frames() const { return m_signal_length / m_hop_size; }
     long fft_size() const { return 1 << m_fft_size_log2; }
     long num_bins() const { return (fft_size() >> 1) + 1; }
     double bin_freq() const { return m_sr / fft_size(); }

@@ -110,7 +110,7 @@ int C74_EXPORT main()
                            0);
 	
 	class_addmethod(this_class, (method) descriptorsrt_descriptors, "descriptors", A_GIMME, 0);
-    class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_fft_params<t_descriptorsrt>, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
     
     class_addmethod(this_class, (method) descriptorsrt_dsp, "dsp", A_CANT, 0);

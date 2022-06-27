@@ -32,7 +32,8 @@ long int_log2(long in, long *inexact)
 #define MIN_FFT_SIZE_LOG2 4
 #define MAX_FFT_SIZE_LOG2 20
 
-long descriptors_max_fft_size(t_descriptorsrt *x, long max_fft_size)
+template <class T>
+long descriptors_max_fft_size(T *x, long max_fft_size)
 {
     // Returns the max fft size log 2 after checking range and value
     
@@ -60,9 +61,11 @@ long descriptors_max_fft_size(t_descriptorsrt *x, long max_fft_size)
     return max_fft_size_log2;
 }
 
-void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type);
+template <class T>
+void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type);
 
-void descriptors_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
+template <class T>
+void descriptors_fft_params(T *x, t_symbol *msg, short argc, t_atom *argv)
 {
     // Load in args as relevant
     
@@ -77,9 +80,12 @@ void descriptors_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_ato
         return;
     
     descriptors_fft_params_internal(x, fft_size, hop_size, frame_size, window_type);
+    
+    x->params.m_signal_length = x->params.m_frame_size;
 }
     
-void descriptors_fft_params_internal(t_descriptorsrt *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
+template <class T>
+void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
 {
     long inexact = 0;
     long fft_size_log2 = int_log2(fft_size, &inexact);
