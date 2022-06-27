@@ -5,6 +5,7 @@
 #include <Statistics.hpp>
 
 #include <cmath>
+#include <limits>
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 

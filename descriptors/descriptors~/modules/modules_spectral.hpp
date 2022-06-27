@@ -14,7 +14,7 @@ struct module_spectral : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        const double infinity = std::numeric_limits<double>::infinity();
+        constexpr double infinity = std::numeric_limits<double>::infinity();
         
         T *m = new T();
         
