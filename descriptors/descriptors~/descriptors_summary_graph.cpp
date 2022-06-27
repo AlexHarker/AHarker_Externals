@@ -18,9 +18,7 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
             
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
         module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
-        
-        // FIX - summaries for descriptors when none are specificed...
-        
+                
         auto m = (*setup)(params, args);
         auto summary = dynamic_cast<summary_module *>(m);
         
@@ -40,10 +38,10 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
             graph::add_user_module(m);
         }
         
-        check_last_descriptor_summary();
         argc_begin = argc_end;
     }
-        
+
+    check_last_descriptor_summary();
     prepare(params);
 }
     
