@@ -97,26 +97,32 @@ enum StatisticsType match_statistics (t_atom **argv, short *argc, double *mask_t
 		if (symbolarg == ps_time_centroid) return STATS_TIME_CENTROID;
 		if (symbolarg == ps_standard_dev) return STATS_STANDARD_DEV;
 		if (symbolarg == ps_range) return STATS_RANGE;
+        
 		if (symbolarg == ps_max) return STATS_MAX;
 		if (symbolarg == ps_min) return STATS_MIN;
-		if (symbolarg == ps_peak) return STATS_PEAK;
+        if (symbolarg == ps_max_pos) return STATS_MAX_POS;
+        if (symbolarg == ps_min_pos) return STATS_MIN_POS;
+        
+        if (symbolarg == ps_peak) return STATS_PEAK;
 		if (symbolarg == ps_trough) return STATS_TROUGH;
-		if (symbolarg == ps_max_pos) return STATS_MAX_POS;
-		if (symbolarg == ps_min_pos) return STATS_MIN_POS;
-		if (symbolarg == ps_peak_pos) return STATS_PEAK_POS;
-		if (symbolarg == ps_trough_pos) return STATS_TROUGH_POS;
-		if (symbolarg == ps_crossing_peak) return STATS_CROSSING_PEAK;
-		if (symbolarg == ps_crossing_peak_pos) return STATS_CROSSING_PEAK_POS;
+        if (symbolarg == ps_peak_pos) return STATS_PEAK_POS;
+        if (symbolarg == ps_trough_pos) return STATS_TROUGH_POS;
+    
+        if (symbolarg == ps_crossing_peak) return STATS_CROSSING_PEAK;
+        if (symbolarg == ps_crossing_trough) return STATS_CROSSING_TROUGH;
+        if (symbolarg == ps_crossing_peak_pos) return STATS_CROSSING_PEAK_POS;
+        if (symbolarg == ps_crossing_trough_pos) return STATS_CROSSING_TROUGH_POS;
+        
 		if (symbolarg == ps_cross_above) return STATS_CROSSING_ABOVE;
-		if (symbolarg == ps_crossings_above) return STATS_CROSSINGS_ABOVE;
-		if (symbolarg == ps_crossing_trough) return STATS_CROSSING_TROUGH;
-		if (symbolarg == ps_crossing_trough_pos) return STATS_CROSSING_TROUGH_POS;
-		if (symbolarg == ps_cross_below) return STATS_CROSSING_BELOW;
+        if (symbolarg == ps_cross_below) return STATS_CROSSING_BELOW;
+        if (symbolarg == ps_crossings_above) return STATS_CROSSINGS_ABOVE;
 		if (symbolarg == ps_crossings_below) return STATS_CROSSINGS_BELOW;
-		if (symbolarg == ps_longest_crossings_above) return STATS_LONGEST_CROSSINGS_ABOVE;
-		if (symbolarg == ps_longest_cross_above) return STATS_LONGEST_CROSS_ABOVE;
-		if (symbolarg == ps_longest_crossings_below) return STATS_LONGEST_CROSSINGS_BELOW;
-		if (symbolarg == ps_longest_cross_below) return STATS_LONGEST_CROSS_BELOW;
+		
+        if (symbolarg == ps_longest_cross_above) return STATS_LONGEST_CROSS_ABOVE;
+        if (symbolarg == ps_longest_cross_below) return STATS_LONGEST_CROSS_BELOW;
+        if (symbolarg == ps_longest_crossings_below) return STATS_LONGEST_CROSSINGS_BELOW;
+        if (symbolarg == ps_longest_crossings_above) return STATS_LONGEST_CROSSINGS_ABOVE;
+		
 		if (symbolarg == ps_ratio_above) return STATS_RATIO_ABOVE;
 		if (symbolarg == ps_ratio_below) return STATS_RATIO_BELOW;
 		
