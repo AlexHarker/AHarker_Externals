@@ -118,6 +118,8 @@ int C74_EXPORT main()
 
 	class_register(CLASS_BOX, this_class);
 	
+    // Per-frame Descriptors
+    
     s_setups.add_module("abs", module_average_abs_amp::setup);
     s_setups.add_module("rms", module_average_rms_amp::setup);
     s_setups.add_module("peakamp", module_peak_amp::setup);
@@ -147,11 +149,20 @@ int C74_EXPORT main()
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);
     s_setups.add_module("roughness", module_roughness::setup);
 
+    // Stats
+    
     s_setups.add_module("mean", stat_module_mean::setup);
     s_setups.add_module("standard_dev", stat_module_stddev::setup);
     s_setups.add_module("time_centroid", stat_module_centroid::setup);
     s_setups.add_module("median", stat_module_median::setup);
     s_setups.add_module("range", stat_module_range::setup);
+
+    s_setups.add_module("min", stat_module_min::setup);
+    s_setups.add_module("max", stat_module_max::setup);
+    s_setups.add_module("min_pos", stat_module_min_pos::setup);
+    s_setups.add_module("max_pos", stat_module_max_pos::setup);
+    
+    // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);
 
