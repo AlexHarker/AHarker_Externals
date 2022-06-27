@@ -74,7 +74,7 @@ struct module
     virtual void add_requirements(graph& g) {}
     
     virtual void prepare(const global_params& params) {}
-    virtual void calculate(const global_params& params, const double *frame, long size) = 0;
+    virtual void calculate(const global_params& params, const double *data, long size) = 0;
 };
 
 // A User Module
