@@ -10,7 +10,7 @@
 
 struct summary_module
 {
-    summary_module(bool no_index) : m_no_index(no_index), m_index(-1) {}
+    summary_module(bool no_index = false) : m_no_index(no_index), m_index(-1) {}
     virtual ~summary_module() {}
 
     size_t get_index() const { return m_index; }

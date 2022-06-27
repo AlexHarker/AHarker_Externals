@@ -98,8 +98,14 @@ void summary_graph::run(const global_params& params, const double *input)
 
 module *summary_graph::add_requirement_impl(module *m)
 {
-    if (dynamic_cast<summary_module *>(m))
+    auto summary = dynamic_cast<summary_module *>(m);
+    
+    if (summary)
     {
+        // Set index before we compare
+        
+        summary->set_index(graph::size() - 1);
+        
         for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
         {
             if ((*it)->is_the_same(m))
