@@ -162,6 +162,11 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
+    s_setups.add_module("peak", stat_module_peak::setup);
+    s_setups.add_module("trough", stat_module_trough::setup);
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
+    
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);

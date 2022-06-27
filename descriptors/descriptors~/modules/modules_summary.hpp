@@ -181,7 +181,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
             // Find the next value of interest
             
             for (long j = 0; j < size; j++)
-                if (!m_mask[j] && m_cond(data, j, pos))
+                if (!m_mask[j] && m_cond(data, j, pos, size))
                     pos = j;
              
             // If valid apply the mask and store, else exit early
@@ -274,19 +274,32 @@ private:
     finder_module *m_finder;
 };
 
-struct stat_condition_min
+template <typename Op>
+struct stat_condition_single
 {
-    bool operator()(const double *data, long i, long pos) { return pos == -1 || data[i] < data[pos]; }
+    bool operator()(const double *data, long i, long pos, long size)
+    {
+        return pos == -1 || Op()(data[i], data[pos]);
+    }
 };
 
-struct stat_condition_max
+template <typename Op>
+struct stat_condition_triple
 {
-    bool operator()(const double *data, long i, long pos) { return pos == -1 || data[i] > data[pos]; }
+    bool operator()(const double *data, long i, long pos, long size)
+    {
+        bool is_triple = i && i < size && Op()(data[i], data[i-1]) && Op()(data[i], data[i+1]);
+        return is_triple && stat_condition_single<Op>()(data, i, pos, size);
+    }
 };
 
-using stat_module_min = stat_find_n_user<stat_condition_min, false>;
-using stat_module_max = stat_find_n_user<stat_condition_max, false>;
-using stat_module_min_pos = stat_find_n_user<stat_condition_min, true>;
-using stat_module_max_pos = stat_find_n_user<stat_condition_max, true>;
+using stat_module_max = stat_find_n_user<stat_condition_single<std::greater<double>>, false>;
+using stat_module_min = stat_find_n_user<stat_condition_single<std::less<double>>, false>;
+using stat_module_max_pos = stat_find_n_user<stat_condition_single<std::greater<double>>, true>;
+using stat_module_min_pos = stat_find_n_user<stat_condition_single<std::less<double>>, true>;
+using stat_module_peak = stat_find_n_user<stat_condition_triple<std::greater<double>>, false>;
+using stat_module_trough = stat_find_n_user<stat_condition_triple<std::less<double>>, false>;
+using stat_module_peak_pos = stat_find_n_user<stat_condition_triple<std::greater<double>>, true>;
+using stat_module_trough_pos = stat_find_n_user<stat_condition_triple<std::less<double>>, true>;
 
 #endif /* _SUMMARY_MODULES_HPP_ */
