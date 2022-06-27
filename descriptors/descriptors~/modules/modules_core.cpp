@@ -42,6 +42,12 @@ void module_window::prepare(const global_params& params)
         return 1.0 / std::accumulate(data, data + size, 0.0);
     };
     
+    if (params.m_frame_size == m_frame_size && params.m_window_type == m_window_type)
+        return;
+    
+    m_frame_size = params.m_frame_size;
+    m_window_type = params.m_window_type;
+    
     m_windowed_frame.resize(params.m_frame_size);
     m_window.resize(params.m_frame_size);
     

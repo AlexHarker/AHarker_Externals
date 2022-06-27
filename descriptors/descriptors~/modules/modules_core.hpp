@@ -34,6 +34,8 @@ private:
     
     double m_rms_compensation;
     double m_energy_compensation;
+    t_symbol *m_window_type = nullptr;
+    long m_frame_size = 0;
     aligned_vector m_window;
     aligned_vector m_windowed_frame;
 };

@@ -42,7 +42,8 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
     }
 
     check_last_descriptor_summary();
-    prepare(params);
+    
+    // N.B. for the summary graph prepare needs calling per input, so we skip it here
 }
     
 void summary_graph::prepare(const global_params& params)

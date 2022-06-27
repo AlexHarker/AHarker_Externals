@@ -60,6 +60,7 @@ void module_loudness::prepare(const global_params& params)
     if (m_loudness_curve.size() != num_bins || m_sr != params.m_sr)
     {
         m_loudness_curve.resize(num_bins);
+        m_sr = params.m_sr;
         
         double *curve = m_loudness_curve.data();
         
