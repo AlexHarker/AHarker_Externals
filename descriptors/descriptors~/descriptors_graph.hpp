@@ -51,6 +51,8 @@ class graph
 {
 public:
     
+    virtual ~graph() {};
+    
     template <class T>
     T *add_requirement(T *m)
     {
