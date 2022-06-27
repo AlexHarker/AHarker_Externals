@@ -201,7 +201,6 @@ void descriptorsrt_free(t_descriptorsrt *x)
     destroy_object(x->output_list);
     destroy_object(x->rt_buffer);
     destroy_object(x->m_graph);
-
 }
 
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s)
