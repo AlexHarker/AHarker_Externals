@@ -1,5 +1,6 @@
 
 #include "descriptors_summary_graph.hpp"
+#include "modules_summary.hpp"
 
 // Summary Graph
     
@@ -26,14 +27,20 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
         if (summary)
         {
             summary->set_index(graph::size() - 1);
+            if (summary->get_index() == -1)
+                check_last_descriptor_summary();
+            else
+                m_last_summary_idx = graph::size() - 1;
             m_summary_outputs.push_back(add_requirement(m));
         }
         else
         {
             assert(m->get_output_size() == 1);
+            check_last_descriptor_summary();
             graph::add_user_module(m);
         }
         
+        check_last_descriptor_summary();
         argc_begin = argc_end;
     }
         
@@ -110,4 +117,15 @@ module *summary_graph::add_requirement_impl(module *m)
     }
     
     return graph::add_requirement_impl(m);
+}
+
+void summary_graph::check_last_descriptor_summary()
+{
+    if (graph::size() - 1 != m_last_summary_idx)
+    {
+        auto summary = new stat_module_mean();
+        summary->set_index(graph::size() - 1);
+        m_last_summary_idx = graph::size() - 1;
+        m_summary_outputs.push_back(add_requirement(summary));
+    }
 }
