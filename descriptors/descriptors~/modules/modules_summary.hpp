@@ -116,11 +116,11 @@ private:
 
 // Finding Stats
 
-// Mask Storage / Time
+// Mask Storage
 
-struct mask_storage : summary_module, comparable_module<mask_storage>
+struct storage_mask : summary_module, comparable_module<storage_mask>
 {
-    mask_storage() : summary_module(true) {}
+    storage_mask() : summary_module(true) {}
     
     auto get_params() const { return std::make_tuple(); }
     void prepare(const global_params& params) override { m_mask.resize(params.num_frames()); }
@@ -132,9 +132,19 @@ private:
     
     std::vector<bool> m_mask;
 };
-/*
-struct mask_time : summary_module, user_module, comparable_module<mask_time, user_module>
+
+// Mask Time
+
+struct specifier_mask_time : comparable_summary_specifier<specifier_mask_time>
 {
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        double time = args.get_double(0.0, 0.0, std::numeric_limits<double>::infinity());
+        return new specifier_mask_time(time);
+    }
+    
+    specifier_mask_time(double time) : m_mask_time(time) {}
+    
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
     
     void prepare(const global_params& params) override
@@ -142,12 +152,12 @@ struct mask_time : summary_module, user_module, comparable_module<mask_time, use
         double time = m_mask_time * 1000.0 * params.m_sr / params.m_hop_size;
         m_mask_span = m_mask_time < 0.0 ? 0 : time;
     }
-    
-    void calculate(const global_params& params, const double *data, long size) override {}
-    
+        
     void update_to_final(const module *m) override
     {
-        m_mask_time = dynamic_cast<const mask_time *>(m)->m_mask_time;
+        auto time = dynamic_cast<const specifier_mask_time *>(m)->m_mask_time;
+        if (time > 0.0)
+            m_mask_time = time;
     }
     
     long get_mask_span() { return m_mask_span; }
@@ -157,7 +167,7 @@ private:
     double m_mask_time = -1.0;
     long m_mask_span = 0;
 };
-*/
+
 // Generic underlying finding module
 
 template <class Condition>
@@ -169,7 +179,8 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
 
     void add_requirements(graph& g) override
     {
-        m_mask = g.add_requirement(new mask_storage());
+        m_mask = g.add_requirement(new storage_mask());
+        m_mask_time = g.add_requirement(new specifier_mask_time(-1.0));
     }
     
     void prepare(const global_params& params) override
@@ -179,11 +190,8 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        // FIX - This is probably coming in here
-
         std::vector<bool> &mask = m_mask->get_mask();
-        
-        long mask_span = 0;
+        long mask_span = m_mask_time->get_mask_span();
         
         // Reset the mask
         
@@ -228,7 +236,8 @@ private:
     
     // FIX - use common mask/mask params for efficiency
     
-    mask_storage *m_mask;
+    storage_mask *m_mask;
+    specifier_mask_time *m_mask_time;
     
     aligned_vector<long> m_pos;
     long m_n;
