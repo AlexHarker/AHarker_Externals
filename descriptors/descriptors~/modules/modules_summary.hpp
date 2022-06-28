@@ -37,7 +37,7 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
 
     void calculate(const global_params& params, const double *data, long size) override
     {
-        m_value = 1000.0  * params.m_signal_length / params.m_sr;
+        m_value = 1000.0 * params.m_signal_length / params.m_sr;
     }
 };
 
@@ -116,6 +116,48 @@ private:
 
 // Finding Stats
 
+// Mask Storage / Time
+
+struct mask_storage : summary_module, comparable_module<mask_storage>
+{
+    mask_storage() : summary_module(true) {}
+    
+    auto get_params() const { return std::make_tuple(); }
+    void prepare(const global_params& params) override { m_mask.resize(params.num_frames()); }
+    void calculate(const global_params& params, const double *data, long size) override {}
+    
+    std::vector<bool> &get_mask() { return m_mask; }
+    
+private:
+    
+    std::vector<bool> m_mask;
+};
+/*
+struct mask_time : summary_module, user_module, comparable_module<mask_time, user_module>
+{
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    
+    void prepare(const global_params& params) override
+    {        
+        double time = m_mask_time * 1000.0 * params.m_sr / params.m_hop_size;
+        m_mask_span = m_mask_time < 0.0 ? 0 : time;
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override {}
+    
+    void update_to_final(const module *m) override
+    {
+        m_mask_time = dynamic_cast<const mask_time *>(m)->m_mask_time;
+    }
+    
+    long get_mask_span() { return m_mask_span; }
+    
+private:
+    
+    double m_mask_time = -1.0;
+    long m_mask_span = 0;
+};
+*/
 // Generic underlying finding module
 
 template <class Condition>
@@ -125,9 +167,13 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
+    void add_requirements(graph& g) override
+    {
+        m_mask = g.add_requirement(new mask_storage());
+    }
+    
     void prepare(const global_params& params) override
     {
-        m_mask.resize(params.num_frames());
         m_pos.resize(m_n);
     }
     
@@ -135,12 +181,14 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     {
         // FIX - This is probably coming in here
 
+        std::vector<bool> &mask = m_mask->get_mask();
+        
         long mask_span = 0;
         
         // Reset the mask
         
         for (long j = 0; j < size; j++)
-            m_mask[j] = data[j] == std::numeric_limits<double>::infinity();
+            mask[j] = data[j] == std::numeric_limits<double>::infinity();
                 
         // Loop over values
         
@@ -151,7 +199,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
             // Find the next value of interest
             
             for (long j = 0; j < size; j++)
-                if (!m_mask[j] && m_cond(data, j, pos, size))
+                if (!mask[j] && m_cond(data, j, pos, size))
                     pos = j;
              
             // If valid apply the mask and store, else exit early
@@ -159,7 +207,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
             if (pos != -1)
             {
                 for (long j = std::max(0L, pos - mask_span); j < std::min(pos + mask_span + 1, size); j++)
-                    m_mask[j] = true;
+                    mask[j] = true;
                 
                 m_pos.data()[i] = pos;
             }
@@ -180,7 +228,7 @@ private:
     
     // FIX - use common mask/mask params for efficiency
     
-    std::vector<bool> m_mask;
+    mask_storage *m_mask;
     
     aligned_vector<long> m_pos;
     long m_n;
