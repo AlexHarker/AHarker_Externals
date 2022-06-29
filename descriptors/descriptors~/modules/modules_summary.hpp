@@ -155,11 +155,10 @@ struct stat_module_range : stat_module_simple<stat_module_range>
 
 // Mask Storage
 
-struct storage_mask : summary_module, comparable_module<storage_mask>
+struct storage_mask : summary_module, module_core<storage_mask>
 {
     storage_mask() : summary_module(true) {}
     
-    auto get_params() const { return std::make_tuple(); }
     void prepare(const global_params& params) override { m_mask.resize(params.num_frames()); }
     void calculate(const global_params& params, const double *data, long size) override {}
     
@@ -180,7 +179,7 @@ private:
 
 // Mask Time
 
-struct specifier_mask_time : comparable_summary_specifier<specifier_mask_time>
+struct specifier_mask_time : summary_specifier<specifier_mask_time>
 {
     specifier_mask_time(double time = -1.0) : m_mask_time(time) {}
 
@@ -201,7 +200,7 @@ private:
 
 // Threshold
 
-struct specifier_threshold : comparable_summary_specifier<specifier_threshold>
+struct specifier_threshold : summary_specifier<specifier_threshold>
 {
     enum class mode { abs, peak_mul, peak_add, peak_db, mean_mul, mean_add, mean_db };
     
@@ -658,7 +657,6 @@ struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossin
         switch (Mode)
         {
             case cross_mode::value:
-                                
                 for (long i = 0; i < vector_module::get_n(); i++)
                     vector_module::m_values[i] = (crossings[i].m_pos == -1) ? infinity : data[crossings[i].m_pos];
                 break;

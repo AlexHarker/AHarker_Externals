@@ -117,10 +117,7 @@ module *summary_graph::add_requirement_impl(module *m)
         {
             if ((*it)->is_the_same(m))
             {
-                auto specifier = dynamic_cast<summary_specifier *>(it->get());
-
-                if (specifier)
-                    specifier->update_to_final(m);
+                dynamic_cast<summary_module*>(it->get())->update_to_final(m);
                 delete m;
                 return it->get();
             }

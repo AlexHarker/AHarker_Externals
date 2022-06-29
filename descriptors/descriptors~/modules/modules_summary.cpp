@@ -242,7 +242,9 @@ user_module *specifier_mask_time::setup(const global_params& params, module_argu
 
 void specifier_mask_time::update_to_final(const module *m)
 {
-    auto time = dynamic_cast<const specifier_mask_time *>(m)->m_mask_time;
+    // N.B. - this should only ever be called after a dynamic cast check
+    
+    auto time = static_cast<const specifier_mask_time *>(m)->m_mask_time;
     if (time > 0.0)
         m_mask_time = time;
 }
@@ -278,7 +280,10 @@ user_module *specifier_threshold::setup(const global_params& params, module_argu
 
 void specifier_threshold::update_to_final(const module *m)
 {
-    auto b = dynamic_cast<const specifier_threshold *>(m);
+    // N.B. - this should only ever be called after a dynamic cast check
+
+    auto b = static_cast<const specifier_threshold *>(m);
+    
     if (b->m_threshold != infinity())
     {
         m_threshold = b->m_threshold;

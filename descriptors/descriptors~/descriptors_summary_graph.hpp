@@ -6,13 +6,17 @@
 
 #include <type_traits>
 
-// A type to indicate that a module calculates a summary (not per frame descriptors)
+// A type to indicate that a module is involved in calculating a summary (not per frame descriptors)
 
 struct summary_module
 {
     summary_module(bool no_index = false) : m_no_index(no_index), m_index(-1) {}
     virtual ~summary_module() {}
 
+    // N.B. - used by specifiersthis should only ever be called after a dynamic cast and comparison check
+    
+    virtual void update_to_final(const module *m) {}
+    
     size_t get_index() const { return m_index; }
     void set_index(size_t index) { m_index = m_no_index ? -1 : index; }
         
@@ -20,30 +24,15 @@ struct summary_module
     size_t m_index;
 };
 
-// A type for adding specifiers that apply to a single descriptor but don't calculate
+// A type for adding specifiers that apply to a single descriptor
 
-struct summary_specifier : summary_module, user_module
+template <class T>
+struct summary_specifier : summary_module, comparable_module<T, user_module>
 {
-    virtual void update_to_final(const module *m) = 0;
-    
     void calculate(const global_params& params, const double *data, long size) override {}
     
     size_t get_output_size() const override { return 0; }
     double get_output(size_t idx) const override { return 0.0; }
-};
-
-// A user version
-
-template <class T>
-struct comparable_summary_specifier : summary_specifier
-{
-    bool is_the_same(const module *m) const override
-    {
-        const T *a = static_cast<const T *>(this);
-        const T *b = dynamic_cast<const T *>(m);
-        
-        return b && a->get_params() == b->get_params();
-    }
 };
 
 // The summary graph
