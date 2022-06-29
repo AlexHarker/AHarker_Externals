@@ -92,9 +92,9 @@ void stat_module_median::calculate(const global_params& params, const double *da
     
     // Ignore spurious values
     
-    for (long i = size; i > 0; i--)
+    for (long i = size - 1; i >= 0; i--)
     {
-        if (data[i-1] != infinity())
+        if (data[i] != infinity())
         {
             size = i;
             break;
