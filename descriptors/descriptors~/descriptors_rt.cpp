@@ -2,13 +2,14 @@
 /*
  *  descriptorsrt~
  *
- *	descriptorsrt~ can be used to calculate audio descriptors (or features) in real-time from an incoming signal.
+ *	descriptorsrt~ is used to calculate audio descriptors (or features) in real-time from an incoming signal.
  *  The results are output as a list.
  *	descriptorsrt~ is intended to cover a wide range of tracking / following / detection applications.
  *	It is the real-time counterpart to the descriptors~ object and the two objects share many features.
  *
- *	The object only calculates and outputs the descriptors that the user requests (these can be changed in realtime).
- *	The object is designed to be as efficient as possible, avoiding re-calculations and making use of SIMD operations.
+ *	The object calculates and outputs only the requested descriptors
+ *  Descriptors can be changed in realtime).
+ *	The object is designed with efficiency in mind, avoiding re-calculations and making use of SIMD operations.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -271,14 +272,13 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 {
     auto& graph = x->m_graph;
 
+    // Run and call clock to output
+
     if (graph)
     {
         if (graph->run(x->params, samples))
         {
             graph->output(x->output_list.data());
-        
-            // Call clock to output
-        
             clock_delay(x->output_clock, 0);
         }
     }
