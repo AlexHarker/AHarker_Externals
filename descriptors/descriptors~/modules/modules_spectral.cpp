@@ -8,6 +8,10 @@
 #include <algorithm>
 #include <cmath>
 
+#include <limits>
+
+static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
+
 using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Energy Ratio Module
@@ -143,11 +147,11 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 {
     const double *amps = m_amplitude_module->get_frame();
 
-    // N.B. - This doesn't use statCrest as the denominator is simply the mean
+    // N.B. - This doesn't use stat_crest as the denominator is simply the mean
 
     const double max = stat_max(amps + m_min_bin, m_max_bin - m_min_bin);
     const double mean = stat_mean(amps + m_min_bin, m_max_bin - m_min_bin);
-    const double crest = max / mean;
+    const double crest = mean ? max / mean : infinity();
             
     m_value = m_report_db ? atodb(crest) : crest;
 }

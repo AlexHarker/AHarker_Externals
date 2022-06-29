@@ -91,8 +91,7 @@ void summary_graph::run(const global_params& params, const double *input)
     {
         // FIX - make this nicer...
 
-        auto summary = dynamic_cast<summary_module *>(it->get());
-        auto index = summary->get_index();
+        auto index = dynamic_cast<summary_module *>(it->get())->get_index();
         
         if (index == -1)
             (*it)->calculate(params, input, params.m_signal_length);
