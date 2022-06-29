@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <limits>
 
+using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
+
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Duration
@@ -18,6 +20,83 @@ user_module *summary_module_duration::setup(const global_params& params, module_
 void summary_module_duration::calculate(const global_params& params, const double *data, long size)
 {
     m_value = 1000.0 * params.m_signal_length / params.m_sr;
+}
+
+// Spectral Peaks
+
+// Spectrum Average
+
+void summary_module_spectral_peaks::spectrum_average::add_requirements(graph& g)
+{
+    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+}
+
+void summary_module_spectral_peaks::spectrum_average::prepare(const global_params& params)
+{
+    m_spectrum.resize(params.num_bins());
+    
+    std::fill_n(m_spectrum.data(), params.num_bins(), 0.0);
+}
+
+void summary_module_spectral_peaks::spectrum_average::calculate(const global_params& params, const double *frame, long size)
+{
+    const double *amp_frame = m_amplitude_module->get_frame();
+    
+    VecType *average = reinterpret_cast<VecType *>(m_spectrum.data());
+    const VecType *amps = reinterpret_cast<const VecType *>(amp_frame);
+    long nyquist = params.num_bins() - 1;
+    long loop_size = nyquist / VecType::size;
+    
+    const double recip = 1.0 / params.num_frames();
+    
+    // Calculate amplitude spectrum
+    
+    for (long i = 0; i < loop_size; i++)
+        average[i] += amps[i] * recip;
+    
+    // Do Nyquist Value
+    
+    m_spectrum.data()[nyquist] += amp_frame[nyquist] * recip;
+}
+
+user_module *summary_module_spectral_peaks::setup(const global_params& params, module_arguments& args)
+{
+    return new summary_module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
+}
+
+void summary_module_spectral_peaks::add_requirements(graph& g)
+{
+    m_spectrum = g.add_requirement(new spectrum_average());
+}
+
+void summary_module_spectral_peaks::prepare(const global_params& params)
+{
+    m_peaks.resize(params.num_bins() / 2);
+    m_detector.resize(params.num_bins());
+}
+
+void summary_module_spectral_peaks::calculate(const global_params& params, const double *frame, long size)
+{
+    const double *spectrum = m_spectrum->get_average();
+    
+    m_detector(m_peaks, spectrum, params.num_bins());
+        
+    long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks()), m_num_peaks);
+    long i = 0;
+    
+    for ( ; i < num_valid_peaks; i++)
+    {
+        auto& peak = m_peaks.by_value(i);
+        
+        m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
+        m_values[i * 2 + 1] = peak.m_value;
+    }
+    
+    for ( ; i < m_num_peaks; i++)
+    {
+        m_values[i * 2 + 0] = 0.0;
+        m_values[i * 2 + 1] = 0.0;
+    }
 }
 
 // Helper functions

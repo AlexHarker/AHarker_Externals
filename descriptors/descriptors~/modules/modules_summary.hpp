@@ -4,6 +4,8 @@
 
 #include "descriptors_summary_graph.hpp"
 
+#include "peak_finder.hpp"
+
 template <class T>
 struct summary_module_single : summary_module, user_module_single<T>
 {
@@ -50,6 +52,49 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
     void calculate(const global_params& params, const double *data, long size) override;
+};
+
+// Summary Spectral Peaks 
+
+struct summary_module_spectral_peaks : summary_module_vector<summary_module_spectral_peaks>
+{
+    using peak_list = peak_set<double>;
+    using peak_detector = peak_finder<double>;
+
+    struct spectrum_average : module_core<spectrum_average>
+    {
+        void add_requirements(graph& g) override;
+        void prepare(const global_params& params) override;
+        void calculate(const global_params& params, const double *frame, long size) override;
+        
+        const double *get_average() const { return m_spectrum.data(); }
+        
+    private:
+        
+        module_amplitude_spectrum *m_amplitude_module;
+        aligned_vector<> m_spectrum;
+    };
+
+    summary_module_spectral_peaks(long N) : summary_module_vector(true), m_num_peaks(N)
+    {
+        m_values.resize(N * 2);
+    }
+
+    static user_module *setup(const global_params& params, module_arguments& args);
+
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), m_num_peaks); }
+
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *data, long size) override;
+    
+private:
+    
+    spectrum_average *m_spectrum;
+    
+    peak_list m_peaks;
+    peak_detector m_detector;
+    long m_num_peaks;
 };
 
 // Stats

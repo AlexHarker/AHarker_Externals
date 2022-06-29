@@ -183,7 +183,8 @@ int C74_EXPORT main()
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);
-
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);
+    
 	return 0;
 }
 
