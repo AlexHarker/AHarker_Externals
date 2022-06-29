@@ -1,7 +1,8 @@
 
-// FFT params and Window Generation
+#ifndef _DESCRIPTORS_FFT_PARAMS_HPP_
+#define _DESCRIPTORS_FFT_PARAMS_HPP_
 
-long int_log2(long in)
+static long int_log2(long in)
 {
     long count = 0;
     
@@ -14,19 +15,21 @@ long int_log2(long in)
     return (count && in == 1L << (count - 1L)) ? count - 1 : count;
 }
 
-long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_size_log2, bool use_default)
+static long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_size_log2)
 {
     constexpr long DEFAULT_MAX_FFT_SIZE_LOG2 = 16;
     constexpr long MIN_FFT_SIZE_LOG2 = 4;
     constexpr long MAX_FFT_SIZE_LOG2 = 20;
     
+    bool use_defaults = max_fft_size_log2 <= 0;
+    
     long fft_size_log2 = int_log2(fft_size);
     
-    max_fft_size_log2 = max_fft_size_log2 ? max_fft_size_log2 : MAX_FFT_SIZE_LOG2;
+    max_fft_size_log2 = use_defaults ? MAX_FFT_SIZE_LOG2 : max_fft_size_log2;
     
     // Check if the default is required
     
-    if (use_default && fft_size_log2 < 0)
+    if (use_defaults && fft_size_log2 < 0)
         fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
     
     // Check for valid fft size
@@ -52,7 +55,7 @@ long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_si
 template <class T>
 void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
 {
-    long fft_size_log2 = check_fft_size((t_object *) x, "fft size", fft_size, x->max_fft_size_log2, false);
+    long fft_size_log2 = check_fft_size((t_object *) x, "fft size", fft_size, x->max_fft_size_log2);
     
     x->params.m_fft_size_log2 = fft_size_log2;
     
@@ -72,25 +75,9 @@ void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long fr
     if (x->m_graph)
         x->m_graph->prepare(x->params);
     
+    x->params.m_signal_length = x->params.m_frame_size;
+
     x->reset = true;
 }
 
-template <class T>
-void descriptors_fft_params(T *x, t_symbol *msg, short argc, t_atom *argv)
-{
-    // Ignore blank argument set (keep current values)
-    
-    if (argc < 0)
-        return;
-    
-    // Load in args as relevant
-    
-    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
-    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
-    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
-    t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
-    
-    descriptors_fft_params_internal(x, fft_size, hop_size, frame_size, window_type);
-    
-    x->params.m_signal_length = x->params.m_frame_size;
-}
+#endif /* _DESCRIPTORS_FFT_PARAMS_HPP_ */

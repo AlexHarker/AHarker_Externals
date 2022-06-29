@@ -28,6 +28,7 @@
 #include <AH_Lifecycle.hpp>
 #include <ibuffer_access.hpp>
 
+#include "descriptors_fft_params.hpp"
 #include "descriptors_graph.hpp"
 #include "descriptors_summary_graph.hpp"
 
@@ -58,10 +59,9 @@ struct t_descriptors
     // FIX
     
     long hop_count;
-    
-    global_params params;
-    
     bool reset;
+
+    global_params params;
     
     // General Parameters
     
@@ -84,16 +84,15 @@ struct t_descriptors
     t_clock *output_clock;
 };
 
-#include "descriptors_temp.hpp"
-
 // Function Prototypes
 
 void *descriptors_new(t_symbol *s, short argc, t_atom *argv);
 void descriptors_free(t_descriptors *x);
 void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s);
 
-void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
@@ -113,7 +112,7 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
 	
     class_addmethod(this_class, (method) descriptors_descriptors, "descriptors", A_GIMME, 0);
-    class_addmethod(this_class, (method) descriptors_fft_params<t_descriptors>, "fftparams", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
 
 	class_register(CLASS_BOX, this_class);
@@ -217,7 +216,7 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Set maximum fft size
 
-    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0, true);
+    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0);
 	x->max_fft_size = 1 << x->max_fft_size_log2;
 
     descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
@@ -236,15 +235,23 @@ void descriptors_free(t_descriptors *x)
     destroy_object(x->m_graph);
 }
 
-// Set Descriptors
+// FFT Params
 
-void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    auto graph = new class summary_graph();
+    // Ignore blank argument set (keep current values)
     
-    graph->build(s_setups, x->params, argc, argv);
-    x->output_list.resize(graph->size());
-    x->m_graph.reset(graph);
+    if (argc < 0)
+        return;
+    
+    // Load in args as relevant
+    
+    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
+    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
+    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
+    
+    descriptors_fft_params_internal(x, fft_size, hop_size, frame_size, window_type);
 }
 
 // Energy Threshold
@@ -258,6 +265,17 @@ void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_at
     
     if (argc > 2)
         object_error((t_object *) x, "too many arguments to energythresh message");
+}
+
+// Set Descriptors
+
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    auto graph = new class summary_graph();
+    
+    graph->build(s_setups, x->params, argc, argv);
+    x->output_list.resize(graph->size());
+    x->m_graph.reset(graph);
 }
 
 // User Routines For Performing Analysis
