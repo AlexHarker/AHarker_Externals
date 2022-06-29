@@ -59,6 +59,7 @@
 		B85830E127B6D5A20083BA8E /* modules_content.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_content.cpp; sourceTree = "<group>"; };
 		B85830E227B6D5A20083BA8E /* modules_content.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_content.hpp; sourceTree = "<group>"; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
+		B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_modules.hpp; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_rt.cpp; sourceTree = "<group>"; };
 		B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_non_rt.cpp; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 				B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */,
 				B8472B9627B55F9F00C60F79 /* descriptors_temp.hpp */,
 				B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */,
+				B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */,
 				B8472B9527B533D000C60F79 /* descriptors_graph.hpp */,
 				B8E54B222869B83B00C2E794 /* descriptors_graph.cpp */,
 				B8E54B252869B99500C2E794 /* descriptors_summary_graph.hpp */,

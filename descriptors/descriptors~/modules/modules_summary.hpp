@@ -2,8 +2,10 @@
 #ifndef _SUMMARY_MODULES_HPP_
 #define _SUMMARY_MODULES_HPP_
 
-#include "descriptors_summary_graph.hpp"
+#include "descriptors_graph.hpp"
+#include "descriptors_summary_modules.hpp"
 
+#include "processing_containers.hpp"
 #include "peak_finder.hpp"
 
 template <class T>
