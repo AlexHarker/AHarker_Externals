@@ -161,20 +161,19 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptorsrt *x = (t_descriptorsrt *) object_alloc(this_class);
 	
-	long max_fft_size_in = 0;
+	long max_fft_size = 0;
 
 	// Get arguments 
 	
 	if (argc) 
-		max_fft_size_in = atom_getlong(argv++);
+		max_fft_size = atom_getlong(argv++);
 	if (argc > 1) 
 		x->descriptors_feedback = atom_getlong(argv++);
 	
 	// Set maximum fft size
 	
-	long max_fft_size_log2 = descriptors_max_fft_size(x, max_fft_size_in);
-	x->max_fft_size_log2 = max_fft_size_log2;
-	x->max_fft_size = 1 << (max_fft_size_log2);
+    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, MAX_FFT_SIZE_LOG2, true);
+	x->max_fft_size = 1 << x->max_fft_size_log2;
 	
     descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
     
