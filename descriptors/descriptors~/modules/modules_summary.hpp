@@ -249,6 +249,7 @@ struct specifier_threshold : comparable_summary_specifier<specifier_threshold>
             case mode::mean_add:
             case mode::peak_add:
                 m_calculated_threshold = specified + stat;
+                break;
         }
     }
     
