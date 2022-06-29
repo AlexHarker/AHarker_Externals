@@ -1,10 +1,6 @@
 
 // FFT params and Window Generation
 
-#define DEFAULT_MAX_FFT_SIZE_LOG2 16
-#define MIN_FFT_SIZE_LOG2 4
-#define MAX_FFT_SIZE_LOG2 20
-
 long int_log2(long in)
 {
     long count = 0;
@@ -20,7 +16,13 @@ long int_log2(long in)
 
 long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_size_log2, bool use_default)
 {
+    constexpr long DEFAULT_MAX_FFT_SIZE_LOG2 = 16;
+    constexpr long MIN_FFT_SIZE_LOG2 = 4;
+    constexpr long MAX_FFT_SIZE_LOG2 = 20;
+    
     long fft_size_log2 = int_log2(fft_size);
+    
+    max_fft_size_log2 = max_fft_size_log2 ? max_fft_size_log2 : MAX_FFT_SIZE_LOG2;
     
     // Check if the default is required
     
@@ -50,7 +52,7 @@ long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_si
 template <class T>
 void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
 {
-    long fft_size_log2 = check_fft_size((t_object *) x, "fft size", x->max_fft_size_log2, MAX_FFT_SIZE_LOG2, false);
+    long fft_size_log2 = check_fft_size((t_object *) x, "fft size", fft_size, x->max_fft_size_log2, false);
     
     x->params.m_fft_size_log2 = fft_size_log2;
     

@@ -172,7 +172,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Set maximum fft size
 	
-    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, MAX_FFT_SIZE_LOG2, true);
+    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0, true);
 	x->max_fft_size = 1 << x->max_fft_size_log2;
 	
     descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
