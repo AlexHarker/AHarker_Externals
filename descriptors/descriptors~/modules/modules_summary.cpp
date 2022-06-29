@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <limits>
 
+using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
+
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Duration
@@ -20,7 +22,94 @@ void summary_module_duration::calculate(const global_params& params, const doubl
     m_value = 1000.0 * params.m_signal_length / params.m_sr;
 }
 
+// Spectral Peaks
+
+// Spectrum Average
+
+void summary_module_spectral_peaks::spectrum_average::add_requirements(graph& g)
+{
+    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+}
+
+void summary_module_spectral_peaks::spectrum_average::prepare(const global_params& params)
+{
+    m_spectrum.resize(params.num_bins());
+    
+    std::fill_n(m_spectrum.data(), params.num_bins(), 0.0);
+}
+
+void summary_module_spectral_peaks::spectrum_average::calculate(const global_params& params, const double *frame, long size)
+{
+    const double *amp_frame = m_amplitude_module->get_frame();
+    
+    VecType *average = reinterpret_cast<VecType *>(m_spectrum.data());
+    const VecType *amps = reinterpret_cast<const VecType *>(amp_frame);
+    long nyquist = params.num_bins() - 1;
+    long loop_size = nyquist / VecType::size;
+    
+    const double recip = 1.0 / params.num_frames();
+    
+    // Calculate amplitude spectrum
+    
+    for (long i = 0; i < loop_size; i++)
+        average[i] += amps[i] * recip;
+    
+    // Do Nyquist Value
+    
+    m_spectrum.data()[nyquist] += amp_frame[nyquist] * recip;
+}
+
+user_module *summary_module_spectral_peaks::setup(const global_params& params, module_arguments& args)
+{
+    return new summary_module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
+}
+
+void summary_module_spectral_peaks::add_requirements(graph& g)
+{
+    m_spectrum = g.add_requirement(new spectrum_average());
+}
+
+void summary_module_spectral_peaks::prepare(const global_params& params)
+{
+    m_peaks.resize(params.num_bins() / 2);
+    m_detector.resize(params.num_bins());
+}
+
+void summary_module_spectral_peaks::calculate(const global_params& params, const double *frame, long size)
+{
+    const double *spectrum = m_spectrum->get_average();
+    
+    m_detector(m_peaks, spectrum, params.num_bins());
+        
+    long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks()), m_num_peaks);
+    long i = 0;
+    
+    for ( ; i < num_valid_peaks; i++)
+    {
+        auto& peak = m_peaks.by_value(i);
+        
+        m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
+        m_values[i * 2 + 1] = peak.m_value;
+    }
+    
+    for ( ; i < m_num_peaks; i++)
+    {
+        m_values[i * 2 + 0] = 0.0;
+        m_values[i * 2 + 1] = 0.0;
+    }
+}
+
 // Helper functions
+
+double ms_to_frame(const global_params& params, double ms)
+{
+    return ms * params.m_sr / ( params.m_hop_size * 1000.0);
+}
+
+double frame_to_ms(const global_params& params, double frame)
+{
+    return frame < 0 ? infinity() : (frame * params.m_hop_size * 1000.0) / params.m_sr;
+}
 
 double calculate_mean(const double *data, long size)
 {
@@ -37,6 +126,27 @@ double calculate_mean(const double *data, long size)
     }
     
     return num_valid ? sum / num_valid : infinity();
+}
+
+double calculate_max(const double *data, long size)
+{
+    double maximum = infinity();
+    long i;
+    
+    for (i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            maximum = data[i];
+            break;
+        }
+    }
+    
+    for (; i < size; i++)
+        if (data[i] != infinity())
+            maximum = std::max(maximum, data[i]);
+    
+    return maximum;
 }
 
 // Mean
@@ -61,9 +171,9 @@ void stat_module_median::calculate(const global_params& params, const double *da
     
     // Ignore spurious values
     
-    for (long i = size; i > 0; i--)
+    for (long i = size - 1; i >= 0; i--)
     {
-        if (data[i-1] < infinity())
+        if (data[i] != infinity())
         {
             size = i;
             break;
@@ -74,25 +184,50 @@ void stat_module_median::calculate(const global_params& params, const double *da
 }
 
 // Centroid
-// FIX - these three need to ignore spurious values and consider whether to cache or not for sub calculations
     
 void stat_module_centroid::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_centroid(data, size);
+    double sum = 0.0;
+    double weight_sum = 0.0;
+    
+    for (long i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            sum += static_cast<double>(i) * data[i];;
+            weight_sum += data[i];
+        }
+    }
+
+    m_value = weight_sum ? frame_to_ms(params, sum / weight_sum) : infinity();
 }
 
 // Standard Deviation
 
 void stat_module_stddev::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_standard_deviation(data, size);
+    double mean = m_mean->get_output(0);
+    double sum = 0.0;
+    long num_valid = 0;
+    
+    for (long i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            const double delta = data[i] - mean;
+            sum += delta * delta;
+            num_valid++;
+        }
+    }
+    
+    m_value = num_valid ? sqrt(sum / static_cast<double>(num_valid)) : infinity();
 }
 
 // Range
 
 void stat_module_range::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_max(data, size) - stat_min(data, size);
+    m_value = calculate_max(data, size) - stat_min(data, size);
 }
 
 // Specifiers
@@ -114,8 +249,7 @@ void specifier_mask_time::update_to_final(const module *m)
 
 void specifier_mask_time::prepare(const global_params& params)
 {
-    double time = m_mask_time * params.m_sr / (1000.0 * params.m_hop_size);
-    m_mask_span = m_mask_time < 0.0 ? 0 : time;
+    m_mask_span = m_mask_time < 0.0 ? 0 : ms_to_frame(params, m_mask_time);
 }
     
 // Threshold
@@ -160,18 +294,16 @@ void specifier_threshold::calculate(const global_params& params, const double *d
     
     const double specified = use_db ? dbtoa(m_threshold) : m_threshold;
     
+    // Calculate stat if needed
+    
     double stat = -infinity();
     
     if (use_mean)
         stat = calculate_mean(data, size);
     else if (use_peak)
-    {
-        for (long i = 0; i < size; i++)
-        {
-            if (data[i] != infinity())
-                stat = std::max(stat, data[i]);
-        }
-    }
+        stat = calculate_max(data, size);
+    
+    // Return the final threshold
     
     switch (m_type)
     {

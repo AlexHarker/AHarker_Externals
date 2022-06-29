@@ -1,6 +1,6 @@
 
 #include "descriptors_summary_graph.hpp"
-#include "modules_summary.hpp"
+#include "modules/modules_summary.hpp"
 
 // Summary Graph
     

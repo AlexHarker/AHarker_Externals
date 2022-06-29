@@ -4,6 +4,8 @@
 
 #include "descriptors_summary_graph.hpp"
 
+#include "peak_finder.hpp"
+
 template <class T>
 struct summary_module_single : summary_module, user_module_single<T>
 {
@@ -16,6 +18,29 @@ struct summary_module_vector : summary_module, user_module_vector<T>
     summary_module_vector(bool no_index = false) : summary_module(no_index) {}
 };
 
+template <class T>
+struct summary_module_vector_n : summary_module_vector<T>
+{
+    summary_module_vector_n(long N) : m_n(N) {}
+    
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        return new T(args.get_long(1, 1, 256));
+    }
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
+    
+protected:
+    
+    long get_n() const { return m_n; }
+    
+    long m_n;
+};
+
+// Helpers
+
+double frame_to_ms(const global_params& params, double frame);
+
 // Duration
 
 struct summary_module_duration : summary_module_single<summary_module_duration>
@@ -27,6 +52,49 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
     void calculate(const global_params& params, const double *data, long size) override;
+};
+
+// Summary Spectral Peaks 
+
+struct summary_module_spectral_peaks : summary_module_vector<summary_module_spectral_peaks>
+{
+    using peak_list = peak_set<double>;
+    using peak_detector = peak_finder<double>;
+
+    struct spectrum_average : module_core<spectrum_average>
+    {
+        void add_requirements(graph& g) override;
+        void prepare(const global_params& params) override;
+        void calculate(const global_params& params, const double *frame, long size) override;
+        
+        const double *get_average() const { return m_spectrum.data(); }
+        
+    private:
+        
+        module_amplitude_spectrum *m_amplitude_module;
+        aligned_vector<> m_spectrum;
+    };
+
+    summary_module_spectral_peaks(long N) : summary_module_vector(true), m_num_peaks(N)
+    {
+        m_values.resize(N * 2);
+    }
+
+    static user_module *setup(const global_params& params, module_arguments& args);
+
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), m_num_peaks); }
+
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *data, long size) override;
+    
+private:
+    
+    spectrum_average *m_spectrum;
+    
+    peak_list m_peaks;
+    peak_detector m_detector;
+    long m_num_peaks;
 };
 
 // Stats
@@ -66,7 +134,16 @@ struct stat_module_centroid : stat_module_simple<stat_module_centroid>
 
 struct stat_module_stddev : stat_module_simple<stat_module_stddev>
 {
+    void add_requirements(graph& g) override
+    {
+        m_mean = g.add_requirement(new stat_module_mean());
+    }
+    
     void calculate(const global_params& params, const double *data, long size) override;
+    
+private:
+    
+    stat_module_mean *m_mean;
 };
 
 struct stat_module_range : stat_module_simple<stat_module_range>
@@ -218,28 +295,20 @@ private:
 // Generic finding user module
 
 template <class Condition, bool Pos>
-struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>>
+struct stat_find_n_user : summary_module_vector_n<stat_find_n_user<Condition, Pos>>
 {
     using finder_module = find_n<Condition>;
-    using vector_module = summary_module_vector<stat_find_n_user<Condition, Pos>>;
+    using vector_module = summary_module_vector_n<stat_find_n_user<Condition, Pos>>;
     
-    stat_find_n_user(long N)
+    stat_find_n_user(long N) : vector_module(N)
     {
         vector_module::m_values.resize(N);
     }
     
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        long N = args.get_long(1, 1, 256);
-        return new stat_find_n_user(N);
-    }
-    
-    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
-    
     void add_requirements(graph& g) override
     {
         m_finder = g.add_requirement(new finder_module());
-        m_finder->set_n(get_n());
+        m_finder->set_n(vector_module::get_n());
     }
     
     void calculate(const global_params& params, const double *data, long size) override
@@ -250,28 +319,18 @@ struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>
         
         if (Pos)
         {
-            const double frame_to_ms = 1000.0 * params.m_hop_size / params.m_sr;
-            
-            for (long i = 0; i < vector_module::m_values.size(); i++)
-            {
-                long pos = positions[i];
-                vector_module::m_values[i] = (pos == -1) ? infinity : pos * frame_to_ms;
-            }
+            for (long i = 0; i < vector_module::get_n(); i++)
+                vector_module::m_values[i] = frame_to_ms(params, positions[i]);
         }
         else
         {
-            for (long i = 0; i < vector_module::m_values.size(); i++)
-            {
-                long pos = positions[i];
-                vector_module::m_values[i] = (pos == -1) ? infinity : data[pos];
-            }
+            for (long i = 0; i < vector_module::get_n(); i++)
+                vector_module::m_values[i] = (positions[i] == -1) ? infinity : data[positions[i]];
         }
     }
         
 private:
-           
-    long get_n() const { return static_cast<long>(vector_module::m_values.size()); }
-    
+               
     finder_module *m_finder;
 };
 
@@ -347,5 +406,316 @@ struct stat_module_ratio : stat_module_simple<stat_module_ratio<Op>>
 
 using stat_module_ratio_above = stat_module_ratio<std::greater>;
 using stat_module_ratio_below = stat_module_ratio<std::less>;
+
+// Crossings
+
+struct crossing
+{
+    crossing() : m_pos(-1), m_cross1(-1), m_cross2(-1) {}
+    crossing(long pos, long cross1, long cross2) : m_pos(pos), m_cross1(cross1), m_cross2(cross2) {}
+    
+    long length() const { return m_cross2 - m_cross1; }
+
+    long m_pos;
+    long m_cross1;
+    long m_cross2;
+};
+
+// Generic underlying longest crossings module
+
+template <template <class T> class Op1, template <class T> class Op2>
+struct extreme_crossings : summary_module, comparable_module<extreme_crossings<Op1, Op2>>
+{
+    extreme_crossings() : summary_module(), m_n(1) {}
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    
+    void add_requirements(graph& g) override
+    {
+        m_mask = g.add_requirement(new storage_mask());
+        m_mask_time = g.add_requirement(new specifier_mask_time());
+        m_threshold = g.add_requirement(new specifier_threshold());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_crossings.resize(m_n);
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        constexpr double infinity = std::numeric_limits<double>::infinity();
+        
+        const auto crossings = m_crossings.data();
+        
+        std::vector<bool> &mask = m_mask->get_mask();
+        double threshold = m_threshold->get_threshold();
+        long mask_span = m_mask_time->get_mask_span();
+                  
+        long num_found = 0;
+        
+        // Reset the mask
+        
+        for (long j = 0; j < size; j++)
+            mask[j] = data[j] == std::numeric_limits<double>::infinity();
+        
+        for (long i = 0; i < m_n; i++)
+        {
+            // Assume there is not another valid value
+            
+            long pos = -1;
+                        
+            // Search for the next largest peak value
+            
+            for (long j = 0; j < size; j++)
+            {
+                if (!mask[j] && Op1<double>()(data[j], threshold) && j && Op1<double>()(data[j], data[j - 1]))
+                {
+                    pos = j;
+                    
+                    // FIX - this needs review in the original code and either replicating or correcting
+                    /*
+                    // Now search right to see if it is a peak value
+                    
+                    for (; j < size - 1; j++)
+                    {
+                        // If the next value is not equal then break (we know if it is a peak or not)
+                        
+                        if (data[j] > data[j + 1])
+                        {
+                            pos = new_max_pos;
+                            break;
+                        }
+                        
+                        if (data[j] < data[j + 1])
+                            break;
+                        
+                        prev_val = current_val;
+                        current_val = next_val;
+                    }
+                    
+                    if (current_val >= prev_val)
+                        max_pos = new_max_pos;
+                     */
+                }
+                 
+            }
+            
+            // If pos is invalid then we are done
+            
+            if (pos == -1)
+                break;
+                    
+            long cross1, cross2;
+    
+            // Search earlier then later for crossing points
+                
+            for (cross1 = pos; i > 0 ; cross1--)
+                if (data[i] != infinity && Op2<double>()(data[cross1], threshold))
+                    break;
+                                
+            for (cross2 = pos + 1; cross2 < size - 1; cross2++)
+                if (data[i] != infinity && Op2<double>()(data[cross2], threshold))
+                    break;
+            
+            // Update mask points and do masking
+            
+            for (long j = std::max(pos - mask_span, cross1); j < std::min(pos + mask_span + 1, cross2); j++)
+                mask[i] = true;
+                        
+            crossings[num_found++] = crossing(pos, cross1, cross2);
+        }
+        
+        // Store defaults if there aren't any more values to be found
+        
+        for (long i = num_found; i < m_n; i++)
+            crossings[i] = crossing();
+    }
+    
+    void set_n(long N) { m_n = std::max(m_n, N); }
+    
+    const crossing *get_crossings() const { return m_crossings.data(); }
+    long get_n() const { return m_n; }
+    
+private:
+    
+    storage_mask *m_mask;
+    specifier_mask_time *m_mask_time;
+    specifier_threshold *m_threshold;
+    
+    aligned_vector<crossing> m_crossings;
+    long m_n;
+};
+
+// Longest Crossings
+
+// Generic underlying longest crossings module
+
+template <template <class T> class Op1, template <class T> class Op2>
+struct longest_crossings : summary_module, comparable_module<longest_crossings<Op1, Op2>>
+{
+    longest_crossings() : summary_module(), m_n(1) {}
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    
+    void add_requirements(graph& g) override
+    {
+        m_mask_time = g.add_requirement(new specifier_mask_time());
+        m_threshold = g.add_requirement(new specifier_threshold());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_crossings.resize(m_n);
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        constexpr double infinity = std::numeric_limits<double>::infinity();
+        
+        const auto crossings = m_crossings.data();
+        
+        double threshold = m_threshold->get_threshold();
+        long mask_span = m_mask_time->get_mask_span();
+        
+        long cross1, cross2, insert;
+        long num_found = 0;
+        
+        for (long i = 0; i < size; i = cross2)
+        {
+            // Find the next crossing over the threshold
+            
+            for (cross1 = i; cross1 < size; cross1++)
+                if (data[cross1] != infinity && Op1<double>()(data[cross1], threshold))
+                    break;
+            
+            // Exit if we've reached the end without finding a crossing point
+            
+            if (cross1 == size)
+                break;
+            
+            // Jump by the mask size then find out when the value crosses back through the threshold
+            
+            for (cross2 = cross1 + mask_span; cross2 < size; cross2++)
+                if (data[cross2] != infinity && Op2<double>()(data[cross2], threshold))
+                    break;
+            
+            crossing cross(-1, cross1, std::max(cross2, size));
+            
+            // If this is longer than any of the stored values then move others and store this crossing
+            
+            for (insert = 0; insert < num_found; insert++)
+                if (cross.length() > crossings[insert].length())
+                    break;
+            
+            num_found = std::min(num_found + 1, m_n);
+            
+            if (insert < num_found)
+            {
+                for (long j = num_found - 1; j >= insert + 1; j--)
+                    crossings[j] = crossings[j - 1];
+                
+                crossings[insert] = cross;
+            }
+        }
+        
+        // Store defaults if there aren't any more values to be found
+        
+        for (long i = num_found; i < m_n; i++)
+            crossings[i] = crossing();
+    }
+    
+    void set_n(long N) { m_n = std::max(m_n, N); }
+    
+    const crossing *get_crossings() const { return m_crossings.data(); }
+    long get_n() const { return m_n; }
+    
+private:
+    
+    specifier_mask_time *m_mask_time;
+    specifier_threshold *m_threshold;
+    
+    aligned_vector<crossing> m_crossings;
+    long m_n;
+};
+
+// Generic crossings user module
+
+enum class cross_mode { value, pos, cross, crossings };
+
+template <class Crossings, cross_mode Mode>
+struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossings, Mode>>
+{
+    using vector_module = summary_module_vector_n<stat_crossings_user<Crossings, Mode>>;
+    
+    stat_crossings_user(long N) : vector_module(N)
+    {
+        vector_module::m_values.resize(Mode == cross_mode::crossings ? N * 2 : N);
+    }
+    
+    void add_requirements(graph& g) override
+    {
+        m_crossings = g.add_requirement(new Crossings());
+        m_crossings->set_n(vector_module::get_n());
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        constexpr auto infinity = std::numeric_limits<double>::infinity();
+
+        const auto *crossings = m_crossings->get_crossings();
+        
+        switch (Mode)
+        {
+            case cross_mode::value:
+                                
+                for (long i = 0; i < vector_module::get_n(); i++)
+                    vector_module::m_values[i] = (crossings[i].m_pos == -1) ? infinity : data[crossings[i].m_pos];
+                break;
+                
+            case cross_mode::pos:
+                for (long i = 0; i < vector_module::get_n(); i++)
+                    vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_pos);
+                break;
+                
+            case cross_mode::cross:
+                for (long i = 0; i < vector_module::get_n(); i++)
+                    vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_cross1);
+                break;
+                
+            case cross_mode::crossings:
+                for (long i = 0; i < vector_module::get_n(); i++)
+                {
+                    vector_module::m_values[i * 2 + 0] = frame_to_ms(params, crossings[i].m_cross1);
+                    vector_module::m_values[i * 2 + 1] = frame_to_ms(params, crossings[i].m_cross2);
+                }
+                break;
+        }
+    }
+    
+private:
+    
+    Crossings *m_crossings;
+};
+
+using extreme_above = extreme_crossings<std::greater, std::less>;
+using extreme_below = extreme_crossings<std::less, std::greater>;
+using longest_above = longest_crossings<std::greater, std::less>;
+using longest_below = longest_crossings<std::less, std::greater>;
+
+// Final user module types
+
+using stat_module_crossing_peak = stat_crossings_user<extreme_above, cross_mode::value>;
+using stat_module_crossing_trough = stat_crossings_user<longest_below, cross_mode::value>;
+using stat_module_crossing_peak_pos = stat_crossings_user<extreme_above, cross_mode::pos>;
+using stat_module_crossing_trough_pos = stat_crossings_user<longest_below, cross_mode::pos>;
+using stat_module_cross_above = stat_crossings_user<extreme_above, cross_mode::cross>;
+using stat_module_cross_below = stat_crossings_user<longest_below, cross_mode::cross>;
+using stat_module_crossings_above = stat_crossings_user<extreme_above, cross_mode::crossings>;
+using stat_module_crossings_below = stat_crossings_user<longest_below, cross_mode::crossings>;
+using stat_module_longest_above = stat_crossings_user<longest_above, cross_mode::cross>;
+using stat_module_longest_below = stat_crossings_user<longest_below, cross_mode::cross>;
+using stat_module_longest_above_both = stat_crossings_user<longest_above, cross_mode::crossings>;
+using stat_module_longest_below_both = stat_crossings_user<longest_below, cross_mode::crossings>;
 
 #endif /* _SUMMARY_MODULES_HPP_ */
