@@ -16,6 +16,10 @@ struct summary_module_vector : summary_module, user_module_vector<T>
     summary_module_vector(bool no_index = false) : summary_module(no_index) {}
 };
 
+// Helpers
+
+double frame_to_ms(const global_params& params, double frame);
+
 // Duration
 
 struct summary_module_duration : summary_module_single<summary_module_duration>
@@ -259,21 +263,13 @@ struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>
         
         if (Pos)
         {
-            const double frame_to_ms = 1000.0 * params.m_hop_size / params.m_sr;
-            
-            for (long i = 0; i < vector_module::m_values.size(); i++)
-            {
-                long pos = positions[i];
-                vector_module::m_values[i] = (pos == -1) ? infinity : pos * frame_to_ms;
-            }
+            for (long i = 0; i < get_n(); i++)
+                vector_module::m_values[i] = frame_to_ms(params, positions[i]);
         }
         else
         {
-            for (long i = 0; i < vector_module::m_values.size(); i++)
-            {
-                long pos = positions[i];
-                vector_module::m_values[i] = (pos == -1) ? infinity : data[pos];
-            }
+            for (long i = 0; i < get_n(); i++)
+                vector_module::m_values[i] = (positions[i] == -1) ? infinity : data[positions[i]];
         }
     }
         
@@ -361,8 +357,8 @@ using stat_module_ratio_below = stat_module_ratio<std::less>;
 
 // Generic underlying longest crossings module
 
-template <template <class T> class Op>
-struct longest_crossings : summary_module, comparable_module<longest_crossings<Op>>
+template <template <class T> class Op1, template <class T> class Op2>
+struct longest_crossings : summary_module, comparable_module<longest_crossings<Op1, Op2>>
 {
     struct crossing
     {
@@ -394,6 +390,8 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
     {
         constexpr double infinity = std::numeric_limits<double>::infinity();
         
+        const auto crossings = m_crossings.data();
+        
         double threshold = m_threshold->get_threshold();
         long mask_span = m_mask_time->get_mask_span();
 
@@ -405,7 +403,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             // Find the next crossing over the threshold
             
             for (cross1 = i; cross1 < size; cross1++)
-                if (data[cross1] != infinity && Op<double>()(data[cross1], threshold))
+                if (data[cross1] != infinity && Op1<double>()(data[cross1], threshold))
                     break;
             
             // Exit if we've reached the end without finding a crossing point
@@ -416,7 +414,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             // Jump by the mask size then find out when the value crosses back through the threshold
             
             for (cross2 = cross1 + mask_span; cross2 < size; cross2++)
-                if (data[cross2] != infinity && Op<double>()(data[cross2], threshold))
+                if (data[cross2] != infinity && Op2<double>()(data[cross2], threshold))
                     break;
 
             crossing cross(cross1, std::max(cross2, size));
@@ -424,7 +422,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             // If this is longer than any of the stored values then move others and store this crossing
 
             for (insert = 0; insert < num_found; insert++)
-                if (cross.length() > m_crossings[insert].length())
+                if (cross.length() > crossings[insert].length())
                     break;
             
             num_found = std::min(num_found + 1, m_n);
@@ -432,16 +430,16 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             if (insert < num_found)
             {
                 for (long j = num_found - 1; j >= insert + 1; j--)
-                    m_crossings[j] = m_crossings[j - 1];
+                    crossings[j] = crossings[j - 1];
                                 
-                m_crossings[insert] = cross;
+                crossings[insert] = cross;
             }
         }
         
         // Store defaults if there aren't any more values to be found
         
         for (long i = num_found; i < m_n; i++)
-            m_crossings[i] = crossing();
+            crossings[i] = crossing();
     }
     
     void set_n(long N) { m_n = std::max(m_n, N); }
@@ -457,5 +455,69 @@ private:
     aligned_vector<crossing> m_crossings;
     long m_n;
 };
+
+// Generic longest crossings user module
+
+template <template <class T> class Op1, template <class T> class Op2, bool Both>
+struct stat_longest_crossings_user : summary_module_vector<stat_longest_crossings_user<Op1, Op2, Both>>
+{
+    using crossings_module = longest_crossings<Op1, Op2>;
+    using vector_module = summary_module_vector<stat_longest_crossings_user<Op1, Op2, Both>>;
+    
+    stat_longest_crossings_user(long N)
+    {
+        vector_module::m_values.resize(Both ? N * 2 : N);
+    }
+    
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        long N = args.get_long(1, 1, 256);
+        return new stat_longest_crossings_user(N);
+    }
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
+    
+    void add_requirements(graph& g) override
+    {
+        m_crossings = g.add_requirement(new crossings_module());
+        m_crossings->set_n(get_n());
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        const auto *crossings = m_crossings->get_crossings();
+        
+        if (Both)
+        {
+            for (long i = 0; i < get_n(); i++)
+            {
+                vector_module::m_values[i * 2 + 0] = frame_to_ms(params, crossings[i].m_cross1);
+                vector_module::m_values[i * 2 + 1] = frame_to_ms(params, crossings[i].m_cross2);
+            }
+        }
+        else
+        {
+            for (long i = 0; i < get_n(); i++)
+                vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_cross1);
+        }
+    }
+    
+private:
+    
+    long get_n() const
+    {
+        long size = static_cast<long>(vector_module::m_values.size());
+        return Both ? size / 2 : size;
+    }
+    
+    crossings_module *m_crossings;
+};
+                                      
+// Final user module types
+
+using stat_module_longest_above = stat_longest_crossings_user<std::greater, std::less, false>;
+using stat_module_longest_below = stat_longest_crossings_user<std::less, std::greater, false>;
+using stat_module_longest_above_both = stat_longest_crossings_user<std::greater, std::less, true>;
+using stat_module_longest_below_both = stat_longest_crossings_user<std::less, std::greater, true>;
 
 #endif /* _SUMMARY_MODULES_HPP_ */

@@ -29,7 +29,7 @@ double ms_to_frame(const global_params& params, double ms)
 
 double frame_to_ms(const global_params& params, double frame)
 {
-    return (frame * params.m_hop_size * 1000.0) / params.m_sr;
+    return frame < 0 ? infinity() : (frame * params.m_hop_size * 1000.0) / params.m_sr;
 }
 
 double calculate_mean(const double *data, long size)

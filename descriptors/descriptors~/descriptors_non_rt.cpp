@@ -167,6 +167,11 @@ int C74_EXPORT main()
     s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
     s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
 
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);
+
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
     s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
