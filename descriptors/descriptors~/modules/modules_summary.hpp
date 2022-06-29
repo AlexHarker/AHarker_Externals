@@ -66,7 +66,16 @@ struct stat_module_centroid : stat_module_simple<stat_module_centroid>
 
 struct stat_module_stddev : stat_module_simple<stat_module_stddev>
 {
+    void add_requirements(graph& g) override
+    {
+        m_mean = g.add_requirement(new stat_module_mean());
+    }
+    
     void calculate(const global_params& params, const double *data, long size) override;
+    
+private:
+    
+    stat_module_mean *m_mean;
 };
 
 struct stat_module_range : stat_module_simple<stat_module_range>

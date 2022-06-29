@@ -55,8 +55,13 @@ double calculate_max(const double *data, long size)
     long i;
     
     for (i = 0; i < size; i++)
+    {
         if (data[i] != infinity())
+        {
             maximum = data[i];
+            break;
+        }
+    }
     
     for (; i < size; i++)
         if (data[i] != infinity())
@@ -119,11 +124,24 @@ void stat_module_centroid::calculate(const global_params& params, const double *
 }
 
 // Standard Deviation
-// FIX - this needs to ignore spurious values and consider whether to cache or not for the mean calculation
 
 void stat_module_stddev::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_standard_deviation(data, size);
+    double mean = m_mean->get_output(0);
+    double sum = 0.0;
+    long num_valid = 0;
+    
+    for (long i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            const double delta = data[i] - mean;
+            sum += delta * delta;
+            num_valid++;
+        }
+    }
+    
+    m_value = num_valid ? sqrt(sum / static_cast<double>(num_valid)) : infinity();
 }
 
 // Range
