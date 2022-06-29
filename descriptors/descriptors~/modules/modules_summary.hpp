@@ -16,6 +16,25 @@ struct summary_module_vector : summary_module, user_module_vector<T>
     summary_module_vector(bool no_index = false) : summary_module(no_index) {}
 };
 
+template <class T>
+struct summary_module_vector_n : summary_module_vector<T>
+{
+    summary_module_vector_n(long N) : m_n(N) {}
+    
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        return new T(args.get_long(1, 1, 256));
+    }
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
+    
+protected:
+    
+    long get_n() const { return m_n; }
+    
+    long m_n;
+};
+
 // Helpers
 
 double frame_to_ms(const global_params& params, double frame);
@@ -231,28 +250,20 @@ private:
 // Generic finding user module
 
 template <class Condition, bool Pos>
-struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>>
+struct stat_find_n_user : summary_module_vector_n<stat_find_n_user<Condition, Pos>>
 {
     using finder_module = find_n<Condition>;
-    using vector_module = summary_module_vector<stat_find_n_user<Condition, Pos>>;
+    using vector_module = summary_module_vector_n<stat_find_n_user<Condition, Pos>>;
     
-    stat_find_n_user(long N)
+    stat_find_n_user(long N) : vector_module(N)
     {
         vector_module::m_values.resize(N);
     }
     
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        long N = args.get_long(1, 1, 256);
-        return new stat_find_n_user(N);
-    }
-    
-    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
-    
     void add_requirements(graph& g) override
     {
         m_finder = g.add_requirement(new finder_module());
-        m_finder->set_n(get_n());
+        m_finder->set_n(vector_module::get_n());
     }
     
     void calculate(const global_params& params, const double *data, long size) override
@@ -263,20 +274,18 @@ struct stat_find_n_user : summary_module_vector<stat_find_n_user<Condition, Pos>
         
         if (Pos)
         {
-            for (long i = 0; i < get_n(); i++)
+            for (long i = 0; i < vector_module::get_n(); i++)
                 vector_module::m_values[i] = frame_to_ms(params, positions[i]);
         }
         else
         {
-            for (long i = 0; i < get_n(); i++)
+            for (long i = 0; i < vector_module::get_n(); i++)
                 vector_module::m_values[i] = (positions[i] == -1) ? infinity : data[positions[i]];
         }
     }
         
 private:
-           
-    long get_n() const { return static_cast<long>(vector_module::m_values.size()); }
-    
+               
     finder_module *m_finder;
 };
 
@@ -459,28 +468,20 @@ private:
 // Generic longest crossings user module
 
 template <template <class T> class Op1, template <class T> class Op2, bool Both>
-struct stat_longest_crossings_user : summary_module_vector<stat_longest_crossings_user<Op1, Op2, Both>>
+struct stat_longest_crossings_user : summary_module_vector_n<stat_longest_crossings_user<Op1, Op2, Both>>
 {
     using crossings_module = longest_crossings<Op1, Op2>;
-    using vector_module = summary_module_vector<stat_longest_crossings_user<Op1, Op2, Both>>;
+    using vector_module = summary_module_vector_n<stat_longest_crossings_user<Op1, Op2, Both>>;
     
-    stat_longest_crossings_user(long N)
+    stat_longest_crossings_user(long N) : vector_module(N)
     {
         vector_module::m_values.resize(Both ? N * 2 : N);
     }
     
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        long N = args.get_long(1, 1, 256);
-        return new stat_longest_crossings_user(N);
-    }
-    
-    auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
-    
     void add_requirements(graph& g) override
     {
         m_crossings = g.add_requirement(new crossings_module());
-        m_crossings->set_n(get_n());
+        m_crossings->set_n(vector_module::get_n());
     }
     
     void calculate(const global_params& params, const double *data, long size) override
@@ -489,7 +490,7 @@ struct stat_longest_crossings_user : summary_module_vector<stat_longest_crossing
         
         if (Both)
         {
-            for (long i = 0; i < get_n(); i++)
+            for (long i = 0; i < vector_module::get_n(); i++)
             {
                 vector_module::m_values[i * 2 + 0] = frame_to_ms(params, crossings[i].m_cross1);
                 vector_module::m_values[i * 2 + 1] = frame_to_ms(params, crossings[i].m_cross2);
@@ -497,18 +498,12 @@ struct stat_longest_crossings_user : summary_module_vector<stat_longest_crossing
         }
         else
         {
-            for (long i = 0; i < get_n(); i++)
+            for (long i = 0; i < vector_module::get_n(); i++)
                 vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_cross1);
         }
     }
     
 private:
-    
-    long get_n() const
-    {
-        long size = static_cast<long>(vector_module::m_values.size());
-        return Both ? size / 2 : size;
-    }
     
     crossings_module *m_crossings;
 };
