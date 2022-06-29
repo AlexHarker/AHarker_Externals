@@ -42,11 +42,21 @@ struct stat_module_simple : summary_module_single<T>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 };
 
-// Mean / Centroid / Stddev / Range / Median
+// Mean / Median / Centroid / Stddev / Range 
 
 struct stat_module_mean : stat_module_simple<stat_module_mean>
 {
     void calculate(const global_params& params, const double *data, long size) override;
+};
+
+struct stat_module_median : stat_module_simple<stat_module_median>
+{
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *data, long size) override;
+    
+private:
+    
+    aligned_vector<long> m_indices;
 };
 
 struct stat_module_centroid : stat_module_simple<stat_module_centroid>
@@ -62,16 +72,6 @@ struct stat_module_stddev : stat_module_simple<stat_module_stddev>
 struct stat_module_range : stat_module_simple<stat_module_range>
 {
     void calculate(const global_params& params, const double *data, long size) override;
-};
-
-struct stat_module_median : stat_module_simple<stat_module_median>
-{
-    void prepare(const global_params& params) override;
-    void calculate(const global_params& params, const double *data, long size) override;
-    
-private:
-    
-    aligned_vector<long> m_indices;
 };
 
 // Finding Stats

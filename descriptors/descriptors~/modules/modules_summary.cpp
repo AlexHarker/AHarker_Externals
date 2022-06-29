@@ -20,45 +20,79 @@ void summary_module_duration::calculate(const global_params& params, const doubl
     m_value = 1000.0 * params.m_signal_length / params.m_sr;
 }
 
-// Mean
+// Helper functions
 
-// FIX - all of these need to ignore spurious values I think
+double calculate_mean(const double *data, long size)
+{
+    double sum = 0.0;
+    long num_valid = 0;
+    
+    for (long i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            sum += data[i];
+            num_valid++;
+        }
+    }
+    
+    return num_valid ? sum / num_valid : infinity();
+}
+
+// Mean
 
 void stat_module_mean::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_mean(data, size);
+    m_value = calculate_mean(data, size);
 }
 
-// FIX - could be more efficient
+// Median
+
+void stat_module_median::prepare(const global_params& params)
+{
+    m_indices.resize(params.num_frames());
+}
+
+void stat_module_median::calculate(const global_params& params, const double *data, long size)
+{
+    long *indices = m_indices.data();
+    
+    sort_ascending(indices, data, size);
+    
+    // Ignore spurious values
+    
+    for (long i = size; i > 0; i--)
+    {
+        if (data[i-1] < infinity())
+        {
+            size = i;
+            break;
+        }
+    }
+    
+    m_value = data[indices[size >> 1]];
+}
+
+// Centroid
+// FIX - these three need to ignore spurious values and consider whether to cache or not for sub calculations
     
 void stat_module_centroid::calculate(const global_params& params, const double *data, long size)
 {
     m_value = stat_centroid(data, size);
 }
 
+// Standard Deviation
+
 void stat_module_stddev::calculate(const global_params& params, const double *data, long size)
 {
-    // FIX - could be more efficient
-
     m_value = stat_standard_deviation(data, size);
 }
+
+// Range
 
 void stat_module_range::calculate(const global_params& params, const double *data, long size)
 {
     m_value = stat_max(data, size) - stat_min(data, size);
-}
-
-void stat_module_median::prepare(const global_params& params)
-{
-    m_indices.resize(params.num_frames());
-}
-    
-void stat_module_median::calculate(const global_params& params, const double *data, long size)
-{
-    long *indices = m_indices.data();
-    
-    sort_ascending(indices, data, size);
-    m_value = data[indices[size >> 1]];
 }
 
 // Specifiers
@@ -129,22 +163,7 @@ void specifier_threshold::calculate(const global_params& params, const double *d
     double stat = -infinity();
     
     if (use_mean)
-    {
-        stat = 0.0;
-        long num_valid = 0;
-        
-        for (long i = 0; i < size; i++)
-        {
-            if (data[i] != infinity())
-            {
-                stat += data[i];
-                num_valid++;
-            }
-        }
-        
-        if (num_valid)
-            stat /= num_valid;
-    }
+        stat = calculate_mean(data, size);
     else if (use_peak)
     {
         for (long i = 0; i < size; i++)
