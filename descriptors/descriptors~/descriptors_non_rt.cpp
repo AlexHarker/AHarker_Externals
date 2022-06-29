@@ -167,8 +167,12 @@ int C74_EXPORT main()
     s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
     s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
 
-    s_setups.add_module("masktime", specifier_mask_time::setup);
+    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
+    s_setups.add_module("masktime", specifier_mask_time::setup);
+    s_setups.add_module("threshold", specifier_threshold::setup);
+    
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);

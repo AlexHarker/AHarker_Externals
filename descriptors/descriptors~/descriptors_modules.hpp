@@ -56,6 +56,11 @@ public:
         return (m_argc-- > 0) ? clip(atom_getfloat(m_argv++), lo, hi) : default_value;
     }
     
+    t_symbol *get_symbol(t_symbol *default_value)
+    {
+        return (m_argc-- > 0) ? atom_getsym(m_argv++) : default_value;
+    }
+    
     long argc() const { return m_argc; }
     
 private:

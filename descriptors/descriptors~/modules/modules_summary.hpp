@@ -143,13 +143,13 @@ struct specifier_mask_time : comparable_summary_specifier<specifier_mask_time>
         return new specifier_mask_time(time);
     }
     
-    specifier_mask_time(double time) : m_mask_time(time) {}
+    specifier_mask_time(double time = -1.0) : m_mask_time(time) {}
     
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
     
     void prepare(const global_params& params) override
     {        
-        double time = m_mask_time * 1000.0 * params.m_sr / params.m_hop_size;
+        double time = m_mask_time * params.m_sr / (1000.0 * params.m_hop_size);
         m_mask_span = m_mask_time < 0.0 ? 0 : time;
     }
         
@@ -168,6 +168,111 @@ private:
     long m_mask_span = 0;
 };
 
+// Threshold
+
+struct specifier_threshold : comparable_summary_specifier<specifier_threshold>
+{
+    enum class mode { abs, peak_mul, peak_add, peak_db, mean_mul, mean_add, mean_db };
+    
+    static user_module *setup(const global_params& params, module_arguments& args)
+    {
+        double threshold = args.get_double(0.0, -std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
+        t_symbol *type_specifier = args.get_symbol(gensym("abs"));
+        mode type = mode::abs;
+        
+        if (type_specifier == gensym("mean_mul"))
+            type = mode::mean_mul;
+        else if (type_specifier == gensym("mean_add"))
+            type = mode::mean_add;
+        else if (type_specifier == gensym("mean_db"))
+            type = mode::mean_db;
+        else if (type_specifier == gensym("peak_mul"))
+            type = mode::peak_mul;
+        else if (type_specifier == gensym("peak_add"))
+            type = mode::peak_add;
+        else if (type_specifier == gensym("peak_db"))
+            type = mode::peak_db;
+        
+        return new specifier_threshold(threshold, type);
+    }
+    
+    specifier_threshold(double threshold = std::numeric_limits<double>::infinity(), mode type = mode::abs)
+    : m_threshold(threshold), m_type(type) {}
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        const bool use_mean = m_type == mode::mean_mul || m_type == mode::mean_add || m_type == mode::mean_db;
+        const bool use_peak = m_type == mode::peak_mul || m_type == mode::peak_add || m_type == mode::peak_db;
+        const bool use_db = m_type == mode::mean_db || m_type == mode::peak_db;
+        
+        const double specified = use_db ? dbtoa(m_threshold) : m_threshold;
+        
+        double stat = -std::numeric_limits<double>::infinity();
+        
+        if (use_mean)
+        {
+            stat = 0.0;
+            long num_valid = 0;
+            
+            for (long i = 0; i < size; i++)
+            {
+                if (data[i] != std::numeric_limits<double>::infinity())
+                {
+                    stat += data[i];
+                    num_valid++;
+                }
+            }
+            
+            if (num_valid)
+                stat /= num_valid;
+        }
+        else if (use_peak)
+        {
+            for (long i = 0; i < size; i++)
+            {
+                if (data[i] != std::numeric_limits<double>::infinity())
+                    stat = std::max(stat, data[i]);
+            }
+        }
+            
+        switch (m_type)
+        {
+            case mode::abs:
+                m_calculated_threshold = specified;
+                break;
+            case mode::mean_mul:
+            case mode::mean_db:
+            case mode::peak_mul:
+            case mode::peak_db:
+                m_calculated_threshold = specified * stat;
+                break;
+            case mode::mean_add:
+            case mode::peak_add:
+                m_calculated_threshold = specified + stat;
+        }
+    }
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    
+    void update_to_final(const module *m) override
+    {
+        auto b = dynamic_cast<const specifier_threshold *>(m);
+        if (b->m_threshold != std::numeric_limits<double>::infinity())
+        {
+            m_threshold = b->m_threshold;
+            m_type = b->m_type;
+        }
+    }
+    
+    double get_threshold() { return m_calculated_threshold; }
+    
+private:
+    
+    double m_threshold = std::numeric_limits<double>::infinity();
+    double m_calculated_threshold = -1.0;
+    mode m_type = mode::abs;
+};
+
 // Generic underlying finding module
 
 template <class Condition>
@@ -180,7 +285,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     void add_requirements(graph& g) override
     {
         m_mask = g.add_requirement(new storage_mask());
-        m_mask_time = g.add_requirement(new specifier_mask_time(-1.0));
+        m_mask_time = g.add_requirement(new specifier_mask_time());
     }
     
     void prepare(const global_params& params) override
@@ -233,9 +338,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     long get_n() const { return m_n; }
     
 private:
-    
-    // FIX - use common mask/mask params for efficiency
-    
+        
     storage_mask *m_mask;
     specifier_mask_time *m_mask_time;
     
@@ -336,5 +439,45 @@ using stat_module_peak = stat_find_n_user<condition_triple<std::greater>, false>
 using stat_module_trough = stat_find_n_user<condition_triple<std::less>, false>;
 using stat_module_peak_pos = stat_find_n_user<condition_triple<std::greater>, true>;
 using stat_module_trough_pos = stat_find_n_user<condition_triple<std::less>, true>;
+
+// Ratio user module
+
+template <template <class T> class Op>
+struct stat_module_ratio : stat_module_simple<stat_module_ratio<Op>>
+{
+    using base = stat_module_simple<stat_module_ratio<Op>>;
+    
+    void add_requirements(graph& g) override
+    {
+        m_threshold = g.add_requirement(new specifier_threshold());
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        double threshold = m_threshold->get_threshold();
+        
+        long num_cond = 0;
+        long num_valid = 0;
+        
+        for (long i = 0; i < size; i++)
+        {
+            if (data[i] != std::numeric_limits<double>::infinity())
+            {
+                if (Op<double>()(data[i], threshold))
+                    num_cond++;
+                num_valid++;
+            }
+        }
+        
+        base::m_value = num_valid ? static_cast<double>(num_cond) / num_valid : 0.0;
+    }
+    
+    specifier_threshold *m_threshold;
+};
+
+// Final user module types
+
+using stat_module_ratio_above = stat_module_ratio<std::greater>;
+using stat_module_ratio_below = stat_module_ratio<std::less>;
 
 #endif /* _SUMMARY_MODULES_HPP_ */
