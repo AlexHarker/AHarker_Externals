@@ -22,6 +22,16 @@ void summary_module_duration::calculate(const global_params& params, const doubl
 
 // Helper functions
 
+double ms_to_frame(const global_params& params, double ms)
+{
+    return ms * params.m_sr / ( params.m_hop_size * 1000.0);
+}
+
+double frame_to_ms(const global_params& params, double frame)
+{
+    return (frame * params.m_hop_size * 1000.0) / params.m_sr;
+}
+
 double calculate_mean(const double *data, long size)
 {
     double sum = 0.0;
@@ -37,6 +47,22 @@ double calculate_mean(const double *data, long size)
     }
     
     return num_valid ? sum / num_valid : infinity();
+}
+
+double calculate_max(const double *data, long size)
+{
+    double maximum = infinity();
+    long i;
+    
+    for (i = 0; i < size; i++)
+        if (data[i] != infinity())
+            maximum = data[i];
+    
+    for (; i < size; i++)
+        if (data[i] != infinity())
+            maximum = std::max(maximum, data[i]);
+    
+    return maximum;
 }
 
 // Mean
@@ -63,7 +89,7 @@ void stat_module_median::calculate(const global_params& params, const double *da
     
     for (long i = size; i > 0; i--)
     {
-        if (data[i-1] < infinity())
+        if (data[i-1] != infinity())
         {
             size = i;
             break;
@@ -74,14 +100,26 @@ void stat_module_median::calculate(const global_params& params, const double *da
 }
 
 // Centroid
-// FIX - these three need to ignore spurious values and consider whether to cache or not for sub calculations
     
 void stat_module_centroid::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_centroid(data, size);
+    double sum = 0.0;
+    double weight_sum = 0.0;
+    
+    for (long i = 0; i < size; i++)
+    {
+        if (data[i] != infinity())
+        {
+            sum += static_cast<double>(i) * data[i];;
+            weight_sum += data[i];
+        }
+    }
+
+    m_value = weight_sum ? frame_to_ms(params, sum / weight_sum) : infinity();
 }
 
 // Standard Deviation
+// FIX - this needs to ignore spurious values and consider whether to cache or not for the mean calculation
 
 void stat_module_stddev::calculate(const global_params& params, const double *data, long size)
 {
@@ -92,7 +130,7 @@ void stat_module_stddev::calculate(const global_params& params, const double *da
 
 void stat_module_range::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = stat_max(data, size) - stat_min(data, size);
+    m_value = calculate_max(data, size) - stat_min(data, size);
 }
 
 // Specifiers
@@ -114,8 +152,7 @@ void specifier_mask_time::update_to_final(const module *m)
 
 void specifier_mask_time::prepare(const global_params& params)
 {
-    double time = m_mask_time * params.m_sr / (1000.0 * params.m_hop_size);
-    m_mask_span = m_mask_time < 0.0 ? 0 : time;
+    m_mask_span = m_mask_time < 0.0 ? 0 : ms_to_frame(params, m_mask_time);
 }
     
 // Threshold
@@ -160,18 +197,16 @@ void specifier_threshold::calculate(const global_params& params, const double *d
     
     const double specified = use_db ? dbtoa(m_threshold) : m_threshold;
     
+    // Calculate stat if needed
+    
     double stat = -infinity();
     
     if (use_mean)
         stat = calculate_mean(data, size);
     else if (use_peak)
-    {
-        for (long i = 0; i < size; i++)
-        {
-            if (data[i] != infinity())
-                stat = std::max(stat, data[i]);
-        }
-    }
+        stat = calculate_max(data, size);
+    
+    // Return the final threshold
     
     switch (m_type)
     {

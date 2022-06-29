@@ -170,6 +170,8 @@ int C74_EXPORT main()
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
     s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
+    // Specifiers
+    
     s_setups.add_module("masktime", specifier_mask_time::setup);
     s_setups.add_module("threshold", specifier_threshold::setup);
     
