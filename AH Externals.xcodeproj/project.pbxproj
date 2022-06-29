@@ -38,8 +38,8 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B80B9306183BD5470014C9C4 /* PBXTargetDependency */,
-				B80B9308183BD5500014C9C4 /* PBXTargetDependency */,
+				B875823A284E39AB00F7FC76 /* PBXTargetDependency */,
+				B875823C284E39AB00F7FC76 /* PBXTargetDependency */,
 			);
 			name = descriptors;
 			productName = "All Externals";
@@ -93,7 +93,6 @@
 			dependencies = (
 				B80B91BB183BD1490014C9C4 /* PBXTargetDependency */,
 				B80B91BD183BD14D0014C9C4 /* PBXTargetDependency */,
-				B80B91BF183BD1520014C9C4 /* PBXTargetDependency */,
 			);
 			name = "random numbers";
 			productName = "All Externals";
@@ -159,9 +158,9 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B8C287AA22781C5100F110B2 /* PBXTargetDependency */,
 				B82F13511465FA90007FAC6A /* PBXTargetDependency */,
 				B82F134F1465FA90007FAC6A /* PBXTargetDependency */,
+				B8D138F728508C9B00D282A8 /* PBXTargetDependency */,
 				B82F134B1465FA90007FAC6A /* PBXTargetDependency */,
 				B82F13491465FA90007FAC6A /* PBXTargetDependency */,
 				B82F13531465FA90007FAC6A /* PBXTargetDependency */,
@@ -181,7 +180,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				B80B95CD183BDBFE0014C9C4 /* PBXTargetDependency */,
 				B80B95CF183BDC1B0014C9C4 /* PBXTargetDependency */,
 				B80B95D1183BDC240014C9C4 /* PBXTargetDependency */,
 				B80B95D3183BDC3D0014C9C4 /* PBXTargetDependency */,
@@ -594,13 +592,6 @@
 			remoteGlobalIDString = B8E15A0911E33C5500FA3CFA;
 			remoteInfo = randfloats;
 		};
-		B80B91BE183BD1520014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0E8A1465F316007FAC6A /* randomvals~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8E15A1D11E33C7500FA3CFA;
-			remoteInfo = "randomvals msp + max";
-		};
 		B80B91CD183BD1890014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B82F0ED51465F455007FAC6A /* ajh.wiiremote.xcodeproj */;
@@ -649,20 +640,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = B8998A4811CECDFB0028A17C;
 			remoteInfo = "entrymatcher~";
-		};
-		B80B9305183BD5470014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56C851465EF2300FE85B0 /* descriptors~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8FE3F4010986CAE00780AF9;
-			remoteInfo = Both;
-		};
-		B80B9307183BD5500014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B8C3050A12606AE500226E73;
-			remoteInfo = Both;
 		};
 		B80B9311183BD5640014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -888,13 +865,6 @@
 			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
 			remoteInfo = "ibuftable~";
 		};
-		B80B95CC183BDBFE0014C9C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B82F0DFD1465F151007FAC6A /* ibufconcatenate~.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B88E3A9711CE72A000FD3E96;
-			remoteInfo = All;
-		};
 		B80B95CE183BDC1B0014C9C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B82F0E0D1465F164007FAC6A /* ibuffer~.xcodeproj */;
@@ -1091,6 +1061,20 @@
 			remoteGlobalIDString = B8ECA03F0F0A57A800B26D31;
 			remoteInfo = "dynamic.out~";
 		};
+		B8758239284E39AB00F7FC76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = entrymatcher;
+		};
+		B875823B284E39AB00F7FC76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8998A3B11CECDFB0028A17C;
+			remoteInfo = "entrymatcher~";
+		};
 		B8758EC326A8DCD7001005A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C301465EDEA00FE85B0 /* dynamic~.xcodeproj */;
@@ -1147,12 +1131,12 @@
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "voicemanager~";
 		};
-		B8C287A922781C5100F110B2 /* PBXContainerItemProxy */ = {
+		B8D138F628508C9B00D282A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = B8B56CA21465EF4A00FE85B0 /* entrymatcher.xcodeproj */;
+			containerPortal = B8B56C161465ED1500FE85B0 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = B8C3050A12606AE500226E73;
-			remoteInfo = Both;
+			remoteGlobalIDString = B82F10C71465F907007FAC6A;
+			remoteInfo = descriptors;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2504,25 +2488,10 @@
 			name = randfloats;
 			targetProxy = B80B91BC183BD14D0014C9C4 /* PBXContainerItemProxy */;
 		};
-		B80B91BF183BD1520014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "randomvals msp + max";
-			targetProxy = B80B91BE183BD1520014C9C4 /* PBXContainerItemProxy */;
-		};
 		B80B91D9183BD1AE0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = meandev;
 			targetProxy = B80B91D8183BD1AE0014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B9306183BD5470014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Both;
-			targetProxy = B80B9305183BD5470014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B9308183BD5500014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Both;
-			targetProxy = B80B9307183BD5500014C9C4 /* PBXContainerItemProxy */;
 		};
 		B80B941D183BD6DF0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2568,11 +2537,6 @@
 			isa = PBXTargetDependency;
 			name = "tsah~";
 			targetProxy = B80B951E183BDA2A0014C9C4 /* PBXContainerItemProxy */;
-		};
-		B80B95CD183BDBFE0014C9C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = All;
-			targetProxy = B80B95CC183BDBFE0014C9C4 /* PBXContainerItemProxy */;
 		};
 		B80B95CF183BDC1B0014C9C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2714,15 +2678,25 @@
 			name = "dynamic.out~";
 			targetProxy = B846140D26D3E15100831079 /* PBXContainerItemProxy */;
 		};
+		B875823A284E39AB00F7FC76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = entrymatcher;
+			targetProxy = B8758239284E39AB00F7FC76 /* PBXContainerItemProxy */;
+		};
+		B875823C284E39AB00F7FC76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "entrymatcher~";
+			targetProxy = B875823B284E39AB00F7FC76 /* PBXContainerItemProxy */;
+		};
 		B8A3866E26AEA1170003FA46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "voicemanager~";
 			targetProxy = B8A3866D26AEA1170003FA46 /* PBXContainerItemProxy */;
 		};
-		B8C287AA22781C5100F110B2 /* PBXTargetDependency */ = {
+		B8D138F728508C9B00D282A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = Both;
-			targetProxy = B8C287A922781C5100F110B2 /* PBXContainerItemProxy */;
+			target = B82F10C71465F907007FAC6A /* descriptors */;
+			targetProxy = B8D138F628508C9B00D282A8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

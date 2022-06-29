@@ -621,7 +621,6 @@ double get_noise_ratio(t_descriptors *x, long *median_indices, float *median_amp
 	
 	if (sum2)
 	{
-        // FIX - check median span
         percentilefilter(median_amplitudes, amplitudes, num_bins, 50.0, median_span, kEdgeFold);
 //		medianfilter(median_amplitudes, amplitudes, num_bins, median_span);
 		
@@ -749,16 +748,14 @@ void complex_mult_conjugate(FFT_SPLIT_COMPLEX_F in1, FFT_SPLIT_COMPLEX_F in2, lo
     VecType *in_imag2 = reinterpret_cast<VecType *>(in2.imagp);
 	
     VecType vscale(scale);
-	
-	long i;
-	
+    
 	float nyquist1 = in1.imagp[0];
 	float nyquist2 = in2.imagp[0];
 		
 	in1.imagp[0] = 0.f;
 	in2.imagp[0] = 0.f;	
 	
-	for (i = 0; i < length >> 2; i++)
+	for (long i = 0; i < length >> 2; i++)
 	{
         VecType in_real1_temp = in_real1[i];
         VecType in_real2_temp = in_real2[i];
@@ -891,26 +888,26 @@ double get_pitch(t_descriptors *x, float *raw_frame, float *ac_coeff, long lengt
 
 double get_roughness(float *freqs, float *amps, long num_sines)
 {
-	double e; 																// base of natural logarithms
-	double cb_int; 															// interval between two partials in critical bandwidths
-	double cbw; 															// critical bandwidth according to P&L, H&K
-	double index; 															// for standard curve of P&L
-	double mean_freq; 														// mean frequency of two cpts
-	double numerator, denominator; 											// for calculating H&K Eq. (3)
-	double ratio; 															// temporary variable
-	double standard_curve; 													// P&L Fig. 10, H&K Fig. 1
+	double e; 							            // base of natural logarithms
+	double cb_int; 								    // interval between two partials in critical bandwidths
+	double cbw; 							        // critical bandwidth according to P&L, H&K
+	double index; 								    // for standard curve of P&L
+	double mean_freq; 							    // mean frequency of two cpts
+	double numerator, denominator; 				    // for calculating H&K Eq. (3)
+	double ratio; 							        // temporary variable
+	double standard_curve; 						    // P&L Fig. 10, H&K Fig. 1
 	double min_amp = 0;
 	
 	long i, j;
 	
 	// Parameters for analytic version of standard curve of P&L:
 	
-	double cb_int0 = 0.25; 													// interval for max roughness (P&L: ca. 0.25)
-	double cb_int1 = 1.2; 													// interval beyond which roughness is negligible (P&L: 1.2)
+	double cb_int0 = 0.25; 						    // interval for max roughness (P&L: ca. 0.25)
+	double cb_int1 = 1.2; 						    // interval beyond which roughness is negligible (P&L: 1.2)
 	double cb_int0_recip;
 		
-	index = 2.; 															// the bigger index, the narrower the curve
-	e = exp(1); 															// 2.7182818 - base of natural log
+	index = 2.; 								    // the bigger index, the narrower the curve
+	e = exp(1); 							        // 2.7182818 - base of natural log
 	cb_int0_recip = 1. / cb_int0;
 	
 	numerator = 0; 
@@ -928,7 +925,7 @@ double get_roughness(float *freqs, float *amps, long num_sines)
 					
 					// The below is from H&K p. 5
 					
-					cbw = 1.72 * pow (mean_freq, 0.65); 									
+					cbw = 1.72 * pow(mean_freq, 0.65);
 					cb_int = (fabsf(freqs[j] - freqs[i])) / cbw; 
 					
 					// (Otherwise roughness is negligible) (save computing time)

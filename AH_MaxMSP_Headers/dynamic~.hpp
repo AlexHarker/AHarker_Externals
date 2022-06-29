@@ -60,9 +60,9 @@ static inline void *dynamic_get_parent()
     return dynamic_is_dynamic_host(obj) ? obj : nullptr;
 }
 
-static inline long dynamic_get_patch_index(void *obj)
+static inline t_atom_long dynamic_get_patch_index(void *obj)
 {
-    long index = 0;
+    t_atom_long index = 0;
     
     if (dynamic_is_dynamic_host(obj))
     {

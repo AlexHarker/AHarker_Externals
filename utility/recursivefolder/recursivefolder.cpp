@@ -293,7 +293,7 @@ void recursive_folder_types(t_recursive_folder *x, t_symbol *s, long argc, t_ato
     
     x->f_numtypes = 0;
     
-    argc = std::max(argc, max_types);
+    argc = std::min(argc, max_types);
     
     while (argc--)
     {

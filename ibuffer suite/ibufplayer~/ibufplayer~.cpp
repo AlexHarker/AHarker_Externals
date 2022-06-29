@@ -165,7 +165,7 @@ int C74_EXPORT main()
     
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibufplayer, kInterpCubicHermite>(this_class, "interp");
+    add_ibuffer_interp_attribute<t_ibufplayer, InterpType::CubicHermite>(this_class, "interp");
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
@@ -213,7 +213,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     for (long i = 0 ; i < max_num_chans; i++)
         x->vols[i] = 1.0;
     
-    x->interp_type = kInterpCubicHermite;
+    x->interp_type = InterpType::CubicHermite;
     
     x->done_clock = clock_new(x, (method) ibufplayer_done_bang);
     
@@ -369,6 +369,20 @@ void ibufplayer_update_phase(U *&positions, T *&phases, U &pos, const U &speed, 
     pos += speed;
 }
 
+template <class T>
+long ibufplayer_varispeed_phase(const T *in, double *positions, T *phases, double& pos, const phase_info &info, long vec_size)
+{
+    for (long i = 0; i < vec_size; i++)
+    {
+        if (info.out_of_range(pos))
+            return i;
+        
+        ibufplayer_update_phase(positions, phases, pos, *in++ * info.speed(), info);
+    }
+    
+    return vec_size;
+}
+
 template <int N, class T>
 void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const phase_info &info, long n_vecs)
 {
@@ -422,7 +436,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
         {
             x->playing = true;
             
-            InterpType interp_type = info.speed_is_int() ? kInterpNone : x->interp_type;
+            InterpType interp_type = info.speed_is_int() ?InterpType::None : x->interp_type;
             
             // Calculate the phasor block
             
@@ -430,13 +444,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
             
             if (info.sig_control())
             {
-                for (to_do = 0; to_do < vec_size; to_do++)
-                {
-                    if (info.out_of_range(drive))
-                        break;
-                    
-                    ibufplayer_update_phase(positions, phase_out, drive, *in++ * info.speed(), info);
-                }
+                to_do = ibufplayer_varispeed_phase(in, positions, phase_out, drive, info, vec_size);
             }
             else
             {

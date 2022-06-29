@@ -165,7 +165,6 @@ void descriptors_new_common(t_descriptors *x, long max_fft_size_log2, long desci
 	
 	if (1 << max_fft_size_log2 < 4096)
 		descriptors_fft_params_internal (x, 1 << max_fft_size_log2, 0, 0, ps_nullsym);	
-
 	else
 		descriptors_fft_params_internal (x, 4096, 0, 0, ps_nullsym);	
 }
@@ -174,7 +173,7 @@ void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
     {
-		sprintf(s,"descriptors Out");
+		sprintf(s,"Descriptors Out");
 	}
 	else 
 	{
@@ -185,7 +184,7 @@ void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
 // FFT params and Window Generation
 
 
-long int_log2 (long in, long *inexact)
+long int_log2(long in, long *inexact)
 {
 	// Helper to calculate fft sizes log 2
 	
@@ -217,25 +216,25 @@ long descriptors_max_fft_size(t_descriptors *x, long max_fft_size)
 	// Returns the max fft size log 2 after checking range and value
 	
 	long inexact = 0;
-	long max_fft_size_log2 = int_log2 (max_fft_size, &inexact);
+	long max_fft_size_log2 = int_log2(max_fft_size, &inexact);
 	
 	if (max_fft_size_log2 < 0)
 		max_fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2; 
 
 	if (max_fft_size_log2 > MAX_FFT_SIZE_LOG2)
 	{
-		error ("descriptors(rt)~: maximum fft size too large - using %ld", 1 << MAX_FFT_SIZE_LOG2);
+		object_error((t_object *) x, "maximum fft size too large - using %ld", 1 << MAX_FFT_SIZE_LOG2);
 		max_fft_size_log2 = MAX_FFT_SIZE_LOG2;
 	}
 	
 	if (max_fft_size_log2 && max_fft_size_log2 < MIN_FFT_SIZE_LOG2)
 	{
-		error ("descriptors(rt)~: maximum fft size too small - using %ld", 1 << MIN_FFT_SIZE_LOG2);
+        object_error((t_object *) x, "maximum fft size too small - using %ld", 1 << MIN_FFT_SIZE_LOG2);
 		max_fft_size_log2 = MIN_FFT_SIZE_LOG2;
 	}
 
 	if (inexact)
-		error ("descriptors(rt)~: maximum fft size must be power of two - using %ld", 1 << max_fft_size_log2);
+        object_error((t_object *) x, "maximum fft size must be power of two - using %ld", 1 << max_fft_size_log2);
 
 	return max_fft_size_log2;
 }
@@ -249,7 +248,6 @@ void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom 
 	long window_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
 	t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : ps_nullsym;
 	
-		
 	// Ignore blank argument set (keep current values)
 	
 	if (argc < 0)
@@ -327,7 +325,6 @@ void descriptors_fft_params_internal(t_descriptors *x, long fft_size, long hop_s
 	
 	x->window_size = window_size;
 	x->reset_fft = 1;
-	
 }
 
 void descriptors_generate_window(t_descriptors *x, float *window, long window_size, long fft_size, enum WindowType window_select)
@@ -361,8 +358,6 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
     VecType *v_amplitudes = reinterpret_cast<VecType *>(amplitudes);
     VecType *real_data = reinterpret_cast<VecType *>(raw_fft_frame.realp);
     VecType *imag_data = reinterpret_cast<VecType *>(raw_fft_frame.imagp);
-
-    // FIX - parameters where needed.
     
     window_functions::params params;
     
@@ -427,7 +422,7 @@ void descriptors_generate_window(t_descriptors *x, float *window, long window_si
 
 // Zero Ring Buffers
 
-void descriptors_zero_ring_buffers (t_descriptors *x, long fft_size)
+void descriptors_zero_ring_buffers(t_descriptors *x, long fft_size)
 {
 	double *cumulate_buffer = x->cumulate;
 	float *ring_buffer = x->amps_buffer;
@@ -460,7 +455,7 @@ void descriptors_energy_thresh (t_descriptors *x, t_symbol *msg, short argc, t_a
 	}
 	
 	if (argc > 2)
-		error("descriptors(rt)~: too many arguments to energythresh message");
+		object_error((t_object *) x, "too many arguments to energythresh message");
 }
 
 // Calculate Raw Per Frame descriptors
@@ -812,16 +807,6 @@ double calc_pf_descriptor(t_descriptors *x, float *raw_frame, float *windowed_fr
 }
 
 // Curves Dependent on sr and FFT SIze 
-
-void calc_curves(t_descriptors *x)
-{
-	long fft_size_halved = x->fft_size >> 1;
-	double bin_freq = x->sr / (double) x->fft_size;
-	
-	calc_log_freq_curve(x->log_freq, fft_size_halved, bin_freq);
-	calc_loudness_curve(x->loudness_curve, fft_size_halved, bin_freq);
-}
-
 
 void calc_log_freq_curve(double *log_freq, long num_bins, double bin_freq)
 {

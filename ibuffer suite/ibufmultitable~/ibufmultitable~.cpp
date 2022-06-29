@@ -67,7 +67,7 @@ int C74_EXPORT main()
     
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibufmultitable, kInterpLinear>(this_class, "interp");
+    add_ibuffer_interp_attribute<t_ibufmultitable, InterpType::Linear>(this_class, "interp");
     
     CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibufmultitable, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
@@ -117,7 +117,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv)
     x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
     x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
     
-    x->interp_type = kInterpLinear;
+    x->interp_type = InterpType::Linear;
     
     // Set attributes from arguments
     
