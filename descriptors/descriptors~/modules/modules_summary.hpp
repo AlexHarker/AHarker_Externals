@@ -163,7 +163,13 @@ struct storage_mask : summary_module, comparable_module<storage_mask>
     void prepare(const global_params& params) override { m_mask.resize(params.num_frames()); }
     void calculate(const global_params& params, const double *data, long size) override {}
     
-    std::vector<bool> &get_mask() { return m_mask; }
+    std::vector<bool> &get_reset_mask(const double *data, long size)
+    {
+        for (long i = 0; i < size; i++)
+            m_mask[i] = data[i] == std::numeric_limits<double>::infinity();
+        
+        return m_mask;
+    }
     
 private:
     
@@ -240,7 +246,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        std::vector<bool> &mask = m_mask->get_mask();
+        std::vector<bool> &mask = m_mask->get_reset_mask(data, size);
         long mask_span = m_mask_time->get_mask_span();
         
         // Reset the mask
@@ -448,57 +454,41 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
         
         const auto crossings = m_crossings.data();
         
-        std::vector<bool> &mask = m_mask->get_mask();
+        std::vector<bool> &mask = m_mask->get_reset_mask(data, size);
         double threshold = m_threshold->get_threshold();
         long mask_span = m_mask_time->get_mask_span();
                   
         long num_found = 0;
         
-        // Reset the mask
-        
-        for (long j = 0; j < size; j++)
-            mask[j] = data[j] == std::numeric_limits<double>::infinity();
+        // Loop per extremity
         
         for (long i = 0; i < m_n; i++)
         {
             // Assume there is not another valid value
             
+            double compare = threshold;
             long pos = -1;
                         
-            // Search for the next largest peak value
+            // Search for the next most extreme value
             
             for (long j = 0; j < size; j++)
             {
-                if (!mask[j] && Op1<double>()(data[j], threshold) && j && Op1<double>()(data[j], data[j - 1]))
+                if (!mask[j] && Op1<double>()(data[j], compare) && (!j || Op1<double>()(data[j], data[j - 1])))
                 {
-                    pos = j;
+                    long test_pos = j;
+                                        
+                    // Now search right until the value changes
                     
-                    // FIX - this needs review in the original code and either replicating or correcting
-                    /*
-                    // Now search right to see if it is a peak value
-                    
-                    for (; j < size - 1; j++)
+                    for (j++; j < size - 1; j++)
+                        if (data[test_pos] != data[j])
+                            break;
+                        
+                    if (data[test_pos] >= data[j])
                     {
-                        // If the next value is not equal then break (we know if it is a peak or not)
-                        
-                        if (data[j] > data[j + 1])
-                        {
-                            pos = new_max_pos;
-                            break;
-                        }
-                        
-                        if (data[j] < data[j + 1])
-                            break;
-                        
-                        prev_val = current_val;
-                        current_val = next_val;
+                        compare = data[test_pos];
+                        pos = test_pos;
                     }
-                    
-                    if (current_val >= prev_val)
-                        max_pos = new_max_pos;
-                     */
                 }
-                 
             }
             
             // If pos is invalid then we are done
