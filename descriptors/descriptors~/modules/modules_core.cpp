@@ -332,8 +332,6 @@ void module_autocorrelation::prepare(const global_params& params)
 
 void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
 {
-    using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
     auto full_frame = m_full_frame.data();
     auto half_frame = m_half_frame.data();
     

@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <limits>
 
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
+
+using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Duration
 
