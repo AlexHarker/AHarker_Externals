@@ -357,4 +357,105 @@ struct stat_module_ratio : stat_module_simple<stat_module_ratio<Op>>
 using stat_module_ratio_above = stat_module_ratio<std::greater>;
 using stat_module_ratio_below = stat_module_ratio<std::less>;
 
+// Longest Crossings
+
+// Generic underlying longest crossings module
+
+template <template <class T> class Op>
+struct longest_crossings : summary_module, comparable_module<longest_crossings<Op>>
+{
+    struct crossing
+    {
+        crossing() : m_cross1(-1), m_cross2(-1) {}
+        crossing(long cross1, long cross2) : m_cross1(cross1), m_cross2(cross2) {}
+        
+        long length() const { return m_cross2 - m_cross1; }
+        
+        long m_cross1;
+        long m_cross2;
+    };
+    
+    longest_crossings() : summary_module(), m_n(1) {}
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    
+    void add_requirements(graph& g) override
+    {
+        m_mask_time = g.add_requirement(new specifier_mask_time());
+        m_threshold = g.add_requirement(new specifier_threshold());
+    }
+    
+    void prepare(const global_params& params) override
+    {
+        m_crossings.resize(m_n);
+    }
+    
+    void calculate(const global_params& params, const double *data, long size) override
+    {
+        constexpr double infinity = std::numeric_limits<double>::infinity();
+        
+        double threshold = m_threshold->get_threshold();
+        long mask_span = m_mask_time->get_mask_span();
+
+        long cross1, cross2, insert;
+        long num_found = 0;
+        
+        for (long i = 0; i < size; i = cross2)
+        {
+            // Find the next crossing over the threshold
+            
+            for (cross1 = i; cross1 < size; cross1++)
+                if (data[cross1] != infinity && Op<double>()(data[cross1], threshold))
+                    break;
+            
+            // Exit if we've reached the end without finding a crossing point
+            
+            if (cross1 == size)
+                break;
+            
+            // Jump by the mask size then find out when the value crosses back through the threshold
+            
+            for (cross2 = cross1 + mask_span; cross2 < size; cross2++)
+                if (data[cross2] != infinity && Op<double>()(data[cross2], threshold))
+                    break;
+
+            crossing cross(cross1, std::max(cross2, size));
+
+            // If this is longer than any of the stored values then move others and store this crossing
+
+            for (insert = 0; insert < num_found; insert++)
+                if (cross.length() > m_crossings[insert].length())
+                    break;
+            
+            num_found = std::min(num_found + 1, m_n);
+  
+            if (insert < num_found)
+            {
+                for (long j = num_found - 1; j >= insert + 1; j--)
+                    m_crossings[j] = m_crossings[j - 1];
+                                
+                m_crossings[insert] = cross;
+            }
+        }
+        
+        // Store defaults if there aren't any more values to be found
+        
+        for (long i = num_found; i < m_n; i++)
+            m_crossings[i] = crossing();
+    }
+    
+    void set_n(long N) { m_n = std::max(m_n, N); }
+    
+    const crossing *get_crossings() const { return m_crossings.data(); }
+    long get_n() const { return m_n; }
+    
+private:
+    
+    specifier_mask_time *m_mask_time;
+    specifier_threshold *m_threshold;
+
+    aligned_vector<crossing> m_crossings;
+    long m_n;
+};
+
 #endif /* _SUMMARY_MODULES_HPP_ */
