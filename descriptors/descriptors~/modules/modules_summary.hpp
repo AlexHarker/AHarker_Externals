@@ -646,7 +646,6 @@ enum class cross_mode { value, pos, cross, crossings };
 template <class Crossings, cross_mode Mode>
 struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossings, Mode>>
 {
-    using crossings_module = Crossings;
     using vector_module = summary_module_vector_n<stat_crossings_user<Crossings, Mode>>;
     
     stat_crossings_user(long N) : vector_module(N)
@@ -656,7 +655,7 @@ struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossin
     
     void add_requirements(graph& g) override
     {
-        m_crossings = g.add_requirement(new crossings_module());
+        m_crossings = g.add_requirement(new Crossings());
         m_crossings->set_n(vector_module::get_n());
     }
     
@@ -696,7 +695,7 @@ struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossin
     
 private:
     
-    crossings_module *m_crossings;
+    Crossings *m_crossings;
 };
 
 using extreme_above = extreme_crossings<std::greater, std::less>;
