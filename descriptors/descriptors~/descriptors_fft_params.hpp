@@ -30,7 +30,10 @@ static long check_fft_size(t_object *x, const char *str, long fft_size, long max
     // Check if the default is required
     
     if (use_defaults && fft_size_log2 < 0)
+    {
         fft_size_log2 = DEFAULT_MAX_FFT_SIZE_LOG2;
+        fft_size = 1 << fft_size_log2;
+    }
     
     // Check for valid fft size
     
@@ -46,7 +49,7 @@ static long check_fft_size(t_object *x, const char *str, long fft_size, long max
         object_error(x,  "%s is too large - using %ld", str, 1 << fft_size_log2);
     }
     
-    if (fft_size != 1 << fft_size_log2)
+    if (fft_size != (1 << fft_size_log2))
         object_error(x, "%s must be power of two - using %ld", str, 1 << fft_size_log2);
     
     return fft_size_log2;
