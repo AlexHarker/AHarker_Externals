@@ -2,13 +2,7 @@
 #ifndef _SUMMARY_MODULES_HPP_
 #define _SUMMARY_MODULES_HPP_
 
-#include "descriptors_modules.hpp"
-
-#include <Statistics.hpp>
-
-#include <algorithm>
-#include <tuple>
-#include <vector>
+#include "descriptors_summary_graph.hpp"
 
 template <class T>
 struct summary_module_single : summary_module, user_module_single<T>
@@ -28,17 +22,11 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
 {
     summary_module_duration() : summary_module_single(true) {}
     
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        return new summary_module_duration();
-    }
+    static user_module *setup(const global_params& params, module_arguments& args);
     
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        m_value = 1000.0 * params.m_signal_length / params.m_sr;
-    }
+    void calculate(const global_params& params, const double *data, long size) override;
 };
 
 // Stats
@@ -54,60 +42,32 @@ struct stat_module_simple : summary_module_single<T>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 };
 
-// Mean
-
-// FIX - all of these need to ignore spurious values I think
+// Mean / Centroid / Stddev / Range / Median
 
 struct stat_module_mean : stat_module_simple<stat_module_mean>
 {
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        m_value = stat_mean(data, size);
-    }
+    void calculate(const global_params& params, const double *data, long size) override;
 };
 
 struct stat_module_centroid : stat_module_simple<stat_module_centroid>
 {
-    // FIX - could be more efficient
-    
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        m_value = stat_centroid(data, size);
-    }
+    void calculate(const global_params& params, const double *data, long size) override;
 };
 
 struct stat_module_stddev : stat_module_simple<stat_module_stddev>
 {
-    // FIX - could be more efficient
-    
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        m_value = stat_standard_deviation(data, size);
-    }
+    void calculate(const global_params& params, const double *data, long size) override;
 };
 
 struct stat_module_range : stat_module_simple<stat_module_range>
 {
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        m_value = stat_max(data, size) - stat_min(data, size);
-    }
+    void calculate(const global_params& params, const double *data, long size) override;
 };
 
 struct stat_module_median : stat_module_simple<stat_module_median>
 {
-    void prepare(const global_params& params) override
-    {
-        m_indices.resize(params.num_frames());
-    }
-    
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        long *indices = m_indices.data();
-        
-        sort_ascending(indices, data, size);
-        m_value = data[indices[size >> 1]];
-    }
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *data, long size) override;
     
 private:
     
@@ -133,33 +93,21 @@ private:
     std::vector<bool> m_mask;
 };
 
+// Specifiers
+
 // Mask Time
 
 struct specifier_mask_time : comparable_summary_specifier<specifier_mask_time>
 {
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        double time = args.get_double(0.0, 0.0, std::numeric_limits<double>::infinity());
-        return new specifier_mask_time(time);
-    }
-    
     specifier_mask_time(double time = -1.0) : m_mask_time(time) {}
-    
-    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
-    
-    void prepare(const global_params& params) override
-    {        
-        double time = m_mask_time * params.m_sr / (1000.0 * params.m_hop_size);
-        m_mask_span = m_mask_time < 0.0 ? 0 : time;
-    }
+
+    static user_module *setup(const global_params& params, module_arguments& args);
         
-    void update_to_final(const module *m) override
-    {
-        auto time = dynamic_cast<const specifier_mask_time *>(m)->m_mask_time;
-        if (time > 0.0)
-            m_mask_time = time;
-    }
-    
+    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    void update_to_final(const module *m) override;
+
+    void prepare(const global_params& params) override;
+            
     long get_mask_span() { return m_mask_span; }
     
 private:
@@ -174,97 +122,16 @@ struct specifier_threshold : comparable_summary_specifier<specifier_threshold>
 {
     enum class mode { abs, peak_mul, peak_add, peak_db, mean_mul, mean_add, mean_db };
     
-    static user_module *setup(const global_params& params, module_arguments& args)
-    {
-        double threshold = args.get_double(0.0, -std::numeric_limits<double>::infinity(), std::numeric_limits<double>::infinity());
-        t_symbol *type_specifier = args.get_symbol(gensym("abs"));
-        mode type = mode::abs;
-        
-        if (type_specifier == gensym("mean_mul"))
-            type = mode::mean_mul;
-        else if (type_specifier == gensym("mean_add"))
-            type = mode::mean_add;
-        else if (type_specifier == gensym("mean_db"))
-            type = mode::mean_db;
-        else if (type_specifier == gensym("peak_mul"))
-            type = mode::peak_mul;
-        else if (type_specifier == gensym("peak_add"))
-            type = mode::peak_add;
-        else if (type_specifier == gensym("peak_db"))
-            type = mode::peak_db;
-        
-        return new specifier_threshold(threshold, type);
-    }
-    
     specifier_threshold(double threshold = std::numeric_limits<double>::infinity(), mode type = mode::abs)
     : m_threshold(threshold), m_type(type) {}
     
-    void calculate(const global_params& params, const double *data, long size) override
-    {
-        const bool use_mean = m_type == mode::mean_mul || m_type == mode::mean_add || m_type == mode::mean_db;
-        const bool use_peak = m_type == mode::peak_mul || m_type == mode::peak_add || m_type == mode::peak_db;
-        const bool use_db = m_type == mode::mean_db || m_type == mode::peak_db;
-        
-        const double specified = use_db ? dbtoa(m_threshold) : m_threshold;
-        
-        double stat = -std::numeric_limits<double>::infinity();
-        
-        if (use_mean)
-        {
-            stat = 0.0;
-            long num_valid = 0;
-            
-            for (long i = 0; i < size; i++)
-            {
-                if (data[i] != std::numeric_limits<double>::infinity())
-                {
-                    stat += data[i];
-                    num_valid++;
-                }
-            }
-            
-            if (num_valid)
-                stat /= num_valid;
-        }
-        else if (use_peak)
-        {
-            for (long i = 0; i < size; i++)
-            {
-                if (data[i] != std::numeric_limits<double>::infinity())
-                    stat = std::max(stat, data[i]);
-            }
-        }
-            
-        switch (m_type)
-        {
-            case mode::abs:
-                m_calculated_threshold = specified;
-                break;
-            case mode::mean_mul:
-            case mode::mean_db:
-            case mode::peak_mul:
-            case mode::peak_db:
-                m_calculated_threshold = specified * stat;
-                break;
-            case mode::mean_add:
-            case mode::peak_add:
-                m_calculated_threshold = specified + stat;
-                break;
-        }
-    }
-    
+    static user_module *setup(const global_params& params, module_arguments& args);
+
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
-    
-    void update_to_final(const module *m) override
-    {
-        auto b = dynamic_cast<const specifier_threshold *>(m);
-        if (b->m_threshold != std::numeric_limits<double>::infinity())
-        {
-            m_threshold = b->m_threshold;
-            m_type = b->m_type;
-        }
-    }
-    
+    void update_to_final(const module *m) override;
+
+    void calculate(const global_params& params, const double *data, long size) override;
+            
     double get_threshold() { return m_calculated_threshold; }
     
 private:

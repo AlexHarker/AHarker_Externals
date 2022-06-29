@@ -68,7 +68,6 @@ private:
     void check_last_descriptor_summary();
     
     std::vector<std::unique_ptr<module>> m_summary_modules;
-    std::vector<std::unique_ptr<summary_specifier>> m_summary_specifiers;
     std::vector<user_module *> m_summary_outputs;
     std::vector<double> m_frame;
     std::vector<double> m_temp_data;
