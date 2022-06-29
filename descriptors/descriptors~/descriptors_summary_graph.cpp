@@ -25,11 +25,16 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
         if (summary)
         {
             summary->set_index(graph::size() - 1);
-            if (summary->get_index() == -1)
-                check_last_descriptor_summary();
+            if (m->get_output_size())
+            {
+                if (summary->get_index() == -1)
+                    check_last_descriptor_summary();
+                else
+                    m_last_summary_idx = graph::size() - 1;
+                m_summary_outputs.push_back(add_requirement(m));
+            }
             else
-                m_last_summary_idx = graph::size() - 1;
-            m_summary_outputs.push_back(add_requirement(m));
+                add_requirement(m);
         }
         else
         {
@@ -98,32 +103,7 @@ void summary_graph::run(const global_params& params, const double *input)
 
 module *summary_graph::add_requirement_impl(module *m)
 {
-    auto specifier = dynamic_cast<summary_specifier *>(m);
     auto summary = dynamic_cast<summary_module *>(m);
-    
-    // Check against specifiers
-
-    if (specifier)
-    {
-        // Set index before we compare
-        
-        summary->set_index(graph::size() - 1);
-        
-        for (auto it = m_summary_specifiers.begin(); it != m_summary_specifiers.end(); it++)
-        {
-            if ((*it)->is_the_same(m))
-            {
-                (*it)->update_to_final(m);
-                delete m;
-                return it->get();
-            }
-        }
-        
-        m->add_requirements(*this);
-        m_summary_modules.push_back(std::unique_ptr<module>(m));
-        
-        return m;
-    }
     
     // Check against summary modules
 
@@ -137,6 +117,10 @@ module *summary_graph::add_requirement_impl(module *m)
         {
             if ((*it)->is_the_same(m))
             {
+                auto specifier = dynamic_cast<summary_specifier *>(it->get());
+
+                if (specifier)
+                    specifier->update_to_final(m);
                 delete m;
                 return it->get();
             }

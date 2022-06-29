@@ -24,7 +24,7 @@ struct summary_module
 
 struct summary_specifier : summary_module, user_module
 {
-    virtual void update_to_final(const module *m) {}
+    virtual void update_to_final(const module *m) = 0;
     
     void calculate(const global_params& params, const double *data, long size) override {}
     
