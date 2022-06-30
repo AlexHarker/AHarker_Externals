@@ -93,6 +93,55 @@ private:
     aligned_vector<> m_spectrum;
 };
 
+// Cumulative Summing Modules
+
+template <class T, class U>
+struct module_frame_sum : module_core<U>
+{
+    void add_requirements(graph& g) override;
+    
+    void prepare(const global_params& params) override
+    {
+        m_cumulative_spectrum.resize(params.num_bins());
+    }
+    
+    void calculate(const global_params& params, const double *frame, long size) override
+    {
+        const double *spectrum = m_core_module->get_frame();
+        double *cumulative = m_cumulative_spectrum.data();
+        
+        double sum = 0.0;
+        
+        for (long i = 0; i < params.num_bins(); i++)
+            cumulative[i] = (sum += spectrum[i]);
+    }
+    
+    const double get_sum(long min_bin, long max_bin)
+    {
+        double *cumulative = m_cumulative_spectrum.data();
+        
+        return min_bin ? cumulative[max_bin - 1] - cumulative[min_bin - 1] : cumulative[max_bin - 1];
+    }
+    
+protected:
+    
+    T *m_core_module;
+    aligned_vector<> m_cumulative_spectrum;
+};
+
+// Power Spectrum Module
+
+struct module_power_sum : module_frame_sum<module_power_spectrum, module_power_sum>
+{
+    void add_requirements(graph& g) override;
+    const double get_energy_compensation() const { return m_core_module->get_energy_compensation(); }
+};
+
+struct module_amplitude_sum : module_frame_sum<module_amplitude_spectrum, module_amplitude_sum>
+{
+    void add_requirements(graph& g) override;
+};
+
 // Median Power Spectrum Module
 
 struct module_median_power_spectrum : comparable_module<module_median_power_spectrum>
