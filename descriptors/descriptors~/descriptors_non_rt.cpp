@@ -120,13 +120,20 @@ int C74_EXPORT main()
     // Issues
     //
     // Padding issue (unfound)
-    // Spectral crest and sfm use power not amps on old version
     // Old buffer object didn't respond to different buffer srs correctly (need to reset fft params)
-    // Rolloff now has interpolation (so reports slightly lower)
-    // Significant issue with linear spread
-    // Shape desciptors (crest/sfm/skewness/kurtosis) - big differences for large fft with sine input
+    //
+    // Spectral crest - used power on old version (need to look at  sfm use power not amps on old version
+    // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
+    // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
+    // Higher spectral shape likely wrong in early versions due to a lack of division by the overall amplitude sum
+    // Log was still wrong in more recent versions
+    //
+    // Precision etc. - some small differences in various places
+    // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
+    
     // Need to investigate speeds
-    // Need to investigate zero inputs
+    // Need to investigate zero inputs  [SFM / rolloff issues]
+    // Need to investigate min return values
     
     // Per-frame Descriptors
     
@@ -135,33 +142,35 @@ int C74_EXPORT main()
     s_setups.add_module("peakamp", module_peak_amp::setup);                 // Match
 
     s_setups.add_module("energy", module_energy::setup);                    // Match
-    s_setups.add_module("energy_ratio", module_energy_ratio::setup);        // ** Differences...
+    s_setups.add_module("energy_ratio", module_energy_ratio::setup);        // Match
     
     s_setups.add_module("loudness", module_loudness::setup);                // Match
     s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Fixed [previously no interpolation]
+                                                                            // N.B. uses power / not same as flucoma
+    
     s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
     s_setups.add_module("spectral_crest", module_spectral_crest::setup);    // ** Fixed [used power not amps]
 
     s_setups.add_module("lin_centroid", module_lin_centroid::setup);        // Match
-    s_setups.add_module("lin_spread", module_lin_spread::setup);            // ** Fixed [matches flucoma - old error]
+    s_setups.add_module("lin_spread", module_lin_spread::setup);            // ** Fixed [was ^2 before Hz conversion]
     s_setups.add_module("lin_skewness", module_lin_skewness::setup);        // Match
     s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);        // Match
                                                                             
-    s_setups.add_module("log_centroid", module_log_centroid::setup);
-    s_setups.add_module("log_spread", module_log_spread::setup);
-    s_setups.add_module("log_skewness", module_log_skewness::setup);
-    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);
+    s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Partial (precision + bin zero)
+    s_setups.add_module("log_spread", module_log_spread::setup);            // * Partial (precision + bin zero)
+    s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Differences (sum div missing + above)
+    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Differences (sum div missing + above)
     
-    s_setups.add_module("pitch", module_pitch::setup);                      // ** Differences particularly at low FFT
-    s_setups.add_module("confidence", module_confidence::setup);            // ** Differences particularly at low FFT
+    s_setups.add_module("pitch", module_pitch::setup);                      // * Differences particularly at low FFT
+    s_setups.add_module("confidence", module_confidence::setup);            // * Differences particularly at low FFT
     s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // Only threshold to look at
     s_setups.add_module("log_brightness", module_log_brightness::setup);    // Only threshold to look at
     
-    s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // ** Big differences (median filter?)
+    s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // Is 1- noise_ratio so sort there
     
-    s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("flux", module_flux::setup);
+    s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);
     
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);
@@ -169,16 +178,16 @@ int C74_EXPORT main()
 
     // Stats
     
-    s_setups.add_module("mean", stat_module_mean::setup);
-    s_setups.add_module("standard_dev", stat_module_stddev::setup);
-    s_setups.add_module("time_centroid", stat_module_centroid::setup);
-    s_setups.add_module("median", stat_module_median::setup);
-    s_setups.add_module("range", stat_module_range::setup);
+    s_setups.add_module("mean", stat_module_mean::setup);                           // Match (apart from padding)
+    s_setups.add_module("standard_dev", stat_module_stddev::setup);                 // Match (apart from padding)
+    s_setups.add_module("time_centroid", stat_module_centroid::setup);              // Match (apart from padding)
+    s_setups.add_module("median", stat_module_median::setup);                       // Match (apart from padding)
+    s_setups.add_module("range", stat_module_range::setup);                         // Match (apart from padding)
 
-    s_setups.add_module("min", stat_module_min::setup);
-    s_setups.add_module("max", stat_module_max::setup);
-    s_setups.add_module("min_pos", stat_module_min_pos::setup);
-    s_setups.add_module("max_pos", stat_module_max_pos::setup);
+    s_setups.add_module("min", stat_module_min::setup);                             // Match (apart from padding)
+    s_setups.add_module("max", stat_module_max::setup);                             // Match (apart from padding)
+    s_setups.add_module("min_pos", stat_module_min_pos::setup);                     // Match (apart from padding)
+    s_setups.add_module("max_pos", stat_module_max_pos::setup);                     // Match (apart from padding)
     
     s_setups.add_module("peak", stat_module_peak::setup);
     s_setups.add_module("trough", stat_module_trough::setup);
@@ -210,7 +219,7 @@ int C74_EXPORT main()
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);
+    s_setups.add_module("duration", summary_module_duration::setup);                    // Matches
     s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);
     
 	return 0;

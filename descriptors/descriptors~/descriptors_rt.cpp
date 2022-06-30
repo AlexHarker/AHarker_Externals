@@ -156,8 +156,8 @@ int C74_EXPORT main()
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);
 
-    s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("flux", module_flux::setup);
+    s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);
 
     s_setups.add_module("spectral_peaks", module_spectral_peaks::setup);
