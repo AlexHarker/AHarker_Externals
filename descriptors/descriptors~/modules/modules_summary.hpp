@@ -512,7 +512,7 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
             // Update mask points and do masking
             
             for (long j = std::max(pos - mask_span, cross1); j < std::min(pos + mask_span + 1, cross2); j++)
-                mask[i] = true;
+                mask[j] = true;
                         
             crossings[num_found++] = crossing(pos, cross1, cross2);
         }
