@@ -484,7 +484,7 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
                         if (data[test_pos] != data[j])
                             break;
                         
-                    if (data[test_pos] >= data[j])
+                    if (!Op2<double>()(data[test_pos], data[j]))
                     {
                         compare = data[test_pos];
                         pos = test_pos;
@@ -501,7 +501,7 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
     
             // Search earlier then later for crossing points
                 
-            for (cross1 = pos; i > 0 ; cross1--)
+            for (cross1 = pos; cross1 > 0 ; cross1--)
                 if (data[i] != infinity && Op2<double>()(data[cross1], threshold))
                     break;
                                 
