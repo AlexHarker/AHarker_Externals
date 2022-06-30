@@ -39,6 +39,8 @@ struct module_spectral : user_module_single<T>
     
 protected:
     
+    long bin_count() const { return m_max_bin - m_min_bin; }
+    
     double m_lo_freq;
     double m_hi_freq;
     long m_min_bin;
@@ -183,19 +185,39 @@ struct module_lin_centroid : module_spectral<module_lin_centroid>
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
+    double get_raw_centroid() const { return m_raw; }
+    double get_sum() const { return m_sum; }
+    
+    const double *get_frame() const { return m_amplitude_module->get_frame(); }
+
 private:
     
+    double m_raw;
+    double m_sum;
     module_amplitude_spectrum *m_amplitude_module;
 };
 
 struct module_lin_spread : module_spectral<module_lin_spread>
 {
+    module_lin_spread(){}
+    
+    module_lin_spread(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    const double *get_frame() const { return m_centroid_module->get_frame(); }
+
+    double get_raw_spread() const { return m_raw; }
+    double get_raw_centroid() const { return m_centroid_module->get_raw_centroid(); }
+    double get_sum() const { return m_centroid_module->get_sum(); }
+    
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    double m_raw;
+
+    module_lin_centroid *m_centroid_module;
 };
 
 struct module_lin_skewness : module_spectral<module_lin_skewness>
@@ -205,7 +227,7 @@ struct module_lin_skewness : module_spectral<module_lin_skewness>
 
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_lin_spread *m_spread_module;
 };
 
 struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
@@ -215,7 +237,7 @@ struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
 
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_lin_spread *m_spread_module;
 };
 
 // Spectral Log Shape Modules

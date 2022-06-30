@@ -186,43 +186,74 @@ void module_lin_centroid::add_requirements(graph& g)
 
 void module_lin_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = (stat_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) + m_min_bin) * params.bin_freq();
+    const double *data = m_amplitude_module->get_frame() + m_min_bin;
+    long bins = m_max_bin - m_min_bin;
+    
+    m_sum = stat_sum(data, bins);
+    m_raw = m_sum ? stat_weighted_sum(data, bins) / m_sum : infinity();
+    m_value = (m_raw + m_min_bin) * params.bin_freq();
 }
 
 // Spread
 
 void module_lin_spread::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_centroid_module = g.add_requirement(new module_lin_centroid(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_spread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    using calculation = impl::indices_diff_op<impl::pow2>;
+    
+    const double *data = m_centroid_module->get_frame() + m_min_bin;
+    
+    const double centroid = m_centroid_module->get_raw_centroid();
+    const double sum = m_centroid_module->get_sum();
+
+    m_raw = sum ? sqrt(stat_weighted_sum(calculation(centroid), data, bin_count()) / sum) : infinity();
+    m_value = m_raw * params.bin_freq();
 }
 
 // Skewness
 
 void module_lin_skewness::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_lin_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_skewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::indices_diff_op<impl::pow3>;
+
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+    
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow3()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Kurtosis
 
 void module_lin_kurtosis::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_lin_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_kurtosis::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_kurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::indices_diff_op<impl::pow4>;
+
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow4()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Spectral Log Shape Modules
