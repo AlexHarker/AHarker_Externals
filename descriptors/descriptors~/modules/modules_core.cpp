@@ -355,8 +355,8 @@ long module_log_spectrum_ring_buffer::get_idx(long lag) const
 void module_autocorrelation::prepare(const global_params& params)
 {
     m_fft_setup.resize(params.m_fft_size_log2);
-    m_full_frame.resize(params.fft_size());;
-    m_half_frame.resize(params.fft_size());;
+    m_full_frame.resize(params.fft_size());
+    m_half_frame.resize(params.fft_size());
     m_coefficients.resize(params.fft_size());
 }
 

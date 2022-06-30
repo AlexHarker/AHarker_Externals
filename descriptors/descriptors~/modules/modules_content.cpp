@@ -198,7 +198,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
             {
                 auto& peak2 = peaks.by_value(j);
                 const double freq2 = peak2.m_position * params.bin_freq();
-                const double amp2 = peak2.m_value;;
+                const double amp2 = peak2.m_value;
                 
                 if (freq2 > 0 && amp2)
                 {

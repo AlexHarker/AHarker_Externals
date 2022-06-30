@@ -194,7 +194,7 @@ void stat_module_centroid::calculate(const global_params& params, const double *
     {
         if (data[i] != infinity())
         {
-            sum += static_cast<double>(i) * data[i];;
+            sum += static_cast<double>(i) * data[i];
             weight_sum += data[i];
         }
     }
