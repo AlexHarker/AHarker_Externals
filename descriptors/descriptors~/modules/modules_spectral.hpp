@@ -255,9 +255,20 @@ struct module_log_centroid : module_spectral<module_log_centroid>
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    double get_raw_centroid() const { return m_raw; }
+    double get_sum() const { return m_sum; }
+    
+    const double *get_frame() const { return m_amplitude_module->get_frame(); }
+    const double *get_log_bins() const { return m_log_bins_module->get_log_bins(); }
+
 private:
     
+    module_log_bins *m_log_bins_module;
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
+    
+    double m_raw;
+    double m_sum;
 };
 
 struct module_log_spread : module_spectral<module_log_spread>
@@ -265,9 +276,17 @@ struct module_log_spread : module_spectral<module_log_spread>
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    const double *get_frame() const { return m_centroid_module->get_frame(); }
+    
+    double get_raw_spread() const { return m_raw; }
+    double get_raw_centroid() const { return m_centroid_module->get_raw_centroid(); }
+    double get_sum() const { return m_centroid_module->get_sum(); }
+
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_centroid *m_centroid_module;
+    
+    double m_raw;
 };
 
 struct module_log_skewness : module_spectral<module_log_skewness>

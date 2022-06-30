@@ -165,6 +165,20 @@ private:
     const long m_median_span;
 };
 
+// Log Bins Module
+
+struct module_log_bins : module_core<module_log_bins>
+{
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *frame, long size) override {}
+    
+    const double *get_log_bins() const { return m_log_bins.data(); }
+    
+private:
+    
+    aligned_vector<> m_log_bins;
+};
+
 // Peak Detection Module
 
 struct module_peak_detection : module_core<module_peak_detection>

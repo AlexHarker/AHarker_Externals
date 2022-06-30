@@ -252,6 +252,18 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
     m_filter(m_spectrum.data(), power, params.num_bins(), m_median_span, median_filter<double>::Edges::Fold, 50.0);
 }
 
+// Log Bins Module
+
+void module_log_bins::prepare(const global_params& params)
+{
+    m_log_bins.resize(params.num_bins());
+
+    double *log_bins = m_log_bins.data();
+        
+    for (long i = 0; i < params.num_bins(); i++)
+        log_bins[i] = i ? log2(i): 0;
+}
+    
 // Peak Detection Module
 
 void module_peak_detection::add_requirements(graph& g)
