@@ -696,13 +696,13 @@ using longest_below = longest_crossings<std::less, std::greater>;
 // Final user module types
 
 using stat_module_crossing_peak = stat_crossings_user<extreme_above, cross_mode::value>;
-using stat_module_crossing_trough = stat_crossings_user<longest_below, cross_mode::value>;
+using stat_module_crossing_trough = stat_crossings_user<extreme_below, cross_mode::value>;
 using stat_module_crossing_peak_pos = stat_crossings_user<extreme_above, cross_mode::pos>;
-using stat_module_crossing_trough_pos = stat_crossings_user<longest_below, cross_mode::pos>;
+using stat_module_crossing_trough_pos = stat_crossings_user<extreme_below, cross_mode::pos>;
 using stat_module_cross_above = stat_crossings_user<extreme_above, cross_mode::cross>;
-using stat_module_cross_below = stat_crossings_user<longest_below, cross_mode::cross>;
+using stat_module_cross_below = stat_crossings_user<extreme_below, cross_mode::cross>;
 using stat_module_crossings_above = stat_crossings_user<extreme_above, cross_mode::crossings>;
-using stat_module_crossings_below = stat_crossings_user<longest_below, cross_mode::crossings>;
+using stat_module_crossings_below = stat_crossings_user<extreme_below, cross_mode::crossings>;
 using stat_module_longest_above = stat_crossings_user<longest_above, cross_mode::cross>;
 using stat_module_longest_below = stat_crossings_user<longest_below, cross_mode::cross>;
 using stat_module_longest_above_both = stat_crossings_user<longest_above, cross_mode::crossings>;
