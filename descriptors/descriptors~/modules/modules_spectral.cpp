@@ -186,7 +186,7 @@ void module_lin_centroid::add_requirements(graph& g)
 
 void module_lin_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    m_value = (stat_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) + m_min_bin) * params.bin_freq();
 }
 
 // Spread
