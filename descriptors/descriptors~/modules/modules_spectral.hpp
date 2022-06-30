@@ -99,6 +99,7 @@ struct module_sfm : module_spectral<module_sfm>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
     aligned_vector<> m_spectrum;
 };
 
@@ -159,10 +160,10 @@ struct module_rolloff : user_module_single<module_rolloff>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
     
-    module_rolloff(double centile)
-    : m_centile(centile) {}
+    module_rolloff(double ratio)
+    : m_ratio(ratio) {}
     
-    auto get_params() const { return std::make_tuple(m_centile); }
+    auto get_params() const { return std::make_tuple(m_ratio); }
 
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -170,7 +171,8 @@ struct module_rolloff : user_module_single<module_rolloff>
 private:
     
     module_power_spectrum *m_power_module;
-    const double m_centile;
+    module_power_sum *m_power_sum_module;
+    const double m_ratio;
 };
 
 // Spectral Linear Shape Modules
@@ -192,10 +194,11 @@ struct module_lin_centroid : module_spectral<module_lin_centroid>
 
 private:
     
-    double m_raw;
-    double m_sum;
     module_amplitude_spectrum *m_amplitude_module;
     module_amplitude_sum *m_amplitude_sum_module;
+    
+    double m_raw;
+    double m_sum;
 };
 
 struct module_lin_spread : module_spectral<module_lin_spread>
@@ -216,9 +219,9 @@ struct module_lin_spread : module_spectral<module_lin_spread>
     
 private:
     
-    double m_raw;
-
     module_lin_centroid *m_centroid_module;
+    
+    double m_raw;
 };
 
 struct module_lin_skewness : module_spectral<module_lin_skewness>
