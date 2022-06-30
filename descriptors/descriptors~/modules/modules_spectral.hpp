@@ -277,7 +277,8 @@ struct module_log_spread : module_spectral<module_log_spread>
     void calculate(const global_params& params, const double *frame, long size) override;
 
     const double *get_frame() const { return m_centroid_module->get_frame(); }
-    
+    const double *get_log_bins() const { return m_centroid_module->get_log_bins(); }
+
     double get_raw_spread() const { return m_raw; }
     double get_raw_centroid() const { return m_centroid_module->get_raw_centroid(); }
     double get_sum() const { return m_centroid_module->get_sum(); }
@@ -296,7 +297,7 @@ struct module_log_skewness : module_spectral<module_log_skewness>
     
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_spread *m_spread_module;
 };
 
 struct module_log_kurtosis : module_spectral<module_log_kurtosis>
@@ -306,7 +307,7 @@ struct module_log_kurtosis : module_spectral<module_log_kurtosis>
     
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_spread *m_spread_module;
 };
 
 #endif /* _MODULES_SPECTRAL_HPP_ */
