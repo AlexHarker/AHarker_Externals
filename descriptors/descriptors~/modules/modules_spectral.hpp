@@ -85,7 +85,7 @@ struct module_energy_ratio : module_spectral<module_energy_ratio>
     
 private:
     
-    module_power_spectrum *m_power_module;
+    module_power_sum *m_power_sum_module;
     aligned_vector<> m_spectrum;
 };
 
@@ -138,7 +138,7 @@ struct module_energy : module_spectral_db<module_energy>
     
 private:
     
-    module_power_spectrum *m_power_module;
+    module_power_sum *m_power_sum_module;
 };
 
 // Spectral Crest Module
@@ -195,6 +195,7 @@ private:
     double m_raw;
     double m_sum;
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
 };
 
 struct module_lin_spread : module_spectral<module_lin_spread>

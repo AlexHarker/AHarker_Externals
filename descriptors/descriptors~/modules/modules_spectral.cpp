@@ -18,15 +18,15 @@ using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 void module_energy_ratio::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_power_sum_module = g.add_requirement(new module_power_sum());
 }
 
 void module_energy_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
-    long num_bins = params.num_bins();
+    const double band = m_power_sum_module->get_sum(m_min_bin, m_max_bin);
+    const double energy = m_power_sum_module->get_sum(0, params.num_bins());
             
-    m_value = stat_sum_squares(power + m_min_bin, m_max_bin - m_min_bin) / stat_sum_squares(power, num_bins);
+    m_value = energy ? band / energy : infinity();
 }
 
 // Spectral Flatness Module
@@ -122,16 +122,14 @@ void module_loudness::calculate(const global_params& params, const double *frame
 
 void module_energy::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_power_sum_module = g.add_requirement(new module_power_sum());
 }
 
 void module_energy::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
+    double energy = m_power_sum_module->get_sum(m_min_bin, m_max_bin);
 
-    double energy = stat_sum(power + m_min_bin, m_max_bin - m_min_bin);
-
-    energy *= m_power_module->get_energy_compensation();
+    energy *= m_power_sum_module->get_energy_compensation();
             
     m_value = m_report_db ? pow_to_db(energy) : energy;
 }
@@ -181,16 +179,16 @@ void module_rolloff::calculate(const global_params& params, const double *frame,
 
 void module_lin_centroid::add_requirements(graph& g)
 {
+    m_amplitude_sum_module = g.add_requirement(new module_amplitude_sum());
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
 }
 
 void module_lin_centroid::calculate(const global_params& params, const double *frame, long size)
 {
     const double *data = m_amplitude_module->get_frame() + m_min_bin;
-    long bins = m_max_bin - m_min_bin;
     
-    m_sum = stat_sum(data, bins);
-    m_raw = m_sum ? stat_weighted_sum(data, bins) / m_sum : infinity();
+    m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
+    m_raw = m_sum ? stat_weighted_sum(data, bin_count()) / m_sum : infinity();
     m_value = (m_raw + m_min_bin) * params.bin_freq();
 }
 
