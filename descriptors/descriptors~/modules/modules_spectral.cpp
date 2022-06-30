@@ -302,14 +302,15 @@ void module_log_spread::add_requirements(graph& g)
 
 void module_log_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::log_indices_diff_op<impl::pow2>;
+    using calculation = impl::modified_diff_data<const double *, impl::pow2>;
     
     const double *data = m_centroid_module->get_frame() + m_min_bin;
-    
+    const double *log_bins = m_centroid_module->get_log_bins() + m_min_bin;
+
     const double centroid = m_centroid_module->get_raw_centroid();
     const double sum = m_centroid_module->get_sum();
     
-    m_raw = sum ? sqrt(stat_weighted_sum(calculation(centroid), data, bin_count()) / sum) : infinity();
+    m_raw = sum ? sqrt(stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / sum) : infinity();
     m_value = m_raw;
 }
 
