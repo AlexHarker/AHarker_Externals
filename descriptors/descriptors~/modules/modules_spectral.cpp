@@ -318,7 +318,7 @@ void module_log_spread::calculate(const global_params& params, const double *fra
 
 void module_log_skewness::add_requirements(graph& g)
 {
-    m_spread_module = g.add_requirement(new module_log_spread());
+    m_spread_module = g.add_requirement(new module_log_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_log_skewness::calculate(const global_params& params, const double *frame, long size)
@@ -340,7 +340,7 @@ void module_log_skewness::calculate(const global_params& params, const double *f
 
 void module_log_kurtosis::add_requirements(graph& g)
 {
-    m_spread_module = g.add_requirement(new module_log_spread());
+    m_spread_module = g.add_requirement(new module_log_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_log_kurtosis::calculate(const global_params& params, const double *frame, long size) 
@@ -356,5 +356,4 @@ void module_log_kurtosis::calculate(const global_params& params, const double *f
     
     double denominator = impl::pow4()(spread) * sum;
     m_value = sum ? stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
-
 }

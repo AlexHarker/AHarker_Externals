@@ -249,6 +249,7 @@ private:
 struct module_log_centroid : module_spectral<module_log_centroid>
 {
     module_log_centroid(){}
+    
     module_log_centroid(double lo_freq, double hi_freq)
     : module_spectral(lo_freq, hi_freq) {}
     
@@ -273,6 +274,11 @@ private:
 
 struct module_log_spread : module_spectral<module_log_spread>
 {
+    module_log_spread(){}
+    
+    module_log_spread(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
