@@ -177,7 +177,9 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
     x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0);
 	x->max_fft_size = 1 << x->max_fft_size_log2;
 	
-    descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
+    long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
+    
+    descriptors_fft_params_internal(x, default_fft_size, 0, 0, nullptr);
     
 	dsp_setup((t_pxobject *) x, 1);
 			
