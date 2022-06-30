@@ -352,7 +352,7 @@ double stat_log_skewness(const T input, size_t size)
 template <class T>
 double stat_log_kurtosis(const T input, size_t size)
 {
-    double centroid = stat_centroid(input, size);
+    double centroid = stat_log_centroid(input, size);
     double denominator = impl::pow4()(stat_log_spread(input, size)) * stat_sum(input, size);
     return denominator ? stat_weighted_sum(impl::log_indices_diff_op<impl::pow4>(log2(centroid)), input, size) / denominator : std::numeric_limits<double>::infinity();
 }
