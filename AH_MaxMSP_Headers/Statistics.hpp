@@ -209,12 +209,6 @@ double stat_weighted_sum_logs(const T input, size_t size)
 // Weighted Sums (by weights)
 
 template <class T>
-double stat_weighted_sum(const T input, const T weights, size_t size)
-{
-    return stat_weighted_sum(input, weights, size);
-}
-
-template <class T>
 double stat_weighted_sum_abs(const T input, const T weights, size_t size)
 {
     return stat_weighted_sum(impl::modified_data<const T, impl::absolute>(input), weights, size);
