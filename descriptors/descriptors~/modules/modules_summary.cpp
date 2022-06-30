@@ -173,7 +173,7 @@ void stat_module_median::calculate(const global_params& params, const double *da
     
     for (long i = size - 1; i >= 0; i--)
     {
-        if (data[i] != infinity())
+        if (data[indices[i]] != infinity())
         {
             size = i;
             break;
