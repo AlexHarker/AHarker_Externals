@@ -303,7 +303,7 @@ double stat_pdf_percentile(const T input, double centile, size_t size)
     {
         sum += input[i];
         if (sum >= target)
-            return static_cast<double>(1 + i - ((sum - target) / input[i]));
+            return static_cast<double>(i - ((sum - target) / input[i]));
     }
     
     return static_cast<double>(size - 1);
