@@ -100,7 +100,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 
 int C74_EXPORT main()
 {	
-    this_class = class_new("descriptors~",
+    this_class = class_new("descriptorstest~",
                            (method) descriptors_new,
                            (method) descriptors_free,
                            sizeof(t_descriptors),
@@ -179,19 +179,19 @@ int C74_EXPORT main()
     // Stats
     
     s_setups.add_module("mean", stat_module_mean::setup);                           // Match (apart from padding)
-    s_setups.add_module("standard_dev", stat_module_stddev::setup);                 // Match (apart from padding)
-    s_setups.add_module("time_centroid", stat_module_centroid::setup);              // Match (apart from padding)
-    s_setups.add_module("median", stat_module_median::setup);                       // Match (apart from padding)
-    s_setups.add_module("range", stat_module_range::setup);                         // Match (apart from padding)
+    s_setups.add_module("standard_dev", stat_module_stddev::setup);                 // Match
+    s_setups.add_module("time_centroid", stat_module_centroid::setup);              // Match
+    s_setups.add_module("median", stat_module_median::setup);                       // Match
+    s_setups.add_module("range", stat_module_range::setup);                         // Match
 
-    s_setups.add_module("min", stat_module_min::setup);                             // Match (apart from padding)
-    s_setups.add_module("max", stat_module_max::setup);                             // Match (apart from padding)
-    s_setups.add_module("min_pos", stat_module_min_pos::setup);                     // Match (apart from padding)
-    s_setups.add_module("max_pos", stat_module_max_pos::setup);                     // Match (apart from padding)
+    s_setups.add_module("min", stat_module_min::setup);                             // Match
+    s_setups.add_module("max", stat_module_max::setup);                             // Match
+    s_setups.add_module("min_pos", stat_module_min_pos::setup);                     // Match
+    s_setups.add_module("max_pos", stat_module_max_pos::setup);                     // Match
     
-    s_setups.add_module("peak", stat_module_peak::setup);
+    s_setups.add_module("peak", stat_module_peak::setup);                           // * Partial (end position behaviour)
     s_setups.add_module("trough", stat_module_trough::setup);
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                   // * Partial (end position behaviour)
     s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
 
     s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
@@ -209,7 +209,7 @@ int C74_EXPORT main()
     s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
     s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
 
-    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
+    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);             // Match
     s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
     // Specifiers
