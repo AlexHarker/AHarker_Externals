@@ -17,7 +17,7 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     
     m->m_forward_only = args.get_bool(true);
     m->m_square_flag = args.get_bool(true);
-    m->m_normalise_spectrum = args.get_bool(false);
+    m->m_normalise_spectrum = args.get_bool(true);
     m->set_lag(args.get_long(1, 1, 33));
     
     return m;
