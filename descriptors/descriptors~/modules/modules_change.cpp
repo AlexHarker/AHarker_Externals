@@ -161,6 +161,11 @@ void module_mkl::add_requirements(graph& g)
     
 void module_mkl::calculate(const global_params& params, const double *frame, long size)
 {
+    const double *log_frame1 = m_log_ring_buffer_module->get_frame(m_frame_lag);
+    const double *log_frame2 = m_log_ring_buffer_module->get_frame(0);
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
+    
     constexpr double DB_MAX_MKL_EQUAL = -140.0;
     const double MKL_EQUALISE_MAX_LOG = log(pow(10.0, DB_MAX_MKL_EQUAL) * 20.0);
     const double norm_min = sqrt(db_to_pow(db_calc_min()));
@@ -170,11 +175,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     double sum = 0.0;
         
     const double log_thresh = log(dbtoa(m_threshold));
-    const double *log_frame1 = m_log_ring_buffer_module->get_frame(m_frame_lag);
-    const double *log_frame2 = m_log_ring_buffer_module->get_frame(0);
-    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
-    const double *frame2 = m_ring_buffer_module->get_frame(0);
-    
+   
     if (m_normalise_spectra)
     {
         norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
@@ -190,53 +191,54 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
   
     norm_factor2 = norm_factor2 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
 
+    auto bin_change = [&](long i)
+    {
+        return (log_frame2[i] - log_frame1[i]) + log_norm_factor;
+    };
+    
     if (m_weight)
     {
+        // Weighted changes (forward only then both)
+
         if (m_forward_only)
         {
-            // Forward changes only weighting by the second frame
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
-                if (current_val > 0 && log_frame2[i] >= log_thresh)
-                    sum += current_val * frame2[i] * norm_factor2;
+                const double value = bin_change(i);
+                if (value > 0 && log_frame2[i] >= log_thresh)
+                    sum += value * frame2[i] * norm_factor2;
             }
         }
         else
         {
-            // Both changes weighting by the second frame
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
+                const double value = bin_change(i);
                 if (log_frame2[i] >= log_thresh)
-                    sum += current_val * frame2[i] * norm_factor2;
+                    sum += value * frame2[i] * norm_factor2;
             }
         }
     }
     else
     {
+        // Non-weighted changes (forward only then both)
+        
         if (m_forward_only)
         {
-            // Forward changes only
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
-                if (current_val > 0 && log_frame2[i] >= log_thresh)
-                    sum += current_val;
+                const double value = bin_change(i);
+                if (value > 0 && log_frame2[i] >= log_thresh)
+                    sum += value;
             }
         }
         else
         {
-            // Both changes
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (log_frame2[i] - log_frame1[i]) + log_norm_factor;
+                const double value = bin_change(i);
                 if (log_frame2[i] >= log_thresh)
-                    sum += current_val;
+                    sum += value;
             }
         }
     }
