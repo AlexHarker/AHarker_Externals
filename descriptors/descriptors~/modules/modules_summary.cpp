@@ -85,7 +85,7 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
         auto& peak = m_peaks.by_value(i);
         
         m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
-        m_values[i * 2 + 1] = peak.m_value;
+        m_values[i * 2 + 1] = atodb(peak.m_value);
     }
     
     for ( ; i < m_num_peaks; i++)
