@@ -119,21 +119,23 @@ int C74_EXPORT main()
 	
     // Issues
     //
-    // Padding issue (unfound)
-    // Old buffer object didn't respond to different buffer srs correctly (need to reset fft params)
+    // Padding issue (not yet found)
+    // Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
     //
     // Spectral crest - used power on old version (need to look at  sfm use power not amps on old version
     // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
     // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
     // Higher spectral shape likely wrong in early versions due to a lack of division by the overall amplitude sum
-    // Log was still wrong in more recent versions
+    // Log higher spectral shape was still wrong in more recent versions
+    // Flux has a fixed index bug in the code producing consistently incorrect results
+    // Foote return inf for the change between two zero frames (now zero)
     //
     // Precision etc. - some small differences in various places
     // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
     
     // Need to check lags and other things with fftparams that have mismatch window and FFT
     // Need to investigate speeds
-    // Need to investigate zero inputs  [SFM / rolloff issues]
+    // Need to investigate zero inputs
     // Need to investigate min return values
     
     // Per-frame Descriptors
