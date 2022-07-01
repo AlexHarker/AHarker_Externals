@@ -591,7 +591,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
                 if (data[cross2] != infinity && Op2<double>()(data[cross2], threshold))
                     break;
             
-            crossing cross(-1, cross1, std::max(cross2, size));
+            crossing cross(-1, cross1, std::min(cross2, size));
             
             // If this is longer than any of the stored values then move others and store this crossing
             
