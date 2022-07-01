@@ -50,7 +50,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                sum += value ? value * value : 0.0;
+                sum += value > 0.0 ? value * value : 0.0;
             }
         }
         else
@@ -73,7 +73,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                sum += value ? value : 0.0;
+                sum += value > 0.0 ? value : 0.0;
             }
         }
         else
