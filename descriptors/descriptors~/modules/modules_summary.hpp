@@ -627,7 +627,7 @@ private:
 
 // Generic crossings user module
 
-enum class cross_mode { value, pos, cross, crossings };
+enum class cross_mode { value, pos, cross, crossings, length };
 
 template <class Crossings, cross_mode Mode>
 struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossings, Mode>>
@@ -664,6 +664,11 @@ struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossin
             case cross_mode::cross:
                 for (long i = 0; i < vector_module::get_n(); i++)
                     vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_cross1);
+                break;
+                
+            case cross_mode::length:
+                for (long i = 0; i < vector_module::get_n(); i++)
+                    vector_module::m_values[i] = frame_to_ms(params, crossings[i].m_cross2 - crossings[i].m_cross1);
                 break;
                 
             case cross_mode::crossings:
