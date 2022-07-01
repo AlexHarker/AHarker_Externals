@@ -28,25 +28,8 @@ struct module_spectral_change : module_spectral<T>
 protected:
     
     module_spectrum_ring_buffer *m_ring_buffer_module;
+    
     long m_frame_lag;
-};
-
-// Foote Module
-
-struct module_foote : module_spectral_change<module_foote>
-{
-    static user_module *setup(const global_params& params, module_arguments& args);
-    
-    auto get_params() const
-    {
-        return std::make_tuple(module_spectral_change::get_params(), m_forward_only);
-    }
-    
-    void calculate(const global_params& params, const double *frame, long size) override;
-    
-private:
-    
-    bool m_forward_only;
 };
 
 // Flux Module
@@ -70,6 +53,24 @@ private:
     bool m_square_flag;
 };
 
+// Foote Module
+
+struct module_foote : module_spectral_change<module_foote>
+{
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
+    auto get_params() const
+    {
+        return std::make_tuple(module_spectral_change::get_params(), m_forward_only);
+    }
+    
+    void calculate(const global_params& params, const double *frame, long size) override;
+    
+private:
+    
+    bool m_forward_only;
+};
+
 // MKL Module
 
 struct module_mkl : module_spectral_change<module_mkl>
@@ -88,6 +89,7 @@ struct module_mkl : module_spectral_change<module_mkl>
 private:
         
     module_log_spectrum_ring_buffer *m_log_ring_buffer_module;
+    
     double m_threshold;
     bool m_forward_only;
     bool m_normalise_spectra;
