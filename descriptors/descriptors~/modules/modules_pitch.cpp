@@ -83,10 +83,8 @@ void module_lin_brightness::calculate(const global_params& params, const double 
 {
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
-    
-    // FIX - weird threshold
-    
-    if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
+        
+    if (pitch != infinity() && centroid != infinity())
         m_value = centroid / pitch;
     else
         m_value = infinity();
@@ -105,9 +103,7 @@ void module_log_brightness::calculate(const global_params& params, const double 
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
     
-    // FIX - weird threshold
-
-    if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
+    if (pitch != infinity() && centroid != infinity())
         m_value = centroid / pitch;
     else
         m_value = infinity();
