@@ -124,7 +124,7 @@ int C74_EXPORT main()
     // Log higher spectral shape was still wrong in more recent versions
     // Flux *had* a fixed index bug in the code producing consistently incorrect results
     // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
-    // Pitch / confidence *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
+    // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
     //
     // trough and trough_pos *did* return infs due to an incorrect test
@@ -154,7 +154,7 @@ int C74_EXPORT main()
     s_setups.add_module("energy_ratio", module_energy_ratio::setup);
     
     s_setups.add_module("loudness", module_loudness::setup);
-    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Fixed [previously no interpolation]
+    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]
                                                                             // N.B. uses power / not same as flucoma
     
     s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
@@ -165,15 +165,15 @@ int C74_EXPORT main()
     s_setups.add_module("lin_skewness", module_lin_skewness::setup);
     s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
                                                                             
-    s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Partial (precision + bin zero)
-    s_setups.add_module("log_spread", module_log_spread::setup);            // * Partial (precision + bin zero)
+    s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Improved (precision + bin zero)
+    s_setups.add_module("log_spread", module_log_spread::setup);            // * Improved (precision + bin zero)
     s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Fixed (sum div missing + above)
     s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Fixed (sum div missing + above)
     
-    s_setups.add_module("pitch", module_pitch::setup);                      // ** Fixed [return for no pitch]
-    s_setups.add_module("confidence", module_confidence::setup);            // ** Fixed [return for no pitch / precision]
-    s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // ** Fixed [removed threshold / pitch fixed]
-    s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Fixed [removed threshold / pitch fixed]
+    s_setups.add_module("pitch", module_pitch::setup);                      // ** Improved [return for no pitch / precision]
+    s_setups.add_module("confidence", module_confidence::setup);            // ** Improved [return for no pitch / precision]
+    s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
+    s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
     
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // ** Depends on above [nothing to do here]

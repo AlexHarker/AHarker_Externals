@@ -356,6 +356,8 @@ struct condition_triple
 {
     bool operator()(const double *data, long i, long pos, long size)
     {
+        // FIX - infinite values and edge effects
+        
         Op<double> op;
         bool is_triple = i && i < size && op(data[i], data[i-1]) && op(data[i], data[i+1]);
         return is_triple && condition_single<Op>()(data, i, pos, size);
@@ -481,6 +483,8 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
                         if (data[test_pos] != data[j])
                             break;
                         
+                    // FIX - infinite values
+
                     if (!Op2<double>()(data[test_pos], data[j]))
                     {
                         compare = data[test_pos];
