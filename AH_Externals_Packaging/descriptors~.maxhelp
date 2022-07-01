@@ -3625,7 +3625,7 @@
 															}
 , 															{
 																"key" : "flux",
-																"value" : [ 1, "min freq", "Hz", "0 Hz", "frequencies below this value will not be used in the calculation", 2, "max freq", "Hz", "192000 Hz", "frequencies above this value will not be used in the calculation", 3, "forward amplitudes only", "0 / 1", 1, "use only amplitudes from bins that have increased in level", 4, "square amplitudes", "0 / 1", 1, "square the amplitudes for calculation", 5, "normalise spectrum", "0 / 1", 1, "normalise the energy level in each frame", 6, "frames to look back", "n", 1, "gap between frames for comparison (note that consecutive frames can overlap)" ]
+																"value" : [ 1, "min freq", "Hz", "0 Hz", "frequencies below this value will not be used in the calculation", 2, "max freq", "Hz", "192000 Hz", "frequencies above this value will not be used in the calculation", 3, "forward amplitudes only", "0 / 1", 1, "use only amplitudes from bins that have increased in level", 4, "square flag", "0 / 1", 1, "square the deltas for calculation", 5, "normalise spectrum", "0 / 1", 1, "normalise the energy level in each frame", 6, "frames to look back", "n", 1, "gap between frames for comparison (note that consecutive frames can overlap)" ]
 															}
 , 															{
 																"key" : "mkl",
@@ -4160,7 +4160,7 @@
 									"outlettype" : [ "list", "", "", "" ],
 									"patching_rect" : [ 24.0, 405.0, 931.0, 147.0 ],
 									"rowhead" : 1,
-									"rows" : 7,
+									"rows" : 4,
 									"selmode" : 0,
 									"vscroll" : 0
 								}
@@ -4175,7 +4175,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 112.0, 334.0, 713.0, 20.0 ],
-									"text" : "perhaps the simplest spectral difference measures - useful for onset detection applications etc."
+									"text" : "the energy contained within the given frequency range (either in linear value or in decibels)"
 								}
 
 							}
@@ -4339,7 +4339,7 @@
 					"spacing_x" : 0.0,
 					"spacing_y" : 0.0,
 					"text" : "open descriptors~ reference",
-					"textcolor" : [ 0.27, 0.35, 0.47, 1.0 ],
+					"textcolor" : [ 0.335, 0.425, 0.56, 1.0 ],
 					"textoncolor" : [ 0.27, 0.35, 0.47, 1.0 ],
 					"textovercolor" : [ 0.4, 0.5, 0.65, 1.0 ],
 					"underline" : 1,
