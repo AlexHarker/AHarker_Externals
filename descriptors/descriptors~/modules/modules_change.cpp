@@ -32,6 +32,11 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
     const double *frame2 = m_ring_buffer_module->get_frame(0);
    
+    auto bin_change = [&](long i)
+    {
+        return (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+    };
+    
     if (m_normalise_spectrum)
     {
         norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
@@ -45,21 +50,21 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     {
         if (m_forward_only)
         {
-            // Forward changes only using square amplitudes
+            // Forward changes only using squared changes
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                const double value = bin_change(i);
                 sum += value > 0.0 ? value * value : 0.0;
             }
         }
         else
         {
-            // Both changes using square amplitudes
+            // Both changes using square changes
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                const double value = bin_change(i);
                 sum += value * value;
             }
         }
@@ -72,7 +77,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                const double value = bin_change(i);
                 sum += value > 0.0 ? value : 0.0;
             }
         }
@@ -81,7 +86,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             // Both changes using amplitudes
             
             for (long i = m_min_bin; i < m_max_bin; i++)
-                sum += (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                sum += bin_change(i);
         }
     }
     
