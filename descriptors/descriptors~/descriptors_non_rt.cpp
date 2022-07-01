@@ -131,6 +131,7 @@ int C74_EXPORT main()
     // Precision etc. - some small differences in various places
     // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
     
+    // Need to check lags and other things with fftparams that have mismatch window and FFT
     // Need to investigate speeds
     // Need to investigate zero inputs  [SFM / rolloff issues]
     // Need to investigate min return values
@@ -153,8 +154,8 @@ int C74_EXPORT main()
 
     s_setups.add_module("lin_centroid", module_lin_centroid::setup);        // Match
     s_setups.add_module("lin_spread", module_lin_spread::setup);            // ** Fixed [was ^2 before Hz conversion]
-    s_setups.add_module("lin_skewness", module_lin_skewness::setup);        // Match
-    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);        // Match
+    s_setups.add_module("lin_skewness", module_lin_skewness::setup);        // Match (fixed from earlier)
+    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);        // Match (fixed from earlier)
                                                                             
     s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Partial (precision + bin zero)
     s_setups.add_module("log_spread", module_log_spread::setup);            // * Partial (precision + bin zero)
@@ -169,8 +170,8 @@ int C74_EXPORT main()
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // Is 1- noise_ratio so sort there
     
-    s_setups.add_module("flux", module_flux::setup);
-    s_setups.add_module("foote", module_foote::setup);
+    s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
+    s_setups.add_module("foote", module_foote::setup);                      // Match
     s_setups.add_module("mkl", module_mkl::setup);
     
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);
@@ -196,8 +197,8 @@ int C74_EXPORT main()
 
     s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
     s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
-    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);
-    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // * Partial (masktime)
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // * Partial (masktime)
     
     s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);
     s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);
@@ -209,7 +210,7 @@ int C74_EXPORT main()
     s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
     s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
 
-    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);             // Match
+    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);              // Match
     s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
     // Specifiers
@@ -219,7 +220,7 @@ int C74_EXPORT main()
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);                    // Matches
+    s_setups.add_module("duration", summary_module_duration::setup);                  // Match
     s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);
     
 	return 0;
