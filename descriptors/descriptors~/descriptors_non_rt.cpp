@@ -122,13 +122,19 @@ int C74_EXPORT main()
     // Padding issue (not yet found)
     // Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
     //
-    // Spectral crest - used power on old version (need to look at  sfm use power not amps on old version
     // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
+    // SFM *was* using power rather than amplitudes
+    // Spectral crest *was* using power rather than amplitudes
     // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
-    // Higher spectral shape likely wrong in early versions due to a lack of division by the overall amplitude sum
+    // Higher spectral shapes likely wrong in early versions due to a lack of division by the overall amplitude sum
     // Log higher spectral shape was still wrong in more recent versions
-    // Flux has a fixed index bug in the code producing consistently incorrect results
-    // Foote return inf for the change between two zero frames (now zero)
+    // Flux *had* a fixed index bug in the code producing consistently incorrect results
+    // Foote previously returned inf for the change between two zero frames (now zero)
+    // Pitch / confidence - major issue is that previously pitch reports as 0 when invalid / also precision difference
+    // Pitch now reports as inf for no pitch (not zero)
+    //
+    // Spectral peak finding currently has no median filtering
+    // RT spectral_peaks reports in linear amps but non RT in db (with no options)
     //
     // Precision etc. - some small differences in various places
     // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
@@ -164,10 +170,10 @@ int C74_EXPORT main()
     s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Differences (sum div missing + above)
     s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Differences (sum div missing + above)
     
-    s_setups.add_module("pitch", module_pitch::setup);                      // * Differences particularly at low FFT
-    s_setups.add_module("confidence", module_confidence::setup);            // * Differences particularly at low FFT
-    s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // Only threshold to look at
-    s_setups.add_module("log_brightness", module_log_brightness::setup);    // Only threshold to look at
+    s_setups.add_module("pitch", module_pitch::setup);                      // ** Fixed [return for no pitch]
+    s_setups.add_module("confidence", module_confidence::setup);            // ** Fixed [return for no pitch / precision]
+    s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // ** Fixed [removed threshold / pitch fixed]
+    s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Fixed [removed threshold / pitch fixed]
     
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // Is 1- noise_ratio so sort there
@@ -212,7 +218,7 @@ int C74_EXPORT main()
     s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
     s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
 
-    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);              // Match
+    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);                 // Match
     s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
 
     // Specifiers
@@ -222,8 +228,8 @@ int C74_EXPORT main()
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);                  // Match
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);
+    s_setups.add_module("duration", summary_module_duration::setup);                    // Match
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);        // Match [minus median filter]
     
 	return 0;
 }
