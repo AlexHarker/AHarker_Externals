@@ -9,56 +9,6 @@
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
-// Foote Module
-
-user_module *module_foote::setup(const global_params& params, module_arguments& args)
-{
-    module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
-    
-    m->m_forward_only = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
-
-    return m;
-}
-
-void module_foote::calculate(const global_params& params, const double *frame, long size)
-{
-    double norm_sum1 = 0.0;
-    double norm_sum2 = 0.0;
-    double sum = 0.0;
- 
-    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
-    const double *frame2 = m_ring_buffer_module->get_frame(0);
-    
-    auto bin_calculate = [&](double value1, double value2)
-    {
-        sum += value1 * value2;
-        norm_sum1 += value1 * value1;
-        norm_sum2 += value2 * value2;
-    };
-    
-    // Calculate sums (looking at forward only changes if requested)
-    
-    if (m_forward_only)
-    {
-        for (long i = m_min_bin; i < m_max_bin; i++)
-            if (frame2[i] > frame1[i])
-                bin_calculate(frame1[i], frame2[i]);
-    }
-    else
-    {
-        for (long i = m_min_bin; i < m_max_bin; i++)
-            bin_calculate(frame1[i], frame2[i]);
-    }
-    
-    if (norm_sum1 && norm_sum2)
-        m_value =  1.0 - (sum / sqrt(norm_sum1 * norm_sum2));
-    else if (norm_sum2)
-        m_value = 1.0;
-    else
-        m_value = infinity();
-}
-
 // Flux Module
 
 user_module *module_flux::setup(const global_params& params, module_arguments& args)
@@ -143,6 +93,56 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     }
     
     m_value = m_square_flag ? sqrt(sum) : sum;
+}
+
+// Foote Module
+
+user_module *module_foote::setup(const global_params& params, module_arguments& args)
+{
+    module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
+    
+    m->m_forward_only = args.get_bool(true);
+    m->set_lag(args.get_long(1, 1, 33));
+    
+    return m;
+}
+
+void module_foote::calculate(const global_params& params, const double *frame, long size)
+{
+    double norm_sum1 = 0.0;
+    double norm_sum2 = 0.0;
+    double sum = 0.0;
+    
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
+    
+    auto bin_calculate = [&](double value1, double value2)
+    {
+        sum += value1 * value2;
+        norm_sum1 += value1 * value1;
+        norm_sum2 += value2 * value2;
+    };
+    
+    // Calculate sums (looking at forward only changes if requested)
+    
+    if (m_forward_only)
+    {
+        for (long i = m_min_bin; i < m_max_bin; i++)
+            if (frame2[i] > frame1[i])
+                bin_calculate(frame1[i], frame2[i]);
+    }
+    else
+    {
+        for (long i = m_min_bin; i < m_max_bin; i++)
+            bin_calculate(frame1[i], frame2[i]);
+    }
+    
+    if (norm_sum1 && norm_sum2)
+        m_value =  1.0 - (sum / sqrt(norm_sum1 * norm_sum2));
+    else if (norm_sum2)
+        m_value = 1.0;
+    else
+        m_value = infinity();
 }
 
 // MKL Module
