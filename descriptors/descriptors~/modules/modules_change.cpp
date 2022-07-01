@@ -38,8 +38,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
         norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
     }
     
-    norm_factor1 = norm_factor1 ? norm_factor1 = 1.0 / norm_factor1 : 1.0;
-    norm_factor2 = norm_factor2 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
+    norm_factor1 = norm_factor1 ? 1.0 / norm_factor1 : 1.0;
+    norm_factor2 = norm_factor2 ? 1.0 / norm_factor2 : 1.0;
     
     if (m_square_flag)
     {
@@ -49,10 +49,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                if (current_val < 0.0) current_val = 0.0;
-                current_val *= current_val;
-                sum += current_val;
+                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                sum += value ? value * value : 0.0;
             }
         }
         else
@@ -61,9 +59,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                current_val *= current_val;
-                sum += current_val;
+                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                sum += value * value;
             }
         }
     }
@@ -75,9 +72,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
-                double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                if (current_val < 0.0) current_val = 0.0;
-                sum += current_val;
+                double value = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
+                sum += value ? value : 0.0;
             }
         }
         else
@@ -85,10 +81,7 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
             // Both changes using amplitudes
             
             for (long i = m_min_bin; i < m_max_bin; i++)
-            {
-                double current_val = (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
-                sum += current_val;
-            }
+                sum += (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
         }
     }
     
