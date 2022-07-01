@@ -57,27 +57,16 @@ struct t_descriptors
     long max_fft_size_log2;
     long max_fft_size;
     
-    // FIX
-    
-    long hop_count;
-    bool reset;
-
     global_params params;
     
     // General Parameters
     
     bool descriptors_feedback;
     
-    // Lock
+    // Lock / Descriptor Graph / Output List
     
     thread_lock m_lock;
-    
-    // Descriptors
-    
     std::unique_ptr<summary_graph> m_graph;
-    
-    // Output List
-    
     std::vector<t_atom> output_list;
     
     // Outlet
