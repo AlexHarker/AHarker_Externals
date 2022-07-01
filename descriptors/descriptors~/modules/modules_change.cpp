@@ -189,7 +189,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     
     // FIX - note that there was an error in the original code here...
   
-    norm_factor2 = norm_factor2 ? norm_factor2 = 1.0 / norm_factor2 : 1.0;
+    norm_factor2 = norm_factor2 ? 1.0 / norm_factor2 : 1.0;
 
     auto bin_change = [&](long i)
     {
@@ -205,7 +205,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 const double value = bin_change(i);
-                if (value > 0 && log_frame2[i] >= log_thresh)
+                if (value > 0.0 && log_frame2[i] >= log_thresh)
                     sum += value * frame2[i] * norm_factor2;
             }
         }
@@ -228,7 +228,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 const double value = bin_change(i);
-                if (value > 0 && log_frame2[i] >= log_thresh)
+                if (value > 0.0 && log_frame2[i] >= log_thresh)
                     sum += value;
             }
         }
