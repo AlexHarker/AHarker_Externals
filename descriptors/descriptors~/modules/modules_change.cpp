@@ -23,13 +23,13 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     
 void module_flux::calculate(const global_params& params, const double *frame, long size)
 {
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
+    
     double norm_factor1 = 1.0;
     double norm_factor2 = 1.0;
     double sum = 0.0;
     
-    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
-    const double *frame2 = m_ring_buffer_module->get_frame(0);
-   
     auto bin_change = [&](long i)
     {
         return (frame2[i] * norm_factor2) - (frame1[i] * norm_factor1);
@@ -46,10 +46,10 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     
     if (m_square_flag)
     {
+        // Squared changes (forward only then both)
+        
         if (m_forward_only)
         {
-            // Forward changes only using squared changes
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 const double value = bin_change(i);
@@ -58,8 +58,6 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
         }
         else
         {
-            // Both changes using square changes
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 const double value = bin_change(i);
@@ -69,10 +67,10 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     }
     else
     {
+        // Non-squared deltas (forward only then both)
+        
         if (m_forward_only)
         {
-            // Forward changes only using amplitudes
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
             {
                 const double value = bin_change(i);
@@ -81,8 +79,6 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
         }
         else
         {
-            // Both changes using amplitudes
-            
             for (long i = m_min_bin; i < m_max_bin; i++)
                 sum += bin_change(i);
         }
@@ -105,12 +101,12 @@ user_module *module_foote::setup(const global_params& params, module_arguments& 
 
 void module_foote::calculate(const global_params& params, const double *frame, long size)
 {
+    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
+    const double *frame2 = m_ring_buffer_module->get_frame(0);
+    
     double norm_sum1 = 0.0;
     double norm_sum2 = 0.0;
     double sum = 0.0;
-    
-    const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
-    const double *frame2 = m_ring_buffer_module->get_frame(0);
     
     auto bin_calculate = [&](double value1, double value2)
     {
@@ -132,6 +128,8 @@ void module_foote::calculate(const global_params& params, const double *frame, l
         for (long i = m_min_bin; i < m_max_bin; i++)
             bin_calculate(frame1[i], frame2[i]);
     }
+    
+    // Finalise
     
     if (norm_sum1 && norm_sum2)
         m_value =  1.0 - (sum / sqrt(norm_sum1 * norm_sum2));
