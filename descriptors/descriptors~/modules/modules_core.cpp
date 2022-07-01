@@ -213,7 +213,7 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
     m_spectrum.data()[nyquist] = sqrt(power_frame[nyquist]);
 }
 
-// Frame Sum Module (N.B. pass through methods to ensure linking)
+// Frame Summming Modules (N.B. pass through methods to ensure linking)
 
 template <class T, class U>
 void module_frame_sum<T, U>::add_requirements(graph& g)
@@ -247,7 +247,7 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
 {
     const double *power = m_power_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_span, median_filter<double>::Edges::Fold, 50.0);
+    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
 }
 
 // Log Bins Module

@@ -37,6 +37,7 @@ struct module_pitch : module_pitch_base<module_pitch>
 private:
     
     module_autocorrelation *m_autocorrelation_module;
+    
     double m_confidence;
 };
 

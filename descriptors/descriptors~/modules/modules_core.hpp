@@ -32,12 +32,13 @@ struct module_window : module_core<module_window>
 
 private:
     
-    double m_rms_compensation;
-    double m_energy_compensation;
-    t_symbol *m_window_type = nullptr;
-    long m_frame_size = 0;
     aligned_vector<> m_window;
     aligned_vector<> m_windowed_frame;
+    
+    double m_rms_compensation;
+    double m_energy_compensation;
+    long m_frame_size = 0;
+    t_symbol *m_window_type = nullptr;
 };
 
 // FFT Module
@@ -54,8 +55,10 @@ struct module_fft : module_core<module_fft>
 private:
     
     module_window *m_window_module;
+    
     fft_setup m_fft_setup;
     fft_split m_fft_frame;
+    
     double m_energy_compensation;
 };
 
@@ -73,7 +76,9 @@ struct module_power_spectrum : module_core<module_power_spectrum>
 private:
     
     module_fft *m_fft_module;
+    
     aligned_vector<> m_spectrum;
+    
     double m_energy_compensation;
 };
 
@@ -90,10 +95,11 @@ struct module_amplitude_spectrum : module_core<module_amplitude_spectrum>
 private:
     
     module_power_spectrum *m_power_module;
+    
     aligned_vector<> m_spectrum;
 };
 
-// Cumulative Summing Modules
+// Frame Summing Modules
 
 template <class T, class U>
 struct module_frame_sum : module_core<U>
@@ -126,10 +132,11 @@ struct module_frame_sum : module_core<U>
 protected:
     
     T *m_core_module;
+    
     aligned_vector<> m_cumulative_spectrum;
 };
 
-// Power Spectrum Module
+// Power / Amplitude Sums
 
 struct module_power_sum : module_frame_sum<module_power_spectrum, module_power_sum>
 {
@@ -146,10 +153,10 @@ struct module_amplitude_sum : module_frame_sum<module_amplitude_spectrum, module
 
 struct module_median_power_spectrum : comparable_module<module_median_power_spectrum>
 {
-    module_median_power_spectrum(long median_span)
-    : m_filter(median_span), m_median_span(median_span) {}
+    module_median_power_spectrum(long median_width)
+    : m_filter(median_width), m_median_width(median_width) {}
     
-    auto get_params() const { return std::make_tuple(m_median_span); }
+    auto get_params() const { return std::make_tuple(m_median_width); }
     
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
@@ -160,9 +167,11 @@ struct module_median_power_spectrum : comparable_module<module_median_power_spec
 private:
     
     module_power_spectrum *m_power_module;
+    
     median_filter<double> m_filter;
     aligned_vector<> m_spectrum;
-    const long m_median_span;
+    
+    const long m_median_width;
 };
 
 // Log Bins Module
@@ -195,11 +204,12 @@ struct module_peak_detection : module_core<module_peak_detection>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
-    peak_list m_peaks;
+    
     peak_detector m_detector;
+    peak_list m_peaks;
 };
 
-// Ring Buffer Modules
+// Amplitude Ring Buffer Module
 
 struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
 {
@@ -215,10 +225,14 @@ private:
     long get_idx(long lag) const;
     
     module_amplitude_spectrum *m_amplitude_module;
+    
     std::vector<aligned_vector<>> m_spectra;
+    
     long m_counter = 0;
     long m_max_lag = 0;
 };
+
+// Log Amplitude Ring Buffer Module
 
 struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_buffer>
 {
@@ -234,7 +248,9 @@ private:
     long get_idx(long lag) const;
     
     module_amplitude_spectrum *m_amplitude_module;
+    
     std::vector<aligned_vector<>> m_spectra;
+    
     long m_counter = 0;
     long m_max_lag = 0;
 };
