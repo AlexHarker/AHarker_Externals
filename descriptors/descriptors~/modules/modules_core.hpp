@@ -56,8 +56,8 @@ private:
     
     module_window *m_window_module;
     
-    fft_setup<> m_fft_setup;
-    fft_split<> m_fft_frame;
+    fft_setup m_fft_setup;
+    fft_split m_fft_frame;
     
     double m_energy_compensation;
 };
@@ -262,15 +262,15 @@ struct module_autocorrelation : module_core<module_autocorrelation>
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
-    const float *get_coefficients() const { return m_coefficients.data(); }
+    const double *get_coefficients() const { return m_coefficients.data(); }
     long get_length() const { return static_cast<long>(m_coefficients.size()); }
 
 private:
     
-    fft_setup<FFT_SETUP_F> m_fft_setup;
-    fft_split<FFT_SPLIT_COMPLEX_F, float> m_full_frame;
-    fft_split<FFT_SPLIT_COMPLEX_F, float> m_half_frame;
-    aligned_vector<float> m_coefficients;
+    fft_setup m_fft_setup;
+    fft_split m_full_frame;
+    fft_split m_half_frame;
+    aligned_vector<> m_coefficients;
 };
 
 #endif /* _MODULES_CORE_HPP_ */

@@ -95,10 +95,10 @@ void module_window::prepare(const global_params& params)
     auto num_bins = params.num_bins();
     auto fft_size = params.fft_size();
     
-    fft_setup<> setup(fft_size_log2);
+    fft_setup setup(fft_size_log2);
     aligned_vector<> raw_frame(frame_size);
     aligned_vector<> power_spectrum(num_bins);
-    fft_split<> spectrum(params.fft_size());
+    fft_split spectrum(params.fft_size());
 
     // Create window
 
@@ -364,8 +364,6 @@ void module_autocorrelation::prepare(const global_params& params)
 
 void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
 {
-    using VecType = SIMDType<float, SIMDLimits<float>::max_size>;
-
     auto full_frame = m_full_frame.data();
     auto half_frame = m_half_frame.data();
     

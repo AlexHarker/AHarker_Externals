@@ -55,7 +55,6 @@ private:
 
 // An FFT Split
 
-template <class T = FFT_SPLIT_COMPLEX_D, class U = double>
 struct fft_split
 {
     fft_split() {}
@@ -71,19 +70,18 @@ struct fft_split
         m_split.imagp = m_vector.data() + (size >> 1);
     }
     
-    T& data() { return m_split; }
-    const T& data() const { return m_split; }
+    FFT_SPLIT_COMPLEX_D& data() { return m_split; }
+    const FFT_SPLIT_COMPLEX_D& data() const { return m_split; }
     size_t size() const { return m_vector.size(); }
 
 private:
 
-    aligned_vector<U> m_vector;
-    T m_split;
+    aligned_vector<> m_vector;
+    FFT_SPLIT_COMPLEX_D m_split;
 };
 
 // An FFT Setup
 
-template <class T = FFT_SETUP_D>
 struct fft_setup
 {
     fft_setup() : m_fft_setup(nullptr), m_size(0) {}
@@ -103,12 +101,12 @@ struct fft_setup
         }
     }
     
-    T& get() { return m_fft_setup; }
+    FFT_SETUP_D& get() { return m_fft_setup; }
     size_t size() const { return m_size; }
 
 private:
     
-    T m_fft_setup;
+    FFT_SETUP_D m_fft_setup;
     size_t m_size;
 };
 

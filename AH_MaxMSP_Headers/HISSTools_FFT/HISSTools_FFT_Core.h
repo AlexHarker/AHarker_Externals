@@ -1153,7 +1153,8 @@ namespace hisstools_fft_impl{
     
 #if defined(USE_APPLE_FFT)
     
-    void unzip_complex(const float *input, DSPSplitComplex *output, uintptr_t half_length)
+    template<class T>
+    void unzip_complex(const T *input, DSPSplitComplex *output, uintptr_t half_length)
     {
         vDSP_ctoz((COMPLEX *) input, (vDSP_Stride) 2, output, (vDSP_Stride) 1, (vDSP_Length) half_length);
     }
@@ -1177,18 +1178,6 @@ namespace hisstools_fft_impl{
         }
     }
     
-    void unzip_complex(const double *input, DSPSplitComplex *output, uintptr_t half_length)
-    {
-        float *realp = output->realp;
-        float *imagp = output->imagp;
-    
-        for (uintptr_t i = 0; i < half_length; i++)
-        {
-            *realp++ = static_cast<float>(*input++);
-            *imagp++ = static_cast<float>(*input++);
-        }
-    }
-
 #endif
     
     // Unzip
