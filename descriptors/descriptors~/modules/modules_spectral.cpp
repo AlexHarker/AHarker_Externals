@@ -290,7 +290,7 @@ void module_log_centroid::calculate(const global_params& params, const double *f
 
     m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
     m_raw = m_sum ? stat_weighted_sum(log_bins, data, bin_count()) / m_sum : infinity();
-    m_value = exp2(m_raw + m_min_bin) * params.bin_freq();
+    m_value = exp2(m_raw) * params.bin_freq();
 }
 
 // Spread
