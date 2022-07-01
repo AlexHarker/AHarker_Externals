@@ -127,6 +127,8 @@ int C74_EXPORT main()
     // Pitch / confidence *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
     //
+    // trough and trough_pos *did* return infs due to an incorrect test
+    // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
     // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
     // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
     //
@@ -165,8 +167,8 @@ int C74_EXPORT main()
                                                                             
     s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Partial (precision + bin zero)
     s_setups.add_module("log_spread", module_log_spread::setup);            // * Partial (precision + bin zero)
-    s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Differences (sum div missing + above)
-    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Differences (sum div missing + above)
+    s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Fixed (sum div missing + above)
+    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Fixed (sum div missing + above)
     
     s_setups.add_module("pitch", module_pitch::setup);                      // ** Fixed [return for no pitch]
     s_setups.add_module("confidence", module_confidence::setup);            // ** Fixed [return for no pitch / precision]
@@ -174,7 +176,7 @@ int C74_EXPORT main()
     s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Fixed [removed threshold / pitch fixed]
     
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
-    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // Is 1- noise_ratio so sort there
+    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // ** Depends on above [nothing to do here]
     
     s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
     s_setups.add_module("foote", module_foote::setup);
@@ -196,38 +198,38 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
-    s_setups.add_module("peak", stat_module_peak::setup);                           // * Partial (end position behaviour)
-    s_setups.add_module("trough", stat_module_trough::setup);                       // * Works as prev (old broken)
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                   // * Partial (end position behaviour)
-    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);               // * Works as prev (old broken)
+    s_setups.add_module("peak", stat_module_peak::setup);                                   // * Partial (end position behaviour)
+    s_setups.add_module("trough", stat_module_trough::setup);                               // ** Fixed [old returns infs]
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // * Partial (end position behaviour)
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);                       // ** Fixed [old returns infs]
 
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
-    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);             // ** Fixed [old retruns infs]
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);                     // ** Fixed [old returns infs]
     
-    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);       // ** Fixed [return cross not length]
-    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);       // ** Fixed [return cross not length]
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);           // ** Fixed [return cross not length]
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);           // ** Fixed [return cross not length]
     s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
     s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
     
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);             // * To investigate
-    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);         // * To investigate
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);     // * To investigate
-    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup); // * To investigate
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // * Matches (check end positions)
+    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);             // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // * Matches (check end positions)
+    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);     // ** Fixed [old searches above thresh]
     
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);                 // * To investigate
-    s_setups.add_module("cross_below", stat_module_cross_below::setup);                 // * To investigate
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);         // * To investigate
-    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);         // * To investigate
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // * Matches (check end positions)
+    s_setups.add_module("cross_below", stat_module_cross_below::setup);                     // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // * Matches (check end positions)
+    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);             // ** Fixed [old searches above thresh]
 
     // Specifiers
     
     s_setups.add_module("masktime", specifier_mask_time::setup);
-    s_setups.add_module("threshold", specifier_threshold::setup);                       // * To investigate
+    s_setups.add_module("threshold", specifier_threshold::setup);                           // * To investigate
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);                    // * To investigate
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);        // * Match [minus median filter]
+    s_setups.add_module("duration", summary_module_duration::setup);                        // * To investigate
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [minus median filter]
     
 	return 0;
 }
