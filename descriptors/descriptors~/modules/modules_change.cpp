@@ -34,8 +34,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
    
     if (m_normalise_spectrum)
     {
-        norm_factor1 = stat_sum(frame1 + m_min_bin, m_max_bin - m_min_bin);
-        norm_factor2 = stat_sum(frame2 + m_min_bin, m_max_bin - m_min_bin);
+        norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
+        norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
     }
     
     norm_factor1 = norm_factor1 ? norm_factor1 = 1.0 / norm_factor1 : 1.0;
@@ -185,11 +185,11 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     
     if (m_normalise_spectra)
     {
-        norm_factor1 = stat_sum(frame1 + m_min_bin, m_max_bin - m_min_bin);
-        norm_factor2 = stat_sum(frame2 + m_min_bin, m_max_bin - m_min_bin);
+        norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
+        norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
      
         if (!norm_factor1)
-            norm_factor1 = norm_min * static_cast<double>(m_max_bin - m_min_bin);
+            norm_factor1 = norm_min * static_cast<double>(bin_count());
     }
     
     const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), MKL_EQUALISE_MAX_LOG);
@@ -249,6 +249,6 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
         }
     }
     
-    m_value = sum / static_cast<double>(2 * (m_max_bin - m_min_bin));
+    m_value = sum / static_cast<double>(2 * (bin_count()));
 }
 

@@ -149,8 +149,8 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
     // N.B. - This doesn't use stat_crest as the denominator is simply the mean
 
-    const double max = stat_max(amps + m_min_bin, m_max_bin - m_min_bin);
-    const double mean = stat_mean(amps + m_min_bin, m_max_bin - m_min_bin);
+    const double max = stat_max(amps + m_min_bin, bin_count());
+    const double mean = stat_mean(amps + m_min_bin, bin_count());
     const double crest = mean ? max / mean : infinity();
             
     m_value = m_report_db ? atodb(crest) : crest;
