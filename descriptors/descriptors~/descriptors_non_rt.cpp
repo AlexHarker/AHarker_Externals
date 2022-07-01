@@ -126,12 +126,12 @@ int C74_EXPORT main()
     // SFM *was* using power rather than amplitudes
     // Spectral crest *was* using power rather than amplitudes
     // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
-    // Higher spectral shapes likely wrong in early versions due to a lack of division by the overall amplitude sum
+    // Higher spectral shapes were wrong in early versions due to a lack of division by the overall amplitude sum
     // Log higher spectral shape was still wrong in more recent versions
     // Flux *had* a fixed index bug in the code producing consistently incorrect results
-    // Foote previously returned inf for the change between two zero frames (now zero)
-    // Pitch / confidence - major issue is that previously pitch reports as 0 when invalid / also precision difference
-    // Pitch now reports as inf for no pitch (not zero)
+    // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
+    // Pitch / confidence *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
+    // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
     //
     // Spectral peak finding currently has no median filtering
     // RT spectral_peaks reports in linear amps but non RT in db (with no options)
