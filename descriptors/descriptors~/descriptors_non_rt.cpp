@@ -126,6 +126,7 @@ int C74_EXPORT main()
     // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
     // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
+    // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
     //
     // trough and trough_pos *did* return infs due to an incorrect test
     // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
@@ -175,7 +176,7 @@ int C74_EXPORT main()
     s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
     s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
     
-    s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // * Big differences (median filter?)
+    s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // ** Fixed [multiple errors]
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // ** Depends on above [nothing to do here]
     
     s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
