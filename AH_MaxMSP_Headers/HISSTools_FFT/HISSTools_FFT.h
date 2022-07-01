@@ -368,5 +368,8 @@ void hisstools_zip(const FFT_SPLIT_COMPLEX_D *input, double *output, uintptr_t l
 
 void hisstools_zip(const FFT_SPLIT_COMPLEX_F *input, float *output, uintptr_t log2n);
 
+
+void hisstools_rfft(FFT_SETUP_F setup, const double *input, FFT_SPLIT_COMPLEX_F *output, uintptr_t in_length, uintptr_t log2n);
+
 #endif
 

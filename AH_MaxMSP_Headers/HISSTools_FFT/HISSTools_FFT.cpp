@@ -215,9 +215,22 @@ void hisstools_unzip_zero(const float *input, FFT_SPLIT_COMPLEX_D *output, uintp
     hisstools_fft_impl::unzip_zero<double>(input, output, in_length, log2n);
 }
 
+// N.B This routine specifically deals with unzipping double data into a float precision complex split format
+
+void hisstools_unzip_zero(const double *input, FFT_SPLIT_COMPLEX_F *output, uintptr_t in_length, uintptr_t log2n)
+{
+    hisstools_fft_impl::unzip_zero<float>(input, output, in_length, log2n);
+}
+
 // Convenience Real FFT Functions
 
 void hisstools_rfft(FFT_SETUP_D setup, const double *input, FFT_SPLIT_COMPLEX_D *output, uintptr_t in_length, uintptr_t log2n)
+{
+    hisstools_unzip_zero(input, output, in_length, log2n);
+    hisstools_rfft(setup, output, log2n);
+}
+
+void hisstools_rfft(FFT_SETUP_F setup, const double *input, FFT_SPLIT_COMPLEX_F *output, uintptr_t in_length, uintptr_t log2n)
 {
     hisstools_unzip_zero(input, output, in_length, log2n);
     hisstools_rfft(setup, output, log2n);
