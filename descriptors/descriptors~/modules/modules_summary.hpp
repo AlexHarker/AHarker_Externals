@@ -4,6 +4,7 @@
 
 #include "descriptors_graph.hpp"
 #include "descriptors_summary_modules.hpp"
+#include "utility_definitions.hpp"
 
 #include "processing_containers.hpp"
 #include "peak_finder.hpp"
@@ -167,7 +168,7 @@ struct storage_mask : summary_module, module_core<storage_mask>
     std::vector<bool> &get_reset_mask(const double *data, long size)
     {
         for (long i = 0; i < size; i++)
-            m_mask[i] = data[i] == std::numeric_limits<double>::infinity();
+            m_mask[i] = data[i] == infinity();
         
         return m_mask;
     }
@@ -206,7 +207,7 @@ struct specifier_threshold : summary_specifier<specifier_threshold>
 {
     enum class mode { abs, peak_mul, peak_add, peak_db, mean_mul, mean_add, mean_db };
     
-    specifier_threshold(double threshold = std::numeric_limits<double>::infinity(), mode type = mode::abs)
+    specifier_threshold(double threshold = infinity(), mode type = mode::abs)
     : m_threshold(threshold), m_type(type) {}
     
     static user_module *setup(const global_params& params, module_arguments& args);
@@ -220,7 +221,7 @@ struct specifier_threshold : summary_specifier<specifier_threshold>
     
 private:
     
-    double m_threshold = std::numeric_limits<double>::infinity();
+    double m_threshold = infinity();
     double m_calculated_threshold = -1.0;
     mode m_type = mode::abs;
 };
@@ -253,7 +254,7 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
         // Reset the mask
         
         for (long j = 0; j < size; j++)
-            mask[j] = data[j] == std::numeric_limits<double>::infinity();
+            mask[j] = data[j] == infinity();
                 
         // Loop over values
         
@@ -320,8 +321,6 @@ struct stat_find_n_user : summary_module_vector_n<stat_find_n_user<Condition, Po
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        constexpr auto infinity = std::numeric_limits<double>::infinity();
-        
         const long *positions = m_finder->get_positions();
         
         if (Pos)
@@ -332,7 +331,7 @@ struct stat_find_n_user : summary_module_vector_n<stat_find_n_user<Condition, Po
         else
         {
             for (long i = 0; i < vector_module::get_n(); i++)
-                vector_module::m_values[i] = (positions[i] == -1) ? infinity : data[positions[i]];
+                vector_module::m_values[i] = (positions[i] == -1) ? infinity() : data[positions[i]];
         }
     }
         
@@ -395,7 +394,7 @@ struct stat_module_ratio : stat_module_simple<stat_module_ratio<Op>>
         
         for (long i = 0; i < size; i++)
         {
-            if (data[i] != std::numeric_limits<double>::infinity())
+            if (data[i] != infinity())
             {
                 if (Op<double>()(data[i], threshold))
                     num_cond++;
@@ -451,8 +450,6 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        constexpr double infinity = std::numeric_limits<double>::infinity();
-        
         const auto crossings = m_crossings.data();
         
         std::vector<bool> &mask = m_mask->get_reset_mask(data, size);
@@ -502,11 +499,11 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
             // Search earlier then later for crossing points
                 
             for (cross1 = pos; cross1 > 0 ; cross1--)
-                if (data[i] != infinity && Op2<double>()(data[cross1], threshold))
+                if (data[i] != infinity() && Op2<double>()(data[cross1], threshold))
                     break;
                                 
             for (cross2 = pos + 1; cross2 < size - 1; cross2++)
-                if (data[i] != infinity && Op2<double>()(data[cross2], threshold))
+                if (data[i] != infinity() && Op2<double>()(data[cross2], threshold))
                     break;
             
             // Update mask points and do masking
@@ -562,8 +559,6 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        constexpr double infinity = std::numeric_limits<double>::infinity();
-        
         const auto crossings = m_crossings.data();
         
         double threshold = m_threshold->get_threshold();
@@ -577,7 +572,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             // Find the next crossing over the threshold
             
             for (cross1 = i; cross1 < size; cross1++)
-                if (data[cross1] != infinity && Op1<double>()(data[cross1], threshold))
+                if (data[cross1] != infinity() && Op1<double>()(data[cross1], threshold))
                     break;
             
             // Exit if we've reached the end without finding a crossing point
@@ -588,7 +583,7 @@ struct longest_crossings : summary_module, comparable_module<longest_crossings<O
             // Jump by the mask size then find out when the value crosses back through the threshold
             
             for (cross2 = cross1 + mask_span; cross2 < size; cross2++)
-                if (data[cross2] != infinity && Op2<double>()(data[cross2], threshold))
+                if (data[cross2] != infinity() && Op2<double>()(data[cross2], threshold))
                     break;
             
             crossing cross(-1, cross1, std::min(cross2, size));
@@ -652,15 +647,13 @@ struct stat_crossings_user : summary_module_vector_n<stat_crossings_user<Crossin
     
     void calculate(const global_params& params, const double *data, long size) override
     {
-        constexpr auto infinity = std::numeric_limits<double>::infinity();
-
         const auto *crossings = m_crossings->get_crossings();
         
         switch (Mode)
         {
             case cross_mode::value:
                 for (long i = 0; i < vector_module::get_n(); i++)
-                    vector_module::m_values[i] = (crossings[i].m_pos == -1) ? infinity : data[crossings[i].m_pos];
+                    vector_module::m_values[i] = (crossings[i].m_pos == -1) ? infinity() : data[crossings[i].m_pos];
                 break;
                 
             case cross_mode::pos:

@@ -1,14 +1,10 @@
 
 #include "modules_summary.hpp"
+#include "utility_definitions.hpp"
 
 #include <Statistics.hpp>
 
 #include <algorithm>
-#include <limits>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
-
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Duration
 

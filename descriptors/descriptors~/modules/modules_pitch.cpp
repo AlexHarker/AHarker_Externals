@@ -1,11 +1,9 @@
 
 #include "modules_pitch.hpp"
 #include "descriptors_graph.hpp"
+#include "utility_definitions.hpp"
 
 #include <algorithm>
-#include <limits>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Pitch Module
 
@@ -86,6 +84,8 @@ void module_lin_brightness::calculate(const global_params& params, const double 
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
     
+    // FIX - weird threshold
+    
     if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
         m_value = centroid / pitch;
     else
@@ -105,6 +105,8 @@ void module_log_brightness::calculate(const global_params& params, const double 
     const double pitch = m_pitch_module->get_output(0);
     const double centroid = m_centroid_module->get_output(0);
     
+    // FIX - weird threshold
+
     if (pitch > 1.0 && pitch != infinity() && centroid != infinity())
         m_value = centroid / pitch;
     else

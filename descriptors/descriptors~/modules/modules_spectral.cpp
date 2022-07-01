@@ -1,18 +1,12 @@
 
 #include "modules_spectral.hpp"
 #include "descriptors_graph.hpp"
+#include "utility_definitions.hpp"
 
-#include <SIMDSupport.hpp>
 #include <Statistics.hpp>
 
 #include <algorithm>
 #include <cmath>
-
-#include <limits>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
-
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Energy Ratio Module
 

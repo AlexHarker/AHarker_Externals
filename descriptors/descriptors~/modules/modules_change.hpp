@@ -75,11 +75,12 @@ private:
 
 struct module_mkl : module_spectral_change<module_mkl>
 {
+    using base = module_spectral_change;
+
     static user_module *setup(const global_params& params, module_arguments& args);
     
     auto get_params() const
     {
-        using base = module_spectral_change;
         return std::make_tuple(base::get_params(), m_threshold, m_forward_only, m_normalise_spectra, m_weight);
     }
 

@@ -1,14 +1,12 @@
 
 #include "modules_content.hpp"
 #include "descriptors_graph.hpp"
+#include "utility_definitions.hpp"
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 
 #include <Statistics.hpp>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 void module_noise_ratio::add_requirements(graph& g)
 {

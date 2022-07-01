@@ -1,11 +1,8 @@
 
 #include "modules_level.hpp"
+#include "utility_definitions.hpp"
 
 #include <Statistics.hpp>
-
-#include <limits>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Abs Module
 

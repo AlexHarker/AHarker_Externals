@@ -1,13 +1,11 @@
 
 #include "modules_change.hpp"
 #include "descriptors_graph.hpp"
+#include "conversion_helpers.hpp"
 
 #include <Statistics.hpp>
 
 #include <cmath>
-#include <limits>
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Flux Module
 

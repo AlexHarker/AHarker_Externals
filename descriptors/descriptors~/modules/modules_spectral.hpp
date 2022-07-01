@@ -3,9 +3,8 @@
 #define _MODULES_SPECTRAL_HPP_
 
 #include "conversion_helpers.hpp"
+#include "utility_definitions.hpp"
 #include "modules_core.hpp"
-
-#include <limits>
 
 // Basic Spectral Module
 
@@ -14,12 +13,10 @@ struct module_spectral : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        constexpr double infinity = std::numeric_limits<double>::infinity();
-        
         T *m = new T();
         
-        m->m_lo_freq = args.get_double(0.0, 0.0, infinity);
-        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity);
+        m->m_lo_freq = args.get_double(0.0, 0.0, infinity());
+        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity());
 
         return m;
     }
