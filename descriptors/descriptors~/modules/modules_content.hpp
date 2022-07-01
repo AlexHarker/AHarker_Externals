@@ -41,7 +41,7 @@ struct module_noise_ratio : module_noise_measure<module_noise_ratio>
     
 private:
     
-    module_energy *m_energy_module;
+    module_power_sum *m_power_sum_module;
     module_median_power_spectrum *m_median_power_module;
 };
 

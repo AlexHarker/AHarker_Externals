@@ -10,15 +10,15 @@
 
 void module_noise_ratio::add_requirements(graph& g)
 {
-    m_energy_module = g.add_requirement(new module_energy(0.0, 192000.0, false));
-    m_median_power_module = g.add_requirement(new module_median_power_spectrum(m_median_span));
+    m_power_sum_module = g.add_requirement(new module_power_sum());
+    m_median_power_module = g.add_requirement(new module_median_power_spectrum(m_median_span * 2 + 1));
 }
 
 void module_noise_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    double power_sum = m_energy_module->get_output(0);
-    
     const double *median_power = m_median_power_module->get_frame();
+
+    double power_sum = m_power_sum_module->get_sum(0, params.num_bins());
             
     if (power_sum)
         m_value = std::min(1.0, stat_sum(median_power, params.num_bins()) / power_sum);
