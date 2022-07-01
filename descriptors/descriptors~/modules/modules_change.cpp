@@ -132,11 +132,9 @@ void module_foote::calculate(const global_params& params, const double *frame, l
     // Finalise
     
     if (norm_sum1 && norm_sum2)
-        m_value =  1.0 - (sum / sqrt(norm_sum1 * norm_sum2));
-    else if (norm_sum2)
-        m_value = 1.0;
+        m_value = 1.0 - (sum / sqrt(norm_sum1 * norm_sum2));
     else
-        m_value = infinity();
+        m_value = norm_sum2 ? 1.0 : 0.0;
 }
 
 // MKL Module
