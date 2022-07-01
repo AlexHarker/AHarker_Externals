@@ -127,6 +127,9 @@ int C74_EXPORT main()
     // Pitch / confidence *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
     //
+    // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
+    // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
+    //
     // Spectral peak finding currently has no median filtering
     // RT spectral_peaks reports in linear amps but non RT in db (with no options)
     //
@@ -141,24 +144,24 @@ int C74_EXPORT main()
     
     // Per-frame Descriptors
     
-    s_setups.add_module("abs", module_average_abs_amp::setup);              // Match
-    s_setups.add_module("rms", module_average_rms_amp::setup);              // Match
-    s_setups.add_module("peakamp", module_peak_amp::setup);                 // Match
+    s_setups.add_module("abs", module_average_abs_amp::setup);
+    s_setups.add_module("rms", module_average_rms_amp::setup);
+    s_setups.add_module("peakamp", module_peak_amp::setup);
 
-    s_setups.add_module("energy", module_energy::setup);                    // Match
-    s_setups.add_module("energy_ratio", module_energy_ratio::setup);        // Match
+    s_setups.add_module("energy", module_energy::setup);
+    s_setups.add_module("energy_ratio", module_energy_ratio::setup);
     
-    s_setups.add_module("loudness", module_loudness::setup);                // Match
+    s_setups.add_module("loudness", module_loudness::setup);
     s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Fixed [previously no interpolation]
                                                                             // N.B. uses power / not same as flucoma
     
     s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
     s_setups.add_module("spectral_crest", module_spectral_crest::setup);    // ** Fixed [used power not amps]
 
-    s_setups.add_module("lin_centroid", module_lin_centroid::setup);        // Match
+    s_setups.add_module("lin_centroid", module_lin_centroid::setup);
     s_setups.add_module("lin_spread", module_lin_spread::setup);            // ** Fixed [was ^2 before Hz conversion]
-    s_setups.add_module("lin_skewness", module_lin_skewness::setup);        // Match (fixed from earlier)
-    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);        // Match (fixed from earlier)
+    s_setups.add_module("lin_skewness", module_lin_skewness::setup);
+    s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
                                                                             
     s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Partial (precision + bin zero)
     s_setups.add_module("log_spread", module_log_spread::setup);            // * Partial (precision + bin zero)
@@ -174,57 +177,57 @@ int C74_EXPORT main()
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // Is 1- noise_ratio so sort there
     
     s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
-    s_setups.add_module("foote", module_foote::setup);                      // Match
-    s_setups.add_module("mkl", module_mkl::setup);
+    s_setups.add_module("foote", module_foote::setup);
+    s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
     
-    s_setups.add_module("inharmonicity", module_inharmonicity::setup);
-    s_setups.add_module("roughness", module_roughness::setup);
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * To investigate
+    s_setups.add_module("roughness", module_roughness::setup);              // * To investigate
 
     // Stats
     
-    s_setups.add_module("mean", stat_module_mean::setup);                           // Match (apart from padding)
-    s_setups.add_module("standard_dev", stat_module_stddev::setup);                 // Match
-    s_setups.add_module("time_centroid", stat_module_centroid::setup);              // Match
-    s_setups.add_module("median", stat_module_median::setup);                       // Match
-    s_setups.add_module("range", stat_module_range::setup);                         // Match
+    s_setups.add_module("mean", stat_module_mean::setup);
+    s_setups.add_module("standard_dev", stat_module_stddev::setup);
+    s_setups.add_module("time_centroid", stat_module_centroid::setup);
+    s_setups.add_module("median", stat_module_median::setup);
+    s_setups.add_module("range", stat_module_range::setup);
 
-    s_setups.add_module("min", stat_module_min::setup);                             // Match
-    s_setups.add_module("max", stat_module_max::setup);                             // Match
-    s_setups.add_module("min_pos", stat_module_min_pos::setup);                     // Match
-    s_setups.add_module("max_pos", stat_module_max_pos::setup);                     // Match
+    s_setups.add_module("min", stat_module_min::setup);
+    s_setups.add_module("max", stat_module_max::setup);
+    s_setups.add_module("min_pos", stat_module_min_pos::setup);
+    s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
     s_setups.add_module("peak", stat_module_peak::setup);                           // * Partial (end position behaviour)
-    s_setups.add_module("trough", stat_module_trough::setup);
+    s_setups.add_module("trough", stat_module_trough::setup);                       // * Works as prev (old broken)
     s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                   // * Partial (end position behaviour)
-    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);               // * Works as prev (old broken)
 
-    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
-    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
-    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // * Partial (masktime)
-    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // * Partial (masktime)
+    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);             // ** Fixed [old retruns infs]
     
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);
-    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);
-    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);       // ** Fixed [return cross not length]
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);       // ** Fixed [return cross not length]
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
     
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);
-    s_setups.add_module("cross_below", stat_module_cross_below::setup);
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
-    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
-
-    s_setups.add_module("ratio_above", stat_module_ratio_above::setup);                 // Match
-    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);             // * To investigate
+    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);         // * To investigate
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);     // * To investigate
+    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup); // * To investigate
+    
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);                 // * To investigate
+    s_setups.add_module("cross_below", stat_module_cross_below::setup);                 // * To investigate
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);         // * To investigate
+    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);         // * To investigate
 
     // Specifiers
     
     s_setups.add_module("masktime", specifier_mask_time::setup);
-    s_setups.add_module("threshold", specifier_threshold::setup);
+    s_setups.add_module("threshold", specifier_threshold::setup);                       // * To investigate
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);                    // Match
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);        // Match [minus median filter]
+    s_setups.add_module("duration", summary_module_duration::setup);                    // * To investigate
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);        // * Match [minus median filter]
     
 	return 0;
 }
