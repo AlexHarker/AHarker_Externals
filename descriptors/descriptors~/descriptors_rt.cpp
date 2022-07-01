@@ -189,7 +189,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 	
     long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
     
-    descriptors_fft_params_internal(x, default_fft_size, 0, 0, nullptr);
+    x->params.m_fft_params = check_fft_params((t_object *) x, default_fft_size, 0, 0, nullptr, x->max_fft_size_log2);
     
 	dsp_setup((t_pxobject *) x, 1);
 			
@@ -200,6 +200,10 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
     x->params.m_sr = 44100.0;
     x->m_outlet = listout(x);
 
+    x->hop_count = x->params.hop_size();
+    x->params.m_signal_length = x->params.frame_size();
+    x->reset = true;
+   
     create_object(x->output_list);
     create_object(x->rt_buffer);
     create_object(x->m_graph);
@@ -257,7 +261,16 @@ void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_a
     long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
-    descriptors_fft_params_internal(x, fft_size, hop_size, frame_size, window_type);
+    auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
+    
+    x->params.m_fft_params = params;
+    x->params.m_signal_length = x->params.frame_size();
+
+    x->hop_count = x->params.hop_size();
+    x->reset = true;
+    
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
 }
 
 // Set Descriptors
@@ -307,10 +320,10 @@ t_int *descriptorsrt_perform(t_int *w)
 	auto& rt_buffer = x->rt_buffer;
 	
     long buffer_size = static_cast<long>(rt_buffer.size());
-    long hop_size = x->params.m_hop_size;
+    long hop_size = x->params.hop_size();
 	long hop_count = x->hop_count;
 	long rw_counter = x->rw_counter;
-	long frame_counter = rw_counter - x->params.m_frame_size + (buffer_size >> 1);
+    long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 	
 	// Reset
 	
@@ -360,10 +373,10 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 	auto& rt_buffer = x->rt_buffer;
 	
 	long buffer_size = static_cast<long>(rt_buffer.size());
-    long hop_size = x->params.m_hop_size;
+    long hop_size = x->params.hop_size();
 	long hop_count = x->hop_count;
 	long rw_counter = x->rw_counter;
-    long frame_counter = rw_counter - x->params.m_frame_size + (buffer_size >> 1);
+    long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 
     // Reset
 

@@ -2,6 +2,8 @@
 #ifndef _DESCRIPTORS_FFT_PARAMS_HPP_
 #define _DESCRIPTORS_FFT_PARAMS_HPP_
 
+#include "descriptors_modules.hpp"
+
 static long int_log2(long in)
 {
     long count = 0;
@@ -55,32 +57,25 @@ static long check_fft_size(t_object *x, const char *str, long fft_size, long max
     return fft_size_log2;
 }
 
-template <class T>
-void descriptors_fft_params_internal(T *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type)
+fft_params check_fft_params(t_object *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type, long max_fft_size_log2)
 {
-    long fft_size_log2 = check_fft_size((t_object *) x, "fft size", fft_size, x->max_fft_size_log2);
+    fft_params params;
     
-    x->params.m_fft_size_log2 = fft_size_log2;
+    long fft_size_log2 = check_fft_size(x, "fft size", fft_size, max_fft_size_log2);
     
+    // Set fft size
     // Set hop size (default to overlap of two)
-    
-    x->params.m_hop_size = hop_size > 0 ? hop_size : x->params.fft_size() >> 1;
-    x->hop_count = x->params.m_hop_size;
-    
     // Set window size (default to fft size and clip at fft_size)
+    // Set window type
     
-    x->params.m_frame_size = std::min(frame_size > 0 ? frame_size : x->params.fft_size(), x->params.fft_size());
+    params.m_fft_size_log2 = fft_size_log2;
+    params.m_hop_size = hop_size > 0 ? hop_size : params.fft_size() >> 1;
+    params.m_frame_size = std::min(frame_size > 0 ? frame_size : params.fft_size(), params.fft_size());
+    params.m_window_type = window_type;
     
     // FIX - error checks
     
-    x->params.m_window_type = window_type;
-    
-    if (x->m_graph)
-        x->m_graph->prepare(x->params);
-    
-    x->params.m_signal_length = x->params.m_frame_size;
-
-    x->reset = true;
+    return params;
 }
 
 #endif /* _DESCRIPTORS_FFT_PARAMS_HPP_ */

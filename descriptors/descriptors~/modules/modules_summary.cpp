@@ -99,12 +99,12 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
 
 double ms_to_frame(const global_params& params, double ms)
 {
-    return ms * params.m_sr / ( params.m_hop_size * 1000.0);
+    return ms * params.m_sr / ( params.hop_size() * 1000.0);
 }
 
 double frame_to_ms(const global_params& params, double frame)
 {
-    return frame < 0 ? infinity() : (frame * params.m_hop_size * 1000.0) / params.m_sr;
+    return frame < 0 ? infinity() : (frame * params.hop_size() * 1000.0) / params.m_sr;
 }
 
 double calculate_mean(const double *data, long size)

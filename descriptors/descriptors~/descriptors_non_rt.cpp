@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <AH_Lifecycle.hpp>
+#include <AH_Locks.hpp>
 #include <ibuffer_access.hpp>
 
 #include "descriptors_fft_params.hpp"
@@ -66,6 +67,10 @@ struct t_descriptors
     // General Parameters
     
     bool descriptors_feedback;
+    
+    // Lock
+    
+    thread_lock m_lock;
     
     // Descriptors
     
@@ -139,6 +144,7 @@ int C74_EXPORT main()
     // Precision etc. - some small differences in various places
     // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
     
+    // Need to check volume compesation points
     // Need to check lags and other things with fftparams that have mismatch window and FFT
     // Need to investigate speeds
     // Need to investigate zero inputs
@@ -258,18 +264,20 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 
     long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
     
-    descriptors_fft_params_internal(x, default_fft_size, 0, 0, nullptr);
+    x->params.m_fft_params = check_fft_params((t_object *) x, default_fft_size, 0, 0, nullptr, x->max_fft_size_log2);
 
     x->m_outlet = listout(x);
 
     create_object(x->output_list);
     create_object(x->m_graph);
+    create_object(x->m_lock);
     
     return x;
 }
 
 void descriptors_free(t_descriptors *x)
 {
+    destroy_object(x->m_lock);
     destroy_object(x->output_list);
     destroy_object(x->m_graph);
 }
@@ -290,7 +298,14 @@ void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom 
     long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
-    descriptors_fft_params_internal(x, fft_size, hop_size, frame_size, window_type);
+    auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
+    
+    safe_lock_hold hold(&x->m_lock);
+
+    x->params.m_fft_params = params;
+    
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
 }
 
 // Energy Threshold
@@ -313,6 +328,9 @@ void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom
     auto graph = new class summary_graph();
     
     graph->build(s_setups, x->params, argc, argv);
+    
+    safe_lock_hold hold(&x->m_lock);
+    
     x->output_list.resize(graph->size());
     x->m_graph.reset(graph);
 }
@@ -321,6 +339,8 @@ void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom
 
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
+    safe_lock_hold hold(&x->m_lock);
+
     auto& graph = x->m_graph;
 
 	t_symbol *buffer_name = nullptr;

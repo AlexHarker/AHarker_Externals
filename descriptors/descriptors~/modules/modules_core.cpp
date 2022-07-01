@@ -40,19 +40,19 @@ void module_window::prepare(const global_params& params)
         return 1.0 / std::accumulate(data, data + size, 0.0);
     };
     
-    if (params.m_frame_size == m_frame_size && params.m_window_type == m_window_type)
+    if (params.frame_size() == m_frame_size && params.window_type() == m_window_type)
         return;
     
-    m_frame_size = params.m_frame_size;
-    m_window_type = params.m_window_type;
+    m_frame_size = params.frame_size();
+    m_window_type = params.window_type();
     
-    m_windowed_frame.resize(params.m_frame_size);
-    m_window.resize(params.m_frame_size);
+    m_windowed_frame.resize(params.frame_size());
+    m_window.resize(params.frame_size());
     
     double *window = m_window.data();
     uint32_t window_size = static_cast<uint32_t>(m_window.size());
 
-    t_symbol *window_type = params.m_window_type;
+    t_symbol *window_type = params.window_type();
     
     window_functions::params win_params(6.8);
     
@@ -90,8 +90,8 @@ void module_window::prepare(const global_params& params)
     
     // Calculate the energy gain of the window
 
-    auto frame_size = params.m_frame_size;
-    auto fft_size_log2 = params.m_fft_size_log2;
+    auto frame_size = params.frame_size();
+    auto fft_size_log2 = params.fft_size_log2();
     auto num_bins = params.num_bins();
     auto fft_size = params.fft_size();
     
@@ -149,7 +149,7 @@ void module_fft::add_requirements(graph& g)
 void module_fft::prepare(const global_params& params)
 {
     m_fft_frame.resize(params.fft_size());
-    m_fft_setup.resize(params.m_fft_size_log2);
+    m_fft_setup.resize(params.fft_size_log2());
     m_energy_compensation = m_window_module->get_energy_compensation();
 }
 
@@ -356,7 +356,7 @@ long module_log_spectrum_ring_buffer::get_idx(long lag) const
 
 void module_autocorrelation::prepare(const global_params& params)
 {
-    m_fft_setup.resize(params.m_fft_size_log2);
+    m_fft_setup.resize(params.fft_size_log2());
     m_full_frame.resize(params.fft_size());
     m_half_frame.resize(params.fft_size());
     m_coefficients.resize(params.fft_size());
