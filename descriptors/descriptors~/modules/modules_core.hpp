@@ -2,11 +2,11 @@
 #ifndef _MODULES_CORE_HPP_
 #define _MODULES_CORE_HPP_
 
-#include "descriptors_modules.hpp"
+#include "../descriptors_modules.hpp"
 #include "processing_containers.hpp"
 
-#include "median_filter.hpp"
-#include "peak_finder.hpp"
+#include "../library/median_filter.hpp"
+#include "../library/peak_finder.hpp"
 
 #include <algorithm>
 #include <vector>

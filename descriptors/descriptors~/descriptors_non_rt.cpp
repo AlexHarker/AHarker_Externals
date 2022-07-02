@@ -34,13 +34,13 @@
 #include "descriptors_graph.hpp"
 #include "descriptors_summary_graph.hpp"
 
-#include "modules_core.hpp"
-#include "modules_change.hpp"
-#include "modules_content.hpp"
-#include "modules_level.hpp"
-#include "modules_pitch.hpp"
-#include "modules_spectral.hpp"
-#include "modules_summary.hpp"
+#include "modules/modules_core.hpp"
+#include "modules/modules_change.hpp"
+#include "modules/modules_content.hpp"
+#include "modules/modules_level.hpp"
+#include "modules/modules_pitch.hpp"
+#include "modules/modules_spectral.hpp"
+#include "modules/modules_summary.hpp"
 
 
 // Globals and Object Structure
@@ -241,9 +241,9 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptors *x = (t_descriptors *) object_alloc(this_class);
     
-    long max_fft_size = 0;
-    long descriptor_data_size = 0;
-    long descriptor_feedback = 0;
+    t_atom_long max_fft_size = 0;
+    t_atom_long descriptor_data_size = 0;
+    bool descriptor_feedback = 0;
 
     // Get arguments
 
@@ -290,9 +290,9 @@ void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom 
     
     // Load in args as relevant
     
-    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
-    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
-    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    t_atom_long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
+    t_atom_long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
+    t_atom_long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
     auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
@@ -395,8 +395,8 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     
     // Store variables
     
-    long start_point = start_point_ms * mstosamps_mul;
-    long end_point = end_point_ms * mstosamps_mul;
+    long start_point = static_cast<long>(start_point_ms * mstosamps_mul);
+    long end_point = static_cast<long>(end_point_ms * mstosamps_mul);
     
     // Access buffer and increment pointer
     
@@ -416,7 +416,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
         signal_length = end_point;
     signal_length -= start_point;
     
-    x->params.m_signal_length = signal_length;
+    x->params.m_signal_length = static_cast<long>(signal_length);
     x->params.m_sr = buffer.get_sample_rate();
     
     if (x->params.num_frames() < 1)

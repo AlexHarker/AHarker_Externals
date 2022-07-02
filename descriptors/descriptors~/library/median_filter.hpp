@@ -5,6 +5,7 @@
 #include "edges.hpp"
 #include "sort.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <vector>
 
@@ -79,7 +80,7 @@ private:
 
         // Search right
 
-        for (insert = current, gap = std::max(1L, (width - current) >> 1); gap; gap >>= 1)
+        for (insert = current, gap = std::max(intptr_t(1), (width - current) >> 1); gap; gap >>= 1)
             for (intptr_t i = insert + gap; (i < width) && (value > data[indices[i]]); i += gap)
                 insert = i;
 
@@ -90,7 +91,7 @@ private:
 
         // Search left
 
-        for (current = insert, gap = std::max(1L, current >> 1); gap; gap >>= 1)
+        for (current = insert, gap = std::max(intptr_t(1), current >> 1); gap; gap >>= 1)
             for (intptr_t i = insert - gap; (i >= 0) && (value < data[indices[i]]); i -= gap)
                 insert = i;
 

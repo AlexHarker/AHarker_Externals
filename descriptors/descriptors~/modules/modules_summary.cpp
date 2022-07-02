@@ -2,7 +2,7 @@
 #include "modules_summary.hpp"
 #include "utility_definitions.hpp"
 
-#include "median_filter.hpp"
+#include "../library/median_filter.hpp"
 
 #include <Statistics.hpp>
 
@@ -255,7 +255,7 @@ void specifier_mask_time::update_to_final(const module *m)
 
 void specifier_mask_time::prepare(const global_params& params)
 {
-    m_mask_span = m_mask_time < 0.0 ? 0 : ms_to_frame(params, m_mask_time);
+    m_mask_span = m_mask_time < 0.0 ? 0 : static_cast<long>(ms_to_frames(params, m_mask_time));
 }
     
 // Threshold
