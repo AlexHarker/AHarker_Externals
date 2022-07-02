@@ -4,7 +4,10 @@
 
 // N.B. We don't use <tuple> here but it will be used for get_params() in comparing modules
 
+#include <AH_Int_Handler.hpp>
+
 #include <ext.h>
+
 #include <tuple>
 #include <vector>
 
@@ -66,7 +69,9 @@ public:
     
     long get_long(long default_value, long lo, long hi)
     {
-        return (m_argc-- > 0) ? atom_getlong(m_argv++) : default_value;
+        t_atom_long value = (m_argc-- > 0) ? atom_getlong(m_argv++) : default_value;
+           
+        return clip(limit_int<long>(value), lo, hi);
     }
     
     double get_double(double default_value, double lo, double hi)
