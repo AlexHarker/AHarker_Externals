@@ -82,7 +82,7 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
     double *median_spectrum = m_median_spectrum.data();
     const double *spectrum = m_spectrum->get_average();
 
-    m_filter(median_spectrum, spectrum, params.num_bins(), m_median_width, median_filter<double>::Edges::Emulate, 50.0);
+    m_filter(median_spectrum, spectrum, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
     m_detector(m_peaks, spectrum, median_spectrum, params.num_bins());
         
     long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks()), m_num_peaks);
