@@ -93,6 +93,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B8C78F9E28706F2E00D8ADA6 /* PBXTargetDependency */,
+				B8C78FA028706F2E00D8ADA6 /* PBXTargetDependency */,
 				B80B91BB183BD1490014C9C4 /* PBXTargetDependency */,
 				B80B91BD183BD14D0014C9C4 /* PBXTargetDependency */,
 			);
@@ -182,6 +184,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B8C78F9C28706EF100D8ADA6 /* PBXTargetDependency */,
+				B8C78F7228706EEB00D8ADA6 /* PBXTargetDependency */,
 				B80B95CF183BDC1B0014C9C4 /* PBXTargetDependency */,
 				B80B95D1183BDC240014C9C4 /* PBXTargetDependency */,
 				B80B95D3183BDC3D0014C9C4 /* PBXTargetDependency */,
@@ -1132,6 +1136,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "voicemanager~";
+		};
+		B8C78F7128706EEB00D8ADA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DFD1465F151007FAC6A /* ibufconcatenate~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B88E3A7D11CE729300FD3E96;
+			remoteInfo = "ibufconcatedrive~";
+		};
+		B8C78F9B28706EF100D8ADA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0DFD1465F151007FAC6A /* ibufconcatenate~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "ibufconcatenate~";
+		};
+		B8C78F9D28706F2E00D8ADA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0E8A1465F316007FAC6A /* randomvals~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B8E15A0911E33C5500FA3CFA;
+			remoteInfo = randomvals;
+		};
+		B8C78F9F28706F2E00D8ADA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0E8A1465F316007FAC6A /* randomvals~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "randomvals~";
 		};
 		B8D138F628508C9B00D282A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2708,6 +2740,26 @@
 			isa = PBXTargetDependency;
 			name = "voicemanager~";
 			targetProxy = B8A3866D26AEA1170003FA46 /* PBXContainerItemProxy */;
+		};
+		B8C78F7228706EEB00D8ADA6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ibufconcatedrive~";
+			targetProxy = B8C78F7128706EEB00D8ADA6 /* PBXContainerItemProxy */;
+		};
+		B8C78F9C28706EF100D8ADA6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ibufconcatenate~";
+			targetProxy = B8C78F9B28706EF100D8ADA6 /* PBXContainerItemProxy */;
+		};
+		B8C78F9E28706F2E00D8ADA6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = randomvals;
+			targetProxy = B8C78F9D28706F2E00D8ADA6 /* PBXContainerItemProxy */;
+		};
+		B8C78FA028706F2E00D8ADA6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "randomvals~";
+			targetProxy = B8C78F9F28706F2E00D8ADA6 /* PBXContainerItemProxy */;
 		};
 		B8D138F728508C9B00D282A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
