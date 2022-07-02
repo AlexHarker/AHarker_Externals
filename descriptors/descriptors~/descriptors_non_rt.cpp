@@ -2,17 +2,18 @@
 /*
  *  descriptors~
  *
- *	The descriptors~ object can be used to calculate a large number of audio descriptors (or features) from a sample stored in an MSP buffer~ (or an ibuffer~ object).
- *	Various statistical calculations may be performed on the resultant descriptors (mean / median / standard deviation / max n values etc.) to produce useful information about the sample.
- *	descriptors~ is intended as a comprehensive analysis solution, being suitable for a wide range of analysis applications.
- *	It is the non real-time counterpart to the descriptorsrt~ object - the two objects are very similar in terms of features and usage.
+ *  descriptors~ is used to calculate audio descriptors (or features) on a sample stored in an buffer~ (or an ibuffer~).
+ *  Various statistical calculations may be performed on the descriptors  to summarise across the sample.
+ *  Examples include mean / median / standard deviation / max n values etc.
  *
- *	The object only calculates and outputs the descriptors that the user requests, and can also operate on subsections of a buffer~ / ibuffer~.
- *	The object is designed to be as efficient as possible, avoiding unnecessary calculations and re-calculations wherever possible and making extensive use of SIMD operations.
+ *  descriptors~ is intended to cover a wide range of analysis applications.
+ *  It is the non real-time counterpart to the descriptorsrt~ object and the two objects share many features.
  *
- *	For in-depth details on usage of of the descriptors~ object see the helpfile documentation.
+ *  The object calculates and outputs only the requested descriptors.
+ *  The object can also operate on subsections of a buffer~ / ibuffer~.
+ *  The object is designed with efficiency in mind, avoiding re-calculations and making use of SIMD operations.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -93,7 +94,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 // Object Basics (main / new / free)
 
 int C74_EXPORT main()
-{	
+{
     this_class = class_new("descriptorstest~",
                            (method) descriptors_new,
                            (method) descriptors_free,
@@ -101,16 +102,16 @@ int C74_EXPORT main()
                            0L,
                            A_GIMME,
                            0);
-	
-	class_addmethod(this_class, (method) descriptors_analyse, "analyse", A_GIMME, 0);
-	class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
-	
+    
+    class_addmethod(this_class, (method) descriptors_analyse, "analyse", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
+    
     class_addmethod(this_class, (method) descriptors_descriptors, "descriptors", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
 
-	class_register(CLASS_BOX, this_class);
-	
+    class_register(CLASS_BOX, this_class);
+    
     // Issues
     //
     // Padding issue (not yet found)
@@ -233,30 +234,30 @@ int C74_EXPORT main()
     s_setups.add_module("duration", summary_module_duration::setup);
     s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [with emulated median filter]
     
-	return 0;
+    return 0;
 }
 
 void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptors *x = (t_descriptors *) object_alloc(this_class);
-	
-	long max_fft_size = 0;
-	long descriptor_data_size = 0;
-	long descriptor_feedback = 0;
+    
+    long max_fft_size = 0;
+    long descriptor_data_size = 0;
+    long descriptor_feedback = 0;
 
-	// Get arguments 
+    // Get arguments
 
-	if (argc) 
+    if (argc)
         max_fft_size = atom_getlong(argv++);
-	if (argc > 1) 
-		descriptor_data_size = atom_getlong(argv++);
-	if (argc > 2)
-		descriptor_feedback = atom_getlong(argv++);
-	
-	// Set maximum fft size
+    if (argc > 1)
+        descriptor_data_size = atom_getlong(argv++);
+    if (argc > 2)
+        descriptor_feedback = atom_getlong(argv++);
+    
+    // Set maximum fft size
 
     x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0);
-	x->max_fft_size = 1 << x->max_fft_size_log2;
+    x->max_fft_size = 1 << x->max_fft_size_log2;
 
     long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
     
@@ -339,12 +340,12 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 
     auto& graph = x->m_graph;
 
-	t_symbol *buffer_name = nullptr;
-	
+    t_symbol *buffer_name = nullptr;
+    
     t_atom_long buffer_chan = 1;
 
     double start_point_ms = 0.0;
-	double end_point_ms = 0.0;
+    double end_point_ms = 0.0;
 
     if (!graph)
     {
@@ -352,51 +353,51 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
         return;
     }
     
-	if (argc && atom_gettype(argv) != A_SYM)
-	{
+    if (argc && atom_gettype(argv) != A_SYM)
+    {
         object_error((t_object *)x, "no buffer name given for analysis");
-		return;
-	}
-	
-	buffer_name = atom_getsym(argv);
-	
-	// Get arguments
-	
-	if (argc > 1) 
-		buffer_chan = atom_getlong(argv + 1);
-	if (argc > 2) 
-		start_point_ms = atom_getfloat(argv + 2);
-	if (argc > 3) 
-		end_point_ms = atom_getfloat(argv + 3);
-	if (argc > 4) 
-		object_error((t_object *)x, "too many arguments to analyse function");
-	
-	// Check the buffer
-	
-	ibuffer_data buffer(buffer_name);
-	
+        return;
+    }
+    
+    buffer_name = atom_getsym(argv);
+    
+    // Get arguments
+    
+    if (argc > 1)
+        buffer_chan = atom_getlong(argv + 1);
+    if (argc > 2)
+        start_point_ms = atom_getfloat(argv + 2);
+    if (argc > 3)
+        end_point_ms = atom_getfloat(argv + 3);
+    if (argc > 4)
+        object_error((t_object *)x, "too many arguments to analyse function");
+    
+    // Check the buffer
+    
+    ibuffer_data buffer(buffer_name);
+    
     if (buffer.get_type() == kBufferNone)
-	{
+    {
         object_error((t_object *)x, "buffer not found");
-		return;
-	}
-		
-	// Calculate lengths
-	
+        return;
+    }
+        
+    // Calculate lengths
+    
     double mstosamps_mul = buffer.get_sample_rate() / 1000.0;
 
     start_point_ms = std::max(0.0, start_point_ms);
     end_point_ms = std::max(0.0, end_point_ms);
     buffer_chan = std::max(t_atom_long(1), buffer_chan) - 1;
-	
+    
     if ((start_point_ms && end_point_ms <= start_point_ms) || end_point_ms < 0.0)
         return;
     
-	// Store variables
-	
-	long start_point = start_point_ms * mstosamps_mul;
+    // Store variables
+    
+    long start_point = start_point_ms * mstosamps_mul;
     long end_point = end_point_ms * mstosamps_mul;
-	    
+    
     // Access buffer and increment pointer
     
     if (!buffer.get_sample_rate())

@@ -99,4 +99,4 @@ void sort_descending(T& indices, const U *data, unsigned long size)
     impl::comb_sort::sort<std::less<U>>(indices, data, size);
 }
 
-#endif	/* _DESCRIPTORS_SORT_HPP_ */
+#endif  /* _DESCRIPTORS_SORT_HPP_ */
