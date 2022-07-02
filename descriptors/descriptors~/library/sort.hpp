@@ -3,6 +3,7 @@
 #define _SORT_HPP_
 
 #include <algorithm>
+#include <cstdint>
 
 // Sorting Implementation
 
@@ -21,7 +22,7 @@ namespace impl
 
         // Gap Update
 
-        static inline long update_gap(long gap)
+        static inline uintptr_t update_gap(uintptr_t gap)
         {
             if (gap > 1)
             {
@@ -29,22 +30,22 @@ namespace impl
                 gap = (gap == 9 || gap == 10) ? 11 : gap;
             }
             
-            return std::max(1L, gap);
+            return std::max(uintptr_t(1), gap);
         }
 
         // An ordered sort (combsort11 algorithm)
 
         template <class Compare, class T>
-        static void sort(T& values, long size)
+        static void sort(T& values, uintptr_t size)
         {
             bool swaps = true;
             
-            for (long gap = size; gap > 1 || swaps; )
+            for (uintptr_t gap = size; gap > 1 || swaps; )
             {
                 gap = update_gap(gap);
                 swaps = false;
                 
-                for (long i = 0; i + gap < size; i++)
+                for (uintptr_t i = 0; i + gap < size; i++)
                     if (Compare()(values[i], values[i + gap]))
                         swaps = swap(values[i], values[i + gap]);
             }
@@ -53,19 +54,19 @@ namespace impl
         // An index sort (combsort11 algorithm)
 
         template <class Compare, class T, class U>
-        static void sort(T& indices, const U& values, long size)
+        static void sort(T& indices, const U& values, uintptr_t size)
         {
             bool swaps = true;
 
-            for (long i = 0; i < size; i++)
+            for (uintptr_t i = 0; i < size; i++)
                 indices[i] = i;
             
-            for (long gap = size; gap > 1 || swaps; )
+            for (uintptr_t gap = size; gap > 1 || swaps; )
             {
                 gap = update_gap(gap);
                 swaps = false;
                 
-                for (long i = 0; i + gap < size; i++)
+                for (uintptr_t i = 0; i + gap < size; i++)
                     if (Compare()(values[indices[i]], values[indices[i + gap]]))
                         swaps = swap(indices[i], indices[i + gap]);
             }
@@ -76,25 +77,25 @@ namespace impl
 // Sorting Routines
 
 template <class T>
-void sort_ascending(T *data, unsigned long size)
+void sort_ascending(T *data, uintptr_t size)
 {
     impl::comb_sort::sort<std::greater<T>>(data, size);
 }
 
 template <class T>
-void sort_descending(T *data, unsigned long size)
+void sort_descending(T *data, uintptr_t size)
 {
     impl::comb_sort::sort<std::less<T>>(data, size);
 }
 
 template <class T, class U>
-void sort_ascending(T& indices, const U *data, unsigned long size)
+void sort_ascending(T& indices, const U *data, uintptr_t size)
 {
     impl::comb_sort::sort<std::greater<U>>(indices, data, size);
 }
 
 template <class T, class U>
-void sort_descending(T& indices, const U *data, unsigned long size)
+void sort_descending(T& indices, const U *data, uintptr_t size)
 {
     impl::comb_sort::sort<std::less<U>>(indices, data, size);
 }

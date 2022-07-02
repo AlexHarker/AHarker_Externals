@@ -174,7 +174,7 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptorsrt *x = (t_descriptorsrt *) object_alloc(this_class);
     
-    long max_fft_size = 0;
+    t_atom_long max_fft_size = 0;
 
     // Get arguments
     
@@ -272,9 +272,9 @@ void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_a
     
     // Load in args as relevant
     
-    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
-    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
-    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    t_atom_long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
+    t_atom_long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
+    t_atom_long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
     safe_lock_hold hold(&x->m_lock);

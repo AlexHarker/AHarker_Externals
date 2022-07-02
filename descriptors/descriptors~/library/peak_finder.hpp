@@ -282,13 +282,13 @@ private:
     
     static void refine_parabolic(peak_data& peak, const T *data)
     {
-        uintptr_t idx = peak.m_position;
+        uintptr_t idx = static_cast<uintptr_t>(peak.m_position);
         parabolic_interp(peak.m_position, peak.m_value, data[idx-1], data[idx], data[idx+1]);
     }
 
     static void refine_parabolic_log(peak_data& peak, const T *data)
     {
-        uintptr_t idx = peak.m_position;
+        uintptr_t idx = static_cast<uintptr_t>(peak.m_position);
         
         // Take log values (avoiding values that are too low) - doesn't work for negative values
         // N.B. we assume a max of -80dB difference between the samples either side to prevent extreme overshoot

@@ -39,7 +39,7 @@ void module_pitch::calculate(const global_params& params, const double *frame, l
     {
         auto max_ptr = std::max_element(begin, end);
         
-        long bin_freq = max_ptr - ac_coeff;
+        long bin_freq = static_cast<long>(max_ptr - ac_coeff);
         double value = *max_ptr;
         
         // Do the correction if we have found a pitch (using parabolic interpolation)
