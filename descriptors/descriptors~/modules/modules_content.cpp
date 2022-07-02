@@ -216,7 +216,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
                     // cb_int = interval between two partials in critical bandwidths
                     
                     const double cbw = 1.72 * pow(mean_freq, 0.65);
-                    const double cb_int = (fabs(freq1 - freq2)) / cbw;
+                    const double cb_int = (fabs(freq2 - freq1)) / cbw;
                     
                     // (Otherwise roughness is negligible) (save computing time)
                     
@@ -229,6 +229,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
                         const double standard_curve = pow((M_E * ratio) * exp(-ratio), index);
                         numerator += amp1 * amp2 * standard_curve;
                     }
+                    
                     denominator += amp1 * amp1;
                     min_amp = std::min(min_amp, amp1);
                 }
