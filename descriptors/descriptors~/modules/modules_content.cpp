@@ -188,7 +188,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
     constexpr double index = 2.0;                      // for standard curve of P&L (bigger index => narrower curve)
     constexpr double cb_int0_recip = 1.0 / cb_int0;    // for calculating H&K Eq. (3)
     
-    double min_amp = 0.0;
+    double min_amp = infinity();
     double numerator = 0.0;
     double denominator = 0.0;
             
@@ -242,7 +242,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
         
     denominator -= min_amp * min_amp;
         
-    m_value = denominator ? (numerator / denominator) : infinity();
+    m_value = denominator > 0.0 ? (numerator / denominator) : infinity();
 }
 
 
