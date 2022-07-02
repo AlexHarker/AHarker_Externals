@@ -98,8 +98,8 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
     
     for ( ; i < m_num_peaks; i++)
     {
-        m_values[i * 2 + 0] = infinity();
-        m_values[i * 2 + 1] = infinity();
+        m_values[i * 2 + 0] = 0.0;
+        m_values[i * 2 + 1] = 0.0;
     }
 }
 
