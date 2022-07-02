@@ -186,7 +186,7 @@ int C74_EXPORT main()
     s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
     
-    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * To investigate
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * Matches [minus median filter]
     s_setups.add_module("roughness", module_roughness::setup);              // * To investigate
 
     // Stats

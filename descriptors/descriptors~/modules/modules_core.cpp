@@ -231,23 +231,23 @@ void module_amplitude_sum::add_requirements(graph& g)
     module_frame_sum::add_requirements(g);
 }
 
-// Median Power Spectrum Module
+// Median Amplitude Spectrum Module
 
-void module_median_power_spectrum::add_requirements(graph& g)
+void module_median_amplitude_spectrum::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
 }
 
-void module_median_power_spectrum::prepare(const global_params& params)
+void module_median_amplitude_spectrum::prepare(const global_params& params)
 {
     m_spectrum.resize(params.num_bins());
 }
 
-void module_median_power_spectrum::calculate(const global_params& params, const double *frame, long size)
+void module_median_amplitude_spectrum::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
+    const double *amplitudes = m_amplitude_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
+    m_filter(m_spectrum.data(), amplitudes, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
 }
 
 // Log Bins Module
@@ -278,8 +278,9 @@ void module_peak_detection::prepare(const global_params& params)
 void module_peak_detection::calculate(const global_params& params, const double *frame, long size)
 {
     const double *spectrum = m_amplitude_module->get_frame();
+    const double *median_spectrum = m_median_amplitude_module->get_frame();
 
-    m_detector(m_peaks, spectrum, params.num_bins());
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins());
 }
 
 // Spectrum Ring Buffer Module

@@ -11,17 +11,17 @@
 void module_noise_ratio::add_requirements(graph& g)
 {
     m_power_sum_module = g.add_requirement(new module_power_sum());
-    m_median_power_module = g.add_requirement(new module_median_power_spectrum(m_median_span * 2 + 1));
+    m_median_amplitude_module = g.add_requirement(new module_median_amplitude_spectrum(m_median_span * 2 + 1));
 }
 
 void module_noise_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *median_power = m_median_power_module->get_frame();
+    const double *median_amplitudes = m_median_amplitude_module->get_frame();
 
     double power_sum = m_power_sum_module->get_sum(0, params.num_bins());
             
     if (power_sum)
-        m_value = std::min(1.0, stat_sum(median_power, params.num_bins()) / power_sum);
+        m_value = std::min(1.0, stat_sum_squares(median_amplitudes, params.num_bins()) / power_sum);
     else
         m_value = infinity();
 }
@@ -47,12 +47,15 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
 
 user_module *module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    return new module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
+    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
+
+    return new module_spectral_peaks(N, median_span);
 }
 
 void module_spectral_peaks::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
 }
 
 void module_spectral_peaks::prepare(const global_params& params)
@@ -87,14 +90,15 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 user_module *module_inharmonicity::setup(const global_params& params, module_arguments& args)
 {
     long num_peaks = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
     double threshold = args.get_double(0.68, 0.0, 1.0);
 
-    return new module_inharmonicity(num_peaks, threshold);
+    return new module_inharmonicity(num_peaks, median_span, threshold);
 }
 
 void module_inharmonicity::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
     m_pitch_module = g.add_requirement(new module_pitch(m_threshold));
 }
 
@@ -137,12 +141,15 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 
 user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
-    return new module_roughness(args.get_long(10, 1, std::numeric_limits<long>::max()));
+    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
+    
+    return new module_roughness(N, median_span);
 }
 
 void module_roughness::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
 }
 
 void module_roughness::calculate(const global_params& params, const double *frame, long size)
