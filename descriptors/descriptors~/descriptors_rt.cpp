@@ -96,7 +96,6 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 void descriptorsrt_output(t_descriptorsrt *x);
 void descriptorsrt_calculate(t_descriptorsrt *x, double *samples);
 
-void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count);
 void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -115,7 +114,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) descriptorsrt_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
     
-    class_addmethod(this_class, (method) descriptorsrt_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) descriptorsrt_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method) descriptorsrt_assist, "assist", A_CANT, 0);
@@ -331,66 +329,6 @@ void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 
 // Perform
 
-t_int *descriptorsrt_perform(t_int *w)
-{
-	float *in1 = (float *) w[1];
-	t_descriptorsrt *x = (t_descriptorsrt *) w[2];
-	long vec_size = w[3];
-	
-	auto& rt_buffer = x->rt_buffer;
-	
-    long buffer_size = static_cast<long>(rt_buffer.size());
-    long hop_size = x->params.hop_size();
-	long hop_count = x->hop_count;
-	long rw_counter = x->rw_counter;
-    long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
-	
-    if (!x->m_lock.attempt())
-        return w + 4;
-    
-	// Reset
-	
-	if (x->reset)
-	{
-		rw_counter = 0;
-		hop_count = hop_size;
-        x->reset = false;
-	}
-	
-	// Write input block into double circular buffer
-	
-	for (long i = 0; i < vec_size; i++)
-	{
-		rt_buffer[rw_counter + (buffer_size >> 1)] = rt_buffer[rw_counter] = in1[i];
-        rw_counter = (rw_counter + 1) % (buffer_size >> 1);
-	}
-	
-    // Check for a frame due and perform calculations
-
-	while (vec_size)
-	{
-        long hop_to_do = (vec_size < hop_size) ? vec_size : hop_size;
-		hop_count -= hop_to_do;
-		vec_size -= hop_to_do;
-        frame_counter += hop_to_do;
-		
-		if (!hop_count)
-		{
-            descriptorsrt_calculate(x, rt_buffer.data() + frame_counter % (buffer_size >> 1));
-			hop_count = hop_size;
-		}
-	}
-		
-	// Store variables
-	
-	x->rw_counter = rw_counter;
-	x->hop_count = hop_count;
-	
-    x->m_lock.release();
-    
-	return w + 4;
-}
-
 void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
 	double *in1 = ins[0];
@@ -448,26 +386,6 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 }
 
 // DSP
-
-void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
-{
-    safe_lock_hold hold(&x->m_lock);
-    
-    // Allocate the correct buffer size and zero
-
-    x->rt_buffer.resize(2 * (x->max_fft_size + sp[0]->s_n), 0.0);
-        
-    // Set variables
-    
-    x->rw_counter = 0;
-    x->params.m_sr = sp[0]->s_sr;
-    
-    descriptorsrt_reset_graph(x);
-    
-    // Add the perform routine
-
-    dsp_add((t_perfroutine) descriptorsrt_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
-}
 
 void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
