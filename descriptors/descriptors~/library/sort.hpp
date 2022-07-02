@@ -56,10 +56,12 @@ namespace impl
         template <class Compare, class T, class U>
         static void sort(T& indices, const U& values, uintptr_t size)
         {
+            using T_Underlying = std::remove_reference<decltype(indices[0])>::type;
+
             bool swaps = true;
 
             for (uintptr_t i = 0; i < size; i++)
-                indices[i] = i;
+                indices[i] = static_cast<T_Underlying>(i);
             
             for (uintptr_t gap = size; gap > 1 || swaps; )
             {
