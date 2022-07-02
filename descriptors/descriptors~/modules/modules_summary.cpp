@@ -1,14 +1,12 @@
 
 #include "modules_summary.hpp"
+#include "utility_definitions.hpp"
+
+#include "median_filter.hpp"
 
 #include <Statistics.hpp>
 
 #include <algorithm>
-#include <limits>
-
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
-static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 
 // Duration
 
@@ -61,7 +59,10 @@ void summary_module_spectral_peaks::spectrum_average::calculate(const global_par
 
 user_module *summary_module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    return new summary_module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
+    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 0, std::numeric_limits<long>::max());
+    
+    return new summary_module_spectral_peaks(N, median_span * 2 + 1);
 }
 
 void summary_module_spectral_peaks::add_requirements(graph& g)
@@ -71,15 +72,18 @@ void summary_module_spectral_peaks::add_requirements(graph& g)
 
 void summary_module_spectral_peaks::prepare(const global_params& params)
 {
+    m_median_spectrum.resize(params.num_bins());
     m_peaks.resize(params.num_bins() / 2);
     m_detector.resize(params.num_bins());
 }
 
 void summary_module_spectral_peaks::calculate(const global_params& params, const double *frame, long size)
 {
+    double *median_spectrum = m_median_spectrum.data();
     const double *spectrum = m_spectrum->get_average();
-    
-    m_detector(m_peaks, spectrum, params.num_bins());
+
+    m_filter(median_spectrum, spectrum, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins());
         
     long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks()), m_num_peaks);
     long i = 0;
@@ -89,7 +93,7 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
         auto& peak = m_peaks.by_value(i);
         
         m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
-        m_values[i * 2 + 1] = peak.m_value;
+        m_values[i * 2 + 1] = atodb(peak.m_value);
     }
     
     for ( ; i < m_num_peaks; i++)
@@ -103,12 +107,12 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
 
 double ms_to_frame(const global_params& params, double ms)
 {
-    return ms * params.m_sr / ( params.m_hop_size * 1000.0);
+    return ms * params.m_sr / ( params.hop_size() * 1000.0);
 }
 
 double frame_to_ms(const global_params& params, double frame)
 {
-    return frame < 0 ? infinity() : (frame * params.m_hop_size * 1000.0) / params.m_sr;
+    return frame < 0 ? infinity() : (frame * params.hop_size() * 1000.0) / params.m_sr;
 }
 
 double calculate_mean(const double *data, long size)
@@ -173,7 +177,7 @@ void stat_module_median::calculate(const global_params& params, const double *da
     
     for (long i = size - 1; i >= 0; i--)
     {
-        if (data[i] != infinity())
+        if (data[indices[i]] != infinity())
         {
             size = i;
             break;
@@ -194,7 +198,7 @@ void stat_module_centroid::calculate(const global_params& params, const double *
     {
         if (data[i] != infinity())
         {
-            sum += static_cast<double>(i) * data[i];;
+            sum += static_cast<double>(i) * data[i];
             weight_sum += data[i];
         }
     }
@@ -242,7 +246,9 @@ user_module *specifier_mask_time::setup(const global_params& params, module_argu
 
 void specifier_mask_time::update_to_final(const module *m)
 {
-    auto time = dynamic_cast<const specifier_mask_time *>(m)->m_mask_time;
+    // N.B. - this should only ever be called after a dynamic cast check
+    
+    auto time = static_cast<const specifier_mask_time *>(m)->m_mask_time;
     if (time > 0.0)
         m_mask_time = time;
 }
@@ -278,7 +284,10 @@ user_module *specifier_threshold::setup(const global_params& params, module_argu
 
 void specifier_threshold::update_to_final(const module *m)
 {
-    auto b = dynamic_cast<const specifier_threshold *>(m);
+    // N.B. - this should only ever be called after a dynamic cast check
+
+    auto b = static_cast<const specifier_threshold *>(m);
+    
     if (b->m_threshold != infinity())
     {
         m_threshold = b->m_threshold;

@@ -2,13 +2,14 @@
 /*
  *  descriptorsrt~
  *
- *	descriptorsrt~ can be used to calculate audio descriptors (or features) in real-time from an incoming signal.
+ *	descriptorsrt~ is used to calculate audio descriptors (or features) in real-time from an incoming signal.
  *  The results are output as a list.
  *	descriptorsrt~ is intended to cover a wide range of tracking / following / detection applications.
  *	It is the real-time counterpart to the descriptors~ object and the two objects share many features.
  *
- *	The object only calculates and outputs the descriptors that the user requests (these can be changed in realtime).
- *	The object is designed to be as efficient as possible, avoiding re-calculations and making use of SIMD operations.
+ *	The object calculates and outputs only the requested descriptors
+ *  Descriptors can be changed in realtime).
+ *	The object is designed with efficiency in mind, avoiding re-calculations and making use of SIMD operations.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -24,8 +25,11 @@
 #include <vector>
 
 #include <AH_Lifecycle.hpp>
+#include <AH_Locks.hpp>
 
+#include "descriptors_fft_params.hpp"
 #include "descriptors_graph.hpp"
+
 #include "modules_core.hpp"
 #include "modules_change.hpp"
 #include "modules_content.hpp"
@@ -63,12 +67,10 @@ struct t_descriptorsrt
     
     bool descriptors_feedback;
     
-    // Descriptors
+    // Lock / Descriptor Graph / Output List
     
+    thread_lock m_lock;
     std::unique_ptr<graph> m_graph;
-    
-    // Output List
-    
     std::vector<t_atom> output_list;
    
     // Outlet
@@ -80,16 +82,16 @@ struct t_descriptorsrt
     t_clock *output_clock;
 };
 
-#include "descriptors_temp.hpp"
-
 // Function Prototypes
 
 void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv);
 void descriptorsrt_free(t_descriptorsrt *x);
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s);
 
-void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
 void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptorsrt_reset_graph(t_descriptorsrt *x);
+void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
 
 void descriptorsrt_output(t_descriptorsrt *x);
 void descriptorsrt_calculate(t_descriptorsrt *x, double *samples);
@@ -110,7 +112,7 @@ int C74_EXPORT main()
                            0);
 	
 	class_addmethod(this_class, (method) descriptorsrt_descriptors, "descriptors", A_GIMME, 0);
-    class_addmethod(this_class, (method) descriptors_fft_params<t_descriptorsrt>, "fftparams", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptorsrt_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
     
     class_addmethod(this_class, (method) descriptorsrt_dsp, "dsp", A_CANT, 0);
@@ -122,32 +124,42 @@ int C74_EXPORT main()
     
 	class_register(CLASS_BOX, this_class);
 	
+    // Per-frame descriptors
+    
     s_setups.add_module("abs", module_average_abs_amp::setup);
     s_setups.add_module("rms", module_average_rms_amp::setup);
     s_setups.add_module("peakamp", module_peak_amp::setup);
+    
     s_setups.add_module("energy", module_energy::setup);
     s_setups.add_module("energy_ratio", module_energy_ratio::setup);
-    s_setups.add_module("spectral_crest", module_spectral_crest::setup);
-    s_setups.add_module("sfm", module_sfm::setup);
-    s_setups.add_module("rolloff", module_rolloff::setup);
+    
     s_setups.add_module("loudness", module_loudness::setup);
+    s_setups.add_module("rolloff", module_rolloff::setup);
+    s_setups.add_module("sfm", module_sfm::setup);
+    s_setups.add_module("spectral_crest", module_spectral_crest::setup);
+    
     s_setups.add_module("lin_centroid", module_lin_centroid::setup);
     s_setups.add_module("lin_spread", module_lin_spread::setup);
     s_setups.add_module("lin_skewness", module_lin_skewness::setup);
     s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
+
     s_setups.add_module("log_centroid", module_log_centroid::setup);
     s_setups.add_module("log_spread", module_log_spread::setup);
     s_setups.add_module("log_skewness", module_log_skewness::setup);
     s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);
+
     s_setups.add_module("pitch", module_pitch::setup);
     s_setups.add_module("confidence", module_confidence::setup);
     s_setups.add_module("lin_brightness", module_lin_brightness::setup);
     s_setups.add_module("log_brightness", module_log_brightness::setup);
+
     s_setups.add_module("noise_ratio", module_noise_ratio::setup);
     s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);
-    s_setups.add_module("foote", module_foote::setup);
+
     s_setups.add_module("flux", module_flux::setup);
+    s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);
+
     s_setups.add_module("spectral_peaks", module_spectral_peaks::setup);
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);
     s_setups.add_module("roughness", module_roughness::setup);
@@ -161,22 +173,23 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptorsrt *x = (t_descriptorsrt *) object_alloc(this_class);
 	
-	long max_fft_size_in = 0;
+	long max_fft_size = 0;
 
 	// Get arguments 
 	
 	if (argc) 
-		max_fft_size_in = atom_getlong(argv++);
+		max_fft_size = atom_getlong(argv++);
 	if (argc > 1) 
 		x->descriptors_feedback = atom_getlong(argv++);
 	
 	// Set maximum fft size
 	
-	long max_fft_size_log2 = descriptors_max_fft_size(x, max_fft_size_in);
-	x->max_fft_size_log2 = max_fft_size_log2;
-	x->max_fft_size = 1 << (max_fft_size_log2);
+    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0);
+	x->max_fft_size = 1 << x->max_fft_size_log2;
 	
-    descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
+    long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
+    
+    x->params.m_fft_params = check_fft_params((t_object *) x, default_fft_size, 0, 0, nullptr, x->max_fft_size_log2);
     
 	dsp_setup((t_pxobject *) x, 1);
 			
@@ -187,9 +200,14 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
     x->params.m_sr = 44100.0;
     x->m_outlet = listout(x);
 
+    x->hop_count = x->params.hop_size();
+    x->params.m_signal_length = x->params.frame_size();
+    x->reset = true;
+   
+    create_object(x->m_lock);
+    create_object(x->m_graph);
     create_object(x->output_list);
     create_object(x->rt_buffer);
-    create_object(x->m_graph);
 
 	return x;
 }
@@ -198,9 +216,10 @@ void descriptorsrt_free(t_descriptorsrt *x)
 {
 	dsp_free(&x->x_obj);
     object_free(x->output_clock);
+    destroy_object(x->m_lock);
+    destroy_object(x->m_graph);
     destroy_object(x->output_list);
     destroy_object(x->rt_buffer);
-    destroy_object(x->m_graph);
 }
 
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s)
@@ -213,17 +232,6 @@ void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s)
     {
         sprintf(s,"(signal / messages) All Messages / Input");
     }
-}
-
-// Set Descriptors
-
-void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
-{
-    auto graph = new class graph();
-    
-    graph->build(s_setups, x->params, argc, argv);
-    x->output_list.resize(graph->size());
-    x->m_graph.reset(graph);
 }
 
 // Energy Threshold
@@ -239,10 +247,65 @@ void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_
         object_error((t_object *) x, "too many arguments to energythresh message");
 }
 
+// Reset graph
+
+void descriptorsrt_reset_graph(t_descriptorsrt *x)
+{
+    // N.B. Only call once the lock is held
+    
+    x->hop_count = x->params.hop_size();
+    x->reset = true;
+    
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
+}
+
+// FFT Params
+
+void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    // Ignore blank argument set (keep current values)
+    
+    if (argc < 0)
+        return;
+    
+    // Load in args as relevant
+    
+    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
+    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
+    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
+    
+    safe_lock_hold hold(&x->m_lock);
+    
+    auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
+    
+    x->params.m_fft_params = params;
+    x->params.m_signal_length = x->params.frame_size();
+
+    descriptorsrt_reset_graph(x);
+}
+
+// Set Descriptors
+
+void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    auto graph = new class graph();
+    
+    graph->build(s_setups, x->params, argc, argv);
+    
+    safe_lock_hold hold(&x->m_lock);
+
+    x->output_list.resize(graph->size());
+    x->m_graph.reset(graph);
+}
+
 // RT Output
 
 void descriptorsrt_output(t_descriptorsrt *x)
 {
+    safe_lock_hold hold(&x->m_lock);
+
     outlet_list(x->m_outlet, nullptr, static_cast<short>(x->output_list.size()), x->output_list.data());
 }
 
@@ -250,16 +313,17 @@ void descriptorsrt_output(t_descriptorsrt *x)
 
 void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 {
+    // N.B. - the lock should already be held
+    
     auto& graph = x->m_graph;
+
+    // Run and call clock to output
 
     if (graph)
     {
         if (graph->run(x->params, samples))
         {
             graph->output(x->output_list.data());
-        
-            // Call clock to output
-        
             clock_delay(x->output_clock, 0);
         }
     }
@@ -276,11 +340,14 @@ t_int *descriptorsrt_perform(t_int *w)
 	auto& rt_buffer = x->rt_buffer;
 	
     long buffer_size = static_cast<long>(rt_buffer.size());
-    long hop_size = x->params.m_hop_size;
+    long hop_size = x->params.hop_size();
 	long hop_count = x->hop_count;
 	long rw_counter = x->rw_counter;
-	long frame_counter = rw_counter - x->params.m_frame_size + (buffer_size >> 1);
+    long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 	
+    if (!x->m_lock.attempt())
+        return w + 4;
+    
 	// Reset
 	
 	if (x->reset)
@@ -319,6 +386,8 @@ t_int *descriptorsrt_perform(t_int *w)
 	x->rw_counter = rw_counter;
 	x->hop_count = hop_count;
 	
+    x->m_lock.release();
+    
 	return w + 4;
 }
 
@@ -329,11 +398,14 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 	auto& rt_buffer = x->rt_buffer;
 	
 	long buffer_size = static_cast<long>(rt_buffer.size());
-    long hop_size = x->params.m_hop_size;
+    long hop_size = x->params.hop_size();
 	long hop_count = x->hop_count;
 	long rw_counter = x->rw_counter;
-    long frame_counter = rw_counter - x->params.m_frame_size + (buffer_size >> 1);
+    long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 
+    if (!x->m_lock.attempt())
+        return;
+    
     // Reset
 
 	if (x->reset)
@@ -371,12 +443,16 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 	
 	x->rw_counter = rw_counter;
 	x->hop_count = hop_count;
+    
+    x->m_lock.release();
 }
 
 // DSP
 
 void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
 {
+    safe_lock_hold hold(&x->m_lock);
+    
     // Allocate the correct buffer size and zero
 
     x->rt_buffer.resize(2 * (x->max_fft_size + sp[0]->s_n), 0.0);
@@ -385,7 +461,9 @@ void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
     
     x->rw_counter = 0;
     x->params.m_sr = sp[0]->s_sr;
-
+    
+    descriptorsrt_reset_graph(x);
+    
     // Add the perform routine
 
     dsp_add((t_perfroutine) descriptorsrt_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
@@ -393,7 +471,9 @@ void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
 
 void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-	// Allocate the correct buffer size and zero
+    safe_lock_hold hold(&x->m_lock);
+
+    // Allocate the correct buffer size and zero
 
     x->rt_buffer.resize(2 * (x->max_fft_size + max_vec), 0.0);
 	
@@ -401,7 +481,9 @@ void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, doub
 	
 	x->rw_counter = 0;
     x->params.m_sr = sample_rate;
-	
+
+    descriptorsrt_reset_graph(x);
+
 	// Add the perform routine
 	
     object_method(dsp64, gensym("dsp_add64"), x, descriptorsrt_perform64, 0, nullptr);

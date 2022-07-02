@@ -1,5 +1,6 @@
 
 #include "modules_level.hpp"
+#include "utility_definitions.hpp"
 
 #include <Statistics.hpp>
 
@@ -21,5 +22,10 @@ void module_average_rms_amp::calculate(const global_params& params, const double
 
 void module_peak_amp::calculate(const global_params& params, const double *frame, long size)
 {
-    set(stat_max(frame, size));
+    double peak = -infinity();
+    
+    for (long i = 0; i < size; i++)
+        peak = std::max(peak, fabs(frame[i]));
+    
+    set(peak);
 }

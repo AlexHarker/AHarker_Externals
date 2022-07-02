@@ -1,16 +1,14 @@
 
 #include "modules_core.hpp"
 #include "descriptors_graph.hpp"
+#include "utility_definitions.hpp"
 
-#include <SIMDSupport.hpp>
 #include <SIMDExtended.hpp>
 #include <Statistics.hpp>
 #include <WindowFunctions.hpp>
 
 #include <algorithm>
 #include <numeric>
-
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
 
 // Power Spectrum Helper
 
@@ -42,19 +40,19 @@ void module_window::prepare(const global_params& params)
         return 1.0 / std::accumulate(data, data + size, 0.0);
     };
     
-    if (params.m_frame_size == m_frame_size && params.m_window_type == m_window_type)
+    if (params.frame_size() == m_frame_size && params.window_type() == m_window_type)
         return;
     
-    m_frame_size = params.m_frame_size;
-    m_window_type = params.m_window_type;
+    m_frame_size = params.frame_size();
+    m_window_type = params.window_type();
     
-    m_windowed_frame.resize(params.m_frame_size);
-    m_window.resize(params.m_frame_size);
+    m_windowed_frame.resize(params.frame_size());
+    m_window.resize(params.frame_size());
     
     double *window = m_window.data();
     uint32_t window_size = static_cast<uint32_t>(m_window.size());
 
-    t_symbol *window_type = params.m_window_type;
+    t_symbol *window_type = params.window_type();
     
     window_functions::params win_params(6.8);
     
@@ -92,8 +90,8 @@ void module_window::prepare(const global_params& params)
     
     // Calculate the energy gain of the window
 
-    auto frame_size = params.m_frame_size;
-    auto fft_size_log2 = params.m_fft_size_log2;
+    auto frame_size = params.frame_size();
+    auto fft_size_log2 = params.fft_size_log2();
     auto num_bins = params.num_bins();
     auto fft_size = params.fft_size();
     
@@ -151,7 +149,7 @@ void module_fft::add_requirements(graph& g)
 void module_fft::prepare(const global_params& params)
 {
     m_fft_frame.resize(params.fft_size());
-    m_fft_setup.resize(params.m_fft_size_log2);
+    m_fft_setup.resize(params.fft_size_log2());
     m_energy_compensation = m_window_module->get_energy_compensation();
 }
 
@@ -215,6 +213,24 @@ void module_amplitude_spectrum::calculate(const global_params& params, const dou
     m_spectrum.data()[nyquist] = sqrt(power_frame[nyquist]);
 }
 
+// Frame Summming Modules (N.B. pass through methods to ensure linking)
+
+template <class T, class U>
+void module_frame_sum<T, U>::add_requirements(graph& g)
+{
+    m_core_module = g.add_requirement(new T());
+}
+
+void module_power_sum::add_requirements(graph& g)
+{
+    module_frame_sum::add_requirements(g);
+}
+
+void module_amplitude_sum::add_requirements(graph& g)
+{
+    module_frame_sum::add_requirements(g);
+}
+
 // Median Power Spectrum Module
 
 void module_median_power_spectrum::add_requirements(graph& g)
@@ -231,9 +247,21 @@ void module_median_power_spectrum::calculate(const global_params& params, const 
 {
     const double *power = m_power_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_span, median_filter<double>::Edges::Fold, 50.0);
+    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
 }
 
+// Log Bins Module
+
+void module_log_bins::prepare(const global_params& params)
+{
+    m_log_bins.resize(params.num_bins());
+
+    double *log_bins = m_log_bins.data();
+        
+    for (long i = 0; i < params.num_bins(); i++)
+        log_bins[i] = i ? log2(i): 0;
+}
+    
 // Peak Detection Module
 
 void module_peak_detection::add_requirements(graph& g)
@@ -265,18 +293,20 @@ void module_spectrum_ring_buffer::prepare(const global_params& params)
 {
     for (long i = 0; i < m_max_lag + 1; i++)
     {
-        m_spectra.emplace_back(params.num_bins());
-        std::fill_n(m_spectra.back().data(), params.num_bins(), 0.0);
+        if (m_spectra.size() <= i)
+            m_spectra.emplace_back(params.num_bins());
+        m_spectra[i].resize(params.num_bins());
+        std::fill_n(m_spectra[i].data(), params.num_bins(), 0.0);
     }
 }
 
 void module_spectrum_ring_buffer::calculate(const global_params& params, const double *frame, long size)
 {
     const double *spectrum = m_amplitude_module->get_frame();
+        
+    std::copy_n(spectrum, params.num_bins(), m_spectra[m_counter].data());
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
-    
-    std::copy_n(spectrum, params.num_bins(), m_spectra[m_counter].data());
 }
 
 long module_spectrum_ring_buffer::get_idx(long lag) const
@@ -295,8 +325,10 @@ void module_log_spectrum_ring_buffer::prepare(const global_params& params)
 {
     for (long i = 0; i < m_max_lag + 1; i++)
     {
-        m_spectra.emplace_back(params.num_bins());
-        std::fill_n(m_spectra.back().data(), params.num_bins(), 0.0);
+        if (m_spectra.size() <= i)
+            m_spectra.emplace_back(params.num_bins());
+        m_spectra[i].resize(params.num_bins());
+        std::fill_n(m_spectra[i].data(), params.num_bins(), 0.0);
     }
 }
 
@@ -306,13 +338,13 @@ void module_log_spectrum_ring_buffer::calculate(const global_params& params, con
     double *spectrum_out = m_spectra[m_counter].data();
     
     const double log_min = log(dbtoa(db_calc_min()));
-    
-    m_counter = (m_counter + 1) % (m_max_lag + 1);
-        
+            
     log_array(spectrum_out, spectrum_in, params.num_bins());
     
     for (long i = 0; i < params.num_bins(); i++)
         spectrum_out[i] = std::max(spectrum_out[i], log_min);
+    
+    m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
 
 long module_log_spectrum_ring_buffer::get_idx(long lag) const
@@ -324,16 +356,14 @@ long module_log_spectrum_ring_buffer::get_idx(long lag) const
 
 void module_autocorrelation::prepare(const global_params& params)
 {
-    m_fft_setup.resize(params.m_fft_size_log2);
-    m_full_frame.resize(params.fft_size());;
-    m_half_frame.resize(params.fft_size());;
+    m_fft_setup.resize(params.fft_size_log2());
+    m_full_frame.resize(params.fft_size());
+    m_half_frame.resize(params.fft_size());
     m_coefficients.resize(params.fft_size());
 }
 
 void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
 {
-    using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
     auto full_frame = m_full_frame.data();
     auto half_frame = m_half_frame.data();
     

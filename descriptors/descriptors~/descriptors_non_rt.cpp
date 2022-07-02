@@ -26,8 +26,10 @@
 #include <vector>
 
 #include <AH_Lifecycle.hpp>
+#include <AH_Locks.hpp>
 #include <ibuffer_access.hpp>
 
+#include "descriptors_fft_params.hpp"
 #include "descriptors_graph.hpp"
 #include "descriptors_summary_graph.hpp"
 
@@ -55,24 +57,16 @@ struct t_descriptors
     long max_fft_size_log2;
     long max_fft_size;
     
-    // FIX
-    
-    long hop_count;
-    
     global_params params;
-    
-    bool reset;
     
     // General Parameters
     
     bool descriptors_feedback;
     
-    // Descriptors
+    // Lock / Descriptor Graph / Output List
     
+    thread_lock m_lock;
     std::unique_ptr<summary_graph> m_graph;
-    
-    // Output List
-    
     std::vector<t_atom> output_list;
     
     // Outlet
@@ -84,16 +78,15 @@ struct t_descriptors
     t_clock *output_clock;
 };
 
-#include "descriptors_temp.hpp"
-
 // Function Prototypes
 
 void *descriptors_new(t_symbol *s, short argc, t_atom *argv);
 void descriptors_free(t_descriptors *x);
 void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s);
 
-void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv);
 
@@ -101,7 +94,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 
 int C74_EXPORT main()
 {	
-    this_class = class_new("descriptors~",
+    this_class = class_new("descriptorstest~",
                            (method) descriptors_new,
                            (method) descriptors_free,
                            sizeof(t_descriptors),
@@ -113,41 +106,86 @@ int C74_EXPORT main()
 	class_addmethod(this_class, (method) descriptors_analyse, "analyze", A_GIMME, 0);
 	
     class_addmethod(this_class, (method) descriptors_descriptors, "descriptors", A_GIMME, 0);
-    class_addmethod(this_class, (method) descriptors_fft_params<t_descriptors>, "fftparams", A_GIMME, 0);
+    class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
 
 	class_register(CLASS_BOX, this_class);
 	
+    // Issues
+    //
+    // Padding issue (not yet found)
+    // Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
+    //
+    // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
+    // SFM *was* using power rather than amplitudes
+    // Spectral crest *was* using power rather than amplitudes
+    // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
+    // Higher spectral shapes were wrong in early versions due to a lack of division by the overall amplitude sum
+    // Log higher spectral shape was still wrong in more recent versions
+    // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
+    // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
+    // Flux *had* a fixed index bug in the code producing consistently incorrect results
+    // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
+    // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
+    //
+    // trough and trough_pos *did* return infs due to an incorrect test
+    // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
+    // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
+    // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
+    // all peak searches *did* incorrectly detect peaks for each stage of continued upward motion (rather than a single peak)
+    // peak and trough searches *did* not address infinity values
+    //
+    // Spectral peak finding per frsme currently has no median filtering
+    // RT spectral_peaks reports in linear amps but non RT in db (with no options)
+    // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
+    //
+    // Precision etc. - some small differences in various places
+    // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
+    
+    // Need to check volume compesation points
+    // Need to check lags and other things with fftparams that have mismatch window and FFT
+    // Need to investigate speeds
+    // Need to investigate zero inputs
+    // Need to investigate min return values
+    
     // Per-frame Descriptors
     
     s_setups.add_module("abs", module_average_abs_amp::setup);
     s_setups.add_module("rms", module_average_rms_amp::setup);
     s_setups.add_module("peakamp", module_peak_amp::setup);
+
     s_setups.add_module("energy", module_energy::setup);
     s_setups.add_module("energy_ratio", module_energy_ratio::setup);
-    s_setups.add_module("spectral_crest", module_spectral_crest::setup);
-    s_setups.add_module("sfm", module_sfm::setup);
-    s_setups.add_module("rolloff", module_rolloff::setup);
+    
     s_setups.add_module("loudness", module_loudness::setup);
+    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]
+    s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
+    s_setups.add_module("spectral_crest", module_spectral_crest::setup);    // ** Fixed [used power not amps]
+
     s_setups.add_module("lin_centroid", module_lin_centroid::setup);
-    s_setups.add_module("lin_spread", module_lin_spread::setup);
+    s_setups.add_module("lin_spread", module_lin_spread::setup);            // ** Fixed [was ^2 before Hz conversion]
     s_setups.add_module("lin_skewness", module_lin_skewness::setup);
     s_setups.add_module("lin_kurtosis", module_lin_kurtosis::setup);
-    s_setups.add_module("log_centroid", module_log_centroid::setup);
-    s_setups.add_module("log_spread", module_log_spread::setup);
-    s_setups.add_module("log_skewness", module_log_skewness::setup);
-    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);
-    s_setups.add_module("pitch", module_pitch::setup);
-    s_setups.add_module("confidence", module_confidence::setup);
-    s_setups.add_module("lin_brightness", module_lin_brightness::setup);
-    s_setups.add_module("log_brightness", module_log_brightness::setup);
-    s_setups.add_module("noise_ratio", module_noise_ratio::setup);
-    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);
+                                                                            
+    s_setups.add_module("log_centroid", module_log_centroid::setup);        // * Improved (precision + bin zero)
+    s_setups.add_module("log_spread", module_log_spread::setup);            // * Improved (precision + bin zero)
+    s_setups.add_module("log_skewness", module_log_skewness::setup);        // * Fixed (sum div missing + above)
+    s_setups.add_module("log_kurtosis", module_log_kurtosis::setup);        // * Fixed (sum div missing + above)
+    
+    s_setups.add_module("pitch", module_pitch::setup);                      // ** Improved [return for no pitch / precision]
+    s_setups.add_module("confidence", module_confidence::setup);            // ** Improved [return for no pitch / precision]
+    s_setups.add_module("lin_brightness", module_lin_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
+    s_setups.add_module("log_brightness", module_log_brightness::setup);    // ** Improved [removed threshold / pitch fixed]
+    
+    s_setups.add_module("noise_ratio", module_noise_ratio::setup);          // ** Fixed [multiple errors]
+    s_setups.add_module("harmonic_ratio", module_harmonic_ratio::setup);    // ** Depends on above [nothing to do here]
+    
+    s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
     s_setups.add_module("foote", module_foote::setup);
-    s_setups.add_module("flux", module_flux::setup);
-    s_setups.add_module("mkl", module_mkl::setup);
-    s_setups.add_module("inharmonicity", module_inharmonicity::setup);
-    s_setups.add_module("roughness", module_roughness::setup);
+    s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
+    
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * To investigate
+    s_setups.add_module("roughness", module_roughness::setup);              // * To investigate
 
     // Stats
     
@@ -162,28 +200,28 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
-    s_setups.add_module("peak", stat_module_peak::setup);
-    s_setups.add_module("trough", stat_module_trough::setup);
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
-    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
-
-    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
-    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
-    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);
-    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);
-    
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);
-    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);
-    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);
-    
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);
-    s_setups.add_module("cross_below", stat_module_cross_below::setup);
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
-    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
+    s_setups.add_module("peak", stat_module_peak::setup);                                   // ** Fixed [old detects while upward]
+    s_setups.add_module("trough", stat_module_trough::setup);                               // ** Fixed [old returns infs]
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // ** Fixed [old detects while upward]
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);                       // ** Fixed [old returns infs]
 
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
-    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);                     // ** Fixed [old returns infs]
+    
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);           // ** Fixed [return cross not length]
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);           // ** Fixed [return cross not length]
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
+    
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // ** Fixed [old detects while upward]
+    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);             // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // ** Fixed [old detects while upward]
+    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);     // ** Fixed [old searches above thresh]
+    
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // ** Fixed [old detects while upward]
+    s_setups.add_module("cross_below", stat_module_cross_below::setup);                     // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // ** Fixed [old detects while upward]
+    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);             // ** Fixed [old searches above thresh]
 
     // Specifiers
     
@@ -193,7 +231,7 @@ int C74_EXPORT main()
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [with emulated median filter]
     
 	return 0;
 }
@@ -202,16 +240,14 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptors *x = (t_descriptors *) object_alloc(this_class);
 	
-	long max_fft_size_log2;
-	long max_fft_size_in = 0;
-	long max_fft_size;
+	long max_fft_size = 0;
 	long descriptor_data_size = 0;
 	long descriptor_feedback = 0;
 
 	// Get arguments 
 
 	if (argc) 
-		max_fft_size_in = atom_getlong(argv++);
+        max_fft_size = atom_getlong(argv++);
 	if (argc > 1) 
 		descriptor_data_size = atom_getlong(argv++);
 	if (argc > 2)
@@ -219,35 +255,53 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 	
 	// Set maximum fft size
 
-	max_fft_size_log2 = descriptors_max_fft_size(x, max_fft_size_in);
-	x->max_fft_size_log2 = max_fft_size_log2;
-	x->max_fft_size = max_fft_size = 1 << (max_fft_size_log2);
+    x->max_fft_size_log2 = check_fft_size((t_object *) x, "maximum fft size", max_fft_size, 0);
+	x->max_fft_size = 1 << x->max_fft_size_log2;
 
-    descriptors_fft_params_internal(x, x->max_fft_size, 0, 0, nullptr);
+    long default_fft_size = 4096 <= x->max_fft_size ? 4096 : x->max_fft_size;
+    
+    x->params.m_fft_params = check_fft_params((t_object *) x, default_fft_size, 0, 0, nullptr, x->max_fft_size_log2);
 
     x->m_outlet = listout(x);
 
     create_object(x->output_list);
     create_object(x->m_graph);
+    create_object(x->m_lock);
     
     return x;
 }
 
 void descriptors_free(t_descriptors *x)
 {
+    destroy_object(x->m_lock);
     destroy_object(x->output_list);
     destroy_object(x->m_graph);
 }
 
-// Set Descriptors
+// FFT Params
 
-void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    auto graph = new class summary_graph();
+    // Ignore blank argument set (keep current values)
     
-    graph->build(s_setups, x->params, argc, argv);
-    x->output_list.resize(graph->size());
-    x->m_graph.reset(graph);
+    if (argc < 0)
+        return;
+    
+    // Load in args as relevant
+    
+    long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
+    long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
+    long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
+    
+    auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
+    
+    safe_lock_hold hold(&x->m_lock);
+
+    x->params.m_fft_params = params;
+    
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
 }
 
 // Energy Threshold
@@ -263,10 +317,26 @@ void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_at
         object_error((t_object *) x, "too many arguments to energythresh message");
 }
 
+// Set Descriptors
+
+void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
+{
+    auto graph = new class summary_graph();
+    
+    graph->build(s_setups, x->params, argc, argv);
+    
+    safe_lock_hold hold(&x->m_lock);
+    
+    x->output_list.resize(graph->size());
+    x->m_graph.reset(graph);
+}
+
 // User Routines For Performing Analysis
 
 void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
+    safe_lock_hold hold(&x->m_lock);
+
     auto& graph = x->m_graph;
 
 	t_symbol *buffer_name = nullptr;

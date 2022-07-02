@@ -12,23 +12,41 @@
 
 class graph;
 
+// FFT Parameters
+
+struct fft_params
+{
+    long m_fft_size_log2;
+    long m_hop_size;
+    long m_frame_size;
+    
+    t_symbol *m_window_type;
+    
+    long fft_size() const { return 1 << m_fft_size_log2; }
+};
+
 // Global Parameters
 
 struct global_params
 {
-    long m_fft_size_log2;
-    long m_frame_size;
-    long m_hop_size;
+    fft_params m_fft_params;
+    
     long m_signal_length;
+    
     double m_sr;
     double m_energy_threshold;
-    t_symbol *m_window_type;
     
     // FIX - ceil??
     
-    long num_frames() const { return m_signal_length / m_hop_size; }
-    long fft_size() const { return 1 << m_fft_size_log2; }
+    long num_frames() const { return ceil(m_signal_length / m_fft_params.m_hop_size); }
+    long fft_size() const { return m_fft_params.fft_size(); }
+    long fft_size_log2() const { return m_fft_params.m_fft_size_log2; }
+    long hop_size() const { return m_fft_params.m_hop_size; }
+    long frame_size() const { return m_fft_params.m_frame_size; }
     long num_bins() const { return (fft_size() >> 1) + 1; }
+    
+    t_symbol *window_type() const { return m_fft_params.m_window_type; }
+    
     double bin_freq() const { return m_sr / fft_size(); }
 };
 

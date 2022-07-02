@@ -3,9 +3,8 @@
 #define _MODULES_SPECTRAL_HPP_
 
 #include "conversion_helpers.hpp"
+#include "utility_definitions.hpp"
 #include "modules_core.hpp"
-
-#include <limits>
 
 // Basic Spectral Module
 
@@ -14,12 +13,10 @@ struct module_spectral : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        constexpr double infinity = std::numeric_limits<double>::infinity();
-        
         T *m = new T();
         
-        m->m_lo_freq = args.get_double(0.0, 0.0, infinity);
-        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity);
+        m->m_lo_freq = args.get_double(0.0, 0.0, infinity());
+        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity());
 
         return m;
     }
@@ -38,6 +35,8 @@ struct module_spectral : user_module_single<T>
     }
     
 protected:
+    
+    long bin_count() const { return m_max_bin - m_min_bin; }
     
     double m_lo_freq;
     double m_hi_freq;
@@ -83,7 +82,7 @@ struct module_energy_ratio : module_spectral<module_energy_ratio>
     
 private:
     
-    module_power_spectrum *m_power_module;
+    module_power_sum *m_power_sum_module;
     aligned_vector<> m_spectrum;
 };
 
@@ -97,6 +96,7 @@ struct module_sfm : module_spectral<module_sfm>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
     aligned_vector<> m_spectrum;
 };
 
@@ -136,7 +136,7 @@ struct module_energy : module_spectral_db<module_energy>
     
 private:
     
-    module_power_spectrum *m_power_module;
+    module_power_sum *m_power_sum_module;
 };
 
 // Spectral Crest Module
@@ -157,10 +157,10 @@ struct module_rolloff : user_module_single<module_rolloff>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
     
-    module_rolloff(double centile)
-    : m_centile(centile) {}
+    module_rolloff(double ratio)
+    : m_ratio(ratio) {}
     
-    auto get_params() const { return std::make_tuple(m_centile); }
+    auto get_params() const { return std::make_tuple(m_ratio); }
 
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -168,7 +168,8 @@ struct module_rolloff : user_module_single<module_rolloff>
 private:
     
     module_power_spectrum *m_power_module;
-    const double m_centile;
+    module_power_sum *m_power_sum_module;
+    const double m_ratio;
 };
 
 // Spectral Linear Shape Modules
@@ -183,19 +184,41 @@ struct module_lin_centroid : module_spectral<module_lin_centroid>
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
+    double get_raw_centroid() const { return m_raw; }
+    double get_sum() const { return m_sum; }
+    
+    const double *get_frame() const { return m_amplitude_module->get_frame(); }
+
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
+    
+    double m_raw;
+    double m_sum;
 };
 
 struct module_lin_spread : module_spectral<module_lin_spread>
 {
+    module_lin_spread(){}
+    
+    module_lin_spread(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    const double *get_frame() const { return m_centroid_module->get_frame(); }
+
+    double get_raw_spread() const { return m_raw; }
+    double get_raw_centroid() const { return m_centroid_module->get_raw_centroid(); }
+    double get_sum() const { return m_centroid_module->get_sum(); }
+    
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_lin_centroid *m_centroid_module;
+    
+    double m_raw;
 };
 
 struct module_lin_skewness : module_spectral<module_lin_skewness>
@@ -205,7 +228,7 @@ struct module_lin_skewness : module_spectral<module_lin_skewness>
 
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_lin_spread *m_spread_module;
 };
 
 struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
@@ -215,7 +238,7 @@ struct module_lin_kurtosis : module_spectral<module_lin_kurtosis>
 
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_lin_spread *m_spread_module;
 };
 
 // Spectral Log Shape Modules
@@ -223,25 +246,51 @@ private:
 struct module_log_centroid : module_spectral<module_log_centroid>
 {
     module_log_centroid(){}
+    
     module_log_centroid(double lo_freq, double hi_freq)
     : module_spectral(lo_freq, hi_freq) {}
     
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    double get_raw_centroid() const { return m_raw; }
+    double get_sum() const { return m_sum; }
+    
+    const double *get_frame() const { return m_amplitude_module->get_frame(); }
+    const double *get_log_bins() const { return m_log_bins_module->get_log_bins(); }
+
 private:
     
+    module_log_bins *m_log_bins_module;
     module_amplitude_spectrum *m_amplitude_module;
+    module_amplitude_sum *m_amplitude_sum_module;
+    
+    double m_raw;
+    double m_sum;
 };
 
 struct module_log_spread : module_spectral<module_log_spread>
 {
+    module_log_spread(){}
+    
+    module_log_spread(double lo_freq, double hi_freq)
+    : module_spectral(lo_freq, hi_freq) {}
+    
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
 
+    const double *get_frame() const { return m_centroid_module->get_frame(); }
+    const double *get_log_bins() const { return m_centroid_module->get_log_bins(); }
+
+    double get_raw_spread() const { return m_raw; }
+    double get_raw_centroid() const { return m_centroid_module->get_raw_centroid(); }
+    double get_sum() const { return m_centroid_module->get_sum(); }
+
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_centroid *m_centroid_module;
+    
+    double m_raw;
 };
 
 struct module_log_skewness : module_spectral<module_log_skewness>
@@ -251,7 +300,7 @@ struct module_log_skewness : module_spectral<module_log_skewness>
     
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_spread *m_spread_module;
 };
 
 struct module_log_kurtosis : module_spectral<module_log_kurtosis>
@@ -261,7 +310,7 @@ struct module_log_kurtosis : module_spectral<module_log_kurtosis>
     
 private:
     
-    module_amplitude_spectrum *m_amplitude_module;
+    module_log_spread *m_spread_module;
 };
 
 #endif /* _MODULES_SPECTRAL_HPP_ */

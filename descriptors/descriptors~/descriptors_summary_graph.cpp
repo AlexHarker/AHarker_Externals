@@ -48,7 +48,9 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
 
     check_last_descriptor_summary();
     
-    // N.B. for the summary graph prepare needs calling per input, so we skip it here
+    // N.B. for the summary graph prepare needs calling per input, but we call it here first
+    
+    prepare(params);
 }
     
 void summary_graph::prepare(const global_params& params)
@@ -58,7 +60,7 @@ void summary_graph::prepare(const global_params& params)
     for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
         (*it)->prepare(params);
     
-    m_frame.resize(params.m_frame_size);
+    m_frame.resize(params.frame_size());
     m_temp_data.resize(graph::size() * params.num_frames());
 }
     
@@ -66,15 +68,15 @@ void summary_graph::run(const global_params& params, const double *input)
 {
     // Loop over hops
 
-    for (long i = 0, offset = 0; i < params.num_frames(); i++, offset += params.m_hop_size)
+    for (long i = 0, offset = 0; i < params.num_frames(); i++, offset += params.hop_size())
     {
-        long frame_available = std::min(params.m_frame_size, params.m_signal_length - offset);
+        long frame_available = std::min(params.frame_size(), params.m_signal_length - offset);
         
         // Get samples
         
         for (long j = 0; j < frame_available; j++)
             m_frame[j] = input[offset + j];
-        for (long j = frame_available; j < params.m_frame_size; j++)
+        for (long j = frame_available; j < params.frame_size(); j++)
             m_frame[j] = 0.0;
         
         // Run per frame
@@ -89,10 +91,7 @@ void summary_graph::run(const global_params& params, const double *input)
         
     for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
     {
-        // FIX - make this nicer...
-
-        auto summary = dynamic_cast<summary_module *>(it->get());
-        auto index = summary->get_index();
+        auto index = dynamic_cast<summary_module *>(it->get())->get_index();
         
         if (index == -1)
             (*it)->calculate(params, input, params.m_signal_length);
@@ -117,10 +116,7 @@ module *summary_graph::add_requirement_impl(module *m)
         {
             if ((*it)->is_the_same(m))
             {
-                auto specifier = dynamic_cast<summary_specifier *>(it->get());
-
-                if (specifier)
-                    specifier->update_to_final(m);
+                dynamic_cast<summary_module*>(it->get())->update_to_final(m);
                 delete m;
                 return it->get();
             }

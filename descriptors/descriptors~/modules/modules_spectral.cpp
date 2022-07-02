@@ -1,28 +1,26 @@
 
 #include "modules_spectral.hpp"
 #include "descriptors_graph.hpp"
+#include "utility_definitions.hpp"
 
-#include <SIMDSupport.hpp>
 #include <Statistics.hpp>
 
 #include <algorithm>
 #include <cmath>
 
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
-
 // Energy Ratio Module
 
 void module_energy_ratio::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_power_sum_module = g.add_requirement(new module_power_sum());
 }
 
 void module_energy_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
-    long num_bins = params.num_bins();
+    const double band = m_power_sum_module->get_sum(m_min_bin, m_max_bin);
+    const double energy = m_power_sum_module->get_sum(0, params.num_bins());
             
-    m_value = stat_sum_squares(power + m_min_bin, m_max_bin - m_min_bin) / stat_sum_squares(power, num_bins);
+    m_value = energy ? band / energy : infinity();
 }
 
 // Spectral Flatness Module
@@ -30,15 +28,15 @@ void module_energy_ratio::calculate(const global_params& params, const double *f
 void module_sfm::add_requirements(graph& g)
 {
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_amplitude_sum_module = g.add_requirement(new module_amplitude_sum());
 }
 
 void module_sfm::calculate(const global_params& params, const double *frame, long size)
 {
-    // FIX - Currently uses amplitudes (does not match previous version)
-
     const double *amplitudes = m_amplitude_module->get_frame();
-            
-    m_value = stat_flatness(amplitudes + m_min_bin, m_max_bin - m_min_bin);
+    const double mean = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin) / bin_count();
+    
+    m_value = mean ? stat_geometric_mean(amplitudes + m_min_bin, bin_count()) / mean : infinity();
 }
 
 // Loudness Module
@@ -118,16 +116,14 @@ void module_loudness::calculate(const global_params& params, const double *frame
 
 void module_energy::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_power_sum_module = g.add_requirement(new module_power_sum());
 }
 
 void module_energy::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
+    double energy = m_power_sum_module->get_sum(m_min_bin, m_max_bin);
 
-    double energy = stat_sum(power + m_min_bin, m_max_bin - m_min_bin);
-
-    energy *= m_power_module->get_energy_compensation();
+    energy *= m_power_sum_module->get_energy_compensation();
             
     m_value = m_report_db ? pow_to_db(energy) : energy;
 }
@@ -143,11 +139,11 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 {
     const double *amps = m_amplitude_module->get_frame();
 
-    // N.B. - This doesn't use statCrest as the denominator is simply the mean
+    // N.B. - This doesn't use stat_crest as the denominator is simply the mean
 
-    const double max = stat_max(amps + m_min_bin, m_max_bin - m_min_bin);
-    const double mean = stat_mean(amps + m_min_bin, m_max_bin - m_min_bin);
-    const double crest = max / mean;
+    const double max = stat_max(amps + m_min_bin, bin_count());
+    const double mean = stat_mean(amps + m_min_bin, bin_count());
+    const double crest = mean ? max / mean : infinity();
             
     m_value = m_report_db ? atodb(crest) : crest;
 }
@@ -156,19 +152,35 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
 user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
-    return new module_rolloff(args.get_double(0.95, 0.0, 1.0) * 100.0);
+    return new module_rolloff(args.get_double(0.95, 0.0, 1.0));
 }
 
 void module_rolloff::add_requirements(graph& g)
 {
     m_power_module = g.add_requirement(new module_power_spectrum());
+    m_power_sum_module = g.add_requirement(new module_power_sum());
 }
 
 void module_rolloff::calculate(const global_params& params, const double *frame, long size)
 {
-    const double bin = stat_pdf_percentile(m_power_module->get_frame(), m_centile, params.num_bins());
+    const double *power_frame = m_power_module->get_frame();
     
-    m_value = bin * params.bin_freq();
+    const double target = m_power_sum_module->get_sum(0, params.num_bins()) * m_ratio;
+    
+    double sum = 0.0;
+    double bin = params.num_bins();
+    
+    for (long i = 0; i < params.num_bins(); i++)
+    {
+        sum += power_frame[i];
+        if (sum >= target)
+        {
+            bin = static_cast<double>(i - ((sum - target) / power_frame[i]));
+            break;
+        }
+    }
+        
+    m_value = target ? bin * params.bin_freq() :  infinity();
 }
     
 // Spectral Linear Shape Modules
@@ -178,47 +190,78 @@ void module_rolloff::calculate(const global_params& params, const double *frame,
 void module_lin_centroid::add_requirements(graph& g)
 {
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_amplitude_sum_module = g.add_requirement(new module_amplitude_sum());
 }
 
 void module_lin_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    const double *data = m_amplitude_module->get_frame() + m_min_bin;
+    
+    m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
+    m_raw = m_sum ? stat_weighted_sum(data, bin_count()) / m_sum : infinity();
+    m_value = (m_raw + m_min_bin) * params.bin_freq();
 }
 
 // Spread
 
 void module_lin_spread::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_centroid_module = g.add_requirement(new module_lin_centroid(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_spread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    using calculation = impl::indices_diff_op<impl::pow2>;
+    
+    const double *data = m_centroid_module->get_frame() + m_min_bin;
+    
+    const double centroid = m_centroid_module->get_raw_centroid();
+    const double sum = m_centroid_module->get_sum();
+
+    m_raw = sum ? sqrt(stat_weighted_sum(calculation(centroid), data, bin_count()) / sum) : infinity();
+    m_value = m_raw * params.bin_freq();
 }
 
 // Skewness
 
 void module_lin_skewness::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_lin_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_skewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::indices_diff_op<impl::pow3>;
+
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+    
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow3()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Kurtosis
 
 void module_lin_kurtosis::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_lin_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_lin_kurtosis::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_kurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::indices_diff_op<impl::pow4>;
+
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow4()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Spectral Log Shape Modules
@@ -227,46 +270,82 @@ void module_lin_kurtosis::calculate(const global_params& params, const double *f
 
 void module_log_centroid::add_requirements(graph& g)
 {
+    m_log_bins_module = g.add_requirement(new module_log_bins());
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_amplitude_sum_module = g.add_requirement(new module_amplitude_sum());
 }
 
 void module_log_centroid::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_log_centroid(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin) * params.bin_freq();
+    const double *data = m_amplitude_module->get_frame() + m_min_bin;
+    const double *log_bins = m_log_bins_module->get_log_bins() + m_min_bin;
+
+    m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
+    m_raw = m_sum ? stat_weighted_sum(log_bins, data, bin_count()) / m_sum : infinity();
+    m_value = exp2(m_raw) * params.bin_freq();
 }
 
 // Spread
 
 void module_log_spread::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_centroid_module = g.add_requirement(new module_log_centroid(m_lo_freq, m_hi_freq));
 }
 
 void module_log_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_log_spread(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::modified_diff_data<const double *, impl::pow2>;
+    
+    const double *data = m_centroid_module->get_frame() + m_min_bin;
+    const double *log_bins = m_centroid_module->get_log_bins() + m_min_bin;
+
+    const double centroid = m_centroid_module->get_raw_centroid();
+    const double sum = m_centroid_module->get_sum();
+    
+    m_raw = sum ? sqrt(stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / sum) : infinity();
+    m_value = m_raw;
 }
 
 // Skewness
 
 void module_log_skewness::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_log_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_log_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    m_value = stat_log_skewness(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::modified_diff_data<const double *, impl::pow3>;
+    
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+    const double *log_bins = m_spread_module->get_log_bins() + m_min_bin;
+
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow3()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Kurtosis
 
 void module_log_kurtosis::add_requirements(graph& g)
 {
-    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_spread_module = g.add_requirement(new module_log_spread(m_lo_freq, m_hi_freq));
 }
 
 void module_log_kurtosis::calculate(const global_params& params, const double *frame, long size) 
 {
-    m_value = stat_log_kurtosis(m_amplitude_module->get_frame() + m_min_bin, m_max_bin - m_min_bin);
+    using calculation = impl::modified_diff_data<const double *, impl::pow4>;
+    
+    const double *data = m_spread_module->get_frame() + m_min_bin;
+    const double *log_bins = m_spread_module->get_log_bins() + m_min_bin;
+
+    const double centroid = m_spread_module->get_raw_centroid();
+    const double spread = m_spread_module->get_raw_spread();
+    const double sum = m_spread_module->get_sum();
+    
+    double denominator = impl::pow4()(spread) * sum;
+    m_value = sum ? stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
 }

@@ -39,12 +39,11 @@
 
 /* Begin PBXFileReference section */
 		B80C537227BD11D100A7637C /* edges.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = edges.hpp; sourceTree = "<group>"; };
-		B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_constants.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B839615B2868D6F900275ECE /* modules_summary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_summary.hpp; sourceTree = "<group>"; };
 		B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_modules.hpp; sourceTree = "<group>"; };
 		B8472B9527B533D000C60F79 /* descriptors_graph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_graph.hpp; sourceTree = "<group>"; };
-		B8472B9627B55F9F00C60F79 /* descriptors_temp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_temp.hpp; sourceTree = "<group>"; };
+		B8472B9627B55F9F00C60F79 /* descriptors_fft_params.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_fft_params.hpp; sourceTree = "<group>"; };
 		B8472B9727B5659000C60F79 /* modules_level.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_level.hpp; sourceTree = "<group>"; };
 		B8472B9827B57C0900C60F79 /* modules_spectral.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_spectral.hpp; sourceTree = "<group>"; };
 		B84BD78B10E81358002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
@@ -60,25 +59,18 @@
 		B85830E127B6D5A20083BA8E /* modules_content.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_content.cpp; sourceTree = "<group>"; };
 		B85830E227B6D5A20083BA8E /* modules_content.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_content.hpp; sourceTree = "<group>"; };
 		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_MaxMSP_Headers/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
+		B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_modules.hpp; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_rt.cpp; sourceTree = "<group>"; };
 		B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_non_rt.cpp; sourceTree = "<group>"; };
 		B8BE4093286C52AD00D3D7A5 /* modules_summary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_summary.cpp; sourceTree = "<group>"; };
-		B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_per_frame_descriptors.cpp; sourceTree = "<group>"; };
-		B8D158410F23B0FF00DA592C /* descriptors_object_structure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_object_structure.h; sourceTree = "<group>"; };
-		B8D1585D0F23B21B00DA592C /* descriptors_constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descriptors_constants.h; sourceTree = "<group>"; };
 		B8D5FA2327BB1C6D00D20EE7 /* peak_finder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = peak_finder.hpp; sourceTree = "<group>"; };
 		B8E54B222869B83B00C2E794 /* descriptors_graph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_graph.cpp; sourceTree = "<group>"; };
 		B8E54B252869B99500C2E794 /* descriptors_summary_graph.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_graph.hpp; sourceTree = "<group>"; };
 		B8E54B262869B99500C2E794 /* descriptors_summary_graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_summary_graph.cpp; sourceTree = "<group>"; };
-		B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_object.cpp; sourceTree = "<group>"; };
-		B8E9C47727BEAB7E009B6B31 /* descriptors_sort.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_sort.cpp; sourceTree = "<group>"; };
 		B8F3820B0F23B58E00B7D3E0 /* median_filter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = median_filter.hpp; sourceTree = "<group>"; };
 		B8F382280F23B6AE00B7D3E0 /* conversion_helpers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = conversion_helpers.hpp; sourceTree = "<group>"; };
 		B8F382580F23B80000B7D3E0 /* sort.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sort.hpp; sourceTree = "<group>"; };
-		B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_spectralpeaks.cpp; sourceTree = "<group>"; };
-		B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_set_descriptors.cpp; sourceTree = "<group>"; };
-		B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_statistics.cpp; sourceTree = "<group>"; };
 		B8FE3F3210986C1000780AF9 /* descriptorsrt~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptorsrt~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -115,8 +107,9 @@
 			children = (
 				B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */,
 				B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */,
-				B8472B9627B55F9F00C60F79 /* descriptors_temp.hpp */,
+				B8472B9627B55F9F00C60F79 /* descriptors_fft_params.hpp */,
 				B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */,
+				B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */,
 				B8472B9527B533D000C60F79 /* descriptors_graph.hpp */,
 				B8E54B222869B83B00C2E794 /* descriptors_graph.cpp */,
 				B8E54B252869B99500C2E794 /* descriptors_summary_graph.hpp */,
@@ -125,7 +118,6 @@
 				B84BD78B10E81358002288DB /* ibuffer_access.cpp */,
 				B8E9C47527BEAA3C009B6B31 /* library */,
 				B8E9C47427BEA9C6009B6B31 /* modules */,
-				B8E9C47627BEAB2B009B6B31 /* legacy */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -171,22 +163,6 @@
 				B8D5FA2327BB1C6D00D20EE7 /* peak_finder.hpp */,
 			);
 			path = library;
-			sourceTree = "<group>";
-		};
-		B8E9C47627BEAB2B009B6B31 /* legacy */ = {
-			isa = PBXGroup;
-			children = (
-				B8E9C47727BEAB7E009B6B31 /* descriptors_sort.cpp */,
-				B8D158410F23B0FF00DA592C /* descriptors_object_structure.h */,
-				B8E7A5480EE16E9A004ABE12 /* descriptors_object.cpp */,
-				B8D1585D0F23B21B00DA592C /* descriptors_constants.h */,
-				B815E6C51F5B2B2200ADF1CA /* descriptors_constants.cpp */,
-				B8F382660F23B88000B7D3E0 /* descriptors_spectralpeaks.cpp */,
-				B8F3829A0F23BA2F00B7D3E0 /* descriptors_set_descriptors.cpp */,
-				B8D158240F23ACB100DA592C /* descriptors_per_frame_descriptors.cpp */,
-				B8F382F30F23BD5300B7D3E0 /* descriptors_statistics.cpp */,
-			);
-			path = legacy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
