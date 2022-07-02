@@ -33,8 +33,6 @@ void module_sfm::add_requirements(graph& g)
 
 void module_sfm::calculate(const global_params& params, const double *frame, long size)
 {
-    // FIX - Currently uses amplitudes (does not match previous version)
-
     const double *amplitudes = m_amplitude_module->get_frame();
     const double mean = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin) / bin_count();
     
