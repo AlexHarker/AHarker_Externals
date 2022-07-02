@@ -267,6 +267,7 @@ void module_log_bins::prepare(const global_params& params)
 void module_peak_detection::add_requirements(graph& g)
 {
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_median_amplitude_module = g.add_requirement(new module_median_amplitude_spectrum(m_median_width));
 }
 
 void module_peak_detection::prepare(const global_params& params)
