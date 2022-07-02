@@ -107,7 +107,7 @@ void module_inharmonicity::add_requirements(graph& g)
 void module_inharmonicity::calculate(const global_params& params, const double *frame, long size)
 {
     auto peaks = m_peak_detection_module->get_peaks();
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
 
     double sum1 = 0.0;
     double sum2 = 0.0;
@@ -163,7 +163,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
     // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
 
     // Code adapated from Richard Parncutt (Mcgill University / Univeristy of Graz)
-    // Richard Parncutt's current webpage is: http://www.uni-graz.at/richard.parncutt/
+    // Richard Parncutt's current webpage is: https://homepage.uni-graz.at/de/richard.parncutt/
     // The code can be found at: http://www.uni-graz.at/richard.parncutt/computerprograms.html
     // The original comments from the code are reproduced in an adapted form below.
 
@@ -186,9 +186,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
     constexpr double cb_int0 = 0.25;                   // interval for max roughness (P&L: ca. 0.25)
     constexpr double cb_int1 = 1.2;                    // interval beyond which roughness is negligible (P&L: 1.2)
     constexpr double index = 2.0;                      // for standard curve of P&L (bigger index => narrower curve)
-    constexpr double cb_int0_recip = 1.0 / cb_int0;
-    
-    // for calculating H&K Eq. (3)
+    constexpr double cb_int0_recip = 1.0 / cb_int0;    // for calculating H&K Eq. (3)
     
     double min_amp = 0.0;
     double numerator = 0.0;
