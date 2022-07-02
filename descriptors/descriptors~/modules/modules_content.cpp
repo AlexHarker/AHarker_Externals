@@ -119,10 +119,10 @@ void module_inharmonicity::calculate(const global_params& params, const double *
             
             if (peak_freq > 0)
             {
-                double divergence = (pitch > peak.m_position) ? pitch / peak_freq : peak_freq / pitch;
+                double divergence = (pitch > peak_freq) ? pitch / peak_freq : peak_freq / pitch;
 
                 divergence -= floor(divergence);
-                divergence =  (divergence > 0.5) ? 1.0 - divergence : divergence;
+                divergence = (divergence > 0.5) ? 1.0 - divergence : divergence;
 
                 sum1 += peak.m_value * divergence * 2.0;
                 sum2 += peak.m_value;
