@@ -266,13 +266,21 @@ struct find_n : summary_module, comparable_module<find_n<Condition>>
         
         for (long i = 0; i < m_n; i++)
         {
+            double threshold = 0.0;
             long pos = -1;
             
             // Find the next value of interest
             
             for (long j = 0; j < size; j++)
-                if (!mask[j] && m_cond(data, j, pos, size))
-                    pos = j;
+            {
+                long test_pos = j;
+                
+                if (!mask[j] && m_cond(data, j, size, pos == -1, threshold))
+                {
+                    pos = test_pos;
+                    threshold = data[test_pos];
+                }
+            }
              
             // If valid apply the mask and store, else exit early
             
@@ -349,37 +357,59 @@ private:
 // Condition templates
 
 template <template <class T> class Op>
-struct condition_single
+struct condition_min_max
 {
-    bool operator()(const double *data, long i, long pos, long size)
+    bool operator()(const double *data, long idx, long size, bool skip_threshold, double threshold)
     {
-        return pos == -1 || Op<double>()(data[i], data[pos]);
+        return skip_threshold || Op<double>()(data[idx], threshold);
     }
 };
 
-template <template <class T> class Op>
-struct condition_triple
+template <template <class T> class Op1, template <class T> class Op2>
+struct condition_peak_trough
 {
-    bool operator()(const double *data, long i, long pos, long size)
+    bool reverse_op(double a, double b) { return Op2<double>()(a, b); }
+
+    bool operator()(const double *data, long& idx, long size, bool skip_threshold, double threshold)
     {
-        // FIX - infinite values and edge effects
+        const double value = data[idx];
         
-        Op<double> op;
-        bool is_triple = i && i < size && op(data[i], data[i-1]) && op(data[i], data[i+1]);
-        return is_triple && condition_single<Op>()(data, i, pos, size);
+        if ((skip_threshold || Op1<double>()(value, threshold)) && (!idx || Op1<double>()(value, data[idx - 1])))
+        {
+            // FIX - infinite values
+            
+            // Now search right until the value changes
+         
+            for (; idx < size - 1; idx++)
+                if (value != data[idx + 1])
+                    break;
+                  
+            if (!Op2<double>()(value, data[idx + 1]))
+            {
+                idx++;
+                return true;
+            }
+        }
+        
+        return false;
     }
 };
+
+using is_max = condition_min_max<std::greater>;
+using is_min = condition_min_max<std::less>;
+using is_peak = condition_peak_trough<std::greater, std::less>;
+using is_trough = condition_peak_trough<std::less, std::greater>;
 
 // Final user module types
 
-using stat_module_max = stat_find_n_user<condition_single<std::greater>, false>;
-using stat_module_min = stat_find_n_user<condition_single<std::less>, false>;
-using stat_module_max_pos = stat_find_n_user<condition_single<std::greater>, true>;
-using stat_module_min_pos = stat_find_n_user<condition_single<std::less>, true>;
-using stat_module_peak = stat_find_n_user<condition_triple<std::greater>, false>;
-using stat_module_trough = stat_find_n_user<condition_triple<std::less>, false>;
-using stat_module_peak_pos = stat_find_n_user<condition_triple<std::greater>, true>;
-using stat_module_trough_pos = stat_find_n_user<condition_triple<std::less>, true>;
+using stat_module_max = stat_find_n_user<is_max, false>;
+using stat_module_min = stat_find_n_user<is_min, false>;
+using stat_module_max_pos = stat_find_n_user<is_max, true>;
+using stat_module_min_pos = stat_find_n_user<is_min, true>;
+using stat_module_peak = stat_find_n_user<is_peak, false>;
+using stat_module_trough = stat_find_n_user<is_trough, false>;
+using stat_module_peak_pos = stat_find_n_user<is_peak, true>;
+using stat_module_trough_pos = stat_find_n_user<is_trough, true>;
 
 // Ratio user module
 
@@ -437,8 +467,8 @@ struct crossing
 
 // Generic underlying longest crossings module
 
-template <template <class T> class Op1, template <class T> class Op2>
-struct extreme_crossings : summary_module, comparable_module<extreme_crossings<Op1, Op2>>
+template <class Condition>
+struct extreme_crossings : summary_module, comparable_module<extreme_crossings<Condition>>
 {
     extreme_crossings() : summary_module(), m_n(1) {}
     
@@ -479,23 +509,12 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
             
             for (long j = 0; j < size; j++)
             {
-                if (!mask[j] && Op1<double>()(data[j], compare) && (!j || Op1<double>()(data[j], data[j - 1])))
+                long test_pos = j;
+                
+                if (!mask[j] && m_cond(data, j, size, false, compare))
                 {
-                    long test_pos = j;
-                                        
-                    // Now search right until the value changes
-                    
-                    for (j++; j < size - 1; j++)
-                        if (data[test_pos] != data[j])
-                            break;
-                        
-                    // FIX - infinite values
-
-                    if (!Op2<double>()(data[test_pos], data[j]))
-                    {
-                        compare = data[test_pos];
-                        pos = test_pos;
-                    }
+                    compare = data[test_pos];
+                    pos = test_pos;
                 }
             }
             
@@ -509,11 +528,11 @@ struct extreme_crossings : summary_module, comparable_module<extreme_crossings<O
             // Search earlier then later for crossing points
                 
             for (cross1 = pos; cross1 > 0 ; cross1--)
-                if (data[i] != infinity() && Op2<double>()(data[cross1], threshold))
+                if (data[i] != infinity() && m_cond.reverse_op(data[cross1], threshold))
                     break;
                                 
             for (cross2 = pos + 1; cross2 < size - 1; cross2++)
-                if (data[i] != infinity() && Op2<double>()(data[cross2], threshold))
+                if (data[i] != infinity() && m_cond.reverse_op(data[cross2], threshold))
                     break;
             
             // Update mask points and do masking
@@ -543,6 +562,8 @@ private:
     
     aligned_vector<crossing> m_crossings;
     long m_n;
+    
+    Condition m_cond;
 };
 
 // Longest Crossings
@@ -696,8 +717,8 @@ private:
     Crossings *m_crossings;
 };
 
-using extreme_above = extreme_crossings<std::greater, std::less>;
-using extreme_below = extreme_crossings<std::less, std::greater>;
+using extreme_above = extreme_crossings<is_peak>;
+using extreme_below = extreme_crossings<is_trough>;
 using longest_above = longest_crossings<std::greater, std::less>;
 using longest_below = longest_crossings<std::less, std::greater>;
 
