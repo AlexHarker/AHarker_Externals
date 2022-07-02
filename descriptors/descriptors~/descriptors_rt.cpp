@@ -25,6 +25,7 @@
 #include <vector>
 
 #include <AH_Lifecycle.hpp>
+#include <AH_Locks.hpp>
 
 #include "descriptors_fft_params.hpp"
 #include "descriptors_graph.hpp"
@@ -66,12 +67,10 @@ struct t_descriptorsrt
     
     bool descriptors_feedback;
     
-    // Descriptors
+    // Lock / Descriptor Graph / Output List
     
+    thread_lock m_lock;
     std::unique_ptr<graph> m_graph;
-    
-    // Output List
-    
     std::vector<t_atom> output_list;
    
     // Outlet
@@ -91,6 +90,7 @@ void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s);
 
 void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
 void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
+void descriptorsrt_reset_graph(t_descriptorsrt *x);
 void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv);
 
 void descriptorsrt_output(t_descriptorsrt *x);
@@ -204,9 +204,10 @@ void *descriptorsrt_new(t_symbol *s, short argc, t_atom *argv)
     x->params.m_signal_length = x->params.frame_size();
     x->reset = true;
    
+    create_object(x->m_lock);
+    create_object(x->m_graph);
     create_object(x->output_list);
     create_object(x->rt_buffer);
-    create_object(x->m_graph);
 
 	return x;
 }
@@ -215,9 +216,10 @@ void descriptorsrt_free(t_descriptorsrt *x)
 {
 	dsp_free(&x->x_obj);
     object_free(x->output_clock);
+    destroy_object(x->m_lock);
+    destroy_object(x->m_graph);
     destroy_object(x->output_list);
     destroy_object(x->rt_buffer);
-    destroy_object(x->m_graph);
 }
 
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s)
@@ -245,6 +247,19 @@ void descriptors_energy_thresh(t_descriptorsrt *x, t_symbol *msg, short argc, t_
         object_error((t_object *) x, "too many arguments to energythresh message");
 }
 
+// Reset graph
+
+void descriptorsrt_reset_graph(t_descriptorsrt *x)
+{
+    // N.B. Only call once the lock is held
+    
+    x->hop_count = x->params.hop_size();
+    x->reset = true;
+    
+    if (x->m_graph)
+        x->m_graph->prepare(x->params);
+}
+
 // FFT Params
 
 void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
@@ -261,16 +276,14 @@ void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_a
     long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
+    safe_lock_hold hold(&x->m_lock);
+    
     auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
     
     x->params.m_fft_params = params;
     x->params.m_signal_length = x->params.frame_size();
 
-    x->hop_count = x->params.hop_size();
-    x->reset = true;
-    
-    if (x->m_graph)
-        x->m_graph->prepare(x->params);
+    descriptorsrt_reset_graph(x);
 }
 
 // Set Descriptors
@@ -280,6 +293,9 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     auto graph = new class graph();
     
     graph->build(s_setups, x->params, argc, argv);
+    
+    safe_lock_hold hold(&x->m_lock);
+
     x->output_list.resize(graph->size());
     x->m_graph.reset(graph);
 }
@@ -288,6 +304,8 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 
 void descriptorsrt_output(t_descriptorsrt *x)
 {
+    safe_lock_hold hold(&x->m_lock);
+
     outlet_list(x->m_outlet, nullptr, static_cast<short>(x->output_list.size()), x->output_list.data());
 }
 
@@ -295,6 +313,8 @@ void descriptorsrt_output(t_descriptorsrt *x)
 
 void descriptorsrt_calculate(t_descriptorsrt *x, double *samples)
 {
+    // N.B. - the lock should already be held
+    
     auto& graph = x->m_graph;
 
     // Run and call clock to output
@@ -325,6 +345,9 @@ t_int *descriptorsrt_perform(t_int *w)
 	long rw_counter = x->rw_counter;
     long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 	
+    if (!x->m_lock.attempt())
+        return w + 4;
+    
 	// Reset
 	
 	if (x->reset)
@@ -363,6 +386,8 @@ t_int *descriptorsrt_perform(t_int *w)
 	x->rw_counter = rw_counter;
 	x->hop_count = hop_count;
 	
+    x->m_lock.release();
+    
 	return w + 4;
 }
 
@@ -378,6 +403,9 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 	long rw_counter = x->rw_counter;
     long frame_counter = rw_counter - x->params.frame_size() + (buffer_size >> 1);
 
+    if (!x->m_lock.attempt())
+        return;
+    
     // Reset
 
 	if (x->reset)
@@ -415,12 +443,16 @@ void descriptorsrt_perform64(t_descriptorsrt *x, t_object *dsp64, double **ins, 
 	
 	x->rw_counter = rw_counter;
 	x->hop_count = hop_count;
+    
+    x->m_lock.release();
 }
 
 // DSP
 
 void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
 {
+    safe_lock_hold hold(&x->m_lock);
+    
     // Allocate the correct buffer size and zero
 
     x->rt_buffer.resize(2 * (x->max_fft_size + sp[0]->s_n), 0.0);
@@ -429,7 +461,9 @@ void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
     
     x->rw_counter = 0;
     x->params.m_sr = sp[0]->s_sr;
-
+    
+    descriptorsrt_reset_graph(x);
+    
     // Add the perform routine
 
     dsp_add((t_perfroutine) descriptorsrt_perform, 3, sp[0]->s_vec, x, sp[0]->s_n);
@@ -437,7 +471,9 @@ void descriptorsrt_dsp(t_descriptorsrt *x, t_signal **sp, short *count)
 
 void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-	// Allocate the correct buffer size and zero
+    safe_lock_hold hold(&x->m_lock);
+
+    // Allocate the correct buffer size and zero
 
     x->rt_buffer.resize(2 * (x->max_fft_size + max_vec), 0.0);
 	
@@ -445,7 +481,9 @@ void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, doub
 	
 	x->rw_counter = 0;
     x->params.m_sr = sample_rate;
-	
+
+    descriptorsrt_reset_graph(x);
+
 	// Add the perform routine
 	
     object_method(dsp64, gensym("dsp_add64"), x, descriptorsrt_perform64, 0, nullptr);
