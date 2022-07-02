@@ -133,8 +133,9 @@ int C74_EXPORT main()
     // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
     // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
     //
-    // Spectral peak finding currently has no median filtering
+    // Spectral peak finding per frsme currently has no median filtering
     // RT spectral_peaks reports in linear amps but non RT in db (with no options)
+    // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
     //
     // Precision etc. - some small differences in various places
     // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
@@ -229,8 +230,8 @@ int C74_EXPORT main()
     
     // Summaries
     
-    s_setups.add_module("duration", summary_module_duration::setup);                        // * To investigate
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [minus median filter]
+    s_setups.add_module("duration", summary_module_duration::setup);
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [with emulated median filter]
     
 	return 0;
 }
