@@ -78,7 +78,8 @@ struct summary_module_spectral_peaks : summary_module_vector<summary_module_spec
         aligned_vector<> m_spectrum;
     };
 
-    summary_module_spectral_peaks(long N) : summary_module_vector(true), m_num_peaks(N)
+    summary_module_spectral_peaks(long N, long median_width)
+    : summary_module_vector(true), m_filter(median_width), m_num_peaks(N), m_median_width(median_width)
     {
         m_values.resize(N * 2);
     }
@@ -97,7 +98,12 @@ private:
     
     peak_list m_peaks;
     peak_detector m_detector;
-    long m_num_peaks;
+    median_filter<double> m_filter;
+
+    aligned_vector<> m_median_spectrum;
+
+    const long m_num_peaks;
+    const long m_median_width;
 };
 
 // Stats
