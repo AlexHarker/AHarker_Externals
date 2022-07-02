@@ -122,10 +122,10 @@ int C74_EXPORT main()
     // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
     // Higher spectral shapes were wrong in early versions due to a lack of division by the overall amplitude sum
     // Log higher spectral shape was still wrong in more recent versions
-    // Flux *had* a fixed index bug in the code producing consistently incorrect results
-    // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
     // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
+    // Flux *had* a fixed index bug in the code producing consistently incorrect results
+    // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
     // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
     //
     // trough and trough_pos *did* return infs due to an incorrect test
@@ -158,7 +158,7 @@ int C74_EXPORT main()
     s_setups.add_module("energy_ratio", module_energy_ratio::setup);
     
     s_setups.add_module("loudness", module_loudness::setup);
-    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]    
+    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]
     s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
     s_setups.add_module("spectral_crest", module_spectral_crest::setup);    // ** Fixed [used power not amps]
 
