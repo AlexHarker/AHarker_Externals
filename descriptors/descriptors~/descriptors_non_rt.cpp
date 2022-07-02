@@ -26,6 +26,7 @@
 #include <memory>
 #include <vector>
 
+#include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 #include <ibuffer_access.hpp>
@@ -241,14 +242,14 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
 {
     t_descriptors *x = (t_descriptors *) object_alloc(this_class);
     
-    t_atom_long max_fft_size = 0;
+    long max_fft_size = 0;
     t_atom_long descriptor_data_size = 0;
     bool descriptor_feedback = 0;
 
     // Get arguments
 
     if (argc)
-        max_fft_size = atom_getlong(argv++);
+        max_fft_size = limit_int<long>(atom_getlong(argv++));
     if (argc > 1)
         descriptor_data_size = atom_getlong(argv++);
     if (argc > 2)
@@ -290,9 +291,9 @@ void descriptors_fft_params(t_descriptors *x, t_symbol *msg, short argc, t_atom 
     
     // Load in args as relevant
     
-    t_atom_long fft_size = (argc > 0) ? atom_getlong(argv + 0) : 0;
-    t_atom_long hop_size = (argc > 1) ? atom_getlong(argv + 1) : 0;
-    t_atom_long frame_size = (argc > 2) ? atom_getlong(argv + 2) : 0;
+    long fft_size = (argc > 0) ? limit_int<long>(atom_getlong(argv + 0)) : 0;
+    long hop_size = (argc > 1) ? limit_int<long>(atom_getlong(argv + 1)) : 0;
+    long frame_size = (argc > 2) ? limit_int<long>(atom_getlong(argv + 2)) : 0;
     t_symbol *window_type = (argc > 3) ? atom_getsym(argv + 3) : gensym("");
     
     auto params = check_fft_params((t_object *) x, fft_size, hop_size, frame_size, window_type, x->max_fft_size_log2);
@@ -429,7 +430,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     
     std::vector<double> samples(signal_length);
     
-    ibuffer_get_samps(buffer, samples.data(), start_point + start_point, signal_length, buffer_chan);
+    ibuffer_get_samps(buffer, samples.data(), start_point + start_point, signal_length, static_cast<long>(buffer_chan));
         
     graph->prepare(x->params);
     graph->run(x->params, samples.data());

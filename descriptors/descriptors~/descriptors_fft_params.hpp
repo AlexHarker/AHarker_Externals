@@ -57,7 +57,7 @@ static long check_fft_size(t_object *x, const char *str, long fft_size, long max
     return fft_size_log2;
 }
 
-fft_params check_fft_params(t_object *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type, long max_fft_size_log2)
+static fft_params check_fft_params(t_object *x, long fft_size, long hop_size, long frame_size, t_symbol *window_type, long max_fft_size_log2)
 {
     fft_params params;
     
