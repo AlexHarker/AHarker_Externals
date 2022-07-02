@@ -91,8 +91,6 @@ void summary_graph::run(const global_params& params, const double *input)
         
     for (auto it = m_summary_modules.begin(); it != m_summary_modules.end(); it++)
     {
-        // FIX - make this nicer...
-
         auto index = dynamic_cast<summary_module *>(it->get())->get_index();
         
         if (index == -1)
