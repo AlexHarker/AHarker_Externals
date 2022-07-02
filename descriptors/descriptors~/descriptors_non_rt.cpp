@@ -124,18 +124,23 @@ int C74_EXPORT main()
     //
     // Descriptors
     //
-    // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
+    // Rolloff *now* has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
     // SFM *was* using power rather than amplitudes
     // Spectral crest *was* using power rather than amplitudes
-    // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
-    // Higher spectral shapes were wrong in early versions due to a lack of division by the overall amplitude sum
-    // Log higher spectral shape was still wrong in more recent versions
+    // Linear spread *was* squaring the raw value before the Hz adjustment (so not a useful value)
+    // Higher spectral shapes (skewness + kurtosis) *were* wrong in early versions (lack of division by the overall amplitude sum)
+    // Log higher spectral shapes *Were* still wrong in more recent versions
     // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
     // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
     // Flux *had* a fixed index bug in the code producing consistently incorrect results
     // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
-    // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
-    // Roughness did not include the hack for min amp (original code no longer available but may be on old hard disk
+    // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results (now fixed)
+    // Roughness did not correctly include the hack for min amp (original code no longer available but may be on old hard disk)
+    // RT spectral_peaks reports in linear amps but non RT in db (with no options)
+    // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
+    // Median filtering implementation *was* broken
+    // All content descriptors *did* exhibit issues with spurious peaks so improving this is a priority (using a range parameter)
+    // Current median filter is weird for low spans? (needs fixing but can't repro)
     //
     // Stats
     //
@@ -144,14 +149,8 @@ int C74_EXPORT main()
     // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
     // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
     // all peak searches *did* incorrectly detect peaks for each stage of continued upward motion (rather than a single peak)
-    // peak and trough searches *did* not address infinity values
-    //
-    // RT spectral_peaks reports in linear amps but non RT in db (with no options)
-    // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
-    // Median filtering implementation *was* broken
-    // All content descriptors *did* exhibit issues with spurious peaks so imp-roving this is a priority
-    // Current median filter is weird for low spans (needs fixing)
-    
+    // peak and trough searches *did not* address infinity values
+
     // Need to check volume compensation points (and which descriptors are level variant or not
     // Need to check lags and other things with fftparams that have mismatch window and FFT
     // Need to investigate speeds
