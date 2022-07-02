@@ -2,12 +2,13 @@
 #ifndef _SUMMARY_MODULES_HPP_
 #define _SUMMARY_MODULES_HPP_
 
-#include "descriptors_graph.hpp"
-#include "descriptors_summary_modules.hpp"
+#include "processing_containers.hpp"
 #include "utility_definitions.hpp"
 
-#include "processing_containers.hpp"
-#include "peak_finder.hpp"
+#include "../descriptors_graph.hpp"
+#include "../descriptors_summary_modules.hpp"
+
+#include "../library/peak_finder.hpp"
 
 template <class T>
 struct summary_module_single : summary_module, user_module_single<T>

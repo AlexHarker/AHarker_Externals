@@ -34,13 +34,13 @@
 #include "descriptors_graph.hpp"
 #include "descriptors_summary_graph.hpp"
 
-#include "modules_core.hpp"
-#include "modules_change.hpp"
-#include "modules_content.hpp"
-#include "modules_level.hpp"
-#include "modules_pitch.hpp"
-#include "modules_spectral.hpp"
-#include "modules_summary.hpp"
+#include "modules/modules_core.hpp"
+#include "modules/modules_change.hpp"
+#include "modules/modules_content.hpp"
+#include "modules/modules_level.hpp"
+#include "modules/modules_pitch.hpp"
+#include "modules/modules_spectral.hpp"
+#include "modules/modules_summary.hpp"
 
 
 // Globals and Object Structure

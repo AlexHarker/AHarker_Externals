@@ -2,7 +2,7 @@
 #include "modules_summary.hpp"
 #include "utility_definitions.hpp"
 
-#include "median_filter.hpp"
+#include "../library/median_filter.hpp"
 
 #include <Statistics.hpp>
 

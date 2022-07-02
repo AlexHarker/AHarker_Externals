@@ -3,7 +3,7 @@
 #define _MODULES_SPECTRAL_CHANGE_HPP_
 
 #include "modules_spectral.hpp"
-#include "descriptors_graph.hpp"
+#include "../descriptors_graph.hpp"
 
 #include <algorithm>
 

@@ -1,7 +1,7 @@
 
 #include "modules_spectral.hpp"
-#include "descriptors_graph.hpp"
 #include "utility_definitions.hpp"
+#include "../descriptors_graph.hpp"
 
 #include <Statistics.hpp>
 
