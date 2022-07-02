@@ -132,6 +132,8 @@ int C74_EXPORT main()
     // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
     // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
     // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
+    // all peak searches *did* incorrectly detect peaks for each stage of continued upward motion (rather than a single peak)
+    // peak and trough searches *did* not address infinity values
     //
     // Spectral peak finding per frsme currently has no median filtering
     // RT spectral_peaks reports in linear amps but non RT in db (with no options)
@@ -156,9 +158,7 @@ int C74_EXPORT main()
     s_setups.add_module("energy_ratio", module_energy_ratio::setup);
     
     s_setups.add_module("loudness", module_loudness::setup);
-    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]
-                                                                            // N.B. uses power / not same as flucoma
-    
+    s_setups.add_module("rolloff", module_rolloff::setup);                  // ** Improved [previously no interpolation]    
     s_setups.add_module("sfm", module_sfm::setup);                          // ** Fixed [used power not amps]
     s_setups.add_module("spectral_crest", module_spectral_crest::setup);    // ** Fixed [used power not amps]
 
@@ -200,9 +200,9 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
-    s_setups.add_module("peak", stat_module_peak::setup);                                   // * Partial (end position behaviour)
+    s_setups.add_module("peak", stat_module_peak::setup);                                   // ** Fixed [old detects while upward]
     s_setups.add_module("trough", stat_module_trough::setup);                               // ** Fixed [old returns infs]
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // * Partial (end position behaviour)
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // ** Fixed [old detects while upward]
     s_setups.add_module("trough_pos", stat_module_trough_pos::setup);                       // ** Fixed [old returns infs]
 
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
@@ -213,20 +213,20 @@ int C74_EXPORT main()
     s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
     s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
     
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // * Matches (check end positions)
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // ** Fixed [old detects while upward]
     s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);             // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // * Matches (check end positions)
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // ** Fixed [old detects while upward]
     s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);     // ** Fixed [old searches above thresh]
     
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // * Matches (check end positions)
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // ** Fixed [old detects while upward]
     s_setups.add_module("cross_below", stat_module_cross_below::setup);                     // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // * Matches (check end positions)
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // ** Fixed [old detects while upward]
     s_setups.add_module("crossings_below", stat_module_crossings_below::setup);             // ** Fixed [old searches above thresh]
 
     // Specifiers
     
     s_setups.add_module("masktime", specifier_mask_time::setup);
-    s_setups.add_module("threshold", specifier_threshold::setup);                           // * To investigate
+    s_setups.add_module("threshold", specifier_threshold::setup);
     
     // Summaries
     
