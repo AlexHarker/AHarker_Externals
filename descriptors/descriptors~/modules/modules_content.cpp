@@ -49,8 +49,9 @@ user_module *module_spectral_peaks::setup(const global_params& params, module_ar
 {
     long N = args.get_long(10, 1, std::numeric_limits<long>::max());
     long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
-
-    return new module_spectral_peaks(N, median_span);
+    double range = args.get_double(60.0, 0.0, 1000.0);
+    
+    return new module_spectral_peaks(N, median_span, range);
 }
 
 void module_spectral_peaks::add_requirements(graph& g)
@@ -67,7 +68,7 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 {
     auto peaks = m_peak_detection_module->get_peaks();
     
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
     long i = 0;
     
     for ( ; i < num_valid_peaks; i++)
@@ -92,8 +93,9 @@ user_module *module_inharmonicity::setup(const global_params& params, module_arg
     long num_peaks = args.get_long(10, 1, std::numeric_limits<long>::max());
     long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
     double threshold = args.get_double(0.68, 0.0, 1.0);
+    double range = args.get_double(60.0, 0.0, 1000.0);
 
-    return new module_inharmonicity(num_peaks, median_span, threshold);
+    return new module_inharmonicity(num_peaks, median_span, threshold, range);
 }
 
 void module_inharmonicity::add_requirements(graph& g)
@@ -143,8 +145,9 @@ user_module *module_roughness::setup(const global_params& params, module_argumen
 {
     long N = args.get_long(10, 1, std::numeric_limits<long>::max());
     long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
-    
-    return new module_roughness(N, median_span);
+    double range = args.get_double(60.0, 0.0, 1000.0);
+
+    return new module_roughness(N, median_span, range);
 }
 
 void module_roughness::add_requirements(graph& g)
@@ -155,7 +158,7 @@ void module_roughness::add_requirements(graph& g)
 void module_roughness::calculate(const global_params& params, const double *frame, long size)
 {
     auto peaks = m_peak_detection_module->get_peaks();
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
 
     // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
 

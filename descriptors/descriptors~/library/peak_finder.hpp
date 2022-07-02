@@ -34,6 +34,17 @@ public:
     peak_set() {}
     peak_set(uintptr_t max_size) { resize(max_size); }
 
+    uintptr_t num_peaks_in_range(double db) const
+    {
+        double threshold = by_value(0).m_value * pow(10, -db / 20.0);
+
+        for (long i = 1; i < m_num_peaks; i++)
+            if (by_value(i).m_value < threshold)
+                return  i;
+                
+        return m_num_peaks;
+    }
+    
     uintptr_t num_peaks() const { return m_num_peaks; }
     
     const peak_data& by_value(size_t idx) const { return m_peaks[m_indices[idx]]; }
