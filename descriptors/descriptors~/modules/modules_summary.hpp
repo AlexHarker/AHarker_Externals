@@ -376,15 +376,15 @@ struct condition_peak_trough
         
         if ((skip_threshold || Op1<double>()(value, threshold)) && (!idx || Op1<double>()(value, data[idx - 1])))
         {
-            // FIX - infinite values
-            
             // Now search right until the value changes
          
             for (; idx < size - 1; idx++)
                 if (value != data[idx + 1])
                     break;
                   
-            if (!Op2<double>()(value, data[idx + 1]))
+            long clipped_pos = std::min(idx + 1, size - 1);
+            
+            if (data[clipped_pos] == infinity() || !Op2<double>()(value, data[clipped_pos]))
             {
                 idx++;
                 return true;
