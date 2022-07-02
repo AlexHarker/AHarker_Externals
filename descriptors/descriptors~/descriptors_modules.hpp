@@ -41,7 +41,7 @@ struct global_params
     
     // FIX - ceil??
     
-    long num_frames() const { return static_cast<long>(ceil(m_signal_length / m_fft_params.m_hop_size)); }
+    long num_frames() const { return m_signal_length < m_fft_params.m_frame_size ? 0  : static_cast<long>(1+ floor(m_signal_length - m_fft_params.m_frame_size) / m_fft_params.m_hop_size); }
     long fft_size() const { return m_fft_params.fft_size(); }
     long fft_size_log2() const { return m_fft_params.m_fft_size_log2; }
     long hop_size() const { return m_fft_params.m_hop_size; }
