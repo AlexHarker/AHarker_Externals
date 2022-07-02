@@ -115,8 +115,14 @@ int C74_EXPORT main()
     
     // Issues
     //
+    // General and Small
+    //
     // Padding issue (not yet found)
     // Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
+    // Precision etc. - some small differences in various places
+    // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
+    //
+    // Descriptors
     //
     // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
     // SFM *was* using power rather than amplitudes
@@ -129,6 +135,9 @@ int C74_EXPORT main()
     // Flux *had* a fixed index bug in the code producing consistently incorrect results
     // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
     // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
+    // Roughness did not include the hack for min amp (original code no longer available but may be on old hard disk
+    //
+    // Stats
     //
     // trough and trough_pos *did* return infs due to an incorrect test
     // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
@@ -137,14 +146,13 @@ int C74_EXPORT main()
     // all peak searches *did* incorrectly detect peaks for each stage of continued upward motion (rather than a single peak)
     // peak and trough searches *did* not address infinity values
     //
-    // Spectral peak finding per frsme currently has no median filtering
     // RT spectral_peaks reports in linear amps but non RT in db (with no options)
     // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
-    //
-    // Precision etc. - some small differences in various places
-    // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
+    // Median filtering implementation *was* broken
+    // All content descriptors *did* exhibit issues with spurious peaks so imp-roving this is a priority
+    // Current median filter is weird for low spans (needs fixing)
     
-    // Need to check volume compesation points
+    // Need to check volume compensation points (and which descriptors are level variant or not
     // Need to check lags and other things with fftparams that have mismatch window and FFT
     // Need to investigate speeds
     // Need to investigate zero inputs
@@ -186,8 +194,8 @@ int C74_EXPORT main()
     s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
     
-    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * Matches [minus median filter]
-    s_setups.add_module("roughness", module_roughness::setup);              // * To investigate
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // ** Improved [calcs match but spurious peaks an issue]
+    s_setups.add_module("roughness", module_roughness::setup);              // ** Improved [calcs match but spurious peaks an issue]
 
     // Stats
     
@@ -233,7 +241,7 @@ int C74_EXPORT main()
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [with emulated median filter]
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // ** Improved [spurious peaks an issue]
     
     return 0;
 }
