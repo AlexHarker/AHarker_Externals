@@ -17,6 +17,8 @@ General and Small
 * Log higher spectral shapes *Were* still wrong in more recent versions [now corrected]
 * Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect [now corrected]
 * Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors 
+* Pitch *was* based on an FFT with (possibly unimportant) time aliasing [now corrected]
+* Pitch *was* faulty if the window size didn't match the FFT size [now corrected]
 * Flux *had* a fixed index bug in the code producing consistently incorrect results [now corrected]
 * Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct) [now corrected]
 * Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results [now corrected]
@@ -27,7 +29,7 @@ General and Small
 * All content descriptors *did* exhibit issues with spurious peaks so improving this is a priority (using a range parameter) [now improved]
 * Current median filter is weird for low spans? (needs fixing but can't repro)
 
-* Stats
+* Stats [all corrected - no decisions to make - possible further testing]
 
 * trough and trough_pos *did* return infs due to an incorrect test [now corrected]
 * crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh) [now corrected]
