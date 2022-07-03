@@ -222,7 +222,8 @@ struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
-    
+    void update_empty(const global_params& params) override;
+
     const double *get_frame(long frame_lag) const { return m_spectra[get_idx(frame_lag)].data(); }
     void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
     
@@ -245,7 +246,8 @@ struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_bu
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
-    
+    void update_empty(const global_params& params) override;
+
     const double *get_frame(long frame_lag) const { return m_spectra[get_idx(frame_lag)].data(); }
     void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
     

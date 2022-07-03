@@ -81,10 +81,16 @@ void summary_graph::run(const global_params& params, const double *input)
         
         // Run per frame
     
-        graph::run(params, m_frame.data());
-        
-        for (long j = 0; j < graph::size(); j++)
-            m_temp_data[j * params.num_frames() + i] = graph::get_output(j, 0);
+        if (graph::run(params, m_frame.data()))
+        {
+            for (long j = 0; j < graph::size(); j++)
+                m_temp_data[j * params.num_frames() + i] = graph::get_output(j, 0);
+        }
+        else
+        {
+            for (long j = 0; j < graph::size(); j++)
+                m_temp_data[j * params.num_frames() + i] = infinity();
+        }
     }
     
     // Run stats and summary descriptors

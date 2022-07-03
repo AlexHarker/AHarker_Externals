@@ -146,6 +146,7 @@ struct module
     
     virtual void prepare(const global_params& params) {}
     virtual void calculate(const global_params& params, const double *data, long size) = 0;
+    virtual void update_empty(const global_params& params) {}
 };
 
 // A User Module

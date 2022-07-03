@@ -316,6 +316,15 @@ void module_spectrum_ring_buffer::calculate(const global_params& params, const d
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
 
+void module_spectrum_ring_buffer::update_empty(const global_params& params)
+{
+    double *spectrum_out = m_spectra[m_counter].data();
+        
+    std::fill_n(spectrum_out, params.num_bins(), 0.0);
+    
+    m_counter = (m_counter + 1) % (m_max_lag + 1);
+}
+
 long module_spectrum_ring_buffer::get_idx(long lag) const
 {
     return (m_max_lag + (m_counter - std::min(m_max_lag, lag))) % (m_max_lag + 1);
@@ -350,6 +359,18 @@ void module_log_spectrum_ring_buffer::calculate(const global_params& params, con
     
     for (long i = 0; i < params.num_bins(); i++)
         spectrum_out[i] = std::max(spectrum_out[i], log_min);
+    
+    m_counter = (m_counter + 1) % (m_max_lag + 1);
+}
+
+void module_log_spectrum_ring_buffer::update_empty(const global_params& params)
+{
+    double *spectrum_out = m_spectra[m_counter].data();
+    
+    const double log_min = log(dbtoa(db_calc_min()));
+    
+    for (long i = 0; i < params.num_bins(); i++)
+        spectrum_out[i] = log_min;
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }

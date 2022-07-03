@@ -36,7 +36,7 @@ bool energy_threshold::check(const global_params& params, const double *frame)
         
     double level = m_energy_module.get_output(0) * m_window.get_rms_compensation();
         
-    return level < params.m_energy_threshold;
+    return level >= params.m_energy_threshold;
 }
 
 // Graph
@@ -101,12 +101,17 @@ void graph::prepare(const global_params& params)
 bool graph::run(const global_params& params, const double *frame)
 {
     if (m_threshold->check(params, frame))
-        return false;
+    {
+        for (auto it = m_modules.begin(); it != m_modules.end(); it++)
+            (*it)->calculate(params, frame, params.frame_size());
         
+        return true;
+    }
+    
     for (auto it = m_modules.begin(); it != m_modules.end(); it++)
-        (*it)->calculate(params, frame, params.frame_size());
-        
-    return true;
+        (*it)->update_empty(params);
+    
+    return false;
 }
         
 void graph::build_energy_threshold(const global_params& params)
