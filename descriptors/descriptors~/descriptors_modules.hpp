@@ -15,6 +15,21 @@
 
 class graph;
 
+// Helper for FFT sizes
+
+static long int_log2(long in)
+{
+    long count = 0;
+    
+    if (in <= 0)
+        return -1;
+    
+    while (in >> count)
+        count++;
+    
+    return (count && in == 1L << (count - 1L)) ? count - 1 : count;
+}
+
 // FFT Parameters
 
 struct fft_params
