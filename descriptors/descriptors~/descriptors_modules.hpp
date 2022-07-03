@@ -88,8 +88,18 @@ public:
     
     ~module_arguments()
     {
-        if (m_argc)
-            object_error(m_x, "unparsed arguments to descriptors message");
+        if (m_argc > 0)
+        {
+            long size = 0;
+            char *text = nullptr;
+        
+            atom_gettext(m_argc, m_argv, &size, &text, OBEX_UTIL_ATOM_GETTEXT_DEFAULT);
+            object_error(m_x, "unparsed desctiptors arguments: %s", text);
+            
+            if (text)
+                sysmem_freeptr(text);
+            
+        }
     }
     
     bool get_bool(bool default_value)
