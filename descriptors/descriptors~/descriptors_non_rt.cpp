@@ -50,6 +50,8 @@ t_class *this_class;
 
 setup_list s_setups;
 
+enum class audio_edges { none, allow_overlap, zero_pad };
+
 struct t_descriptors
 {
     t_pxobject x_obj;
@@ -375,11 +377,44 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     if (buffer.get_num_chans() < buffer_chan + 1)
         buffer_chan = buffer_chan % buffer.get_num_chans();
     
-    auto signal_length = buffer.get_length();
-    if (end_point && end_point < signal_length)
-        signal_length = end_point;
-    signal_length -= start_point;
+    audio_edges edges = audio_edges::none;
     
+    auto signal_length = buffer.get_length();
+    
+    if (edges == audio_edges::allow_overlap)
+    {
+        if (end_point && end_point < signal_length)
+        {
+            global_params calculation = x->params;
+        
+            // How many frames are available in the buffer
+        
+            calculation.m_signal_length = static_cast<long>(signal_length - start_point);
+            calculation.m_pad = false;
+            long available_frames = calculation.num_frames();
+        
+            // How many frames would be calculated with padding?
+        
+            calculation.m_signal_length = static_cast<long>(end_point - start_point);
+            calculation.m_pad = true;
+            long required_frames = calculation.num_frames();
+        
+            long num_frames = std::min(available_frames, required_frames);
+            
+            signal_length = num_frames ? calculation.frame_size() + num_frames * calculation.hop_size() : 0;
+            signal_length += start_point;
+        }
+    }
+    else
+    {
+        if (end_point && end_point < signal_length)
+            signal_length = end_point;
+    }
+    
+    signal_length -= start_point;
+
+    
+    x->params.m_pad = edges == audio_edges::zero_pad;
     x->params.m_signal_length = static_cast<long>(signal_length);
     x->params.m_sr = buffer.get_sample_rate();
     
