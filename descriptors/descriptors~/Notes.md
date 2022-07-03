@@ -3,9 +3,9 @@
 General and Small
 
 * Padding issue (not yet found)
-* Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
-* Precision etc. - some small differences in various places
-* Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
+* Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params) [ now corrected ]
+* Precision etc. - some small differences in various places [ note only ]
+* Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input [note only]
 
 * Descriptors
 
@@ -39,13 +39,22 @@ General and Small
 TO DO
 
 * Need to check volume compensation points (and which descriptors are level variant or not
+  
   - variant - rms / abs / peakamp / energy / loudness / spectral peaks (levels only)
   - invariant - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch / confidence / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio / foote
   - variable - flux / mkl
   
-* Need to check lags and other things with fftparams that have mismatch window and FFT
 * Need to investigate zero inputs and min return values (applies only to dB currently set to - 180dB suggest leave for now)
   - 0 - peak freqs / peak amps (both types) / confidence / foote / flux
-  - -180.0 (or 0 if not in dB) - rms / abs / peakamp / energy / loudness
+  - -180.0dB (or 0 if not in dB) - rms / abs / peakamp / energy / loudness
   - inf - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch  / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio
+
+  Change are:
+  1 - foote to 0.0 for difference between silent frames
+  2 - pitch to inf for no pitch found
+  
+* Need to check lags and other things with fftparams that have mismatch window and FFT
+
+* Need to investigate padding issues
+
 * Need to investigate speeds
