@@ -61,7 +61,7 @@ struct global_params
         long valid_hop_length = m_signal_length - frame_size();
         
         if (m_pad)
-            static_cast<long>(ceil(m_signal_length / hop_size()));
+            return static_cast<long>(ceil(m_signal_length / hop_size()));
         else
             return valid_hop_length < 0 ? 0  : static_cast<long>(1 + floor(valid_hop_length / hop_size()));
     }
