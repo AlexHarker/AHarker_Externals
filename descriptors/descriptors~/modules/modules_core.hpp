@@ -269,7 +269,7 @@ struct module_autocorrelation : module_core<module_autocorrelation>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_coefficients() const { return m_coefficients.data(); }
-    long get_length() const { m_coefficients_size; }
+    long get_length() const { return m_coefficients_size; }
 
 private:
     
