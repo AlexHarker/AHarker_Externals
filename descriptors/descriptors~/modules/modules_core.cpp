@@ -1,6 +1,7 @@
 
 #include "modules_core.hpp"
 #include "utility_definitions.hpp"
+
 #include "../descriptors_graph.hpp"
 
 #include <SIMDExtended.hpp>
@@ -362,6 +363,8 @@ void module_autocorrelation::prepare(const global_params& params)
     m_full_frame.resize(params.fft_size());
     m_half_frame.resize(params.fft_size());
     m_coefficients.resize(params.fft_size());
+    
+    m_coefficients_size = params.frame_size();
 }
 
 void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
@@ -398,7 +401,9 @@ void module_autocorrelation::calculate(const global_params& params, const double
     full_frame.imagp[0] = 0.0;
     half_frame.imagp[0] = 0.0;
     
-    for (long i = 0; i < size / (2 * VecType::size); i++)
+    long fft_size = 1 << m_fft_setup.size();
+    
+    for (long i = 0; i < fft_size / (2 * VecType::size); i++)
     {
         const VecType r1 = real1[i];
         const VecType i1 = imag1[i];

@@ -269,7 +269,7 @@ struct module_autocorrelation : module_core<module_autocorrelation>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_coefficients() const { return m_coefficients.data(); }
-    long get_length() const { return static_cast<long>(m_coefficients.size()); }
+    long get_length() const { m_coefficients_size; }
 
 private:
     
@@ -277,6 +277,8 @@ private:
     fft_split m_full_frame;
     fft_split m_half_frame;
     aligned_vector<> m_coefficients;
+    
+    long m_coefficients_size;
 };
 
 #endif /* _MODULES_CORE_HPP_ */
