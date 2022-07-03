@@ -36,7 +36,7 @@ static inline double atodb(double a)
 
 static inline double db_to_pow(double db)
 {
-    return pow(10, db / 20.0);
+    return pow(10, db / 10.0);
 }
 
 static inline double pow_to_db(double p)
