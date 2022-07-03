@@ -3,8 +3,8 @@
 General and Small
 
 * Padding issue (not yet fully investigated)
-* Old non RT object didn't respond to different buffer sample rates correctly (need to reset fft params) [ now corrected ]
-* Precision etc. - some small differences in various places [ note only ]
+* Old non RT object didn't respond to different buffer sample rates correctly (need to reset fft params) [now corrected]
+* Precision etc. - some small differences in various places [note only]
 * Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input [note only]
 
 * -- Descriptors --

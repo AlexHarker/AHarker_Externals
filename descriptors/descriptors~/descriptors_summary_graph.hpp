@@ -4,7 +4,7 @@
 
 #include "descriptors_graph.hpp"
 
-// The summary graph
+// The Summary Graph
 
 class summary_graph : private graph
 {    

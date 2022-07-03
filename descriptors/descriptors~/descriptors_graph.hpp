@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 
+// Setup List (for adding modules)
+
 class setup_list
 {
 public:
@@ -27,6 +29,8 @@ private:
     
     std::vector<user_setups> m_setups;
 };
+
+// Energy Threshold Class
 
 class energy_threshold
 {
@@ -46,6 +50,8 @@ private:
     module_window m_window;
     module_average_rms_amp m_energy_module;
 };
+
+// The Main Graph Class
 
 class graph
 {
@@ -79,7 +85,7 @@ protected:
     
     double get_output(long idx, long jdx) { return m_outputs[idx]->get_output(jdx); }
         
-    // This allows the stats graph to override the implementation
+    // This allows the summary graph to override the implementation for adding requirements
     
     virtual module *add_requirement_impl(module *m);
     
