@@ -377,6 +377,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
     VecType *real2 = reinterpret_cast<VecType *>(half_frame.realp);
     VecType *imag2 = reinterpret_cast<VecType *>(half_frame.imagp);
         
+    long fft_size = 1 << m_fft_setup.size();
     double scale = 0.0;
     
     // Calculate normalisation factor
@@ -384,7 +385,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
     for (long i = 0; i < (size >> 1); i++)
         scale += frame[i] * frame[i];
         
-    scale = 0.25 / (get_length() * scale);
+    scale = 0.25 / (fft_size * scale);
         
     // Do ffts straight into position with zero padding (one half the size of the other)
     
@@ -400,9 +401,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
         
     full_frame.imagp[0] = 0.0;
     half_frame.imagp[0] = 0.0;
-    
-    long fft_size = 1 << m_fft_setup.size();
-    
+        
     for (long i = 0; i < fft_size / (2 * VecType::size); i++)
     {
         const VecType r1 = real1[i];
