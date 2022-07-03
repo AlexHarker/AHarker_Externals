@@ -290,7 +290,7 @@ void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom
 {
     auto graph = new class summary_graph();
     
-    graph->build(s_setups, x->params, argc, argv);
+    graph->build((t_object *) x, s_setups, x->params, argc, argv);
     
     safe_lock_hold hold(&x->m_lock);
     

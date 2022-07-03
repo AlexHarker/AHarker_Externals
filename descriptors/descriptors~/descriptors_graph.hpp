@@ -59,7 +59,7 @@ public:
         return dynamic_cast<T *>(add_requirement_impl(m));
     }
     
-    void build(const setup_list& setups, const global_params& params, long argc, t_atom *argv);
+    void build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     void prepare(const global_params& params);
     bool run(const global_params& params, const double *frame);
     

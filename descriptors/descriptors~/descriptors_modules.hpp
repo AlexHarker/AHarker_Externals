@@ -83,8 +83,14 @@ class module_arguments
 {
 public:
     
-    module_arguments(long argc, t_atom *argv)
-    : m_argc(argc), m_argv(argv) {}
+    module_arguments(t_object *x, long argc, t_atom *argv)
+    : m_x(x), m_argc(argc), m_argv(argv) {}
+    
+    ~module_arguments()
+    {
+        if (m_argc)
+            object_error(m_x, "unparsed arguments to descriptors message");
+    }
     
     bool get_bool(bool default_value)
     {
@@ -115,6 +121,7 @@ private:
     template <class T>
     T clip(T value, T lo, T hi) { return std::min(std::max(value, lo), hi); }
     
+    t_object *m_x;
     long m_argc;
     t_atom *m_argv;
 };

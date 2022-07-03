@@ -4,7 +4,7 @@
 
 // Summary Graph
     
-void summary_graph::build(const setup_list& setups, const global_params& params, long argc, t_atom *argv)
+void summary_graph::build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
 {
     user_module_setup next;
         
@@ -17,7 +17,7 @@ void summary_graph::build(const setup_list& setups, const global_params& params,
         user_module_setup setup = next;
             
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
-        module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
+        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
                 
         auto m = (*setup)(params, args);
         auto summary = dynamic_cast<summary_module *>(m);

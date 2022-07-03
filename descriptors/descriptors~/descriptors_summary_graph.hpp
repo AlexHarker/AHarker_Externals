@@ -12,7 +12,7 @@ public:
     
     summary_graph() : m_last_summary_idx(-1) {}
     
-    void build(const setup_list& setups, const global_params& params, long argc, t_atom *argv);
+    void build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     void prepare(const global_params& params);
     void run(const global_params& params, const double *input);
     
