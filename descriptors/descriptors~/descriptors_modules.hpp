@@ -17,9 +17,10 @@ class graph;
 
 // Helper for FFT sizes
 
-static long int_log2(long in)
+template <class T>
+static T int_log2(T in)
 {
-    long count = 0;
+    T count = 0;
     
     if (in <= 0)
         return -1;
