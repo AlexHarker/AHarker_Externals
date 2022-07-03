@@ -359,10 +359,14 @@ long module_log_spectrum_ring_buffer::get_idx(long lag) const
 
 void module_autocorrelation::prepare(const global_params& params)
 {
-    m_fft_setup.resize(params.fft_size_log2());
-    m_full_frame.resize(params.fft_size());
-    m_half_frame.resize(params.fft_size());
-    m_coefficients.resize(params.fft_size());
+    long out_size = params.frame_size() + (params.frame_size() >> 1);
+    long fft_size_log2 = int_log2(out_size);
+    long fft_size = 1 << fft_size_log2;
+    
+    m_fft_setup.resize(fft_size_log2);
+    m_full_frame.resize(fft_size);
+    m_half_frame.resize(fft_size);
+    m_coefficients.resize(fft_size);
     
     m_coefficients_size = params.frame_size();
 }
