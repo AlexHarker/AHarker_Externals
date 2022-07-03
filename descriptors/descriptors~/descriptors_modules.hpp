@@ -123,9 +123,7 @@ public:
     {
         return (m_argc-- > 0) ? atom_getsym(m_argv++) : default_value;
     }
-    
-    long argc() const { return m_argc; }
-    
+        
 private:
     
     template <class T>
