@@ -30,7 +30,7 @@ bool energy_threshold::check(const global_params& params, const double *frame)
     m_window.calculate(params, frame, params.frame_size());
         
     if (!params.m_energy_threshold)
-        return false;
+        return true;
         
     m_energy_module.calculate(params, m_window.get_frame(), params.frame_size());
         
