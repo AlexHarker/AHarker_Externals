@@ -1,6 +1,7 @@
 
 #include "modules_core.hpp"
 #include "utility_definitions.hpp"
+
 #include "../descriptors_graph.hpp"
 
 #include <SIMDExtended.hpp>
@@ -231,23 +232,23 @@ void module_amplitude_sum::add_requirements(graph& g)
     module_frame_sum::add_requirements(g);
 }
 
-// Median Power Spectrum Module
+// Median Amplitude Spectrum Module
 
-void module_median_power_spectrum::add_requirements(graph& g)
+void module_median_amplitude_spectrum::add_requirements(graph& g)
 {
-    m_power_module = g.add_requirement(new module_power_spectrum());
+    m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
 }
 
-void module_median_power_spectrum::prepare(const global_params& params)
+void module_median_amplitude_spectrum::prepare(const global_params& params)
 {
     m_spectrum.resize(params.num_bins());
 }
 
-void module_median_power_spectrum::calculate(const global_params& params, const double *frame, long size)
+void module_median_amplitude_spectrum::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *power = m_power_module->get_frame();
+    const double *amplitudes = m_amplitude_module->get_frame();
 
-    m_filter(m_spectrum.data(), power, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
+    m_filter(m_spectrum.data(), amplitudes, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
 }
 
 // Log Bins Module
@@ -267,6 +268,7 @@ void module_log_bins::prepare(const global_params& params)
 void module_peak_detection::add_requirements(graph& g)
 {
     m_amplitude_module = g.add_requirement(new module_amplitude_spectrum());
+    m_median_amplitude_module = g.add_requirement(new module_median_amplitude_spectrum(m_median_width));
 }
 
 void module_peak_detection::prepare(const global_params& params)
@@ -278,8 +280,13 @@ void module_peak_detection::prepare(const global_params& params)
 void module_peak_detection::calculate(const global_params& params, const double *frame, long size)
 {
     const double *spectrum = m_amplitude_module->get_frame();
+    const double *median_spectrum = m_median_amplitude_module->get_frame();
 
-    m_detector(m_peaks, spectrum, params.num_bins());
+    peak_detector::options options;
+    
+    options.mask_gain = 1.0;
+    
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins(), options);
 }
 
 // Spectrum Ring Buffer Module
@@ -305,6 +312,15 @@ void module_spectrum_ring_buffer::calculate(const global_params& params, const d
     const double *spectrum = m_amplitude_module->get_frame();
         
     std::copy_n(spectrum, params.num_bins(), m_spectra[m_counter].data());
+    
+    m_counter = (m_counter + 1) % (m_max_lag + 1);
+}
+
+void module_spectrum_ring_buffer::update_empty(const global_params& params)
+{
+    double *spectrum_out = m_spectra[m_counter].data();
+        
+    std::fill_n(spectrum_out, params.num_bins(), 0.0);
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
@@ -347,6 +363,18 @@ void module_log_spectrum_ring_buffer::calculate(const global_params& params, con
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
 
+void module_log_spectrum_ring_buffer::update_empty(const global_params& params)
+{
+    double *spectrum_out = m_spectra[m_counter].data();
+    
+    const double log_min = log(dbtoa(db_calc_min()));
+    
+    for (long i = 0; i < params.num_bins(); i++)
+        spectrum_out[i] = log_min;
+    
+    m_counter = (m_counter + 1) % (m_max_lag + 1);
+}
+
 long module_log_spectrum_ring_buffer::get_idx(long lag) const
 {
     return (m_max_lag + (m_counter - std::min(m_max_lag, lag))) % (m_max_lag + 1);
@@ -356,10 +384,16 @@ long module_log_spectrum_ring_buffer::get_idx(long lag) const
 
 void module_autocorrelation::prepare(const global_params& params)
 {
-    m_fft_setup.resize(params.fft_size_log2());
-    m_full_frame.resize(params.fft_size());
-    m_half_frame.resize(params.fft_size());
-    m_coefficients.resize(params.fft_size());
+    long out_size = params.frame_size() + (params.frame_size() >> 1);
+    long fft_size_log2 = int_log2(out_size);
+    long fft_size = 1 << fft_size_log2;
+    
+    m_fft_setup.resize(fft_size_log2);
+    m_full_frame.resize(fft_size);
+    m_half_frame.resize(fft_size);
+    m_coefficients.resize(fft_size);
+    
+    m_coefficients_size = params.frame_size();
 }
 
 void module_autocorrelation::calculate(const global_params& params, const double *frame, long size)
@@ -372,6 +406,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
     VecType *real2 = reinterpret_cast<VecType *>(half_frame.realp);
     VecType *imag2 = reinterpret_cast<VecType *>(half_frame.imagp);
         
+    long fft_size = 1 << m_fft_setup.size();
     double scale = 0.0;
     
     // Calculate normalisation factor
@@ -379,7 +414,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
     for (long i = 0; i < (size >> 1); i++)
         scale += frame[i] * frame[i];
         
-    scale = 0.25 / (get_length() * scale);
+    scale = 0.25 / (fft_size * scale);
         
     // Do ffts straight into position with zero padding (one half the size of the other)
     
@@ -395,8 +430,8 @@ void module_autocorrelation::calculate(const global_params& params, const double
         
     full_frame.imagp[0] = 0.0;
     half_frame.imagp[0] = 0.0;
-    
-    for (long i = 0; i < size / (2 * VecType::size); i++)
+        
+    for (long i = 0; i < fft_size / (2 * VecType::size); i++)
     {
         const VecType r1 = real1[i];
         const VecType i1 = imag1[i];

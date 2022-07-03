@@ -15,15 +15,31 @@
 
 class graph;
 
+// Helper for FFT sizes
+
+template <class T>
+static T int_log2(T in)
+{
+    T count = 0;
+    
+    if (in <= 0)
+        return -1;
+    
+    while (in >> count)
+        count++;
+    
+    return (count && in == 1L << (count - 1L)) ? count - 1 : count;
+}
+
 // FFT Parameters
 
 struct fft_params
 {
-    long m_fft_size_log2;
-    long m_hop_size;
-    long m_frame_size;
+    long m_fft_size_log2 = 12;
+    long m_hop_size = 2048;
+    long m_frame_size = 4096;
     
-    t_symbol *m_window_type;
+    t_symbol *m_window_type = nullptr;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
 };
@@ -34,14 +50,22 @@ struct global_params
 {
     fft_params m_fft_params;
     
-    long m_signal_length;
+    long m_signal_length = 0;
     
-    double m_sr;
-    double m_energy_threshold;
+    bool m_pad = false;
+    double m_sr = 44100.0;
+    double m_energy_threshold = 0.0;
+        
+    long num_frames() const
+    {
+        long valid_hop_length = m_signal_length - frame_size();
+        
+        if (m_pad)
+            return static_cast<long>(ceil(m_signal_length / hop_size()));
+        else
+            return valid_hop_length < 0 ? 0  : static_cast<long>(1 + floor(valid_hop_length / hop_size()));
+    }
     
-    // FIX - ceil??
-    
-    long num_frames() const { return static_cast<long>(ceil(m_signal_length / m_fft_params.m_hop_size)); }
     long fft_size() const { return m_fft_params.fft_size(); }
     long fft_size_log2() const { return m_fft_params.m_fft_size_log2; }
     long hop_size() const { return m_fft_params.m_hop_size; }
@@ -59,8 +83,24 @@ class module_arguments
 {
 public:
     
-    module_arguments(long argc, t_atom *argv)
-    : m_argc(argc), m_argv(argv) {}
+    module_arguments(t_object *x, long argc, t_atom *argv)
+    : m_x(x), m_argc(argc), m_argv(argv) {}
+    
+    ~module_arguments()
+    {
+        if (m_argc > 0)
+        {
+            long size = 0;
+            char *text = nullptr;
+        
+            atom_gettext(m_argc, m_argv, &size, &text, OBEX_UTIL_ATOM_GETTEXT_DEFAULT);
+            object_error(m_x, "unparsed desctiptors arguments: %s", text);
+            
+            if (text)
+                sysmem_freeptr(text);
+            
+        }
+    }
     
     bool get_bool(bool default_value)
     {
@@ -83,14 +123,13 @@ public:
     {
         return (m_argc-- > 0) ? atom_getsym(m_argv++) : default_value;
     }
-    
-    long argc() const { return m_argc; }
-    
+        
 private:
     
     template <class T>
     T clip(T value, T lo, T hi) { return std::min(std::max(value, lo), hi); }
     
+    t_object *m_x;
     long m_argc;
     t_atom *m_argv;
 };
@@ -107,6 +146,7 @@ struct module
     
     virtual void prepare(const global_params& params) {}
     virtual void calculate(const global_params& params, const double *data, long size) = 0;
+    virtual void update_empty(const global_params& params) {}
 };
 
 // A User Module

@@ -1373,7 +1373,7 @@
 		B80B92F1183BD52E0014C9C4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B80B92F7183BD52E0014C9C4 /* descriptors~.mxo */,
+				B80B92F7183BD52E0014C9C4 /* descriptorstest~.mxo */,
 				B80B92F9183BD52E0014C9C4 /* descriptorsrt~.mxo */,
 			);
 			name = Products;
@@ -2240,10 +2240,10 @@
 			remoteRef = B80B91D4183BD1930014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B80B92F7183BD52E0014C9C4 /* descriptors~.mxo */ = {
+		B80B92F7183BD52E0014C9C4 /* descriptorstest~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "descriptors~.mxo";
+			path = "descriptorstest~.mxo";
 			remoteRef = B80B92F6183BD52E0014C9C4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

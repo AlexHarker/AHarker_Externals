@@ -12,7 +12,6 @@ By Alex Harker
 			
 A brief overview of some areas addressed:
 
-
 * general purpose scaling for Max and MSP
 * efficient partitioned + non- partitioned convolution
 * comprehensive descriptor analysis (realtime + non-realtime)

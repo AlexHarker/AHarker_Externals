@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 
+// Setup List (for adding modules)
+
 class setup_list
 {
 public:
@@ -27,6 +29,8 @@ private:
     
     std::vector<user_setups> m_setups;
 };
+
+// Energy Threshold Class
 
 class energy_threshold
 {
@@ -47,6 +51,8 @@ private:
     module_average_rms_amp m_energy_module;
 };
 
+// The Main Graph Class
+
 class graph
 {
 public:
@@ -59,12 +65,13 @@ public:
         return dynamic_cast<T *>(add_requirement_impl(m));
     }
     
-    void build(const setup_list& setups, const global_params& params, long argc, t_atom *argv);
+    void build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     void prepare(const global_params& params);
     bool run(const global_params& params, const double *frame);
     
     void output(t_atom *argv) { output(m_outputs, argv); }
-    size_t size() { return size(m_outputs); }
+    size_t output_size() { return output_size(m_outputs); }
+    size_t size() { return m_outputs.size(); }
     
 protected:
     
@@ -74,11 +81,11 @@ protected:
     long next_setup(const setup_list& setups, long idx, long argc, t_atom *argv, user_module_setup& setup);
     
     void output(std::vector<user_module *>& output_modules, t_atom *argv);
-    size_t size(std::vector<user_module *>& output_modules);
+    size_t output_size(std::vector<user_module *>& output_modules);
     
     double get_output(long idx, long jdx) { return m_outputs[idx]->get_output(jdx); }
         
-    // This allows the stats graph to override the implementation
+    // This allows the summary graph to override the implementation for adding requirements
     
     virtual module *add_requirement_impl(module *m);
     

@@ -149,11 +149,11 @@ struct module_amplitude_sum : module_frame_sum<module_amplitude_spectrum, module
     void add_requirements(graph& g) override;
 };
 
-// Median Power Spectrum Module
+// Median Amplitude Spectrum Module
 
-struct module_median_power_spectrum : comparable_module<module_median_power_spectrum>
+struct module_median_amplitude_spectrum : comparable_module<module_median_amplitude_spectrum>
 {
-    module_median_power_spectrum(long median_width)
+    module_median_amplitude_spectrum(long median_width)
     : m_filter(median_width), m_median_width(median_width) {}
     
     auto get_params() const { return std::make_tuple(m_median_width); }
@@ -166,7 +166,7 @@ struct module_median_power_spectrum : comparable_module<module_median_power_spec
     
 private:
     
-    module_power_spectrum *m_power_module;
+    module_amplitude_spectrum *m_amplitude_module;
     
     median_filter<double> m_filter;
     aligned_vector<> m_spectrum;
@@ -195,6 +195,9 @@ struct module_peak_detection : module_core<module_peak_detection>
     using peak_list = peak_set<double>;
     using peak_detector = peak_finder<double>;
 
+    module_peak_detection(long median_width)
+    : m_median_width(median_width) {}
+    
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -204,9 +207,12 @@ struct module_peak_detection : module_core<module_peak_detection>
 private:
     
     module_amplitude_spectrum *m_amplitude_module;
+    module_median_amplitude_spectrum *m_median_amplitude_module;
     
     peak_detector m_detector;
     peak_list m_peaks;
+    
+    const long m_median_width;
 };
 
 // Amplitude Ring Buffer Module
@@ -216,7 +222,8 @@ struct module_spectrum_ring_buffer : module_core<module_spectrum_ring_buffer>
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
-    
+    void update_empty(const global_params& params) override;
+
     const double *get_frame(long frame_lag) const { return m_spectra[get_idx(frame_lag)].data(); }
     void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
     
@@ -239,7 +246,8 @@ struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_bu
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
-    
+    void update_empty(const global_params& params) override;
+
     const double *get_frame(long frame_lag) const { return m_spectra[get_idx(frame_lag)].data(); }
     void request_lag(long lag) { m_max_lag = std::max(m_max_lag, lag); }
     
@@ -263,7 +271,7 @@ struct module_autocorrelation : module_core<module_autocorrelation>
     void calculate(const global_params& params, const double *frame, long size) override;
     
     const double *get_coefficients() const { return m_coefficients.data(); }
-    long get_length() const { return static_cast<long>(m_coefficients.size()); }
+    long get_length() const { return m_coefficients_size; }
 
 private:
     
@@ -271,6 +279,8 @@ private:
     fft_split m_full_frame;
     fft_split m_half_frame;
     aligned_vector<> m_coefficients;
+    
+    long m_coefficients_size;
 };
 
 #endif /* _MODULES_CORE_HPP_ */

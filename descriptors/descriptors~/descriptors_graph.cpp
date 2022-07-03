@@ -30,13 +30,13 @@ bool energy_threshold::check(const global_params& params, const double *frame)
     m_window.calculate(params, frame, params.frame_size());
         
     if (!params.m_energy_threshold)
-        return false;
+        return true;
         
     m_energy_module.calculate(params, m_window.get_frame(), params.frame_size());
         
     double level = m_energy_module.get_output(0) * m_window.get_rms_compensation();
         
-    return level < params.m_energy_threshold;
+    return level >= params.m_energy_threshold;
 }
 
 // Graph
@@ -68,7 +68,7 @@ module *graph::add_requirement_impl(module *m)
     return m;
 }
 
-void graph::build(const setup_list& setups, const global_params& params, long argc, t_atom *argv)
+void graph::build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
 {
     user_module_setup next;
         
@@ -81,7 +81,7 @@ void graph::build(const setup_list& setups, const global_params& params, long ar
         user_module_setup setup = next;
             
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
-        module_arguments args(argc_end - (argc_begin + 1), argv + argc_begin + 1);
+        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
         add_user_module((*setup)(params, args));
         argc_begin = argc_end;
     }
@@ -101,12 +101,17 @@ void graph::prepare(const global_params& params)
 bool graph::run(const global_params& params, const double *frame)
 {
     if (m_threshold->check(params, frame))
-        return false;
+    {
+        for (auto it = m_modules.begin(); it != m_modules.end(); it++)
+            (*it)->calculate(params, frame, params.frame_size());
         
+        return true;
+    }
+    
     for (auto it = m_modules.begin(); it != m_modules.end(); it++)
-        (*it)->calculate(params, frame, params.frame_size());
-        
-    return true;
+        (*it)->update_empty(params);
+    
+    return false;
 }
         
 void graph::build_energy_threshold(const global_params& params)
@@ -141,7 +146,7 @@ void graph::output(std::vector<user_module *>& output_modules, t_atom *argv)
     }
 }
 
-size_t graph::size(std::vector<user_module *>& output_modules)
+size_t graph::output_size(std::vector<user_module *>& output_modules)
 {
     size_t output_size = 0;
     

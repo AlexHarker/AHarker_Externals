@@ -11,17 +11,17 @@
 void module_noise_ratio::add_requirements(graph& g)
 {
     m_power_sum_module = g.add_requirement(new module_power_sum());
-    m_median_power_module = g.add_requirement(new module_median_power_spectrum(m_median_span * 2 + 1));
+    m_median_amplitude_module = g.add_requirement(new module_median_amplitude_spectrum(m_median_span * 2 + 1));
 }
 
 void module_noise_ratio::calculate(const global_params& params, const double *frame, long size)
 {
-    const double *median_power = m_median_power_module->get_frame();
+    const double *median_amplitudes = m_median_amplitude_module->get_frame();
 
     double power_sum = m_power_sum_module->get_sum(0, params.num_bins());
             
     if (power_sum)
-        m_value = std::min(1.0, stat_sum(median_power, params.num_bins()) / power_sum);
+        m_value = std::min(1.0, stat_sum_squares(median_amplitudes, params.num_bins()) / power_sum);
     else
         m_value = infinity();
 }
@@ -47,12 +47,16 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
 
 user_module *module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    return new module_spectral_peaks(args.get_long(10, 1, std::numeric_limits<long>::max()));
+    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
+    double range = args.get_double(60.0, 0.0, 1000.0);
+    
+    return new module_spectral_peaks(N, median_span, range);
 }
 
 void module_spectral_peaks::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
 }
 
 void module_spectral_peaks::prepare(const global_params& params)
@@ -64,7 +68,7 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 {
     auto peaks = m_peak_detection_module->get_peaks();
     
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
     long i = 0;
     
     for ( ; i < num_valid_peaks; i++)
@@ -87,21 +91,23 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 user_module *module_inharmonicity::setup(const global_params& params, module_arguments& args)
 {
     long num_peaks = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
     double threshold = args.get_double(0.68, 0.0, 1.0);
+    double range = args.get_double(60.0, 0.0, 1000.0);
 
-    return new module_inharmonicity(num_peaks, threshold);
+    return new module_inharmonicity(num_peaks, median_span, threshold, range);
 }
 
 void module_inharmonicity::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
     m_pitch_module = g.add_requirement(new module_pitch(m_threshold));
 }
 
 void module_inharmonicity::calculate(const global_params& params, const double *frame, long size)
 {
     auto peaks = m_peak_detection_module->get_peaks();
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
 
     double sum1 = 0.0;
     double sum2 = 0.0;
@@ -119,10 +125,10 @@ void module_inharmonicity::calculate(const global_params& params, const double *
             
             if (peak_freq > 0)
             {
-                double divergence = (pitch > peak.m_position) ? pitch / peak_freq : peak_freq / pitch;
+                double divergence = (pitch > peak_freq) ? pitch / peak_freq : peak_freq / pitch;
 
                 divergence -= floor(divergence);
-                divergence =  (divergence > 0.5) ? 1.0 - divergence : divergence;
+                divergence = (divergence > 0.5) ? 1.0 - divergence : divergence;
 
                 sum1 += peak.m_value * divergence * 2.0;
                 sum2 += peak.m_value;
@@ -137,23 +143,27 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 
 user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
-    return new module_roughness(args.get_long(10, 1, std::numeric_limits<long>::max()));
+    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
+    double range = args.get_double(60.0, 0.0, 1000.0);
+
+    return new module_roughness(N, median_span, range);
 }
 
 void module_roughness::add_requirements(graph& g)
 {
-    m_peak_detection_module = g.add_requirement(new module_peak_detection());
+    m_peak_detection_module = g.add_requirement(new module_peak_detection(m_median_span * 2 + 1));
 }
 
 void module_roughness::calculate(const global_params& params, const double *frame, long size)
 {
     auto peaks = m_peak_detection_module->get_peaks();
-    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks()), m_num_peaks);
+    long num_valid_peaks = std::min(static_cast<long>(peaks.num_peaks_in_range(m_range)), m_num_peaks);
 
     // This roughness calulator takes freq and amplitude pairs - the ordering is unimportant
 
     // Code adapated from Richard Parncutt (Mcgill University / Univeristy of Graz)
-    // Richard Parncutt's current webpage is: http://www.uni-graz.at/richard.parncutt/
+    // Richard Parncutt's current webpage is: https://homepage.uni-graz.at/de/richard.parncutt/
     // The code can be found at: http://www.uni-graz.at/richard.parncutt/computerprograms.html
     // The original comments from the code are reproduced in an adapted form below.
 
@@ -176,11 +186,9 @@ void module_roughness::calculate(const global_params& params, const double *fram
     constexpr double cb_int0 = 0.25;                   // interval for max roughness (P&L: ca. 0.25)
     constexpr double cb_int1 = 1.2;                    // interval beyond which roughness is negligible (P&L: 1.2)
     constexpr double index = 2.0;                      // for standard curve of P&L (bigger index => narrower curve)
-    constexpr double cb_int0_recip = 1.0 / cb_int0;
+    constexpr double cb_int0_recip = 1.0 / cb_int0;    // for calculating H&K Eq. (3)
     
-    // for calculating H&K Eq. (3)
-    
-    double min_amp = 0.0;
+    double min_amp = infinity();
     double numerator = 0.0;
     double denominator = 0.0;
             
@@ -209,7 +217,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
                     // cb_int = interval between two partials in critical bandwidths
                     
                     const double cbw = 1.72 * pow(mean_freq, 0.65);
-                    const double cb_int = (fabs(freq1 - freq2)) / cbw;
+                    const double cb_int = (fabs(freq2 - freq1)) / cbw;
                     
                     // (Otherwise roughness is negligible) (save computing time)
                     
@@ -222,6 +230,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
                         const double standard_curve = pow((M_E * ratio) * exp(-ratio), index);
                         numerator += amp1 * amp2 * standard_curve;
                     }
+                    
                     denominator += amp1 * amp1;
                     min_amp = std::min(min_amp, amp1);
                 }
@@ -233,7 +242,7 @@ void module_roughness::calculate(const global_params& params, const double *fram
         
     denominator -= min_amp * min_amp;
         
-    m_value = denominator ? (numerator / denominator) : infinity();
+    m_value = denominator > 0.0 ? (numerator / denominator) : infinity();
 }
 
 

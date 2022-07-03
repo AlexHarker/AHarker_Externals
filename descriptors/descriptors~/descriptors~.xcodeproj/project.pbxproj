@@ -39,7 +39,7 @@
 
 /* Begin PBXFileReference section */
 		B80C537227BD11D100A7637C /* edges.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = edges.hpp; sourceTree = "<group>"; };
-		B81F571D0D2422E0000D5E50 /* descriptors~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptors~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B81F571D0D2422E0000D5E50 /* descriptorstest~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptorstest~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B839615B2868D6F900275ECE /* modules_summary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_summary.hpp; sourceTree = "<group>"; };
 		B8472B9327B52F5200C60F79 /* descriptors_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_modules.hpp; sourceTree = "<group>"; };
 		B8472B9527B533D000C60F79 /* descriptors_graph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_graph.hpp; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 		B8F3820B0F23B58E00B7D3E0 /* median_filter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = median_filter.hpp; sourceTree = "<group>"; };
 		B8F382280F23B6AE00B7D3E0 /* conversion_helpers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = conversion_helpers.hpp; sourceTree = "<group>"; };
 		B8F382580F23B80000B7D3E0 /* sort.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sort.hpp; sourceTree = "<group>"; };
-		B8FE3F3210986C1000780AF9 /* descriptorsrt~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptorsrt~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8FE3F3210986C1000780AF9 /* descriptorsrttest~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "descriptorsrttest~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,8 +125,8 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B81F571D0D2422E0000D5E50 /* descriptors~.mxo */,
-				B8FE3F3210986C1000780AF9 /* descriptorsrt~.mxo */,
+				B81F571D0D2422E0000D5E50 /* descriptorstest~.mxo */,
+				B8FE3F3210986C1000780AF9 /* descriptorsrttest~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,9 +192,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		8D01CCC60486CAD60068D4B7 /* descriptors~ */ = {
+		8D01CCC60486CAD60068D4B7 /* descriptorstest~ */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "descriptors~" */;
+			buildConfigurationList = 0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "descriptorstest~" */;
 			buildPhases = (
 				8D01CCC70486CAD60068D4B7 /* Headers */,
 				8D01CCC90486CAD60068D4B7 /* Resources */,
@@ -206,15 +206,15 @@
 			);
 			dependencies = (
 			);
-			name = "descriptors~";
+			name = "descriptorstest~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B81F571D0D2422E0000D5E50 /* descriptors~.mxo */;
+			productReference = B81F571D0D2422E0000D5E50 /* descriptorstest~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
-		B8FE3F1910986C1000780AF9 /* descriptorsrt~ */ = {
+		B8FE3F1910986C1000780AF9 /* descriptorsrttest~ */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B8FE3F2E10986C1000780AF9 /* Build configuration list for PBXNativeTarget "descriptorsrt~" */;
+			buildConfigurationList = B8FE3F2E10986C1000780AF9 /* Build configuration list for PBXNativeTarget "descriptorsrttest~" */;
 			buildPhases = (
 				B8FE3F1A10986C1000780AF9 /* Headers */,
 				B8FE3F1C10986C1000780AF9 /* Resources */,
@@ -226,10 +226,10 @@
 			);
 			dependencies = (
 			);
-			name = "descriptorsrt~";
+			name = "descriptorsrttest~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B8FE3F3210986C1000780AF9 /* descriptorsrt~.mxo */;
+			productReference = B8FE3F3210986C1000780AF9 /* descriptorsrttest~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -255,8 +255,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D01CCC60486CAD60068D4B7 /* descriptors~ */,
-				B8FE3F1910986C1000780AF9 /* descriptorsrt~ */,
+				8D01CCC60486CAD60068D4B7 /* descriptorstest~ */,
+				B8FE3F1910986C1000780AF9 /* descriptorsrttest~ */,
 			);
 		};
 /* End PBXProject section */
@@ -496,7 +496,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "descriptors~" */ = {
+		0FFBC540097463A900D78707 /* Build configuration list for PBXNativeTarget "descriptorstest~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0FFBC541097463A900D78707 /* Development */,
@@ -516,7 +516,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
 		};
-		B8FE3F2E10986C1000780AF9 /* Build configuration list for PBXNativeTarget "descriptorsrt~" */ = {
+		B8FE3F2E10986C1000780AF9 /* Build configuration list for PBXNativeTarget "descriptorsrttest~" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8FE3F2F10986C1000780AF9 /* Development */,

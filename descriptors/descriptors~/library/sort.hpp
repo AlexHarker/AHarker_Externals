@@ -56,7 +56,7 @@ namespace impl
         template <class Compare, class T, class U>
         static void sort(T& indices, const U& values, uintptr_t size)
         {
-            using T_Underlying = std::remove_reference<decltype(indices[0])>::type;
+            using T_Underlying = typename std::remove_reference<decltype(indices[0])>::type;
 
             bool swaps = true;
 

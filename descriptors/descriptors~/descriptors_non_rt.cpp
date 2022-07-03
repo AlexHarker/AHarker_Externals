@@ -50,6 +50,8 @@ t_class *this_class;
 
 setup_list s_setups;
 
+enum class audio_edges { none, allow_overlap, zero_pad };
+
 struct t_descriptors
 {
     t_pxobject x_obj;
@@ -113,43 +115,6 @@ int C74_EXPORT main()
 
     class_register(CLASS_BOX, this_class);
     
-    // Issues
-    //
-    // Padding issue (not yet found)
-    // Old no RT object didn't respond to different buffer sample rates correctly (need to reset fft params)
-    //
-    // Rolloff now has interpolation (so reports slightly lower) and uses power (as Peeters / unlike flucoma default)
-    // SFM *was* using power rather than amplitudes
-    // Spectral crest *was* using power rather than amplitudes
-    // Linear spread was squaring the raw value before the Hz adjustment (so not a useful value)
-    // Higher spectral shapes were wrong in early versions due to a lack of division by the overall amplitude sum
-    // Log higher spectral shape was still wrong in more recent versions
-    // Pitch modules *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect
-    // Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors
-    // Flux *had* a fixed index bug in the code producing consistently incorrect results
-    // Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct)
-    // Noise ratio *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results
-    //
-    // trough and trough_pos *did* return infs due to an incorrect test
-    // crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh)
-    // longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime)
-    // longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented)
-    // all peak searches *did* incorrectly detect peaks for each stage of continued upward motion (rather than a single peak)
-    // peak and trough searches *did* not address infinity values
-    //
-    // Spectral peak finding per frsme currently has no median filtering
-    // RT spectral_peaks reports in linear amps but non RT in db (with no options)
-    // Summary spectral peak finding returns zeros if it can't find enough peaks, not infs
-    //
-    // Precision etc. - some small differences in various places
-    // Shape desciptors (crest/sfm/skewness/kurtosis) - some differences for large fft with sine input
-    
-    // Need to check volume compesation points
-    // Need to check lags and other things with fftparams that have mismatch window and FFT
-    // Need to investigate speeds
-    // Need to investigate zero inputs
-    // Need to investigate min return values
-    
     // Per-frame Descriptors
     
     s_setups.add_module("abs", module_average_abs_amp::setup);
@@ -186,8 +151,8 @@ int C74_EXPORT main()
     s_setups.add_module("foote", module_foote::setup);
     s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
     
-    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // * To investigate
-    s_setups.add_module("roughness", module_roughness::setup);              // * To investigate
+    s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // ** Improved [calcs match but spurious peaks an issue]
+    s_setups.add_module("roughness", module_roughness::setup);              // ** Improved [calcs match but spurious peaks an issue]
 
     // Stats
     
@@ -202,28 +167,28 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
-    s_setups.add_module("peak", stat_module_peak::setup);                                   // ** Fixed [old detects while upward]
-    s_setups.add_module("trough", stat_module_trough::setup);                               // ** Fixed [old returns infs]
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // ** Fixed [old detects while upward]
-    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);                       // ** Fixed [old returns infs]
+    s_setups.add_module("peak", stat_module_peak::setup);
+    s_setups.add_module("trough", stat_module_trough::setup);
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
 
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
-    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);                     // ** Fixed [old returns infs]
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
     
-    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);           // ** Fixed [return cross not length]
-    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);           // ** Fixed [return cross not length]
-    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
-    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);
     
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // ** Fixed [old detects while upward]
-    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);             // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // ** Fixed [old detects while upward]
-    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);     // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);
+    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);
+    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);
     
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // ** Fixed [old detects while upward]
-    s_setups.add_module("cross_below", stat_module_cross_below::setup);                     // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // ** Fixed [old detects while upward]
-    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);             // ** Fixed [old searches above thresh]
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);
+    s_setups.add_module("cross_below", stat_module_cross_below::setup);
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
+    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
 
     // Specifiers
     
@@ -233,7 +198,7 @@ int C74_EXPORT main()
     // Summaries
     
     s_setups.add_module("duration", summary_module_duration::setup);
-    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // * Match [with emulated median filter]
+    s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // ** Improved [spurious peaks an issue]
     
     return 0;
 }
@@ -325,11 +290,11 @@ void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom
 {
     auto graph = new class summary_graph();
     
-    graph->build(s_setups, x->params, argc, argv);
+    graph->build((t_object *) x, s_setups, x->params, argc, argv);
     
     safe_lock_hold hold(&x->m_lock);
     
-    x->output_list.resize(graph->size());
+    x->output_list.resize(graph->output_size());
     x->m_graph.reset(graph);
 }
 
@@ -412,11 +377,44 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     if (buffer.get_num_chans() < buffer_chan + 1)
         buffer_chan = buffer_chan % buffer.get_num_chans();
     
-    auto signal_length = buffer.get_length();
-    if (end_point && end_point < signal_length)
-        signal_length = end_point;
-    signal_length -= start_point;
+    audio_edges edges = audio_edges::none;
     
+    auto signal_length = buffer.get_length();
+    
+    if (edges == audio_edges::allow_overlap)
+    {
+        if (end_point && end_point < signal_length)
+        {
+            global_params calculation = x->params;
+        
+            // How many frames are available in the buffer
+        
+            calculation.m_signal_length = static_cast<long>(signal_length - start_point);
+            calculation.m_pad = false;
+            long available_frames = calculation.num_frames();
+        
+            // How many frames would be calculated with padding?
+        
+            calculation.m_signal_length = static_cast<long>(end_point - start_point);
+            calculation.m_pad = true;
+            long required_frames = calculation.num_frames();
+        
+            long num_frames = std::min(available_frames, required_frames);
+            
+            signal_length = num_frames ? calculation.frame_size() + num_frames * calculation.hop_size() : 0;
+            signal_length += start_point;
+        }
+    }
+    else
+    {
+        if (end_point && end_point < signal_length)
+            signal_length = end_point;
+    }
+    
+    signal_length -= start_point;
+
+    
+    x->params.m_pad = edges == audio_edges::zero_pad;
     x->params.m_signal_length = static_cast<long>(signal_length);
     x->params.m_sr = buffer.get_sample_rate();
     

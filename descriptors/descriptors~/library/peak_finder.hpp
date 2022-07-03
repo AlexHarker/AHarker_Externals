@@ -34,6 +34,17 @@ public:
     peak_set() {}
     peak_set(uintptr_t max_size) { resize(max_size); }
 
+    uintptr_t num_peaks_in_range(double db) const
+    {
+        double threshold = by_value(0).m_value * pow(10, -db / 20.0);
+
+        for (long i = 1; i < m_num_peaks; i++)
+            if (by_value(i).m_value < threshold)
+                return  i;
+                
+        return m_num_peaks;
+    }
+    
     uintptr_t num_peaks() const { return m_num_peaks; }
     
     const peak_data& by_value(size_t idx) const { return m_peaks[m_indices[idx]]; }
@@ -96,6 +107,7 @@ public:
         bool always_detect = false;
         int neighbours = 1;
         T threshold = 0.0;
+        T mask_gain = 1.0;
         T pad_value = 0.0;
     };
     
@@ -148,7 +160,8 @@ private:
         // N.B. parabolic log interpolation can only work on +ve values
         
         double threshold = params.threshold;
-        
+        double mask_gain = params.mask_gain;
+
         if (params.refine == Refine::ParabolicLog)
             threshold = std::max(0.0, threshold);
         
@@ -156,10 +169,10 @@ private:
         
         switch (neighbours)
         {
-            case 1:  find_peaks<check_for_peak<1>>(peaks, size, mask, threshold);  break;
-            case 2:  find_peaks<check_for_peak<2>>(peaks, size, mask, threshold);  break;
-            case 3:  find_peaks<check_for_peak<3>>(peaks, size, mask, threshold);  break;
-            case 4:  find_peaks<check_for_peak<4>>(peaks, size, mask, threshold);  break;
+            case 1:  find_peaks<check_for_peak<1>>(peaks, size, mask, threshold, mask_gain);  break;
+            case 2:  find_peaks<check_for_peak<2>>(peaks, size, mask, threshold, mask_gain);  break;
+            case 3:  find_peaks<check_for_peak<3>>(peaks, size, mask, threshold, mask_gain);  break;
+            case 4:  find_peaks<check_for_peak<4>>(peaks, size, mask, threshold, mask_gain);  break;
         }
         
         // Find boundaries (note by default all boundaries span the entire space)
@@ -239,14 +252,14 @@ private:
     // Peak Finding
 
     template <bool Func(const T *, double)>
-    void find_peaks(peak_set<T>& peaks, uintptr_t size, const T *mask, T threshold)
+    void find_peaks(peak_set<T>& peaks, uintptr_t size, const T *mask, T threshold, T mask_gain)
     {
         const T *data = stored_data();
                 
         if (mask)
         {
             for (uintptr_t i = 0; i < size; i++)
-                if (Func(data++, std::max(*mask++, threshold)))
+                if (Func(data++, std::max(*mask++ * mask_gain, threshold)))
                     peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
         }
         else

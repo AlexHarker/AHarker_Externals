@@ -42,7 +42,7 @@ struct module_noise_ratio : module_noise_measure<module_noise_ratio>
 private:
     
     module_power_sum *m_power_sum_module;
-    module_median_power_spectrum *m_median_power_module;
+    module_median_amplitude_spectrum *m_median_amplitude_module;
 };
 
 // Harmonic Ratio Module
@@ -65,10 +65,10 @@ struct module_spectral_peaks : user_module_vector<module_spectral_peaks>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
-    module_spectral_peaks(long num_peaks)
-    : m_num_peaks(num_peaks) {}
+    module_spectral_peaks(long num_peaks, long median_span, double range)
+    : m_num_peaks(num_peaks), m_median_span(median_span), m_range(range) {}
     
-    auto get_params() const { return std::make_tuple(m_num_peaks); }
+    auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span); }
 
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
@@ -77,7 +77,10 @@ struct module_spectral_peaks : user_module_vector<module_spectral_peaks>
 private:
     
     module_peak_detection *m_peak_detection_module;
+
     const long m_num_peaks;
+    const long m_median_span;
+    const double m_range;
 };
 
 // Inharmonicity Module
@@ -86,8 +89,8 @@ struct module_inharmonicity : user_module_single<module_inharmonicity>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
-    module_inharmonicity(long num_peaks, double threshold)
-    : m_num_peaks(num_peaks), m_threshold(threshold) {}
+    module_inharmonicity(long num_peaks, long median_span, double threshold, double range)
+    : m_num_peaks(num_peaks), m_median_span(median_span), m_threshold(threshold), m_range(range) {}
     
     auto get_params() const { return std::make_tuple(m_num_peaks, m_threshold); }
 
@@ -98,8 +101,11 @@ private:
     
     module_peak_detection *m_peak_detection_module;
     module_pitch *m_pitch_module;
+    
     const long m_num_peaks;
+    const long m_median_span;
     const double m_threshold;
+    const double m_range;
 };
 
 // Roughness Module
@@ -108,8 +114,8 @@ struct module_roughness : user_module_single<module_roughness>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
-    module_roughness(long num_peaks)
-    : m_num_peaks(num_peaks) {}
+    module_roughness(long num_peaks, long median_span, double range)
+    : m_num_peaks(num_peaks), m_median_span(median_span), m_range(range) {}
     
     auto get_params() const { return std::make_tuple(m_num_peaks); }
 
@@ -119,7 +125,10 @@ struct module_roughness : user_module_single<module_roughness>
 private:
     
     module_peak_detection *m_peak_detection_module;
+
     const long m_num_peaks;
+    const long m_median_span;
+    const double m_range;
 };
 
 #endif /* _MODULES_SPECTRAL_CONTENT_HPP_ */

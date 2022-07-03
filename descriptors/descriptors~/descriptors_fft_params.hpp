@@ -4,19 +4,6 @@
 
 #include "descriptors_modules.hpp"
 
-static long int_log2(long in)
-{
-    long count = 0;
-    
-    if (in <= 0)
-        return -1;
-    
-    while (in >> count)
-        count++;
-    
-    return (count && in == 1L << (count - 1L)) ? count - 1 : count;
-}
-
 static long check_fft_size(t_object *x, const char *str, long fft_size, long max_fft_size_log2)
 {
     constexpr long DEFAULT_MAX_FFT_SIZE_LOG2 = 16;

@@ -104,7 +104,7 @@ void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, doub
 
 int C74_EXPORT main()
 {
-    this_class = class_new("descriptorsrt~",
+    this_class = class_new("descriptorsrttest~",
                            (method) descriptorsrt_new,
                            (method) descriptorsrt_free,
                            sizeof(t_descriptorsrt),
@@ -292,11 +292,11 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
 {
     auto graph = new class graph();
     
-    graph->build(s_setups, x->params, argc, argv);
+    graph->build((t_object *) x, s_setups, x->params, argc, argv);
     
     safe_lock_hold hold(&x->m_lock);
 
-    x->output_list.resize(graph->size());
+    x->output_list.resize(graph->output_size());
     x->m_graph.reset(graph);
 }
 
