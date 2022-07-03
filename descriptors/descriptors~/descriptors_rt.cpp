@@ -105,7 +105,7 @@ void descriptorsrt_dsp64(t_descriptorsrt *x, t_object *dsp64, short *count, doub
 
 int C74_EXPORT main()
 {
-    this_class = class_new("descriptorsrt~",
+    this_class = class_new("descriptorsrttest~",
                            (method) descriptorsrt_new,
                            (method) descriptorsrt_free,
                            sizeof(t_descriptorsrt),

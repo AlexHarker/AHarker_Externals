@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B8FE3F1910986C1000780AF9"
                BuildableName = "descriptorsrt~.mxo"
-               BlueprintName = "descriptorsrt~"
+               BlueprintName = "descriptorsrttest~"
                ReferencedContainer = "container:descriptors~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,6 +42,7 @@
       allowLocationSimulation = "YES">
       <PathRunnable
          runnableDebuggingMode = "0"
+         BundleIdentifier = "com.cycling74.Max"
          FilePath = "/Applications/Max.app">
       </PathRunnable>
    </LaunchAction>
@@ -56,7 +57,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B8FE3F1910986C1000780AF9"
             BuildableName = "descriptorsrt~.mxo"
-            BlueprintName = "descriptorsrt~"
+            BlueprintName = "descriptorsrttest~"
             ReferencedContainer = "container:descriptors~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
