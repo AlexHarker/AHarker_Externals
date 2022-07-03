@@ -35,11 +35,11 @@ static T int_log2(T in)
 
 struct fft_params
 {
-    long m_fft_size_log2;
-    long m_hop_size;
-    long m_frame_size;
+    long m_fft_size_log2 = 12;
+    long m_hop_size = 2048;
+    long m_frame_size = 4096;
     
-    t_symbol *m_window_type;
+    t_symbol *m_window_type = nullptr;
     
     long fft_size() const { return 1 << m_fft_size_log2; }
 };
@@ -50,14 +50,22 @@ struct global_params
 {
     fft_params m_fft_params;
     
-    long m_signal_length;
+    long m_signal_length = 0;
     
-    double m_sr;
-    double m_energy_threshold;
+    bool m_pad = false;
+    double m_sr = 44100.0;
+    double m_energy_threshold = 0.0;
+        
+    long num_frames() const
+    {
+        long valid_hop_length = m_signal_length - frame_size();
+        
+        if (m_pad)
+            static_cast<long>(ceil(m_signal_length / hop_size()));
+        else
+            return valid_hop_length < 0 ? 0  : static_cast<long>(1 + floor(valid_hop_length / hop_size()));
+    }
     
-    // FIX - ceil??
-    
-    long num_frames() const { return m_signal_length < m_fft_params.m_frame_size ? 0  : static_cast<long>(1+ floor(m_signal_length - m_fft_params.m_frame_size) / m_fft_params.m_hop_size); }
     long fft_size() const { return m_fft_params.fft_size(); }
     long fft_size_log2() const { return m_fft_params.m_fft_size_log2; }
     long hop_size() const { return m_fft_params.m_hop_size; }
