@@ -17,7 +17,7 @@ public:
     void run(const global_params& params, const double *input);
     
     void output(t_atom *argv) { graph::output(m_summary_outputs, argv); }
-    size_t size() { return graph::size(m_summary_outputs); }
+    size_t output_size() { return graph::output_size(m_summary_outputs); }
     
 private:
     

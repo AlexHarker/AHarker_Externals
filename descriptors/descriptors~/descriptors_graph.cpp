@@ -146,7 +146,7 @@ void graph::output(std::vector<user_module *>& output_modules, t_atom *argv)
     }
 }
 
-size_t graph::size(std::vector<user_module *>& output_modules)
+size_t graph::output_size(std::vector<user_module *>& output_modules)
 {
     size_t output_size = 0;
     

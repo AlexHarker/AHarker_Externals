@@ -64,7 +64,8 @@ public:
     bool run(const global_params& params, const double *frame);
     
     void output(t_atom *argv) { output(m_outputs, argv); }
-    size_t size() { return size(m_outputs); }
+    size_t output_size() { return output_size(m_outputs); }
+    size_t size() { return m_outputs.size(); }
     
 protected:
     
@@ -74,7 +75,7 @@ protected:
     long next_setup(const setup_list& setups, long idx, long argc, t_atom *argv, user_module_setup& setup);
     
     void output(std::vector<user_module *>& output_modules, t_atom *argv);
-    size_t size(std::vector<user_module *>& output_modules);
+    size_t output_size(std::vector<user_module *>& output_modules);
     
     double get_output(long idx, long jdx) { return m_outputs[idx]->get_output(jdx); }
         

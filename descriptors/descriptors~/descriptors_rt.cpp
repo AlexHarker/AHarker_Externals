@@ -298,7 +298,7 @@ void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_
     
     safe_lock_hold hold(&x->m_lock);
 
-    x->output_list.resize(graph->size());
+    x->output_list.resize(graph->output_size());
     x->m_graph.reset(graph);
 }
 
