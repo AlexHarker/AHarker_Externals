@@ -165,28 +165,28 @@ int C74_EXPORT main()
     s_setups.add_module("min_pos", stat_module_min_pos::setup);
     s_setups.add_module("max_pos", stat_module_max_pos::setup);
     
-    s_setups.add_module("peak", stat_module_peak::setup);                                   // ** Fixed [old detects while upward]
-    s_setups.add_module("trough", stat_module_trough::setup);                               // ** Fixed [old returns infs]
-    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);                           // ** Fixed [old detects while upward]
-    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);                       // ** Fixed [old returns infs]
+    s_setups.add_module("peak", stat_module_peak::setup);
+    s_setups.add_module("trough", stat_module_trough::setup);
+    s_setups.add_module("peak_pos", stat_module_peak_pos::setup);
+    s_setups.add_module("trough_pos", stat_module_trough_pos::setup);
 
     s_setups.add_module("ratio_above", stat_module_ratio_above::setup);
-    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);                     // ** Fixed [old returns infs]
+    s_setups.add_module("ratio_below", stat_module_ratio_below::setup);
     
-    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);           // ** Fixed [return cross not length]
-    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);           // ** Fixed [return cross not length]
-    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);  // ** Fixed [clip end to length]
-    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);  // ** Fixed [clip end to length]
+    s_setups.add_module("longest_cross_above", stat_module_longest_above::setup);
+    s_setups.add_module("longest_cross_below", stat_module_longest_below::setup);
+    s_setups.add_module("longest_crossings_above", stat_module_longest_above_both::setup);
+    s_setups.add_module("longest_crossings_below", stat_module_longest_below_both::setup);
     
-    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);                 // ** Fixed [old detects while upward]
-    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);             // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);         // ** Fixed [old detects while upward]
-    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);     // ** Fixed [old searches above thresh]
+    s_setups.add_module("crossing_peak", stat_module_crossing_peak::setup);
+    s_setups.add_module("crossing_trough", stat_module_crossing_trough::setup);
+    s_setups.add_module("crossing_peak_pos", stat_module_crossing_peak_pos::setup);
+    s_setups.add_module("crossing_trough_pos", stat_module_crossing_trough_pos::setup);
     
-    s_setups.add_module("cross_above", stat_module_cross_above::setup);                     // ** Fixed [old detects while upward]
-    s_setups.add_module("cross_below", stat_module_cross_below::setup);                     // ** Fixed [old searches above thresh]
-    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);             // ** Fixed [old detects while upward]
-    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);             // ** Fixed [old searches above thresh]
+    s_setups.add_module("cross_above", stat_module_cross_above::setup);
+    s_setups.add_module("cross_below", stat_module_cross_below::setup);
+    s_setups.add_module("crossings_above", stat_module_crossings_above::setup);
+    s_setups.add_module("crossings_below", stat_module_crossings_below::setup);
 
     // Specifiers
     

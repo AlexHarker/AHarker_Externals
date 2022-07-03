@@ -29,9 +29,10 @@ General and Small
 * All content descriptors *did* exhibit issues with spurious peaks so improving this is a priority (using a range parameter) [now improved]
 * Current median filter is weird for low spans? (needs fixing but can't repro)
 
-* Stats [all corrected - no decisions to make - possible further testing]
+* Stats [all corrected - check on the length/position decisions!!! - possible further testing]
 
 * trough and trough_pos *did* return infs due to an incorrect test [now corrected]
+* ratio_below *did* return inf due to an incorrectly formed test [now corrected]
 * crossing_trough / crossing_trough_pos / cross_below / crossings_below *did* search incorrectly (giving values above thresh) [now corrected]
 * longest_crossings_above and longest_crossings_below *did* return allow the end to be beyond length (due to masktime) [now corrected]
 * longest_cross_above and longest_cross_below *did* return the lengths of the crossings (not as documented) [now corrected]
