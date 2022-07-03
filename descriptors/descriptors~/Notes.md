@@ -52,9 +52,11 @@ TO DO
   - -180.0dB (or 0 if not in dB) - rms / abs / peakamp / energy / loudness
   - inf - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch  / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio
 
-  Change are:
+  Changes are:
   1 - foote to 0.0 for difference between silent frames
   2 - pitch to inf for no pitch found
+  
+* Look at user messages
   
 * Need to check lags and other things with fftparams that have mismatch window and FFT
 
