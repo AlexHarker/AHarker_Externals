@@ -282,7 +282,11 @@ void module_peak_detection::calculate(const global_params& params, const double 
     const double *spectrum = m_amplitude_module->get_frame();
     const double *median_spectrum = m_median_amplitude_module->get_frame();
 
-    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins());
+    peak_detector::options options;
+    
+    options.mask_gain = 1.0;
+    
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins(), options);
 }
 
 // Spectrum Ring Buffer Module
