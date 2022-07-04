@@ -4,6 +4,7 @@
 
 #include "../descriptors_modules.hpp"
 #include "processing_containers.hpp"
+#include "conversion_helpers.hpp"
 
 #include "../library/median_filter.hpp"
 #include "../library/peak_finder.hpp"
@@ -243,6 +244,8 @@ private:
 
 struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_buffer>
 {
+    module_log_spectrum_ring_buffer() : m_log_min(log(dbtoa(db_calc_min()))) {}
+    
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -261,6 +264,9 @@ private:
     
     long m_counter = 0;
     long m_max_lag = 0;
+    
+    const double m_log_min;
+
 };
 
 // Autocorrelation Module

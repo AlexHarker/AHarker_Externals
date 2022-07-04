@@ -344,7 +344,7 @@ void module_log_spectrum_ring_buffer::prepare(const global_params& params)
         if (m_spectra.size() <= i)
             m_spectra.emplace_back(params.num_bins());
         m_spectra[i].resize(params.num_bins());
-        std::fill_n(m_spectra[i].data(), params.num_bins(), 0.0);
+        std::fill_n(m_spectra[i].data(), params.num_bins(), m_log_min);
     }
 }
 
@@ -352,13 +352,10 @@ void module_log_spectrum_ring_buffer::calculate(const global_params& params, con
 {
     const double *spectrum_in = m_amplitude_module->get_frame();
     double *spectrum_out = m_spectra[m_counter].data();
-    
-    const double log_min = log(dbtoa(db_calc_min()));
-            
     log_array(spectrum_out, spectrum_in, params.num_bins());
     
     for (long i = 0; i < params.num_bins(); i++)
-        spectrum_out[i] = std::max(spectrum_out[i], log_min);
+        spectrum_out[i] = std::max(spectrum_out[i], m_log_min);
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
@@ -366,11 +363,9 @@ void module_log_spectrum_ring_buffer::calculate(const global_params& params, con
 void module_log_spectrum_ring_buffer::update_empty(const global_params& params)
 {
     double *spectrum_out = m_spectra[m_counter].data();
-    
-    const double log_min = log(dbtoa(db_calc_min()));
-    
+        
     for (long i = 0; i < params.num_bins(); i++)
-        spectrum_out[i] = log_min;
+        spectrum_out[i] = m_log_min;
     
     m_counter = (m_counter + 1) % (m_max_lag + 1);
 }
