@@ -9,13 +9,6 @@ General and Small
 
 * -- Descriptors --
 
-Fully Working:
-abs / peakamp / rms / energy / loudness / energy_ratio / lin_centroid
-Minor Improvements:
-rolloff / foote / log_centroid / log_spread / pitch / confidence / lin_brightness / log_brightness
-Bug fixes:
-noise_ratio / harmonic_ratio
-
 * Rolloff *now* has interpolation (so reports slightly lower) - N.B. it uses power (as Peeters / unlike flucoma default)
 * SFM *was* using power rather than amplitudes [now corrected]
 * Spectral crest *was* using power rather than amplitudes [now corrected]
@@ -82,3 +75,23 @@ noise_ratio / harmonic_ratio
 * Stats - return crossing position (as documented) or length for relevant searches
 * Descriptors - implement power option for some descriptors?
 * Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter)
+
+-- Desciptors Notes --
+
+Fully Working:
+[7] - abs / peakamp / rms / energy / loudness / energy_ratio / lin_centroid
+Minor Improvements:
+[8] - rolloff / foote / log_centroid / log_spread / pitch / confidence / lin_brightness / log_brightness
+Bug fixes [no questions]:
+[3] - noise_ratio / harmonic_ratio / lin_spread
+
+[18]
+
+Bug fixes [questions]:
+[3] contents - spectral_peaks / inharmonicity / roughness - spurious peaks
+[2] sfm / spectral_crest (should there be a power option and how to convert the final ratio? - should sfm report in db?)
+
+[5]
+
+Unaccounted:
+[6] lin_skewness / lin_kurtosis / log_skewness / log_kurtosis / flux / mkl
