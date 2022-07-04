@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B8FE3F1910986C1000780AF9"
-               BuildableName = "descriptorsrt~.mxo"
+               BuildableName = "descriptorsrttest~.mxo"
                BlueprintName = "descriptorsrttest~"
                ReferencedContainer = "container:descriptors~.xcodeproj">
             </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B8FE3F1910986C1000780AF9"
-            BuildableName = "descriptorsrt~.mxo"
+            BuildableName = "descriptorsrttest~.mxo"
             BlueprintName = "descriptorsrttest~"
             ReferencedContainer = "container:descriptors~.xcodeproj">
          </BuildableReference>
