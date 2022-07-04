@@ -16,12 +16,14 @@ struct thread_lock
     thread_lock() : m_flag(0) {}
     thread_lock(const thread_lock&) = delete;
     thread_lock& operator=(const thread_lock&) = delete;
-    ~thread_lock() { acquire(); }
+    ~thread_lock() { acquire_periodic_sleep(); }
     
     // Acquire, Attempt and Release
     
     void acquire()
     {
+        // FIX - this spin is not safe
+        
         bool expected = false;
         while (!m_flag.compare_exchange_weak(expected, true));
     }
