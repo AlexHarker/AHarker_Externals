@@ -149,7 +149,7 @@ int C74_EXPORT main()
     
     s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
     s_setups.add_module("foote", module_foote::setup);
-    s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
+    s_setups.add_module("mkl", module_mkl::setup);                          // ** Fixed [normalisation]
     
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // ** Improved [calcs match but spurious peaks an issue]
     s_setups.add_module("roughness", module_roughness::setup);              // ** Improved [calcs match but spurious peaks an issue]
@@ -209,7 +209,6 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
     
     long max_fft_size = 0;
     t_atom_long descriptor_data_size = 0;
-    bool descriptor_feedback = 0;
 
     // Get arguments
 
@@ -218,7 +217,7 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
     if (argc > 1)
         descriptor_data_size = atom_getlong(argv++);
     if (argc > 2)
-        descriptor_feedback = atom_getlong(argv++);
+        x->descriptors_feedback = atom_getlong(argv++);
     
     // Set maximum fft size
 
@@ -288,14 +287,15 @@ void descriptors_energy_thresh(t_descriptors *x, t_symbol *msg, short argc, t_at
 
 void descriptors_descriptors(t_descriptors *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    auto graph = new class summary_graph();
-    
-    graph->build((t_object *) x, s_setups, x->params, argc, argv);
+    auto graph = new class summary_graph((t_object *) x, s_setups, x->params, argc, argv);
     
     safe_lock_hold hold(&x->m_lock);
     
     x->output_list.resize(graph->output_size());
     x->m_graph.reset(graph);
+    
+    if (x->descriptors_feedback)
+        object_post((t_object *) x, "set %lu descriptors", graph->size());
 }
 
 // User Routines For Performing Analysis

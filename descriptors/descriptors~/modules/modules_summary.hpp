@@ -29,7 +29,7 @@ struct summary_module_vector_n : summary_module_vector<T>
     
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        return new T(args.get_long(1, 1, 256));
+        return new T(args.get_long("number of values", 1, 1, 256));
     }
     
     auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }
@@ -56,6 +56,8 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
     void calculate(const global_params& params, const double *data, long size) override;
+    
+    bool is_descriptor() const override { return true; };
 };
 
 // Summary Spectral Peaks 
@@ -79,8 +81,9 @@ struct summary_module_spectral_peaks : summary_module_vector<summary_module_spec
         aligned_vector<> m_spectrum;
     };
 
-    summary_module_spectral_peaks(long N, long median_width, double range)
-    : summary_module_vector(true), m_filter(median_width), m_num_peaks(N), m_median_width(median_width), m_range(range)
+    summary_module_spectral_peaks(long N, long median_width, double median_gain, double range, bool report_db)
+    : summary_module_vector(true), m_filter(median_width), m_num_peaks(N)
+    , m_median_width(median_width), m_median_gain(median_gain), m_range(range), m_report_db(report_db)
     {
         m_values.resize(N * 2);
     }
@@ -93,6 +96,8 @@ struct summary_module_spectral_peaks : summary_module_vector<summary_module_spec
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *data, long size) override;
     
+    bool is_descriptor() const override { return true; };
+
 private:
     
     spectrum_average *m_spectrum;
@@ -105,7 +110,9 @@ private:
 
     const long m_num_peaks;
     const long m_median_width;
+    const double m_median_gain;
     const double m_range;
+    const bool m_report_db;
 };
 
 // Stats

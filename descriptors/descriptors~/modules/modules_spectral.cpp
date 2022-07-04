@@ -36,7 +36,9 @@ void module_sfm::calculate(const global_params& params, const double *frame, lon
     const double *amplitudes = m_amplitude_module->get_frame();
     const double mean = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin) / bin_count();
     
-    m_value = mean ? stat_geometric_mean(amplitudes + m_min_bin, bin_count()) / mean : infinity();
+    const double sfm = stat_geometric_mean(amplitudes + m_min_bin, bin_count()) / mean;
+    
+    m_value = mean ? (m_report_db ? atodb(sfm) : sfm) : infinity();
 }
 
 // Loudness Module
@@ -90,7 +92,7 @@ void module_loudness::calculate(const global_params& params, const double *frame
     long nyquist = params.num_bins() - 1;
     long loop_size = nyquist / VecType::size;
     
-    // Calculate amplitude spectrum
+    // Calculate spectrum
     
     for (long i = 0; i < loop_size; i++)
         sum += power[i] * curve[i];
@@ -152,7 +154,7 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
 user_module *module_rolloff::setup(const global_params& params, module_arguments& args)
 {
-    return new module_rolloff(args.get_double(0.95, 0.0, 1.0));
+    return new module_rolloff(args.get_double("threshold", 0.95, 0.0, 1.0));
 }
 
 void module_rolloff::add_requirements(graph& g)

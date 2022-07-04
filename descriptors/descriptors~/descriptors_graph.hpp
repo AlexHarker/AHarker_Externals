@@ -57,7 +57,8 @@ class graph
 {
 public:
     
-    virtual ~graph() {};
+    graph(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
+    virtual ~graph() {}
     
     template <class T>
     T *add_requirement(T *m)
@@ -65,7 +66,6 @@ public:
         return dynamic_cast<T *>(add_requirement_impl(m));
     }
     
-    void build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     void prepare(const global_params& params);
     bool run(const global_params& params, const double *frame);
     
@@ -74,6 +74,8 @@ public:
     size_t size() { return m_outputs.size(); }
     
 protected:
+    
+    graph() {}
     
     void build_energy_threshold(const global_params& params);
     void add_user_module(user_module *m);

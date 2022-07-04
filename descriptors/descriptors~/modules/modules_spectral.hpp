@@ -15,8 +15,8 @@ struct module_spectral : user_module_single<T>
     {
         T *m = new T();
         
-        m->m_lo_freq = args.get_double(0.0, 0.0, infinity());
-        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity());
+        m->m_lo_freq = args.get_double("low frequency", 0.0, 0.0, infinity());
+        m->m_hi_freq = args.get_double("high frequency", 192000.0, 0.0, infinity());
 
         return m;
     }
@@ -88,7 +88,7 @@ private:
 
 // Spectral Flatness Module
 
-struct module_sfm : module_spectral<module_sfm>
+struct module_sfm : module_spectral_db<module_sfm>
 {
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;

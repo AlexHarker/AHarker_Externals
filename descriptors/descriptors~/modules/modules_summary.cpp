@@ -59,11 +59,13 @@ void summary_module_spectral_peaks::spectrum_average::calculate(const global_par
 
 user_module *summary_module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
-    long median_span = args.get_long(15, 0, std::numeric_limits<long>::max());
-    double range = args.get_double(60.0, 0.0, 1000.0);
+    long N = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 0, std::numeric_limits<long>::max());
+    double median_gain = dbtoa(args.get_double("median gain", 0, 0, 40.0));
+    double range = args.get_double("db range", 60.0, 0.0, 1000.0);
+    bool report_db = args.get_bool(true);
 
-    return new summary_module_spectral_peaks(N, median_span * 2 + 1, range);
+    return new summary_module_spectral_peaks(N, median_span * 2 + 1, median_gain, range, report_db);
 }
 
 void summary_module_spectral_peaks::add_requirements(graph& g)
@@ -83,8 +85,12 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
     double *median_spectrum = m_median_spectrum.data();
     const double *spectrum = m_spectrum->get_average();
 
+    peak_detector::options options;
+    
+    options.mask_gain = m_median_gain;
+
     m_filter(median_spectrum, spectrum, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
-    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins());
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins(), options);
         
     long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks_in_range(m_range)), m_num_peaks);
     long i = 0;
@@ -94,7 +100,7 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
         auto& peak = m_peaks.by_value(i);
         
         m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
-        m_values[i * 2 + 1] = atodb(peak.m_value);
+        m_values[i * 2 + 1] = m_report_db ? atodb(peak.m_value) : peak.m_value;
     }
     
     for ( ; i < m_num_peaks; i++)
@@ -241,7 +247,7 @@ void stat_module_range::calculate(const global_params& params, const double *dat
 
 user_module *specifier_mask_time::setup(const global_params& params, module_arguments& args)
 {
-    double time = args.get_double(0.0, 0.0, infinity());
+    double time = args.get_double("mask time", 0.0, 0.0, infinity());
     return new specifier_mask_time(time);
 }
 
@@ -263,7 +269,7 @@ void specifier_mask_time::prepare(const global_params& params)
 
 user_module *specifier_threshold::setup(const global_params& params, module_arguments& args)
 {
-    double threshold = args.get_double(0.0, -infinity(), infinity());
+    double threshold = args.get_double("threshold", 0.0, -infinity(), infinity());
     t_symbol *type_specifier = args.get_symbol(gensym("abs"));
     mode type = mode::abs;
     

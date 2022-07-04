@@ -16,7 +16,7 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     m->m_forward_only = args.get_bool(true);
     m->m_square_flag = args.get_bool(true);
     m->m_normalise_spectrum = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
     
     return m;
 }
@@ -94,7 +94,7 @@ user_module *module_foote::setup(const global_params& params, module_arguments& 
     module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
     
     m->m_forward_only = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
     
     return m;
 }
@@ -143,11 +143,11 @@ user_module *module_mkl::setup(const global_params& params, module_arguments& ar
 {
     module_mkl *m = dynamic_cast<module_mkl *>(module_spectral::setup(params, args));
     
-    m->m_threshold = args.get_double(-300.0, -500.0, 0.0);
+    m->m_threshold = args.get_double("amplitude threshold", -300.0, -500.0, 0.0);
     m->m_forward_only = args.get_bool(true);
     m->m_weight = args.get_bool(false);
     m->m_normalise_spectra = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
 
     return m;
 }
@@ -166,9 +166,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     const double *frame1 = m_ring_buffer_module->get_frame(m_frame_lag);
     const double *frame2 = m_ring_buffer_module->get_frame(0);
     
-    constexpr double DB_MAX_MKL_EQUAL = -140.0;
-    const double MKL_EQUALISE_MAX_LOG = log(pow(10.0, DB_MAX_MKL_EQUAL) * 20.0);
-    const double norm_min = sqrt(db_to_pow(db_calc_min()));
+    constexpr double max_equalise_db = -140.0;
 
     double norm_factor1 = 1.0;
     double norm_factor2 = 1.0;
@@ -181,11 +179,11 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
         norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
         norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
      
-        if (!norm_factor1)
-            norm_factor1 = norm_min * static_cast<double>(bin_count());
+        norm_factor1 = std::max(norm_factor1, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));
+        norm_factor2 = std::max(norm_factor2, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));
     }
     
-    const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), MKL_EQUALISE_MAX_LOG);
+    const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), log(dbtoa(max_equalise_db)));
     
     // FIX - note that there was an error in the original code here...
   

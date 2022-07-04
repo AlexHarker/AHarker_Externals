@@ -4,6 +4,7 @@
 
 #include "../descriptors_modules.hpp"
 #include "processing_containers.hpp"
+#include "conversion_helpers.hpp"
 
 #include "../library/median_filter.hpp"
 #include "../library/peak_finder.hpp"
@@ -195,8 +196,8 @@ struct module_peak_detection : module_core<module_peak_detection>
     using peak_list = peak_set<double>;
     using peak_detector = peak_finder<double>;
 
-    module_peak_detection(long median_width)
-    : m_median_width(median_width) {}
+    module_peak_detection(long median_width, double median_gain)
+    : m_median_width(median_width), m_median_gain(median_gain) {}
     
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
@@ -213,6 +214,7 @@ private:
     peak_list m_peaks;
     
     const long m_median_width;
+    const double m_median_gain;
 };
 
 // Amplitude Ring Buffer Module
@@ -243,6 +245,8 @@ private:
 
 struct module_log_spectrum_ring_buffer : module_core<module_log_spectrum_ring_buffer>
 {
+    module_log_spectrum_ring_buffer() : m_log_min(log(dbtoa(db_calc_min()))) {}
+    
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -261,6 +265,9 @@ private:
     
     long m_counter = 0;
     long m_max_lag = 0;
+    
+    const double m_log_min;
+
 };
 
 // Autocorrelation Module
