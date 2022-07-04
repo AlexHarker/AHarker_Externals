@@ -409,7 +409,7 @@ void module_autocorrelation::calculate(const global_params& params, const double
     for (long i = 0; i < (size >> 1); i++)
         scale += frame[i] * frame[i];
         
-    scale = 0.25 / (fft_size * scale);
+    scale = 0.25 / (fft_size * (scale ? scale : 1.0));
         
     // Do ffts straight into position with zero padding (one half the size of the other)
     
