@@ -9,13 +9,20 @@ General and Small
 
 * -- Descriptors --
 
+Fully Working:
+abs / peakamp / rms / energy / loudness / energy_ratio / lin_centroid
+Minor Improvements:
+rolloff / foote / log_centroid / log_spread / pitch / confidence / lin_brightness / log_brightness
+Bug fixes:
+noise_ratio / harmonic_ratio
+
 * Rolloff *now* has interpolation (so reports slightly lower) - N.B. it uses power (as Peeters / unlike flucoma default)
 * SFM *was* using power rather than amplitudes [now corrected]
 * Spectral crest *was* using power rather than amplitudes [now corrected]
 
 * Linear spread *was* squaring the raw value before the Hz adjustment (so not a useful value) [now corrected]
 * Higher spectral shapes (skewness + kurtosis) *were* wrong in early versions (lack of division by the overall amplitude sum) [now corrected]
-* Log higher spectral shapes *Were* still wrong in more recent versions [now corrected]
+* Log higher spectral shapes *were* still wrong in more recent versions [now corrected]
 
 * Pitch module *had* a significant issue where pitch reports as 0 when invalid / there is a precision effect [now corrected]
 * Pitch *now* reports as inf for no pitch (not zero) solving averaging and stats errors [now corrected]
@@ -73,3 +80,5 @@ General and Small
 -- DECISIONS --
 
 * Stats - return crossing position (as documented) or length for relevant searches
+* Descriptors - implement power option for some descriptors?
+* Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter)
