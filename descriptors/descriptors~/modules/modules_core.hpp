@@ -196,8 +196,8 @@ struct module_peak_detection : module_core<module_peak_detection>
     using peak_list = peak_set<double>;
     using peak_detector = peak_finder<double>;
 
-    module_peak_detection(long median_width)
-    : m_median_width(median_width) {}
+    module_peak_detection(long median_width, double median_gain)
+    : m_median_width(median_width), m_median_gain(median_gain) {}
     
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
@@ -214,6 +214,7 @@ private:
     peak_list m_peaks;
     
     const long m_median_width;
+    const double m_median_gain;
 };
 
 // Amplitude Ring Buffer Module

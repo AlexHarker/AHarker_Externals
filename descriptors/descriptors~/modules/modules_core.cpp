@@ -284,7 +284,7 @@ void module_peak_detection::calculate(const global_params& params, const double 
 
     peak_detector::options options;
     
-    options.mask_gain = 1.0;
+    options.mask_gain = m_median_gain;
     
     m_detector(m_peaks, spectrum, median_spectrum, params.num_bins(), options);
 }
