@@ -88,7 +88,7 @@ private:
 
 // Spectral Flatness Module
 
-struct module_sfm : module_spectral<module_sfm>
+struct module_sfm : module_spectral_db<module_sfm>
 {
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
