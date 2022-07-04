@@ -49,14 +49,14 @@ General and Small
 
 -- TO DO --
 
-* Need to check volume compensation points (and which descriptors are level variant or not)
+* Need to check volume compensation points (and which descriptors are level variant or not) - leave as is
   
   - variant - rms / abs / peakamp / energy / loudness / spectral peaks (levels only)
   - invariant - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch / confidence / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio / foote
   - variable - flux / mkl
   
 * Need to investigate zero inputs and min return values (applies only to dB currently set to - 180dB suggest leave for now)
-  - 0 - peak freqs / peak amps (both types) / confidence / foote / flux
+  - 0 - peak freqs / peak amps (both types) / confidence / foote / flux / mkl
   - -180.0dB (or 0 if not in dB) - rms / abs / peakamp / energy / loudness
   - inf - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch  / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio
 
@@ -64,7 +64,7 @@ General and Small
   1 - foote and mkl to 0.0 for difference between silent frames
   2 - pitch to inf for no pitch found
   
-* Need to check lags and other things with fftparams that have mismatch window and FFT
+* Need to check lags and other things with fftparams that have mismatch window and FFT [all correct]
 
 * Look at user messages/feedback [completed] 
   
@@ -74,10 +74,14 @@ General and Small
 
 -- DECISIONS --
 
-* Stats - return crossing position (as documented) or length for relevant searches
-* Descriptors - implement power option for some descriptors? [all shape related?]
-* Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter)
-* spectral_peaks - unify returns and interface
+* Stats - return crossing position (as documented) or length for relevant searches [yes - corrected]
+* Descriptors - implement power option for some descriptors? [all shape related? - rolloff / crest / sfm / lin and log shape / brightness ]??? [not now - nothing to do]
+* sfm convert to db (correct conversions for powers) [added for amplitude - is now the default]
+* Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter) [corrected - inharmonicity changed]
+* spectral_peaks - unify returns and interface (invalid freqs/amps and db conversion on/off) [corrected - RT now defaults to db]
+
+* How to deal with padding
+
 
 -- Desciptors Notes --
 
@@ -86,12 +90,10 @@ Fully Working:
 Minor Improvements:
 [8] - rolloff / foote / log_centroid / log_spread / pitch / confidence / lin_brightness / log_brightness
 Bug fixes [no questions]:
-[3] - noise_ratio / harmonic_ratio / lin_spread / flux / mkl / lin_skewness / lin_kurtosis / log_skewness / log_kurtosis
+[9] - noise_ratio / harmonic_ratio / lin_spread / flux / mkl / lin_skewness / lin_kurtosis / log_skewness / log_kurtosis
 
-[18]
+[24]
 
 Bug fixes [questions]:
 [3] contents - spectral_peaks / inharmonicity / roughness - spurious peaks
 [2] sfm / spectral_crest (should there be a power option and how to convert the final ratio? - should sfm report in db?)
-
-[5]
