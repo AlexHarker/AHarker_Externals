@@ -65,8 +65,8 @@ struct module_spectral_peaks : user_module_vector<module_spectral_peaks>
 {
     static user_module *setup(const global_params& params, module_arguments& args);
         
-    module_spectral_peaks(long num_peaks, long median_span, double median_gain, double range)
-    : m_num_peaks(num_peaks), m_median_span(median_span), m_median_gain(median_gain), m_range(range) {}
+    module_spectral_peaks(long num_peaks, long median_span, double median_gain, double range, bool report_db)
+    : m_num_peaks(num_peaks), m_median_span(median_span), m_median_gain(median_gain), m_range(range), m_report_db(report_db) {}
     
     auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span); }
 
@@ -82,6 +82,7 @@ private:
     const long m_median_span;
     const double m_median_gain;
     const double m_range;
+    const bool m_report_db;
 };
 
 // Inharmonicity Module

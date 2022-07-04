@@ -51,8 +51,9 @@ user_module *module_spectral_peaks::setup(const global_params& params, module_ar
     long median_span = args.get_long("median span", 15, 1, std::numeric_limits<long>::max());
     double median_gain = dbtoa(args.get_double("median gain", 0, 0, 40.0));
     double range = args.get_double("db range", 60.0, 0.0, 1000.0);
-    
-    return new module_spectral_peaks(N, median_span, median_gain, range);
+    bool report_db = args.get_bool(true);
+
+    return new module_spectral_peaks(N, median_span, median_gain, range, report_db);
 }
 
 void module_spectral_peaks::add_requirements(graph& g)
@@ -77,7 +78,7 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
         auto& peak = peaks.by_value(i);
         
         m_values[i * 2 + 0] = peak.m_position * params.bin_freq();
-        m_values[i * 2 + 1] = peak.m_value;
+        m_values[i * 2 + 1] = m_report_db ? atodb(peak.m_value) : peak.m_value;
     }
     
     for ( ; i < m_num_peaks; i++)
