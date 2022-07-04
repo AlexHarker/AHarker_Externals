@@ -18,7 +18,7 @@ summary_graph::summary_graph(t_object *x, const setup_list& setups, const global
         user_module_setup setup = next;
             
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
-        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
+        module_arguments args(x, argc_end - argc_begin, argv + argc_begin);
                 
         auto m = (*setup)(params, args);
         auto summary = dynamic_cast<summary_module *>(m);

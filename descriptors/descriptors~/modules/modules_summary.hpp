@@ -29,7 +29,7 @@ struct summary_module_vector_n : summary_module_vector<T>
     
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        return new T(args.get_long(1, 1, 256));
+        return new T(args.get_long("number of values", 1, 1, 256));
     }
     
     auto get_params() const { return std::make_tuple(summary_module::get_index(), get_n()); }

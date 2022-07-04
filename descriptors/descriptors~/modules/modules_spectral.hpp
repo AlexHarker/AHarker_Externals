@@ -15,8 +15,8 @@ struct module_spectral : user_module_single<T>
     {
         T *m = new T();
         
-        m->m_lo_freq = args.get_double(0.0, 0.0, infinity());
-        m->m_hi_freq = args.get_double(192000.0, 0.0, infinity());
+        m->m_lo_freq = args.get_double("low frequency", 0.0, 0.0, infinity());
+        m->m_hi_freq = args.get_double("high frequency", 192000.0, 0.0, infinity());
 
         return m;
     }

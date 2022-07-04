@@ -47,9 +47,9 @@ void module_harmonic_ratio::calculate(const global_params& params, const double 
 
 user_module *module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
-    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
-    double range = args.get_double(60.0, 0.0, 1000.0);
+    long N = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 1, std::numeric_limits<long>::max());
+    double range = args.get_double("db range", 60.0, 0.0, 1000.0);
     
     return new module_spectral_peaks(N, median_span, range);
 }
@@ -90,10 +90,10 @@ void module_spectral_peaks::calculate(const global_params& params, const double 
 
 user_module *module_inharmonicity::setup(const global_params& params, module_arguments& args)
 {
-    long num_peaks = args.get_long(10, 1, std::numeric_limits<long>::max());
-    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
-    double threshold = args.get_double(0.68, 0.0, 1.0);
-    double range = args.get_double(60.0, 0.0, 1000.0);
+    long num_peaks = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 1, std::numeric_limits<long>::max());
+    double threshold = args.get_double("pitch threshold", 0.68, 0.0, 1.0);
+    double range = args.get_double("db range", 60.0, 0.0, 1000.0);
 
     return new module_inharmonicity(num_peaks, median_span, threshold, range);
 }
@@ -143,9 +143,9 @@ void module_inharmonicity::calculate(const global_params& params, const double *
 
 user_module *module_roughness::setup(const global_params& params, module_arguments& args)
 {
-    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
-    long median_span = args.get_long(15, 1, std::numeric_limits<long>::max());
-    double range = args.get_double(60.0, 0.0, 1000.0);
+    long N = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 1, std::numeric_limits<long>::max());
+    double range = args.get_double("db range", 60.0, 0.0, 1000.0);
 
     return new module_roughness(N, median_span, range);
 }

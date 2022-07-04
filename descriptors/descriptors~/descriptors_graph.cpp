@@ -54,7 +54,7 @@ graph::graph(t_object *x, const setup_list& setups, const global_params& params,
         user_module_setup setup = next;
         
         long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
-        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
+        module_arguments args(x, argc_end - argc_begin, argv + argc_begin);
         add_user_module((*setup)(params, args));
         argc_begin = argc_end;
     }

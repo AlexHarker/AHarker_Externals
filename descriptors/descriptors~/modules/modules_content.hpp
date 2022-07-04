@@ -15,7 +15,7 @@ struct module_noise_measure : user_module_single<T>
 {
     static user_module *setup(const global_params& params, module_arguments& args)
     {
-        long median_span = args.get_long(15, 0, std::numeric_limits<long>::max());
+        long median_span = args.get_long("median span", 15, 0, std::numeric_limits<long>::max());
 
         return new T(median_span);
     }

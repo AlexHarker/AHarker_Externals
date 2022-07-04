@@ -84,7 +84,11 @@ class module_arguments
 public:
     
     module_arguments(t_object *x, long argc, t_atom *argv)
-    : m_x(x), m_argc(argc), m_argv(argv) {}
+    : m_x(x), m_argc(argc), m_argv(argv)
+    {
+        assert(argc);
+        m_module = get_symbol(gensym("unknown"));
+    }
     
     ~module_arguments()
     {
@@ -94,7 +98,7 @@ public:
             char *text = nullptr;
         
             atom_gettext(m_argc, m_argv, &size, &text, OBEX_UTIL_ATOM_GETTEXT_DEFAULT);
-            object_error(m_x, "unparsed desctiptors arguments: %s", text);
+            object_error(m_x, "unparsed descriptors arguments: %s", text);
             
             if (text)
                 sysmem_freeptr(text);
@@ -107,16 +111,16 @@ public:
         return (m_argc-- > 0) ? atom_getfloat(m_argv++) : default_value;
     }
     
-    long get_long(long default_value, long lo, long hi)
+    long get_long(const char *name, long default_value, long lo, long hi)
     {
         t_atom_long value = (m_argc-- > 0) ? atom_getlong(m_argv++) : default_value;
            
-        return clip(limit_int<long>(value), lo, hi);
+        return clip(name, limit_int<long>(value), lo, hi);
     }
     
-    double get_double(double default_value, double lo, double hi)
+    double get_double(const char *name, double default_value, double lo, double hi)
     {
-        return (m_argc-- > 0) ? clip(atom_getfloat(m_argv++), lo, hi) : default_value;
+        return (m_argc-- > 0) ? clip(name, atom_getfloat(m_argv++), lo, hi) : default_value;
     }
     
     t_symbol *get_symbol(t_symbol *default_value)
@@ -126,10 +130,29 @@ public:
         
 private:
     
+    void out_of_range(const char *name, long clipped)
+    {
+        object_error(m_x, "%s out of range for %s module: setting to %ld", name, m_module->s_name, clipped);
+    }
+    
+    void out_of_range(const char *name, double clipped)
+    {
+        object_error(m_x, "%s out of range for %s module: setting to %g", name, m_module->s_name,  clipped);
+    }
+    
     template <class T>
-    T clip(T value, T lo, T hi) { return std::min(std::max(value, lo), hi); }
+    T clip(const char *name, T value, T lo, T hi)
+    {
+        auto clipped = std::min(std::max(value, lo), hi);
+        
+        if (clipped != value)
+            out_of_range(name, clipped);
+        
+        return clipped;
+    }
     
     t_object *m_x;
+    t_symbol *m_module;
     long m_argc;
     t_atom *m_argv;
 };

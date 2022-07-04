@@ -16,7 +16,7 @@ user_module *module_flux::setup(const global_params& params, module_arguments& a
     m->m_forward_only = args.get_bool(true);
     m->m_square_flag = args.get_bool(true);
     m->m_normalise_spectrum = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
     
     return m;
 }
@@ -94,7 +94,7 @@ user_module *module_foote::setup(const global_params& params, module_arguments& 
     module_foote *m = dynamic_cast<module_foote *>(module_spectral::setup(params, args));
     
     m->m_forward_only = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
     
     return m;
 }
@@ -143,11 +143,11 @@ user_module *module_mkl::setup(const global_params& params, module_arguments& ar
 {
     module_mkl *m = dynamic_cast<module_mkl *>(module_spectral::setup(params, args));
     
-    m->m_threshold = args.get_double(-300.0, -500.0, 0.0);
+    m->m_threshold = args.get_double("amplitude threshold", -300.0, -500.0, 0.0);
     m->m_forward_only = args.get_bool(true);
     m->m_weight = args.get_bool(false);
     m->m_normalise_spectra = args.get_bool(true);
-    m->set_lag(args.get_long(1, 1, 33));
+    m->set_lag(args.get_long("lag", 1, 1, 33));
 
     return m;
 }

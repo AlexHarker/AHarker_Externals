@@ -59,9 +59,9 @@ void summary_module_spectral_peaks::spectrum_average::calculate(const global_par
 
 user_module *summary_module_spectral_peaks::setup(const global_params& params, module_arguments& args)
 {
-    long N = args.get_long(10, 1, std::numeric_limits<long>::max());
-    long median_span = args.get_long(15, 0, std::numeric_limits<long>::max());
-    double range = args.get_double(60.0, 0.0, 1000.0);
+    long N = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 0, std::numeric_limits<long>::max());
+    double range = args.get_double("db rnage", 60.0, 0.0, 1000.0);
 
     return new summary_module_spectral_peaks(N, median_span * 2 + 1, range);
 }
@@ -241,7 +241,7 @@ void stat_module_range::calculate(const global_params& params, const double *dat
 
 user_module *specifier_mask_time::setup(const global_params& params, module_arguments& args)
 {
-    double time = args.get_double(0.0, 0.0, infinity());
+    double time = args.get_double("mask time", 0.0, 0.0, infinity());
     return new specifier_mask_time(time);
 }
 
@@ -263,7 +263,7 @@ void specifier_mask_time::prepare(const global_params& params)
 
 user_module *specifier_threshold::setup(const global_params& params, module_arguments& args)
 {
-    double threshold = args.get_double(0.0, -infinity(), infinity());
+    double threshold = args.get_double("threshold", 0.0, -infinity(), infinity());
     t_symbol *type_specifier = args.get_symbol(gensym("abs"));
     mode type = mode::abs;
     
