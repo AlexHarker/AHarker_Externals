@@ -179,8 +179,8 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
         norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
         norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
      
-        if (!norm_factor1)
-            norm_factor1 = dbtoa(db_calc_min()) * static_cast<double>(bin_count());
+        norm_factor1 = std::max(norm_factor1, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));
+        norm_factor2 = std::max(norm_factor2, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));
     }
     
     const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), log(dbtoa(max_equalise_db)));
