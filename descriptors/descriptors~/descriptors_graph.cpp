@@ -41,6 +41,27 @@ bool energy_threshold::check(const global_params& params, const double *frame)
 
 // Graph
     
+graph::graph(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
+{
+    user_module_setup next;
+    
+    long argc_begin = next_setup(setups, 0, argc, argv, next);
+    
+    build_energy_threshold(params);
+    
+    while (argc_begin < argc)
+    {
+        user_module_setup setup = next;
+        
+        long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
+        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
+        add_user_module((*setup)(params, args));
+        argc_begin = argc_end;
+    }
+    
+    prepare(params);
+}
+
 module *graph::add_requirement_impl(module *m)
 {
     // Check the window for energy threshold first
@@ -66,27 +87,6 @@ module *graph::add_requirement_impl(module *m)
     m_modules.push_back(std::unique_ptr<module>(m));
     
     return m;
-}
-
-void graph::build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
-{
-    user_module_setup next;
-        
-    long argc_begin = next_setup(setups, 0, argc, argv, next);
-        
-    build_energy_threshold(params);
-        
-    while (argc_begin < argc)
-    {
-        user_module_setup setup = next;
-            
-        long argc_end = next_setup(setups, argc_begin + 1, argc, argv, next);
-        module_arguments args(x, argc_end - (argc_begin + 1), argv + argc_begin + 1);
-        add_user_module((*setup)(params, args));
-        argc_begin = argc_end;
-    }
-        
-    prepare(params);
 }
     
 void graph::prepare(const global_params& params)

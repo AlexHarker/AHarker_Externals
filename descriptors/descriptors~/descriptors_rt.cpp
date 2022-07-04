@@ -292,14 +292,15 @@ void descriptorsrt_fft_params(t_descriptorsrt *x, t_symbol *msg, short argc, t_a
 
 void descriptorsrt_descriptors(t_descriptorsrt *x, t_symbol *msg, short argc, t_atom *argv)
 {
-    auto graph = new class graph();
-    
-    graph->build((t_object *) x, s_setups, x->params, argc, argv);
+    auto graph = new class graph((t_object *) x, s_setups, x->params, argc, argv);
     
     safe_lock_hold hold(&x->m_lock);
 
     x->output_list.resize(graph->output_size());
     x->m_graph.reset(graph);
+    
+    if (x->descriptors_feedback)
+        object_post((t_object *) x, "set %lu descriptors", graph->size());
 }
 
 // RT Output

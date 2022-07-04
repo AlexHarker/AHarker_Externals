@@ -14,7 +14,8 @@ struct summary_module
     // N.B. - used by specifiersthis should only ever be called after a dynamic cast and comparison check
     
     virtual void update_to_final(const module *m) {}
-    
+    virtual bool is_descriptor() const { return false; }
+
     size_t get_index() const { return m_index; }
     void set_index(size_t index) { m_index = m_no_index ? -1 : index; }
     

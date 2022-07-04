@@ -56,6 +56,8 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
     auto get_params() const { return std::make_tuple(summary_module::get_index()); }
 
     void calculate(const global_params& params, const double *data, long size) override;
+    
+    bool is_descriptor() const override { return true; };
 };
 
 // Summary Spectral Peaks 
@@ -93,6 +95,8 @@ struct summary_module_spectral_peaks : summary_module_vector<summary_module_spec
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *data, long size) override;
     
+    bool is_descriptor() const override { return true; };
+
 private:
     
     spectrum_average *m_spectrum;

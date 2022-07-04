@@ -4,7 +4,8 @@
 
 // Summary Graph
     
-void summary_graph::build(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
+summary_graph::summary_graph(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv)
+: m_num_summary_descriptors(0), m_last_summary_idx(-1)
 {
     user_module_setup next;
         
@@ -25,6 +26,8 @@ void summary_graph::build(t_object *x, const setup_list& setups, const global_pa
         if (summary)
         {
             summary->set_index(graph::size() - 1);
+            if (summary->is_descriptor())
+                m_num_summary_descriptors++;
             if (m->get_output_size())
             {
                 if (summary->get_index() == -1)
