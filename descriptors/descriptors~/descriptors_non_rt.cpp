@@ -149,7 +149,7 @@ int C74_EXPORT main()
     
     s_setups.add_module("flux", module_flux::setup);                        // ** Fixed [fixed index mistake]
     s_setups.add_module("foote", module_foote::setup);
-    s_setups.add_module("mkl", module_mkl::setup);                          // * Doesn't match
+    s_setups.add_module("mkl", module_mkl::setup);                          // ** Fixed [normalisation]
     
     s_setups.add_module("inharmonicity", module_inharmonicity::setup);      // ** Improved [calcs match but spurious peaks an issue]
     s_setups.add_module("roughness", module_roughness::setup);              // ** Improved [calcs match but spurious peaks an issue]

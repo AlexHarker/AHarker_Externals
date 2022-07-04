@@ -24,6 +24,8 @@ General and Small
 
 * Flux *had* a fixed index bug in the code producing consistently incorrect results [now corrected]
 * Foote *did* return inf for the change between two zero frames (now returns zero which seems more correct) [now corrected]
+* MKL *did* have some normalisation bugs [now corrected]
+* MKL *did* return inf for the change between two zero frames (now returns zero which seems more correct) [now corrected]
 
 * Noise ratio (and harmonic ratio) *did* have errors in the median filter and the bin indexing, meaning fairly meaningless results [now corrected]
 
@@ -59,13 +61,13 @@ General and Small
   - inf - energy_ratio / rolloff / spectral_crest / sfm / lin + log shape / pitch  / lin + log brightness / inharmonicity / roughness / noise_ratio / harmonic_ratio
 
   Changes are:
-  1 - foote to 0.0 for difference between silent frames
+  1 - foote and mkl to 0.0 for difference between silent frames
   2 - pitch to inf for no pitch found
-  
-* Look at user messages
   
 * Need to check lags and other things with fftparams that have mismatch window and FFT
 
+* Look at user messages/feedback [completed] 
+  
 * Need to investigate padding issues
 
 * Need to investigate speeds
@@ -73,8 +75,9 @@ General and Small
 -- DECISIONS --
 
 * Stats - return crossing position (as documented) or length for relevant searches
-* Descriptors - implement power option for some descriptors?
+* Descriptors - implement power option for some descriptors? [all shape related?]
 * Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter)
+* spectral_peaks - unify returns and interface
 
 -- Desciptors Notes --
 
@@ -83,7 +86,7 @@ Fully Working:
 Minor Improvements:
 [8] - rolloff / foote / log_centroid / log_spread / pitch / confidence / lin_brightness / log_brightness
 Bug fixes [no questions]:
-[3] - noise_ratio / harmonic_ratio / lin_spread
+[3] - noise_ratio / harmonic_ratio / lin_spread / flux / mkl / lin_skewness / lin_kurtosis / log_skewness / log_kurtosis
 
 [18]
 
@@ -92,6 +95,3 @@ Bug fixes [questions]:
 [2] sfm / spectral_crest (should there be a power option and how to convert the final ratio? - should sfm report in db?)
 
 [5]
-
-Unaccounted:
-[6] lin_skewness / lin_kurtosis / log_skewness / log_kurtosis / flux / mkl
