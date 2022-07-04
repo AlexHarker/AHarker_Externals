@@ -161,7 +161,6 @@ private:
 
 // Specific lock holds
 
-using spin_lock_hold = lock_hold<thread_lock, &thread_lock::acquire, &thread_lock::release>;
 using safe_lock_hold = lock_hold<thread_lock, &thread_lock::acquire_periodic_sleep, &thread_lock::release>;
 using read_lock_hold = lock_hold<read_write_lock, &read_write_lock::acquire_read, &read_write_lock::release_read>;
 using write_lock_hold = lock_hold<read_write_lock, &read_write_lock::acquire_write, &read_write_lock::release_write>;
