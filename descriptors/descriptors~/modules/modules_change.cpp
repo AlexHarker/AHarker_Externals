@@ -184,9 +184,7 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
     }
     
     const double log_norm_factor = std::max(log(norm_factor1 / norm_factor2), log(dbtoa(max_equalise_db)));
-    
-    // FIX - note that there was an error in the original code here...
-  
+      
     norm_factor2 = norm_factor2 ? 1.0 / norm_factor2 : 1.0;
 
     auto bin_change = [&](long i)
