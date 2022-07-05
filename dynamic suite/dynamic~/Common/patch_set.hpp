@@ -440,7 +440,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
 
     bool process_if_unprocessed(t_atom_long index, void **outputs)
     {
-        return slot_action_result(&::threaded_patch_slot::process_if_unprocessed, index, outputs);
+        return slot_action_result(&threaded_patch_slot::process_if_unprocessed, index, outputs);
     }
 
     void request_thread(t_atom_long index, t_atom_long thread)
@@ -448,7 +448,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
         slot_action(&::threaded_patch_slot::request_thread, index, thread);
     }
 
-    void reset_processed()   { for_all_slots(&::threaded_patch_slot::reset_processed); }
+    void reset_processed()   { for_all_slots(&threaded_patch_slot::reset_processed); }
     void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
 };
 
