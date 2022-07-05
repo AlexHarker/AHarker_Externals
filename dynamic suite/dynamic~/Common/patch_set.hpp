@@ -208,22 +208,27 @@ public:
 
     // Window management
 
-    bool open_window(t_atom_long index)
+    void open_window(t_atom_long index)
     {
-        return defer_slot_action(index, (method) do_open, &patch_set::get);
+        defer_slot_action(index, (method) do_open, &patch_set::get);
+    }
+    
+    void open_first_window()
+    {
+        for (t_atom_long i = 1; i <= size(); i++)
+            if (defer_slot_action(i, (method) do_open, &patch_set::get))
+                break;
     }
 
-    bool close_window(t_atom_long index)
+    void close_window(t_atom_long index)
     {
         if (!index)
         {
             for (t_atom_long i = 1; i <= size(); i++)
                 defer_slot_action(i, (method) do_close, &patch_set::get);
-
-            return true;
         }
         else
-            return defer_slot_action(index, (method) do_close, &patch_set::get);
+            defer_slot_action(index, (method) do_close, &patch_set::get);
     }
 
     // Listeners

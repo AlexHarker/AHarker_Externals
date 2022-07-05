@@ -63,9 +63,7 @@ struct dynamic_host
 
     static void dblclick(T *x)
     {
-        for (long i = 1; i <= x->patch_set->size(); i++)
-            if (x->patch_set->open_window(i))
-                break;
+        x->patch_set->open_first_window();
     }
 
     static void open(T *x, t_atom_long index)
