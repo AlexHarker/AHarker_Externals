@@ -19,6 +19,17 @@ public:
     size_t output_size() { return graph::output_size(m_summary_outputs); }
     size_t size() { return graph::size() + m_num_summary_descriptors; }
 
+    void output_per_frame_descriptors(long idx, t_atom *argv)
+    {
+        long num_frames = m_temp_data.size() / graph::size();
+        long offset = num_frames * idx;
+        
+        for (size_t i = 0; i < num_frames; i++)
+            atom_setfloat(argv + i, m_temp_data[offset + i]);
+    }
+
+    size_t per_frame_descriptors_size() { return graph::size(); }
+
 private:
     
     module *add_requirement_impl(module *m) override;
