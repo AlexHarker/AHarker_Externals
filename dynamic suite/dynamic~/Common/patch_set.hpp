@@ -404,7 +404,7 @@ protected:
 
         t_atom a[2];
         atom_setobj(a + 0, this);
-        atom_setlong(a + 1, index);
+        atom_setlong(a + 1, index - 1);
         defer(m_owner, action, 0L, 1, a);
         return true;
     }
