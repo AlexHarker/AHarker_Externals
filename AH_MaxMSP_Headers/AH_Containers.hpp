@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <thread>
 #include <vector>
 
 // N.B. the list owns the pointers
@@ -9,9 +10,9 @@
 template <class T>
 class threadsafe_pointer_list
 {
-    enum { max_iter_before_sleep = 5 };
-
 public:
+    
+    using list_type = std::vector<T *>;
     
     // Can be created from any thread
     // It is then safe to act on any of the contents, but not store pointers/defer on any pointer
@@ -26,15 +27,15 @@ public:
             m_list.release();
         }
         
-        std::vector<T *> &get() { return m_current; }
+        list_type &operator()() { return m_current; }
         
     private:
         
-        std::vector<T *>& m_current;
         threadsafe_pointer_list& m_list;
+        list_type& m_current;
     };
     
-    threadsafe_pointer_list() : m_current(m_vec_a), m_users(0) {}
+    threadsafe_pointer_list() : m_current(&m_vec_a), m_users(0) {}
     
     ~threadsafe_pointer_list()
     {
@@ -45,7 +46,7 @@ public:
     
     void add(T * ptr, size_t idx)
     {
-        auto add_to_vector = [](std::vector<T *> &v, T * ptr, size_t idx)
+        auto add_to_vector = [](list_type &v, T * ptr, size_t idx)
         {
             if (v.size() < idx)
                 v.resize(idx, nullptr);
@@ -53,10 +54,10 @@ public:
             v[idx] = ptr;
         };
         
-        add_to_vector(next());
+        add_to_vector(next(), ptr, idx);
         swap();
         wait_till_safe_to_modify();
-        add_to_vector(next());
+        add_to_vector(next(), ptr, idx);
     }
 
     void remove(size_t idx)
@@ -83,7 +84,7 @@ private:
     
     // Safe from any thread
     
-    std::vector<T *> &acquire()
+    list_type &acquire()
     {
         m_users++;
         return current();
@@ -94,9 +95,9 @@ private:
         m_users--;
     }
     
-    std::vector<T *>& current()
+    list_type& current()
     {
-        return m_current.load();
+        return *m_current.load();
     }
     
     // Only to be called from the low priority thread
@@ -111,7 +112,7 @@ private:
         next().clear();
     }
     
-    std::vector<T *>& next()
+    list_type& next()
     {
         if (current() == m_vec_b)
             return m_vec_a;
@@ -121,13 +122,14 @@ private:
     
     void swap()
     {
-        m_current.store(next());
+        m_current.store(&next());
     }
 
     void wait_till_safe_to_modify()
     {
         using namespace std::chrono_literals;
 
+        constexpr int max_iter_before_sleep = 5;
         int i = 0;
         
         while (m_users++ != 0)
@@ -141,10 +143,10 @@ private:
         }
     }
     
-    std::vector<T *> m_vec_a;
-    std::vector<T *> m_vec_b;
+    list_type m_vec_a;
+    list_type m_vec_b;
     
-    std::atomic<std::vector<T *>&> m_current;
+    std::atomic<list_type *> m_current;
     
     std::atomic<long> m_users;
 };
