@@ -160,7 +160,7 @@ void poly_appendinstanceifneeded(char *buf, char *name, long instance)
 
 void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
 {
-    long i;
+    long i = 0;
     t_symbol *name;
     char buf[1024];
     bool subpatcher = false;
@@ -177,6 +177,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
             strcpy(*title,buf);
             return;
         }
+        i++;
     }
     // got here? it's ok, conventional title will be used
 }
@@ -482,11 +483,10 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
         patch_name = atom_getsym(argv);
         argc--; argv++;
         
-        index = x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
         
-        // FIX - threading...
-        // FIX - review
-        
+    
+        // FIX - threading... this won't work for high-priority and the index doesn't get recalled...
         if (thread_request && index >= 0)
         {
             if (thread_request > 0)

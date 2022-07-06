@@ -87,28 +87,15 @@ public:
         m_out_table.assign(outs, outs + num_outs);
     }
 
-    // Size
+    // Number of patches
 
     size_t num_patches() const { return m_slots.members(); }
     
-    //long size() const { return static_cast<long>(m_slots.size()); }
-
     // Load / Remove / Clear
 
-    t_atom_long load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+    void load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
         std::vector<t_atom> deferred_args(argc + 4);
-
-        // FIX - some kind of high value check for user specified index?
-
-        // Find a free patch if no index is given
-
-        if (index < 1)
-        {
-            for (index = 1; index <= size(); index++)
-                if (!m_slots[index - 1])
-                    break;
-        }
 
         // Set arguments
 
@@ -121,8 +108,6 @@ public:
             deferred_args[i + 4] = argv[i];
 
         defer(m_owner, (method) deferred_load, path, static_cast<short>(argc + 4), deferred_args.data());
-
-        return index;
     }
 
     void remove(t_atom_long index)
@@ -367,7 +352,20 @@ protected:
 
     void do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
+        // Find a free patch if no index is given
+        
+        if (index < 1)
+        {
+            slot_access slots_prior(m_slots);
+
+            for (index = 1; index <= slots_prior().size(); index++)
+                if (!slots_prior()[index - 1])
+                    break;
+        }
+        
         // Load into the specified slot
+
+        // FIX - some kind of high value check for user specified index?
 
         m_loading_index = index;
         m_slots.add(new T(m_owner, m_parent, index, m_num_ins, &m_out_table), index - 1);
@@ -481,7 +479,7 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
             if (*it) (*it)->process_if_thread_matches(outputs, thread, n_threads);
     }
 
-    bool process_if_unprocessed(void **outputs, long thread_num, long num_active_threads)
+    void process_if_unprocessed(void **outputs, long thread_num, long num_active_threads)
     {
         slot_access slots(m_slots);
         
