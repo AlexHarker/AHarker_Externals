@@ -20,19 +20,30 @@ public:
     
     struct access
     {
-        access(threadsafe_pointer_list& list) : m_list(list), m_current(m_list.acquire())
+        access(threadsafe_pointer_list& list) : m_list(&list), m_current(list.acquire())
         {}
         
         ~access()
         {
-            m_list.release();
+            release();
+        }
+        
+        // Calling release() invaluidates the list referenced by operator()
+        
+        void release()
+        {
+            if (m_list)
+            {
+                m_list->release();
+                m_list = nullptr;
+            }
         }
         
         list_type &operator()() { return m_current; }
         
     private:
         
-        threadsafe_pointer_list& m_list;
+        threadsafe_pointer_list *m_list;
         list_type& m_current;
     };
     
