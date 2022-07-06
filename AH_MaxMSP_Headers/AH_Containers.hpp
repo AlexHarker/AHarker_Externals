@@ -158,6 +158,8 @@ private:
             if (i == max_iter_before_sleep)
                 std::this_thread::sleep_for(0.1ms);
         }
+        
+        m_users--;
     }
     
     list_type m_vec_a;
