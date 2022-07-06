@@ -57,7 +57,6 @@ public:
         set->do_load(index, s, argc - 4, argv + 4, vec_size, sampling_rate);
     }
 
-    
     static void do_clear(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
         patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
