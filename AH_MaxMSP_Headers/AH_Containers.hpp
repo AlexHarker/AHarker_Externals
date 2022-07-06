@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <thread>
 #include <vector>
 
@@ -130,7 +131,7 @@ private:
     
     list_type& next()
     {
-        if (current() == m_vec_b)
+        if (std::addressof(current()) == addressof(m_vec_b))
             return m_vec_a;
         else
             return m_vec_b;
