@@ -94,7 +94,7 @@ public:
         empty();
     }
 
-    size_t members() { return m_members.load(); }
+    size_t members() const { return m_members.load(); }
     
 private:
     
