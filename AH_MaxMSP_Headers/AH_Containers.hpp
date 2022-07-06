@@ -91,7 +91,7 @@ public:
         
         wait_till_safe_to_modify();
                      
-        if (!ptr)
+        if (ptr)
             m_members--;
         
         next()[idx] = nullptr;
