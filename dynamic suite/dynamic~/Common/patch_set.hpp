@@ -176,7 +176,7 @@ public:
         
         t_atom_long index = argc ? atom_getlong(argv) : 0;
 
-        m_target_index = slot_exists(slots(), index) ? index : -1;
+        m_target_index = index ? (slot_exists(slots(), index) ? index : -1) : 0;
     }
 
     void target_free(long argc, t_atom *argv)
