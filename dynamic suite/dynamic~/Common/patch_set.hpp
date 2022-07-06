@@ -57,6 +57,13 @@ public:
         set->do_load(index, s, argc - 4, argv + 4, vec_size, sampling_rate);
     }
 
+    
+    static void do_clear(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
+        set->m_slots.clear();
+    }
+    
     static void do_delete(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
         patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
@@ -129,7 +136,10 @@ public:
 
     void clear()
     {
-        m_slots.clear();
+        for_all_slots(&T::set_invalid);
+        t_atom a;
+        atom_setobj(&a, this);
+        defer(m_owner, (method) do_clear, 0L, 1, &a);
     }
 
     // Message communication
@@ -414,7 +424,7 @@ protected:
         
         slots.release();
         
-        defer(m_owner, action, 0L, 1, a);
+        defer(m_owner, action, 0L, 2, a);
         return true;
     }
 
