@@ -430,7 +430,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     
     std::vector<double> samples(signal_length);
     
-    ibuffer_get_samps(buffer, samples.data(), start_point + start_point, signal_length, static_cast<long>(buffer_chan));
+    ibuffer_get_samps(buffer, samples.data(), start_point, signal_length, static_cast<long>(buffer_chan));
         
     graph->prepare(x->params);
     graph->run(x->params, samples.data());
