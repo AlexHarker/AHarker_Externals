@@ -50,10 +50,10 @@ public:
         {
             T *old_ptr = nullptr;
             
-            if (v.size() < idx)
-                v.resize(idx, nullptr);
+            if (v.size() <= idx)
+                v.resize(idx + 1, nullptr);
             else
-                ptr = v[idx];
+                old_ptr = v[idx];
             
             v[idx] = ptr;
             
