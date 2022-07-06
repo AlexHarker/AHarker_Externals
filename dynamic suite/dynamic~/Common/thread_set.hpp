@@ -11,6 +11,8 @@
 
 #include <SIMDSupport.hpp>
 
+#include <AH_Containers.hpp>
+
 #ifdef __APPLE__
 
 #include <libkern/OSAtomic.h>
