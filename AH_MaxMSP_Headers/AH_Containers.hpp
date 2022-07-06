@@ -35,7 +35,7 @@ public:
         list_type& m_current;
     };
     
-    threadsafe_pointer_list() : m_current(&m_vec_a), m_users(0) {}
+    threadsafe_pointer_list() : m_current(&m_vec_a), m_users(0), m_members(0) {}
     
     ~threadsafe_pointer_list()
     {
@@ -48,16 +48,27 @@ public:
     {
         auto add_to_vector = [](list_type &v, T * ptr, size_t idx)
         {
+            T *old_ptr = nullptr;
+            
             if (v.size() < idx)
                 v.resize(idx, nullptr);
+            else
+                ptr = v[idx];
             
             v[idx] = ptr;
+            
+            return old_ptr;
         };
         
-        add_to_vector(next(), ptr, idx);
+        auto old_ptr = add_to_vector(next(), ptr, idx);
+        
+        if (!old_ptr)
+            m_members++;
+        
         swap();
         wait_till_safe_to_modify();
         add_to_vector(next(), ptr, idx);
+        delete old_ptr;
     }
 
     void remove(size_t idx)
@@ -68,6 +79,9 @@ public:
         
         wait_till_safe_to_modify();
                      
+        if (!ptr)
+            m_members--;
+        
         next()[idx] = nullptr;
         delete ptr;
     }
@@ -80,6 +94,8 @@ public:
         empty();
     }
 
+    size_t members() { return m_members.load(); }
+    
 private:
     
     // Safe from any thread
@@ -149,4 +165,5 @@ private:
     std::atomic<list_type *> m_current;
     
     std::atomic<long> m_users;
+    std::atomic<size_t> m_members;
 };
