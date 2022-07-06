@@ -366,9 +366,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     x->num_sig_outs = num_sig_outs;
     x->num_ins = num_ins;
     x->num_outs = num_outs;
-    
-    x->update_thread_map = 0;
-    
+        
     x->last_vec_size = 64;
     x->last_samp_rate = 44100;
     
@@ -412,7 +410,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Load patch
     
     if (patch_name_entered)
-        x->patch_set->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(0, 0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
     
     return x;
 }
@@ -483,19 +481,7 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
         patch_name = atom_getsym(argv);
         argc--; argv++;
         
-        x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
-        
-    
-        // FIX - threading... this won't work for high-priority and the index doesn't get recalled...
-        if (thread_request && index >= 0)
-        {
-            if (thread_request > 0)
-                x->patch_set->request_thread(index, thread_request);
-            else
-                x->patch_set->request_thread(index, index);
-            
-            x->update_thread_map = 1;
-        }
+        x->patch_set->load(index, thread_request, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
     }
     else
         object_error((t_object *) x, "no patch specified");
@@ -545,8 +531,6 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
         x->patch_set->request_thread(index, thread_request);
     else
         x->patch_set->request_thread(index, index);
-    
-    x->update_thread_map = 1;
 }
 
 // Perform Routines
@@ -642,12 +626,8 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     if (!x->manual_threading)
         x->patch_set->reset_processed();
     
-    if (x->update_thread_map)
-    {
-        x->update_thread_map = 0;
-        x->patch_set->update_threads();
-    }
-    
+    x->patch_set->update_threads();
+        
     // Do processing - the switch aims to get more speed from inlining a fixed loop size
     // N.B. - the single threaded case is handled as a special case in the ThreadSet class
     

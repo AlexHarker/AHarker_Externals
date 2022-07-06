@@ -350,7 +350,7 @@ protected:
         return index >= 1 && index <= slots.size() && slots[index - 1];
     }
 
-    void do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+    t_atom_long do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
         // Find a free patch if no index is given
         
@@ -381,7 +381,10 @@ protected:
         {
             m_slots.remove(index - 1);
             object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::get_error(error));
+            index = -1;
         }
+        
+        return index;
     }
 
     void send_message(t_symbol *msg, long argc, t_atom *argv)
@@ -466,11 +469,52 @@ protected:
 
 // Class with threading additions
 
-struct threaded_patch_set : public patch_set<threaded_patch_slot>
+class threaded_patch_set : public patch_set<threaded_patch_slot>
 {
+public:
+    
     threaded_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
-    : patch_set(x, parent, num_ins, num_outs, outs) {}
+    : patch_set(x, parent, num_ins, num_outs, outs), m_update_threads(false) {}
 
+    void load(t_atom_long index, t_atom_long thread, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+    {
+        std::vector<t_atom> deferred_args(argc + 5);
+        
+        // Set arguments
+        
+        atom_setobj(deferred_args.data() + 0, this);
+        atom_setlong(deferred_args.data() + 1, index);
+        atom_setlong(deferred_args.data() + 2, vec_size);
+        atom_setlong(deferred_args.data() + 3, sampling_rate);
+        atom_setlong(deferred_args.data() + 4, thread);
+
+        for (long i = 0; i < argc; i++)
+            deferred_args[i + 5] = argv[i];
+        
+        defer(m_owner, (method) deferred_load_thread, path, static_cast<short>(argc + 5), deferred_args.data());
+    }
+    
+    // Deferred helpers
+    
+    static void deferred_load_thread(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        threaded_patch_set *set = reinterpret_cast<threaded_patch_set *>(atom_getobj(argv + 0));
+        t_atom_long index = atom_getlong(argv + 1);
+        long vec_size = static_cast<long>(atom_getlong(argv + 2));
+        long sampling_rate = static_cast<long>(atom_getlong(argv + 3));
+        long thread = static_cast<long>(atom_getlong(argv + 4));
+                
+        index = set->do_load(index, s, argc - 5, argv + 5, vec_size, sampling_rate);
+        
+        if (index > 0 && thread)
+        {
+            if (thread > 0)
+                set->request_thread(index, thread);
+            else
+                set->request_thread(index, index);
+        }
+    }
+    
     void process_if_thread_matches(void **outputs, t_atom_long thread, t_atom_long n_threads)
     {
         slot_access slots(m_slots);
@@ -499,10 +543,24 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
     void request_thread(t_atom_long index, t_atom_long thread)
     {
         slot_action(&::threaded_patch_slot::request_thread, index, thread);
+        m_update_threads = true;
     }
 
-    void reset_processed()   { for_all_slots(&threaded_patch_slot::reset_processed); }
-    void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
+    void reset_processed()
+    {
+        for_all_slots(&threaded_patch_slot::reset_processed);
+    }
+    
+    void update_threads()
+    {
+        if (m_update_threads)
+            for_all_slots(&threaded_patch_slot::update_thread);
+        m_update_threads = false;
+    }
+    
+private:
+    
+    bool m_update_threads;
 };
 
 
