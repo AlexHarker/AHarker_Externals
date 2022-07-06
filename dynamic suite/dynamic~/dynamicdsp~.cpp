@@ -618,21 +618,9 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
         memset(sig_outs[i], 0, sig_size * vec_size);
     
     if (x->manual_threading)
-    {
        x->patch_set->process_if_thread_matches(sig_outs, thread_num, num_active_threads);
-    }
     else
-    {
-        long size = x->patch_set->size();
-        long index = (thread_num * (size / num_active_threads));
-        for (long i = 1; i <= size; i++)
-        {
-            if (++index > size)
-                index -= size;
-            
-            x->patch_set->process_if_unprocessed(i, sig_outs);
-        }
-    }
+        x->patch_set->process_if_unprocessed(sig_outs, thread_num, num_active_threads);
 }
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)

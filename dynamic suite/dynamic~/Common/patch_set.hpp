@@ -481,9 +481,21 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
             if (*it) (*it)->process_if_thread_matches(outputs, thread, n_threads);
     }
 
-    bool process_if_unprocessed(t_atom_long index, void **outputs)
+    bool process_if_unprocessed(void **outputs, long thread_num, long num_active_threads)
     {
-        return slot_action_result(&threaded_patch_slot::process_if_unprocessed, index, outputs);
+        slot_access slots(m_slots);
+        
+        long size = slots().size();
+        long index = (thread_num * (size / num_active_threads));
+
+        for (long i = 0; i < size; i++)
+        {
+            if (++index >= size)
+                index -= size;
+            
+            if (slots()[index])
+                slots()[index]->process_if_unprocessed(outputs);
+        }
     }
 
     void request_thread(t_atom_long index, t_atom_long thread)
