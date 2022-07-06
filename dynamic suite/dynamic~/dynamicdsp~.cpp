@@ -29,7 +29,6 @@
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
 
-// FIX - threadsafety around alterations to the patch set vector
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
 // FIX - potential adc~ crashes / no audio - cannot get traction on this
 
