@@ -164,7 +164,7 @@ private:
         {
             m_users--;
     
-            i = std::min(i++, max_iter_before_sleep);
+            i = std::min(++i, max_iter_before_sleep);
             
             if (i == max_iter_before_sleep)
                 std::this_thread::sleep_for(0.1ms);

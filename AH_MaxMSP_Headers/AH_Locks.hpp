@@ -46,7 +46,7 @@ struct thread_lock
         constexpr int max_iter = thread_lock::max_iter_before_sleep;
         bool acquired = false;
         
-        for (int i = 0; !acquired; i = std::min(i++, max_iter))
+        for (int i = 0; !acquired; i = std::min(++i, max_iter))
         {
             if (attempt())
                 acquired = true;
