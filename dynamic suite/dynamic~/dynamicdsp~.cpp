@@ -167,9 +167,8 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
     
     *title = nullptr;
     
-    for (i = 0; i < x->patch_set->size(); i++)
+    while (const t_patcher *pp = x->patch_set->subpatch(i, x))
     {
-        const t_patcher *pp = x->patch_set->subpatch(i, x);
         if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
         {
             object_method(p, gensym("getname"), &name);
@@ -620,8 +619,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     
     if (x->manual_threading)
     {
-        for (long i = 1; i <= x->patch_set->size(); i++)
-            x->patch_set->process_if_thread_matches(i, sig_outs, thread_num, num_active_threads);
+       x->patch_set->process_if_thread_matches(sig_outs, thread_num, num_active_threads);
     }
     else
     {
@@ -640,7 +638,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
     long num_active_threads = x->request_num_active_threads;
-    long multithread_flag = (x->patch_set->size() > 1) && x->multithread_flag;
+    long multithread_flag = (x->patch_set->num_patches() > 1) && x->multithread_flag;
     
     // Zero Outputs
     
