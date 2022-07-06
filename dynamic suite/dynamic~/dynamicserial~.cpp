@@ -49,7 +49,7 @@ struct t_dynamicserial
     
     // Patch Data and Variables
     
-    patch_set<patch_slot> *patch_set;
+    serial_patch_set *patch_set;
     
     long last_vec_size;
     long last_samp_rate;
@@ -295,7 +295,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup slots
     
-    x->patch_set = new patch_set<patch_slot>((t_object *) x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new serial_patch_set((t_object *) x, x->parent_patch, num_ins, num_outs, outs);
     
     // Load patch
     
@@ -390,52 +390,20 @@ void dynamicserial_perform_common(t_dynamicserial *x)
 {
     void **sig_ins = x->sig_ins;
     void **sig_outs = x->sig_outs;
-    void **temp_buffers1 = x->temp_buffers1;
-    void **temp_buffers2 = x->temp_buffers2;
+    void **temp1 = x->temp_buffers1;
+    void **temp2 = x->temp_buffers2;
     void **ins_temp = x->ins_temp;
     
-    long num_sig_ins = x->num_sig_ins;
-    long num_sig_outs = x->num_sig_outs;
-    long num_temp_buffers = x->num_temp_buffers;
+    long num_ins = x->num_sig_ins;
+    long num_outs = x->num_sig_outs;
+    long num_temps = x->num_temp_buffers;
     long vec_size = x->last_vec_size;
-    
-    bool flip = false;
-    
-    // Zero Outputs
-    
-    for (long i = 0; i < num_sig_outs; i++)
-        memset(sig_outs[i], 0, sig_size * vec_size);
-    
-    // Copy inputs in and zero output temp buffers
-    
-    for (long i = 0; i < num_sig_ins; i++)
-        memcpy(temp_buffers1[i], sig_ins[i], sig_size * vec_size);
-    for (long i = num_sig_ins; i < num_sig_outs; i++)
-        memset(temp_buffers1[i], 0, sig_size * vec_size);
-    
-    // Loop over patches
-    
-    for (long i = 1; i <= x->patch_set->size(); i++)
-    {
-        // Copy in pointers
         
-        memcpy(ins_temp, flip ? temp_buffers2 : temp_buffers1, num_temp_buffers * sizeof(void *));
-        
-        // Clear current output buffers
-        
-        for (long j = 0; j < num_temp_buffers; j++)
-            memset(flip ? temp_buffers1[j] : temp_buffers2[j], 0, sig_size * vec_size);
-        
-        // Process and flip if processing has occurred
-        
-        if (x->patch_set->process(i, flip ? temp_buffers1 : temp_buffers2))
-            flip = !flip;
-    }
+    size_t buffer_size = sig_size * vec_size;
     
-    // Copy outputs
+    // Process
     
-    for (long i = 0; i < num_sig_outs; i++)
-        memcpy(sig_outs[i], flip ? temp_buffers2[i] : temp_buffers1[i], vec_size * sig_size);
+    x->patch_set->process_serial(sig_outs, sig_ins, ins_temp, temp1, temp2, num_ins, num_outs, num_temps, buffer_size);
 }
 
 t_int *dynamicserial_perform(t_int *w)

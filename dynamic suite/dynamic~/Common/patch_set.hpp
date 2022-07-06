@@ -221,11 +221,6 @@ public:
 
     // Process and DSP
 
-    bool process(t_atom_long index, void **outputs)
-    {
-        return slot_action_result(&T::process, index, outputs);
-    }
-
     void compile_dsp(long vec_size, long sampling_rate)
     {
         for_all_slots(&T::compile_dsp, vec_size, sampling_rate, false);
@@ -498,6 +493,50 @@ struct threaded_patch_set : public patch_set<threaded_patch_slot>
 
     void reset_processed()   { for_all_slots(&threaded_patch_slot::reset_processed); }
     void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
+};
+
+
+// Class with serial processing additions
+
+struct serial_patch_set : public patch_set<patch_slot>
+{
+    serial_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
+    : patch_set(x, parent, num_ins, num_outs, outs) {}
+    
+    void process_serial(void **outs, void **ins, void **in_temps, void **temp1, void **temp2, long num_ins, long num_outs, long num_temps, size_t buffer_size)
+    {
+        slot_access slots(m_slots);
+        bool flip = false;
+        
+        // Copy inputs in and zero output temp buffers
+        
+        for (long i = 0; i < num_ins; i++)
+            memcpy(temp1[i], ins[i], buffer_size);
+        for (long i = num_ins; i < num_outs; i++)
+            memset(temp1[i], 0, buffer_size);
+        
+        for (auto it = slots().begin(); it != slots().end(); it++)
+        {
+            // Copy in pointers
+            
+            std::copy_n(flip ? temp2 : temp1, num_temps, in_temps);
+            
+            // Clear current output buffers
+            
+            for (long j = 0; j < num_temps; j++)
+                memset(flip ? temp1[j] : temp2[j], 0, buffer_size);
+            
+            // Process and flip if processing has occurred
+            
+            if (*it && (*it)->process(flip ? temp1 : temp2))
+                flip = !flip;
+        }
+    
+        // Copy outputs
+    
+        for (long i = 0; i < num_outs; i++)
+            memcpy(outs[i], flip ? temp2[i] : temp1[i], buffer_size);
+    }
 };
 
 #endif /* _PATCHSET_HPP_ */
