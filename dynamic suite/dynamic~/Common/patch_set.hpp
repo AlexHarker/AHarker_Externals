@@ -60,23 +60,29 @@ public:
     static void do_delete(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
         patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
-        set->m_slots.remove(index_from_atom(argv + 1));
+        set->m_slots.remove(atom_getlong(argv + 1));
     }
 
     static void do_open(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        auto slot = slot_from_atom(argv);
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv + 0));
+        auto index = atom_getlong(argv + 1);
         
-        if (slot)
-            slot->open_window();
+        slot_access slots(set->m_slots);
+        
+        if (slots()[index])
+            slots()[index]->open_window();
     }
 
     static void do_close(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        auto slot = slot_from_atom(argv);
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv + 0));
+        auto index = atom_getlong(argv + 1);
         
-        if (slot)
-            slot->close_window();
+        slot_access slots(set->m_slots);
+        
+        if (slots()[index])
+            slots()[index]->close_window();
     }
 
     // Constructor
@@ -407,19 +413,6 @@ protected:
         atom_setlong(a + 1, index - 1);
         defer(m_owner, action, 0L, 1, a);
         return true;
-    }
-
-    static t_atom_long index_from_atom(t_atom *argv)
-    {
-        return atom_getlong(argv);
-    }
-    
-    static T *slot_from_atom(t_atom *argv)
-    {
-        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv + 0));
-        auto index = atom_getlong(argv + 1);
-        
-        return slot_access(set->m_slots)()[index];
     }
 
     template <typename Method, typename ...Args>
