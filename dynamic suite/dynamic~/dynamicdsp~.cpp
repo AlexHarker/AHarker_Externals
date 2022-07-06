@@ -612,7 +612,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
 
     SIMDDenormals denormal_handler;
         
-    // Zero outputs
+    // Zero Outputs
     
     for (long i = 0; i < num_sig_outs; i++)
         memset(sig_outs[i], 0, sig_size * vec_size);
