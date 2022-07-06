@@ -123,7 +123,7 @@ public:
         if (slot_exists(slots(), index))
             slots()[index - 1]->set_invalid();
             
-        if (!defer_slot_action(slots(), index, (method) do_delete))
+        if (!defer_slot_action(slots, index, (method) do_delete))
             object_error(m_owner, "no patch found in slot %ld", index);
     }
 
@@ -223,7 +223,7 @@ public:
     {
         slot_access slots(m_slots);
 
-        defer_slot_action(slots(), index, (method) do_open);
+        defer_slot_action(slots, index, (method) do_open);
     }
     
     void open_first_window()
@@ -231,7 +231,7 @@ public:
         slot_access slots(m_slots);
         
         for (t_atom_long i = 1; i <= slots().size(); i++)
-            if (defer_slot_action(slots(), i, (method) do_open))
+            if (defer_slot_action(slots, i, (method) do_open))
                 break;
     }
 
@@ -242,10 +242,10 @@ public:
         if (!index)
         {
             for (t_atom_long i = 1; i <= slots().size(); i++)
-                defer_slot_action(slots(), i, (method) do_close);
+                defer_slot_action(slots, i, (method) do_close);
         }
         else
-            defer_slot_action(slots(), index, (method) do_close);
+            defer_slot_action(slots, index, (method) do_close);
     }
 
     // Listeners
@@ -403,14 +403,17 @@ protected:
             slot_action(&T::message, m_target_index, inlet, msg, argc, argv);
     }
 
-    bool defer_slot_action(list_type& list, t_atom_long index, method action)
+    bool defer_slot_action(slot_access& slots, t_atom_long index, method action)
     {
-        if (!slot_exists(list, index))
+        if (!slot_exists(slots(), index))
             return false;
 
         t_atom a[2];
         atom_setobj(a + 0, this);
         atom_setlong(a + 1, index - 1);
+        
+        slots.release();
+        
         defer(m_owner, action, 0L, 1, a);
         return true;
     }
