@@ -661,10 +661,10 @@ void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sam
     
     // Do internal dsp compile (for each valid patch)
     
-    x->patch_set->compile_dsp(max_vec, sample_rate);
+    x->patch_set->compile_dsp(max_vec, static_cast<long>(sample_rate));
     
     x->last_vec_size = max_vec;
-    x->last_samp_rate = sample_rate;
+    x->last_samp_rate = static_cast<long>(sample_rate);
         
     // Add to dsp if memory allocation successful
     

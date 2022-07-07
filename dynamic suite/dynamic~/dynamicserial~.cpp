@@ -406,7 +406,7 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
     
     // Do internal dsp compile
     
-    x->patch_set->compile_dsp(max_vec, sample_rate);
+    x->patch_set->compile_dsp(max_vec, static_cast<long>(sample_rate));
     
     for (long i = 0; i < x->num_temp_buffers; i++)
     {
@@ -421,7 +421,7 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
     }
     
     x->last_vec_size = max_vec;
-    x->last_samp_rate = sample_rate;
+    x->last_samp_rate = static_cast<long>(sample_rate);
     
     // Add to dsp if memory allocation successful
     
