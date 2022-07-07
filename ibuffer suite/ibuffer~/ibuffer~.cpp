@@ -167,7 +167,7 @@ struct ibuffer_lock
 {
     // Manage lock and file through RAII
     
-    ibuffer_lock(t_ibuffer *x, HISSTools::Utility::IAudioFile *file) : m_ibuffer(x), m_file(file)
+    ibuffer_lock(t_ibuffer *x, HISSTools::IAudioFile *file) : m_ibuffer(x), m_file(file)
     {
         // Set invalid and wait till we can become the only user
         
@@ -200,7 +200,7 @@ struct ibuffer_lock
     }
     
     t_ibuffer *m_ibuffer;
-    HISSTools::Utility::IAudioFile *m_file;
+    HISSTools::IAudioFile *m_file;
 };
 
 // Path Helpers
@@ -285,7 +285,7 @@ void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
-    HISSTools::Utility::IAudioFile file;
+    HISSTools::IAudioFile file;
     
     // Get path
     
@@ -334,10 +334,10 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         switch (file.getPCMFormat())
         {
-            case HISSTools::Utility::BaseAudioFile::kAudioFileInt16:    x->format = PCM_INT_16;    break;
-            case HISSTools::Utility::BaseAudioFile::kAudioFileInt24:    x->format = PCM_INT_24;    break;
-            case HISSTools::Utility::BaseAudioFile::kAudioFileInt32:    x->format = PCM_INT_32;    break;
-            case HISSTools::Utility::BaseAudioFile::kAudioFileFloat32:  x->format = PCM_FLOAT;     break;
+            case HISSTools::BaseAudioFile::kAudioFileInt16:    x->format = PCM_INT_16;    break;
+            case HISSTools::BaseAudioFile::kAudioFileInt24:    x->format = PCM_INT_24;    break;
+            case HISSTools::BaseAudioFile::kAudioFileInt32:    x->format = PCM_INT_32;    break;
+            case HISSTools::BaseAudioFile::kAudioFileFloat32:  x->format = PCM_FLOAT;     break;
                 
             default:
                 object_error((t_object *) x, "incorrect sample format");
@@ -407,7 +407,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         // If the samples are in the wrong endianness then reverse the byte order for each sample
         
-        if (file.getAudioEndianness() == HISSTools::Utility::BaseAudioFile::kAudioFileBigEndian)
+        if (file.getAudioEndianness() == HISSTools::BaseAudioFile::kAudioFileBigEndian)
             ibuffer_switch_endianness(x);
         
         // File is now loaded - destroy the lock and bang (must be in this order!)
