@@ -48,7 +48,7 @@ void private_object_release(T *x, private_count_getter<T> get)
                 
     // Decrease the count with the lock held
         
-    spin_lock_hold(&get(*x).lock);
+    safe_lock_hold(&get(*x).lock);
     
     // If this is the last client then unregister and free the object (deferlow in case the pointer is hanging around)
     
@@ -73,7 +73,7 @@ T *private_object_find_retain(T *prev, t_symbol *name, t_symbol *s_namespace, pr
     {
         // Check that the object is still valid
 
-        spin_lock_hold(&get(*x).lock);
+        safe_lock_hold(&get(*x).lock);
         
         if ((found = get(*x).count > 0))
             get(*x).count++;

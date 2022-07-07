@@ -10,6 +10,8 @@
 #include <memory>
 #include <vector>
 
+#include <AH_Containers.hpp>
+
 #include "patch_slot.hpp"
 
 // Attribute helper for dspchains
@@ -36,6 +38,11 @@ class patch_set
 {
     typedef T* (patch_set::*get_slot)(t_atom_long index);
 
+protected:
+    
+    using list_type = typename threadsafe_pointer_list<T>::list_type;
+    using slot_access = typename threadsafe_pointer_list<T>::access;
+    
 public:
 
     // Deferred helpers
@@ -50,19 +57,38 @@ public:
         set->do_load(index, s, argc - 4, argv + 4, vec_size, sampling_rate);
     }
 
+    static void do_clear(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
+        set->m_slots.clear();
+    }
+    
     static void do_delete(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        delete slot_from_atom(argv);
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv));
+        set->m_slots.remove(atom_getlong(argv + 1));
     }
 
     static void do_open(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        slot_from_atom(argv)->open_window();
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv + 0));
+        auto index = atom_getlong(argv + 1);
+        
+        slot_access slots(set->m_slots);
+        
+        if (slots()[index])
+            slots()[index]->open_window();
     }
 
     static void do_close(t_object *x, t_symbol *s, long argc, t_atom *argv)
     {
-        slot_from_atom(argv)->close_window();
+        patch_set *set = reinterpret_cast<patch_set *>(atom_getobj(argv + 0));
+        auto index = atom_getlong(argv + 1);
+        
+        slot_access slots(set->m_slots);
+        
+        if (slots()[index])
+            slots()[index]->close_window();
     }
 
     // Constructor
@@ -73,26 +99,15 @@ public:
         m_out_table.assign(outs, outs + num_outs);
     }
 
-    // Size
+    // Number of patches
 
-    long size() const { return static_cast<long>(m_slots.size()); }
-
+    size_t num_patches() const { return m_slots.members(); }
+    
     // Load / Remove / Clear
 
-    t_atom_long load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+    void load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
         std::vector<t_atom> deferred_args(argc + 4);
-
-        // FIX - some kind of high value check for user specified index?
-
-        // Find a free patch if no index is given
-
-        if (index < 1)
-        {
-            for (index = 1; index <= size(); index++)
-                if (!m_slots[index - 1])
-                    break;
-        }
 
         // Set arguments
 
@@ -105,20 +120,25 @@ public:
             deferred_args[i + 4] = argv[i];
 
         defer(m_owner, (method) deferred_load, path, static_cast<short>(argc + 4), deferred_args.data());
-
-        return index;
     }
 
     void remove(t_atom_long index)
     {
-        if (!defer_slot_action(index, (method) do_delete, &patch_set::release))
+        slot_access slots(m_slots);
+        
+        if (slot_exists(slots(), index))
+            slots()[index - 1]->set_invalid();
+            
+        if (!defer_slot_action(slots, index, (method) do_delete))
             object_error(m_owner, "no patch found in slot %ld", index);
     }
 
     void clear()
     {
-        for (t_atom_long i = 1; i <= size(); i++)
-            defer_slot_action(i, (method) do_delete, &patch_set::release);
+        for_all_slots(&T::set_invalid);
+        t_atom a;
+        atom_setobj(&a, this);
+        defer(m_owner, (method) do_clear, 0L, 1, &a);
     }
 
     // Message communication
@@ -151,14 +171,19 @@ public:
 
     void target(long argc, t_atom *argv)
     {
+        slot_access slots(m_slots);
+        
         t_atom_long index = argc ? atom_getlong(argv) : 0;
 
-        m_target_index = slot_exists(index) ? index : -1;
+        m_target_index = index ? (slot_exists(slots(), index) ? index : -1) : 0;
     }
 
     void target_free(long argc, t_atom *argv)
     {
-        t_atom_long max_slot = size();
+        slot_access slots(m_slots);
+        auto slot_list = slots();
+        
+        t_atom_long max_slot = slot_list.size();
         t_atom_long lo = 0;
         t_atom_long hi = max_slot;
 
@@ -184,7 +209,7 @@ public:
 
         for (t_atom_long i = lo; i < hi; i++)
         {
-            if (m_slots[i] && m_slots[i]->get_valid() && !m_slots[i]->get_busy())
+            if (slot_list[i] && slot_list[i]->get_valid() && !slot_list[i]->get_busy())
             {
                 m_target_index = i + 1;
                 return;
@@ -196,11 +221,6 @@ public:
 
     // Process and DSP
 
-    bool process(t_atom_long index, void **outputs)
-    {
-        return slot_action_result(&T::process, index, outputs);
-    }
-
     void compile_dsp(long vec_size, long sampling_rate)
     {
         for_all_slots(&T::compile_dsp, vec_size, sampling_rate, false);
@@ -208,22 +228,33 @@ public:
 
     // Window management
 
-    bool open_window(t_atom_long index)
+    void open_window(t_atom_long index)
     {
-        return defer_slot_action(index, (method) do_open, &patch_set::get);
+        slot_access slots(m_slots);
+
+        defer_slot_action(slots, index, (method) do_open);
+    }
+    
+    void open_first_window()
+    {
+        slot_access slots(m_slots);
+        
+        for (t_atom_long i = 1; i <= slots().size(); i++)
+            if (defer_slot_action(slots, i, (method) do_open))
+                break;
     }
 
-    bool close_window(t_atom_long index)
+    void close_window(t_atom_long index)
     {
+        slot_access slots(m_slots);
+
         if (!index)
         {
-            for (t_atom_long i = 1; i <= size(); i++)
-                defer_slot_action(i, (method) do_close, &patch_set::get);
-
-            return true;
+            for (t_atom_long i = 1; i <= slots().size(); i++)
+                defer_slot_action(slots, i, (method) do_close);
         }
         else
-            return defer_slot_action(index, (method) do_close, &patch_set::get);
+            defer_slot_action(slots, index, (method) do_close);
     }
 
     // Listeners
@@ -242,7 +273,9 @@ public:
 
     void ***get_output_handle(t_ptr_int index)
     {
-        return slot_exists(index) ? m_slots[index - 1]->get_output_handle() : nullptr;
+        slot_access slots(m_slots);
+        
+        return slot_exists(slots(), index) ? slots()[index - 1]->get_output_handle() : nullptr;
     }
 
     bool get_on(t_ptr_int index)
@@ -274,9 +307,11 @@ public:
 
     void update(t_patcher *p, long vec_size, long sampling_rate)
     {
+        slot_access slots(m_slots);
+        
         // Reload the patcher when it's updated
 
-        for (auto it = m_slots.begin(); it != m_slots.end(); it++)
+        for (auto it = slots().begin(); it != slots().end(); it++)
         {
             if ((*it) && (*it)->get_patch() == p)
             {
@@ -290,7 +325,9 @@ public:
 
     t_atom_long patch_index(t_patcher *p)
     {
-        for (auto it = m_slots.begin(); it != m_slots.end(); it++)
+        slot_access slots(m_slots);
+        
+        for (auto it = slots().begin(); it != slots().end(); it++)
             if ((*it) && (*it)->get_patch() == p)
                 return (*it)->get_user_index();
 
@@ -301,6 +338,8 @@ public:
 
     t_patcher* subpatch(long index, void *arg)
     {
+        slot_access slots(m_slots);
+
         // Report subpatchers if requested by an object that is not a dspchain
 
         if ((t_ptr_uint) arg > 1)
@@ -312,7 +351,7 @@ public:
 
         long count = 0;
 
-        for (auto it = m_slots.begin(); it != m_slots.end(); it++)
+        for (auto it = slots().begin(); it != slots().end(); it++)
             if ((*it) && (*it)->get_patch() && count++ == index)
                 return (*it)->get_patch();
 
@@ -321,30 +360,46 @@ public:
 
 protected:
 
-    bool slot_exists(t_atom_long index)
+    static bool slot_exists(list_type& slots, t_atom_long index)
     {
-        return index >= 1 && index <= size() && m_slots[index - 1];
+        return index >= 1 && index <= slots.size() && slots[index - 1];
     }
 
-    void do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
+    t_atom_long do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
+        // Find a free patch if no index is given
+        
+        if (index < 1)
+        {
+            slot_access slots_prior(m_slots);
+
+            for (index = 1; index <= slots_prior().size(); index++)
+                if (!slots_prior()[index - 1])
+                    break;
+        }
+        
         // Load into the specified slot
 
-        if (size() < index)
-            m_slots.resize(index);
+        // FIX - some kind of high value check for user specified index?
 
         m_loading_index = index;
-        m_slots[index - 1] = std::unique_ptr<T>(new T(m_owner, m_parent, index, m_num_ins, &m_out_table));
-        auto error = m_slots[index - 1]->load(path, argc, argv, vec_size, sampling_rate);
+        m_slots.add(new T(m_owner, m_parent, index, m_num_ins, &m_out_table), index - 1);
+        
+        slot_access slots(m_slots);
+        
+        auto error = slots()[index - 1]->load(path, argc, argv, vec_size, sampling_rate);
         m_loading_index = 0;
 
         // If there is an error report and empty the slot
 
         if (error != T::load_error::none)
         {
-            m_slots[index - 1] = nullptr;
+            m_slots.remove(index - 1);
             object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::get_error(error));
+            index = -1;
         }
+        
+        return index;
     }
 
     void send_message(t_symbol *msg, long argc, t_atom *argv)
@@ -357,53 +412,49 @@ protected:
             slot_action(&T::message, m_target_index, inlet, msg, argc, argv);
     }
 
-    T *get(t_atom_long index)
+    bool defer_slot_action(slot_access& slots, t_atom_long index, method action)
     {
-        return m_slots[index - 1].get();
-    }
-
-    T *release(t_atom_long index)
-    {
-        m_slots[index - 1]->set_invalid();
-        return m_slots[index - 1].release();
-    }
-
-    bool defer_slot_action(t_atom_long index, method action, get_slot getter)
-    {
-        if (!slot_exists(index))
+        if (!slot_exists(slots(), index))
             return false;
 
-        t_atom a;
-        atom_setobj(&a, (this->*getter)(index));
-        defer(m_owner, action, 0L, 1, &a);
+        t_atom a[2];
+        atom_setobj(a + 0, this);
+        atom_setlong(a + 1, index - 1);
+        
+        slots.release();
+        
+        defer(m_owner, action, 0L, 2, a);
         return true;
-    }
-
-    static T *slot_from_atom(t_atom *argv)
-    {
-        return reinterpret_cast<T *>(atom_getobj(argv));
     }
 
     template <typename Method, typename ...Args>
     void slot_action(Method method, t_atom_long index, Args...args)
     {
-        if (slot_exists(index))
-            (*m_slots[index - 1].*method)(args...);
+        slot_access slots(m_slots);
+        auto list = slots();
+        
+        if (slot_exists(list, index))
+            (*list[index - 1].*method)(args...);
     }
 
     template <typename Method, typename ...Args>
     bool slot_action_result(Method method, t_atom_long index, Args...args)
     {
-        if (!slot_exists(index))
+        slot_access slots(m_slots);
+        auto list = slots();
+        
+        if (!slot_exists(list, index))
             return false;
 
-        return (*m_slots[index - 1].*method)(args...);
+        return (*list[index - 1].*method)(args...);
     }
 
     template <typename Method, typename ...Args>
     void for_all_slots(Method method, Args...args)
     {
-        for (auto it = m_slots.begin(); it != m_slots.end(); it++)
+        slot_access slots(m_slots);
+        
+        for (auto it = slots().begin(); it != slots().end(); it++)
             if (*it) ((**it).*method)(args...);
     }
 
@@ -417,34 +468,148 @@ protected:
     long m_num_ins;
 
     std::vector<void *> m_out_table;
-    std::vector<std::unique_ptr<T>> m_slots;
+    threadsafe_pointer_list<T> m_slots;
 };
 
 
 // Class with threading additions
 
-struct threaded_patch_set : public patch_set<threaded_patch_slot>
+class threaded_patch_set : public patch_set<threaded_patch_slot>
 {
+public:
+    
     threaded_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
-    : patch_set(x, parent, num_ins, num_outs, outs) {}
+    : patch_set(x, parent, num_ins, num_outs, outs), m_update_threads(false) {}
 
-    bool process_if_thread_matches(t_atom_long index, void **outputs, t_atom_long thread, t_atom_long n_threads)
+    void load(t_atom_long index, t_atom_long thread, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
     {
-        return slot_action_result(&threaded_patch_slot::process_if_thread_matches, index, outputs, thread, n_threads);
+        std::vector<t_atom> deferred_args(argc + 5);
+        
+        // Set arguments
+        
+        atom_setobj(deferred_args.data() + 0, this);
+        atom_setlong(deferred_args.data() + 1, index);
+        atom_setlong(deferred_args.data() + 2, vec_size);
+        atom_setlong(deferred_args.data() + 3, sampling_rate);
+        atom_setlong(deferred_args.data() + 4, thread);
+
+        for (long i = 0; i < argc; i++)
+            deferred_args[i + 5] = argv[i];
+        
+        defer(m_owner, (method) deferred_load_thread, path, static_cast<short>(argc + 5), deferred_args.data());
+    }
+    
+    // Deferred helpers
+    
+    static void deferred_load_thread(t_object *x, t_symbol *s, long argc, t_atom *argv)
+    {
+        threaded_patch_set *set = reinterpret_cast<threaded_patch_set *>(atom_getobj(argv + 0));
+        t_atom_long index = atom_getlong(argv + 1);
+        long vec_size = static_cast<long>(atom_getlong(argv + 2));
+        long sampling_rate = static_cast<long>(atom_getlong(argv + 3));
+        long thread = static_cast<long>(atom_getlong(argv + 4));
+                
+        index = set->do_load(index, s, argc - 5, argv + 5, vec_size, sampling_rate);
+        
+        if (index > 0 && thread)
+        {
+            if (thread > 0)
+                set->request_thread(index, thread);
+            else
+                set->request_thread(index, index);
+        }
+    }
+    
+    void process_if_thread_matches(void **outputs, t_atom_long thread, t_atom_long n_threads)
+    {
+        slot_access slots(m_slots);
+        
+        for (auto it = slots().begin(); it != slots().end(); it++)
+            if (*it) (*it)->process_if_thread_matches(outputs, thread, n_threads);
     }
 
-    bool process_if_unprocessed(t_atom_long index, void **outputs)
+    void process_if_unprocessed(void **outputs, long thread_num, long num_active_threads)
     {
-        return slot_action_result(&::threaded_patch_slot::process_if_unprocessed, index, outputs);
+        slot_access slots(m_slots);
+        
+        long size = slots().size();
+        long index = (thread_num * (size / num_active_threads));
+
+        for (long i = 0; i < size; i++)
+        {
+            if (++index >= size)
+                index -= size;
+            
+            if (slots()[index])
+                slots()[index]->process_if_unprocessed(outputs);
+        }
     }
 
     void request_thread(t_atom_long index, t_atom_long thread)
     {
         slot_action(&::threaded_patch_slot::request_thread, index, thread);
+        m_update_threads = true;
     }
 
-    void reset_processed()   { for_all_slots(&::threaded_patch_slot::reset_processed); }
-    void update_threads()    { for_all_slots(&threaded_patch_slot::update_thread); }
+    void reset_processed()
+    {
+        for_all_slots(&threaded_patch_slot::reset_processed);
+    }
+    
+    void update_threads()
+    {
+        if (m_update_threads)
+            for_all_slots(&threaded_patch_slot::update_thread);
+        m_update_threads = false;
+    }
+    
+private:
+    
+    bool m_update_threads;
+};
+
+
+// Class with serial processing additions
+
+struct serial_patch_set : public patch_set<patch_slot>
+{
+    serial_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
+    : patch_set(x, parent, num_ins, num_outs, outs) {}
+    
+    void process_serial(void **outs, void **ins, void **in_temps, void **temp1, void **temp2, long num_ins, long num_outs, long num_temps, size_t buffer_size)
+    {
+        slot_access slots(m_slots);
+        bool flip = false;
+        
+        // Copy inputs in and zero output temp buffers
+        
+        for (long i = 0; i < num_ins; i++)
+            memcpy(temp1[i], ins[i], buffer_size);
+        for (long i = num_ins; i < num_outs; i++)
+            memset(temp1[i], 0, buffer_size);
+        
+        for (auto it = slots().begin(); it != slots().end(); it++)
+        {
+            // Copy in pointers
+            
+            std::copy_n(flip ? temp2 : temp1, num_temps, in_temps);
+            
+            // Clear current output buffers
+            
+            for (long j = 0; j < num_temps; j++)
+                memset(flip ? temp1[j] : temp2[j], 0, buffer_size);
+            
+            // Process and flip if processing has occurred
+            
+            if (*it && (*it)->process(flip ? temp1 : temp2))
+                flip = !flip;
+        }
+    
+        // Copy outputs
+    
+        for (long i = 0; i < num_outs; i++)
+            memcpy(outs[i], flip ? temp2[i] : temp1[i], buffer_size);
+    }
 };
 
 #endif /* _PATCHSET_HPP_ */

@@ -2,14 +2,13 @@
 /*
  *  dynamicserial~
  *
- *  dynamicserial~ is an audio processing object for dynamically loading / managing patches
+ *  dynamicserial~ is a serial audio processing object for dynamically loading / managing patches.
  *  Loading patches does not affect other audio patches that are processing.
  *  It is similar to dynamicdsp~, but is designed for serial processing (hence it isn't multithreaded).
  *
  *  There is an associated set of objects for audio input / output and querying and setting patch state:
  *  (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
- *
- *  See the helpfile documentation for further details of functionality.
+ *  The standard in / out objects can be used for message IO.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -49,7 +48,7 @@ struct t_dynamicserial
     
     // Patch Data and Variables
     
-    patch_set<patch_slot> *patch_set;
+    serial_patch_set *patch_set;
     
     long last_vec_size;
     long last_samp_rate;
@@ -62,10 +61,10 @@ struct t_dynamicserial
     long num_outs;
     long num_temp_buffers;
     
-    void **sig_ins;
+    void **sig_object_ins;
     void **sig_outs;
     
-    void **ins_temp;
+    void **sig_ins;
     void **temp_buffers1;
     void **temp_buffers2;
     
@@ -256,19 +255,21 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // Create signal in/out buffers and zero
     
-    x->sig_ins = (void **) malloc(num_sig_ins * sizeof(void *));
+    // N.B. here sig_ins are those used for the patches (which are dynamic) and sig_object_ins are the object ins
+    
+    x->sig_object_ins = (void **) malloc(num_sig_ins * sizeof(void *));
     x->sig_outs = (void **) malloc(num_sig_outs * sizeof(void *));
     
-    x->ins_temp = (void **) malloc(num_temp_buffers * sizeof(void *));
+    x->sig_ins = (void **) malloc(num_temp_buffers * sizeof(void *));
     x->temp_buffers1 = (void **) malloc(num_temp_buffers * sizeof(void *));
     x->temp_buffers2 = (void **) malloc(num_temp_buffers * sizeof(void *));
     
     for (long i = 0; i < num_sig_ins; i++)
-        x->sig_ins[i] = nullptr;
+        x->sig_object_ins[i] = nullptr;
     for (long i = 0; i < num_sig_outs; i++)
         x->sig_outs[i] = nullptr;
     for (long i = 0; i < num_temp_buffers; i++)
-        x->ins_temp[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = nullptr;
+        x->sig_ins[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = nullptr;
     
     // Make non-signal outlets first
     
@@ -295,7 +296,7 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // Setup slots
     
-    x->patch_set = new patch_set<patch_slot>((t_object *) x, x->parent_patch, num_ins, num_outs, outs);
+    x->patch_set = new serial_patch_set((t_object *) x, x->parent_patch, num_ins, num_outs, outs);
     
     // Load patch
     
@@ -327,11 +328,11 @@ void dynamicserial_free(t_dynamicserial *x)
     // Free buffer handles
     
     if (x->num_sig_ins)
-        free(x->sig_ins);
+        free(x->sig_object_ins);
     if (x->num_sig_outs)
         free(x->sig_outs);
-    if (x->ins_temp)
-        free(x->ins_temp);
+    if (x->sig_ins)
+        free(x->sig_ins);
     if (x->temp_buffers1)
         free(x->temp_buffers1);
     if (x->temp_buffers2)
@@ -388,54 +389,22 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 
 void dynamicserial_perform_common(t_dynamicserial *x)
 {
+    void **sig_object_ins = x->sig_object_ins;
     void **sig_ins = x->sig_ins;
     void **sig_outs = x->sig_outs;
-    void **temp_buffers1 = x->temp_buffers1;
-    void **temp_buffers2 = x->temp_buffers2;
-    void **ins_temp = x->ins_temp;
+    void **temp1 = x->temp_buffers1;
+    void **temp2 = x->temp_buffers2;
     
-    long num_sig_ins = x->num_sig_ins;
-    long num_sig_outs = x->num_sig_outs;
-    long num_temp_buffers = x->num_temp_buffers;
+    long num_ins = x->num_sig_ins;
+    long num_outs = x->num_sig_outs;
+    long num_temps = x->num_temp_buffers;
     long vec_size = x->last_vec_size;
-    
-    bool flip = false;
-    
-    // Zero Outputs
-    
-    for (long i = 0; i < num_sig_outs; i++)
-        memset(sig_outs[i], 0, sig_size * vec_size);
-    
-    // Copy inputs in and zero output temp buffers
-    
-    for (long i = 0; i < num_sig_ins; i++)
-        memcpy(temp_buffers1[i], sig_ins[i], sig_size * vec_size);
-    for (long i = num_sig_ins; i < num_sig_outs; i++)
-        memset(temp_buffers1[i], 0, sig_size * vec_size);
-    
-    // Loop over patches
-    
-    for (long i = 1; i <= x->patch_set->size(); i++)
-    {
-        // Copy in pointers
         
-        memcpy(ins_temp, flip ? temp_buffers2 : temp_buffers1, num_temp_buffers * sizeof(void *));
-        
-        // Clear current output buffers
-        
-        for (long j = 0; j < num_temp_buffers; j++)
-            memset(flip ? temp_buffers1[j] : temp_buffers2[j], 0, sig_size * vec_size);
-        
-        // Process and flip if processing has occurred
-        
-        if (x->patch_set->process(i, flip ? temp_buffers1 : temp_buffers2))
-            flip = !flip;
-    }
+    size_t buffer_size = sig_size * vec_size;
     
-    // Copy outputs
+    // Process
     
-    for (long i = 0; i < num_sig_outs; i++)
-        memcpy(sig_outs[i], flip ? temp_buffers2[i] : temp_buffers1[i], vec_size * sig_size);
+    x->patch_set->process_serial(sig_outs, sig_object_ins, sig_ins, temp1, temp2, num_ins, num_outs, num_temps, buffer_size);
 }
 
 t_int *dynamicserial_perform(t_int *w)
@@ -448,7 +417,7 @@ t_int *dynamicserial_perform(t_int *w)
 
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    memcpy(x->sig_ins, ins, x->num_sig_ins * sizeof(void *));
+    memcpy(x->sig_object_ins, ins, x->num_sig_ins * sizeof(void *));
     memcpy(x->sig_outs, outs, x->num_sig_ins * sizeof(void *));
     
     dynamicserial_perform_common(x);
@@ -487,7 +456,7 @@ void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count)
     // Copy in and out pointers (note that all inlets are declared as if signals)
     
     for (long i = 0; i < x->num_sig_ins; i++)
-        x->sig_ins[i] = sp[i]->s_vec;
+        x->sig_object_ins[i] = sp[i]->s_vec;
     for (long i = 0; i < x->num_sig_outs; i++)
         x->sig_outs[i] = sp[i + x->num_proxies]->s_vec;
     

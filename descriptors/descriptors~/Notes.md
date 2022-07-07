@@ -65,7 +65,6 @@ General and Small
   2 - pitch to inf for no pitch found
   
 * Need to check lags and other things with fftparams that have mismatch window and FFT [all correct]
-
 * Look at user messages/feedback [completed] 
   
 * Need to investigate padding issues
@@ -80,6 +79,8 @@ General and Small
 * Content descriptors - implement better filtering for partials (including interface for inharmonicity which has an additional parameter) [corrected - inharmonicity changed]
 * spectral_peaks - unify returns and interface (invalid freqs/amps and db conversion on/off) [corrected - RT now defaults to db]
 
+* Confirm the changes to returns for invalid/empty frames etc.
+* Check all arguments and defaults (and note where they've changed)
 * How to deal with padding
 
 

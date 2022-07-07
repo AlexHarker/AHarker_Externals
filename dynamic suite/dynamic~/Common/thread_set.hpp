@@ -71,7 +71,7 @@ private:
 };
 
 
-// semaphore (note that you should most likely close() before the destructor is called
+// semaphore (note that you should call close() before the destructor is called)
 
 class semaphore
 {
