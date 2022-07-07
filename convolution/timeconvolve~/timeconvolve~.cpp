@@ -106,15 +106,15 @@ int C74_EXPORT main()
     
     // Add Attributes
             
-    CLASS_ATTR_LONG(this_class, "length", 0L, t_timeconvolve, length);
+    CLASS_ATTR_ATOM_LONG(this_class, "length", 0L, t_timeconvolve, length);
     CLASS_ATTR_FILTER_CLIP(this_class, "length", 0, 2044);
     CLASS_ATTR_LABEL(this_class, "length", 0L, "Impulse Length");
     
-    CLASS_ATTR_LONG(this_class, "offset", 0L, t_timeconvolve, offset);
+    CLASS_ATTR_ATOM_LONG(this_class, "offset", 0L, t_timeconvolve, offset);
     CLASS_ATTR_FILTER_MIN(this_class, "offset", 0);
     CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
     
-    CLASS_ATTR_LONG(this_class, "chan", 0L, t_timeconvolve, chan);
+    CLASS_ATTR_ATOM_LONG(this_class, "chan", 0L, t_timeconvolve, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
 

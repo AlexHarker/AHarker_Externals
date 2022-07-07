@@ -179,15 +179,15 @@ int C74_EXPORT main()
     CLASS_ATTR_ACCESSORS(this_class, "fftsize", nullptr, partconvolve_fft_size_set);
     CLASS_ATTR_LABEL(this_class, "fftsize", 0L, "FFT Size");
     
-    CLASS_ATTR_LONG(this_class, "length", 0L, t_partconvolve, length);
+    CLASS_ATTR_ATOM_LONG(this_class, "length", 0L, t_partconvolve, length);
     CLASS_ATTR_ACCESSORS(this_class, "length", nullptr, partconvolve_length_set);
     CLASS_ATTR_LABEL(this_class, "length", 0L, "Impulse Length");
     
-    CLASS_ATTR_LONG(this_class, "offset", 0L, t_partconvolve, offset);
+    CLASS_ATTR_ATOM_LONG(this_class, "offset", 0L, t_partconvolve, offset);
     CLASS_ATTR_FILTER_MIN(this_class, "offset", 0);
     CLASS_ATTR_LABEL(this_class,"offset", 0L, "Offset Into Buffer");
     
-    CLASS_ATTR_LONG(this_class, "chan", 0L, t_partconvolve, chan);
+    CLASS_ATTR_ATOM_LONG(this_class, "chan", 0L, t_partconvolve, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Read Channel");
     

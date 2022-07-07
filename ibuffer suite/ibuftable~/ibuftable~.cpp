@@ -69,15 +69,15 @@ int C74_EXPORT main()
     
     add_ibuffer_interp_attribute<t_ibuftable, InterpType::Linear>(this_class, "interp");
     
-    CLASS_ATTR_LONG(this_class, "chan", 0L, t_ibuftable, chan);
+    CLASS_ATTR_ATOM_LONG(this_class, "chan", 0L, t_ibuftable, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
     CLASS_ATTR_LABEL(this_class, "chan", 0L, "Buffer Channel");
     
-    CLASS_ATTR_LONG(this_class, "startsamp", 0L, t_ibuftable, start_samp);
+    CLASS_ATTR_ATOM_LONG(this_class, "startsamp", 0L, t_ibuftable, start_samp);
     CLASS_ATTR_FILTER_MIN(this_class, "startsamp", 0);
     CLASS_ATTR_LABEL(this_class, "startsamp", 0L, "Start Sample");
     
-    CLASS_ATTR_LONG(this_class, "endsamp", 0L, t_ibuftable, end_samp);
+    CLASS_ATTR_ATOM_LONG(this_class, "endsamp", 0L, t_ibuftable, end_samp);
     CLASS_ATTR_FILTER_MIN(this_class, "endsamp", 0);
     CLASS_ATTR_LABEL(this_class, "endsamp", 0L, "End Sample");
     
