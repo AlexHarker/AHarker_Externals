@@ -62,10 +62,10 @@ struct t_dynamicserial
     long num_outs;
     long num_temp_buffers;
     
-    void **sig_ins;
+    void **sig_object_ins;
     void **sig_outs;
     
-    void **ins_temp;
+    void **sig_ins;
     void **temp_buffers1;
     void **temp_buffers2;
     
@@ -256,19 +256,21 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // Create signal in/out buffers and zero
     
-    x->sig_ins = (void **) malloc(num_sig_ins * sizeof(void *));
+    // N.B. here sig_ins are those used for the patches (which are dynamic) and sig_object_ins are the object ins
+    
+    x->sig_object_ins = (void **) malloc(num_sig_ins * sizeof(void *));
     x->sig_outs = (void **) malloc(num_sig_outs * sizeof(void *));
     
-    x->ins_temp = (void **) malloc(num_temp_buffers * sizeof(void *));
+    x->sig_ins = (void **) malloc(num_temp_buffers * sizeof(void *));
     x->temp_buffers1 = (void **) malloc(num_temp_buffers * sizeof(void *));
     x->temp_buffers2 = (void **) malloc(num_temp_buffers * sizeof(void *));
     
     for (long i = 0; i < num_sig_ins; i++)
-        x->sig_ins[i] = nullptr;
+        x->sig_object_ins[i] = nullptr;
     for (long i = 0; i < num_sig_outs; i++)
         x->sig_outs[i] = nullptr;
     for (long i = 0; i < num_temp_buffers; i++)
-        x->ins_temp[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = nullptr;
+        x->sig_ins[i] = x->temp_buffers1[i] = x->temp_buffers2[i] = nullptr;
     
     // Make non-signal outlets first
     
@@ -327,11 +329,11 @@ void dynamicserial_free(t_dynamicserial *x)
     // Free buffer handles
     
     if (x->num_sig_ins)
-        free(x->sig_ins);
+        free(x->sig_object_ins);
     if (x->num_sig_outs)
         free(x->sig_outs);
-    if (x->ins_temp)
-        free(x->ins_temp);
+    if (x->sig_ins)
+        free(x->sig_ins);
     if (x->temp_buffers1)
         free(x->temp_buffers1);
     if (x->temp_buffers2)
@@ -388,11 +390,11 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 
 void dynamicserial_perform_common(t_dynamicserial *x)
 {
+    void **sig_object_ins = x->sig_object_ins;
     void **sig_ins = x->sig_ins;
     void **sig_outs = x->sig_outs;
     void **temp1 = x->temp_buffers1;
     void **temp2 = x->temp_buffers2;
-    void **ins_temp = x->ins_temp;
     
     long num_ins = x->num_sig_ins;
     long num_outs = x->num_sig_outs;
@@ -403,7 +405,7 @@ void dynamicserial_perform_common(t_dynamicserial *x)
     
     // Process
     
-    x->patch_set->process_serial(sig_outs, sig_ins, ins_temp, temp1, temp2, num_ins, num_outs, num_temps, buffer_size);
+    x->patch_set->process_serial(sig_outs, sig_object_ins, sig_ins, temp1, temp2, num_ins, num_outs, num_temps, buffer_size);
 }
 
 t_int *dynamicserial_perform(t_int *w)
@@ -416,7 +418,7 @@ t_int *dynamicserial_perform(t_int *w)
 
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    memcpy(x->sig_ins, ins, x->num_sig_ins * sizeof(void *));
+    memcpy(x->sig_object_ins, ins, x->num_sig_ins * sizeof(void *));
     memcpy(x->sig_outs, outs, x->num_sig_ins * sizeof(void *));
     
     dynamicserial_perform_common(x);
@@ -455,7 +457,7 @@ void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count)
     // Copy in and out pointers (note that all inlets are declared as if signals)
     
     for (long i = 0; i < x->num_sig_ins; i++)
-        x->sig_ins[i] = sp[i]->s_vec;
+        x->sig_object_ins[i] = sp[i]->s_vec;
     for (long i = 0; i < x->num_sig_outs; i++)
         x->sig_outs[i] = sp[i + x->num_proxies]->s_vec;
     
