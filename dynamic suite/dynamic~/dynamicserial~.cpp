@@ -2,14 +2,13 @@
 /*
  *  dynamicserial~
  *
- *  dynamicserial~ is an audio processing object for dynamically loading / managing patches
+ *  dynamicserial~ is a serial audio processing object for dynamically loading / managing patches.
  *  Loading patches does not affect other audio patches that are processing.
  *  It is similar to dynamicdsp~, but is designed for serial processing (hence it isn't multithreaded).
  *
  *  There is an associated set of objects for audio input / output and querying and setting patch state:
  *  (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
- *
- *  See the helpfile documentation for further details of functionality.
+ *  The standard in / out objects can be used for message IO.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
