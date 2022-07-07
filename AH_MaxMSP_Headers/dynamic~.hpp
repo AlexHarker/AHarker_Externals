@@ -60,7 +60,7 @@ static inline void *dynamic_get_parent()
     return dynamic_is_dynamic_host(obj) ? obj : nullptr;
 }
 
-static inline t_atom_long dynamic_get_patch_index(void *obj)
+static inline long dynamic_get_patch_index(void *obj)
 {
     t_atom_long index = 0;
     
@@ -77,7 +77,7 @@ static inline t_atom_long dynamic_get_patch_index(void *obj)
         }
     }
 
-    return index;
+    return static_cast<long>(index);
 }
 
 // Functions for querying the host object

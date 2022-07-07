@@ -239,7 +239,7 @@ public:
     {
         slot_access slots(m_slots);
         
-        for (t_atom_long i = 1; i <= slots().size(); i++)
+        for (t_atom_long i = 1; i <= static_cast<t_atom_long>(slots().size()); i++)
             if (defer_slot_action(slots, i, (method) do_open))
                 break;
     }
@@ -250,7 +250,7 @@ public:
 
         if (!index)
         {
-            for (t_atom_long i = 1; i <= slots().size(); i++)
+            for (t_atom_long i = 1; i <= static_cast<t_atom_long>(slots().size()); i++)
                 defer_slot_action(slots, i, (method) do_close);
         }
         else
@@ -362,7 +362,7 @@ protected:
 
     static bool slot_exists(list_type& slots, t_atom_long index)
     {
-        return index >= 1 && index <= slots.size() && slots[index - 1];
+        return index >= 1 && index <= static_cast<t_atom_long>(slots.size()) && slots[index - 1];
     }
 
     t_atom_long do_load(t_atom_long index, t_symbol *path, long argc, t_atom *argv, long vec_size, long sampling_rate)
@@ -373,7 +373,7 @@ protected:
         {
             slot_access slots_prior(m_slots);
 
-            for (index = 1; index <= slots_prior().size(); index++)
+            for (index = 1; index <= static_cast<t_atom_long>(slots_prior().size()); index++)
                 if (!slots_prior()[index - 1])
                     break;
         }
@@ -532,7 +532,7 @@ public:
     {
         slot_access slots(m_slots);
         
-        long size = slots().size();
+        long size = static_cast<long>(slots().size());
         long index = (thread_num * (size / num_active_threads));
 
         for (long i = 0; i < size; i++)
