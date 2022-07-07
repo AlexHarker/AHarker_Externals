@@ -105,7 +105,7 @@ class thread_set
 
 public:
 
-    typedef void process_function(t_object *, void **, long, long, long);
+    typedef void process_function(t_object *, double **, long, long, long);
 
     struct thread_slot
     {
@@ -118,11 +118,11 @@ public:
         thread_slot(const thread_slot& other)
         : m_owner(other.m_owner), m_processed(1), m_buffers(other.m_buffers) {}
 
-        void **get_buffers() { return m_buffers.data(); }
+        double **get_buffers() { return m_buffers.data(); }
 
         void *m_owner;
         std::atomic<int> m_processed;
-        std::vector<void *> m_buffers;
+        std::vector<double *> m_buffers;
     };
 
     thread_set(t_object *owner, process_function *process, long num_threads, long num_outs);
@@ -130,13 +130,12 @@ public:
 
     long get_num_threads() const { return static_cast<long>(m_thread_slots.size()); }
 
-    void tick(long vec_size, long num_threads, void **outs);
+    void tick(long vec_size, long num_threads, double **outs);
     bool resize_buffers(t_ptr_int size);
 
-    template <typename T>
-    T *get_thread_buffer(long thread, long index)
+    double *get_thread_buffer(long thread, long index)
     {
-        return (T *) m_thread_slots[thread].m_buffers[index];
+        return m_thread_slots[thread].m_buffers[index];
     }
 
     static void thread_entry(void *arg);

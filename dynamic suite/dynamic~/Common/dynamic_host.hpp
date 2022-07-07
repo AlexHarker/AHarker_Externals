@@ -131,12 +131,12 @@ struct dynamic_host
         *num_sig_outs = x->num_sig_outs;
     }
 
-    static void query_sigins(T *x, void ***sig_ins)
+    static void query_sigins(T *x, double ***sig_ins)
     {
         *sig_ins = x->sig_ins;
     }
 
-    static void query_sigouts(T *x, t_ptr_uint idx, void ****out_handle)
+    static void query_sigouts(T *x, t_ptr_uint idx, double ****out_handle)
     {
         *out_handle = x->patch_set->get_output_handle(idx);
     }

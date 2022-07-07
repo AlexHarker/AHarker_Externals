@@ -117,14 +117,14 @@ static inline long dynamic_get_num_sig_outs(void *obj)
     return dynamic_object_query<long>(obj, "query_num_sigouts");
 }
 
-static inline void **dynamic_get_sig_in_ptrs(void *obj)
+static inline double **dynamic_get_sig_in_ptrs(void *obj)
 {
-    return dynamic_object_query<void **>(obj, "query_sigins");
+    return dynamic_object_query<double **>(obj, "query_sigins");
 }
 
-static inline void ***dynamic_get_sig_out_handle(void *obj, long index)
+static inline double ***dynamic_get_sig_out_handle(void *obj, long index)
 {
-    return dynamic_object_query<void ***>(obj, "query_sigouts", index);
+    return dynamic_object_query<double ***>(obj, "query_sigouts", index);
 }
 
 // State Queries

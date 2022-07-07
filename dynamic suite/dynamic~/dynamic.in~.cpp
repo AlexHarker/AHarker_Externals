@@ -15,6 +15,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
+
 #include <dynamic~.hpp>
 
 
@@ -27,7 +29,7 @@ struct t_dynamic_in
     t_pxobject x_obj;
     
     long num_sig_ins;
-    void **sig_ins;
+    double **sig_ins;
     
     t_atom_long inlet_num;
     bool valid;
@@ -120,9 +122,9 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     if (x->valid)
-        memcpy(outs[0], x->sig_ins[x->inlet_num - 1], vec_size * sizeof(double));
+        std::copy_n(x->sig_ins[x->inlet_num - 1], vec_size, outs[0]);
     else
-        memset(outs[0], 0, vec_size * sizeof(double));
+        std::fill_n(outs[0], vec_size, 0.0);
 }
 
 // DSP
