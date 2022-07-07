@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <random>
 
 namespace random_generators
 {
@@ -68,24 +69,11 @@ namespace random_generators
         {
             uint32_t seeds[cmwc_lag_size];
             
-        #ifdef __APPLE__
-            for (uint32_t i = 0; i < cmwc_lag_size; i++)
-                seeds[i] = arc4random();
-        #elif defined (__linux__)
-            srandom(time(nullptr));
-            for (uint32_t i = 0; i < cmwc_lag_size; i++)
-                seeds[i] = random();
-        #else
-            HCRYPTPROV hProvider = 0;
-            const DWORD dwLength = 4 * cmwc_lag_size;
-            BYTE *pbBuffer = (BYTE *) seeds;
+            std::random_device rd;
             
-            if (!CryptAcquireContextW(&hProvider, 0, 0, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
-                return;
-            
-            CryptGenRandom(hProvider, dwLength, pbBuffer);
-            CryptReleaseContext(hProvider, 0);
-        #endif
+            for (uint32_t i = 0; i < cmwc_lag_size; i++)
+                seeds[i] = rd();
+        
             seed(seeds);
         }
         
