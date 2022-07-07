@@ -2,13 +2,14 @@
 /*
  *  dynamicdsp~
  *
- *  dynamicdsp~ is a multithreaded audio processing object for dynamically loading and managing audio (or non-audio) patches in realtime, without affecting other patches that are processing.
+ *  dynamicdsp~ is a multithreaded audio processing object for dynamically loading and managing patches.
+ *  Patches can be loaded in realtime without affecting other patches that are processing.
  *
- *  It can be thought of as a poly~ alternative, with more extensive multithreading features than the Max version.
- *  There is an associated set of objects for audio input / output and querying and setting patch state (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
- *  The voice allocation system is somewhat different to poly~.
- *
- *  See the helpfile documentation for further details of functionality.
+ *  It can be thought of as a poly~ alternative, with more extensive multithreading control.
+ *  There is an associated set of objects for audio input / output and querying and setting patch state.
+ *  These objects are dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
+ *  The standard in / out objects can be used for message IO.
+ *  The voice allocation system works differently to poly~ (using the targetfree message).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -28,12 +29,10 @@
 
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
-
-// FIX - threadsafety around alterations to the patch set vector
-// FIX - It seems I should clean up the threads better here / improve threading mechanisms further
-// FIX - potential adc~ crashes / no audio - cannot get traction on this
-
 // TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
+// FIX - It seems I should clean up the threads better here / improve threading mechanisms further
+
+// TODO - potential adc~ crashes / no audio - cannot get traction on this
 // TODO - share threads between objects
 // TODO - allow patch crossfading
 // TODO - patch serialisation
@@ -160,16 +159,15 @@ void poly_appendinstanceifneeded(char *buf, char *name, long instance)
 
 void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
 {
-    long i;
+    long i = 0;
     t_symbol *name;
     char buf[1024];
     bool subpatcher = false;
     
     *title = nullptr;
     
-    for (i = 0; i < x->patch_set->size(); i++)
+    while (const t_patcher *pp = x->patch_set->subpatch(i, x))
     {
-        const t_patcher *pp = x->patch_set->subpatch(i, x);
         if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
         {
             object_method(p, gensym("getname"), &name);
@@ -178,6 +176,7 @@ void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
             strcpy(*title,buf);
             return;
         }
+        i++;
     }
     // got here? it's ok, conventional title will be used
 }
@@ -366,9 +365,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     x->num_sig_outs = num_sig_outs;
     x->num_ins = num_ins;
     x->num_outs = num_outs;
-    
-    x->update_thread_map = 0;
-    
+        
     x->last_vec_size = 64;
     x->last_samp_rate = 44100;
     
@@ -412,7 +409,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Load patch
     
     if (patch_name_entered)
-        x->patch_set->load(0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
+        x->patch_set->load(0, 0, patch_name_entered, ac, av, x->last_vec_size, x->last_samp_rate);
     
     return x;
 }
@@ -483,20 +480,7 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
         patch_name = atom_getsym(argv);
         argc--; argv++;
         
-        index = x->patch_set->load(index, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
-        
-        // FIX - threading...
-        // FIX - review
-        
-        if (thread_request && index >= 0)
-        {
-            if (thread_request > 0)
-                x->patch_set->request_thread(index, thread_request);
-            else
-                x->patch_set->request_thread(index, index);
-            
-            x->update_thread_map = 1;
-        }
+        x->patch_set->load(index, thread_request, patch_name, argc, argv, x->last_vec_size, x->last_samp_rate);
     }
     else
         object_error((t_object *) x, "no patch specified");
@@ -537,8 +521,6 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
     if (argc > 0)
         index = atom_getlong(argv + 0) - 1;
     
-    // FIX - how to check the range of this value (N.B. different hardware may exhibit different numbers of max threads)
-    
     if (argc > 1)
         thread_request = atom_getlong(argv + 1) - 1;
     
@@ -546,8 +528,6 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
         x->patch_set->request_thread(index, thread_request);
     else
         x->patch_set->request_thread(index, index);
-    
-    x->update_thread_map = 1;
 }
 
 // Perform Routines
@@ -613,34 +593,21 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
 
     SIMDDenormals denormal_handler;
         
-    // Zero outputs
+    // Zero Outputs
     
     for (long i = 0; i < num_sig_outs; i++)
         memset(sig_outs[i], 0, sig_size * vec_size);
     
     if (x->manual_threading)
-    {
-        for (long i = 1; i <= x->patch_set->size(); i++)
-            x->patch_set->process_if_thread_matches(i, sig_outs, thread_num, num_active_threads);
-    }
+       x->patch_set->process_if_thread_matches(sig_outs, thread_num, num_active_threads);
     else
-    {
-        long size = x->patch_set->size();
-        long index = (thread_num * (size / num_active_threads));
-        for (long i = 1; i <= size; i++)
-        {
-            if (++index > size)
-                index -= size;
-            
-            x->patch_set->process_if_unprocessed(i, sig_outs);
-        }
-    }
+        x->patch_set->process_if_unprocessed(sig_outs, thread_num, num_active_threads);
 }
 
 void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
 {
     long num_active_threads = x->request_num_active_threads;
-    long multithread_flag = (x->patch_set->size() > 1) && x->multithread_flag;
+    long multithread_flag = (x->patch_set->num_patches() > 1) && x->multithread_flag;
     
     // Zero Outputs
     
@@ -656,12 +623,8 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     if (!x->manual_threading)
         x->patch_set->reset_processed();
     
-    if (x->update_thread_map)
-    {
-        x->update_thread_map = 0;
-        x->patch_set->update_threads();
-    }
-    
+    x->patch_set->update_threads();
+        
     // Do processing - the switch aims to get more speed from inlining a fixed loop size
     // N.B. - the single threaded case is handled as a special case in the ThreadSet class
     

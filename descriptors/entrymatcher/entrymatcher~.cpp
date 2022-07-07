@@ -14,7 +14,6 @@
  *  5 - only numeric data can be used (although entries and columns can still be referred to using symbols).
  *
  *  In practice a large number of matching scenarios and data lookup requirements can be satisfied.
- *  The features of the entrymatcher~ object are covered in detail in the helpfile documentation.
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
