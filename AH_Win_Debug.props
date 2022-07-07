@@ -49,8 +49,7 @@
       <AssemblerListingLocation>$(IntDir)$(TargetName).asm</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <Optimization>Disabled</Optimization>
-      <ExceptionHandling>
-      </ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
   </ItemDefinitionGroup>
