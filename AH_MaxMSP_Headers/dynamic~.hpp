@@ -19,10 +19,10 @@
 
 // Helper to check that an object that appears to be a host is of the correct type
 
-static inline bool dynamic_is_dynamic_host(void *x)
+static inline bool dynamic_is_dynamic_host(void *obj)
 {
-    return x && (object_classname(x) == gensym("dynamicdsp~") ||
-                 object_classname(x) == gensym("dynamicserial~"));
+    return obj && (object_classname(obj) == gensym("dynamicdsp~") ||
+                 object_classname(obj) == gensym("dynamicserial~"));
 }
 
 // Helper to allow traversal through parent patchers
