@@ -95,8 +95,6 @@ namespace HISSTools
         {
             switch (error)
             {
-                case ERR_NONE:
-                    return "no error";
                 case ERR_MEM_COULD_NOT_ALLOCATE:
                     return "mem could not allocate";
                 case ERR_FILE_ERROR:
@@ -117,6 +115,8 @@ namespace HISSTools
                     return "wave unsupported format";
                 case ERR_FILE_COULDNT_WRITE:
                     return "file couldn't write";
+                default:
+                    return "no error";
             }
         }
         std::vector<BaseAudioFile::Error> BaseAudioFile::extractErrorsFromFlags(int flags)
@@ -200,8 +200,6 @@ namespace HISSTools
             {
                 case kAudioFileInt8:
                     return 8;
-                case kAudioFileInt16:
-                    return 16;
                 case kAudioFileInt24:
                     return 24;
                 case kAudioFileInt32:
@@ -210,6 +208,9 @@ namespace HISSTools
                     return 32;
                 case kAudioFileFloat64:
                     return 64;
+                case kAudioFileInt16:
+                default:
+                    return 16;
             }
         }
 
@@ -217,15 +218,17 @@ namespace HISSTools
         {
             switch (i)
             {
+                case kAudioFileFloat32:
+                case kAudioFileFloat64:
+                    return kAudioFileFloat;
+                    
                 case kAudioFileInt8:
                 case kAudioFileInt16:
                 case kAudioFileInt24:
                 case kAudioFileInt32:
+                default:
                     return kAudioFileInt;
 
-                case kAudioFileFloat32:
-                case kAudioFileFloat64:
-                    return kAudioFileFloat;
             }
         }
     }
