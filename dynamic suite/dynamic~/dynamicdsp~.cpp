@@ -2,13 +2,14 @@
 /*
  *  dynamicdsp~
  *
- *  dynamicdsp~ is a multithreaded audio processing object for dynamically loading and managing audio (or non-audio) patches in realtime, without affecting other patches that are processing.
+ *  dynamicdsp~ is a multithreaded audio processing object for dynamically loading and managing patches.
+ *  Patches can be loaded in realtime without affecting other patches that are processing.
  *
- *  It can be thought of as a poly~ alternative, with more extensive multithreading features than the Max version.
- *  There is an associated set of objects for audio input / output and querying and setting patch state (dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
- *  The voice allocation system is somewhat different to poly~.
- *
- *  See the helpfile documentation for further details of functionality.
+ *  It can be thought of as a poly~ alternative, with more extensive multithreading control.
+ *  There is an associated set of objects for audio input / output and querying and setting patch state.
+ *  These objects are dynamic.in~ / dynamic.out~ / dynamic.request~ / dynamic.this~ / dynamic.patch~).
+ *  The standard in / out objects can be used for message IO.
+ *  The voice allocation system works differently to poly~ (using the targetfree message).
  *
  *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
@@ -28,11 +29,10 @@
 
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
-
-// FIX - It seems I should clean up the threads better here / improve threading mechanisms further
-// FIX - potential adc~ crashes / no audio - cannot get traction on this
-
 // TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
+// FIX - It seems I should clean up the threads better here / improve threading mechanisms further
+
+// TODO - potential adc~ crashes / no audio - cannot get traction on this
 // TODO - share threads between objects
 // TODO - allow patch crossfading
 // TODO - patch serialisation
@@ -520,8 +520,6 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
     
     if (argc > 0)
         index = atom_getlong(argv + 0) - 1;
-    
-    // FIX - how to check the range of this value (N.B. different hardware may exhibit different numbers of max threads)
     
     if (argc > 1)
         thread_request = atom_getlong(argv + 1) - 1;
