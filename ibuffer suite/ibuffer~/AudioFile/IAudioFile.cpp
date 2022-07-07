@@ -235,7 +235,7 @@ namespace HISSTools
     template <class T>
     void IAudioFile::float64ToOutput(T* output, uint64_t value)
     {
-        *output = *reinterpret_cast<double*>(&value);
+        *output = static_cast<T>(*reinterpret_cast<double*>(&value));
     }
     
      //  Chunk Reading
@@ -533,6 +533,9 @@ namespace HISSTools
                     }
                     
                     break;
+
+                default:
+                    break;
             }
         }
         
@@ -596,7 +599,7 @@ namespace HISSTools
             return;
         }
         
-        setFrames(chunkSize / getFrameByteCount());
+        setFrames(chunkSize / static_cast<FrameCount>(getFrameByteCount()));
         setPCMOffset(positionInternal());
         setFileType(kAudioFileWAVE);
     }
@@ -665,6 +668,9 @@ namespace HISSTools
                 case kAudioFileFloat64:
                     for (size_t i = 0; i < loopSamples; i++, j += byteStep)
                         float64ToOutput(output + i, getU64(mBuffer + j, getAudioEndianness()));
+                    break;
+                    
+                default:
                     break;
             }
             
