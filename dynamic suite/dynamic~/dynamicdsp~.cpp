@@ -17,9 +17,11 @@
 
 #include <ext.h>
 #include <ext_obex.h>
-#include <z_dsp.h>
 #include <ext_wind.h>
+#include <z_dsp.h>
 #include <jpatcher_api.h>
+
+#include <algorithm>
 
 #include <dynamic~.hpp>
 
@@ -46,8 +48,6 @@ t_class *this_class;
 t_symbol *ps_args = gensym("args");
 t_symbol *ps_declareio = gensym("declareio");
 
-static t_ptr_uint sig_size;
-
 constexpr long max_args = threaded_patch_slot::max_args();
 
 // Object Structure
@@ -68,8 +68,7 @@ struct t_dynamicdsp
     long num_ins;
     long num_outs;
     
-    void **sig_ins;
-    void **sig_outs;
+    double **sig_ins;
     
     long num_proxies;                // number of proxies = MAX(num_sig_ins, num_ins)
     
@@ -104,14 +103,10 @@ void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *a
 void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
-static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
-void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, long thread_num, long num_active_threads);
-void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size);
-t_int *dynamicdsp_perform(t_int *w);
+static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, double **outs, long vec_size, long num_active_threads);
+void dynamicdsp_threadprocess(t_dynamicdsp *x, double **outs, long vec_size, long thread_num, long num_active_threads);
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
-void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -196,7 +191,6 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method) dynamicdsp_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) dynamicdsp_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method) dynamicdsp_assist, "assist", A_CANT, 0);
@@ -249,9 +243,7 @@ int C74_EXPORT main()
     class_dspinit(this_class);
     
     class_register(CLASS_BOX, this_class);
-    
-    sig_size = ((maxversion() & 0x3FFF) >= 0x600) ? sizeof(double) : sizeof(float);
-    
+        
     return 0;
 }
 
@@ -373,13 +365,10 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Create signal in/out buffers and zero
     
-    x->sig_ins = (void **) malloc(num_sig_ins * sizeof(void *));
-    x->sig_outs = (void **) malloc(num_sig_outs * sizeof(void *));
+    x->sig_ins = allocate_aligned<double *>(num_sig_ins);
     
     for (long i = 0; i < num_sig_ins; i++)
         x->sig_ins[i] = nullptr;
-    for (long i = 0; i < num_sig_outs; i++)
-        x->sig_outs[i] = nullptr;
     
     // Make non-signal outlets first
     
@@ -428,16 +417,14 @@ void dynamicdsp_free(t_dynamicdsp *x)
     // Free other resources
     
     if (x->num_sig_ins)
-        free(x->sig_ins);
-    if (x->num_sig_outs)
-        free(x->sig_outs);
+        deallocate_aligned(x->sig_ins);
 }
 
 void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 {
     if (m == ASSIST_OUTLET)
     {
-        if (a <    x->num_sig_outs)
+        if (a < x->num_sig_outs)
             sprintf(s,"Signal Out %ld", a + 1);
         else
             sprintf(s,"Message Out %ld", a - x->num_sig_outs + 1);
@@ -534,19 +521,18 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 
 // Perform Routines
 
-template <typename T>
-void dynamicdsp_sum(thread_set *threads, void **sig_outs, long num_sig_outs, long vec_size, long num_active_threads)
+void dynamicdsp_sum(thread_set *threads, double **outs, long num_outs, long vec_size, long num_active_threads)
 {
-    constexpr long max_simd_size = SIMDLimits<T>::max_size;
+    constexpr long max_simd_size = SIMDLimits<double>::max_size;
     
     // Sum output of threads for each signal outlet
     
-    for (long i = 0; i < num_sig_outs; i++)
+    for (long i = 0; i < num_outs; i++)
     {
         for (long j = 0; j < num_active_threads; j++)
         {
-            T *io_pointer = (T *) sig_outs[i];
-            T *next_sig_pointer = threads->get_thread_buffer<T>(j, i);
+            double *io_pointer = outs[i];
+            double *next_sig_pointer = threads->get_thread_buffer(j, i);
             
             if (next_sig_pointer)
             {
@@ -557,7 +543,7 @@ void dynamicdsp_sum(thread_set *threads, void **sig_outs, long num_sig_outs, lon
                 }
                 else
                 {
-                    using SIMD = SIMDType<T, max_simd_size>;
+                    using SIMD = SIMDType<double, max_simd_size>;
                     const long num_vecs = vec_size / max_simd_size;
                     SIMD *a = (SIMD *) io_pointer;
                     SIMD *b = (SIMD *) next_sig_pointer;
@@ -570,24 +556,21 @@ void dynamicdsp_sum(thread_set *threads, void **sig_outs, long num_sig_outs, lon
     }
 }
 
-static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads)
+static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, double **outs, long vec_size, long num_active_threads)
 {
     // Tick the threads and process in this thread (the main audio thread)
     
-    x->threads->tick(vec_size, num_active_threads, sig_outs);
+    x->threads->tick(vec_size, num_active_threads, outs);
     
     if (num_active_threads > 1)
     {
         // Sum outputs
         
-        if (sig_size == sizeof(float))
-            dynamicdsp_sum<float>(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
-        else
-            dynamicdsp_sum<double>(x->threads, sig_outs, x->num_sig_outs, vec_size, num_active_threads);
+        dynamicdsp_sum(x->threads, outs, x->num_sig_outs, vec_size, num_active_threads);
     }
 }
 
-void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, long thread_num, long num_active_threads)
+void dynamicdsp_threadprocess(t_dynamicdsp *x, double **outs, long vec_size, long thread_num, long num_active_threads)
 {
     long num_sig_outs = x->num_sig_outs;
     
@@ -598,23 +581,29 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, void **sig_outs, long vec_size, l
     // Zero Outputs
     
     for (long i = 0; i < num_sig_outs; i++)
-        memset(sig_outs[i], 0, sig_size * vec_size);
+        std::fill_n(outs[i], vec_size, 0.0);
     
     if (x->manual_threading)
-       x->patch_set->process_if_thread_matches(sig_outs, thread_num, num_active_threads);
+       x->patch_set->process_if_thread_matches(outs, thread_num, num_active_threads);
     else
-        x->patch_set->process_if_unprocessed(sig_outs, thread_num, num_active_threads);
+        x->patch_set->process_if_unprocessed(outs, thread_num, num_active_threads);
 }
 
-void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
+
+void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     long num_active_threads = x->request_num_active_threads;
     long multithread_flag = (x->patch_set->num_patches() > 1) && x->multithread_flag;
     
+    // Copy inputs
+    
+    for (long i = 0; i < x->num_sig_ins; i++)
+        x->sig_ins[i] = ins[i];
+    
     // Zero Outputs
     
     for (long i = 0; i < x->num_sig_outs; i++)
-        memset(sig_outs[i], 0, sig_size * vec_size);
+        std::fill_n(outs[i], vec_size, 0.0);
     
     // Update multithreading parameters (done in one thread and before processing to ensure uninterrupted audio processing
     
@@ -633,94 +622,54 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     switch (num_active_threads)
     {
         case 2:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 2);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 2);
             break;
             
         case 3:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 3);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 3);
             break;
             
         case 4:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 4);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 4);
             break;
             
         case 5:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 5);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 5);
             break;
             
         case 6:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 6);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 6);
             break;
             
         case 7:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 7);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 7);
             break;
             
         case 8:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, 8);
+            dynamicdsp_multithread_perform(x, outs, vec_size, 8);
             break;
             
         default:
-            dynamicdsp_multithread_perform(x, sig_outs, vec_size, num_active_threads);
+            dynamicdsp_multithread_perform(x, outs, vec_size, num_active_threads);
             break;
     }
 }
 
-t_int *dynamicdsp_perform(t_int *w)
-{
-    t_dynamicdsp *x = (t_dynamicdsp *) (w[1]);
-    void **sig_outs = (void **) x->sig_outs;
-    long vec_size = x->last_vec_size;
-    
-    if (!x->x_obj.z_disabled)
-        dynamicdsp_perform_common(x, sig_outs, vec_size);
-    
-    return w + 2;
-}
-
-void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    for (long i = 0; i < x->num_sig_ins; i++)
-        x->sig_ins[i] = ins[i];
-    
-    dynamicdsp_perform_common(x, (void **) outs, vec_size);
-}
-
 // DSP Routines
-
-bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate)
-{
-    bool mem_fail = x->threads->resize_buffers(vec_size * sig_size);
-    
-    // Do internal dsp compile (for each valid patch)
-    
-    x->patch_set->compile_dsp(vec_size, sample_rate);
-    
-    x->last_vec_size = vec_size;
-    x->last_samp_rate = sample_rate;
-    
-    return mem_fail;
-}
-
-void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count)
-{
-    // Copy in and out pointers
-    
-    for (long i = 0; i < x->num_sig_ins; i++)
-        x->sig_ins[i] = sp[i]->s_vec;
-    for (long i = 0; i < x->num_sig_outs; i++)
-        x->sig_outs[i] = sp[i + x->num_proxies]->s_vec;
-    
-    // Add to dsp if common routine successful
-    
-    if (!dynamicdsp_dsp_common(x, sp[0]->s_n, static_cast<long>(sp[0]->s_sr)))
-        dsp_add(dynamicdsp_perform, 1, x);
-}
 
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    // Add to dsp if common routine successful
+    bool mem_fail = x->threads->resize_buffers(max_vec);
     
-    if (!dynamicdsp_dsp_common(x, max_vec, static_cast<long>(sample_rate)))
+    // Do internal dsp compile (for each valid patch)
+    
+    x->patch_set->compile_dsp(max_vec, static_cast<long>(sample_rate));
+    
+    x->last_vec_size = max_vec;
+    x->last_samp_rate = static_cast<long>(sample_rate);
+        
+    // Add to dsp if memory allocation successful
+    
+    if (!mem_fail)
         object_method(dsp64, gensym("dsp_add64"), x, dynamicdsp_perform64, 0, nullptr);
 }

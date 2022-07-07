@@ -34,13 +34,13 @@ struct t_chebyshape
     
     long num_coeff;
     
-    void *coeff_ins[max_coeff];
+    double *coeff_ins[max_coeff];
     double coeff[max_coeff];
     
     long offset;
     long num_sig_ins;
     
-    void **sig_ins;
+    double **sig_ins;
 };
 
 // Function Protoypes
@@ -119,7 +119,7 @@ void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins
     
     double *in = ins[0];
     double *trigger = ins[1];
-    double **coeff_ins = ((double **) (x->sig_ins)) + x->offset - 1;
+    double **coeff_ins = x->sig_ins + (x->offset - 1);
     double *coeff = x->coeff;
     double *out = outs[0];
     
@@ -279,8 +279,8 @@ void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long n
 
 void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    void **sig_ins = x->sig_ins;
-    void **coeff_ins = x->coeff_ins;
+    double **sig_ins = x->sig_ins;
+    double **coeff_ins = x->coeff_ins;
     
     double *coeff = x->coeff;
     

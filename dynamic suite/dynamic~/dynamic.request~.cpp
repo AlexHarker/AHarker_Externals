@@ -29,7 +29,7 @@ struct t_dynamic_request
     t_pxobject x_obj;
     
     long num_sig_ins;
-    void **sig_ins;
+    double **sig_ins;
     
     t_atom_long inlet_num;
     bool valid;
@@ -135,7 +135,7 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
     
     double prev = x->prev;
     
-    from = (double *) x->sig_ins[x->inlet_num - 1];
+    from = x->sig_ins[x->inlet_num - 1];
     
     for (long i = 0; i < vec_size >> 1; i++)
     {

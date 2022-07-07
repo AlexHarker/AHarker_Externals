@@ -28,7 +28,7 @@ struct t_dynamic_out
 {
     t_pxobject x_obj;
     
-    void ***out_handle;
+    double ***out_handle;
     long num_sig_outs;
     
     t_atom_long outlet_num;
@@ -112,7 +112,7 @@ void dynamic_out_int (t_dynamic_out *x, t_atom_long intin)
 template <typename T>
 void dynamic_out_perform(t_dynamic_out *x, T *in, long N)
 {
-    T ***out_handle = (T ***) x->out_handle;
+    T ***out_handle = reinterpret_cast<T ***>(x->out_handle);
     T *io_pointer;
     
     long num_sig_outs = x->num_sig_outs;
@@ -143,7 +143,7 @@ void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **in
 void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     using SIMD = SIMDType<double, SIMDLimits<double>::max_size>;
-    SIMD *in = (SIMD *) ins[0];
+    SIMD *in = reinterpret_cast<SIMD *>(ins[0]);
     
     dynamic_out_perform(x, in, vec_size /  SIMDLimits<double>::max_size);
 }
