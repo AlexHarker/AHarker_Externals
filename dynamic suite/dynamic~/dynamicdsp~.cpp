@@ -23,6 +23,8 @@
 
 #include <dynamic~.hpp>
 
+#include <AH_Int_Handler.hpp>
+
 #include "Common/patch_set.hpp"
 #include "Common/thread_set.hpp"
 #include "Common/dynamic_host.hpp"
@@ -323,7 +325,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     if (argc && atom_gettype(argv) == A_LONG)
     {
         if (atom_getlong(argv) < max_obj_threads)
-            max_obj_threads = atom_getlong(argv);
+            max_obj_threads = limit_int<long>(atom_getlong(argv));
         if (max_obj_threads < 1)
             max_obj_threads = 1;
         argc--; argv++;
@@ -508,7 +510,7 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
         n = (n < 1) ? 1 : ((n > x->max_obj_threads) ? x->max_obj_threads : n);
     }
     
-    x->request_num_active_threads = n;
+    x->request_num_active_threads = limit_int<long>(n);
 }
 
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
