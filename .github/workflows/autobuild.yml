@@ -1,7 +1,7 @@
 name: build-github
 on: [push]
 jobs:
-  deploy:
+  deploy-mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,4 +21,6 @@ jobs:
           prerelease: true
           fail_on_unmatched_files: true
           files: build/AHarker_Externals_Mac.zip
-          tag_name: 'latest-test6'
+          target_commitish: ${GITHUB_SHA}
+          tag_name: 'latest-test8'
+  '
