@@ -12,7 +12,8 @@ jobs:
         with:
           path: "ah-externals"
       - run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
-      - run: mkdir build/
+      - run: |
+             mkdir build/
              cd ah-externals/AH_Externals_Package/
              zip -r AHarker_Externals_Mac.zip AH_Externals
              mv AHarker_Externals_Mac.zip ../../build/AHarker_Externals_Mac.zip
