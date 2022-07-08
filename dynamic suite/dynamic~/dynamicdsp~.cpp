@@ -31,7 +31,7 @@
 
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
-// TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
+// FIX - GIMME methods
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
@@ -643,6 +643,9 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
             dynamicdsp_multithread_perform(x, sig_outs, vec_size, num_active_threads);
             break;
     }
+    
+    if (!x->manual_threading)
+        x->patch_set->reset_processed();
 }
 
 t_int *dynamicdsp_perform(t_int *w)
