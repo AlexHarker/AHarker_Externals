@@ -1,6 +1,17 @@
 name: build-github
 on: [push]
 jobs:
+  deploy-win:
+    runs-on: win-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: 'Cycling74/max-sdk-base'
+          path: "max-sdk-base"
+      - uses: actions/checkout@v3
+        with:
+          path: "ah-externals"
+      #- run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
   deploy-mac:
     runs-on: macos-latest
     steps:
@@ -26,4 +37,4 @@ jobs:
           files: build/AHarker_Externals_Mac.zip
           target_commitish: ${{ github.sha }}
           tag_name: latest-${{ steps.date.outputs.date }}
-  
+    
