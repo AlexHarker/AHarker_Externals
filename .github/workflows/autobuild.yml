@@ -33,7 +33,7 @@ jobs:
         with:
           path: "ah-externals"
       - name: Build mac externals
-        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
       - name: Make zip
         run: |
              mkdir build/
