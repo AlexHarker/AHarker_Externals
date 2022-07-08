@@ -17,4 +17,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          files: 'AH_Externals_Package/AHarker_Externals/*'
+          files: ah-externals/AH_Externals_Package/AHarker_Externals/*
