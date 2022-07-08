@@ -4,30 +4,36 @@ jobs:
   deploy-win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout max-sdk-base
+        uses: actions/checkout@v3
         with:
           repository: 'Cycling74/max-sdk-base'
           path: "max-sdk-base"
-      - uses: actions/checkout@v3
+      - name: Checkout main repo
+        uses: actions/checkout@v3
         with:
           path: "ah-externals"
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      - run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m || exit /B 1
+      - name: Build windows externals
+        run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
   deploy-mac:
     runs-on: macos-latest
     steps:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - uses: actions/checkout@v3
+      - name: Checkout max-sdk-base
+        uses: actions/checkout@v3
         with:
           repository: 'Cycling74/max-sdk-base'
           path: "max-sdk-base"
-      - uses: actions/checkout@v3
+      - name: Checkout main repo
+        uses: actions/checkout@v3
         with:
           path: "ah-externals"
-      - run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+      - name: Build mac externals
+        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
       - run: |
              mkdir build/
              cd ah-externals/AH_Externals_Package/
