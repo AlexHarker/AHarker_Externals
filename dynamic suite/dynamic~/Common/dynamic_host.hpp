@@ -49,9 +49,9 @@ struct dynamic_host
 
     // Voice targeting
 
-    static void target(T *x, t_symbol *msg, long argc, t_atom *argv)
+    static void target(T *x, t_atom_long index)
     {
-        x->patch_set->target(argc, argv);
+        x->patch_set->target(index);
     }
 
     static void targetfree(T *x, t_symbol *msg, long argc, t_atom *argv)

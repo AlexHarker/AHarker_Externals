@@ -170,12 +170,10 @@ public:
 
     // Target methods
 
-    void target(long argc, t_atom *argv)
+    void target(t_atom_long index)
     {
         slot_access slots(m_slots);
         
-        t_atom_long index = argc ? atom_getlong(argv) : 0;
-
         m_target_index = index ? (slot_exists(slots(), index) ? index : -1) : 0;
     }
 
