@@ -4,6 +4,9 @@ jobs:
   deploy-mac:
     runs-on: macos-latest
     steps:
+       - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - uses: actions/checkout@v3
         with:
           repository: 'Cycling74/max-sdk-base'
@@ -22,5 +25,5 @@ jobs:
           fail_on_unmatched_files: true
           files: build/AHarker_Externals_Mac.zip
           target_commitish: ${{ github.sha }}
-          tag_name: 'latest-test8'
+          tag_name: latest-${{ steps.date.outputs.date }}
   
