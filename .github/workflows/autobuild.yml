@@ -10,5 +10,11 @@ jobs:
           path: "max-sdk-base"
       - uses: actions/checkout@v3
         with:
-          path: "ahbuild"
-      - run: xcodebuild -project 'ahbuild/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+          path: "ah-externals"
+      - run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          files: 'ah-externals/AH_Externals_Package/AHarker_Externals/*'
