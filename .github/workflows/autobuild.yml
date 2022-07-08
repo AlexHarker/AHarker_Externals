@@ -6,6 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-           repository: 'https://github.com/Cycling74/max-sdk-base'
+          repository: 'https://github.com/Cycling74/max-sdk-base'
       - uses: actions/checkout@v3
-      - run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+        with:
+          path: 'ahbuild/'
+      - run: xcodebuild -project 'ahbuild/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
