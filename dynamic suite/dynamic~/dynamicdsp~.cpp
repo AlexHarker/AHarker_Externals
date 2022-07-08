@@ -43,18 +43,6 @@
 
 // Poly stuff to investigate
 
-void poly_getfilesquery(t_object *x, t_linklist **plist)
-{
-    t_linklist *list = linklist_new();
-    t_jdrag_inquiry *inq = (t_jdrag_inquiry *)sysmem_newptr(sizeof(t_jdrag_inquiry));
-    
-    //inq->i_role = gensym("poly_abstractions");
-    //inq->i_prepend = ps_patchername;
-    
-    linklist_append(list, inq);
-    *plist = list;
-}
-
 // the updatepath message is used when unfreezing a Max for Live device.
 // If an object refers to a path inside a collective, it needs to find its patcher on disk and use that path ID instead to refer to it. The filename will not change.
 
@@ -209,9 +197,8 @@ int C74_EXPORT main()
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
     CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
-        
+    
     /*
-     class_addmethod(c, (method)poly_getfilesquery, "getfilesquery", A_CANT, 0);    // Dependencies?
      class_addmethod(c, (method)poly_updatepath, "updatepath", A_CANT, 0);          // M4L
      */
     
