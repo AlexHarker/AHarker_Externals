@@ -39,6 +39,46 @@
 // TODO - allow patch crossfading
 // TODO - patch serialisation
 
+// Poly stuff to investigate
+
+void poly_getfilesquery(t_object *x, t_linklist **plist)
+{
+    t_linklist *list = linklist_new();
+    t_jdrag_inquiry *inq = (t_jdrag_inquiry *)sysmem_newptr(sizeof(t_jdrag_inquiry));
+    
+    //inq->i_role = gensym("poly_abstractions");
+    //inq->i_prepend = ps_patchername;
+    
+    linklist_append(list, inq);
+    *plist = list;
+}
+
+// the updatepath message is used when unfreezing a Max for Live device.
+// If an object refers to a path inside a collective, it needs to find its patcher on disk and use that path ID instead to refer to it. The filename will not change.
+
+void poly_updatepath(t_object *x)
+{
+    //char filename[MAX_PATH_CHARS];
+    //short path;
+    //t_fourcc type;
+    //method m = (method)gensym("__locatefile_extended_flags__")->s_thing;
+    //char found = false;
+    
+    //strcpy(filename, x->p_patchername->s_name);
+    
+    //if (m)
+    //    found = !m(filename, &path, &type, NULL, 0, 1 /* LOCATEFILE_FLAGS_DONTSEARCHCOLLECTIVES */);
+    //else
+    //    found = !locatefile_extended(filename, &path, &type, NULL, 0);
+    
+    //if (found && path <= 0)
+    {
+        // post("updating path to %d", path);
+        //x->p_patchervol = path;
+    }
+}
+
+
 // Global Variables
 
 t_class *this_class;
@@ -114,75 +154,8 @@ bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
+
 // Main
-
-long poly_isparent(t_object *p, t_object *mightbeparent)
-{
-    t_object *pp = p;
-    
-    do {
-        object_method(pp, gensym("getvnewobjparent"), &pp);
-        if (pp == mightbeparent)
-            return true;
-    } while (pp);
-    
-    return false;
-}
-
-void poly_appendinstanceifneeded(char *buf, char *name, long instance)
-{
-    char seeninstance = false;
-    
-    long len = static_cast<long>(strlen(name));
-
-    // is last character of name a right paren?
-    if (len > 3 && name[len - 1] == ')') {
-        // look for pattern, digits until left paren
-        char seendigit = true;
-        
-        for (long i = len - 2; i >= 0; i--) {
-            if (isdigit(name[i])) {
-                seendigit = true;
-            } else {
-                if (!seendigit)
-                    break;
-                if (name[i] == '(') {
-                    seeninstance = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (seeninstance)
-        strcpy(buf, name);
-    else
-        sprintf(buf, "%s (%ld)", name, instance);
-}
-
-void poly_titleassoc(t_dynamicdsp *x, t_object *p, char **title)
-{
-    long i = 0;
-    t_symbol *name;
-    char buf[1024];
-    bool subpatcher = false;
-    
-    *title = nullptr;
-    
-    while (const t_patcher *pp = x->patch_set->subpatch(i, x))
-    {
-        if (p == pp || (subpatcher = poly_isparent(p, (t_object*)pp)))
-        {
-            object_method(p, gensym("getname"), &name);
-            poly_appendinstanceifneeded(buf, name->s_name, i + 1);
-            *title = sysmem_newptr(strlen(buf)+1);
-            strcpy(*title,buf);
-            return;
-        }
-        i++;
-    }
-    // got here? it's ok, conventional title will be used
-}
-
 
 int C74_EXPORT main()
 {
