@@ -367,8 +367,10 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     x->num_proxies = (num_sig_ins > num_ins) ? num_sig_ins : num_ins;
     
+    // Needed due to output zeroing!!
+    
     dsp_setup((t_pxobject *) x, x->num_proxies);
-    x->x_obj.z_misc = Z_NO_INPLACE;                                                             // due to output zeroing!!
+    x->x_obj.z_misc = Z_NO_INPLACE;
     
     // Make signal outs
     
@@ -377,7 +379,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Get parent patcher
     
-    x->parent_patch = (t_patcher *) gensym("#P")->s_thing;                                        // store reference to parent patcher
+    x->parent_patch = (t_patcher *) gensym("#P")->s_thing;
     
     // Setup temporary memory / threads / slots
     
@@ -484,7 +486,7 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
     if (argc)
     {
         n = atom_getlong(argv);
-        n = (n < 1) ? 1 : ((n > x->max_obj_threads) ? x->max_obj_threads : n);
+        n = std::max(t_atom_long(1), std::min(n, x->max_obj_threads));
     }
     
     x->request_num_active_threads = limit_int<long>(n);
