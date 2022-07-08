@@ -32,7 +32,6 @@
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
 // FIX - GIMME methods
-// FIX - It seems I should clean up the threads better here / improve threading mechanisms further
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
 // TODO - share threads between objects
