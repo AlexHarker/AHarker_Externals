@@ -8,4 +8,4 @@ jobs:
         with:
           repository: 'Cycling74/max-sdk-base'
       - uses: actions/checkout@v3
-      - run: xcodebuild -project 'ahbuild/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+      - run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
