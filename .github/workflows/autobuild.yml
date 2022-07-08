@@ -2,7 +2,7 @@ name: build-github
 on: [push]
 jobs:
   deploy-win:
-    runs-on: win-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
