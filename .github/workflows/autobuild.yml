@@ -5,4 +5,4 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
-      - run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Release build CODE_SIGNING_ALLOWED=YES
+      - run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
