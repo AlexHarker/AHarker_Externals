@@ -11,9 +11,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: "ah-externals"
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
       - run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m || exit /B 1
-#call "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 store
-      #- run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
   deploy-mac:
     runs-on: macos-latest
     steps:
