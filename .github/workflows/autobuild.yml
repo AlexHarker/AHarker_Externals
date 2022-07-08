@@ -15,8 +15,7 @@ jobs:
       - run: |
              mkdir build/
              cd ah-externals/AH_Externals_Package/
-             zip -r AHarker_Externals_Mac.zip AH_Externals
-             mv AHarker_Externals_Mac.zip ../../build/AHarker_Externals_Mac.zip
+             zip -r ./../build/AHarker_Externals_Mac.zip AHarker_Externals
       - uses: "softprops/action-gh-release@v1"
         with:
           prerelease: true
