@@ -1,7 +1,7 @@
 AHarker Externals
 =================
 
-A Set of 80+ Externals for a variety of tasks in Max.
+A Set of 80+ Externals for a variety of tasks in Cycling 74's Max.
 
 By Alex Harker
 
