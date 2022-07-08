@@ -12,9 +12,10 @@ jobs:
         with:
           path: "ah-externals"
       - run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment build CODE_SIGNING_ALLOWED=YES
+      - run: zip build/AHarker_Externals_Mac.zip -r ah-externals/AH_Externals_Package/
       - uses: "softprops/action-gh-release@v1"
         with:
           prerelease: true
           fail_on_unmatched_files: true
-          files: ah-externals/AH_Externals_Package/**/*
-          tag_name: 'latest-test'
+          files: build/AHarker_Externals_Mac.zip
+          tag_name: 'latest-test2'
