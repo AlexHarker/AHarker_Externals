@@ -3,7 +3,7 @@ on: [push]
 jobs:
   deploy:
     runs-on: macos-12
-     steps:
-    - uses: actions/checkout@v1
-    - name: Build Externals
-      run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'macOS' -configuration Release build CODE_SIGNING_ALLOWED=YES
+      steps:
+        - uses: actions/checkout@v1
+        - name: Build Externals
+        run: xcodebuild -project 'AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'macOS' -configuration Release build CODE_SIGNING_ALLOWED=YES
