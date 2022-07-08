@@ -140,7 +140,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
     class_addmethod(this_class, (method) handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
     
-    CLASS_ATTR_OBJ(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, t_dynamicserial, x_obj.z_ob);
+    CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
     CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
     
