@@ -76,7 +76,7 @@ struct t_descriptors
     // Outlet
     
     void *m_outlet;
-    //void *m_per_Frame_outlet;
+    //void *m_per_frame_outlet;
 
     // Output Clock
     
@@ -229,7 +229,7 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
     
     x->params.m_fft_params = check_fft_params((t_object *) x, default_fft_size, 0, 0, nullptr, x->max_fft_size_log2);
 
-    //x->m_per_Frame_outlet = listout(x);
+    //x->m_per_frame_outlet = listout(x);
     x->m_outlet = listout(x);
 
     create_object(x->output_list);
@@ -447,7 +447,7 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
     for (size_t i = 0; i < graph->per_frame_descriptors_size(); i++)
     {
         graph->output_per_frame_descriptors(i, per_frame_atoms.data());
-        outlet_list(x->m_features_outlet, nullptr, static_cast<short>(per_frame_atoms.size()), per_frame_atoms.data());
+        outlet_list(x->m_per_frame_outlet, nullptr, static_cast<short>(per_frame_atoms.size()), per_frame_atoms.data());
     }
     */
     // Output
