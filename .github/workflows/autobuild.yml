@@ -37,4 +37,5 @@ jobs:
           files: build/AHarker_Externals_Mac.zip
           target_commitish: ${{ github.sha }}
           tag_name: latest-${{ steps.date.outputs.date }}
+          body: This is an automated build of AHarker Externals
     
