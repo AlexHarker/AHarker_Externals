@@ -10,9 +10,9 @@ struct dynamic_host
 {
     // Removing patches
 
-    static void deletepatch(T *x, t_symbol *msg, long argc, t_atom *argv)
+    static void deletepatch(T *x, t_atom_long index)
     {
-        x->patch_set->remove(atom_getlong(argv));
+        x->patch_set->remove(index);
     }
 
     static void clear(T *x)

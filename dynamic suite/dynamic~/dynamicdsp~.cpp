@@ -15,6 +15,7 @@
  *
  */
 
+
 #include <ext.h>
 #include <ext_obex.h>
 #include <ext_wind.h>
@@ -34,6 +35,7 @@
 // TODO - check all poly CANT methods
 // TODO - change some items to attributes
 // TODO - use an atomic counter for autoloadbalance to decrease thread sync costs??
+// FIX - GIMME methods
 // FIX - It seems I should clean up the threads better here / improve threading mechanisms further
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
@@ -77,10 +79,9 @@ struct t_dynamicdsp
     long request_num_active_threads;
     long num_active_threads;
     
-    long multithread_flag;
-    long request_manual_threading;
-    long manual_threading;
-    long update_thread_map;
+    bool multithread_flag;
+    bool request_manual_threading;
+    bool manual_threading;
     
     long max_obj_threads;
     
@@ -98,8 +99,8 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s);
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
 
-void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
+void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_atom_long flag);
+void dynamicdsp_multithread(t_dynamicdsp *x, t_atom_long flag);
 void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
@@ -210,17 +211,17 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::msglist, "list", A_GIMME, 0);
     class_addmethod(this_class, (method) handler::msganything, "anything", A_GIMME, 0);
     
-    class_addmethod(this_class, (method) dynamicdsp_autoloadbalance, "autoloadbalance", A_GIMME, 0);                // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) dynamicdsp_multithread, "multithread", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) dynamicdsp_activethreads, "activethreads", A_GIMME, 0);                    // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) dynamicdsp_threadmap, "threadmap", A_GIMME, 0);                            // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) dynamicdsp_autoloadbalance, "autoloadbalance", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamicdsp_multithread, "multithread", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamicdsp_activethreads, "activethreads", A_GIMME, 0);        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) dynamicdsp_threadmap, "threadmap", A_GIMME, 0);                // MUST FIX TO GIMME FOR NOW
     
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
     class_addmethod(this_class, (method) dynamicdsp_loadpatch, "loadpatch", A_GIMME, 0);
-    class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_LONG, 0);
     
-    class_addmethod(this_class, (method) handler::target, "target", A_GIMME, 0);                                 // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                         // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::target, "target", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);
     
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
     class_addmethod(this_class, (method) handler::register_listener, "register_listener", A_CANT, 0);
@@ -241,7 +242,6 @@ int C74_EXPORT main()
     /*
      class_addmethod(c, (method)poly_getfilesquery, "getfilesquery", A_CANT, 0);    // Dependencies?
      class_addmethod(c, (method)poly_updatepath, "updatepath", A_CANT, 0);          // M4L
-     class_addmethod(c, (method)poly_contextmenu, "contextmenu", A_CANT, 0);        // for open original
      */
     
     class_dspinit(this_class);
@@ -347,14 +347,14 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Multithreading Setup - defaults to multi-threading off for nested objects, on for non-nested
     
     if (dynamic_get_parent())
-        x->multithread_flag = 0;
+        x->multithread_flag = false;
     else
-        x->multithread_flag = 1;
+        x->multithread_flag = true;
     
     // Multithreading variables
     
-    x->manual_threading = 1;
-    x->request_manual_threading = 1;
+    x->manual_threading = true;
+    x->request_manual_threading = true;
     x->request_num_active_threads = max_obj_threads;
     
     // Set other variables to defaults
@@ -481,14 +481,14 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 
 // Multithreading Messages
 
-void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
+void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_atom_long flag)
 {
-    x->request_manual_threading = !(!argc || atom_getlong(argv)) ? 1 : 0;
+    x->request_manual_threading = flag;
 }
 
-void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
+void dynamicdsp_multithread(t_dynamicdsp *x, t_atom_long flag)
 {
-    x->multithread_flag = (!argc || atom_getlong(argv)) ? 1 : 0;
+    x->multithread_flag = flag;
 }
 
 void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
@@ -597,7 +597,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, double **outs, long vec_size, lon
 void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     long num_active_threads = x->request_num_active_threads;
-    long multithread_flag = (x->patch_set->num_patches() > 1) && x->multithread_flag;
+    bool multithread_flag = (x->patch_set->num_patches() > 1) && x->multithread_flag;
     
     // Copy inputs
     
