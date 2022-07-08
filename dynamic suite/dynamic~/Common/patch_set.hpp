@@ -393,6 +393,7 @@ protected:
 
         if (error != T::load_error::none)
         {
+            slots.release();
             m_slots.remove(index - 1);
             object_error(m_owner, "error trying to load patch %s - %s", path->s_name, T::get_error(error));
             index = -1;
