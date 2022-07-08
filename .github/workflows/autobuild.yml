@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'https://github.com/Cycling74/max-sdk-base'
+          repository: 'Cycling74/max-sdk-base'
       - uses: actions/checkout@v3
         with:
           path: 'ahbuild/'
