@@ -21,6 +21,6 @@ jobs:
           prerelease: true
           fail_on_unmatched_files: true
           files: build/AHarker_Externals_Mac.zip
-          target_commitish: ${GITHUB_SHA}
+          target_commitish: ${{ github.sha }}
           tag_name: 'latest-test8'
   
