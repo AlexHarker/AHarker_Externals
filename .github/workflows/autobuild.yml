@@ -29,8 +29,7 @@ jobs:
       - name: Build windows externals
         run: |
              msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
-             ls
-             cd ah-externals/AH_Externals_Package/
+             cd ah-externals/AH_Externals_Package/AHarker_Externals
              ls
       - name: Upload windows builds
         uses: actions/upload-artifact@v3
