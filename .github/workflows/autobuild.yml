@@ -13,6 +13,7 @@ jobs:
              cd ${{ runner.temp }}
              curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
              .\oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
+             ls
              .\webimage_extracted/bootstrapper.exe -s --action install --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
