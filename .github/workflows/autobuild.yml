@@ -10,9 +10,9 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Install oneMKL / oneAPI
         run: |
-             echo curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
-             curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
-             oneapi_install.exe -s -a --silent --eula accept
+             mkdir installer
+             curl.exe $env:WIN_ONEAPI --output installer/oneapi_install.exe
+             installer/oneapi_install.exe -s -a --silent --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
