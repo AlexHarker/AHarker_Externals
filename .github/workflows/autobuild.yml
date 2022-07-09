@@ -1,5 +1,7 @@
 name: build-github
 on: [push]
+env: 
+  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18674/w_BaseKit_p_2022.2.0.252_offline.exe
 jobs:
   deploy-win:
     runs-on: windows-latest
@@ -15,6 +17,9 @@ jobs:
           path: "ah-externals"
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+      - name: Install oneMKL / oneApI
+        run: curl $WIN_ONEAPI --output oneapi_install.exe
+              #oneapi_install.exe -s -a --silent --eula accept
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
   deploy-mac:
