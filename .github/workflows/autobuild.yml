@@ -20,8 +20,8 @@ jobs:
       - name: Install oneMKL / oneAPI
 #       oneapi_install.exe -s -a --silent --eula accept
         run: |
-             echo curl.exe $WIN_ONEAPI --output oneapi_install.exe
-             curl.exe $WIN_ONEAPI --output oneapi_install.exe
+             echo curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
+             curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
   deploy-mac:
