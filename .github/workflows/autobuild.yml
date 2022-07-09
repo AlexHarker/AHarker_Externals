@@ -18,7 +18,7 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Install oneMKL / oneApI
-        run: curl $WIN_ONEAPI --output oneapi_install.exe
+        run: curl.exe $WIN_ONEAPI --output oneapi_install.exe
               #oneapi_install.exe -s -a --silent --eula accept
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
