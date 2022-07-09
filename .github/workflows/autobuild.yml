@@ -11,9 +11,8 @@ jobs:
       - name: Install oneMKL / oneAPI
         run: |
              cd ${{ runner.temp }}
-             mkdir installer
-             cd installer
              curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
+             ls
              oneapi_install.exe -s -a --silent --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
