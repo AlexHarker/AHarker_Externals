@@ -1,7 +1,7 @@
 name: build-github
 on: [push]
 env: 
-  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18674/w_BaseKit_p_2022.2.0.252_offline.exe
+  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
 jobs:
   deploy-win:
     runs-on: windows-latest
