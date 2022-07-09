@@ -9,11 +9,12 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Install oneMKL / oneAPI
+        shell: bash
         run: |
              cd ${{ runner.temp }}
-             curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
-             .\oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
-             .\webimage_extracted/bootstrapper.exe -s --action install --eula accept
+             curl $env:WIN_ONEAPI --output oneapi_install.exe
+             oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
+             webimage_extracted/bootstrapper.exe -s --action install --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
