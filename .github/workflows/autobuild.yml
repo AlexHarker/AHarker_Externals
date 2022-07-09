@@ -11,7 +11,8 @@ jobs:
       - name: Install oneMKL / oneAPI
         shell: bash
         run: |
-             cd ${{ runner.temp }}
+             mkdir install
+             cd install
              curl $env:WIN_ONEAPI --output oneapi_install.exe
              oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
              webimage_extracted/bootstrapper.exe -s --action install --eula accept
