@@ -13,7 +13,7 @@ jobs:
         run: |
              mkdir install
              cd install
-             curl $env:WIN_ONEAPI --output oneapi_install.exe
+             curl $WIN_ONEAPI --output oneapi_install.exe
              oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
              webimage_extracted/bootstrapper.exe -s --action install --eula accept
       - name: Checkout max-sdk-base
