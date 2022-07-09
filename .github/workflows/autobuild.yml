@@ -10,6 +10,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
       - name: Install oneMKL / oneAPI
         run: |
+             echo ${{ runner.temp }}
              mkdir installer
              cd installer
              curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
