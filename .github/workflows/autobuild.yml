@@ -12,7 +12,8 @@ jobs:
         run: |
              mkdir installer
              curl.exe $env:WIN_ONEAPI --output installer/oneapi_install.exe
-             installer/oneapi_install.exe -s -a --silent --eula accept
+             cd installer
+             oneapi_install.exe -s -a --silent --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
