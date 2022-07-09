@@ -14,8 +14,9 @@ jobs:
              mkdir install
              cd install
              curl $WIN_ONEAPI --output oneapi_install.exe
-             oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
-             webimage_extracted/bootstrapper.exe -s --action install --eula accept
+             ls
+             ./oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
+             ./webimage_extracted/bootstrapper.exe -s --action install --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
