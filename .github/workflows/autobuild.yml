@@ -11,9 +11,9 @@ jobs:
       - name: Install oneMKL / oneAPI
         run: |
              mkdir installer
-             curl.exe $env:WIN_ONEAPI --output installer/oneapi_install.exe
+             curl.exe $env:WIN_ONEAPI --output installer/w_BaseKit_p_2022.2.0.252_offline.exe
              cd installer
-             oneapi_install.exe -s -a --silent --eula accept
+             w_BaseKit_p_2022.2.0.252_offline.exe -s -a --silent --eula accept
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
