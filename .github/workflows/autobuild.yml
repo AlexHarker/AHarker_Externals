@@ -13,8 +13,8 @@ jobs:
              cd ${{ runner.temp }}
              curl.exe $env:WIN_ONEAPI --output oneapi_install.exe
              .\oneapi_install.exe -a --silent --eula accept
-             cd D:\Program Files(x86)\Intel\oneAPI
-             cd C:\Program Files(x86)\Intel\oneAPI
+             cd "D:\Program Files(x86)\Intel\oneAPI"
+             cd "C:\Program Files(x86)\Intel\oneAPI"
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
