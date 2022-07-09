@@ -1,7 +1,7 @@
 AHarker Externals
 =================
 
-A Set of 80+ Externals for a variety of tasks in Max.
+A Set of 80+ Externals for a variety of tasks in Cycling 74's Max.
 
 By Alex Harker
 
@@ -17,7 +17,6 @@ A brief overview of some areas addressed:
 * comprehensive descriptor analysis (realtime + non-realtime)
 * enhanced audio multi-threading / dynamic patch loading
 * efficient buffer playback and storage
-* improved wiiremote communication object
 * high quality random number generators for Max and MSP
 * sample accurate voice management and more
 * thread debugging and switching
