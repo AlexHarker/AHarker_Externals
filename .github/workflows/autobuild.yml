@@ -63,7 +63,7 @@ jobs:
         run: |
              mkdir build/
              cd ah-externals/AH_Externals_Package/
-             zip -r ../../build/AHarker_Externals_Mac.zip AHarker_Externals
+             zip -r ../../build/AHarker_Externals.zip AHarker_Externals
       - name: Make release
         uses: "softprops/action-gh-release@v1"
         with:
