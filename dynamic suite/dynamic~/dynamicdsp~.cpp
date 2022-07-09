@@ -441,7 +441,7 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
     if (argc)
     {
         n = atom_getlong(argv);
-        n = std::max(t_atom_long(1), std::min(n, x->max_obj_threads));
+        n = std::max(t_atom_long(1), std::min(n, static_cast<t_atom_long>(x->max_obj_threads)));
     }
     
     x->request_num_active_threads = limit_int<long>(n);

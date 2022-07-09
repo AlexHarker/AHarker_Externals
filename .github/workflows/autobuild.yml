@@ -1,0 +1,73 @@
+name: build-github
+on: [workflow_dispatch]
+env: 
+  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
+jobs:
+  deploy-win:
+    runs-on: windows-2019
+    steps:
+      - name: Install oneMKL
+        if: ${{ false }}
+        shell: bash
+        run: |
+             mkdir install
+             cd install
+             curl $WIN_ONEAPI --output oneapi_install.exe
+             ./oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
+             ./webimage_extracted/bootstrapper.exe -s --action install --eula accept -p=NEED_VS2022_INTEGRATION=1
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Checkout max-sdk-base
+        uses: actions/checkout@v3
+        with:
+          repository: 'Cycling74/max-sdk-base'
+          path: "max-sdk-base"
+      - name: Checkout main repo
+        uses: actions/checkout@v3
+        with:
+          path: "ah-externals"
+      - name: Build windows externals
+        run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
+      - name: Upload windows builds
+        uses: actions/upload-artifact@v3
+        with:
+          name: winbuild
+          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+  deploy-mac:
+    runs-on: macos-latest
+    needs: deploy-win
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Checkout max-sdk-base
+        uses: actions/checkout@v3
+        with:
+          repository: 'Cycling74/max-sdk-base'
+          path: "max-sdk-base"
+      - name: Checkout main repo
+        uses: actions/checkout@v3
+        with:
+          path: "ah-externals"
+      - name: Download windows builds
+        uses: actions/download-artifact@v2
+        with:
+          name: winbuild
+          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+      - name: Build mac externals
+        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
+      - name: Make zip
+        run: |
+             mkdir build/
+             cd ah-externals/AH_Externals_Package/
+             zip -r ../../build/AHarker_Externals_Mac.zip AHarker_Externals
+      - name: Make release
+        uses: "softprops/action-gh-release@v1"
+        with:
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: build/AHarker_Externals.zip
+          target_commitish: ${{ github.sha }}
+          tag_name: latest-${{ steps.date.outputs.date }}
+          body: This is an automated build of AHarker Externals
+    
