@@ -27,9 +27,14 @@ jobs:
           path: "ah-externals"
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
+      - uses: actions/upload-artifact@v3
+        with:
+          name: winbuild
+          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
   deploy-mac:
     if: ${{ false }}
     runs-on: macos-latest
+    needs: deploy-win
     steps:
       - name: Get current date
         id: date
@@ -43,6 +48,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: "ah-externals"
+      - name: Download windows builds
+        uses: actions/download-artifact@v2
+        with:
+          name: winbuild
+          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
       - name: Build mac externals
         run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
       - name: Make zip
@@ -55,7 +65,7 @@ jobs:
         with:
           prerelease: true
           fail_on_unmatched_files: true
-          files: build/AHarker_Externals_Mac.zip
+          files: build/AHarker_Externals.zip
           target_commitish: ${{ github.sha }}
           tag_name: latest-${{ steps.date.outputs.date }}
           body: This is an automated build of AHarker Externals
