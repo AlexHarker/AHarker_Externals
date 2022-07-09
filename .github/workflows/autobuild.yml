@@ -1,5 +1,5 @@
 name: build-github
-on: [push]
+on: [workflow_dispatch]
 env: 
   WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
 jobs:
@@ -27,8 +27,9 @@ jobs:
         with:
           path: "ah-externals"
       - name: Build windows externals
-        run: msbuild "ah-externals/AH Externals.sln"  /t:recursivefolder /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
-      - uses: actions/upload-artifact@v3
+        run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
+      - name: Upload windows builds
+        uses: actions/upload-artifact@v3
         with:
           name: winbuild
           path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
