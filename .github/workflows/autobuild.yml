@@ -6,8 +6,6 @@ jobs:
   deploy-win:
     runs-on: windows-latest
     steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
       - name: Install oneMKL
         shell: bash
         run: |
@@ -16,6 +14,8 @@ jobs:
              curl $WIN_ONEAPI --output oneapi_install.exe
              ./oneapi_install.exe -s -x -f webimage_extracted --log extract.log 
              ./webimage_extracted/bootstrapper.exe -s --action install --eula accept -p=NEED_VS2022_INTEGRATION=1
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
       - name: Checkout max-sdk-base
         uses: actions/checkout@v3
         with:
