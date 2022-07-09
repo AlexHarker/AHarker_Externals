@@ -58,7 +58,7 @@ jobs:
           name: deploy-win
           path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
       - name: Build mac externals
-        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
+        run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'utility' -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
       - name: Make zip
         run: |
              mkdir build/
