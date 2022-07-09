@@ -29,6 +29,7 @@ jobs:
       - name: Build windows externals
         run: |
              msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
+             ls
              cd ah-externals/AH_Externals_Package/
              ls
       - name: Upload windows builds
