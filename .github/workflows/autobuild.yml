@@ -4,7 +4,7 @@ env:
   WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
 jobs:
   deploy-win:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Install oneMKL
         shell: bash
