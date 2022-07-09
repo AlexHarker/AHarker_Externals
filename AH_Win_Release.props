@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>../../AH_Externals_Builds/</OutDir>
+    <OutDir>../../AH_Externals_Package/AHarker_Externals/externals/</OutDir>
   </PropertyGroup>
   <PropertyGroup>
     <IntDir>../../AH_Externals_Intermediate/$(ProjectName)/</IntDir>
