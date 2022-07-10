@@ -41,33 +41,6 @@
 // TODO - allow patch crossfading
 // TODO - patch serialisation
 
-// Poly stuff to investigate
-
-// the updatepath message is used when unfreezing a Max for Live device.
-// If an object refers to a path inside a collective, it needs to find its patcher on disk and use that path ID instead to refer to it. The filename will not change.
-
-void poly_updatepath(t_object *x)
-{
-    //char filename[MAX_PATH_CHARS];
-    //short path;
-    //t_fourcc type;
-    //method m = (method)gensym("__locatefile_extended_flags__")->s_thing;
-    //char found = false;
-    
-    //strcpy(filename, x->p_patchername->s_name);
-    
-    //if (m)
-    //    found = !m(filename, &path, &type, NULL, 0, 1 /* LOCATEFILE_FLAGS_DONTSEARCHCOLLECTIVES */);
-    //else
-    //    found = !locatefile_extended(filename, &path, &type, NULL, 0);
-    
-    //if (found && path <= 0)
-    {
-        // post("updating path to %d", path);
-        //x->p_patchervol = path;
-    }
-}
-
 
 // Global Variables
 
@@ -197,10 +170,6 @@ int C74_EXPORT main()
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
     CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
-    
-    /*
-     class_addmethod(c, (method)poly_updatepath, "updatepath", A_CANT, 0);          // M4L
-     */
     
     class_dspinit(this_class);
     
@@ -458,7 +427,7 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
     if (argc)
     {
         n = atom_getlong(argv);
-        n = std::max(t_atom_long(1), std::min(n, x->max_obj_threads));
+        n = std::max(t_atom_long(1), std::min(n, static_cast<t_atom_long>(x->max_obj_threads)));
     }
     
     x->request_num_active_threads = limit_int<long>(n);
