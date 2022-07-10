@@ -27,7 +27,7 @@ struct rdiv_functor
 
 // Type Alias
 
-using vrdiv = v_binary<rdiv_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vrdiv = v_binary<rdiv_functor, calculation_type::vector_op>;
 
 // Specialise Value In
 
@@ -38,24 +38,7 @@ void vrdiv::value_in(double value, long inlet)
     m_functor.m_recip = nan_fixer()(1.0 / value);
 }
 
-// Specialise Perform Routines with LHS Signal Only (use multiply by reciprocal)
-
-template<>
-template <class T, int N>
-void vrdiv::perform_single2_op(t_int *w)
-{
-    SIMDType<float, N> *in2 = reinterpret_cast< SIMDType<float, N> *>(w[3]);
-    SIMDType<float, N> *out1 = reinterpret_cast< SIMDType<float, N> *>(w[4]);
-    long vec_size = static_cast<long>(w[5]);
-    T *x = reinterpret_cast<T *>(w[6]);
-    
-    SIMDType<float, N> float_val(static_cast<float>(x->m_functor.m_recip));
-
-    vec_size /= SIMDType<float, N>::size;
-
-    while (vec_size--)
-        *out1++ = fix_denorm(nan_fixer()(float_val * *in2++));
-}
+// Specialise Perform Routine with LHS Signal Only (use multiply by reciprocal)
 
 template<>
 template <class T, int N>
@@ -69,7 +52,7 @@ void vrdiv::perform64_single2_op(T *x, t_object *dsp64, double **ins, long numin
     vec_size /= SIMDType<double, N>::size;
 
     while (vec_size--)
-        *out1++ = fix_denorm(nan_fixer()(double_val * *in2++));
+        *out1++ = nan_fixer()(double_val * *in2++);
 }
 
 // Main

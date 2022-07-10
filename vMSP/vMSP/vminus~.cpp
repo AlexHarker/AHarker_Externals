@@ -22,7 +22,7 @@ struct minus_functor
 
 // Type Alias
 
-using vminus = v_binary<minus_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vminus = v_binary<minus_functor, calculation_type::vector_op>;
 
 // Main
 

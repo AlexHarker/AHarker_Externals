@@ -17,7 +17,6 @@
 #include <type_traits>
 
 #include "SIMDSupport.hpp"
-#include <AH_Denormals.h>
 
 
 // Calculation Type Enum
@@ -26,10 +25,9 @@ enum class calculation_type { scalar, vector_op, vector_array };
 
 // Unary Class
 
-template<typename Functor, calculation_type Vec32, calculation_type Vec64>
+template<typename Functor, calculation_type Type>
 class v_unary
 {
-    
 public:
     
     // Main
@@ -46,7 +44,6 @@ public:
                        (method) nullptr,
                        0);
         
-        class_addmethod(*C, (method) dsp<T>, "dsp", A_CANT, 0);
         class_addmethod(*C, (method) dsp64<T>, "dsp64", A_CANT, 0);
         class_addmethod(*C, (method) assist, "assist", A_CANT, 0);
         
@@ -78,96 +75,10 @@ public:
         
         return x;
     }
-    
-    // 32 bit DSP
-    
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::scalar, T *>)
-    {
-        // Scalar
-        
-        return reinterpret_cast<method>(perform<perform_op<T, 1>>);
-    }
-    
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::vector_op, T *>)
-    {
-        // Vector Op
 
-        constexpr int simd_width = SIMDLimits<float>::max_size;
-        return reinterpret_cast<method>(perform<perform_op<T, simd_width>>);
-    }
-    
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::vector_array, T *>)
-    {
-        // Vector Array
-    
-        return reinterpret_cast<method>(perform<perform_array<T>>);
-    }
-    
-    template <class T>
-    static void dsp(T *x, t_signal **sp, short *count)
-    {        
-        // Default to scalar routine
-        
-        method current_perform_routine = reinterpret_cast<method>(perform<perform_op<T, 1>>);
-        long vec_size = sp[0]->s_n;
-
-        // Use SIMD routines if possible
-        
-        if ((Vec32 != calculation_type::scalar) && ((vec_size / SIMDLimits<float>::max_size) > 0))
-        {
-            // Check memory alignment of all relevant vectors
-            
-            if ((t_ptr_uint) sp[0]->s_vec % 16 || (t_ptr_uint) sp[1]->s_vec % 16)
-                object_error((t_object *) x, "handed a misaligned signal vector - update to Max 5.1.3 or later");
-            else
-                dsp_vector_select<T>(x);
-        }
-        
-        dsp_add(denormals_perform, 5, current_perform_routine, sp[0]->s_vec, sp[1]->s_vec, vec_size, x);
-    }
-    
-    // 32 bit Perform Return Wrapper
-    
-    template <void PerformRoutine(t_int *w)>
-    static t_int *perform(t_int *w)
-    {
-        PerformRoutine(w);
-        
-        return w + 6;
-    }
-    
-    // 32 bit Perform (SIMD - array)
-    
-    template <class T>
-    static void perform_array(t_int *w)
-    {
-        T *x = reinterpret_cast<T *>(w[5]);
-
-        x->m_functor(reinterpret_cast<float *>(w[3]), reinterpret_cast<float *>(w[2]), static_cast<long>(w[4]));
-    }
-    
-    // 32 bit Perform (SIMD - op)
-    
-    template <class T, int N>
-    static void perform_op(t_int *w)
-    {
-        SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
-        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        long vec_size = static_cast<long>(w[4]) / SIMDType<float, N>::size;
-        T *x = reinterpret_cast<T *>(w[5]);
-
-        Functor &functor = x->m_functor;
-
-        while (vec_size--)
-            *out1++ = functor(*in1++);
-    }
-    
     // 64 bit DSP
     
-    template <typename T, calculation_type C = Vec64>
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, T *>)
     {
         // Scalar
@@ -175,7 +86,7 @@ public:
         return reinterpret_cast<method>(perform64_op<T, 1>);
     }
     
-    template <typename T, calculation_type C = Vec64>
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, T *>)
     {
         // Vector Op
@@ -184,7 +95,7 @@ public:
         return reinterpret_cast<method>(perform64_op<T, simd_width>);
     }
     
-    template <typename T, calculation_type C = Vec64>
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, T *>)
     {
         // Vector Array
@@ -201,7 +112,7 @@ public:
         
         // Use SIMD routines if possible
 
-        if ((Vec64 != calculation_type::scalar) && ((max_vec / SIMDLimits<double>::max_size) > 0))
+        if ((Type != calculation_type::scalar) && ((max_vec / SIMDLimits<double>::max_size) > 0))
             current_perform_routine = dsp_vector_select64<T>(x);
         
         object_method(dsp64, gensym("dsp_add64"), x, current_perform_routine, 0, 0);

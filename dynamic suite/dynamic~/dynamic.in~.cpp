@@ -15,6 +15,8 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
+#include <algorithm>
+
 #include <dynamic~.hpp>
 
 
@@ -27,7 +29,7 @@ struct t_dynamic_in
     t_pxobject x_obj;
     
     long num_sig_ins;
-    void **sig_ins;
+    double **sig_ins;
     
     t_atom_long inlet_num;
     bool valid;
@@ -41,10 +43,8 @@ void dynamic_in_free(t_dynamic_in *x);
 
 void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num);
 
-t_int *dynamic_in_perform(t_int *w);
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count);
 void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -59,10 +59,10 @@ int C74_EXPORT main()
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method) dynamic_in_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_in_int, "int", A_LONG, 0);
+    
     class_addmethod(this_class, (method) dynamic_in_dsp64, "dsp64", A_CANT, 0);
     class_addmethod(this_class, (method) dynamic_in_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) dynamic_in_int, "int", A_LONG, 0);
     
     class_dspinit(this_class);
     
@@ -119,34 +119,15 @@ void dynamic_in_int(t_dynamic_in *x, t_atom_long inlet_num)
 
 // Perform
 
-t_int *dynamic_in_perform(t_int *w)
-{
-    float *out = (float *)(w[1]);
-    long vec_size = (long) w[2];
-    t_dynamic_in *x = (t_dynamic_in *)(w[3]);
-    
-    if (x->valid)
-        memcpy(out, x->sig_ins[x->inlet_num - 1], vec_size * sizeof(float));
-    else
-        memset(out, 0, vec_size * sizeof(float));
-    
-    return w + 4;
-}
-
 void dynamic_in_perform64(t_dynamic_in *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     if (x->valid)
-        memcpy(outs[0], x->sig_ins[x->inlet_num - 1], vec_size * sizeof(double));
+        std::copy_n(x->sig_ins[x->inlet_num - 1], vec_size, outs[0]);
     else
-        memset(outs[0], 0, vec_size * sizeof(double));
+        std::fill_n(outs[0], vec_size, 0.0);
 }
 
 // DSP
-
-void dynamic_in_dsp(t_dynamic_in *x, t_signal **sp, short *count)
-{
-    dsp_add(dynamic_in_perform, 3, sp[1]->s_vec, sp[0]->s_n, x);
-}
 
 void dynamic_in_dsp64(t_dynamic_in *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

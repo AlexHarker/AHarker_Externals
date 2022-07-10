@@ -14,8 +14,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
-
 
 // Globals and Object Structure
 
@@ -37,10 +35,7 @@ void *rbiquad_new();
 void rbiquad_free(t_rbiquad *x);
 void rbiquad_assist(t_rbiquad *x, void *b, long m, long a, char *s);
 
-t_int *rbiquad_perform(t_int *w);
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count);
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -55,7 +50,6 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) rbiquad_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) rbiquad_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) rbiquad_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -84,76 +78,6 @@ void rbiquad_free(t_rbiquad *x)
 }
 
 // Perform
-
-t_int *rbiquad_perform(t_int *w)
-{
-    // Set Pointers
-    
-    float *in1 = (float *) w[2];
-    float *in2 = (float *) w[3];
-    float *in3 = (float *) w[4];
-    float *in4 = (float *) w[5];
-    float *in5 = (float *) w[6];
-    float *in6 = (float *) w[7];
-    float *in7 = (float *) w[8];
-    float *out = (float *) w[9];
-    long vec_size = (long) w[10];
-    t_rbiquad *x = (t_rbiquad *) w[11];
-    
-    double a0, a1, a2, b1, b2, in, y;
-    
-    // Recall memory
-    
-    double x1 = x->x1;
-    double x2 = x->x2;
-    double y1 = x->y1;
-    double y2 = x->y2;
-    
-    float out_val;
-    
-    while (vec_size--)
-    {
-        // Get input and coeffiecients
-        
-        in = *in1++;
-        a0 = *in2++;
-        a1 = *in3++;
-        a2 = *in4++;
-        b1 = *in5++;
-        b2 = *in6++;
-        
-        // Sample accurate reset
-        
-        if (*in7++)
-            x1 = x2 = y1 = y2 = 0.;
-        
-        // Filter
-        
-        y = (a0 * in) + (a1 * x1) + (a2 * x2) - (b1 * y1) - (b2 * y2);
-        
-        out_val = (float) y;
-        
-        FIX_DENORM_FLOAT(out_val);
-        *out++ = out_val;
-        
-        // Shift memory
-        
-        y2 = y1;
-        y1 = y;
-        x2 = x1;
-        x1 = in;
-        FIX_DENORM_DOUBLE(y1);
-    }
-    
-    // Store memory
-    
-    x->x1 = x1;
-    x->x2 = x2;
-    x->y1 = y1;
-    x->y2 = y2;
-    
-    return w + 12;
-}
 
 void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
@@ -220,11 +144,6 @@ void rbiquad_perform64(t_rbiquad *x, t_object *dsp64, double **ins, long numins,
 }
 
 // DSP
-
-void rbiquad_dsp(t_rbiquad *x, t_signal **sp, short *count)
-{
-    dsp_add(denormals_perform, 11, rbiquad_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[6]->s_vec, sp[7]->s_vec, sp[0]->s_n, x);
-}
 
 void rbiquad_dsp64(t_rbiquad *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

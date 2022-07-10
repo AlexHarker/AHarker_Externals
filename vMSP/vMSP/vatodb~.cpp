@@ -25,15 +25,6 @@ struct atodb_functor
     // IO Limiting Functors
     
     template <int N>
-    static SIMDType<float, N> is_negative_inf(const SIMDType<float, N>& a)
-    {
-        constexpr uint32_t neg_inf_32 = 0xFF800000U;
-        const SIMDType<float, N> v_neg_inf_32 = *reinterpret_cast<const float *>(&neg_inf_32);
-        
-        return a == v_neg_inf_32;
-    }
-    
-    template <int N>
     static SIMDType<double, N> is_negative_inf(const SIMDType<double, N>& a)
     {
         constexpr uint64_t neg_inf_64 = 0xFFF0000000000000U;
@@ -56,11 +47,6 @@ struct atodb_functor
     
     // Ops + Array Operators
 
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return a.mVal <= 0.f ?  -999.f : nan_fixer()(20.f * log10f(a.mVal));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return a.mVal <= 0.0 ? -999.0 : nan_fixer()(20.0 * log10(a.mVal));
@@ -82,7 +68,7 @@ const double atodb_functor::atodb_constant = 20.0 / log(10.0);
 
 // Type Alias
 
-using vatodb = v_unary<atodb_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vatodb = v_unary<atodb_functor, calculation_type::vector_array>;
 
 // Main
 

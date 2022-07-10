@@ -41,14 +41,11 @@ struct t_ibufconcatedrive
 // Function Prototypes
 
 void *ibufconcatedrive_new(t_symbol *buffernmae, double init_val);
-void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv);
+void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *buffer_name);
 void ibufconcatedrive_free(t_ibufconcatedrive *x);
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s);
 
-void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count);
 void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
-
-t_int *ibufconcatedrive_perform(t_int *w);
 void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
 // Main
@@ -64,9 +61,8 @@ int C74_EXPORT main()
                            A_DEFFLOAT,
                            0);
     
-    class_addmethod(this_class, (method) ibufconcatedrive_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufconcatedrive_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufconcatedrive_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) ibufconcatedrive_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) ibufconcatedrive_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -106,21 +102,12 @@ void ibufconcatedrive_free(t_ibufconcatedrive *x)
 
 // Set Method
 
-void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *msg, short argc, t_atom *argv)
+void ibufconcatedrive_set(t_ibufconcatedrive *x, t_symbol *buffer_name)
 {
-    t_symbol *buffer_name = argc ? atom_getsym(argv) : 0;
-    
-    if (buffer_name)
-        x->attachment = attach_ibufconcatenate_info(buffer_name, x->attachment);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, x->attachment);
 }
 
 // Perform
-
-void store(float *lo_res, float *hi_res, double output)
-{
-    *lo_res = static_cast<float>(output);
-    *hi_res = static_cast<float>(output - *lo_res);
-}
 
 void store(double *lo_res, double *hi_res, double output)
 {
@@ -192,41 +179,12 @@ void ibufconcatedrive_perform_core(t_ibufconcatedrive *x, T **ins, T **outs, lon
     x->hi = hi;
 }
 
-t_int *ibufconcatedrive_perform(t_int *w)
-{
-    // Set pointers
-    
-    float *ins[4];
-    float *outs[2];
-    
-    ins[0] = (float *) w[1];
-    ins[1] = (float *) w[2];
-    ins[2] = (float *) w[3];
-    ins[3] = (float *) w[4];
-    
-    outs[0] = (float *) w[5];
-    outs[1] = (float *) w[6];
-    
-    long vec_size = (long) w[7];
-    t_ibufconcatedrive *x = (t_ibufconcatedrive *) w[8];
-    
-    ibufconcatedrive_perform_core(x, ins, outs, vec_size);
-    
-    return w + 9;
-}
-
 void ibufconcatedrive_perform64(t_ibufconcatedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     ibufconcatedrive_perform_core(x, ins, outs, vec_size);
 }
 
 // DSP
-
-void ibufconcatedrive_dsp(t_ibufconcatedrive *x, t_signal **sp, short *count)
-{
-    x->sr_const = 1000.0 / sp[0]->s_sr;
-    dsp_add(ibufconcatedrive_perform, 8, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[5]->s_vec, sp[0]->s_n, x);
-}
 
 void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

@@ -17,7 +17,6 @@
 #include <type_traits>
 
 #include "SIMDSupport.hpp"
-#include <AH_Denormals.h>
 
 
 // Type Enums
@@ -27,21 +26,9 @@ enum class inputs { both, lhs, rhs, none };
 
 // Binary Class
 
-template<typename Functor, calculation_type Vec32, calculation_type Vec64, bool LHSIn = true, bool LHSSig = false>
+template<typename Functor, calculation_type Type, bool LHSIn = true, bool LHSSig = false>
 class v_binary
 {
-    // Denormal Fixing
-    
-    static float fix_denorm(const float a)
-    {
-        float b = a;
-        FIX_DENORM_FLOAT(b);
-        return b;
-    }
-
-    template <class T>
-    static T fix_denorm(const T a) { return a; }
-    
 public:
     
     // Main
@@ -61,7 +48,6 @@ public:
         
         class_addmethod(*C, (method) float_in<T>, "float", A_FLOAT, 0);
         class_addmethod(*C, (method) int_in<T>, "int", A_LONG, 0);
-        class_addmethod(*C, (method) dsp<T>, "dsp", A_CANT, 0);
         class_addmethod(*C, (method) dsp64<T>, "dsp64", A_CANT, 0);
         class_addmethod(*C, (method) assist, "assist", A_CANT, 0);
         
@@ -112,178 +98,9 @@ public:
         float_in(x, static_cast<double>(value));
     }
     
-    // 32 bit DSP
-   
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::scalar, inputs> ins)
-    {
-        // Scalar
-        
-        switch (ins)
-        {
-            case inputs::none:  return reinterpret_cast<method>(perform<perform_single1_op<T, 1, inputs::none>>);
-            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, 1, inputs::lhs>>);
-            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_single2_op<T, 1>>);
-            default:            return reinterpret_cast<method>(perform<perform_op<T, 1>>);
-        }
-    }
-    
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::vector_op, inputs> ins)
-    {
-        // Vector Op
-
-        constexpr int vec_size = SIMDLimits<float>::max_size;
-        
-        switch (ins)
-        {
-            case inputs::none:  return reinterpret_cast<method>(perform<perform_single1_op<T, vec_size, inputs::none>>);
-            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_single1_op<T, vec_size, inputs::lhs>>);
-            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_single2_op<T, vec_size>>);
-            default:            return reinterpret_cast<method>(perform<perform_op<T, vec_size>>);
-        }
-    }
-    
-    template <typename T, calculation_type C = Vec32>
-    static method dsp_vector_select(std::enable_if_t<C == calculation_type::vector_array, inputs> ins)
-    {
-        // Vector Array
-    
-        switch (ins)
-        {
-            case inputs::none:  // fall through
-            case inputs::lhs:   return reinterpret_cast<method>(perform<perform_array<T, inputs::lhs>>);
-            case inputs::rhs:   return reinterpret_cast<method>(perform<perform_array<T, inputs::rhs>>);
-            default:            return reinterpret_cast<method>(perform<perform_array<T, inputs::both>>);
-        }
-    }
-    
-    template <class T>
-    static void dsp(T *x, t_signal **sp, short *count)
-    {
-        bool use_vec = false;
-        long vec_size = sp[0]->s_n;
-
-        float *used_input1 = reinterpret_cast<float *>(sp[0]->s_vec);
-        float *used_input2 = reinterpret_cast<float *>(sp[1]->s_vec);
-        
-        // Default to scalar routines
-        
-        method perform_routine = (method) perform<perform_op<T, 1>>;
-        
-        inputs ins = inputs::none;
-        
-        // Choose routines as needed
-        
-        if (count[0] && count[1])
-            ins = inputs::both;
-        else if (count[0] || LHSSig)
-            ins = inputs::lhs;
-        else if (count[1])
-            ins = inputs::rhs;
-
-        // Use SIMD code where possible
-        
-        if (Vec32 != calculation_type::scalar && ((vec_size / SIMDLimits<float>::max_size) > 0))
-        {
-            if ((t_ptr_uint) used_input1 % 16 || (t_ptr_uint) used_input2 % 16 || (t_ptr_uint) sp[2]->s_vec % 16)
-            {
-                object_error((t_object *) x, "handed a misaligned signal vector - update to Max 5.1.3 or later");
-            }
-            else
-                use_vec = true;
-        }
-        
-        if (use_vec)
-            perform_routine = dsp_vector_select<T>(ins);
-        else
-            perform_routine = dsp_vector_select<T, calculation_type::scalar>(ins);
-        
-        dsp_add(denormals_perform, 6, perform_routine, used_input1, used_input2, sp[2]->s_vec, vec_size, x);
-    }
-    
-    // 32 bit Perform Return Wrapper
-    
-    template<void perform_routine(t_int *w)>
-    static t_int *perform(t_int *w)
-    {
-        perform_routine(w);
-        
-        return w + 7;
-    }
-    
-    // 32 bit Perform with Variable Inputs (SIMD - array)
-    
-    template <class T, inputs Ins>
-    static void perform_array(t_int *w)
-    {
-        T *x = reinterpret_cast<T *>(w[6]);
-        
-        x->m_functor(reinterpret_cast<float *>(w[4]), reinterpret_cast<float *>(w[2]), reinterpret_cast<float *>(w[3]), static_cast<long>(w[5]), x->get_value(Ins), Ins);
-    }
-    
-    // 32 bit Perform with One LHS Signal Input (SIMD - op)
-    
-    template <class T, int N, inputs Ins>
-    static void perform_single1_op(t_int *w)
-    {
-        SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
-        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-
-        Functor &functor = x->m_functor;
-
-        SIMDType<float, N> float_val(static_cast<float>(x->get_value(inputs::lhs)));
-        
-        vec_size /= SIMDType<float, N>::size;
-
-        while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, float_val));
-    }
-    
-    // 32 bit Perform with One RHS Signal Input (SIMD - op)
-    
-    template <class T, int N>
-    static void perform_single2_op(t_int *w)
-    {
-        SIMDType<float, N> *in2 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-        
-        Functor &functor = x->m_functor;
-
-        SIMDType<float, N> float_val(static_cast<float>(x->get_value(inputs::rhs)));
-
-        vec_size /= SIMDType<float, N>::size;
-    
-        while (vec_size--)
-            *out1++ = fix_denorm(functor(float_val, *in2++));
-    }
-    
-    // 32 bit Perform with Two Signal Inputs (SIMD - op)
-    
-    template <class T, int N>
-    static void perform_op(t_int *w)
-    {
-        SIMDType<float, N> *in1 = reinterpret_cast<SIMDType<float, N> *>(w[2]);
-        SIMDType<float, N> *in2 = reinterpret_cast<SIMDType<float, N> *>(w[3]);
-        SIMDType<float, N> *out1 = reinterpret_cast<SIMDType<float, N> *>(w[4]);
-        long vec_size = static_cast<long>(w[5]);
-        T *x = reinterpret_cast<T *>(w[6]);
-
-        Functor &functor = x->m_functor;
-
-        vec_size /= SIMDType<float, N>::size;
-
-        while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, *in2++));
-    }
-    
     // 64 bit DSP
-    
-    template <typename T, calculation_type C = Vec64>
+
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::scalar, inputs> ins)
     {
         // Scalar
@@ -297,7 +114,7 @@ public:
         }
     }
     
-    template <typename T, calculation_type C = Vec64>
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_op, inputs> ins)
     {
         // Vector Op
@@ -313,7 +130,7 @@ public:
         }
     }
     
-    template <typename T, calculation_type C = Vec64>
+    template <typename T, calculation_type C = Type>
     static method dsp_vector_select64(std::enable_if_t<C == calculation_type::vector_array, inputs> ins)
     {
         // Vector Array
@@ -344,7 +161,7 @@ public:
         
         // Use SIMD code where possible
         
-        if (Vec64 != calculation_type::scalar && ((max_vec / SIMDLimits<double>::max_size) > 0))
+        if (Type != calculation_type::scalar && ((max_vec / SIMDLimits<double>::max_size) > 0))
             perform_routine = dsp_vector_select64<T>(ins);
         else
             perform_routine = dsp_vector_select64<T, calculation_type::scalar>(ins);
@@ -367,7 +184,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
         
         while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, double_val));
+            *out1++ = functor(*in1++, double_val);
     }
     
     // 64 bit Perform with One RHS Signal Input (SIMD - op)
@@ -385,7 +202,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
 
         while (vec_size--)
-            *out1++ = fix_denorm(functor(double_val, *in2++));
+            *out1++ = functor(double_val, *in2++);
     }
     
     // 64 bit Perform with Two Signal Inputs (SIMD - op)
@@ -402,7 +219,7 @@ public:
         vec_size /= SIMDType<double, N>::size;
 
         while (vec_size--)
-            *out1++ = fix_denorm(functor(*in1++, *in2++));
+            *out1++ = functor(*in1++, *in2++);
     }
     
     // 64 bit Perform with Variable Inputs (SIMD - array)

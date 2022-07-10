@@ -17,7 +17,6 @@
 
 struct atan_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return atanf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return atan(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct atan_functor
 
 // Type Alias
 
-using vatan = v_unary<atan_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vatan = v_unary<atan_functor, calculation_type::vector_array>;
 
 // Main
 

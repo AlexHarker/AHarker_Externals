@@ -15,7 +15,6 @@
 
 // Functions for converting alls bits on to 1 for output
 
-static SIMDType<float, 1> mask_one(const SIMDType<float, 1>& a) { return a.mVal ? 1.f : 0.f; }
 static SIMDType<double, 1> mask_one(const SIMDType<double, 1>& a) { return a.mVal ? 1.0 : 0.0; }
 
 template<class T>
@@ -33,6 +32,6 @@ struct comparison
 // Type Aliasing Helper
 
 template <class T>
-using v_binary_comparison = v_binary<comparison<T>, calculation_type::vector_op, calculation_type::vector_op, false>;
+using v_binary_comparison = v_binary<comparison<T>, calculation_type::vector_op, false>;
 
 #endif /* _COMPARISONS_HPP_ */

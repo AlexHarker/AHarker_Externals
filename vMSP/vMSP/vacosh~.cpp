@@ -27,12 +27,7 @@ struct acosh_functor
     };
     
     // Ops + Array Operators
-    
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return a.mVal < 1.f ? 0.f : acoshf(a.mVal);
-    }
-    
+ 
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
@@ -48,7 +43,7 @@ struct acosh_functor
 
 // Type Alias
 
-using vacosh = v_unary<acosh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vacosh = v_unary<acosh_functor, calculation_type::vector_array>;
 
 // Main
 

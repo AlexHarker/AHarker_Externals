@@ -22,18 +22,11 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
 #include <ibuffer_access.hpp>
 
 #include <limits>
 #include <algorithm>
-
-#ifdef __APPLE__
-#include <alloca.h>
-#else
-#include <malloc.h>
-#endif 
 
 
 // Globals and Object Structure
@@ -142,14 +135,10 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_free(t_ibufplayer *x);
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s);
 
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv);
-void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s);
+void ibufplayer_set(t_ibufplayer *x, t_symbol *s);
 void ibufplayer_vols(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv);
 void ibufplayer_stop(t_ibufplayer *x);
-
-t_int *ibufplayer_perform(t_int *w);
-void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count);
 
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
@@ -166,12 +155,12 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method) ibufplayer_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufplayer_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufplayer_vols, "vols", A_GIMME, 0);
     class_addmethod(this_class, (method) ibufplayer_play, "play", A_GIMME, 0);
     class_addmethod(this_class, (method) ibufplayer_stop, "stop", 0);
+
     class_addmethod(this_class, (method) ibufplayer_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) ibufplayer_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) ibufplayer_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
@@ -268,14 +257,9 @@ void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
     }
 }
 
-// Set Methods
+// Set Method
 
-void ibufplayer_set(t_ibufplayer *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibufplayer_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
+void ibufplayer_set(t_ibufplayer *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
     
@@ -289,8 +273,7 @@ void ibufplayer_set_internal(t_ibufplayer *x, t_symbol *s)
     else
     {
         x->buffer_name = nullptr;
-        if (s)
-            object_error((t_object *) x, "no buffer %s", s->s_name);
+        object_error((t_object *) x, "no buffer %s", s->s_name);
     }
 }
 
@@ -321,7 +304,7 @@ void ibufplayer_play(t_ibufplayer *x, t_symbol *s, long argc, t_atom *argv)
     
     if (argc && atom_gettype(argv) == A_SYM)
     {
-        ibufplayer_set_internal(x, atom_getsym(argv++));
+        ibufplayer_set(x, atom_getsym(argv++));
         argc--;
     }
     
@@ -466,7 +449,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
             else
             {
                 to_do = info.fixed_speed_loop_size(drive, vec_size);
-                const long v_count = ((t_ptr_uint) positions % 16 || (t_ptr_uint) phase_out % 16) ? 0 : to_do / N;
+                const long v_count = to_do / N;
                 const long S = v_count * N;
                 
                 ibufplayer_phase_fixed<N>(positions + 0, phase_out + 0, drive, info, v_count);
@@ -509,26 +492,6 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
 
 // Perform
 
-t_int *ibufplayer_perform(t_int *w)
-{
-    // Ignore the copy of this function pointer (due to denormal fixer)
-    
-    // Set pointers
-    
-    const float *in = reinterpret_cast<float *>(w[2]);
-    float **outs = reinterpret_cast<float **>(w[3]);
-    float *phase_out = reinterpret_cast<float *>(w[4]);
-    long vec_size = (long) w[5];
-    t_ibufplayer *x = reinterpret_cast<t_ibufplayer *>(w[6]);
-    
-    double *positions = reinterpret_cast<double *>(alloca(sizeof(double) * vec_size));
-    
-    if (!x->x_obj.z_disabled)
-        perform_core(x, in, outs, phase_out, positions, vec_size);
-    
-    return w + 7;
-}
-
 void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     perform_core(x, ins[0], outs, outs[numouts - 1], outs[numouts - 2], vec_size);
@@ -536,31 +499,13 @@ void ibufplayer_perform64(t_ibufplayer *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void ibufplayer_dsp(t_ibufplayer *x, t_signal **sp, short *count)
-{
-    x->sr_div = 1.0 / sp[0]->s_sr;
-    
-    // Set buffer again in case it is no longer valid / extant
-    
-    ibufplayer_set_internal(x, x->buffer_name);
-    
-    // Check if input is connected
-    
-    x->input_connected = count[0];
-    
-    for (long i = 0; i < x->obj_n_chans; i++)
-        x->float_outs[i] = reinterpret_cast<float *>(sp[i + 1]->s_vec);
-    
-    dsp_add(denormals_perform, 6, ibufplayer_perform, sp[0]->s_vec, x->float_outs, sp[x->obj_n_chans]->s_vec, sp[0]->s_n, x);
-}
-
 void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     x->sr_div = 1.0 / sample_rate;
     
     // Set buffer again in case it is no longer valid / extant
     
-    ibufplayer_set_internal(x, x->buffer_name);
+    ibufplayer_set(x, x->buffer_name);
     
     // Check if input is connected
     

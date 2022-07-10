@@ -18,7 +18,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
@@ -45,11 +44,7 @@ void *ibufmultitable_new(t_symbol *s, long argc, t_atom *argv);
 void ibufmultitable_free(t_ibufmultitable *x);
 void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s);
 
-void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv);
-void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s);
-
-t_int *ibufmultitable_perform(t_int *w);
-void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count);
+void ibufmultitable_set(t_ibufmultitable *x, t_symbol *s);
 
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
@@ -66,9 +61,8 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method) ibufmultitable_set, "set", A_GIMME, 0);
+    class_addmethod(this_class, (method) ibufmultitable_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibufmultitable_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) ibufmultitable_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) ibufmultitable_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
@@ -160,18 +154,13 @@ void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s
 
 // Buffer Setting
 
-void ibufmultitable_set(t_ibufmultitable *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibufmultitable_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibufmultitable_set_internal(t_ibufmultitable *x, t_symbol *s)
+void ibufmultitable_set(t_ibufmultitable *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
     
     x->buffer_name = s;
     
-    if (buffer.get_type() == kBufferNone && s)
+    if (buffer.get_type() == kBufferNone)
         object_error((t_object *) x, "ibufmultitable~: no buffer %s", s->s_name);
 }
 
@@ -239,36 +228,7 @@ void perform_core(t_ibufmultitable *x, const T *in, const T *offset_in, T *out, 
         std::fill_n(out, vec_size, T(0));
 }
 
-// Perform and DSP for 32-bit signals
-
-t_int *ibufmultitable_perform(t_int *w)
-{
-    // Ignore the copy of this function pointer (due to denormal fixer)
-    
-    // Set pointers
-    
-    const float *in = (float *) w[2];
-    const float *offset_in = (float *) w[3];
-    float *out = (float *)(w[4]);
-    long vec_size = (long) w[5];
-    t_ibufmultitable *x = (t_ibufmultitable *) w[6];
-    
-    if (!x->x_obj.z_disabled)
-        perform_core(x, in, offset_in, out, vec_size);
-    
-    return w + 7;
-}
-
-void ibufmultitable_dsp(t_ibufmultitable *x, t_signal **sp, short *count)
-{
-    // Set buffer again in case it is no longer valid / extant
-    
-    ibufmultitable_set_internal(x, x->buffer_name);
-    
-    dsp_add(denormals_perform, 6, ibufmultitable_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
+// Perform and DSP
 
 void ibufmultitable_perform64(t_ibufmultitable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
@@ -279,7 +239,7 @@ void ibufmultitable_dsp64(t_ibufmultitable *x, t_object *dsp64, short *count, do
 {
     // Set buffer again in case it is no longer valid / extant
     
-    ibufmultitable_set_internal(x, x->buffer_name);
+    ibufmultitable_set(x, x->buffer_name);
     
     object_method(dsp64, gensym("dsp_add64"), x, ibufmultitable_perform64);
 }

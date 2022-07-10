@@ -56,7 +56,7 @@ public:
     void message(long inlet, t_symbol *msg, long argc, t_atom *argv);
 
     void compile_dsp(long vec_size, long sampling_rate, bool force_when_invalid);
-    bool process(void **outputs);
+    bool process(double **outputs);
 
     // Getters
 
@@ -65,7 +65,7 @@ public:
     bool get_valid() const              { return m_valid; }
     bool get_on() const                 { return m_on; }
     bool get_busy() const               { return m_busy; }
-    void ***get_output_handle()         { return &m_outputs; }
+    double ***get_output_handle()       { return &m_outputs; }
 
     // Setters
 
@@ -130,7 +130,7 @@ private:
 
     // Pointer to array of audio out buffers (which are thread dependent)
 
-    void **m_outputs;
+    double **m_outputs;
 
     // Inlet and outlet communication
 
@@ -162,12 +162,12 @@ public:
     void update_thread()                        { m_thread_current = m_thread_request; }
     void reset_processed()                      { m_processing_lock.release(); }
 
-    bool process_if_unprocessed(void **outputs)
+    bool process_if_unprocessed(double **outputs)
     {
         return m_processing_lock.attempt() ? process(outputs) : false;
     }
 
-    bool process_if_thread_matches(void **outputs, t_atom_long thread, t_atom_long n_threads)
+    bool process_if_thread_matches(double **outputs, t_atom_long thread, t_atom_long n_threads)
     {
         return ((m_thread_current % n_threads) == thread) ? process(outputs) : false;
     }

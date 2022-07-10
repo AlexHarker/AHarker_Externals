@@ -17,7 +17,6 @@
 
 struct cosh_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return coshf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return cosh(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct cosh_functor
 
 // Type Alias
 
-using vcosh = v_unary<cosh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vcosh = v_unary<cosh_functor, calculation_type::vector_array>;
 
 // Main
 

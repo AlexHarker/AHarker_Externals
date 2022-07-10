@@ -17,7 +17,6 @@
 
 struct tanx_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return tanf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return tan(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct tanx_functor
 
 // Type Alias
 
-using vtanx = v_unary<tanx_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vtanx = v_unary<tanx_functor, calculation_type::vector_array>;
 
 // Main
 

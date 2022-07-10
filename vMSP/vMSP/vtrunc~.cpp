@@ -22,7 +22,7 @@ struct trunc_functor
 
 // Type Alias
 
-using vtrunc = v_unary<trunc_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vtrunc = v_unary<trunc_functor, calculation_type::vector_op>;
 
 // Main
 

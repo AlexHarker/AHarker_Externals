@@ -15,8 +15,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
-
 
 // Globals and Object Structure
 
@@ -38,13 +36,9 @@ void *rdcblock_new(t_atom_long mode);
 void rdcblock_free(t_rdcblock *x);
 void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s);
 
-t_int *rdcblock_perform(t_int *w);
-t_int *rdcblock_perform_inval(t_int *w);
-
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count);
 void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -60,7 +54,6 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) rdcblock_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) rdcblock_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) rdcblock_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -91,107 +84,6 @@ void rdcblock_free(t_rdcblock *x)
 
 // Perform
 
-t_int *rdcblock_perform(t_int *w)
-{
-    float *in1 = (float *) w[2];
-    float *in2 = (float *) w[3];
-    float *out = (float *) w[4];
-    long vec_size = (long) w[5];
-    t_rdcblock *x = (t_rdcblock *) w[6];
-    
-    double x0, y;
-    
-    // Recall memory
-    
-    double x1 = x->x1;
-    double y1 = x->y1;
-    
-    float yf;
-    
-    while (vec_size--)
-    {
-        x0 = *in1++;
-        
-        // Sample accurate reset
-        
-        if (*in2++)
-            x1 = y1 = 0.0;
-        
-        // Filter
-        
-        y = x0 - x1 + (0.99 * y1);
-        FIX_DENORM_DOUBLE(y);
-        
-        // Shift memories
-        
-        x1 = x0;
-        y1 = y;
-        
-        yf = (float) y;
-        FIX_DENORM_FLOAT(yf);
-        *out++ = yf;
-    }
-    
-    // Store memory
-    
-    x->x1 = x1;
-    x->y1 = y1;
-    
-    return w + 7;
-}
-
-t_int *rdcblock_perform_inval(t_int *w)
-{
-    float *in1 = (float *) w[2];
-    float *in2 = (float *) w[3];
-    float *out = (float *) w[4];
-    long vec_size = (long) w[5];
-    t_rdcblock *x = (t_rdcblock *) w[6];
-    
-    double x0, y;
-    
-    // Recall memory
-    
-    double x1 = x->x1;
-    double y1 = x->y1;
-    
-    float yf;
-    
-    while (vec_size--)
-    {
-        x0 = *in1++;
-        
-        // Sample accurate reset
-        
-        if (*in2++)
-        {
-            x1 = x0;
-            y1 = 0.0;
-        }
-        
-        // Filter
-        
-        y = x0 - x1 + (0.99 * y1);
-        FIX_DENORM_DOUBLE(y);
-        
-        // Shift memories
-        
-        x1 = x0;
-        y1 = y;
-        
-        yf = (float) y;
-        FIX_DENORM_FLOAT(yf);
-        *out++ = yf;
-    }
-    
-    // Store memory
-    
-    x->x1 = x1;
-    x->y1 = y1;
-    
-    return w + 7;
-}
-
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     double *in1 = ins[0];
@@ -217,7 +109,7 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
         
         y = x0 - x1 + (0.99 * y1);
         FIX_DENORM_DOUBLE(y);
-        
+    
         // Shift memories
         
         x1 = x0;
@@ -276,14 +168,6 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 }
 
 // DSP
-
-void rdcblock_dsp(t_rdcblock *x, t_signal **sp, short *count)
-{
-    if (x->mode)
-        dsp_add(denormals_perform, 6, rdcblock_perform_inval, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-    else
-        dsp_add(denormals_perform, 6, rdcblock_perform, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[0]->s_n, x);
-}
 
 void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

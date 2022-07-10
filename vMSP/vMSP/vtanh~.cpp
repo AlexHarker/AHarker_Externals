@@ -17,7 +17,6 @@
 
 struct tanh_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return tanhf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return tanh(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct tanh_functor
 
 // Type Alias
 
-using vtanh = v_unary<tanh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vtanh = v_unary<tanh_functor, calculation_type::vector_array>;
 
 // Main
 
