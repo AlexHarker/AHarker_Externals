@@ -62,7 +62,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="entries.cpp" />
-    <ClCompile Include="entrymatcher~.cpp" />
+    <ClCompile Include="entrymatcher_audio.cpp" />
     <ClCompile Include="entry_database.cpp" />
     <ClCompile Include="database_view.cpp" />
     <ClCompile Include="matchers.cpp" />
