@@ -67,7 +67,7 @@ void summary_graph::prepare(const global_params& params)
     m_temp_data.resize(graph::size() * params.num_frames());
 }
     
-void summary_graph::run(const global_params& params, const double *input)
+void summary_graph::run(const global_params& params, ibuffer_data& data, long buffer_offset, long buffer_chan)
 {
     // Loop over hops
 
@@ -77,8 +77,8 @@ void summary_graph::run(const global_params& params, const double *input)
         
         // Get samples
         
-        for (long j = 0; j < frame_available; j++)
-            m_frame[j] = input[offset + j];
+        ibuffer_get_samps(data, m_frame.data(), buffer_offset + offset, frame_available, buffer_chan);
+
         for (long j = frame_available; j < params.frame_size(); j++)
             m_frame[j] = 0.0;
         
@@ -103,7 +103,7 @@ void summary_graph::run(const global_params& params, const double *input)
         auto index = dynamic_cast<summary_module *>(it->get())->get_index();
         
         if (index == -1)
-            (*it)->calculate(params, input, params.m_signal_length);
+            (*it)->calculate(params, nullptr, 0);
         else
             (*it)->calculate(params, m_temp_data.data() + index * params.num_frames(), params.num_frames());
     }

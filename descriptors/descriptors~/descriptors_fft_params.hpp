@@ -60,7 +60,23 @@ static fft_params check_fft_params(t_object *x, long fft_size, long hop_size, lo
     params.m_frame_size = std::min(frame_size > 0 ? frame_size : params.fft_size(), params.fft_size());
     params.m_window_type = window_type;
     
-    // FIX - error checks
+    if (!window_type
+        || window_type == gensym("rect")
+        || window_type == gensym("hamming")
+        || window_type == gensym("kaiser")
+        || window_type == gensym("triangle")
+        || window_type == gensym("blackman")
+        || window_type == gensym("blackman62")
+        || window_type == gensym("blackman70")
+        || window_type == gensym("blackman74")
+        || window_type == gensym("blackman92")
+        || window_type == gensym("blackman-harris")
+        || window_type == gensym("flattop")
+        || window_type == gensym("hann")
+        || window_type == gensym(""))
+        return params;
+
+    object_error(x, "window type not recognised - using hann window");
     
     return params;
 }

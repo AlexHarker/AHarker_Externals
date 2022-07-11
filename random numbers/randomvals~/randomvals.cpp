@@ -249,7 +249,22 @@ void randomvals_int(t_randomvals *x, t_atom_long value)
 
 // Assist
 
-// FIX - better labels?
+#ifdef MSP_VERSION
+
+void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
+{
+    if (m == ASSIST_OUTLET)
+    {
+        sprintf(s, "(signal) Random Vals Out");
+    }
+    else
+    {
+        sprintf(s, "(signal/messages) Triggers / Parameters");
+    }
+    
+}
+
+#else
 
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {
@@ -259,7 +274,9 @@ void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
     }
     else
     {
-        sprintf(s, "Triggers / Parameters");
+        sprintf(s, "(messages) Triggers / Parameters");
     }
     
 }
+
+#endif

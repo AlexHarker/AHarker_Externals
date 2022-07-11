@@ -426,14 +426,8 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
         return;
     }
     
-    // FIX - could this be a lamda to grab samples, or just pass the ibuffer?
-    
-    std::vector<double> samples(signal_length);
-    
-    ibuffer_get_samps(buffer, samples.data(), start_point, signal_length, static_cast<long>(buffer_chan));
-        
     graph->prepare(x->params);
-    graph->run(x->params, samples.data());
+    graph->run(x->params, buffer, start_point, static_cast<long>(buffer_chan));
     graph->output(x->output_list.data());
     
     // Release buffer
