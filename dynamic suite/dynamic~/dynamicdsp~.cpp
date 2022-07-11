@@ -80,7 +80,7 @@ struct t_dynamicdsp
     long num_active_threads;
     
     long multithread_flag;
-    long request_manual_threading;
+    long autoloadbalance_flag;
     long manual_threading;
     long update_thread_map;
     
@@ -100,9 +100,7 @@ void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s);
 
 void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv);
 
-void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
+t_max_err dynamicdsp_activethreads(t_dynamicdsp *x, t_object *attr, long argc, t_atom *argv);
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv);
 
 static inline void dynamicdsp_multithread_perform(t_dynamicdsp *x, void **sig_outs, long vec_size, long num_active_threads);
@@ -150,9 +148,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::msglist, "list", A_GIMME, 0);
     class_addmethod(this_class, (method) handler::msganything, "anything", A_GIMME, 0);
     
-    class_addmethod(this_class, (method) dynamicdsp_autoloadbalance, "autoloadbalance", A_GIMME, 0);                // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) dynamicdsp_multithread, "multithread", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
-    class_addmethod(this_class, (method) dynamicdsp_activethreads, "activethreads", A_GIMME, 0);                    // MUST FIX TO GIMME FOR NOW
     class_addmethod(this_class, (method) dynamicdsp_threadmap, "threadmap", A_GIMME, 0);                            // MUST FIX TO GIMME FOR NOW
     
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
@@ -173,6 +168,19 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::client_get_patch_busy, "client_get_patch_busy", A_CANT, 0);
     class_addmethod(this_class, (method) handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
     class_addmethod(this_class, (method) handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
+    
+    CLASS_ATTR_LONG(this_class, "multithread", 0L, t_dynamicdsp, multithread_flag);
+    CLASS_ATTR_FILTER_CLIP(this_class, "multithread", 0, 1);
+    CLASS_ATTR_STYLE_LABEL(this_class, "multithread" ,0L, "onoff", "Multithread Processing");
+    
+    CLASS_ATTR_LONG(this_class, "autoloadbalance", 0L, t_dynamicdsp, autoloadbalance_flag);
+    CLASS_ATTR_FILTER_CLIP(this_class, "autoloadbalance", 0, 1);
+    CLASS_ATTR_STYLE_LABEL(this_class, "autoloadbalance" ,0L, "onoff", "Automatically Balance Threads");
+
+    CLASS_ATTR_LONG(this_class, "activethreads", 0L, t_dynamicdsp, request_num_active_threads);
+    CLASS_ATTR_ACCESSORS(this_class, "activethreads", 0L, dynamicdsp_activethreads);
+    CLASS_ATTR_LABEL(this_class, "activethreads", 0L, "Number of Active Threads");
+
     
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
@@ -290,7 +298,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     // Multithreading variables
     
     x->manual_threading = 1;
-    x->request_manual_threading = 1;
+    x->autoloadbalance_flag = 0;
     x->request_num_active_threads = max_obj_threads;
     
     // Set other variables to defaults
@@ -424,17 +432,7 @@ void dynamicdsp_loadpatch(t_dynamicdsp *x, t_symbol *s, long argc, t_atom *argv)
 
 // Multithreading Messages
 
-void dynamicdsp_autoloadbalance(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->request_manual_threading = !(!argc || atom_getlong(argv)) ? 1 : 0;
-}
-
-void dynamicdsp_multithread(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    x->multithread_flag = (!argc || atom_getlong(argv)) ? 1 : 0;
-}
-
-void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
+t_max_err dynamicdsp_activethreads(t_dynamicdsp *x, t_object *attr, long argc, t_atom *argv)
 {
     t_atom_long n = x->max_obj_threads;
     
@@ -445,6 +443,8 @@ void dynamicdsp_activethreads(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom 
     }
     
     x->request_num_active_threads = limit_int<long>(n);
+    
+    return MAX_ERR_NONE;
 }
 
 void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *argv)
@@ -553,7 +553,7 @@ void dynamicdsp_perform_common(t_dynamicdsp *x, void **sig_outs, long vec_size)
     // Update multithreading parameters (done in one thread and before processing to ensure uninterrupted audio processing
     
     x->num_active_threads = num_active_threads;
-    x->manual_threading = x->request_manual_threading;
+    x->manual_threading = !x->autoloadbalance_flag;
     num_active_threads = !multithread_flag ? 1 : num_active_threads;
     
     if (!x->manual_threading)
