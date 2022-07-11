@@ -4,6 +4,8 @@
 
 #include "descriptors_graph.hpp"
 
+#include <ibuffer_access.hpp>
+
 // The Summary Graph
 
 class summary_graph : private graph
@@ -13,7 +15,7 @@ public:
     summary_graph(t_object *x, const setup_list& setups, const global_params& params, long argc, t_atom *argv);
     
     void prepare(const global_params& params);
-    void run(const global_params& params, const double *input);
+    void run(const global_params& params, ibuffer_data& data, long buffer_offset, long buffer_chan);
     
     void output(t_atom *argv) { graph::output(m_summary_outputs, argv); }
     size_t output_size() { return graph::output_size(m_summary_outputs); }
