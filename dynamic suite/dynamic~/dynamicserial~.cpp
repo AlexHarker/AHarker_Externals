@@ -477,4 +477,3 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
     if (!dynamicserial_dsp_common(x, max_vec, static_cast<long>(sample_rate)))
         object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, nullptr);
 }
-

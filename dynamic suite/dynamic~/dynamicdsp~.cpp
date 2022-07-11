@@ -113,7 +113,6 @@ bool dynamicdsp_dsp_common(t_dynamicdsp *x, long vec_size, long sample_rate);
 void dynamicdsp_dsp(t_dynamicdsp *x, t_signal **sp, short *count);
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
-
 // Main
 
 int C74_EXPORT main()
