@@ -108,7 +108,6 @@ void dynamicdsp_perform64(t_dynamicdsp *x, t_object *dsp64, double **ins, long n
 
 void dynamicdsp_dsp64(t_dynamicdsp *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
-
 // Main
 
 int C74_EXPORT main()

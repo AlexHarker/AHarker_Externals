@@ -13,14 +13,14 @@
 		B85C98F11F3DDA96003F468F /* matchers.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85C98ED1F3DDA96003F468F /* matchers.hpp */; };
 		B85C99061F3E392D003F468F /* entries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* entries.cpp */; };
 		B85C99071F3E3930003F468F /* matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* matchers.cpp */; };
-		B8BACCD21F3F1092001589D8 /* entrymatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */; };
+		B8BACCD21F3F1092001589D8 /* entrymatcher_message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8EC9F040F0A433600B26D31 /* entrymatcher_message.cpp */; };
 		B8BACCDA1F3FD879001589D8 /* entry_database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BACCD81F3FD879001589D8 /* entry_database.cpp */; };
 		B8BACCDB1F3FD879001589D8 /* entry_database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BACCD81F3FD879001589D8 /* entry_database.cpp */; };
 		B8BACCDC1F3FD879001589D8 /* entry_database.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8BACCD91F3FD879001589D8 /* entry_database.hpp */; };
 		B8BACCDD1F3FD879001589D8 /* entry_database.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8BACCD91F3FD879001589D8 /* entry_database.hpp */; };
 		B8CB69D21F3E3B7D00F6215A /* entries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80770B61F3B9DAA006E6C0B /* entries.cpp */; };
 		B8CB69D31F3E3B7F00F6215A /* matchers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98EC1F3DDA96003F468F /* matchers.cpp */; };
-		B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */; };
+		B8CB69D41F3E3B8D00F6215A /* entrymatcher_audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85C98F21F3DDE5F003F468F /* entrymatcher_audio.cpp */; };
 		B8F18CE61F52D76F000E59CA /* database_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* database_view.cpp */; };
 		B8F18CE71F52D76F000E59CA /* database_view.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8F18CE41F52D76F000E59CA /* database_view.cpp */; };
 		B8F18CE81F52D76F000E59CA /* database_view.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B8F18CE51F52D76F000E59CA /* database_view.hpp */; };
@@ -33,14 +33,14 @@
 		B80770B71F3B9DAA006E6C0B /* entries.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entries.hpp; sourceTree = "<group>"; };
 		B85C98EC1F3DDA96003F468F /* matchers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matchers.cpp; sourceTree = "<group>"; };
 		B85C98ED1F3DDA96003F468F /* matchers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matchers.hpp; sourceTree = "<group>"; };
-		B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "entrymatcher~.cpp"; sourceTree = "<group>"; };
+		B85C98F21F3DDE5F003F468F /* entrymatcher_audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher_audio.cpp; sourceTree = "<group>"; };
 		B8998A4811CECDFB0028A17C /* entrymatcher~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "entrymatcher~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BACCD41F3F9923001589D8 /* atom_types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = atom_types.hpp; sourceTree = "<group>"; };
 		B8BACCD81F3FD879001589D8 /* entry_database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database.cpp; sourceTree = "<group>"; };
 		B8BACCD91F3FD879001589D8 /* entry_database.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entry_database.hpp; sourceTree = "<group>"; };
 		B8C536E11F42459A00B7978B /* sort.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sort.hpp; sourceTree = "<group>"; };
 		B8E3186B1F471F2200BE449B /* entrymatcher_common.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = entrymatcher_common.hpp; sourceTree = "<group>"; };
-		B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher.cpp; sourceTree = "<group>"; };
+		B8EC9F040F0A433600B26D31 /* entrymatcher_message.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher_message.cpp; sourceTree = "<group>"; };
 		B8F18CE41F52D76F000E59CA /* database_view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = database_view.cpp; sourceTree = "<group>"; };
 		B8F18CE51F52D76F000E59CA /* database_view.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = database_view.hpp; sourceTree = "<group>"; };
 		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -88,8 +88,8 @@
 				B8F18CE51F52D76F000E59CA /* database_view.hpp */,
 				B8F18CE41F52D76F000E59CA /* database_view.cpp */,
 				B8E3186B1F471F2200BE449B /* entrymatcher_common.hpp */,
-				B8EC9F040F0A433600B26D31 /* entrymatcher.cpp */,
-				B85C98F21F3DDE5F003F468F /* entrymatcher~.cpp */,
+				B8EC9F040F0A433600B26D31 /* entrymatcher_message.cpp */,
+				B85C98F21F3DDE5F003F468F /* entrymatcher_audio.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -243,7 +243,7 @@
 				B85C99071F3E3930003F468F /* matchers.cpp in Sources */,
 				B8F18CE61F52D76F000E59CA /* database_view.cpp in Sources */,
 				B8BACCDA1F3FD879001589D8 /* entry_database.cpp in Sources */,
-				B8BACCD21F3F1092001589D8 /* entrymatcher.cpp in Sources */,
+				B8BACCD21F3F1092001589D8 /* entrymatcher_message.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +255,7 @@
 				B8CB69D31F3E3B7F00F6215A /* matchers.cpp in Sources */,
 				B8F18CE71F52D76F000E59CA /* database_view.cpp in Sources */,
 				B8BACCDB1F3FD879001589D8 /* entry_database.cpp in Sources */,
-				B8CB69D41F3E3B8D00F6215A /* entrymatcher~.cpp in Sources */,
+				B8CB69D41F3E3B8D00F6215A /* entrymatcher_audio.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
