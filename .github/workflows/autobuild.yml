@@ -2,6 +2,7 @@ name: build-github
 on: [workflow_dispatch]
 env: 
   WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
+  MXO_GLOB: -e mxo
 jobs:
   deploy-win:
     runs-on: windows-2019
@@ -55,6 +56,41 @@ jobs:
           path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
       - name: Build mac externals
         run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
+      - name: Setup keychain and identities
+        shell: bash
+        env:  
+          TEAM_ID: ${{ secrets.TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APP_SPECIFIC_PWD: ${{ secrets.APP_SPECIFIC_PWD }}
+          CERT_PWD: ${{ secrets.CERT_PWD }}
+          CERT_BASE64: ${{ secrets.CERT_BASE64}}
+          CERTPATH: ${{ runner.temp }}/certificate.p12
+          KEYCHAINPWD: temporarykeychainpassword
+          KEYCHAINPATH: ${{ runner.temp }}/app-signing.keychain-db
+         # create and setup a temporary keychain, then decode the certificate and setup creditials for codesigning and notarization
+        run: |
+             security create-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
+             security list-keychain -d user -s "$KEYCHAINPATH"
+             security set-keychain-settings "$KEYCHAINPATH"
+             security unlock-keychain -p "$KEYCHAINPWD" "$KEYCHAINPATH"
+             echo -n "$CERT_BASE64" | base64 --decode --output $CERTPATH
+             security import "$CERTPATH" -P "$CERT_PWD" -A -t cert -f pkcs12 -k "$KEYCHAINPATH" -T /usr/bin/codesign
+             security set-key-partition-list -S apple-tool:,apple:, -s -k "$KEYCHAINPATH" -D "$CERT_BASE64" -t private "$KEYCHAINPATH"
+             xcrun notarytool store-credentials "AJH-NOTARIZE" --apple-id $APPLE_ID --team-id $TEAM_ID --password $APP_SPECIFIC_PWD
+      - name: Mac builds notarization
+        shell: bash
+        # install fd /cd to package make temp folder with mxos / sign mxos / copy to folder / zip / notarize upload / deleete temps / staple
+        run: |
+             brew install fd
+             cd ah-externals/AH_Externals_Package
+             mkdir -p Notarization
+             fd $MXO_GLOB -E .git -I
+             fd $MXO_GLOB -E .git -I -x codesign --force --timestamp --sign "Developer ID Application" {}
+             fd $MXO_GLOB -E .git -I -x ditto {} Notarization/{/} 
+             /usr/bin/ditto -c -k --keepParent Notarization Notarization.zip
+             xcrun notarytool submit Notarization.zip --keychain-profile "AJH-NOTARIZE" --wait
+             rm -rf Notarization Notarization.zip
+             fd $MXO_GLOB -E .git -I -x xcrun stapler staple {}  
       - name: Make zip
         run: |
              mkdir build/
