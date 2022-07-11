@@ -385,8 +385,6 @@ protected:
         
         // Load into the specified slot
 
-        // FIX - some kind of high value check for user specified index?
-
         m_loading_index = index;
         m_slots.add(new T(m_owner, m_parent, index, m_num_ins, &m_out_table), index - 1);
         
