@@ -140,7 +140,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
     class_addmethod(this_class, (method) handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
     
-    CLASS_ATTR_OFFSET_DUMMY(this_class, "target", 0L, gensym("long"));
+    CLASS_ATTR_OFFSET_DUMMY(this_class, "target", 0L, gensym("atom_long"));
     CLASS_ATTR_ACCESSORS(this_class, "target", handler::get_target, handler::target);
     CLASS_ATTR_LABEL(this_class, "target", 0L, "Target Patch Number");
     
