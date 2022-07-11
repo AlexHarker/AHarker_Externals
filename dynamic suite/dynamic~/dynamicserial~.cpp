@@ -119,7 +119,7 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
     class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_LONG, 0);
 
-    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);
     
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
     class_addmethod(this_class, (method) handler::register_listener, "register_listener", A_CANT, 0);
