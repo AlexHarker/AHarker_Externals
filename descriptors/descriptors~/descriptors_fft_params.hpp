@@ -60,7 +60,8 @@ static fft_params check_fft_params(t_object *x, long fft_size, long hop_size, lo
     params.m_frame_size = std::min(frame_size > 0 ? frame_size : params.fft_size(), params.fft_size());
     params.m_window_type = window_type;
     
-    if (window_type == gensym("rect")
+    if (!window_type
+        || window_type == gensym("rect")
         || window_type == gensym("hamming")
         || window_type == gensym("kaiser")
         || window_type == gensym("triangle")
