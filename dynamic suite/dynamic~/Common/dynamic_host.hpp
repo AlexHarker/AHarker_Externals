@@ -49,14 +49,32 @@ struct dynamic_host
 
     // Voice targeting
 
-    static void target(T *x, t_atom_long index)
+    static t_max_err get_target(T *x, t_object *attr, long *argc, t_atom **argv)
     {
-        x->patch_set->target(index);
+        if (argc && argv)
+        {
+            char alloc;
+            
+            if (atom_alloc(argc, argv, &alloc))
+                return MAX_ERR_GENERIC;
+            
+            atom_setlong(*argv,  x->patch_set->get_target());
+        }
+        
+        return MAX_ERR_NONE;
+    }
+    
+    static t_max_err target(T *x, t_object *attr, long argc, t_atom *argv)
+    {
+        x->patch_set->target(argc ? atom_getlong(argv) : 0);
+        
+        return MAX_ERR_NONE;
     }
 
     static void targetfree(T *x, t_symbol *msg, long argc, t_atom *argv)
     {
         x->patch_set->target_free(argc, argv);
+        object_attr_touch((t_object *) x, gensym("target"));
     }
 
     // Patcher windows

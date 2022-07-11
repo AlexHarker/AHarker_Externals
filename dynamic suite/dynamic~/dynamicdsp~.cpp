@@ -149,9 +149,8 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
     class_addmethod(this_class, (method) dynamicdsp_loadpatch, "loadpatch", A_GIMME, 0);
     class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_LONG, 0);
-    
-    class_addmethod(this_class, (method) handler::target, "target", A_LONG, 0);
-    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);
+
+    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                // MUST FIX TO GIMME FOR NOW
     
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
     class_addmethod(this_class, (method) handler::register_listener, "register_listener", A_CANT, 0);
@@ -165,18 +164,21 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) handler::client_set_patch_on, "client_set_patch_on", A_CANT, 0);
     class_addmethod(this_class, (method) handler::client_set_patch_busy, "client_set_patch_busy", A_CANT, 0);
     
+    CLASS_ATTR_OFFSET_DUMMY(this_class, "target", 0L, gensym("atom_long"));
+    CLASS_ATTR_ACCESSORS(this_class, "target", handler::get_target, handler::target);
+    CLASS_ATTR_LABEL(this_class, "target", 0L, "Target Patch Number");
+
     CLASS_ATTR_LONG(this_class, "multithread", 0L, t_dynamicdsp, multithread_flag);
     CLASS_ATTR_FILTER_CLIP(this_class, "multithread", 0, 1);
-    CLASS_ATTR_STYLE_LABEL(this_class, "multithread" ,0L, "onoff", "Multithread Processing");
+    CLASS_ATTR_STYLE_LABEL(this_class, "multithread", 0L, "onoff", "Multithread Processing");
     
     CLASS_ATTR_LONG(this_class, "autoloadbalance", 0L, t_dynamicdsp, autoloadbalance_flag);
     CLASS_ATTR_FILTER_CLIP(this_class, "autoloadbalance", 0, 1);
-    CLASS_ATTR_STYLE_LABEL(this_class, "autoloadbalance" ,0L, "onoff", "Automatically Balance Threads");
+    CLASS_ATTR_STYLE_LABEL(this_class, "autoloadbalance", 0L, "onoff", "Autobalance Threads");
 
     CLASS_ATTR_LONG(this_class, "activethreads", 0L, t_dynamicdsp, request_num_active_threads);
     CLASS_ATTR_ACCESSORS(this_class, "activethreads", 0L, dynamicdsp_activethreads);
     CLASS_ATTR_LABEL(this_class, "activethreads", 0L, "Number of Active Threads");
-
     
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
     CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);

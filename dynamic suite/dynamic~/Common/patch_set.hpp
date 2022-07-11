@@ -218,6 +218,11 @@ public:
         m_target_index = -1;
     }
 
+    t_atom_long get_target() const
+    {
+        return m_target_index;
+    }
+    
     // Process and DSP
 
     void compile_dsp(long vec_size, long sampling_rate)
