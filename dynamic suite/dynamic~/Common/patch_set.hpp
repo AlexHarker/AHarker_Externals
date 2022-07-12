@@ -320,7 +320,9 @@ public:
         {
             if ((*it) && (*it)->get_patch() == p)
             {
+                m_loading_index = (*it)->get_user_index();
                 (*it)->load(vec_size, sampling_rate, false);
+                m_loading_index = 0;
                 break;
             }
         }
