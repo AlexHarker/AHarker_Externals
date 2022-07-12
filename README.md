@@ -1,16 +1,9 @@
 AHarker Externals
 =================
 
-A Set of 80+ Externals for a variety of tasks in Cycling 74's Max.
+A Set of 80+ Externals for a variety of tasks in Cycling 74's Max by Alex Harker
 
-By Alex Harker
-
-**Contact:**
-
-* ajharker@gmail.com 
-* http://www.alexanderjharker.co.uk/
-			
-A brief overview of some areas addressed:
+Overview:
 
 * general purpose scaling for Max and MSP
 * efficient partitioned + non- partitioned convolution
@@ -23,12 +16,9 @@ A brief overview of some areas addressed:
 * utility objects
 * SIMD versions of 35 basic MSP objects
 
-The current versions support Mac and Windows in 64bit, including support for Apple Silicon (M1) processors.
-
-The AHarker Externals are licensed under the 3-clause BSD license.
-
-Portions of this work have been supported by the Arts and Humanities Research Council, and the HISSTools Project at the University of Huddersfield.
-
+AHarker Externals:
+- support Mac and Windows in 64bit, including support for Apple Silicon (M1) processors.
+- are licensed under the 3-clause BSD license.
 
 Enjoy!
 
@@ -70,4 +60,9 @@ Should you wish to compile the externals yourself you will require the following
 * The max-sdk-base repository main folder should be located next to (in the same enclosing folder as) the main folder for this repository.
 * The location for the max-sdk-base can be modified in AH_Win_Debug.props / AH_Win_Release.props if desired.
 
+Contact
+---------
 
+* ajharker@gmail.com 
+* http://www.alexanderjharker.co.uk/
+			
