@@ -23,7 +23,7 @@ A brief overview of some areas addressed:
 * utility objects
 * SIMD versions of 35 basic MSP objects
 
-The current versions support Max and Windows in 64bit, including support for Apple ARM (M1) processors.
+The current versions support Mac and Windows in 64bit, including support for Apple Silicon (M1) processors.
 
 The AHarker Externals are licensed under a the 3-clause BSD license.
 
@@ -37,7 +37,7 @@ Alex
 Package Releases / Binaries
 ---------
 
-- At this time alpha releases are available via GitHub releases. 
+- At this time alpha releases are available via GitHub **[releases](https://github.com/AlexHarker/AHarker_Externals/releases)**. 
 - Until official release some objects may change. 
 - Please report any issues with the issues page on GitHub. 
 
