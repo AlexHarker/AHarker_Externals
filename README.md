@@ -25,7 +25,7 @@ A brief overview of some areas addressed:
 
 The current versions support Mac and Windows in 64bit, including support for Apple Silicon (M1) processors.
 
-The AHarker Externals are licensed under a the 3-clause BSD license.
+The AHarker Externals are licensed under the 3-clause BSD license.
 
 Portions of this work have been supported by the Arts and Humanities Research Council, and the HISSTools Project at the University of Huddersfield.
 
@@ -38,7 +38,8 @@ Package Releases / Binaries
 ---------
 
 - At this time alpha releases are available via GitHub **[releases](https://github.com/AlexHarker/AHarker_Externals/releases)**. 
-- Until official release some objects may change. 
+- Until official release some objects interfaces may change.
+- Please note that the behaviour of *descriptors~ / descriptorsrt~* may differ from earlier versions. 
 - Please report any issues with the issues page on GitHub. 
 
 Compiling
