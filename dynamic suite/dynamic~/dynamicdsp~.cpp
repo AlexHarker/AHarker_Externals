@@ -30,8 +30,6 @@
 #include "Common/thread_set.hpp"
 #include "Common/dynamic_host.hpp"
 
-// TODO - check all poly CANT methods
-// TODO - change some items to attributes
 // FIX - GIMME methods (max 6.1 onwards)
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
