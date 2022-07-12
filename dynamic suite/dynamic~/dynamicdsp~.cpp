@@ -32,7 +32,6 @@
 #include "Common/thread_set.hpp"
 #include "Common/dynamic_host.hpp"
 
-// TODO - check all poly CANT methods
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
 // TODO - share threads between objects
