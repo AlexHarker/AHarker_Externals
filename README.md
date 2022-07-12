@@ -29,6 +29,11 @@ The AHarker Externals are licensed under a the 3-clause BSD license.
 
 Portions of this work have been supported by the Arts and Humanities Research Council, and the HISSTools Project at the University of Huddersfield.
 
+
+Enjoy!
+
+Alex
+
 Package Releases / Binaries
 ---------
 
@@ -64,7 +69,4 @@ Should you wish to compile the externals yourself you will require the following
 * The max-sdk-base repository main folder should be located next to (in the same enclosing folder as) the main folder for this repository.
 * The location for the max-sdk-base can be modified in AH_Win_Debug.props / AH_Win_Release.props if desired.
 
-Enjoy,
-
-Alex Harker
 
