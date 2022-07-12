@@ -37,7 +37,7 @@ Alex
 Package Releases / Binaries
 ---------
 
-- At this time alpha releases are available via GitHub releases. 
+- At this time alpha releases are available via GitHub **[releases](https://github.com/AlexHarker/AHarker_Externals/releases)**. 
 - Until official release some objects may change. 
 - Please report any issues with the issues page on GitHub. 
 
