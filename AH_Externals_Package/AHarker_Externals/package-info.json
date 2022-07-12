@@ -1,0 +1,20 @@
+{
+	"name": "Aharker Externals",
+	"type": "package",
+	"author": "Alex Harker",
+	"description": "A Set of 80+ Externals for a variety of tasks in Cycling 74's Max.",
+	"version": "1.0.0",
+    "tags" : [ "audio", "dynamic dsp", "SIMD", "descriptors", "threading" ],
+    "max_version_min" : "7.2.3",
+    "os" :     {
+        "macintosh" :         {
+            "min_version" : "10.9.x",
+            "platform" : [ "x64", "aarch64" ]
+        },
+        "windows" :         {
+            "min_version" : "7",
+            "platform" : [ "x64" ]
+        }
+    },
+	"website": "https://github.com/AlexHarker/AHarker_Externals"
+}
