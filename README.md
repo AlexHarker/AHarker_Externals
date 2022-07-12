@@ -6,7 +6,7 @@ A Set of 80+ Externals for a variety of tasks in Cycling 74's Max by Alex Harker
 Overview:
 
 * general purpose scaling for Max and MSP
-* efficient partitioned + non- partitioned convolution
+* efficient partitioned + non-partitioned convolution
 * comprehensive descriptor analysis (realtime + non-realtime)
 * enhanced audio multi-threading / dynamic patch loading
 * efficient buffer playback and storage
