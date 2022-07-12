@@ -45,7 +45,7 @@ Should you wish to compile the externals yourself you will require the following
 1. Xcode
 2. The max-sdk-base repository (https://github.com/Cycling74/max-sdk-base)
 
-<br>
+*Notes*
 
 * The max-sdk-base repository main folder should be located next to (in the same enclosing folder as) the main folder for this repository.
 * The location for the max-sdk-base can be modified in Config_AHarker_Externals.xcconfig if desired.
@@ -58,7 +58,7 @@ Should you wish to compile the externals yourself you will require the following
     - https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html
 3. The max-sdk-base repository (https://github.com/Cycling74/max-sdk-base)
 
-<br>
+*Notes*
 
 * The OneMKL installation needs to include Visual Studio integration (this is required for some of the externals using SIMD)
 * The max-sdk-base repository main folder should be located next to (in the same enclosing folder as) the main folder for this repository.
