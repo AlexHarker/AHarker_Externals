@@ -23,9 +23,33 @@ A brief overview of some areas addressed:
 * utility objects
 * SIMD versions of 35 basic MSP objects
 
-The AHarker Externals are licensed freely for non-commercial use (see \_Docs\_License\_ for details of the specifics of licensing for particular objects). At this time it is not possible to license in a less restrictive way due to some current dependencies. I intend to remove these dependencies for the next major release.
+The AHarker Externals are licensed under a the 3-clause BSD license.
 
 Portions of this work have been supported by the Arts and Humanities Research Council, and the HISSTools Project at the University of Huddersfield.
+
+Compiling
+---------
+
+Should you wish to compile you will require the following:
+
+**Mac:**
+- XCode
+- The max-sdk-base repository (https://github.com/Cycling74/max-sdk-base)
+
+The max-sdk-base repository should be placed parallel to (in the same encolsing folder) as this repository so that b
+The location for the max-sdk-base can be modified in Config_AHarker_Externals.xcconfig if desired.
+AVX / SSE support can also be toggled in Config_AHarker_Externals.xcconfig (for old machines, or Rosetta 2 support).
+
+**Windows:**
+- Visual Studio
+- OneMKL or OneAPI Base Toolkit (which includes OneMKL)
+    - OneMKL https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html
+    - OneAPI Base Toolkit https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html
+- The max-sdk-base repository (https://github.com/Cycling74/max-sdk-base)
+
+The OneMKL installation needs to include Visual Studio integration (this is required for some of the externals using SIMD)
+The max-sdk-base repository should be placed parallel to (in the same encolsing folder) as this repository so that b
+The location for the max-sdk-base can be modified in AH_Win_Debug.props / AH_Win_Release.props if desired.
 
 Enjoy,
 
