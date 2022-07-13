@@ -251,35 +251,35 @@ private:
     
     // Peak Finding
 
-    template <bool Func(const T *, double)>
+    template <bool Func(const T *)>
     void find_peaks(peak_set<T>& peaks, uintptr_t size, const T *mask, T threshold, T mask_gain)
     {
         const T *data = stored_data();
                 
         if (mask)
         {
-            for (uintptr_t i = 0; i < size; i++)
-                if (Func(data++, std::max(*mask++ * mask_gain, threshold)))
+            for (uintptr_t i = 0; i < size; i++, data++)
+                if (*data > std::max(*mask++ * mask_gain, threshold) && Func(data))
                     peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
         }
         else
         {
-            for (uintptr_t i = 0; i < size; i++)
-                if (Func(data++, threshold))
+            for (uintptr_t i = 0; i < size; i++, data++)
+                if (*data > threshold && Func(data))
                     peaks.add_peak({ i, 0, size, static_cast<double>(i), *data });
         }
     }
 
     template <int N>
-    static bool check_for_peak(const T *data, double threshold)
+    static bool check_for_peak(const T *data)
     {
-        return check_for_peak<N-1>(data, threshold) && data[0] > data[-N] && data[0] > data[N];
+        return check_for_peak<N-1>(data) && data[0] > data[-N] && data[0] > data[N];
     }
 
     template <>
-    static bool check_for_peak<1>(const T *data, double threshold)
+    static bool check_for_peak<1>(const T *data)
     {
-        return data[0] > threshold && data[0] > data[-1] && data[0] > data[1];
+        return data[0] > data[-1] && data[0] > data[1];
     }
 
     // Peak Refinement
