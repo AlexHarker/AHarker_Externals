@@ -109,7 +109,7 @@ Slightly slower
 
 flux / foote / mkl (3)
 
-Slower or tbc (10) - median filter / peak finding / pitch with increased FFT size
+Slower or tbc (10) - median filter / peak finding (log is the cost) / pitch with increased FFT size
 
 sfm / noise_ratio / harmonic_ratio / pitch / confidence / lin_brightness / log_brightness / spectral_peaks / inharmonicity / roughness 
 
