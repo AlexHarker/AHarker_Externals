@@ -66,7 +66,7 @@ private:
     
     // Insertion
 
-    T insert(T *data, uintptr_t *indices, T value, intptr_t index, intptr_t width, uintptr_t pos)
+    inline T insert(T *data, uintptr_t *indices, T value, intptr_t index, intptr_t width, uintptr_t pos)
     {
         intptr_t current = -1, insert = 0, gap = 0;
 
