@@ -77,29 +77,36 @@ private:
         // Find sort position for the index
 
         for (current = 0; (current < width) && (indices[current] != index); current++);
+        
+        if (current < (width - 1) && value > data[indices[current + 1]])
+        {
+            // Search right
 
-        // Search right
+            for (insert = current, gap = std::max(intptr_t(1), (width - current) >> 1); gap; gap >>= 1)
+                for (intptr_t i = insert + gap; (i < width) && (value > data[indices[i]]); i += gap)
+                    insert = i;
 
-        for (insert = current, gap = std::max(intptr_t(1), (width - current) >> 1); gap; gap >>= 1)
-            for (intptr_t i = insert + gap; (i < width) && (value > data[indices[i]]); i += gap)
-                insert = i;
+            // Swaps
 
-        // Swaps
+            std::copy(indices + current + 1, indices + insert + 1, indices + current);
+            indices[insert] = index;
+            current = insert;
+        }
+        
+        if (current > 0 && value < data[indices[current - 1]])
+        {
+            // Search left
 
-        std::copy(indices + current + 1, indices + insert + 1, indices + current);
-        indices[insert] = index;
+            for (gap = std::max(intptr_t(1), current >> 1); gap; gap >>= 1)
+                for (intptr_t i = insert - gap; (i >= 0) && (value < data[indices[i]]); i -= gap)
+                    insert = i;
 
-        // Search left
+            // Swaps
 
-        for (current = insert, gap = std::max(intptr_t(1), current >> 1); gap; gap >>= 1)
-            for (intptr_t i = insert - gap; (i >= 0) && (value < data[indices[i]]); i -= gap)
-                insert = i;
-
-        // Swaps
-
-        std::copy_backward(indices + insert, indices + current, indices + current + 1);
-        indices[insert] = index;
-
+            std::copy_backward(indices + insert, indices + current, indices + current + 1);
+            indices[insert] = index;
+        }
+        
         return data[indices[pos]];
     }
     
