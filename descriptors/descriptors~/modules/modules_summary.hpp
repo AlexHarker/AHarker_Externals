@@ -5,6 +5,8 @@
 #include "processing_containers.hpp"
 #include "utility_definitions.hpp"
 
+#include "modules_pitch.hpp"
+
 #include "../descriptors_graph.hpp"
 #include "../descriptors_summary_modules.hpp"
 
@@ -745,5 +747,48 @@ using stat_module_longest_above = stat_crossings_user<longest_above, cross_mode:
 using stat_module_longest_below = stat_crossings_user<longest_below, cross_mode::cross>;
 using stat_module_longest_above_both = stat_crossings_user<longest_above, cross_mode::crossings>;
 using stat_module_longest_below_both = stat_crossings_user<longest_below, cross_mode::crossings>;
+
+// Summary Harmonic Peaks
+
+struct summary_module_harmonic_peaks : summary_module_vector<summary_module_spectral_peaks>
+{
+    using peak_list = peak_set<double>;
+    using peak_detector = peak_finder<double>;
+    
+    summary_module_harmonic_peaks(long N, long median_width, double median_gain, double range, bool report_db, double pitch_threshold)
+    : summary_module_vector(true), m_filter(median_width), m_num_peaks(N)
+    , m_median_width(median_width), m_median_gain(median_gain), m_range(range), m_report_db(report_db), m_threshold(pitch_threshold)
+    {
+        m_values.resize(N * 2);
+    }
+    
+    static user_module *setup(const global_params& params, module_arguments& args);
+    
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), m_num_peaks); }
+    
+    void add_requirements(graph& g) override;
+    void prepare(const global_params& params) override;
+    void calculate(const global_params& params, const double *data, long size) override;
+    
+    bool is_descriptor() const override { return true; };
+    
+private:
+    
+    summary_module_spectral_peaks::spectrum_average *m_spectrum;
+    stat_module_mean *m_mean;
+    
+    peak_list m_peaks;
+    peak_detector m_detector;
+    median_filter<double> m_filter;
+    
+    aligned_vector<> m_median_spectrum;
+    
+    const long m_num_peaks;
+    const long m_median_width;
+    const double m_median_gain;
+    const double m_range;
+    const bool m_report_db;
+    const double m_threshold;
+};
 
 #endif /* _SUMMARY_MODULES_HPP_ */

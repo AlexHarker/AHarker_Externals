@@ -200,6 +200,8 @@ int C74_EXPORT main()
     
     s_setups.add_module("duration", summary_module_duration::setup);
     s_setups.add_module("spectral_peaks", summary_module_spectral_peaks::setup);            // ** Improved [spurious peaks an issue]
+    s_setups.add_module("harmonic_peaks", summary_module_harmonic_peaks::setup);            // ** Improved [spurious peaks an issue]
+
     
     return 0;
 }

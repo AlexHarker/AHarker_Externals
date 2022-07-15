@@ -73,12 +73,13 @@ public:
     size_t output_size() { return output_size(m_outputs); }
     size_t size() { return m_outputs.size(); }
     
+    void add_user_module(user_module *m);
+
 protected:
     
     graph() {}
     
     void build_energy_threshold(const global_params& params);
-    void add_user_module(user_module *m);
     
     long next_setup(const setup_list& setups, long idx, long argc, t_atom *argv, user_module_setup& setup);
     

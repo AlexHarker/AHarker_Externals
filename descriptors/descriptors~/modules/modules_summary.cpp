@@ -110,6 +110,103 @@ void summary_module_spectral_peaks::calculate(const global_params& params, const
     }
 }
 
+// Harmonic peaks
+
+
+user_module *summary_module_harmonic_peaks::setup(const global_params& params, module_arguments& args)
+{
+    long N = args.get_long("number of peaks", 10, 1, std::numeric_limits<long>::max());
+    long median_span = args.get_long("median span", 15, 0, std::numeric_limits<long>::max());
+    double median_gain = dbtoa(args.get_double("median gain", 0, 0, 40.0));
+    double range = args.get_double("db range", 60.0, 0.0, 1000.0);
+    bool report_db = args.get_bool(true);
+    double threshold = args.get_double("pitch threshold", 0.68, 0, 1.0);
+    
+    return new summary_module_harmonic_peaks(N, median_span * 2 + 1, median_gain, range, report_db, threshold);
+}
+
+void summary_module_harmonic_peaks::add_requirements(graph& g)
+{
+    m_spectrum = g.add_requirement(new summary_module_spectral_peaks::spectrum_average());
+    g.add_user_module(new module_pitch(m_threshold));
+    m_mean = g.add_requirement(new stat_module_mean());
+}
+
+
+void summary_module_harmonic_peaks::prepare(const global_params& params)
+{
+    m_median_spectrum.resize(params.num_bins());
+    m_peaks.resize(params.num_bins() / 2);
+    m_detector.resize(params.num_bins());
+}
+
+void summary_module_harmonic_peaks::calculate(const global_params& params, const double *frame, long size)
+{
+    double *median_spectrum = m_median_spectrum.data();
+    const double *spectrum = m_spectrum->get_average();
+    
+    peak_detector::options options;
+    
+    options.mask_gain = m_median_gain;
+    
+    m_filter(median_spectrum, spectrum, params.num_bins(), m_median_width, median_filter<double>::Edges::Fold, 50.0);
+    m_detector(m_peaks, spectrum, median_spectrum, params.num_bins(), options);
+    
+    double pitch = m_mean->get_output(0);
+    
+    long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks_in_range(m_range)), m_num_peaks);
+    
+    const double tolerance = pow(2, 0.2 / 12);
+    long i = 0, k = 0;
+    
+    for (long j = 0; k < m_num_peaks; j++)
+    {
+        double partial = (pitch * (j + 1));
+        double distance = infinity();
+        long match = -1;
+        
+        if (partial > params.m_sr / 2.0)
+            break;
+        
+        partial /= params.bin_freq();
+        
+        for ( ; i < m_peaks.num_peaks(); i++)
+        {
+            auto& peak = m_peaks.by_position(i);
+            
+            if (peak.m_position < (partial / tolerance))
+                continue;
+            
+            if (peak.m_position > (partial * tolerance))
+                break;
+            
+            const double test_distance = fabs(log(partial/tolerance));
+            
+            if (test_distance < distance)
+            {
+                match = i;
+                distance = test_distance;
+            }
+        }
+        
+        if (match != -1)
+        {
+            auto& peak = m_peaks.by_position(match);
+
+            i = match + 1;
+            m_values[k * 2 + 0] = peak.m_position * params.bin_freq();
+            m_values[k * 2 + 1] = m_report_db ? atodb(peak.m_value) : peak.m_value;
+            k++;
+        }
+    }
+        
+    for ( ; k < m_num_peaks; k++)
+    {
+        m_values[k * 2 + 0] = 0.0;
+        m_values[k * 2 + 1] = 0.0;
+    }
+}
+
 // Helper functions
 
 double ms_to_frame(const global_params& params, double ms)
