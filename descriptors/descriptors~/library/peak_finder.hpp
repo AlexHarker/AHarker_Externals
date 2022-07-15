@@ -48,7 +48,7 @@ public:
     uintptr_t num_peaks() const { return m_num_peaks; }
     
     const peak_data& by_value(size_t idx) const { return m_peaks[m_indices[idx]]; }
-    const peak_data& operator [](size_t idx) const { return m_peaks[idx]; }
+    const peak_data& by_position(size_t idx) const { return m_peaks[idx]; }
 
     void resize(uintptr_t max_size)
     {

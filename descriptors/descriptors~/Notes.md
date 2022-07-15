@@ -81,6 +81,7 @@ General and Small
 
 * Confirm the changes to returns for invalid/empty frames etc.
 * Check all arguments and defaults (and note where they've changed)
+* Check all get_params!!
 * How to deal with padding
 
 
