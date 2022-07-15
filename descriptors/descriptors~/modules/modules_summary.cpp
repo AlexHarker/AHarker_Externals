@@ -154,7 +154,7 @@ void summary_module_harmonic_peaks::calculate(const global_params& params, const
     
     double pitch = m_mean->get_output(0);
     
-    long num_valid_peaks = std::min(static_cast<long>(m_peaks.num_peaks_in_range(m_range)), m_num_peaks);
+    double amp_threshold = (m_peaks.num_peaks() ? m_peaks.by_position(0).m_value : 0) * atodb(m_range);
     
     const double tolerance = pow(2, 0.2 / 12);
     long i = 0, k = 0;
@@ -174,7 +174,7 @@ void summary_module_harmonic_peaks::calculate(const global_params& params, const
         {
             auto& peak = m_peaks.by_position(i);
             
-            if (peak.m_position < (partial / tolerance))
+            if (peak.m_position < (partial / tolerance) || peak.m_value < amp_threshold)
                 continue;
             
             if (peak.m_position > (partial * tolerance))
