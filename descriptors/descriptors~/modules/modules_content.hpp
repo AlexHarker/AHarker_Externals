@@ -68,7 +68,7 @@ struct module_spectral_peaks : user_module_vector<module_spectral_peaks>
     module_spectral_peaks(long num_peaks, long median_span, double median_gain, double range, bool report_db)
     : m_num_peaks(num_peaks), m_median_span(median_span), m_median_gain(median_gain), m_range(range), m_report_db(report_db) {}
     
-    auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span); }
+    auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span, m_median_gain, m_range, m_report_db); }
 
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
@@ -94,7 +94,7 @@ struct module_inharmonicity : user_module_single<module_inharmonicity>
     module_inharmonicity(long num_peaks, long median_span, double median_gain, double range, double threshold)
     : m_num_peaks(num_peaks), m_median_span(median_span), m_median_gain(median_gain), m_range(range), m_threshold(threshold) {}
     
-    auto get_params() const { return std::make_tuple(m_num_peaks, m_threshold); }
+    auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span, m_median_gain, m_range, m_threshold); }
 
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
@@ -120,7 +120,7 @@ struct module_roughness : user_module_single<module_roughness>
     module_roughness(long num_peaks, long median_span, double median_gain, double range)
     : m_num_peaks(num_peaks), m_median_span(median_span), m_median_gain(median_gain), m_range(range) {}
     
-    auto get_params() const { return std::make_tuple(m_num_peaks); }
+    auto get_params() const { return std::make_tuple(m_num_peaks, m_median_span, m_median_gain, m_range); }
 
     void add_requirements(graph& g) override;
     void calculate(const global_params& params, const double *frame, long size) override;
