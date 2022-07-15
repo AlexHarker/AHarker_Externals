@@ -81,6 +81,7 @@ General and Small
 
 * Confirm the changes to returns for invalid/empty frames etc.
 * Check all arguments and defaults (and note where they've changed)
+* Check all get_params!!
 * How to deal with padding
 
 
@@ -98,3 +99,18 @@ Bug fixes [no questions]:
 Bug fixes [questions]:
 [3] contents - spectral_peaks / inharmonicity / roughness - spurious peaks
 [2] sfm / spectral_crest (should there be a power option and how to convert the final ratio? - should sfm report in db?)
+
+Speeds:
+
+Faster / comparable (16)
+
+abs / peakamp / rms / energy / energy_ratio / loudness / lin shape (4) / log shape (4) / spectral_crest / rolloff
+
+Slightly slower
+
+flux / foote / mkl (3)
+
+Slower or tbc (10) - median filter / peak finding (log is the cost) / pitch with increased FFT size
+
+sfm / noise_ratio / harmonic_ratio / pitch / confidence / lin_brightness / log_brightness / spectral_peaks / inharmonicity / roughness 
+

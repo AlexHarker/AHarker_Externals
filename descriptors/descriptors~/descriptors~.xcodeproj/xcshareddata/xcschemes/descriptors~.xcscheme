@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-               BuildableName = "descriptorstest~.mxo"
-               BlueprintName = "descriptorstest~"
+               BuildableName = "descriptors~.mxo"
+               BlueprintName = "descriptors~"
                ReferencedContainer = "container:descriptors~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -55,8 +55,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-            BuildableName = "descriptorstest~.mxo"
-            BlueprintName = "descriptorstest~"
+            BuildableName = "descriptors~.mxo"
+            BlueprintName = "descriptors~"
             ReferencedContainer = "container:descriptors~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

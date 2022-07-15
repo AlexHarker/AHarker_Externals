@@ -53,7 +53,7 @@ struct summary_module_duration : summary_module_single<summary_module_duration>
     
     static user_module *setup(const global_params& params, module_arguments& args);
     
-    auto get_params() const { return std::make_tuple(summary_module::get_index()); }
+    auto get_params() const { return std::make_tuple(); }
 
     void calculate(const global_params& params, const double *data, long size) override;
     
@@ -90,7 +90,7 @@ struct summary_module_spectral_peaks : summary_module_vector<summary_module_spec
 
     static user_module *setup(const global_params& params, module_arguments& args);
 
-    auto get_params() const { return std::make_tuple(summary_module::get_index(), m_num_peaks); }
+    auto get_params() const { return std::make_tuple(summary_module::get_index(), m_num_peaks, m_num_peaks, m_median_width, m_median_gain, m_range, m_report_db); }
 
     void add_requirements(graph& g) override;
     void prepare(const global_params& params) override;
