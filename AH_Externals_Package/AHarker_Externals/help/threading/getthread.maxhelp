@@ -269,7 +269,7 @@
 , 							{
 								"box" : 								{
 									"border" : 0,
-									"filename" : "fl.helpdetails.js",
+									"filename" : "ah.helpdetails.js",
 									"id" : "obj-4",
 									"ignoreclick" : 1,
 									"jsarguments" : [ "getthread", 100 ],
