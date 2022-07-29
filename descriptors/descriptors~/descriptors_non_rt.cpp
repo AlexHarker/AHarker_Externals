@@ -103,7 +103,7 @@ int C74_EXPORT main()
                            (method) descriptors_new,
                            (method) descriptors_free,
                            sizeof(t_descriptors),
-                           0L,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
