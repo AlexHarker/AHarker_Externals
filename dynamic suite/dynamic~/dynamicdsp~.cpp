@@ -177,7 +177,7 @@ int C74_EXPORT main()
     CLASS_ATTR_LABEL(this_class, "activethreads", 0L, "Number of Active Threads");
     
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
-    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) nullptr);
     CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
     
     class_dspinit(this_class);
