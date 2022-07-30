@@ -51,6 +51,11 @@
     <ClInclude Include="modules\utility_definitions.hpp">
       <Filter>modules</Filter>
     </ClInclude>
+    <ClInclude Include="descriptors_fft_params.hpp" />
+    <ClInclude Include="descriptors_graph.hpp" />
+    <ClInclude Include="descriptors_modules.hpp" />
+    <ClInclude Include="descriptors_summary_graph.hpp" />
+    <ClInclude Include="descriptors_summary_modules.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules\modules_change.cpp">
@@ -76,5 +81,8 @@
     </ClCompile>
     <ClCompile Include="..\..\AH_MaxMSP_Headers\HISSTools_FFT\HISSTools_FFT.cpp" />
     <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.cpp" />
+    <ClCompile Include="descriptors_graph.cpp" />
+    <ClCompile Include="descriptors_non_rt.cpp" />
+    <ClCompile Include="descriptors_summary_graph.cpp" />
   </ItemGroup>
 </Project>
