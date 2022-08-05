@@ -15,10 +15,10 @@ namespace impl
     struct pow3         { template <class T> T operator()(T a) const { return a * a * a; } };
     struct pow4         { template <class T> T operator()(T a) const { return pow2()(pow2()(a)); } };
     struct absolute     { template <class T> T operator()(T a) const { return std::abs(a); } };
-    struct logarithm    { template <class T> T operator()(T a) const { return log(a); } };
+    struct logarithm    { template <class T> T operator()(T a) const { return std::log(a); } };
 
     struct indices      { template <class T> double operator[](T a) const { return static_cast<double>(a); } };
-    struct log_indices  { template <class T> double operator[](T a) const { return a ? log2(static_cast<double>(a)) : 0.0; } };
+    struct log_indices  { template <class T> double operator[](T a) const { return a ? std::log2(static_cast<double>(a)) : 0.0; } };
 
     template <class T, typename Op>
     struct modified_data
@@ -256,7 +256,7 @@ double stat_mean_squares(const T input, size_t size)
 template <class T>
 double stat_geometric_mean(const T input, size_t size)
 {
-    return exp(stat_sum_logs(input, size) / stat_length(input, size));
+    return std::exp(stat_sum_logs(input, size) / stat_length(input, size));
 }
 
 // Variance
@@ -331,14 +331,14 @@ double stat_kurtosis(const T input, size_t size)
 template <class T>
 double stat_log_centroid(const T input, size_t size)
 {
-    return exp2(stat_weighted_sum(impl::log_indices(), input, size) / (stat_sum(input, size)));
+    return std::exp2(stat_weighted_sum(impl::log_indices(), input, size) / (stat_sum(input, size)));
 }
 
 template <class T>
 double stat_log_spread(const T input, size_t size)
 {
     double centroid = stat_log_centroid(input, size);
-    return sqrt(stat_weighted_sum(impl::log_indices_diff_op<impl::pow2>(log2(centroid)), input, size) / stat_sum(input, size));
+    return sqrt(stat_weighted_sum(impl::log_indices_diff_op<impl::pow2>(std::log2(centroid)), input, size) / stat_sum(input, size));
 }
 
 template <class T>
@@ -346,7 +346,7 @@ double stat_log_skewness(const T input, size_t size)
 {
     double centroid = stat_log_centroid(input, size);
     double denominator = impl::pow3()(stat_log_spread(input, size)) * stat_sum(input, size);
-    return denominator ? stat_weighted_sum(impl::log_indices_diff_op<impl::pow3>(log2(centroid)), input, size) / denominator : 0.0;
+    return denominator ? stat_weighted_sum(impl::log_indices_diff_op<impl::pow3>(std::log2(centroid)), input, size) / denominator : 0.0;
 }
 
 template <class T>
@@ -354,7 +354,7 @@ double stat_log_kurtosis(const T input, size_t size)
 {
     double centroid = stat_log_centroid(input, size);
     double denominator = impl::pow4()(stat_log_spread(input, size)) * stat_sum(input, size);
-    return denominator ? stat_weighted_sum(impl::log_indices_diff_op<impl::pow4>(log2(centroid)), input, size) / denominator : std::numeric_limits<double>::infinity();
+    return denominator ? stat_weighted_sum(impl::log_indices_diff_op<impl::pow4>(std::log2(centroid)), input, size) / denominator : std::numeric_limits<double>::infinity();
 }
 
 // Flatness
