@@ -70,9 +70,7 @@ void entrymatcher_matchers(t_entrymatcher *x, t_symbol *msg, long argc, t_atom *
 
 void entrymatcher_tick(t_entrymatcher *x);
 
-t_int *entrymatcher_perform(t_int *w);
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count);
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -91,7 +89,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) entrymatcher_matchers,"matchers", A_GIMME, 0);
     class_addmethod(this_class, (method) entrymatcher_assist, "assist", A_CANT, 0);
     
-    class_addmethod(this_class, (method) entrymatcher_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) entrymatcher_dsp64, "dsp64", A_CANT, 0);
 
     entrymatcher_common<t_entrymatcher>::class_add(this_class);
@@ -282,68 +279,6 @@ void entrymatcher_tick(t_entrymatcher *x)
 
 // Perform
 
-t_int *entrymatcher_perform(t_int *w)
-{
-    // Set pointers
-    
-    const float *choose_in = (float *) w[1];
-    const float *match_in = (float *) w[2];
-    const float **matcher_ins = (const float **) w[3];
-    float *out = (float *) w[4];
-    long vec_size = (long) w[5];
-    t_entrymatcher *x = (t_entrymatcher *) w[6];
-    
-    random_generator<>& gen = x->gen;
-
-    auto database = database_get_read_access(x->database_object);
-    matchers& matchers = x->matchers;
-    
-    double ratio_kept = x->ratio_kept;
-    
-    long n_limit = x->n_limit;
-    long num_matched_indices = matchers.get_num_matches();
-    
-    if (!matchers.validate(database))
-    {
-        if (!x->invalid_matchers)
-        {
-            clock_set(x->invalid_clock, 0);
-            x->invalid_matchers = true;
-        }
-        
-        while (vec_size--)
-            *out++ = 0.f;
-        
-        return w + 7;
-    }
-    
-    for (long i = 0; i < vec_size; i++)
-    {
-        // Assume no match
-        
-        long index = -1;
-        
-        if (*match_in++)
-        {
-            // Do matching (if requested)
-            
-            for (long j = 0; j < x->max_matchers; j++)
-                matchers.set_target(j, matcher_ins[j][i]);
-            
-            num_matched_indices = matchers.match(database, ratio_kept, n_limit, true);
-        }
-        
-        // Choose a random entry from the valid list (if requested)
-        
-        if (*choose_in++ && num_matched_indices)
-            index = matchers.get_index(gen.rand_int(static_cast<uint32_t>(num_matched_indices - 1)));
-
-        *out++ = (float) index + 1;
-    }
-    
-    return w + 7;
-}
-
 void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     // Set pointers
@@ -401,17 +336,6 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
 }
 
 // DSP
-
-void entrymatcher_dsp(t_entrymatcher *x, t_signal **sp, short *count)
-{
-    const float **matcher_ins = x->matcher_ins;
-    long max_matchers = x->max_matchers;
-    
-    for (long i = 0; i < max_matchers; i++)
-        matcher_ins[i] = (const float *) sp[i + 2]->s_vec;
-    
-    dsp_add(entrymatcher_perform, 6, sp[0]->s_vec, sp[1]->s_vec, matcher_ins, sp[2 + max_matchers]->s_vec, sp[0]->s_n, x);
-}
 
 void entrymatcher_dsp64(t_entrymatcher *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

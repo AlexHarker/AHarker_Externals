@@ -23,7 +23,7 @@ struct sqrt_functor
 
 // Type Alias
 
-using vsqrt = v_unary<sqrt_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vsqrt = v_unary<sqrt_functor, calculation_type::vector_op>;
 
 // Main
 

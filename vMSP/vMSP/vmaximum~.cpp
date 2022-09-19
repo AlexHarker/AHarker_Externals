@@ -24,7 +24,7 @@ struct maximum_functor
 
 // Type Alias
 
-using vmaximum = v_binary<maximum_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vmaximum = v_binary<maximum_functor, calculation_type::vector_op>;
 
 // Main
 

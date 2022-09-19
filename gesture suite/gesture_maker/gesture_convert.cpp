@@ -53,21 +53,22 @@ void gesture_convert::params(t_object *x, long argc, t_atom *argv)
     
     t_symbol *mode_sym = atom_getsym(argv++);
     
-    if (mode_sym == ps_none || mode_sym == ps_None || argc < 3)
-    {
-        if (argc < 3)
-            object_error(x, "not enough values for conversion parameter change");
-        
-        *this = gesture_convert();
-        return;
-    }
-    
     // Here we convert captialised symbols, so as to allow capitalisation (which is needed for backward compatibility)
     
     mode_sym = (mode_sym == ps_Scale) ? ps_scale : mode_sym;
     mode_sym = (mode_sym == ps_Log)   ? ps_log   : mode_sym;
     mode_sym = (mode_sym == ps_Amp)   ? ps_amp   : mode_sym;
     mode_sym = (mode_sym == ps_Pitch) ? ps_pitch : mode_sym;
+    mode_sym = (mode_sym == ps_None)  ? ps_none : mode_sym;
+
+    if (mode_sym == ps_none || argc < 3)
+    {
+        if (mode_sym != ps_none)
+            object_error(x, "not enough values for conversion parameter change");
+        
+        *this = gesture_convert();
+        return;
+    }
     
     // We can either just specify min and max out, or also specify input range (again for backwards compatibility)
     

@@ -28,11 +28,6 @@ struct acos_functor
     
     // Ops + Array Operators
 
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return abs(a).mVal > 1.f ? 0.f : acosf(a.mVal);
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return abs(a).mVal > 1.0 ? 0.0 : acos(a.mVal);
@@ -48,7 +43,7 @@ struct acos_functor
 
 // Type Alias
 
-using vacos = v_unary<acos_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vacos = v_unary<acos_functor, calculation_type::vector_array>;
 
 // Main
 

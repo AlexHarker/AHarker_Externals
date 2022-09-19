@@ -24,7 +24,7 @@ struct minimum_functor
 
 // Type Alias
 
-using vminimum = v_binary<minimum_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vminimum = v_binary<minimum_functor, calculation_type::vector_op>;
 
 // Main
 

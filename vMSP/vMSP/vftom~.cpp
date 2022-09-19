@@ -23,12 +23,6 @@ struct ftom_functor
     static const double ftom_mul_constant;
     static const double ftom_add_constant;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        const float b = static_cast<float>(ftom_mul_constant) * logf(a.mVal);
-        return nan_fixer()(b + static_cast<float>(ftom_add_constant));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return nan_fixer()(ftom_mul_constant * log(a.mVal) + ftom_add_constant);
@@ -50,7 +44,7 @@ const double ftom_functor::ftom_add_constant = ((log(2.0) * 69.0 / 12.0) - log(4
 
 // Type Alias
 
-using vftom = v_unary<ftom_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vftom = v_unary<ftom_functor, calculation_type::vector_array>;
 
 // Main
 

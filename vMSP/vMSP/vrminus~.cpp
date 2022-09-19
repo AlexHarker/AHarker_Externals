@@ -22,7 +22,7 @@ struct rminus_functor
 
 // Type Alias
 
-using vrminus = v_binary<rminus_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vrminus = v_binary<rminus_functor, calculation_type::vector_op>;
 
 // Main
 

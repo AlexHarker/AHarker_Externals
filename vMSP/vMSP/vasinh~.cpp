@@ -17,7 +17,6 @@
 
 struct asinh_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return asinhf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return asinh(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct asinh_functor
 
 // Type Alias
 
-using vasinh = v_unary<asinh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vasinh = v_unary<asinh_functor, calculation_type::vector_array>;
 
 // Main
 

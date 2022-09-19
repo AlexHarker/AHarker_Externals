@@ -22,7 +22,7 @@ struct abs_functor
 
 // Type Alias
 
-using vabs = v_unary<abs_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vabs = v_unary<abs_functor, calculation_type::vector_op>;
 
 // Main
 

@@ -49,14 +49,13 @@ Should you wish to compile the externals yourself you will require the following
 
 **Windows:**
 1. Visual Studio
-2. OneMKL or OneAPI Base Toolkit (which includes OneMKL)
+2. OneMKL *or* OneAPI Base Toolkit (which includes OneMKL)
     - https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html
     - https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html
 3. The max-sdk-base repository (https://github.com/Cycling74/max-sdk-base)
 
 *Notes*
 
-* The OneMKL installation needs to include Visual Studio integration (this is required for some of the externals using SIMD)
 * The max-sdk-base repository main folder should be located next to (in the same enclosing folder as) the main folder for this repository.
 * The location for the max-sdk-base can be modified in AH_Win_Debug.props / AH_Win_Release.props if desired.
 

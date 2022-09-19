@@ -18,7 +18,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <SIMDSupport.hpp>
 #include <AH_Int_Handler.hpp>
 #include <ibuffer_access.hpp>
@@ -81,9 +80,6 @@ void timeconvolve_set(t_timeconvolve *x, t_symbol *sym, long argc, t_atom *argv)
 void time_domain_convolve(const float *in, const vec_type *impulse, float *output, t_ptr_int N, t_ptr_int L);
 
 void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *out, long vec_size);
-t_int *timeconvolve_perform(t_int *w);
-void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count);
-
 void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
@@ -104,7 +100,6 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) timeconvolve_set, "set", A_GIMME, 0);
     
     class_addmethod(this_class, (method) timeconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) timeconvolve_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) timeconvolve_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
@@ -298,15 +293,6 @@ void timeconvolve_perform_internal(t_timeconvolve *x, const float *in, float *ou
     time_domain_convolve(current_buffer, impulse_buffer, out, vec_size, impulse_length);
 }
 
-t_int *timeconvolve_perform(t_int *w)
-{
-    // Miss perform routine for denormal handling (w[2] onwards)
-    
-    timeconvolve_perform_internal((t_timeconvolve *)(w[5]), (float *)(w[2]), (float *)(w[3]), (long) (w[4]));
-    
-    return w + 6;
-}
-
 template<class T, class U>
 void typecast_copy(const T *in, U *out, long size)
 {
@@ -327,11 +313,6 @@ void timeconvolve_perform64(t_timeconvolve *x, t_object *dsp64, double **ins, lo
 }
 
 // DSP
-
-void timeconvolve_dsp(t_timeconvolve *x, t_signal **sp, short *count)
-{
-    dsp_add(denormals_perform, 5, timeconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
 
 void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

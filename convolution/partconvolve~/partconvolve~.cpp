@@ -17,7 +17,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <HISSTools_FFT/HISSTools_FFT.h>
 #include <AH_Int_Handler.hpp>
 #include <RandomGenerator.hpp>
@@ -146,9 +145,6 @@ void partconvolve_perform_partition(split_type in1, split_type in2, split_type o
 void partconvolve_perform_equaliser(split_type in1, split_type in2, split_type out, long vec_size);
 void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, long vec_size);
 
-t_int *partconvolve_perform(t_int *w);
-void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count);
-
 void partconvolve_perform64(t_partconvolve *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
@@ -173,7 +169,6 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) partconvolve_memoryusage, "memoryusage", 0);
     class_addmethod(this_class, (method) partconvolve_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) partconvolve_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) partconvolve_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method) object_obex_quickref, "quickref", A_CANT, 0);
@@ -855,14 +850,6 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     x->last_partition = last_partition;
 }
 
-t_int *partconvolve_perform(t_int *w)
-{
-    // Miss denormal routine
-    
-    partconvolve_perform_internal((t_partconvolve *) w[5], (float *)(w[2]), (float *)(w[3]), (long) (w[4]));
-    return w + 6;
-}
-
 template<class T, class U>
 void typecast_copy(const T *in, U *out, long size)
 {
@@ -883,11 +870,6 @@ void partconvolve_perform64(t_partconvolve *x, t_object *dsp64, double **ins, lo
 }
 
 // DSP
-
-void partconvolve_dsp(t_partconvolve *x, t_signal **sp, short *count)
-{
-    dsp_add(denormals_perform, 5, partconvolve_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
 
 void partconvolve_dsp64(t_partconvolve *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

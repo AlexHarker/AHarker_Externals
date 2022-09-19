@@ -25,11 +25,6 @@ struct pow_functor
 {
     double m_exp = 1.0;
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a, const SIMDType<float, 1> b)
-    {
-        return nan_fixer()(powf(b.mVal, a.mVal));
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
         return nan_fixer()(pow(b.mVal, a.mVal));
@@ -73,7 +68,7 @@ struct pow_functor
 
 // Type Alias
 
-using vpow = v_binary<pow_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vpow = v_binary<pow_functor, calculation_type::vector_array>;
 
 // Specialise Value In
 
@@ -97,18 +92,7 @@ double vpow::get_value(inputs ins) const
         return m_functor.m_exp;
 }
 
-// Specialise Perform Routines with No Signals (zero output)
-
-template<>
-template<>
-void vpow::perform_single1_op<vpow, 1, inputs::none>(t_int *w)
-{
-    float *out = reinterpret_cast<float *>(w[4]);
-    long vec_size = static_cast<long>(w[5]);
-
-    while (vec_size--)
-        *out++ = 0.f;
-}
+// Specialise Perform Routine with No Signals (zero output)
 
 template<>
 template<>

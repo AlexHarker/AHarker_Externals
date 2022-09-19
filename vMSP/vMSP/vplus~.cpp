@@ -22,7 +22,7 @@ struct plus_functor
 
 // Type Alias
 
-using vplus = v_binary<plus_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vplus = v_binary<plus_functor, calculation_type::vector_op>;
 
 // Main
 

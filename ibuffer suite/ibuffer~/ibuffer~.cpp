@@ -238,7 +238,7 @@ void form_os_name(char *filename, char *foldname, char *fullpath)
 void form_os_name(char *filename, char *foldname, char *fullpath)
 {
     size_t offset = strlen(foldname);
-    
+
     // Copy folder name, add a slash seperator and then copy the file name
     
     strcpy(fullpath, foldname);

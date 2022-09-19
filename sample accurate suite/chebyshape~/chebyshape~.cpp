@@ -19,7 +19,6 @@
 
 #include <algorithm>
 
-#include <AH_Denormals.h>
 #include <dynamic~.hpp>
 
 
@@ -35,13 +34,13 @@ struct t_chebyshape
     
     long num_coeff;
     
-    void *coeff_ins[max_coeff];
+    double *coeff_ins[max_coeff];
     double coeff[max_coeff];
     
     long offset;
     long num_sig_ins;
     
-    void **sig_ins;
+    double **sig_ins;
 };
 
 // Function Protoypes
@@ -50,13 +49,9 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset);
 void chebyshape_free(t_chebyshape *x);
 void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s);
 
-t_int *chebyshape_perform_dynamic(t_int *w);
-t_int *chebyshape_perform(t_int *w);
+void chebyshape_perform_dynamic64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-
-void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count);
 void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -73,7 +68,6 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) chebyshape_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) chebyshape_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) chebyshape_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -119,185 +113,13 @@ void chebyshape_free(t_chebyshape *x)
 
 // Perform (within a dynamic~ host object)
 
-t_int *chebyshape_perform_dynamic(t_int *w)
-{
-    // Set pointers
-    
-    float *in = (float *) w[1];
-    float *trigger = (float *) w[2];
-    float **coeff_ins = (float **) w[3];
-    double *coeff = (double *) w[4];
-    float *out = (float *) w[5];
-    long vec_size = (long) w[6];
-    long num_coeff = (long) w[7];
-    
-    double in_val;
-    double cheby_mem1;
-    double cheby_mem2;
-    double current_cheby;
-    double out_val = 0;
-    
-    long max_cheby;
-    long i, j = 0;
-    
-    // Recall coefficients
-    
-    for (i = 0, max_cheby = 0; i < num_coeff; i++)
-        if (coeff[i])
-            max_cheby = i + 1;
-    
-    while (vec_size--)
-    {
-        // Get input sample
-        
-        in_val = *in++;
-        cheby_mem2 = 1.;
-        cheby_mem1 = in_val;
-        out_val = in_val * coeff[0];
-        
-        // Update coeffients (loop unrolled)
-        
-        if (*trigger++)
-        {
-            for (i = 0; i + 3 < num_coeff; i += 4)
-            {
-                coeff[i+0] = coeff_ins[i+0][j];
-                coeff[i+1] = coeff_ins[i+1][j];
-                coeff[i+2] = coeff_ins[i+2][j];
-                coeff[i+3] = coeff_ins[i+3][j];
-            }
-            for (; i < num_coeff; i++)
-                coeff[i] = coeff_ins[i][j];
-            
-            for (i = 0, max_cheby = 0; i < num_coeff; i++)
-                if (coeff[i])
-                    max_cheby = i + 1;
-        }
-        
-        // Do waveshaping iteratively (loop unrolled)
-        
-        for (i = 1;  i + 3 < max_cheby; i += 4)
-        {
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff[i] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff[i+1] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff[i+2] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff[i+3] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-        }
-        for (;  i < max_cheby; i++)
-        {
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff[i] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-        }
-        
-        FIX_DENORM_FLOAT(out_val);
-        *out++ = static_cast<float>(out_val);
-        j++;
-    }
-    
-    return w + 8;
-}
-
-// Perform (standard)
-
-t_int *chebyshape_perform(t_int *w)
-{
-    // Set pointers
-    
-    // N.B. perform routine for denormal handling
-    
-    float *in = (float *) w[2];
-    float **coeff_ins = (float **) w[3];
-    float *out = (float *) w[4];
-    long vec_size = (long) w[5];
-    long num_coeff = (long) w[6];
-    
-    double in_val;
-    double cheby_mem1;
-    double cheby_mem2;
-    double current_cheby;
-    double out_val = 0;
-    
-    long i, j = 0;
-    
-    while (vec_size--)
-    {
-        // Get input sample
-        
-        in_val = *in++;
-        cheby_mem2 = 1.;
-        cheby_mem1 = in_val;
-        out_val = in_val * coeff_ins[0][j];
-        
-        // Do waveshaping iteratively (loop unrolled)
-        
-        for (i = 1;  i + 3 < num_coeff; i += 4)
-        {
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff_ins[i][j] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff_ins[i+1][j] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff_ins[i+2][j] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff_ins[i+3][j] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-        }
-        for (;  i < num_coeff;  i++)
-        {
-            current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
-            out_val += coeff_ins[i][j] * current_cheby;
-            cheby_mem2 = cheby_mem1;
-            cheby_mem1 = current_cheby;
-            FIX_DENORM_DOUBLE(cheby_mem1);
-        }
-        
-        FIX_DENORM_FLOAT(out_val);
-        *out++ = static_cast<float>(out_val);
-        j++;
-    }
-    
-    return w + 7;
-}
-
-// 64 Bit Perform (within a dynamic~ host object)
-
 void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     // Set pointers
     
     double *in = ins[0];
     double *trigger = ins[1];
-    double **coeff_ins = ((double **) (x->sig_ins)) + x->offset - 1;
+    double **coeff_ins = x->sig_ins + (x->offset - 1);
     double *coeff = x->coeff;
     double *out = outs[0];
     
@@ -385,7 +207,7 @@ void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins
     }
 }
 
-// 64 Bit Perform (standard)
+// Perform (standard)
 
 void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
@@ -455,45 +277,10 @@ void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void chebyshape_dsp(t_chebyshape *x, t_signal **sp, short *count)
-{
-    void **sig_ins = x->sig_ins;
-    void **coeff_ins = x->coeff_ins;
-    
-    double *coeff = x->coeff;
-    
-    long num_sig_ins = x->num_sig_ins;
-    long num_coeff = x->num_coeff;
-    long offset = x->offset;
-    long i;
-    
-    // Add perform routine according to mode
-    
-    if (!offset)
-    {
-        for (i = 0; i < num_coeff; i++)
-            coeff_ins[i] = sp[i + 1]->s_vec;
-        
-        dsp_add(denormals_perform, 6, chebyshape_perform, sp[0]->s_vec, coeff_ins, sp[num_coeff + 1]->s_vec, sp[0]->s_n, num_coeff);
-    }
-    else
-    {
-        if (offset + num_coeff - 1 <= num_sig_ins)
-        {
-            for (i = 0; i < num_coeff; i++)
-            {
-                coeff_ins[i] = sig_ins[i + offset - 1];
-                coeff[i] = 0.;
-            }
-            dsp_add(chebyshape_perform_dynamic, 7, sp[0]->s_vec, sp[1]->s_vec, coeff_ins, coeff, sp[2]->s_vec, sp[0]->s_n, num_coeff);
-        }
-    }
-}
-
 void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    void **sig_ins = x->sig_ins;
-    void **coeff_ins = x->coeff_ins;
+    double **sig_ins = x->sig_ins;
+    double **coeff_ins = x->coeff_ins;
     
     double *coeff = x->coeff;
     
@@ -544,3 +331,4 @@ void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s)
         }
     }
 }
+

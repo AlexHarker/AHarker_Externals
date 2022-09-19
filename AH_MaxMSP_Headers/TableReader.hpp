@@ -322,7 +322,7 @@ void table_read(Table fetcher, T *out, const U *positions, intptr_t n_samps, T m
         case InterpType::Linear:        table_read<linear_reader>(fetcher, out, positions, n_samps, mul);           break;
         case InterpType::CubicHermite:  table_read<cubic_hermite_reader>(fetcher, out,positions, n_samps, mul);     break;
         case InterpType::CubicLagrange: table_read<cubic_lagrange_reader>(fetcher, out, positions, n_samps, mul);   break;
-        case InterpType::CubicBSpline:   table_read<cubic_bspline_reader>(fetcher, out, positions, n_samps, mul);    break;
+        case InterpType::CubicBSpline:  table_read<cubic_bspline_reader>(fetcher, out, positions, n_samps, mul);    break;
     }
 }
 

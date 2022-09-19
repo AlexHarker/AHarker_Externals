@@ -21,6 +21,8 @@
 #include <ext_wind.h>
 #include <jpatcher_api.h>
 
+#include <algorithm>
+
 #include <SIMDSupport.hpp>
 
 #include "Common/patch_set.hpp"
@@ -33,8 +35,6 @@ t_class *this_class;
 
 t_symbol *ps_args = gensym("args");
 t_symbol *ps_declareio = gensym("declareio");
-
-static t_ptr_uint sig_size;
 
 constexpr long max_args = patch_slot::max_args();
 
@@ -61,12 +61,12 @@ struct t_dynamicserial
     long num_outs;
     long num_temp_buffers;
     
-    void **sig_object_ins;
-    void **sig_outs;
+    double **sig_object_ins;
+    double **sig_outs;
     
-    void **sig_ins;
-    void **temp_buffers1;
-    void **temp_buffers2;
+    double **sig_ins;
+    double **temp_buffers1;
+    double **temp_buffers2;
     
     long num_proxies;                // number of proxies = MAX(num_sig_ins, num_ins)
 };
@@ -79,13 +79,7 @@ void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s);
 
 void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom *argv);
 
-void dynamicserial_perform_common(t_dynamicserial *x);
-void dynamicserial_perform_denormal_handled(t_dynamicserial *x);
-t_int *dynamicserial_perform(t_int *w);
 void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate);
-void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count);
 void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -102,7 +96,6 @@ int C74_EXPORT main()
                            A_GIMME,
                            0);
     
-    class_addmethod(this_class, (method) dynamicserial_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) dynamicserial_dsp64, "dsp64", A_CANT, 0);
     
     class_addmethod(this_class, (method) dynamicserial_assist, "assist", A_CANT, 0);
@@ -124,9 +117,9 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) dynamicserial_loadpatch, "loadpatch", A_GIMME, 0);
     class_addmethod(this_class, (method) handler::clear, "clear", 0);
-    class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_GIMME, 0);                        // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::deletepatch, "deletepatch", A_LONG, 0);
 
-    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);                       // MUST FIX TO GIMME FOR NOW
+    class_addmethod(this_class, (method) handler::targetfree, "targetfree", A_GIMME, 0);
     
     class_addmethod(this_class, (method) handler::loading_index, "loading_index", A_CANT, 0);
     class_addmethod(this_class, (method) handler::register_listener, "register_listener", A_CANT, 0);
@@ -145,15 +138,13 @@ int C74_EXPORT main()
     CLASS_ATTR_LABEL(this_class, "target", 0L, "Target Patch Number");
     
     CLASS_ATTR_OFFSET_DUMMY(this_class, "ownsdspchain", ATTR_SET_OPAQUE | ATTR_SET_OPAQUE_USER, gensym("long"));
-    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) 0);
+    CLASS_ATTR_ACCESSORS(this_class, "ownsdspchain", (method) patchset_get_ownsdspchain, (method) nullptr);
     CLASS_ATTR_INVISIBLE(this_class, "ownsdspchain", 0);
     
     class_dspinit(this_class);
     
     class_register(CLASS_BOX, this_class);
-        
-    sig_size = ((maxversion() & 0x3FFF) >= 0x600) ? sizeof(double) : sizeof(float);
-    
+            
     return 0;
 }
 
@@ -261,12 +252,12 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // N.B. here sig_ins are those used for the patches (which are dynamic) and sig_object_ins are the object ins
     
-    x->sig_object_ins = (void **) malloc(num_sig_ins * sizeof(void *));
-    x->sig_outs = (void **) malloc(num_sig_outs * sizeof(void *));
+    x->sig_object_ins = allocate_aligned<double *>(num_sig_ins);
+    x->sig_outs = allocate_aligned<double *>(num_sig_outs);
     
-    x->sig_ins = (void **) malloc(num_temp_buffers * sizeof(void *));
-    x->temp_buffers1 = (void **) malloc(num_temp_buffers * sizeof(void *));
-    x->temp_buffers2 = (void **) malloc(num_temp_buffers * sizeof(void *));
+    x->sig_ins = allocate_aligned<double *>(num_temp_buffers);
+    x->temp_buffers1 = allocate_aligned<double *>(num_temp_buffers);
+    x->temp_buffers2 = allocate_aligned<double *>(num_temp_buffers);
     
     for (long i = 0; i < num_sig_ins; i++)
         x->sig_object_ins[i] = nullptr;
@@ -332,15 +323,15 @@ void dynamicserial_free(t_dynamicserial *x)
     // Free buffer handles
     
     if (x->num_sig_ins)
-        free(x->sig_object_ins);
+        deallocate_aligned(x->sig_object_ins);
     if (x->num_sig_outs)
-        free(x->sig_outs);
+        deallocate_aligned(x->sig_outs);
     if (x->sig_ins)
-        free(x->sig_ins);
+        deallocate_aligned(x->sig_ins);
     if (x->temp_buffers1)
-        free(x->temp_buffers1);
+        deallocate_aligned(x->temp_buffers1);
     if (x->temp_buffers2)
-        free(x->temp_buffers2);
+        deallocate_aligned(x->temp_buffers2);
 }
 
 void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
@@ -391,89 +382,53 @@ void dynamicserial_loadpatch(t_dynamicserial *x, t_symbol *s, long argc, t_atom 
 
 // Perform Routines
 
-void dynamicserial_perform_common(t_dynamicserial *x)
+void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    void **sig_object_ins = x->sig_object_ins;
-    void **sig_ins = x->sig_ins;
-    void **sig_outs = x->sig_outs;
-    void **temp1 = x->temp_buffers1;
-    void **temp2 = x->temp_buffers2;
+    double **sig_object_ins = x->sig_object_ins;
+    double **sig_ins = x->sig_ins;
+    double **sig_outs = x->sig_outs;
+    double **temp1 = x->temp_buffers1;
+    double **temp2 = x->temp_buffers2;
     
     long num_ins = x->num_sig_ins;
     long num_outs = x->num_sig_outs;
     long num_temps = x->num_temp_buffers;
-    long vec_size = x->last_vec_size;
-        
-    size_t buffer_size = sig_size * vec_size;
+    
+    std::copy_n(ins, x->num_sig_ins, x->sig_object_ins);
+    std::copy_n(outs, x->num_sig_outs, x->sig_outs);
     
     // Process
     
-    x->patch_set->process_serial(sig_outs, sig_object_ins, sig_ins, temp1, temp2, num_ins, num_outs, num_temps, buffer_size);
-}
-
-t_int *dynamicserial_perform(t_int *w)
-{
-    if (!((t_dynamicserial *) (w[1]))->x_obj.z_disabled)
-        dynamicserial_perform_common((t_dynamicserial *) w[1]);
-    
-    return w + 2;
-}
-
-void dynamicserial_perform64(t_dynamicserial *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
-{
-    memcpy(x->sig_object_ins, ins, x->num_sig_ins * sizeof(void *));
-    memcpy(x->sig_outs, outs, x->num_sig_ins * sizeof(void *));
-    
-    dynamicserial_perform_common(x);
+    x->patch_set->process_serial(sig_outs, sig_object_ins, sig_ins, temp1, temp2, num_ins, num_outs, num_temps, vec_size);
 }
 
 // DSP
 
-bool dynamicserial_dsp_common(t_dynamicserial *x, long vec_size, long sample_rate)
+void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     bool mem_fail = false;
     
     // Do internal dsp compile
     
-    x->patch_set->compile_dsp(vec_size, sample_rate);
+    x->patch_set->compile_dsp(max_vec, static_cast<long>(sample_rate));
     
     for (long i = 0; i < x->num_temp_buffers; i++)
     {
         deallocate_aligned(x->temp_buffers1[i]);
         deallocate_aligned(x->temp_buffers2[i]);
         
-        x->temp_buffers1[i] = allocate_aligned<uint8_t>(sig_size * vec_size);
-        x->temp_buffers2[i] = allocate_aligned<uint8_t>(sig_size * vec_size);
+        x->temp_buffers1[i] = allocate_aligned<double>(max_vec);
+        x->temp_buffers2[i] = allocate_aligned<double>(max_vec);
         
         if (!x->temp_buffers1[i] || !x->temp_buffers2[i])
             mem_fail = true;
     }
     
-    x->last_vec_size = vec_size;
-    x->last_samp_rate = sample_rate;
+    x->last_vec_size = max_vec;
+    x->last_samp_rate = static_cast<long>(sample_rate);
     
-    return mem_fail;
-}
-
-void dynamicserial_dsp(t_dynamicserial *x, t_signal **sp, short *count)
-{
-    // Copy in and out pointers (note that all inlets are declared as if signals)
+    // Add to dsp if memory allocation successful
     
-    for (long i = 0; i < x->num_sig_ins; i++)
-        x->sig_object_ins[i] = sp[i]->s_vec;
-    for (long i = 0; i < x->num_sig_outs; i++)
-        x->sig_outs[i] = sp[i + x->num_proxies]->s_vec;
-    
-    // Add to dsp if common routine successful
-    
-    if (!dynamicserial_dsp_common(x, sp[0]->s_n, static_cast<long>(sp[0]->s_sr)))
-        dsp_add(dynamicserial_perform, 1, x);
-}
-
-void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
-{
-    // Add to dsp if common routine successful
-    
-    if (!dynamicserial_dsp_common(x, max_vec, static_cast<long>(sample_rate)))
+    if (!mem_fail)
         object_method(dsp64, gensym("dsp_add64"), x, dynamicserial_perform64, 0, nullptr);
 }

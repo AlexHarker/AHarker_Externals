@@ -191,7 +191,7 @@ void patch_slot::message(long inlet, t_symbol *msg, long argc, t_atom *argv)
 
 // Processing and DSP
 
-bool patch_slot::process(void **outputs)
+bool patch_slot::process(double **outputs)
 {
     if (m_dspchain && m_valid && m_on)
     {

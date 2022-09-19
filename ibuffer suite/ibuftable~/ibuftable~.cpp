@@ -16,7 +16,6 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <AH_Denormals.h>
 #include <ibuffer_access.hpp>
 
 #include <algorithm>
@@ -45,11 +44,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv);
 void ibuftable_free(t_ibuftable *x);
 void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s);
 
-void ibuftable_set(t_ibuftable *x, t_symbol *s, long argc, t_atom *argv);
-void ibuftable_set_internal(t_ibuftable *x, t_symbol *s);
-
-t_int *ibuftable_perform(t_int *w);
-void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count);
+void ibuftable_set(t_ibuftable *x, t_symbol *s);
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
@@ -65,10 +60,9 @@ int C74_EXPORT main()
                            (method) nullptr,
                            A_GIMME,
                            0);
-    
-    class_addmethod(this_class, (method) ibuftable_set, "set", A_GIMME, 0);
+
+    class_addmethod(this_class, (method) ibuftable_set, "set", A_SYM, 0);
     class_addmethod(this_class, (method) ibuftable_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) ibuftable_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) ibuftable_dsp64, "dsp64", A_CANT, 0);
     
     // Add Attributes
@@ -110,6 +104,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
     // Default variables
     
     t_symbol *buffer_name = nullptr;
+
     t_atom_long start_samp = 0;
     t_atom_long end_samp = 512;
     t_atom_long chan = 1;
@@ -147,18 +142,13 @@ void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
 
 // Buffer Setting
 
-void ibuftable_set(t_ibuftable *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    ibuftable_set_internal(x, argc ? atom_getsym(argv) : 0);
-}
-
-void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
+void ibuftable_set(t_ibuftable *x, t_symbol *s)
 {
     ibuffer_data buffer(s);
     
     x->buffer_name = s;
     
-    if (buffer.get_type() == kBufferNone && s)
+    if (buffer.get_type() == kBufferNone)
         object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
 }
 
@@ -192,8 +182,8 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
     
     ibuffer_data buffer(x->buffer_name);
     
-    double start_samp = clip<double>(x->start_samp, buffer.get_length() - 1);
-    double end_samp = clip<double>(x->end_samp, buffer.get_length() - 1);
+    const double start_samp = clip<double>(x->start_samp, buffer.get_length() - 1);
+    const double end_samp = clip<double>(x->end_samp, buffer.get_length() - 1);
     long chan = clip<long>(x->chan - 1, buffer.get_num_chans() - 1);
     
     // Calculate output
@@ -218,35 +208,7 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
         std::fill_n(out, vec_size, T(0));
 }
 
-// Perform and DSP for 32-bit signals
-
-t_int *ibuftable_perform(t_int *w)
-{
-    // Ignore the copy of this function pointer (due to denormal fixer)
-    
-    // Set pointers
-    
-    const float *in = (float *) w[2];
-    float *out = (float *)(w[3]);
-    long vec_size = (long) w[4];
-    t_ibuftable *x = (t_ibuftable *) w[5];
-    
-    if (!x->x_obj.z_disabled)
-        perform_core(x, in, out, vec_size);
-    
-    return w + 6;
-}
-
-void ibuftable_dsp(t_ibuftable *x, t_signal **sp, short *count)
-{
-    // Set buffer again in case it is no longer valid / extant
-    
-    ibuftable_set_internal(x, x->buffer_name);
-    
-    dsp_add(denormals_perform, 5, ibuftable_perform, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
-
-// Perform and DSP for 64-bit signals
+// Perform and DSP
 
 void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
@@ -257,7 +219,8 @@ void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sampl
 {
     // Set buffer again in case it is no longer valid / extant
     
-    ibuftable_set_internal(x, x->buffer_name);
+    if (x->buffer_name)
+        ibuftable_set(x, x->buffer_name);
     
     object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform64);
 }

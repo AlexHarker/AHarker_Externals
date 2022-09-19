@@ -17,7 +17,6 @@
 
 struct cosx_functor
 {
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a) { return cosf(a.mVal); }
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return cos(a.mVal); }
     
     template <class T>
@@ -26,7 +25,7 @@ struct cosx_functor
 
 // Type Alias
 
-using vcosx = v_unary<cosx_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vcosx = v_unary<cosx_functor, calculation_type::vector_array>;
 
 // Main
 

@@ -61,9 +61,7 @@ void randomvals_list(t_randomvals *x, t_symbol *msg, long argc, t_atom *argv);
 double randomvals_generate(rand_gen& gen, const gauss_params *params, const double *weights, long n_params, bool gauss);
 
 #ifdef MSP_VERSION
-t_int *randomvals_perform(t_int *w);
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count);
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 #else
 void randomvals_int(t_randomvals *x, t_atom_long value);
@@ -82,7 +80,6 @@ int C74_EXPORT main()
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method) randomvals_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) randomvals_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -225,31 +222,12 @@ void perform_core(t_randomvals *x, const T *in, T *out, long vec_size)
     }
 }
 
-t_int *randomvals_perform(t_int *w)
-{
-    // Set pointers
-    
-    const float *in = reinterpret_cast<float *>(w[1]);
-    float *out = reinterpret_cast<float *>(w[2]);
-    long vec_size = static_cast<long>(w[3]);
-    t_randomvals *x = reinterpret_cast<t_randomvals *>(w[4]);
-    
-    perform_core(x, in, out, vec_size);
-    
-    return w + 5;
-}
-
 void randomvals_perform64(t_randomvals *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     perform_core(x, ins[0], outs[0], vec_size);
 }
 
 // DSP
-
-void randomvals_dsp(t_randomvals *x, t_signal **sp, short *count)
-{
-    dsp_add(randomvals_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-}
 
 void randomvals_dsp64(t_randomvals *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

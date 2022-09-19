@@ -7,6 +7,7 @@
 #include <ext_dictionary.h>
 #include <ext_dictobj.h>
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -169,12 +170,10 @@ public:
 
     // Target methods
 
-    void target(long argc, t_atom *argv)
+    void target(t_atom_long index)
     {
         slot_access slots(m_slots);
         
-        t_atom_long index = argc ? atom_getlong(argv) : 0;
-
         m_target_index = index ? (slot_exists(slots(), index) ? index : -1) : 0;
     }
 
@@ -276,7 +275,7 @@ public:
 
     // Queries
 
-    void ***get_output_handle(t_ptr_int index)
+    double ***get_output_handle(t_ptr_int index)
     {
         slot_access slots(m_slots);
         
@@ -526,7 +525,7 @@ public:
         }
     }
     
-    void process_if_thread_matches(void **outputs, t_atom_long thread, t_atom_long n_threads)
+    void process_if_thread_matches(double **outputs, t_atom_long thread, t_atom_long n_threads)
     {
         slot_access slots(m_slots);
         
@@ -534,7 +533,7 @@ public:
             if (*it) (*it)->process_if_thread_matches(outputs, thread, n_threads);
     }
 
-    void process_if_unprocessed(void **outputs, long thread_num, long num_active_threads)
+    void process_if_unprocessed(double **outputs, long thread_num, long num_active_threads)
     {
         slot_access slots(m_slots);
         
@@ -582,7 +581,7 @@ struct serial_patch_set : public patch_set<patch_slot>
     serial_patch_set(t_object *x, t_patcher *parent, long num_ins, long num_outs, void **outs)
     : patch_set(x, parent, num_ins, num_outs, outs) {}
     
-    void process_serial(void **outs, void **ins, void **in_temps, void **temp1, void **temp2, long num_ins, long num_outs, long num_temps, size_t buffer_size)
+    void process_serial(double **outs, double **ins, double **in_temps, double **temp1, double **temp2, long num_ins, long num_outs, long num_temps, long vec_size)
     {
         slot_access slots(m_slots);
         bool flip = false;
@@ -590,9 +589,10 @@ struct serial_patch_set : public patch_set<patch_slot>
         // Copy inputs in and zero output temp buffers
         
         for (long i = 0; i < num_ins; i++)
-            memcpy(temp1[i], ins[i], buffer_size);
+            std::copy_n(ins[i], vec_size, temp1[i]);
         for (long i = num_ins; i < num_outs; i++)
-            memset(temp1[i], 0, buffer_size);
+            std::fill_n(temp1[i], vec_size, 0.0);
+
         
         for (auto it = slots().begin(); it != slots().end(); it++)
         {
@@ -603,7 +603,7 @@ struct serial_patch_set : public patch_set<patch_slot>
             // Clear current output buffers
             
             for (long j = 0; j < num_temps; j++)
-                memset(flip ? temp1[j] : temp2[j], 0, buffer_size);
+                std::fill_n(flip ? temp1[j] : temp2[j], vec_size, 0.0);
             
             // Process and flip if processing has occurred
             
@@ -614,7 +614,7 @@ struct serial_patch_set : public patch_set<patch_slot>
         // Copy outputs
     
         for (long i = 0; i < num_outs; i++)
-            memcpy(outs[i], flip ? temp2[i] : temp1[i], buffer_size);
+            std::copy_n(flip ? temp2[i] : temp1[i], vec_size, outs[i]);
     }
 };
 

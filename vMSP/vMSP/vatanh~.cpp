@@ -28,11 +28,6 @@ struct atanh_functor
     
     // Ops + Array Operators
 
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return abs(a).mVal >= 1.f ? 0.f : atanhf(a.mVal);
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return abs(a).mVal >= 1.0 ? 0.0 : atanh(a.mVal);
@@ -48,7 +43,7 @@ struct atanh_functor
 
 // Type Alias
 
-using vatanh = v_unary<atanh_functor, calculation_type::vector_array, calculation_type::vector_array>;
+using vatanh = v_unary<atanh_functor, calculation_type::vector_array>;
 
 // Main
 

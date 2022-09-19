@@ -48,7 +48,7 @@ private:
         uintptr_t *indices = m_indices.data();
         
         intptr_t o1 = width >> 1;
-        intptr_t o2 = width - o1;
+        intptr_t o2 = (width - o1) - 1;
 
         // Calculate the first percentile
 

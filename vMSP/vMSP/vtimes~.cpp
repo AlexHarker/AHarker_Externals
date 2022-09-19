@@ -23,7 +23,7 @@ struct times_functor
 
 // Type Alias
 
-using vtimes = v_binary<times_functor, calculation_type::vector_op, calculation_type::vector_op>;
+using vtimes = v_binary<times_functor, calculation_type::vector_op>;
 
 // Main
 

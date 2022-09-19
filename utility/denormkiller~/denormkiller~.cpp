@@ -34,9 +34,6 @@ struct t_denormkiller
 void *denormkiller_new();
 void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s);
 
-t_int *denormkiller_perform(t_int *w);
-void denormkiller_dsp(t_denormkiller *x, t_signal **sp, short *count);
-
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
@@ -52,7 +49,6 @@ int C74_EXPORT main()
                            0);
     
     class_addmethod(this_class, (method) denormkiller_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) denormkiller_dsp, "dsp", A_CANT, 0);
     class_addmethod(this_class, (method) denormkiller_dsp64, "dsp64", A_CANT, 0);
     
     class_dspinit(this_class);
@@ -81,24 +77,12 @@ void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
 
 // Perform
 
-t_int *denormkiller_perform(t_int *w)
-{
-    SIMDDenormals::off();
-    
-    return w + 1;
-}
-
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {    
     SIMDDenormals::off();
 }
 
 // DSP
-
-void denormkiller_dsp(t_denormkiller *x, t_signal **sp, short *count)
-{
-    dsp_add(denormkiller_perform, 0);
-}
 
 void denormkiller_dsp64(t_denormkiller *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

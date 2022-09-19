@@ -44,10 +44,9 @@ struct t_dynamic_this
 
 void *dynamic_this_new(t_atom_long on, t_atom_long busy);
 void dynamic_this_free(t_dynamic_this *x);
-void dynamic_this_busy_internal(t_dynamic_this *x, t_atom_long arg_val);
-void dynamic_this_busy(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv);
-void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv);
+void dynamic_this_busy(t_dynamic_this *x, t_atom_long value);
+void dynamic_this_mute(t_dynamic_this *x, t_atom_long value);
+void dynamic_this_flags(t_dynamic_this *x, t_atom_long value);
 void dynamic_this_bang(t_dynamic_this *x);
 void dynamic_this_output_busy(t_dynamic_this *x);
 void dynamic_this_output_mute(t_dynamic_this *x);
@@ -70,10 +69,10 @@ int C74_EXPORT main()
     
     class_addmethod(this_class, (method) dynamic_this_assist, "assist", A_CANT, 0);
     
-    class_addmethod(this_class, (method) dynamic_this_busy_internal, "int", A_LONG, 0);
-    class_addmethod(this_class, (method) dynamic_this_busy, "busy", A_GIMME, 0);
-    class_addmethod(this_class, (method) dynamic_this_mute, "mute", A_GIMME, 0);
-    class_addmethod(this_class, (method) dynamic_this_flags, "flags", A_GIMME, 0);
+    class_addmethod(this_class, (method) dynamic_this_busy, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamic_this_busy, "busy", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamic_this_mute, "mute", A_LONG, 0);
+    class_addmethod(this_class, (method) dynamic_this_flags, "flags", A_LONG, 0);
     
     class_addmethod(this_class, (method) dynamic_this_bang, "bang", 0);
     class_addmethod(this_class, (method) dynamic_this_bang, "loadbang", A_CANT, 0);
@@ -141,40 +140,20 @@ void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s)
 
 // State
 
-void dynamic_this_busy(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
+void dynamic_this_busy(t_dynamic_this *x, t_atom_long value)
 {
-    if (argc)
-        dynamic_this_busy_internal(x, atom_getlong(argv));
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, value);
 }
 
-void dynamic_this_busy_internal(t_dynamic_this *x, t_atom_long arg_val)
+void dynamic_this_mute(t_dynamic_this *x, t_atom_long value)
 {
-    dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
+    dynamic_set_patch_on(x->dynamic_parent, x->index, !value);
 }
 
-void dynamic_this_mute(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
+void dynamic_this_flags(t_dynamic_this *x, t_atom_long value)
 {
-    t_atom_long arg_val;
-    
-    if (!argc)
-        return;
-    
-    arg_val = atom_getlong(argv);
-    
-    dynamic_set_patch_on(x->dynamic_parent, x->index, !arg_val);
-}
-
-void dynamic_this_flags(t_dynamic_this *x, t_symbol *msg, long argc, t_atom *argv)
-{
-    t_atom_long arg_val;
-    
-    if (!argc)
-        return;
-    
-    arg_val = atom_getlong(argv);
-    
-    dynamic_set_patch_busy(x->dynamic_parent, x->index, arg_val);
-    dynamic_set_patch_on(x->dynamic_parent, x->index, arg_val);
+    dynamic_set_patch_busy(x->dynamic_parent, x->index, value);
+    dynamic_set_patch_on(x->dynamic_parent, x->index, value);
 }
 
 // Get State

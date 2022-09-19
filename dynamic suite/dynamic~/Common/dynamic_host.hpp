@@ -10,9 +10,9 @@ struct dynamic_host
 {
     // Removing patches
 
-    static void deletepatch(T *x, t_symbol *msg, long argc, t_atom *argv)
+    static void deletepatch(T *x, t_atom_long index)
     {
-        x->patch_set->remove(atom_getlong(argv));
+        x->patch_set->remove(index);
     }
 
     static void clear(T *x)
@@ -48,7 +48,7 @@ struct dynamic_host
     }
 
     // Voice targeting
-    
+
     static t_max_err get_target(T *x, t_object *attr, long *argc, t_atom **argv)
     {
         if (argc && argv)
@@ -66,7 +66,7 @@ struct dynamic_host
     
     static t_max_err target(T *x, t_object *attr, long argc, t_atom *argv)
     {
-        x->patch_set->target(argc, argv);
+        x->patch_set->target(argc ? atom_getlong(argv) : 0);
         
         return MAX_ERR_NONE;
     }
@@ -149,12 +149,12 @@ struct dynamic_host
         *num_sig_outs = x->num_sig_outs;
     }
 
-    static void query_sigins(T *x, void ***sig_ins)
+    static void query_sigins(T *x, double ***sig_ins)
     {
         *sig_ins = x->sig_ins;
     }
 
-    static void query_sigouts(T *x, t_ptr_uint idx, void ****out_handle)
+    static void query_sigouts(T *x, t_ptr_uint idx, double ****out_handle)
     {
         *out_handle = x->patch_set->get_output_handle(idx);
     }

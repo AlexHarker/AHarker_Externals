@@ -26,11 +26,6 @@ struct asin_functor
 
     // Ops + Array Operators
 
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
-    {
-        return abs(a).mVal > 1.f ? 0.f : asinf(a.mVal);
-    }
-    
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
         return abs(a).mVal > 1.0 ? 0.0 : asin(a.mVal);
@@ -44,7 +39,7 @@ struct asin_functor
     }
 };
 
-typedef v_unary<asin_functor, calculation_type::vector_array, calculation_type::vector_array> vasin;
+typedef v_unary<asin_functor, calculation_type::vector_array> vasin;
 
 int C74_EXPORT main()
 {

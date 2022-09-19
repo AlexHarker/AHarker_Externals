@@ -29,7 +29,7 @@ struct t_dynamic_request
     t_pxobject x_obj;
     
     long num_sig_ins;
-    void **sig_ins;
+    double **sig_ins;
     
     t_atom_long inlet_num;
     bool valid;
@@ -45,12 +45,9 @@ void dynamic_request_assist(t_dynamic_request *x, void *b, long m, long a, char 
 
 void dynamic_request_int(t_dynamic_request *x, t_atom_long inlet_num);
 
-t_int *dynamic_request_perform(t_int *w);
-t_int *dynamic_request_perform_small(t_int *w);
 void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void dynamic_request_dsp(t_dynamic_request *x, t_signal **sp, short *count);
 void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
@@ -65,10 +62,10 @@ int C74_EXPORT main()
                            A_DEFLONG,
                            0);
     
-    class_addmethod(this_class, (method) dynamic_request_dsp, "dsp", A_CANT, 0);
+    class_addmethod(this_class, (method) dynamic_request_int, "int", A_LONG, 0);
+    
     class_addmethod(this_class, (method) dynamic_request_dsp64, "dsp64", A_CANT, 0);
     class_addmethod(this_class, (method) dynamic_request_assist, "assist", A_CANT, 0);
-    class_addmethod(this_class, (method) dynamic_request_int, "int", A_LONG, 0);
     
     class_dspinit(this_class);
     
@@ -130,63 +127,6 @@ void dynamic_request_int(t_dynamic_request *x, t_atom_long inlet_num)
 
 // Manually loop unrolled for speed - if the vs is above 4 then we use this version
 
-t_int *dynamic_request_perform(t_int *w)
-{
-    float *in = (float *)(w[1]);
-    float *out = (float *)(w[2]);
-    long vec_size = (long) w[3];
-    t_dynamic_request *x = (t_dynamic_request *)(w[4]);
-    
-    float *from;
-    float prev = static_cast<float>(x->prev);
-    
-    from = (float *) x->sig_ins[x->inlet_num - 1];
-    
-    for (long i = 0; i < vec_size >> 1; i++)
-    {
-        if (*in++)
-            prev = *from;
-        *out++ = prev;
-        from++;
-        if (*in++)
-            prev = *from;
-        *out++ = prev;
-        from++;
-    }
-    
-    x->prev = prev;
-    
-    return w + 5;
-}
-
-// Non loop unrolled version for small vector sizes
-
-t_int *dynamic_request_perform_small(t_int *w)
-{
-    float *in = (float *)(w[1]);
-    float *out = (float *)(w[2]);
-    long vec_size = (long) w[3];
-    t_dynamic_request *x = (t_dynamic_request *)(w[4]);
-    
-    float *from;
-    float prev = static_cast<float>(x->prev);
-    
-    from = (float *) x->sig_ins[x->inlet_num - 1];
-    
-    for (long i = 0; i < vec_size; i++, from++)
-    {
-        if (*in++)
-            prev = *from;
-        *out++ = prev;
-    }
-    
-    x->prev = prev;
-    
-    return w + 5;
-}
-
-// 64 Bit Manually loop unrolled for speed - if the vs is above 4 then we use this version
-
 void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     double *in = ins[0];
@@ -195,7 +135,7 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
     
     double prev = x->prev;
     
-    from = (double *) x->sig_ins[x->inlet_num - 1];
+    from = x->sig_ins[x->inlet_num - 1];
     
     for (long i = 0; i < vec_size >> 1; i++)
     {
@@ -212,7 +152,7 @@ void dynamic_request_perform64(t_dynamic_request *x, t_object *dsp64, double **i
     x->prev = prev;
 }
 
-// 64 Bit Non loop unrolled version for small vector sizes
+// Non loop unrolled version for small vector sizes
 
 void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
@@ -235,17 +175,6 @@ void dynamic_request_perform_small64(t_dynamic_request *x, t_object *dsp64, doub
 }
 
 // DSP
-
-void dynamic_request_dsp(t_dynamic_request *x, t_signal **sp, short *count)
-{
-    if (x->valid)
-    {
-        if (sp[0]->s_n > 4)
-            dsp_add(dynamic_request_perform, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-        else
-            dsp_add(dynamic_request_perform_small, 4, sp[0]->s_vec, sp[1]->s_vec, sp[0]->s_n, x);
-    }
-}
 
 void dynamic_request_dsp64(t_dynamic_request *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {

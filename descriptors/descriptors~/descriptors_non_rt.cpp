@@ -99,11 +99,11 @@ void descriptors_analyse(t_descriptors *x, t_symbol *msg, short argc, t_atom *ar
 
 int C74_EXPORT main()
 {
-    this_class = class_new("descriptorstest~",
+    this_class = class_new("descriptors~",
                            (method) descriptors_new,
                            (method) descriptors_free,
                            sizeof(t_descriptors),
-                           0L,
+                           (method) nullptr,
                            A_GIMME,
                            0);
     
