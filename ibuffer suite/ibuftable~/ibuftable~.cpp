@@ -158,7 +158,7 @@ void ibuftable_set_internal(t_ibuftable *x, t_symbol *s)
     
     x->buffer_name = s;
     
-    if (buffer.get_type() == kBufferNone && s)
+    if (buffer.get_type() == kBufferNone)
         object_error((t_object *) x, "ibuftable~: no buffer %s", s->s_name);
 }
 
@@ -256,8 +256,9 @@ void ibuftable_perform64(t_ibuftable *x, t_object *dsp64, double **ins, long num
 void ibuftable_dsp64(t_ibuftable *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     // Set buffer again in case it is no longer valid / extant
-    
-    ibuftable_set_internal(x, x->buffer_name);
+
+    if (x->buffer_name)
+        ibuftable_set_internal(x, x->buffer_name);
     
     object_method(dsp64, gensym("dsp_add64"), x, ibuftable_perform64);
 }

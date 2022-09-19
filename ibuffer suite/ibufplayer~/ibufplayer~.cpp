@@ -560,7 +560,8 @@ void ibufplayer_dsp64(t_ibufplayer *x, t_object *dsp64, short *count, double sam
     
     // Set buffer again in case it is no longer valid / extant
     
-    ibufplayer_set_internal(x, x->buffer_name);
+    if (x->buffer_name)
+        ibufplayer_set_internal(x, x->buffer_name);
     
     // Check if input is connected
     
