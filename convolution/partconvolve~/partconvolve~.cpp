@@ -604,8 +604,8 @@ void partconvolve_perform_partition(split_type in1, split_type in2, split_type o
     
     for (long i = 0; i < num_vecs; i++)
     {
-        out_real[i] += (in_real1[i] * in_real2[i]) - in_imag1[i] * in_imag2[i];
-        out_imag[i] += (in_real1[i] * in_imag2[i]) + in_imag1[i] * in_real2[i];
+        out_real[i] += (in_real1[i] * in_real2[i]) - (in_imag1[i] * in_imag2[i]);
+        out_imag[i] += (in_real1[i] * in_imag2[i]) + (in_imag1[i] * in_real2[i]);
     }
     
     // Replace nyquist bins
