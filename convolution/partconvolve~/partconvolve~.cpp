@@ -335,18 +335,18 @@ void partconvolve_max_fft_size_set(t_partconvolve *x, t_atom_long max_fft_size)
     
     if (max_fft_size_log2 > MAX_FFT_SIZE_LOG2)
     {
-        object_error( (t_object *) x, "maximum fft size too large: using %ld", 1 << MAX_FFT_SIZE_LOG2);
+        object_error((t_object *) x, "maximum fft size too large: using %ld", 1 << MAX_FFT_SIZE_LOG2);
         max_fft_size_log2 = MAX_FFT_SIZE_LOG2;
     }
     
     if (max_fft_size_log2 && max_fft_size_log2 < MIN_FFT_SIZE_LOG2)
     {
-        object_error( (t_object *) x, "maximum fft size too small: using %ld", 1 << MIN_FFT_SIZE_LOG2);
+        object_error((t_object *) x, "maximum fft size too small: using %ld", 1 << MIN_FFT_SIZE_LOG2);
         max_fft_size_log2 = MIN_FFT_SIZE_LOG2;
     }
     
     if (inexact)
-        object_error( (t_object *) x, "maximum fft size must be power of two: using %ld", 1 << max_fft_size_log2);
+        object_error((t_object *) x, "maximum fft size must be power of two: using %ld", 1 << max_fft_size_log2);
     
     x->max_fft_size_log2 = max_fft_size_log2;
     x->max_fft_size = 1 << max_fft_size_log2;
@@ -378,7 +378,7 @@ t_max_err partconvolve_fft_size_set(t_partconvolve *x, t_object *attr, long argc
     }
     
     if (inexact)
-        object_error( (t_object *) x, "fft size must be power of two: using %ld", 1 << fft_size_log2);
+        object_error((t_object *) x, "fft size must be power of two: using %ld", 1 << fft_size_log2);
     
     // Set fft variables iff the fft size has actually actually changed
     
@@ -478,7 +478,7 @@ void partconvolve_set_internal(t_partconvolve *x, t_symbol *s, bool direct_flag,
         x->reset_flag = 1;
         
         if (buffer.get_type() == kBufferNone && s)
-            object_error( (t_object *) x, "%s is not a valid buffer", s->s_name);
+            object_error((t_object *) x, "%s is not a valid buffer", s->s_name);
     }
 }
 
