@@ -743,7 +743,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             // (If wraparound is in the middle of this set of partitions this loop will run again)
             
             next_partition = (last_partition < num_partitions) ? last_partition : 0;
-            last_partition = std::max(last_partition, next_partition + partitions_to_do);
+            last_partition = std::min(num_partitions, next_partition + partitions_to_do);
             partitions_to_do -= last_partition - next_partition;
             
             // Calculate offsets and pointers
