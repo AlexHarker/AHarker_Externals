@@ -15,7 +15,7 @@
 /* Begin PBXFileReference section */
 		B81F571D0D2422E0000D5E50 /* ibufmultitable~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibufmultitable~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B891ABAC10EB51250017BB19 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
-		B891ABAE10EB51430017BB19 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
+		B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8DAF697181D44710049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
 		B8DE14DC0EB46B030050BDFE /* ibufmultitable~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ibufmultitable~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -34,7 +34,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B891ABAE10EB51430017BB19 /* Config_AHarker_Externals.xcconfig */,
+				B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -156,7 +156,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -166,7 +166,7 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -176,7 +176,7 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;

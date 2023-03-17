@@ -17,11 +17,11 @@
 /* Begin PBXFileReference section */
 		B1BB1FD70A4ECF2D0012288F /* ibuffer~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "ibuffer~.cpp"; sourceTree = "<group>"; };
 		B1BB1FD90A4ECF4A0012288F /* ibuffer~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibuffer~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
-		B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAudioFile.cpp; path = AudioFile/BaseAudioFile.cpp; sourceTree = SOURCE_ROOT; };
-		B89B13591CC18525008B0E1A /* BaseAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAudioFile.h; path = AudioFile/BaseAudioFile.h; sourceTree = SOURCE_ROOT; };
-		B89B135A1CC18525008B0E1A /* IAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAudioFile.cpp; path = AudioFile/IAudioFile.cpp; sourceTree = SOURCE_ROOT; };
-		B89B135B1CC18525008B0E1A /* IAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioFile.h; path = AudioFile/IAudioFile.h; sourceTree = SOURCE_ROOT; };
+		B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAudioFile.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/BaseAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B13591CC18525008B0E1A /* BaseAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAudioFile.h; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/BaseAudioFile.h; sourceTree = SOURCE_ROOT; };
+		B89B135A1CC18525008B0E1A /* IAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAudioFile.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/IAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B135B1CC18525008B0E1A /* IAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioFile.h; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/IAudioFile.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,7 +38,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */,
+				B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -70,7 +70,7 @@
 				B89B135A1CC18525008B0E1A /* IAudioFile.cpp */,
 				B89B135B1CC18525008B0E1A /* IAudioFile.h */,
 			);
-			path = AudioFile;
+			name = AudioFile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,7 +172,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -182,7 +182,7 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -191,7 +191,7 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
