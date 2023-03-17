@@ -29,7 +29,7 @@
     <ClInclude Include="modules\utility_definitions.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\HISSTools_FFT\HISSTools_FFT.cpp" />
+    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\HISSTools_FFT\HISSTools_FFT.cpp" />
     <ClCompile Include="descriptors_graph.cpp" />
     <ClCompile Include="descriptors_rt.cpp" />
     <ClCompile Include="modules\modules_change.cpp" />
@@ -67,12 +67,12 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="..\..\AH_Win_Debug.props" />
-    <Import Project="..\..\AH_OneMKL.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_AH_Ext_Win_Debug.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_OneMKL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="..\..\AH_Win_Release.props" />
-    <Import Project="..\..\AH_OneMKL.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_AH_Ext_Win_Release.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_OneMKL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>

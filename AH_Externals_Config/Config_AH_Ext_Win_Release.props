@@ -10,7 +10,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <TargetExt>.mxe64</TargetExt>
-    <_PropertySheetDisplayName>AH_Release</_PropertySheetDisplayName>
+    <_PropertySheetDisplayName>Config_Release</_PropertySheetDisplayName>
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -34,7 +34,7 @@
       <AdditionalOptions>/EXPORT:main %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_MaxMSP_Headers\HissTools_FFT;..\..\..\max-sdk-base\c74support\max-includes;..\..\..\max-sdk-base\c74support\msp-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_Externals_Dependencies\HissTools_Library;..\..\..\max-sdk-base\c74support\max-includes;..\..\..\max-sdk-base\c74support\msp-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_USE_MATH_DEFINES;WIN_VERSION;WIN64;_WINDOWS;_USRDLL;WIN_EXT_VERSION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
