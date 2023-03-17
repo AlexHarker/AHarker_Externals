@@ -35,7 +35,7 @@
 		B87283961CC38D2D00A1C38E /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = "dynamic~.hpp"; path = "../../AH_MaxMSP_Headers/dynamic~.hpp"; sourceTree = "<group>"; };
 		B87283981CC39A5100A1C38E /* patch_set.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_set.hpp; sourceTree = "<group>"; };
 		B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dynamic_host.hpp; sourceTree = "<group>"; };
-		B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = patch_slot.cpp; sourceTree = "<group>"; };
 		B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_slot.hpp; sourceTree = "<group>"; };
 		B8EC176E10836C3600316C82 /* dynamic.this~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.this~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,7 +104,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */,
+				B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */,
 				B87283961CC38D2D00A1C38E /* dynamic~.hpp */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
@@ -556,7 +556,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -566,7 +566,7 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -575,7 +575,7 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -688,7 +688,7 @@
 		};
 		B803277411CCFC69009E69AD /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -698,7 +698,7 @@
 		};
 		B803277511CCFC69009E69AD /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -707,7 +707,7 @@
 		};
 		B803277611CCFC69009E69AD /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -716,7 +716,7 @@
 		};
 		B8600FB912C22A6500864B9B /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -726,7 +726,7 @@
 		};
 		B8600FBA12C22A6500864B9B /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -735,7 +735,7 @@
 		};
 		B8600FBB12C22A6500864B9B /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -744,7 +744,7 @@
 		};
 		B8EC176B10836C3600316C82 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -754,7 +754,7 @@
 		};
 		B8EC176C10836C3600316C82 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -763,7 +763,7 @@
 		};
 		B8EC176D10836C3600316C82 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -772,7 +772,7 @@
 		};
 		B8ECA0270F0A578000B26D31 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -782,7 +782,7 @@
 		};
 		B8ECA0280F0A578000B26D31 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -791,7 +791,7 @@
 		};
 		B8ECA0290F0A578000B26D31 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -800,7 +800,7 @@
 		};
 		B8ECA0380F0A578900B26D31 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -810,7 +810,7 @@
 		};
 		B8ECA0390F0A578900B26D31 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -819,7 +819,7 @@
 		};
 		B8ECA03A0F0A578900B26D31 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -828,7 +828,7 @@
 		};
 		B8ECA04B0F0A57A800B26D31 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -838,7 +838,7 @@
 		};
 		B8ECA04C0F0A57A800B26D31 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -847,7 +847,7 @@
 		};
 		B8ECA04D0F0A57A800B26D31 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8C35FAF19FA65A000C04C8D /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;

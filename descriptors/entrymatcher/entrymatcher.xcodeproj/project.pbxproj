@@ -43,7 +43,7 @@
 		B8EC9F040F0A433600B26D31 /* entrymatcher_message.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher_message.cpp; sourceTree = "<group>"; };
 		B8F18CE41F52D76F000E59CA /* database_view.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = database_view.cpp; sourceTree = "<group>"; };
 		B8F18CE51F52D76F000E59CA /* database_view.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = database_view.hpp; sourceTree = "<group>"; };
-		B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +67,7 @@
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */,
+				B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -264,7 +264,7 @@
 /* Begin XCBuildConfiguration section */
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -273,7 +273,7 @@
 		};
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
@@ -281,7 +281,7 @@
 		};
 		0FF6670D096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
@@ -399,7 +399,7 @@
 		};
 		B8998A4511CECDFB0028A17C /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -408,7 +408,7 @@
 		};
 		B8998A4611CECDFB0028A17C /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
@@ -416,7 +416,7 @@
 		};
 		B8998A4711CECDFB0028A17C /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8F41BDD10ED39E400C577DA /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};

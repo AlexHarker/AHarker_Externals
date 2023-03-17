@@ -14,7 +14,7 @@
 /* Begin PBXFileReference section */
 		B11F57FF0A65139E0000A79B /* valconvert.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = valconvert.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A2C25D0A4C272200236386 /* valconvert.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = valconvert.cpp; sourceTree = "<group>"; };
-		B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AHarker_Externals.xcconfig; path = ../../Config_AHarker_Externals.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8A34C7719A77A08000A4FD4 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8C2E6AA11C397E100A7E297 /* valconvert~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "valconvert~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,7 +39,7 @@
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */,
+				B8A34C7719A77A08000A4FD4 /* Config_AH_Ext_Mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -230,7 +230,7 @@
 		};
 		0FF6670F096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -267,7 +267,7 @@
 		};
 		0FF66710096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -302,7 +302,7 @@
 		};
 		0FF66711096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AHarker_Externals.xcconfig */;
+			baseConfigurationReference = B8A34C7719A77A08000A4FD4 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
