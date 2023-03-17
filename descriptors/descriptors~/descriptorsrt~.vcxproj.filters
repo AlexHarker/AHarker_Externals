@@ -73,6 +73,5 @@
     </ClCompile>
     <ClCompile Include="descriptors_graph.cpp" />
     <ClCompile Include="descriptors_rt.cpp" />
-    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\HISSTools_FFT\HISSTools_FFT.cpp" />
   </ItemGroup>
 </Project>

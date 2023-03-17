@@ -29,7 +29,6 @@
     <ClInclude Include="modules\utility_definitions.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\HISSTools_FFT\HISSTools_FFT.cpp" />
     <ClCompile Include="descriptors_graph.cpp" />
     <ClCompile Include="descriptors_rt.cpp" />
     <ClCompile Include="modules\modules_change.cpp" />

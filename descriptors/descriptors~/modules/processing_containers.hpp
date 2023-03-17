@@ -2,7 +2,7 @@
 #ifndef _PROCESSING_CONTAINERS_HPP_
 #define _PROCESSING_CONTAINERS_HPP_
 
-#include <HISSTools_FFT/HISSTools_FFT.h>
+#include <HISSTools_FFT/HISSTools_FFT.hpp>
 #include <SIMDSupport.hpp>
 
 // A Memory Aligned Vector
@@ -70,14 +70,14 @@ struct fft_split
         m_split.imagp = m_vector.data() + (size >> 1);
     }
     
-    FFT_SPLIT_COMPLEX_D& data() { return m_split; }
-    const FFT_SPLIT_COMPLEX_D& data() const { return m_split; }
+    Split<double>& data() { return m_split; }
+    const Split<double>& data() const { return m_split; }
     size_t size() const { return m_vector.size(); }
 
 private:
 
     aligned_vector<> m_vector;
-    FFT_SPLIT_COMPLEX_D m_split;
+    Split<double> m_split;
 };
 
 // An FFT Setup
@@ -101,12 +101,12 @@ struct fft_setup
         }
     }
     
-    FFT_SETUP_D& get() { return m_fft_setup; }
+    Setup<double>& get() { return m_fft_setup; }
     size_t size() const { return m_size; }
 
 private:
     
-    FFT_SETUP_D m_fft_setup;
+    Setup<double> m_fft_setup;
     size_t m_size;
 };
 

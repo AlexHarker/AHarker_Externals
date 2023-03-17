@@ -48,7 +48,6 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\HISSTools_FFT\HISSTools_FFT.cpp" />
     <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.cpp" />
     <ClCompile Include="partconvolve~.cpp" />
   </ItemGroup>

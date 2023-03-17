@@ -60,7 +60,6 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\BaseAudioFile.cpp" />
     <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\IAudioFile.cpp" />
     <ClCompile Include="ibuffer~.cpp" />
   </ItemGroup>
