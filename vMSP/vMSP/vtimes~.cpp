@@ -4,24 +4,28 @@
  *
  *  vtimes~ is a vectorised version of times~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_binary.hpp"
-#include "nans.hpp"
+
+#include "Base/v_binary.hpp"
+#include "Base/nans.hpp"
+
+
+// Functor
 
 struct times_functor
 {
     template <class T>
     T operator()(const T a, const T b) { return nan_fixer()(a * b); }
-    
-    // Empty Implementations
-
-    void operator()(double *o, double *i1, double *i2, long size, double val, InputType type) {}
 };
 
-typedef v_binary<times_functor, kVectorOp, kVectorOp> vtimes;
+// Type Alias
+
+using vtimes = v_binary<times_functor, calculation_type::vector_op>;
+
+// Main
 
 int C74_EXPORT main()
 {

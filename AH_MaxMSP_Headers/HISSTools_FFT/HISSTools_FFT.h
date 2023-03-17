@@ -35,7 +35,7 @@ template <class T> struct Split
 
 // Type defintions for Apple / HISSTools FFT
 
-#ifdef USE_APPLE_FFT
+#if defined(USE_APPLE_FFT)
 
 #include <Accelerate/Accelerate.h>
 
@@ -47,8 +47,8 @@ typedef struct DSPSplitComplex FFT_SPLIT_COMPLEX_F;
 
 #else
 
-struct DoubleSplit : public Split<double> {};
-struct FloatSplit : public Split<float> {};
+typedef Split<double> DoubleSplit;
+typedef Split<float> FloatSplit;
 
 /**
     FFT_SETUP_D is an opaque setup structure for a double-precision FFT.
@@ -66,12 +66,12 @@ typedef struct FloatSetup *FFT_SETUP_F;
     FFT_SPLIT_COMPLEX_D is a Structure for storing a double-precision complex array in split form.
  */
 
-typedef struct DoubleSplit FFT_SPLIT_COMPLEX_D;
+typedef DoubleSplit FFT_SPLIT_COMPLEX_D;
 
 /**
     FFT_SPLIT_COMPLEX_F is a Structure for storing a single-precision complex array in split form.
  */
-typedef struct FloatSplit FFT_SPLIT_COMPLEX_F;
+typedef FloatSplit FFT_SPLIT_COMPLEX_F;
 
 #endif
 
@@ -351,7 +351,7 @@ void hisstools_unzip(const float *input, FFT_SPLIT_COMPLEX_F *output, uintptr_t 
 	@param	output		A pointer to the real double-precision output.
 	@param	log2n		The log base 2 of the FFT size.
 	
-	@remark             Subnsequent to running a real FFT the data must be zipped from a complex split structue into a contiguous memory location for final output. This function performs the zipping.
+	@remark             Subsequent to running a real FFT the data must be zipped from a complex split structue into a contiguous memory location for final output. This function performs the zipping.
  */
 
 void hisstools_zip(const FFT_SPLIT_COMPLEX_D *input, double *output, uintptr_t log2n);
@@ -363,8 +363,9 @@ void hisstools_zip(const FFT_SPLIT_COMPLEX_D *input, double *output, uintptr_t l
 	@param	output		A pointer to the real single-precision output.
 	@param	log2n		The log base 2 of the FFT size.
 	
-	@remark             Subnsequent to running a real FFT the data must be zipped from a complex split structue into a contiguous memory location for final output. This function performs the zipping.
+	@remark             Subsequent to running a real FFT the data must be zipped from a complex split structue into a contiguous memory location for final output. This function performs the zipping.
  */
+
 void hisstools_zip(const FFT_SPLIT_COMPLEX_F *input, float *output, uintptr_t log2n);
 
 #endif

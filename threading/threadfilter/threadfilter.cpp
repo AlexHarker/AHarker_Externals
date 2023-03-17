@@ -7,7 +7,7 @@
  *
  *  The most obvious use of threadfilter is to avoid threading issues, especially in the case of global code.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -20,8 +20,8 @@
 
 t_class *this_class;
 
-struct t_threadfilter{
-    
+struct t_threadfilter
+{    
     t_object a_obj;
     
     void *message_out_lo;
@@ -48,7 +48,7 @@ int C74_EXPORT main()
                           (method) threadfilter_new,
                           (method) nullptr,
                           sizeof(t_threadfilter),
-                          nullptr,
+                          (method) nullptr,
                           0);
     
     class_addmethod(this_class, (method) threadfilter_int, "int", A_LONG, 0);
@@ -69,8 +69,8 @@ void *threadfilter_new()
 {
     t_threadfilter *x = (t_threadfilter *) object_alloc(this_class);
     
-    x->message_out_hi = outlet_new(x, 0);
-    x->message_out_lo = outlet_new(x, 0);
+    x->message_out_hi = outlet_new(x, nullptr);
+    x->message_out_lo = outlet_new(x, nullptr);
     
     return x;
 }
@@ -104,13 +104,12 @@ void threadfilter_bang(t_threadfilter *x)
 void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *argv)
 {
     if (isr())
-        outlet_anything(x->message_out_hi, msg, argc, argv);
+        outlet_anything(x->message_out_hi, msg, static_cast<short>(argc), argv);
     else
-        outlet_anything(x->message_out_lo, msg, argc, argv);
+        outlet_anything(x->message_out_lo, msg, static_cast<short>(argc), argv);
 }
 
 // Assist
-
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 {

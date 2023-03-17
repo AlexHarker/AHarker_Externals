@@ -6,12 +6,12 @@
  *  However, in most cases, the best method to retrieve data from an ibuffer is to use ibuffer_access.cpp.
  *  ibuffer_access.cpp can also be used to access standard Max buffers.
  *
- *  Copyright 2010-20 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#ifndef IBUFFER_H
-#define IBUFFER_H
+#ifndef _IBUFFER_HPP_
+#define _IBUFFER_HPP_
 
 #include <ext.h>
 #include <z_dsp.h>
@@ -53,5 +53,5 @@ struct t_ibuffer
     void *bang_out;             // bangs on load
 };
 
-#endif        /* IBUFFER_H */
+#endif /* _IBUFFER_HPP_ */
 

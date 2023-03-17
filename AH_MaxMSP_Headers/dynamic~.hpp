@@ -2,16 +2,16 @@
 /*
  *  dynamic~ header
  *
- *	This header provides an interface for querying and seting the state of a parent dynamic object.
- *	All communication with a host object should be done using this interface.
- *	For uage examples see the dynamic set of objects (dynamicdsp.in~ / dynamicdsp.out~ / dynamicdsp.this~ etc.).
+ *  This header provides an interface for querying and seting the state of a parent dynamic object.
+ *  All communication with a host object should be done using this interface.
+ *  For uage examples see the dynamic set of objects (dynamicdsp.in~ / dynamicdsp.out~ / dynamicdsp.this~ etc.).
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#ifndef _DYNAMIC_INTERFACE_
-#define _DYNAMIC_INTERFACE_
+#ifndef _DYNAMIC_HPP_
+#define _DYNAMIC_HPP_
 
 #include <algorithm>
 
@@ -19,10 +19,10 @@
 
 // Helper to check that an object that appears to be a host is of the correct type
 
-static inline bool dynamic_is_dynamic_host(void *x)
+static inline bool dynamic_is_dynamic_host(void *obj)
 {
-    return x && (object_classname(x) == gensym("dynamicdsp~") ||
-                 object_classname(x) == gensym("dynamicserial~"));
+    return obj && (object_classname(obj) == gensym("dynamicdsp~") ||
+                 object_classname(obj) == gensym("dynamicserial~"));
 }
 
 // Helper to allow traversal through parent patchers
@@ -62,9 +62,9 @@ static inline void *dynamic_get_parent()
 
 static inline long dynamic_get_patch_index(void *obj)
 {
-    long index = 0;
+    t_atom_long index = 0;
     
-	if (dynamic_is_dynamic_host(obj))
+    if (dynamic_is_dynamic_host(obj))
     {
         object_method(obj, gensym("loading_index"), &index);
         
@@ -72,11 +72,12 @@ static inline long dynamic_get_patch_index(void *obj)
         {
             t_object *p = dynamic_traverse_assoc(gensym("#P")->s_thing, nullptr);
             p = dynamic_traverse_assoc(p, obj);
-            index = std::max(0L, (long) object_method(obj,  gensym("getindex"), p));
+            t_ptr_int idx = reinterpret_cast<t_ptr_int>(object_method(obj,  gensym("getindex"), p));
+            index = std::max(0L, static_cast<long>(idx));
         }
     }
-	
-    return index;
+
+    return static_cast<long>(index);
 }
 
 // Functions for querying the host object
@@ -90,8 +91,10 @@ void dynamic_object_method(void *obj, const char *str, void *ptr1, void *ptr2 = 
 template <typename T>
 void dynamic_object_method(void *obj, const char *str, long index, T value)
 {
-    if (index > 0)
-        dynamic_object_method(obj, str, reinterpret_cast<void *>(index), reinterpret_cast<void *>(value));
+    t_ptr_int idx = index;
+    
+    if (idx > 0)
+        dynamic_object_method(obj, str, reinterpret_cast<void *>(idx), reinterpret_cast<void *>(value));
 }
 
 template <typename T, typename... Args>
@@ -114,14 +117,14 @@ static inline long dynamic_get_num_sig_outs(void *obj)
     return dynamic_object_query<long>(obj, "query_num_sigouts");
 }
 
-static inline void **dynamic_get_sig_in_ptrs(void *obj)
+static inline double **dynamic_get_sig_in_ptrs(void *obj)
 {
-    return dynamic_object_query<void **>(obj, "query_sigins");
+    return dynamic_object_query<double **>(obj, "query_sigins");
 }
 
-static inline void ***dynamic_get_sig_out_handle(void *obj, long index)
+static inline double ***dynamic_get_sig_out_handle(void *obj, long index)
 {
-    return dynamic_object_query<void ***>(obj, "query_sigouts", index);
+    return dynamic_object_query<double ***>(obj, "query_sigouts", index);
 }
 
 // State Queries
@@ -158,4 +161,4 @@ static inline void dynamic_unregister_listener(void *obj, long index, void *list
     dynamic_object_method(obj, "unregister_listener", index, listener);
 }
 
-#endif  /* _DYNAMIC_INTERFACE_	*/
+#endif /* _DYNAMIC_HPP_ */

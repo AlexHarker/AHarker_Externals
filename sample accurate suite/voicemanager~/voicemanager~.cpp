@@ -13,10 +13,8 @@
  *
  *  Outgoing triggers are numbered according to voice.
  *  These can be tested using an audio rate comparison to derive triggers for individual voices.
- *
- *  See documentation for more info on limitations / implementation.
- *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ * *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -27,11 +25,12 @@
 
 #include <algorithm>
 
+
 // Globals and Object Structure
 
 t_class *this_class;
 
-constexpr long MAX_VOICES = 1000000;
+constexpr long max_voices = 1000000;
 
 struct t_voicemanager
 {
@@ -42,7 +41,7 @@ struct t_voicemanager
     double current_time;
     double sr_val;
     
-    long max_voices;
+    long num_voices;
     long active_voices;
     long active_connected;
     
@@ -51,7 +50,7 @@ struct t_voicemanager
 
 // Function Prototypes
 
-void *voicemanager_new(t_atom_long max_voices);
+void *voicemanager_new(t_atom_long num_voices);
 void voicemanager_free(t_voicemanager *x);
 void voicemanager_assist(t_voicemanager *x, void *b, long m, long a, char *s);
 
@@ -59,7 +58,7 @@ void voicemanager_reset(t_voicemanager *x);
 void voicemanager_active(t_voicemanager *x, t_symbol *msg, long argc, t_atom *argv);
 
 void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -69,12 +68,12 @@ int C74_EXPORT main()
                            (method) voicemanager_new,
                            (method) voicemanager_free,
                            sizeof(t_voicemanager),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
     class_addmethod(this_class, (method) voicemanager_reset, "reset", 0);
-    class_addmethod(this_class, (method) voicemanager_reset, "active", A_GIMME,0);
+    class_addmethod(this_class, (method) voicemanager_active, "active", A_GIMME, 0);
     class_addmethod(this_class, (method) voicemanager_assist, "assist", A_CANT, 0);
     class_addmethod(this_class, (method) voicemanager_dsp64, "dsp64", A_CANT, 0);
     
@@ -86,18 +85,18 @@ int C74_EXPORT main()
 
 // New / Free
 
-void *voicemanager_new(t_atom_long max_voices)
+void *voicemanager_new(t_atom_long num_voices)
 {
-    t_voicemanager *x = (t_voicemanager *)object_alloc(this_class);
+    t_voicemanager *x = (t_voicemanager *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 4);
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 4);
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
     
-    x->max_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(max_voices), MAX_VOICES)));
-    x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->max_voices));
-    x->active_voices = x->max_voices;
+    x->num_voices = static_cast<long>(std::max(1L, std::min(static_cast<long>(num_voices), max_voices)));
+    x->free_times = reinterpret_cast<double *>(malloc(sizeof(double) * x->num_voices));
+    x->active_voices = x->num_voices;
     x->reset = true;
     
     return x;
@@ -118,12 +117,12 @@ void voicemanager_reset(t_voicemanager *x)
 
 void voicemanager_active(t_voicemanager *x, t_symbol *msg, long argc, t_atom *argv)
 {
-    long active = x->max_voices;
+    long active = x->num_voices;
     
     if (argc)
         active = static_cast<long>(atom_getlong(argv));
     
-    x->active_voices = std::max(0L, std::min(x->max_voices, active));
+    x->active_voices = std::max(0L, std::min(x->num_voices, active));
 }
 
 // Perform
@@ -140,11 +139,10 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     double *out2 = outs[1];
     double *out3 = outs[2];
     
-    long max_voices = x->max_voices;
+    long num_voices = x->num_voices;
     long active_voices = x->active_voices;
     long active_connected = x->active_connected;
-    long voice_number;
-    long i;
+    long voice_idx;
     
     double *free_times = x->free_times;
     
@@ -157,7 +155,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     
     if (x->reset)
     {
-        for (i = 0; i < max_voices; i++)
+        for (long i = 0; i < num_voices; i++)
             free_times[i] = current_time;
         
         current_time = 0.0;
@@ -170,20 +168,20 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
     {
         // Reset variables
         
-        voice_number = 0;
+        voice_idx = 0;
         length = 0.0;
         subsample_offset = 0.0;
         
         active_voices = active_connected ? (long) *in4 : active_voices;
-        active_voices  = active_voices > max_voices ? max_voices : active_voices;
+        active_voices  = active_voices > num_voices ? num_voices : active_voices;
         
         if (*in1 && (*in3  < 1.0))
         {
             // Search for a free and active voice
             
-            for (voice_number = 1; free_times[voice_number - 1] > current_time && voice_number <= active_voices; voice_number++);
+            for (voice_idx = 1; free_times[voice_idx - 1] > current_time && voice_idx <= active_voices; voice_idx++);
             
-            if (voice_number <= active_voices)
+            if (voice_idx <= active_voices)
             {
                 // Get data for trigger
                 
@@ -193,10 +191,10 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
                 if (subsample_offset < 0.0)
                     subsample_offset = 0.0;
                 
-                free_times[voice_number - 1] = current_time + (sr_val * length) - subsample_offset;
+                free_times[voice_idx - 1] = current_time + (sr_val * length) - subsample_offset;
             }
             else
-                voice_number = 0;
+                voice_idx = 0;
         }
         
         // Advance input pointers
@@ -208,7 +206,7 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
         
         // Output parameters
         
-        *out1++ = voice_number;
+        *out1++ = voice_idx;
         *out2++ = length;
         *out3++ = subsample_offset;
         
@@ -220,9 +218,9 @@ void voicemanager_perform64(t_voicemanager *x, t_object *dsp64, double **ins, lo
 
 // DSP
 
-void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_val = samplerate / 1000.0;
+    x->sr_val = sample_rate / 1000.0;
     x->active_connected = count[3];
     
     object_method(dsp64, gensym("dsp_add64"), x, voicemanager_perform64, 0, nullptr);

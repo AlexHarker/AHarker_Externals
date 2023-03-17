@@ -3,21 +3,25 @@
  *  vftom~
  *
  *  vftom~ is a vectorised version of v_ftom~.
- *  This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
+ *  The exact results from this object may vary slightly different to the native Max version in terms of accuracy.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_unary.hpp"
-#include "conversions.hpp"
-#include "nans.hpp"
+
+#include "Base/v_unary.hpp"
+#include "Base/conversions.hpp"
+#include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct ftom_functor
 {
-    const static double ftom_mul_constant;
-    const static double ftom_add_constant;
+    static const double ftom_mul_constant;
+    static const double ftom_add_constant;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
@@ -31,19 +35,18 @@ struct ftom_functor
         mul_add_const_array(o, size, T(ftom_mul_constant), T(ftom_add_constant));
         nan_fixer()(o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
-// Initialise constants
+// Initialise Constants
 
 const double ftom_functor::ftom_mul_constant = 12.0 / log(2.0);
 const double ftom_functor::ftom_add_constant = ((log(2.0) * 69.0 / 12.0) - log(440.0)) * ftom_mul_constant;
 
-typedef v_unary<ftom_functor, kVectorArray> vftom;
+// Type Alias
+
+using vftom = v_unary<ftom_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

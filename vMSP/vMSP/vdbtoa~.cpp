@@ -3,20 +3,24 @@
  *  vdtbtoa~
  *
  *  vdtbtoa~ is a vectorised version of vdtbtoa~.
- *  This object may be marginally less accurate than the standard version, although that disadvantage is probably outweighed in most cases by the speed benefit.
+ *  The exact results from this object may vary slightly different to the native Max version in terms of accuracy.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_unary.hpp"
-#include "conversions.hpp"
-#include "nans.hpp"
+
+#include "Base/v_unary.hpp"
+#include "Base/conversions.hpp"
+#include "Base/nans.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct dbtoa_functor
 {
-    const static double dbtoa_constant;
+    static const double dbtoa_constant;
     
     SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
     {
@@ -30,18 +34,17 @@ struct dbtoa_functor
         exp_array(o, o, size);
         nan_fixer()(o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
-// Initialise constants
+// Initialise Constants
 
 const double dbtoa_functor::dbtoa_constant = log(10.0) / 20.0;
 
-typedef v_unary<dbtoa_functor, kVectorArray> vdbtoa;
+// Type Alias
+
+using vdbtoa = v_unary<dbtoa_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

@@ -7,9 +7,7 @@
  *  1 - To move messages from the low priority thread to high priority scheduler thread (if it it exists).
  *  2 - To delay any message (like delay, or pipe but for any messages).
  *
- *  See documentations for details of usage and intricatcies of timing / threading issues.
- *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -22,9 +20,9 @@
 
 t_class *this_class;
 
-t_symbol *ps_int;
-t_symbol *ps_float;
-t_symbol *ps_bang;
+t_symbol *ps_int = gensym("int");
+t_symbol *ps_float = gensym("float");
+t_symbol *ps_bang = gensym("bang");
 
 struct t_schedulemessage
 {
@@ -56,7 +54,7 @@ int C74_EXPORT main()
                           (method) schedulemessage_new,
                           (method) nullptr,
                           sizeof(t_schedulemessage),
-                          nullptr,
+                          (method) nullptr,
                           A_DEFFLOAT,
                           0);
 
@@ -70,10 +68,6 @@ int C74_EXPORT main()
     
     class_register(CLASS_BOX, this_class);
     
-    ps_int = gensym("int");
-    ps_float = gensym("float");
-    ps_bang = gensym("bang");
-    
     return 0;
 }
 
@@ -85,7 +79,7 @@ void *schedulemessage_new(double delay)
     
     floatin(x, 1);
     
-    x->message_out = outlet_new(x, 0);
+    x->message_out = outlet_new(x, nullptr);
     x->delay = delay;
     
     return x;
@@ -115,7 +109,7 @@ void schedulemessage_output(t_schedulemessage *x, t_symbol *msg, long argc, t_at
         return;
     }
     
-    outlet_anything(x->message_out, msg, argc, argv);
+    outlet_anything(x->message_out, msg, static_cast<short>(argc), argv);
 }
 
 void schedulemessage_int(t_schedulemessage *x, t_atom_long value)
@@ -146,7 +140,7 @@ void schedulemessage_anything(t_schedulemessage *x, t_symbol *msg, long argc, t_
     double delay = x->delay;
     
     if (!isr() || delay > 0)
-        schedule_fdelay(x, (method) schedulemessage_output, delay, msg, argc, argv);
+        schedule_fdelay(x, (method) schedulemessage_output, delay, msg, static_cast<short>(argc), argv);
     else
         schedulemessage_output(x, msg, argc, argv);
 }

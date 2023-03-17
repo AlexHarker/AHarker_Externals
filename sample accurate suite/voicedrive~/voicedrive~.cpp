@@ -8,9 +8,8 @@
  *  Typically voicedrive~ is used in connection with the voicemanager~ object.
  *  In this case it is used as the drive unit for each individual voice of a process.
  *  It can also be used for other sample-accurate timing purposes such as random length ramping.
- *  See documentation for more info on implementation.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -45,7 +44,7 @@ void voicedrive_free(t_voicedrive *x);
 void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s);
 
 void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
-void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -55,7 +54,7 @@ int C74_EXPORT main()
                            (method) voicedrive_new,
                            (method) voicedrive_free,
                            sizeof(t_voicedrive),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            A_DEFLONG,
                            0);
@@ -75,13 +74,13 @@ void *voicedrive_new(t_atom_long precision, t_atom_long interrupt_on)
 {
     t_voicedrive *x = (t_voicedrive *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 4);
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 4);
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
+    outlet_new((t_object *) x, "signal");
     if (precision)
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
     
     x->interrupt_on = interrupt_on ? true : false;
     x->precision = precision ? true : false;
@@ -189,9 +188,9 @@ void voicedrive_perform64(t_voicedrive *x, t_object *dsp64, double **ins, long n
 
 // DSP
 
-void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    x->sr_val = samplerate / 1000.0;
+    x->sr_val = sample_rate / 1000.0;
     object_method(dsp64, gensym("dsp_add64"), x, voicedrive_perform64, 0, nullptr);
 }
 
@@ -250,4 +249,3 @@ void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s)
         }
     }
 }
-

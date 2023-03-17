@@ -686,7 +686,7 @@
 			isa = PBXGroup;
 			children = (
 				B8B574401FF9C97900A62902 /* SIMD Support */,
-				B8B5743F1FF9C97000A62902 /* Base Clases */,
+				B8B5743F1FF9C97000A62902 /* Base Classes */,
 				B8B574411FF9C9A000A62902 /* Objects */,
 			);
 			name = Source;
@@ -734,7 +734,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B8B5743F1FF9C97000A62902 /* Base Clases */ = {
+		B8B5743F1FF9C97000A62902 /* Base Classes */ = {
 			isa = PBXGroup;
 			children = (
 				B8DA7B631FDDBC520037D848 /* v_unary.hpp */,
@@ -745,7 +745,7 @@
 				B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */,
 				B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */,
 			);
-			name = "Base Clases";
+			name = "Base Classes";
 			sourceTree = "<group>";
 		};
 		B8B574401FF9C97900A62902 /* SIMD Support */ = {
@@ -762,6 +762,8 @@
 			children = (
 				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,
 				B8E3962A1096172C0081D095 /* vlog~.cpp */,
+				B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */,
+				B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */,
 				B8E493CF1095A79000A88A63 /* vminus~.cpp */,
 				B8E492E81095A2FA00A88A63 /* vplus~.cpp */,
 				B8FE3FA0109875BE00780AF9 /* vpow~.cpp */,
@@ -771,8 +773,6 @@
 				B8E492E21095A2EA00A88A63 /* vtimes~.cpp */,
 				B8E39595109613C90081D095 /* vabs~.cpp */,
 				B8E39627109617180081D095 /* vtrunc~.cpp */,
-				B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */,
-				B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */,
 				B8E492EE1095A30E00A88A63 /* vequals~.cpp */,
 				B8E3937D1095B8990081D095 /* vnotequals~.cpp */,
 				B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */,
@@ -783,17 +783,17 @@
 				B8FE40691098791600780AF9 /* vdbtoa~.cpp */,
 				B8FE406E1098793200780AF9 /* vftom~.cpp */,
 				B8FE406A1098792000780AF9 /* vmtof~.cpp */,
-				B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */,
-				B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */,
 				B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */,
-				B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */,
+				B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */,
 				B8BFFB9E10AEF053008EB5B2 /* vatan~.cpp */,
+				B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */,
+				B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */,
 				B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */,
-				B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */,
-				B8E3959A109613F40081D095 /* vcosx~.cpp */,
 				B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */,
-				B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */,
+				B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */,
 				B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */,
+				B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */,
+				B8E3959A109613F40081D095 /* vcosx~.cpp */,
 				B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */,
 			);
 			name = Objects;
@@ -1756,16 +1756,18 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 1310;
 			};
 			buildConfigurationList = 0FFBC544097463A900D78707 /* Build configuration list for PBXProject "- vMSP~" */;
 			compatibilityVersion = "Xcode 2.4";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				Base,
+				de,
+				fr,
+				ja,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* plus~ */;
 			projectDirPath = "";
@@ -2772,7 +2774,6 @@
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 			};
@@ -2781,7 +2782,6 @@
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
 			name = Deployment;
@@ -2797,7 +2797,36 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
-				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Development;
 		};
@@ -2805,7 +2834,34 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
-				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 			};
 			name = Deployment;
 		};
@@ -2813,26 +2869,49 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
 			buildSettings = {
-				CLANG_X86_VECTOR_INSTRUCTIONS = avx;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 			};
 			name = Default;
 		};
 		B8BFF98710AED1BE008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFF98810AED1BE008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2840,26 +2919,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFF99810AED1C5008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFF99910AED1C5008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2867,26 +2941,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFA9510AEEE18008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFA9610AEEE18008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2894,26 +2963,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFAA710AEEE1C008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFAA810AEEE1C008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2921,26 +2985,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFAB910AEEE1F008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFABA10AEEE1F008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2948,26 +3007,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFACB10AEEE21008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFACC10AEEE21008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -2975,26 +3029,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFADD10AEEE62008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFADE10AEEE62008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3002,26 +3051,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB0D10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB0E10AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3029,26 +3073,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB1F10AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB2010AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3056,26 +3095,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB3110AEEE71008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB3210AEEE71008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3083,26 +3117,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB4310AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB4410AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3110,26 +3139,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB5510AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB5610AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3137,26 +3161,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8BFFB6710AEEE77008EB5B2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8BFFB6810AEEE77008EB5B2 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3164,26 +3183,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E393731095B8640081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E393741095B8640081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3191,26 +3205,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E3956C1096138D0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E3956D1096138D0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3218,26 +3227,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E3957E109613900081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Development;
 		};
 		B8E3957F109613900081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Deployment;
 		};
@@ -3245,26 +3249,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = YES;
 			};
 			name = Default;
 		};
 		B8E395F8109616AB0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E395F9109616AB0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3272,26 +3271,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E3960A109616B20081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E3960B109616B20081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3299,26 +3293,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E39621109616ED0081D095 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E39622109616ED0081D095 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3326,26 +3315,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E492FF1095A32500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E493001095A32500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3353,26 +3337,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E493101095A32800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E493111095A32800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3380,43 +3359,41 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E493441095A43200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Development;
 		};
 		B8E493451095A43200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Deployment;
 		};
 		B8E493461095A43200A88A63 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
 			name = Default;
 		};
 		B8E4943B1095AB2B00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E4943C1095AB2B00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
 			name = Deployment;
@@ -3425,26 +3402,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E4944C1095AB2F00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E4944D1095AB2F00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3452,26 +3424,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E4945D1095AB3200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E4945E1095AB3200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3479,26 +3446,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E4946E1095AB3700A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E4946F1095AB3700A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3506,26 +3468,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E4947F1095AB3C00A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E494801095AB3C00A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3533,26 +3490,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E494901095AB4200A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E494911095AB4200A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3560,26 +3512,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E494A11095AB4500A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E494A21095AB4500A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3587,26 +3534,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8E494B21095AB4800A88A63 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8E494B31095AB4800A88A63 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3614,26 +3556,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8FE3F901098759000780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8FE3F911098759000780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3641,26 +3578,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8FE40851098795600780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8FE40861098795600780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3668,26 +3600,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8FE40961098795A00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8FE40971098795A00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3695,26 +3622,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8FE40A71098795D00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8FE40A81098795D00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3722,26 +3644,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};
 		B8FE40B81098795F00780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Development;
 		};
 		B8FE40B91098795F00780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Deployment;
 		};
@@ -3749,7 +3666,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_UNROLL_LOOPS = NO;
 			};
 			name = Default;
 		};

@@ -4,20 +4,21 @@
  *
  *  vacosh~ is a vectorised version of acosh~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_unary.hpp"
-#include "vector_loop.hpp"
+
+#include "Base/v_unary.hpp"
+#include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct acosh_functor
 {
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
-    {
-        return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
-    }
+    // Input Limiting Functor
     
     struct replace_functor
     {
@@ -25,20 +26,26 @@ struct acosh_functor
         T operator()(const T& a) { return sel(a, T(1.0), a < T(1.0)); }
     };
     
+    // Ops + Array Operators
+ 
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    {
+        return a.mVal < 1.0 ? 0.0 : acosh(a.mVal);
+    }
+    
     template <class T>
     void operator()(T *o, T *i, long size)
     {
         vector_loop<replace_functor>(o, i, size);
         acosh_array(o, o, size);
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
-typedef v_unary<acosh_functor, kVectorArray> vacosh;
+// Type Alias
+
+using vacosh = v_unary<acosh_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

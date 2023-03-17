@@ -4,19 +4,28 @@
  *
  *  vnotequals~ is a vectorised version of notequals~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_binary.hpp"
-#include "comparisons.hpp"
+
+#include "Base/v_binary.hpp"
+#include "Base/comparisons.hpp"
+
+
+// Functor
 
 struct not_equal
 {
-    template <class T> T operator()(const T a, const T b) { return a != b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a != b; }
 };
 
-typedef v_binary<comparison_functor<not_equal>, kVectorOp, kVectorOp> vnotequals;
+// Type Alias
+
+using vnotequals = v_binary_comparison<not_equal>;
+
+// Main
 
 int C74_EXPORT main()
 {

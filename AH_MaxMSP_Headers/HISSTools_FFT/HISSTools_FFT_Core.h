@@ -1,12 +1,16 @@
 
 #include <cmath>
+#include <cstring>
+#include <cstdlib>
 #include <algorithm>
 #include <functional>
 
-#ifdef __arm__
+#if defined(__arm__) || defined(__arm64)
 #include <arm_neon.h>
-#else
-#ifndef __APPLE__
+#include <memory.h>
+#elif defined(__APPLE__) || defined(__linux__) || defined(_WIN32)
+#if defined(_WIN32)
+#include <malloc.h>
 #include <intrin.h>
 #endif
 #include <emmintrin.h>
@@ -15,8 +19,8 @@
 
 // Microsoft Visual Studio doesn't ever define __SSE__ so if necessary we derive it from other defines
 
-#ifndef __SSE__
-#if defined _M_X64 || (defined _M_IX86_FP && _M_IX86_FP > 0)
+#if !defined(__SSE__)
+#if defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP > 0)
 #define __SSE__ 1
 #endif
 #endif
@@ -35,84 +39,83 @@ struct FloatSetup : public Setup<float> {};
 
 namespace hisstools_fft_impl{
     
-    template<class T> struct SIMDLimits     { static const int max_size = 1;};
+    template<class T> struct SIMDLimits     { static constexpr int max_size = 1;};
     
 #if defined(__AVX512F__)
     
-    template<> struct SIMDLimits<double>    { static const int max_size = 8; };
-    template<> struct SIMDLimits<float>     { static const int max_size = 16; };
+    template<> struct SIMDLimits<double>    { static constexpr int max_size = 8; };
+    template<> struct SIMDLimits<float>     { static constexpr int max_size = 16; };
     
 #elif defined(__AVX__)
     
-    template<> struct SIMDLimits<double>    { static const int max_size = 4; };
-    template<> struct SIMDLimits<float>     { static const int max_size = 8; };
+    template<> struct SIMDLimits<double>    { static constexpr int max_size = 4; };
+    template<> struct SIMDLimits<float>     { static constexpr int max_size = 8; };
     
 #elif defined(__SSE__)
     
-    template<> struct SIMDLimits<double>    { static const int max_size = 2; };
-    template<> struct SIMDLimits<float>     { static const int max_size = 4; };
+    template<> struct SIMDLimits<double>    { static constexpr int max_size = 2; };
+    template<> struct SIMDLimits<float>     { static constexpr int max_size = 4; };
     
-#elif defined(__arm__)
+#elif defined(__arm__) || defined(__arm64__)
 
-    template<> struct SIMDLimits<float>     { static const int max_size = 4; };
+    template<> struct SIMDLimits<float>     { static constexpr int max_size = 4; };
 
 #endif
     
-    // Aligned Allocation
+    static constexpr int alignment_size = SIMDLimits<float>::max_size * sizeof(float);
     
-#ifdef __APPLE__
-    
-    template <class T>
-    T *allocate_aligned(size_t size)
-    {
-        return static_cast<T *>(malloc(size * sizeof(T)));
-    }
-    
-    template <class T>
-    void deallocate_aligned(T *ptr)
-    {
-        free(ptr);
-    }
-    
-#elif defined(__arm__)
-    
-#include <memory.h>
+// Aligned Allocation
+
+#if defined(__APPLE__) || defined (__linux__) || defined(__EMSCRIPTEN__)
     
     template <class T>
     T *allocate_aligned(size_t size)
     {
-        return static_cast<T *>(aligned_alloc(16, size * sizeof(T)));
+        void *mem = nullptr;
+        if (!posix_memalign(&mem, alignment_size, size * sizeof(T)))
+            return static_cast<T *>(mem);
+        else
+            return nullptr;
     }
+
+#elif defined(__arm__) || defined(__arm64__)
     
     template <class T>
-    void deallocate_aligned(T *ptr)
+    T *allocate_aligned(size_t size)
     {
-        free(ptr);
+        return static_cast<T *>(aligned_alloc(alignment_size, size * sizeof(T)));
     }
+    
+#elif defined(_WIN32)
+    
+    template <class T>
+    T *allocate_aligned(size_t size)
+    {
+        return static_cast<T *>(_aligned_malloc(size * sizeof(T), alignment_size));
+    }
+    
+#endif
+    
+// Aligned deallocation
+    
+#if !defined(_WIN32)
+    
+    template <class T>
+    void deallocate_aligned(T *ptr) { free(ptr); }
     
 #else
-#include <malloc.h>
     
     template <class T>
-    T *allocate_aligned(size_t size)
-    {
-        return static_cast<T *>(_aligned_malloc(size * sizeof(T), 16));
-    }
-    
-    template <class T>
-    void deallocate_aligned(T *ptr)
-    {
-        _aligned_free(ptr);
-    }
+    void deallocate_aligned(T *ptr) { _aligned_free(ptr); }
     
 #endif
     
     template <class T>
-    bool isAligned(const T *ptr) { return !(reinterpret_cast<uintptr_t>(ptr) % 16); }
+    bool is_aligned(const T *ptr) { return !(reinterpret_cast<uintptr_t>(ptr) % alignment_size); }
     
     // Offset for Table
     
-    static const uintptr_t trig_table_offset = 3;
+    static constexpr uintptr_t trig_table_offset = 3;
     
     // Data Type Definitions
     
@@ -121,7 +124,7 @@ namespace hisstools_fft_impl{
     template <class T, class U, int vec_size>
     struct SIMDVectorBase
     {
-        static const int size = vec_size;
+        static constexpr int size = vec_size;
         
         SIMDVectorBase() {}
         SIMDVectorBase(U a) : mVal(a) {}
@@ -190,8 +193,8 @@ namespace hisstools_fft_impl{
         
         static void deinterleave(const SIMDVector *input, SIMDVector *outReal, SIMDVector *outImag)
         {
-            *outReal = _mm_unpacklo_ps(input[0].mVal, input[1].mVal);
-            *outImag = _mm_unpackhi_ps(input[0].mVal, input[1].mVal);
+            *outReal = _mm_shuffle_ps(input[0].mVal, input[1].mVal, 0x88);
+            *outImag = _mm_shuffle_ps(input[0].mVal, input[1].mVal, 0xDD);
         }
         
         static void interleave(const SIMDVector *inReal, const SIMDVector *inImag, SIMDVector *output)
@@ -216,14 +219,20 @@ namespace hisstools_fft_impl{
         
         static void deinterleave(const SIMDVector *input, SIMDVector *outReal, SIMDVector *outImag)
         {
-            *outReal = _mm256_unpacklo_pd(input[0].mVal, input[1].mVal);
-            *outImag = _mm256_unpackhi_pd(input[0].mVal, input[1].mVal);
+            const __m256d v1 = _mm256_permute2f128_pd(input[0].mVal, input[1].mVal, 0x20);
+            const __m256d v2 = _mm256_permute2f128_pd(input[0].mVal, input[1].mVal, 0x31);
+            
+            *outReal = _mm256_unpacklo_pd(v1, v2);
+            *outImag = _mm256_unpackhi_pd(v1, v2);
         }
         
         static void interleave(const SIMDVector *inReal, const SIMDVector *inImag, SIMDVector *output)
         {
-            output[0] = _mm256_unpacklo_pd(inReal->mVal, inImag->mVal);
-            output[1] = _mm256_unpackhi_pd(inReal->mVal, inImag->mVal);
+            const __m256d v1 = _mm256_unpacklo_pd(inReal->mVal, inImag->mVal);
+            const __m256d v2 = _mm256_unpackhi_pd(inReal->mVal, inImag->mVal);
+            
+            output[0] = _mm256_permute2f128_pd(v1, v2, 0x20);
+            output[1] = _mm256_permute2f128_pd(v1, v2, 0x31);
         }
     };
     
@@ -238,14 +247,20 @@ namespace hisstools_fft_impl{
         
         static void deinterleave(const SIMDVector *input, SIMDVector *outReal, SIMDVector *outImag)
         {
-            *outReal = _mm256_unpacklo_ps(input[0].mVal, input[1].mVal);
-            *outImag = _mm256_unpackhi_ps(input[0].mVal, input[1].mVal);
+            const __m256 v1 = _mm256_permute2f128_ps(input[0].mVal, input[1].mVal, 0x20);
+            const __m256 v2 = _mm256_permute2f128_ps(input[0].mVal, input[1].mVal, 0x31);
+            
+            *outReal = _mm256_shuffle_ps(v1, v2, 0x88);
+            *outImag = _mm256_shuffle_ps(v1, v2, 0xDD);
         }
         
         static void interleave(const SIMDVector *inReal, const SIMDVector *inImag, SIMDVector *output)
         {
-            output[0] = _mm256_unpacklo_ps(inReal->mVal, inImag->mVal);
-            output[1] = _mm256_unpackhi_ps(inReal->mVal, inImag->mVal);
+            const __m256 v1 = _mm256_unpacklo_ps(inReal->mVal, inImag->mVal);
+            const __m256 v2 = _mm256_unpackhi_ps(inReal->mVal, inImag->mVal);
+            
+            output[0] = _mm256_permute2f128_ps(v1, v2, 0x20);
+            output[1] = _mm256_permute2f128_ps(v1, v2, 0x31);
         }
     };
     
@@ -299,7 +314,7 @@ namespace hisstools_fft_impl{
     
 #endif
     
-#if defined(__arm__)
+#if defined(__arm__) || defined(__arm64__)
     
     template<>
     struct SIMDVector<float, 4> : public SIMDVectorBase<float, float32x4_t, 4>
@@ -333,11 +348,11 @@ namespace hisstools_fft_impl{
     struct Vector4x
     {
         typedef SIMDVector<T, vec_size> ArrayType;
-        static const int array_size = 4 / vec_size;
+        static constexpr int array_size = 4 / vec_size;
         
         Vector4x() {}
         Vector4x(const Vector4x *ptr) { *this = *ptr; }
-        Vector4x(const T *array) { *this = *reinterpret_cast<const Vector4x *>(array); }
+        Vector4x(const T *array) { memcpy(mData, array, sizeof(ArrayType) * array_size); }
         
         // This template allows a static loop
         
@@ -399,7 +414,7 @@ namespace hisstools_fft_impl{
     template <class T>
     Setup<T> *create_setup(uintptr_t max_fft_log2)
     {
-        Setup<T> *setup = allocate_aligned<Setup<T>>(1);
+        Setup<T> *setup = new(Setup<T>);
         
         // Set Max FFT Size
         
@@ -442,7 +457,7 @@ namespace hisstools_fft_impl{
             for (uintptr_t i = trig_table_offset; i <= setup->max_fft_log2; i++)
                 deallocate_aligned(setup->tables[i - trig_table_offset].realp);
             
-            deallocate_aligned(setup);
+            delete(setup);
         }
     }
     
@@ -561,15 +576,25 @@ namespace hisstools_fft_impl{
         const __m256d v3 = _mm256_unpacklo_pd(C.mData[0].mVal, D.mData[0].mVal);
         const __m256d v4 = _mm256_unpackhi_pd(C.mData[0].mVal, D.mData[0].mVal);
         
-        ptr1->mData[0] = _mm256_unpacklo_pd(v1, v3);
-        ptr2->mData[0] = _mm256_unpacklo_pd(v2, v4);
-        ptr3->mData[0] = _mm256_unpackhi_pd(v1, v3);
-        ptr4->mData[0] = _mm256_unpackhi_pd(v2, v4);
+        const __m256d v5 = _mm256_permute2f128_pd(v1, v2, 0x20);
+        const __m256d v6 = _mm256_permute2f128_pd(v1, v2, 0x31);
+        const __m256d v7 = _mm256_permute2f128_pd(v3, v4, 0x20);
+        const __m256d v8 = _mm256_permute2f128_pd(v3, v4, 0x31);
+        
+        const __m256d v9 = _mm256_unpacklo_pd(v5, v7);
+        const __m256d vA = _mm256_unpackhi_pd(v5, v7);
+        const __m256d vB = _mm256_unpacklo_pd(v6, v8);
+        const __m256d vC = _mm256_unpackhi_pd(v6, v8);
+        
+        ptr1->mData[0] = _mm256_permute2f128_pd(v9, vA, 0x20);
+        ptr2->mData[0] = _mm256_permute2f128_pd(vB, vC, 0x20);
+        ptr3->mData[0] = _mm256_permute2f128_pd(v9, vA, 0x31);
+        ptr4->mData[0] = _mm256_permute2f128_pd(vB, vC, 0x31) ;
     }
     
 #endif
     
-#if defined (__arm__)
+#if defined(__arm__) || defined(__arm64__)
     
     // Template Specialisation for an ARM Float Packed (1 SIMD Element)
     
@@ -1126,7 +1151,7 @@ namespace hisstools_fft_impl{
     
     // ******************** Unzip and Zip ******************** //
     
-#ifdef USE_APPLE_FFT
+#if defined(USE_APPLE_FFT)
     
     template<class T>
     void unzip_complex(const T *input, DSPSplitComplex *output, uintptr_t half_length)
@@ -1188,7 +1213,7 @@ namespace hisstools_fft_impl{
     {
         const int v_size = SIMDLimits<T>::max_size;
         
-        if (isAligned(input) && isAligned(output->realp) && isAligned(output->imagp))
+        if (is_aligned(input) && is_aligned(output->realp) && is_aligned(output->imagp))
         {
             uintptr_t v_length = (half_length / v_size) * v_size;
             unzip_impl<T, v_size>(input, output->realp, output->imagp, v_length);
@@ -1218,7 +1243,7 @@ namespace hisstools_fft_impl{
     {
         const int v_size = SIMDLimits<T>::max_size;
         
-        if (isAligned(output) && isAligned(input->realp) && isAligned(input->imagp))
+        if (is_aligned(output) && is_aligned(input->realp) && is_aligned(input->imagp))
         {
             uintptr_t v_length = (half_length / v_size) * v_size;
             zip_impl<T, v_size>(input->realp, input->imagp, output, v_length);
@@ -1302,7 +1327,7 @@ namespace hisstools_fft_impl{
     {
         if (fft_log2 >= 4)
         {
-            if (!isAligned(input->realp) || !isAligned(input->imagp))
+            if (!is_aligned(input->realp) || !is_aligned(input->imagp))
                 fft_passes<T, 1>(input, setup, fft_log2);
             else
                 fft_passes<T, SIMDLimits<T>::max_size>(input, setup, fft_log2);

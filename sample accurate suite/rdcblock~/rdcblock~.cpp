@@ -6,7 +6,7 @@
  *
  *  There are two reset modes, one that zeros the memory, another that resets to the current input value.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -39,7 +39,7 @@ void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s);
 void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -49,7 +49,7 @@ int C74_EXPORT main()
                            (method) rdcblock_new,
                            (method) rdcblock_free,
                            sizeof(t_rdcblock),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -68,8 +68,8 @@ void *rdcblock_new(t_atom_long mode)
 {
     t_rdcblock *x = (t_rdcblock *) object_alloc(this_class);
     
-    dsp_setup((t_pxobject *)x, 2);
-    outlet_new((t_object *)x, "signal");
+    dsp_setup((t_pxobject *) x, 2);
+    outlet_new((t_object *) x, "signal");
     
     x->x1 = x->y1 = 0.0;
     x->mode = mode;
@@ -108,8 +108,8 @@ void rdcblock_perform64(t_rdcblock *x, t_object *dsp64, double **ins, long numin
         // Filter
         
         y = x0 - x1 + (0.99 * y1);
-        y = FIX_DENORM_DOUBLE(y);
-        
+        FIX_DENORM_DOUBLE(y);
+    
         // Shift memories
         
         x1 = x0;
@@ -151,7 +151,7 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
         // Filter and shift memory
         
         y = x0 - x1 + (0.99 * y1);
-        y = FIX_DENORM_DOUBLE(y);
+        FIX_DENORM_DOUBLE(y);
         
         // Shift memories
         
@@ -169,7 +169,7 @@ void rdcblock_perform_inval64(t_rdcblock *x, t_object *dsp64, double **ins, long
 
 // DSP
 
-void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->mode)
         object_method(dsp64, gensym("dsp_add64"), x, rdcblock_perform_inval64, 0, nullptr);
@@ -197,4 +197,3 @@ void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Output");
 }
-

@@ -4,25 +4,53 @@
  *
  *  vlog~ is a vectorised version of log~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_binary.hpp"
-#include "conversions.hpp"
-#include "vector_loop.hpp"
+#include "Base/v_binary.hpp"
+#include "Base/conversions.hpp"
+#include "Base/vector_loop.hpp"
 #include <SIMDExtended.hpp>
-#include <alloca.h>
 #include <limits>
+
+#ifdef __APPLE__
+#include <alloca.h>
+#else
+#include <malloc.h>
+#endif 
+
 
 struct log_functor
 {
-    static const double min_constant;
+    static constexpr double min_constant = 0.0000000001;
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
+    // IO Limiting Functors
+
+    struct replace_input_functor
     {
-        return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
-    }
+        template <class T>
+        T operator()(const T& a)
+        {
+            using scalar = typename T::scalar_type;
+            const scalar min = static_cast<scalar>(min_constant);
+            return sel(T(min), a, a > T(scalar(0)));
+        }
+    };
+    
+    struct replace_base_functor
+    {
+        template <class T>
+        T operator()(const T& a)
+        {
+            using scalar = typename T::scalar_type;
+            const scalar e = static_cast<scalar>(M_E);
+            const T b = sel(a, T(e), a == T(scalar(0)));
+            return sel(b, T(std::numeric_limits<scalar>::infinity()), b == T(1.0));
+        }
+    };
+    
+    // Base Update
     
     double update_base(double base)
     {
@@ -39,34 +67,26 @@ struct log_functor
         
         return m_base_mul;
     }
-
-    struct replace_input_functor
-    {
-        template <class T>
-        T operator()(const T& a) { return sel(T(min_constant), a, a > T(0.0)); }
-    };
     
-    struct replace_base_functor
+    // Ops + Array Operators
+
+    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
     {
-        template <class T>
-        T operator()(const T& a)
-        {
-            const T b = sel(a, T(M_E), a == T(0.0));
-            return sel(b, T(std::numeric_limits<typename T::scalar_type>::infinity()), b == T(1.0));
-        }
-    };
+        return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
+    }
     
     template <class T>
-    void operator()(T *o, T *i1, T *i2, long size, double val, InputType type)
+    void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
-        const int simd_width = SIMDLimits<T>::max_size;
+        constexpr int simd_width = SIMDLimits<T>::max_size;
         
         switch (type)
         {
-            // N.B. - there is no signal/float input for log~ so if there's only one connection we take this route
+            // N.B. - the lhs input is always a signal, so if there's less than twp connections we take this route
                 
-            case kScalar1:
-            case kScalar2:
+            case inputs::none:
+            case inputs::lhs:
+            case inputs::rhs:
             {
                 const T mul = static_cast<T>(update_base(val));
                 
@@ -76,7 +96,7 @@ struct log_functor
                 break;
             }
                 
-            case kBinary:
+            case inputs::both:
             {
                 T *t = reinterpret_cast<T *>(alloca(sizeof(T) * size));
 
@@ -99,21 +119,16 @@ struct log_functor
             }
         }
     }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a, const T b) { return a; }
-    
+        
     double m_base = 1.0;
     double m_base_mul = 0.0;
 };
 
-// Initialise constants
+// Type Alias
 
-const double log_functor::min_constant = 0.0000000001;
+using vlog = v_binary<log_functor, calculation_type::vector_array, true, true>;
 
-typedef v_binary<log_functor, kVectorArray, true> vlog;
+// Main
 
 int C74_EXPORT main()
 {

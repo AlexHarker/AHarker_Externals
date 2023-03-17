@@ -4,19 +4,28 @@
  *
  *  vgreaterthan~ is a vectorised version of greaterthan~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_binary.hpp"
-#include "comparisons.hpp"
+
+#include "Base/v_binary.hpp"
+#include "Base/comparisons.hpp"
+
+
+// Functor
 
 struct greater
 {
-    template <class T> T operator()(const T a, const T b) { return a > b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a > b; }
 };
 
-typedef v_binary<comparison_functor<greater>, kVectorOp, kVectorOp> vgreaterthan;
+// Type Alias
+
+using vgreaterthan = v_binary_comparison<greater>;
+
+// Main
 
 int C74_EXPORT main()
 {

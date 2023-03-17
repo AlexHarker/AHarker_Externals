@@ -4,19 +4,28 @@
  *
  *  vgreaterthaneq~ is a vectorised version of greaterthaneq~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_binary.hpp"
-#include "comparisons.hpp"
+
+#include "Base/v_binary.hpp"
+#include "Base/comparisons.hpp"
+
+
+// Functor
 
 struct greater_eq
 {
-    template <class T> T operator()(const T a, const T b) { return a >= b; }
+    template <class T>
+    T operator()(const T a, const T b) { return a >= b; }
 };
 
-typedef v_binary<comparison_functor<greater_eq>, kVectorOp, kVectorOp> vgreaterthaneq;
+// Type Alias
+
+using vgreaterthaneq = v_binary_comparison<greater_eq>;
+
+// Main
 
 int C74_EXPORT main()
 {

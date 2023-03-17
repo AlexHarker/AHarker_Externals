@@ -2,9 +2,10 @@
 /*
  *  getthread
  *
- *  getthread is an object to report which thread incoming events are in (output is 1 for the scheduler thread, 0 otherwise).
+ *  getthread is an object to report which thread incoming events are in.
+ *  Output is 1 for the scheduler thread or 0 otherwise.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -17,8 +18,8 @@
 
 t_class *this_class;
 
-struct t_getthread{
-    
+struct t_getthread
+{    
     t_object a_obj;
     
     void *thread_out;
@@ -44,7 +45,7 @@ int C74_EXPORT main()
                           (method) getthread_new,
                           (method) nullptr,
                           sizeof(t_getthread),
-                          nullptr,
+                          (method) nullptr,
                           0);
     
     class_addmethod(this_class, (method) getthread_doit, "bang", 0);
@@ -63,7 +64,7 @@ int C74_EXPORT main()
 
 void *getthread_new()
 {
-    t_getthread *x = (t_getthread *) object_alloc (this_class);
+    t_getthread *x = (t_getthread *) object_alloc(this_class);
     
     x->thread_out = intout(x);
     

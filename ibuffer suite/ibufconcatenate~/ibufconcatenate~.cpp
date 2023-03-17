@@ -2,19 +2,18 @@
 /*
  *  ibufconcatenate~
  *
- *    The ibufconcatenate~ object is used to handle data to do with sections of a buffer.
+ *  The ibufconcatenate~ object is used to handle data to do with sections of a buffer.
  *
- *    It can be used in one of two ways:
+ *  It can be used in one of two ways:
  *
- *        1 - entries - store start and end points for items in a buffer by entering them manually.
- *        2 - concatenation - concatenate multiple msp buffers into one buffer, storing start and end points.
+ *      1 - entries - store start and end points for items in a buffer by entering them manually.
+ *      2 - concatenation - concatenate multiple msp buffers into one buffer, storing start and end points.
  *
- *    The bounds of each chunk can be retrieved either as a message, or as a signal in a sample-accurate manner, according to the mode of the object.
- *    The ibufconcatedrive~ object can also be used to give sample-accurate playback of only one item at a time.
+ *  The bounds of each chunk can be retrieved either as a message, or as a signal (according to the mode chosen).
+ *  When using signals the bounds can be retrieved in a sample-accurate manner.
+ *  The ibufconcatedrive~ object can also be used to give sample-accurate playback of only one item at a time.
  *
- *    See the helpfile documentation for more on how this object can be used in practice.
- *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -29,11 +28,11 @@
 #include "ibufconcatenate_info.hpp"
 
 
+// Globals and Object Structure
+
+constexpr int BUFFER_GROW_SIZE = 0x100000;
+
 t_class *this_class;
-
-
-const int BUFFER_GROW_SIZE = 1048576;
-
 
 struct t_ibufconcatenate
 {
@@ -47,6 +46,7 @@ struct t_ibufconcatenate
     void *last_added_out;
 };
 
+// Function Prototypes
 
 void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode);
 void ibufconcatenate_free(t_ibufconcatenate *x);
@@ -61,32 +61,29 @@ void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double 
 static inline t_ptr_int mstosamps(double ms, double sr);
 void ibufconcatenate_int(t_ibufconcatenate *x, long in);
 
-t_int *ibufconcatenate_perform(t_int *w);
 void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
+void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
-void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count);
-void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
-
+// Main
 
 int C74_EXPORT main()
 {
-    this_class = class_new ("ibufconcatenate~",
-                            (method) ibufconcatenate_new,
-                            (method)ibufconcatenate_free,
-                            sizeof(t_ibufconcatenate),
-                            0L,
-                            A_SYM,
-                            A_DEFLONG,
-                            0);
+    this_class = class_new("ibufconcatenate~",
+                           (method) ibufconcatenate_new,
+                           (method) ibufconcatenate_free,
+                           sizeof(t_ibufconcatenate),
+                           (method) nullptr,
+                           A_SYM,
+                           A_DEFLONG,
+                           0);
     
-    class_addmethod (this_class, (method)ibufconcatenate_int, "int", A_LONG, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_set, "set", A_SYM, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_clear, "clear", 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_append, "append", A_SYM, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_entry, "entry", A_DEFFLOAT, A_DEFFLOAT, 0L);
-    class_addmethod (this_class, (method)ibufconcatenate_assist, "assist", A_CANT, 0L);
-    class_addmethod(this_class, (method)ibufconcatenate_dsp, "dsp", A_CANT, 0);
-    class_addmethod(this_class, (method)ibufconcatenate_dsp64, "dsp64", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_int, "int", A_LONG, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_set, "set", A_SYM, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_clear, "clear", 0);
+    class_addmethod(this_class, (method) ibufconcatenate_append, "append", A_SYM, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_entry, "entry", A_DEFFLOAT, A_DEFFLOAT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_assist, "assist", A_CANT, 0);
+    class_addmethod(this_class, (method) ibufconcatenate_dsp64, "dsp64", A_CANT, 0);
     
     class_register(CLASS_BOX, this_class);
     
@@ -95,26 +92,28 @@ int C74_EXPORT main()
     return 0;
 }
 
+// New / Free / Assist
+
 void *ibufconcatenate_new(t_symbol *buffer_name, t_atom_long max_mode)
 {
-    t_ibufconcatenate *x = (t_ibufconcatenate *)object_alloc(this_class);
+    t_ibufconcatenate *x = (t_ibufconcatenate *) object_alloc(this_class);
     
     x->last_added_out = listout(x);
     
     if (!max_mode)
     {
-        dsp_setup((t_pxobject *)x, 1);
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
-        outlet_new((t_object *)x, "signal");
+        dsp_setup((t_pxobject *) x, 1);
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
+        outlet_new((t_object *) x, "signal");
     }
     else
     {
         x->data_out = listout(x);
     }
     
-    x->attachment = attach_ibufconcatenate_info(buffer_name);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, nullptr);
     x->max_mode = max_mode;
     
     return x;
@@ -181,10 +180,11 @@ void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char 
     }
 }
 
+// Set / Clear
+
 void ibufconcatenate_set(t_ibufconcatenate *x, t_symbol *buffer_name)
 {
-    detach_ibufconcatenate_info(x->attachment);
-    x->attachment = attach_ibufconcatenate_info(buffer_name);
+    x->attachment = attach_ibufconcatenate_info(buffer_name, x->attachment);
 }
 
 void ibufconcatenate_clear(t_ibufconcatenate *x)
@@ -192,6 +192,8 @@ void ibufconcatenate_clear(t_ibufconcatenate *x)
     t_ibufconcatenate_info::write_access access(x->attachment);
     access.clear();
 }
+
+// Append
 
 long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name, double &beg, double &end)
 {
@@ -236,11 +238,11 @@ long ibufconcatenate_append_internal(t_ibufconcatenate *x, t_symbol *source_name
             
             target.set_size_in_samples(new_size);
             
-            if (required_length >= target.get_length())
+            if (required_length <= target.get_length())
                 std::copy_n(temp.m_ptr, old_size, static_cast<float *>(target.get_samples()));
         }
         
-        if (required_length < target.get_length())
+        if (required_length > target.get_length())
         {
             error ("ibufconcatenate: no room left in buffer");
             return -1;
@@ -316,6 +318,8 @@ void ibufconcatenate_append(t_ibufconcatenate *x, t_symbol *source_name)
         ibufconcatenate_output(x, item, beg, end);
 }
 
+// Entry
+
 void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end)
 {
     // Scope to release lock before calling the output
@@ -330,6 +334,8 @@ void ibufconcatenate_entry(t_ibufconcatenate *x, double beg, double end)
     ibufconcatenate_output(x, item, beg, end);
 }
 
+// Output (for new entries)
+
 void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double end)
 {
     t_atom list[3];
@@ -340,12 +346,14 @@ void ibufconcatenate_output(t_ibufconcatenate *x, long item, double beg, double 
     atom_setfloat(list + 1, beg);
     atom_setfloat(list + 2, end);
     
-    outlet_list(x->last_added_out, 0, 3, list);
+    outlet_list(x->last_added_out, nullptr, 3, list);
 }
+
+// Helpers
 
 static inline t_ptr_int mstosamps(double ms, double sr)
 {
-    return (t_ptr_int) std::round((ms * sr) / 1000.0);
+    return static_cast<t_ptr_int>(std::round((ms * sr) / 1000.0));
 }
 
 double ibuffer_full_length(t_symbol *name)
@@ -357,6 +365,8 @@ double ibuffer_full_length(t_symbol *name)
     else
         return 0.0;
 }
+
+// Get Item
 
 void ibufconcatenate_int(t_ibufconcatenate *x, long item)
 {
@@ -386,13 +396,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
     atom_setlong(atom_out + 1, mstosamps(end, sr));
     atom_setfloat(atom_out + 2, sr);
     
-    outlet_list(x->data_out, 0, 3, atom_out);
-}
-
-void store(float *lo_res, float *hi_res, double output)
-{
-    *lo_res = static_cast<float>(output);
-    *hi_res = output - *lo_res;
+    outlet_list(x->data_out, nullptr, 3, atom_out);
 }
 
 void store(double *lo_res, double *hi_res, double output)
@@ -439,42 +443,15 @@ void ibufconcatenate_perform_core(t_ibufconcatenate *x, T **ins, T **outs, long 
     }
 }
 
-t_int *ibufconcatenate_perform(t_int *w)
-{
-    // Set pointers
-    
-    float *ins[1];
-    float *outs[4];
-    
-    ins[0] = (float *) w[1];
-    
-    outs[0] = (float *) w[2];
-    outs[1] = (float *) w[3];
-    outs[2] = (float *) w[4];
-    outs[3] = (float *) w[5];
-    
-    long vec_size = (long) w[6];
-    t_ibufconcatenate *x = (t_ibufconcatenate *) w[7];
-    
-    ibufconcatenate_perform_core(x, ins, outs, vec_size);
-    
-    return w + 8;
-}
-
 void ibufconcatenate_perform64(t_ibufconcatenate *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
     ibufconcatenate_perform_core(x, ins, outs, vec_size);
 }
 
-void ibufconcatenate_dsp(t_ibufconcatenate *x, t_signal **sp, short *count)
+// DSP
+
+void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (!x->max_mode)
-        dsp_add(ibufconcatenate_perform, 7, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, sp[3]->s_vec, sp[4]->s_vec, sp[0]->s_n, x);
+        object_method(dsp64, gensym("dsp_add64"), x, ibufconcatenate_perform64, 0, nullptr);
 }
-
-void ibufconcatenate_dsp64(t_ibufconcatenate *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
-{
-    if (!x->max_mode)
-        object_method(dsp64, gensym("dsp_add64"), x, ibufconcatenate_perform64, 0, NULL);
-}
-

@@ -2,7 +2,7 @@
 #include "HISSTools_FFT.h"
 #include "HISSTools_FFT_Core.h"
 
-#ifdef USE_APPLE_FFT
+#if defined(USE_APPLE_FFT)
 
 // This file provides bindings to the relevant Apple or HISSTools template routines.
 
@@ -10,42 +10,42 @@
 
 void hisstools_fft(FFT_SETUP_D setup, FFT_SPLIT_COMPLEX_D *input, uintptr_t log2n)
 {
-	vDSP_fft_zipD(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
+    vDSP_fft_zipD(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
 }
 
 void hisstools_fft(FFT_SETUP_F setup, FFT_SPLIT_COMPLEX_F *input, uintptr_t log2n)
 {
-	vDSP_fft_zip(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
+    vDSP_fft_zip(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
 }
 
 void hisstools_rfft(FFT_SETUP_D setup, FFT_SPLIT_COMPLEX_D *input, uintptr_t log2n)
 {
-	vDSP_fft_zripD(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
+    vDSP_fft_zripD(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
 }
 
 void hisstools_rfft(FFT_SETUP_F setup, FFT_SPLIT_COMPLEX_F *input, uintptr_t log2n)
 {
-	vDSP_fft_zrip(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
+    vDSP_fft_zrip(setup, input, (vDSP_Stride) 1, log2n, FFT_FORWARD);
 }
 
 void hisstools_ifft(FFT_SETUP_D setup, FFT_SPLIT_COMPLEX_D *input, uintptr_t log2n)
 {
-	vDSP_fft_zipD(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
+    vDSP_fft_zipD(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
 }
 
 void hisstools_ifft(FFT_SETUP_F setup, FFT_SPLIT_COMPLEX_F *input, uintptr_t log2n)
 {
-	vDSP_fft_zip(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
+    vDSP_fft_zip(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
 }
 
 void hisstools_rifft(FFT_SETUP_D setup, FFT_SPLIT_COMPLEX_D *input, uintptr_t log2n)
 {
-	vDSP_fft_zripD(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
-}	
+    vDSP_fft_zripD(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
+}
 
 void hisstools_rifft(FFT_SETUP_F setup, FFT_SPLIT_COMPLEX_F *input, uintptr_t log2n)
 {
-	vDSP_fft_zrip(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
+    vDSP_fft_zrip(setup, input, (vDSP_Stride) 1, log2n, FFT_INVERSE);
 }
 
 // Zip and Unzip

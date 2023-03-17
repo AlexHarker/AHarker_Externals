@@ -133,34 +133,34 @@ int C74_EXPORT main()
 		return 0;
 	}
 
-	this_class = class_new ("ajh.wiiremote",
-							(method) ajhwiiremote_new, 
-							(method)ajhwiiremote_free, 
-							sizeof(t_ajhwiiremote), 
-							0L, 
-							A_GIMME,
-							0);
+	this_class = class_new("ajh.wiiremote",
+                           (method) ajhwiiremote_new,
+                           (method) ajhwiiremote_free,
+                           sizeof(t_ajhwiiremote),
+                           (method) nullptr,
+                           A_GIMME,
+                           0);
 	
-	class_addmethod (this_class, (method)ajhwiiremote_report, "bang", 0);
+	class_addmethod(this_class, (method) ajhwiiremote_report, "bang", 0);
 	
-	class_addmethod (this_class, (method)ajhwiiremote_address, "address", A_DEFSYM, 0L);
-	class_addmethod (this_class, (method)ajhwiiremote_connect,"connect", 0);
-	class_addmethod (this_class, (method)ajhwiiremote_disconnect,"disconnect",0);
-	class_addmethod (this_class, (method)ajhwiiremote_poll,"poll", A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_motionsensor,"motion", A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_irsensor,"ir", A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_vibration,"vibration", A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_led,"led", A_DEFLONG, A_DEFLONG, A_DEFLONG, A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_expansion,"expansion", A_DEFLONG, 0);
-	class_addmethod (this_class, (method)ajhwiiremote_motionplusmode,"motionplus", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_address, "address", A_DEFSYM, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_connect,"connect", 0);
+	class_addmethod(this_class, (method) ajhwiiremote_disconnect,"disconnect",0);
+	class_addmethod(this_class, (method) ajhwiiremote_poll,"poll", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_motionsensor,"motion", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_irsensor,"ir", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_vibration,"vibration", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_led,"led", A_DEFLONG, A_DEFLONG, A_DEFLONG, A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_expansion,"expansion", A_DEFLONG, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_motionplusmode,"motionplus", A_DEFLONG, 0);
 
-	class_addmethod (this_class, (method)ajhwiiremote_getbattery, "getbattery",0);
-	class_addmethod (this_class, (method)ajhwiiremote_getexpansion, "getexpansion",0);
-	class_addmethod (this_class, (method)ajhwiiremote_getled,"getled",0);
-	class_addmethod (this_class, (method)ajhwiiremote_getaddress, "getaddress",0);
-	class_addmethod (this_class, (method)ajhwiiremote_getcalibration, "getcalibration", 0);
+	class_addmethod(this_class, (method) ajhwiiremote_getbattery, "getbattery",0);
+	class_addmethod(this_class, (method) ajhwiiremote_getexpansion, "getexpansion",0);
+	class_addmethod(this_class, (method) ajhwiiremote_getled,"getled",0);
+	class_addmethod(this_class, (method) ajhwiiremote_getaddress, "getaddress",0);
+	class_addmethod(this_class, (method) ajhwiiremote_getcalibration, "getcalibration", 0);
 			
-	class_addmethod(this_class, (method)ajhwiiremote_assist,"assist", A_CANT, 0);
+	class_addmethod(this_class, (method) ajhwiiremote_assist,"assist", A_CANT, 0);
 
 	class_register(CLASS_BOX, this_class);
 
@@ -620,7 +620,7 @@ void ajhwiiremote_connect(t_ajhwiiremote *x)
 {
 	if (wiiremote_isconnected(x->wiiremote))
 	{
-		post ("Already Connected!!");
+		post("Already Connected!!");
 		outlet_anything(x->statusOut, ps_connected, 0, 0);		
 	}
 	else
@@ -858,7 +858,7 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 	{
 		case WiiPost:
 			
-			post (String);
+			post(String);
 			break;
 			
 		case WiiErr:
@@ -869,7 +869,7 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 		case WiiDebug:
 		
 			#ifdef WII_DEBUG 
-			post (String);
+			post(String);
 			#endif
 			break;
 			
@@ -881,17 +881,17 @@ void ajhwiiremotre_notify (void *x, void *wiiremote, WiimoteCallbackType Type, c
 			
 			switch (((WiiRemoteRef) wiiremote)->expType)
 			{
-				case WiiExpNotAttached:			post ("expansion change - not attached");							break;
-				case WiiExpUninitialised:		post ("expansion change - not intialised");							break;
-				case WiiNunchuk:				post ("expansion change - nunchuk");								break;
-				case WiiClassicController:		post ("expansion change - classic controller");						break;
-				case WiiGuitarHeroGuitar:		post ("expansion change - guitar hero guitar");						break;
-				case WiiGuitarHeroDrums:		post ("expansion change - guitar hero drums");						break;
-				case WiiMotionPlus:				post ("expansion change - motion plus");							break;
-				case WiiMotionPlusNunchuk:		post ("expansion change - motion plus with nunchuk");				break;
-				case WiiMotionPlusClassic:		post ("expansion change - motion plus with classic controller");	break;
-				case WiiExpNotTested:			post ("expansion change - not tested");								break;
-				default:						post ("expansion change - unknown device %x", ((WiiRemoteRef) wiiremote)->expType);
+				case WiiExpNotAttached:			post("expansion change - not attached");							break;
+				case WiiExpUninitialised:		post("expansion change - not intialised");							break;
+				case WiiNunchuk:				post("expansion change - nunchuk");								break;
+				case WiiClassicController:		post("expansion change - classic controller");						break;
+				case WiiGuitarHeroGuitar:		post("expansion change - guitar hero guitar");						break;
+				case WiiGuitarHeroDrums:		post("expansion change - guitar hero drums");						break;
+				case WiiMotionPlus:				post("expansion change - motion plus");							break;
+				case WiiMotionPlusNunchuk:		post("expansion change - motion plus with nunchuk");				break;
+				case WiiMotionPlusClassic:		post("expansion change - motion plus with classic controller");	break;
+				case WiiExpNotTested:			post("expansion change - not tested");								break;
+				default:						post("expansion change - unknown device %x", ((WiiRemoteRef) wiiremote)->expType);
 			}
 			break;
 	}
@@ -929,10 +929,10 @@ void *ajhwiiremote_new(t_symbol *s, short ac, t_atom *av)
 {
 	t_ajhwiiremote *x;
 	
-	x = (t_ajhwiiremote *)object_alloc(this_class);
+	x = (t_ajhwiiremote *) object_alloc(this_class);
 	
 	x->wiiremote = wiiremote_create(ajhwiiremotre_notify, x);
-	x->data_clock = clock_new(x, (method)ajhwiiremote_report_timed);
+	x->data_clock = clock_new(x, (method) ajhwiiremote_report_timed);
 	
 	ajhwiiremote_motionsensor(x, 1);
 	
@@ -949,8 +949,8 @@ void *ajhwiiremote_new(t_symbol *s, short ac, t_atom *av)
 	
 	ajhwiiremote_init(x);
 	
-	x->statusOut = outlet_new(x, 0);
-	x->dataOut = outlet_new(x, 0);
+	x->statusOut = outlet_new(x, nullptr);
+	x->dataOut = outlet_new(x, nullptr);
 	
 	x->poll = 10;
 
@@ -960,7 +960,7 @@ void *ajhwiiremote_new(t_symbol *s, short ac, t_atom *av)
 
 void ajhwiiremote_free(t_ajhwiiremote *x)
 {
-	freeobject((t_object *)x->data_clock);
+    object_free(x->data_clock);
 	wiiremote_destroy(x->wiiremote);
 }
 

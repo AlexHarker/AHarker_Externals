@@ -5,7 +5,7 @@
  *  tsah~ is like sah~ but the output value is updated whenever the trigger input is non-zero.
  *  This means that the output can be updated once per sample if desired.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -19,16 +19,16 @@
 
 t_class *this_class;
 
-constexpr int MAXIMUM_NUM_OUTLETS = 64;
+constexpr int max_outlets = 64;
 
 struct t_tsah
 {
     t_pxobject x_obj;
     
-    float *sig_ins[MAXIMUM_NUM_OUTLETS];
-    float *sig_outs[MAXIMUM_NUM_OUTLETS];
+    float *sig_ins[max_outlets];
+    float *sig_outs[max_outlets];
     
-    double last_outputs[MAXIMUM_NUM_OUTLETS];
+    double last_outputs[max_outlets];
     
     long num_outlets;
 };
@@ -43,7 +43,7 @@ void tsah_perform64(t_tsah *x, t_object *dsp64, double **ins, long numins, doubl
 void tsah_perform_multiple64(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -53,7 +53,7 @@ int C74_EXPORT main()
                            (method) tsah_new,
                            (method) tsah_free,
                            sizeof(t_tsah),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            0);
     
@@ -76,22 +76,22 @@ void *tsah_new(t_atom_long num_outlets)
     
     num_outlets = num_outlets < 1 ? 1 : num_outlets;
     
-    if (num_outlets > MAXIMUM_NUM_OUTLETS)
+    if (num_outlets > max_outlets)
     {
-        object_error((t_object *) x, "the maximum number of outlets is %ld", MAXIMUM_NUM_OUTLETS);
-        num_outlets = MAXIMUM_NUM_OUTLETS;
+        object_error((t_object *) x, "the maximum number of outlets is %ld", max_outlets);
+        num_outlets = max_outlets;
     }
     
-    dsp_setup((t_pxobject *)x, num_outlets + 1);
+    dsp_setup((t_pxobject *) x, static_cast<long>(num_outlets + 1));
     
     for (i = 0; i < num_outlets; i++)
     {
-        outlet_new((t_object *)x, "signal");
+        outlet_new((t_object *) x, "signal");
         x->last_outputs[i] = 0.;
     }
     
     x->x_obj.z_misc = Z_NO_INPLACE;        // due to working method!!
-    x->num_outlets = num_outlets;
+    x->num_outlets = static_cast<long>(num_outlets);
     
     return x;
 }
@@ -182,11 +182,11 @@ void tsah_perform_multiple64_unroll(t_tsah *x, t_object *dsp64, double **ins, lo
 
 // DSP
 
-void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
     if (x->num_outlets > 1)
     {
-        if (maxvectorsize >= 4)
+        if (max_vec >= 4)
             object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64_unroll, 0, nullptr);
         else
             object_method(dsp64, gensym("dsp_add64"), x, tsah_perform_multiple64, 0, nullptr);
@@ -215,4 +215,3 @@ void tsah_assist(t_tsah *x, void *b, long m, long a, char *s)
     else
         sprintf(s,"(signal) Held Values");
 }
-

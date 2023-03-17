@@ -8,7 +8,7 @@
  *  In this mode the coefficients may be updated sample-accurately directly from the inputs to the host object.
  *  This is an efficient alternative to the normal mode, which updates coefficients every sample.
  *
- *  Copyright 2010-21 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
@@ -21,11 +21,12 @@
 
 #include <dynamic~.hpp>
 
+
 // Globals and Object Structure
 
 t_class *this_class;
 
-constexpr long MAX_COEFF = 32;
+constexpr long max_coeff = 32;
 
 struct t_chebyshape
 {
@@ -33,13 +34,13 @@ struct t_chebyshape
     
     long num_coeff;
     
-    void *coeff_ins[MAX_COEFF];
-    double coeff[MAX_COEFF];
+    double *coeff_ins[max_coeff];
+    double coeff[max_coeff];
     
     long offset;
     long num_sig_ins;
     
-    void **sig_ins;
+    double **sig_ins;
 };
 
 // Function Protoypes
@@ -51,7 +52,7 @@ void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s);
 void chebyshape_perform_dynamic64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 void chebyshape_perform64 (t_chebyshape *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam);
 
-void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags);
+void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags);
 
 // Main
 
@@ -61,7 +62,7 @@ int C74_EXPORT main()
                            (method) chebyshape_new,
                            (method) chebyshape_free,
                            sizeof(t_chebyshape),
-                           nullptr,
+                           (method) nullptr,
                            A_DEFLONG,
                            A_DEFLONG,
                            0);
@@ -90,15 +91,15 @@ void *chebyshape_new(t_atom_long num_coeff, t_atom_long offset)
     
     // Clip Number of coefficients / Mode
     
-    x->num_coeff = std::max(2L, std::min(static_cast<long>(num_coeff), MAX_COEFF));
+    x->num_coeff = std::max(2L, std::min(static_cast<long>(num_coeff), max_coeff));
     x->offset = std::max(0L, std::min(static_cast<long>(offset), x->num_sig_ins));
     
     if (!x->offset)
-        dsp_setup((t_pxobject *)x, num_coeff + 1);
+        dsp_setup((t_pxobject *) x, static_cast<long>(num_coeff + 1));
     else
-        dsp_setup((t_pxobject *)x, 2);
+        dsp_setup((t_pxobject *) x, 2);
     
-    outlet_new((t_object *)x, "signal");
+    outlet_new((t_object *) x, "signal");
     
     return x;
 }
@@ -118,7 +119,7 @@ void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins
     
     double *in = ins[0];
     double *trigger = ins[1];
-    double **coeff_ins = ((double **) (x->sig_ins)) + x->offset - 1;
+    double **coeff_ins = x->sig_ins + (x->offset - 1);
     double *coeff = x->coeff;
     double *out = outs[0];
     
@@ -173,29 +174,35 @@ void chebyshape_perform_dynamic64(t_chebyshape *x, t_object *dsp64, double **ins
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff[i] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff[i+1] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff[i+2] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff[i+3] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
         }
         for (;  i < max_cheby; i++)
         {
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff[i] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
         }
         
-        *out++ = FIX_DENORM_DOUBLE(out_val);
+        FIX_DENORM_DOUBLE(out_val);
+        *out++ = out_val;
         j++;
     }
 }
@@ -235,39 +242,45 @@ void chebyshape_perform64(t_chebyshape *x, t_object *dsp64, double **ins, long n
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff_ins[i][j] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff_ins[i+1][j] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff_ins[i+2][j] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff_ins[i+3][j] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
         }
         for (;  i < num_coeff;  i++)
         {
             current_cheby = (2 * in_val * cheby_mem1) - cheby_mem2;
             out_val += coeff_ins[i][j] * current_cheby;
             cheby_mem2 = cheby_mem1;
-            cheby_mem1 = FIX_DENORM_DOUBLE(current_cheby);
+            cheby_mem1 = current_cheby;
+            FIX_DENORM_DOUBLE(cheby_mem1);
         }
         
-        *out++ = FIX_DENORM_DOUBLE(out_val);
+        FIX_DENORM_DOUBLE(out_val);
+        *out++ = out_val;
         j++;
     }
 }
 
 // DSP
 
-void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double samplerate, long maxvectorsize, long flags)
+void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    void **sig_ins = x->sig_ins;
-    void **coeff_ins = x->coeff_ins;
+    double **sig_ins = x->sig_ins;
+    double **coeff_ins = x->coeff_ins;
     
     double *coeff = x->coeff;
     

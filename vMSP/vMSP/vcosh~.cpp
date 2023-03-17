@@ -4,12 +4,16 @@
  *
  *  vcosh~ is a vectorised version of cosh~.
  *
- *  Copyright 2010 Alex Harker. All rights reserved.
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
  *
  */
 
-#include "v_unary.hpp"
+
+#include "Base/v_unary.hpp"
 #include <SIMDExtended.hpp>
+
+
+// Functor
 
 struct cosh_functor
 {
@@ -17,14 +21,13 @@ struct cosh_functor
     
     template <class T>
     void operator()(T *o, T *i, long size) { cosh_array(o, i, size); }
-    
-    // Empty Implementations
-    
-    template <class T>
-    T operator()(const T a) { return a; }
 };
 
-typedef v_unary<cosh_functor, kVectorArray> vcosh;
+// Type Alias
+
+using vcosh = v_unary<cosh_functor, calculation_type::vector_array>;
+
+// Main
 
 int C74_EXPORT main()
 {

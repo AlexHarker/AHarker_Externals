@@ -1,4 +1,4 @@
-
+﻿
 # Apple Finder Database
 
 .DS_Store
@@ -9,6 +9,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs/
 
 # XCode
 
@@ -32,10 +33,6 @@ xcuserdata/
 AH_Externals_Builds/
 AH_Externals_Intermediate/
 
-# New Versions
-
-*module_version/
-
 # CVS Folders
 
 CVS/
@@ -47,3 +44,4 @@ c74support/
 # Builds
 
 *.mxo
+*.mxe64

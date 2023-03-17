@@ -1,14 +1,27 @@
 
-#ifndef VECTOR_LOOP_H
-#define VECTOR_LOOP_H
+/*
+ *  vector_loop.hpp
+ *
+ *  A header file with loop helper for array vector functions.
+ *
+ *  Copyright 2010-22 Alex Harker. All rights reserved.
+ *
+ */
+
+
+#ifndef _VECTOR_LOOP_HPP_
+#define _VECTOR_LOOP_HPP_
+
+
+// Run Vector Functor On Array
 
 template <class Op, class T, typename... Args>
 void vector_loop(T *o, const T *i, long size, Args... args)
 {
-    using VecType = SIMDType<T, SIMDLimits<T>::max_size>;
+    using vec_type = SIMDType<T, SIMDLimits<T>::max_size>;
     
-    const VecType *v_i = reinterpret_cast<const VecType *>(i);
-    VecType *v_o = reinterpret_cast<VecType *>(o);
+    const vec_type *v_i = reinterpret_cast<const vec_type *>(i);
+    vec_type *v_o = reinterpret_cast<vec_type *>(o);
     
     Op op;
     
@@ -18,4 +31,4 @@ void vector_loop(T *o, const T *i, long size, Args... args)
         *v_o++ = op(*v_i++, args...);
 }
 
-#endif /* VECTOR_LOOPS_H */
+#endif /* _VECTOR_LOOP_HPP_ */
