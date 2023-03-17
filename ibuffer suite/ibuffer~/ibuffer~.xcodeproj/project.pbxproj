@@ -18,10 +18,10 @@
 		B1BB1FD70A4ECF2D0012288F /* ibuffer~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "ibuffer~.cpp"; sourceTree = "<group>"; };
 		B1BB1FD90A4ECF4A0012288F /* ibuffer~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibuffer~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8141B4A10EB551300CB75FA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAudioFile.cpp; path = AudioFile/BaseAudioFile.cpp; sourceTree = SOURCE_ROOT; };
-		B89B13591CC18525008B0E1A /* BaseAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAudioFile.h; path = AudioFile/BaseAudioFile.h; sourceTree = SOURCE_ROOT; };
-		B89B135A1CC18525008B0E1A /* IAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAudioFile.cpp; path = AudioFile/IAudioFile.cpp; sourceTree = SOURCE_ROOT; };
-		B89B135B1CC18525008B0E1A /* IAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioFile.h; path = AudioFile/IAudioFile.h; sourceTree = SOURCE_ROOT; };
+		B89B13581CC18525008B0E1A /* BaseAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseAudioFile.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/BaseAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B13591CC18525008B0E1A /* BaseAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseAudioFile.h; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/BaseAudioFile.h; sourceTree = SOURCE_ROOT; };
+		B89B135A1CC18525008B0E1A /* IAudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAudioFile.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/IAudioFile.cpp; sourceTree = SOURCE_ROOT; };
+		B89B135B1CC18525008B0E1A /* IAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAudioFile.h; path = ../../AH_Externals_Dependencies/HISSTools_Library/AudioFile/IAudioFile.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +70,7 @@
 				B89B135A1CC18525008B0E1A /* IAudioFile.cpp */,
 				B89B135B1CC18525008B0E1A /* IAudioFile.h */,
 			);
-			path = AudioFile;
+			name = AudioFile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
