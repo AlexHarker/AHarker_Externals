@@ -13,7 +13,7 @@
 
 // Power Spectrum Helper
 
-void calculate_power_spectrum(double *spectrum, const FFT_SPLIT_COMPLEX_D &fft_frame, long num_bins)
+void calculate_power_spectrum(double *spectrum, const Split<double> &fft_frame, long num_bins)
 {
     VecType *power = reinterpret_cast<VecType *>(spectrum);
     const VecType *real = reinterpret_cast<const VecType *>(fft_frame.realp);

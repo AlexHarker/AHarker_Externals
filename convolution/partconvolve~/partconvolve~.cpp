@@ -17,7 +17,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <HISSTools_FFT/HISSTools_FFT.h>
+#include <HISSTools_FFT/HISSTools_FFT.hpp>
 #include <AH_Int_Handler.hpp>
 #include <RandomGenerator.hpp>
 #include <SIMDSupport.hpp>
@@ -29,7 +29,7 @@
 // Utility
 
 using vec_type = SIMDType<float, 4>;
-using split_type = FFT_SPLIT_COMPLEX_F;
+using split_type = Split<float>;
 
 void update_split_complex_pointers(split_type &complex1, const split_type complex2, long offset)
 {
@@ -79,7 +79,7 @@ struct t_partconvolve
     
     // FFT variables
     
-    FFT_SETUP_F fft_setup_real;
+    Setup<float> fft_setup_real;
     
     long max_fft_size;
     long max_fft_size_log2;
@@ -487,7 +487,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
     
     // FFT variables / attributes
     
-    FFT_SETUP_F fft_setup_real = x->fft_setup_real;
+    Setup<float> fft_setup_real = x->fft_setup_real;
     
     long fft_size_halved = x->fft_size >> 1;
     long fft_size_log2 = x->fft_size_log2;
@@ -651,7 +651,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     
     // FFT variables
     
-    FFT_SETUP_F fft_setup_real = x->fft_setup_real;
+    Setup<float> fft_setup_real = x->fft_setup_real;
     
     float **fft_buffers = x->fft_buffers;
     

@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		B8E2BC6E19FA6CC500AE0E71 /* partconvolve~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E7A5480EE16E9A004ABE12 /* partconvolve~.cpp */; };
 		B8E2BC6F19FA6CC800AE0E71 /* ibuffer_access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B84BD5B110E804DF002288DB /* ibuffer_access.cpp */; };
-		B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
 		B8141B2B10EB54D300CB75FA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B81F571D0D2422E0000D5E50 /* partconvolve~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "partconvolve~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B84BD5B110E804DF002288DB /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../../AH_MaxMSP_Headers/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
@@ -45,7 +43,6 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B80B5097145F06BC00FD48FF /* HISSTools_FFT.cpp */,
 				B8E7A5480EE16E9A004ABE12 /* partconvolve~.cpp */,
 				B84BD5B110E804DF002288DB /* ibuffer_access.cpp */,
 				B8DAF7F0181D8DE80049FB27 /* ibuffer_access.hpp */,
@@ -147,7 +144,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E2BC7019FA6CD300AE0E71 /* HISSTools_FFT.cpp in Sources */,
 				B8E2BC6E19FA6CC500AE0E71 /* partconvolve~.cpp in Sources */,
 				B8E2BC6F19FA6CC800AE0E71 /* ibuffer_access.cpp in Sources */,
 			);

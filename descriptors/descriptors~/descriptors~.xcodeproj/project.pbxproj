@@ -26,8 +26,6 @@
 		B85830E427B6D5A20083BA8E /* modules_content.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B85830E127B6D5A20083BA8E /* modules_content.cpp */; };
 		B85830E527B6D5A20083BA8E /* modules_content.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85830E227B6D5A20083BA8E /* modules_content.hpp */; };
 		B85830E627B6D5A20083BA8E /* modules_content.hpp in Headers */ = {isa = PBXBuildFile; fileRef = B85830E227B6D5A20083BA8E /* modules_content.hpp */; };
-		B862CA9A145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */; };
-		B862CA9B145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */; };
 		B8A49AB4110C6EF000738FDC /* descriptors_non_rt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */; };
 		B8A49AB7110C6F0200738FDC /* descriptors_rt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */; };
 		B8BE4094286C52AD00D3D7A5 /* modules_summary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BE4093286C52AD00D3D7A5 /* modules_summary.cpp */; };
@@ -58,7 +56,6 @@
 		B85830DA27B6B94C0083BA8E /* modules_spectral.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_spectral.cpp; sourceTree = "<group>"; };
 		B85830E127B6D5A20083BA8E /* modules_content.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_content.cpp; sourceTree = "<group>"; };
 		B85830E227B6D5A20083BA8E /* modules_content.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_content.hpp; sourceTree = "<group>"; };
-		B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HISSTools_FFT.cpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/HISSTools_FFT/HISSTools_FFT.cpp; sourceTree = SOURCE_ROOT; };
 		B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_modules.hpp; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = ../../AH_Externals_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_rt.cpp; sourceTree = "<group>"; };
@@ -114,7 +111,6 @@
 				B8E54B222869B83B00C2E794 /* descriptors_graph.cpp */,
 				B8E54B252869B99500C2E794 /* descriptors_summary_graph.hpp */,
 				B8E54B262869B99500C2E794 /* descriptors_summary_graph.cpp */,
-				B862CA99145F03FA00EC9070 /* HISSTools_FFT.cpp */,
 				B84BD78B10E81358002288DB /* ibuffer_access.cpp */,
 				B8E9C47527BEAA3C009B6B31 /* library */,
 				B8E9C47427BEA9C6009B6B31 /* modules */,
@@ -300,7 +296,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B862CA9A145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */,
 				B84BD78C10E81358002288DB /* ibuffer_access.cpp in Sources */,
 				B8BE4094286C52AD00D3D7A5 /* modules_summary.cpp in Sources */,
 				B8E54B282869B99500C2E794 /* descriptors_summary_graph.cpp in Sources */,
@@ -319,7 +314,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B862CA9B145F03FA00EC9070 /* HISSTools_FFT.cpp in Sources */,
 				B8A49AB7110C6F0200738FDC /* descriptors_rt.cpp in Sources */,
 				B85830DC27B6B94C0083BA8E /* modules_spectral.cpp in Sources */,
 				B85830D027B692510083BA8E /* modules_change.cpp in Sources */,
