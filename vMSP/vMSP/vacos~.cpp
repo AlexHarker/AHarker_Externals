@@ -28,9 +28,9 @@ struct acos_functor
     
     // Ops + Array Operators
 
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a)
     {
-        return abs(a).mVal > 1.0 ? 0.0 : acos(a.mVal);
+        return abs(a).m_val > 1.0 ? 0.0 : acos(a.m_val);
     }
     
     template <class T>

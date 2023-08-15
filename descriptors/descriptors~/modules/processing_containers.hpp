@@ -2,8 +2,8 @@
 #ifndef _PROCESSING_CONTAINERS_HPP_
 #define _PROCESSING_CONTAINERS_HPP_
 
-#include <HISSTools_FFT/HISSTools_FFT.hpp>
-#include <SIMDSupport.hpp>
+#include <fft/fft.hpp>
+#include <simd_support.hpp>
 
 // A Memory Aligned Vector
 

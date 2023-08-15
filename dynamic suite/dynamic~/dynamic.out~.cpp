@@ -15,7 +15,7 @@
 #include <z_dsp.h>
 #include <ext_obex.h>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
 #include <dynamic~.hpp>
 
@@ -142,17 +142,17 @@ void dynamic_out_perform_scalar64(t_dynamic_out *x, t_object *dsp64, double **in
 
 void dynamic_out_perform64(t_dynamic_out *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    using SIMD = SIMDType<double, SIMDLimits<double>::max_size>;
+    using SIMD = htl::simd_type<double, htl::simd_limits<double>::max_size>;
     SIMD *in = reinterpret_cast<SIMD *>(ins[0]);
     
-    dynamic_out_perform(x, in, vec_size /  SIMDLimits<double>::max_size);
+    dynamic_out_perform(x, in, vec_size / htl::simd_limits<double>::max_size);
 }
 
 // DSP
 
 void dynamic_out_dsp64(t_dynamic_out *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    constexpr int simd_width = SIMDLimits<double>::max_size;
+    constexpr int simd_width = htl::simd_limits<double>::max_size;
     
     // Use SIMD routines where possible
     

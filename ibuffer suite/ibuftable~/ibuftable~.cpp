@@ -31,7 +31,7 @@ struct t_ibuftable
     
     t_symbol *buffer_name;
     
-    InterpType interp_type;
+    htl::interp_type interp_type;
     
     t_atom_long chan;
     t_atom_long start_samp;
@@ -67,7 +67,7 @@ int C74_EXPORT main()
     
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibuftable, InterpType::Linear>(this_class, "interp");
+    add_ibuffer_interp_attribute<t_ibuftable, htl::interp_type::LINEAR>(this_class, "interp");
     
     CLASS_ATTR_ATOM_LONG(this_class, "chan", 0L, t_ibuftable, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
@@ -118,7 +118,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
     x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
     x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
     
-    x->interp_type = InterpType::Linear;
+    x->interp_type = htl::interp_type::LINEAR;
     
     // Set attributes from arguments
     
@@ -157,13 +157,13 @@ void ibuftable_set(t_ibuftable *x, t_symbol *s)
 template <int N, class T>
 void perform_positions(T *positions, const T *in, long n_vecs, double start, double end)
 {
-    SIMDType<T, N> *v_positions = reinterpret_cast<SIMDType<T, N> *>(positions);
-    const SIMDType<T, N> *v_in = reinterpret_cast<const SIMDType<T, N> *>(in);
+    htl::simd_type<T, N> *v_positions = reinterpret_cast<htl::simd_type<T, N> *>(positions);
+    const htl::simd_type<T, N> *v_in = reinterpret_cast<const htl::simd_type<T, N> *>(in);
     
-    const SIMDType<T, N> mul(static_cast<T>(end - start));
-    const SIMDType<T, N> add(static_cast<T>(start));
-    const SIMDType<T, N> zero(static_cast<T>(0));
-    const SIMDType<T, N> one(static_cast<T>(1));
+    const htl::simd_type<T, N> mul(static_cast<T>(end - start));
+    const htl::simd_type<T, N> add(static_cast<T>(start));
+    const htl::simd_type<T, N> zero(static_cast<T>(0));
+    const htl::simd_type<T, N> one(static_cast<T>(1));
     
     for (long i = 0; i < n_vecs; i++)
         v_positions[i] = (mul * min(one, max(zero, *v_in++))) + add;
@@ -192,7 +192,7 @@ void perform_core(t_ibuftable *x, const T *in, T *out, long vec_size)
     {
         // Positions
         
-        constexpr int N = SIMDLimits<T>::max_size;
+        constexpr int N = htl::simd_limits<T>::max_size;
         
         const long v_count = vec_size / N;
         const long S = v_count * N;

@@ -9,7 +9,7 @@
 #include <ext.h>
 #include <stdint.h>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
 #ifdef __APPLE__
 

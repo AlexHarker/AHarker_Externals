@@ -22,9 +22,9 @@ struct dbtoa_functor
 {
     static const double dbtoa_constant;
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a)
     {
-        return nan_fixer()(exp(a.mVal * dbtoa_constant));
+        return nan_fixer()(exp(a.m_val * dbtoa_constant));
     }
     
     template <class T>

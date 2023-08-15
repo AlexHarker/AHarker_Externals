@@ -23,9 +23,9 @@ struct ftom_functor
     static const double ftom_mul_constant;
     static const double ftom_add_constant;
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a)
     {
-        return nan_fixer()(ftom_mul_constant * log(a.mVal) + ftom_add_constant);
+        return nan_fixer()(ftom_mul_constant * log(a.m_val) + ftom_add_constant);
     }
     
     template <class T>

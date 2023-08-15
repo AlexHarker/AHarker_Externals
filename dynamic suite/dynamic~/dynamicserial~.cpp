@@ -23,7 +23,7 @@
 
 #include <algorithm>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
 #include "Common/patch_set.hpp"
 #include "Common/dynamic_host.hpp"
@@ -252,12 +252,12 @@ void *dynamicserial_new(t_symbol *s, long argc, t_atom *argv)
     
     // N.B. here sig_ins are those used for the patches (which are dynamic) and sig_object_ins are the object ins
     
-    x->sig_object_ins = allocate_aligned<double *>(num_sig_ins);
-    x->sig_outs = allocate_aligned<double *>(num_sig_outs);
+    x->sig_object_ins = htl::allocate_aligned<double *>(num_sig_ins);
+    x->sig_outs = htl::allocate_aligned<double *>(num_sig_outs);
     
-    x->sig_ins = allocate_aligned<double *>(num_temp_buffers);
-    x->temp_buffers1 = allocate_aligned<double *>(num_temp_buffers);
-    x->temp_buffers2 = allocate_aligned<double *>(num_temp_buffers);
+    x->sig_ins = htl::allocate_aligned<double *>(num_temp_buffers);
+    x->temp_buffers1 = htl::allocate_aligned<double *>(num_temp_buffers);
+    x->temp_buffers2 = htl::allocate_aligned<double *>(num_temp_buffers);
     
     for (long i = 0; i < num_sig_ins; i++)
         x->sig_object_ins[i] = nullptr;
@@ -315,23 +315,23 @@ void dynamicserial_free(t_dynamicserial *x)
     {
         for (long i = 0; i < x->num_temp_buffers; i++)
         {
-            deallocate_aligned(x->temp_buffers1[i]);
-            deallocate_aligned(x->temp_buffers2[i]);
+            htl::deallocate_aligned(x->temp_buffers1[i]);
+            htl::deallocate_aligned(x->temp_buffers2[i]);
         }
     }
     
     // Free buffer handles
     
     if (x->num_sig_ins)
-        deallocate_aligned(x->sig_object_ins);
+        htl::deallocate_aligned(x->sig_object_ins);
     if (x->num_sig_outs)
-        deallocate_aligned(x->sig_outs);
+        htl::deallocate_aligned(x->sig_outs);
     if (x->sig_ins)
-        deallocate_aligned(x->sig_ins);
+        htl::deallocate_aligned(x->sig_ins);
     if (x->temp_buffers1)
-        deallocate_aligned(x->temp_buffers1);
+        htl::deallocate_aligned(x->temp_buffers1);
     if (x->temp_buffers2)
-        deallocate_aligned(x->temp_buffers2);
+        htl::deallocate_aligned(x->temp_buffers2);
 }
 
 void dynamicserial_assist(t_dynamicserial *x, void *b, long m, long a, char *s)
@@ -414,11 +414,11 @@ void dynamicserial_dsp64(t_dynamicserial *x, t_object *dsp64, short *count, doub
     
     for (long i = 0; i < x->num_temp_buffers; i++)
     {
-        deallocate_aligned(x->temp_buffers1[i]);
-        deallocate_aligned(x->temp_buffers2[i]);
+        htl::deallocate_aligned(x->temp_buffers1[i]);
+        htl::deallocate_aligned(x->temp_buffers2[i]);
         
-        x->temp_buffers1[i] = allocate_aligned<double>(max_vec);
-        x->temp_buffers2[i] = allocate_aligned<double>(max_vec);
+        x->temp_buffers1[i] = htl::allocate_aligned<double>(max_vec);
+        x->temp_buffers2[i] = htl::allocate_aligned<double>(max_vec);
         
         if (!x->temp_buffers1[i] || !x->temp_buffers2[i])
             mem_fail = true;

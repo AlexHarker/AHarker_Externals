@@ -222,7 +222,7 @@ thread_set::~thread_set()
 
     for (auto it = m_thread_slots.begin(); it != m_thread_slots.end(); it++)
         for (auto jt = it->m_buffers.begin(); jt != it->m_buffers.end(); jt++)
-            deallocate_aligned(*jt);
+            htl::deallocate_aligned(*jt);
 }
 
 void thread_set::tick(long vec_size, long num_threads, double **outs)
@@ -263,8 +263,8 @@ bool thread_set::resize_buffers(t_ptr_int size)
         {
             for (auto jt = it->m_buffers.begin(); jt != it->m_buffers.end(); jt++)
             {
-                deallocate_aligned(*jt);
-                *jt = allocate_aligned<double>(size);
+                htl::deallocate_aligned(*jt);
+                *jt = htl::allocate_aligned<double>(size);
                 if (!*jt)
                 {
                     object_error((t_object *) m_owner, "not enough memory");

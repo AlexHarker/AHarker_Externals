@@ -305,7 +305,7 @@ void *dynamicdsp_new(t_symbol *s, long argc, t_atom *argv)
     
     // Create signal in/out buffers and zero
     
-    x->sig_ins = allocate_aligned<double *>(num_sig_ins);
+    x->sig_ins = htl::allocate_aligned<double *>(num_sig_ins);
     
     for (long i = 0; i < num_sig_ins; i++)
         x->sig_ins[i] = nullptr;
@@ -359,7 +359,7 @@ void dynamicdsp_free(t_dynamicdsp *x)
     // Free other resources
     
     if (x->num_sig_ins)
-        deallocate_aligned(x->sig_ins);
+        htl::deallocate_aligned(x->sig_ins);
 }
 
 void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
@@ -457,7 +457,7 @@ void dynamicdsp_threadmap(t_dynamicdsp *x, t_symbol *msg, long argc, t_atom *arg
 
 void dynamicdsp_sum(thread_set *threads, double **outs, long num_outs, long vec_size, long num_active_threads)
 {
-    constexpr long max_simd_size = SIMDLimits<double>::max_size;
+    constexpr long max_simd_size = htl::simd_limits<double>::max_size;
     
     // Sum output of threads for each signal outlet
     
@@ -477,7 +477,7 @@ void dynamicdsp_sum(thread_set *threads, double **outs, long num_outs, long vec_
                 }
                 else
                 {
-                    using SIMD = SIMDType<double, max_simd_size>;
+                    using SIMD = htl::simd_type<double, max_simd_size>;
                     const long num_vecs = vec_size / max_simd_size;
                     SIMD *a = (SIMD *) io_pointer;
                     SIMD *b = (SIMD *) next_sig_pointer;
@@ -510,7 +510,7 @@ void dynamicdsp_threadprocess(t_dynamicdsp *x, double **outs, long vec_size, lon
     
     // Turn off denormals using RAII
 
-    SIMDDenormals denormal_handler;
+    htl::simd_denormals denormal_handler;
         
     // Zero Outputs
     

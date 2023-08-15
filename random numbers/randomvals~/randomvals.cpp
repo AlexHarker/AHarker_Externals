@@ -20,7 +20,7 @@
 #include <z_dsp.h>
 
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -28,7 +28,7 @@
 
 // Globals and Object Structure
 
-using rand_gen = random_generator<>;
+using rand_gen = htl::random_generator<>;
 using gauss_params = rand_gen::windowed_gaussian_params;
 
 t_class *this_class;

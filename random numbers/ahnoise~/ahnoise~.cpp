@@ -14,7 +14,7 @@
 #include <z_dsp.h>
 
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 
 // Globals and Object Structure
@@ -25,7 +25,7 @@ struct t_ahnoise
 {
     t_pxobject a_obj;
     
-    random_generator<> gen;
+    htl::random_generator<> gen;
 };
 
 // Function Prototypes

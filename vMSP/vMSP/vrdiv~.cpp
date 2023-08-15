@@ -44,12 +44,12 @@ template<>
 template <class T, int N>
 void vrdiv::perform64_single2_op(T *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
-    SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
+    htl::simd_type<double, N> *in2 = reinterpret_cast<htl::simd_type<double, N> *>(ins[1]);
+    htl::simd_type<double, N> *out1 = reinterpret_cast<htl::simd_type<double, N> *>(outs[0]);
     
-    SIMDType<double, N> double_val(x->m_functor.m_recip);
+    htl::simd_type<double, N> double_val(x->m_functor.m_recip);
 
-    vec_size /= SIMDType<double, N>::size;
+    vec_size /= htl::simd_type<double, N>::size;
 
     while (vec_size--)
         *out1++ = nan_fixer()(double_val * *in2++);

@@ -25,7 +25,7 @@
 #include <vector>
 
 #ifdef MSP_VERSION
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 #include <SIMDExtended.hpp>
 
 
@@ -229,14 +229,14 @@ void valconvert_perform64(t_valconvert *x, t_object *dsp64, double **ins, long n
 
 void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {
-    using vec_type = SIMDType<double, SIMDLimits<double>::max_size>;
+    using vec_type = htl::simd_type<double,  htl::simd_limits<double>::max_size>;
     
     double *out = outs[0];
 
     const vec_type *in_vec = reinterpret_cast<const vec_type *>(ins[0]);
     vec_type *out_vec = reinterpret_cast<vec_type *>(out);
     
-    long num_vecs = vec_size / SIMDLimits<double>::max_size;
+    long num_vecs = vec_size /  htl::simd_limits<double>::max_size;
     
     vec_type mul(x->mul);
     vec_type sub(x->sub);
@@ -275,7 +275,7 @@ void valconvert_perform_SIMD64(t_valconvert *x, t_object *dsp64, double **ins, l
 
 void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double sample_rate, long max_vec, long flags)
 {
-    if (max_vec >= SIMDLimits<double>::max_size)
+    if (max_vec >= htl::simd_limits<double>::max_size)
         object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform_SIMD64, 0, nullptr);
     else
         object_method(dsp64, gensym("dsp_add64"), x, valconvert_perform64, 0, nullptr);

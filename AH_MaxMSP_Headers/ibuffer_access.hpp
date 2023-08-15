@@ -27,7 +27,7 @@
 #define IBUFFER_ACCESS_H
 
 #include "ibuffer.hpp"
-#include <TableReader.hpp>
+#include <table_reader.hpp>
 
 enum BufferType { kBufferNone, kBufferIBuffer, kBufferMaxBuffer };
 
@@ -80,7 +80,7 @@ private:
 // Reading different formats
 
 template <class T, int64_t bit_scale>
-struct fetch : public table_fetcher<float>
+struct fetch : public htl::table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
         : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << (bit_scale - 1))), samples(((T*)data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
@@ -93,7 +93,7 @@ struct fetch : public table_fetcher<float>
 };
 
 template<>
-struct fetch<int32_t, 24> : public table_fetcher<float>
+struct fetch<int32_t, 24> : public htl::table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
         : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << 31)), samples(((uint8_t*)data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
@@ -124,15 +124,15 @@ void ibuffer_get_samps(const ibuffer_data& buffer, double* out, intptr_t offset,
 
 // Read with various forms of interpolation
 
-void ibuffer_read(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, InterpType interp);
-void ibuffer_read(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, InterpType interp);
-void ibuffer_read(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, InterpType interp);
+void ibuffer_read(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, htl::interp_type interp);
+void ibuffer_read(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp);
+void ibuffer_read(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp);
 
 // Read with various edge conditions and various forms of interpolation
 
-void ibuffer_read_edges(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, InterpType interp, EdgeMode edges, bool bound);
-void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, InterpType interp, EdgeMode edges, bool bound);
-void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, InterpType interp, EdgeMode edges, bool bound);
+void ibuffer_read_edges(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, htl::interp_type interp, htl::edge_mode edges, bool bound);
+void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp, htl::edge_mode edges, bool bound);
+void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp, htl::edge_mode edges, bool bound);
 
 // Get individual samples
 
@@ -151,7 +151,7 @@ static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offse
 
 // Interpolation Attributes
 
-template <class T, InterpType defaultValue>
+template <class T, htl::interp_type defaultValue>
 t_max_err ibuf_interp_attribute_set(T* x, t_attr* a, long argc, t_atom* argv)
 {
     if (!argc)
@@ -165,13 +165,13 @@ t_max_err ibuf_interp_attribute_set(T* x, t_attr* a, long argc, t_atom* argv)
         t_symbol* type = atom_getsym(argv);
 
         if (type == gensym("linear"))
-            x->interp_type = InterpType::Linear;
+            x->interp_type = htl::interp_type::LINEAR;
         else if (type == gensym("hermite"))
-            x->interp_type = InterpType::CubicHermite;
+            x->interp_type = htl::interp_type::CUBIC_HERMITE;
         else if (type == gensym("bspline"))
-            x->interp_type = InterpType::CubicBSpline;
+            x->interp_type = htl::interp_type::CUBIC_BSPLINE;
         else if (type == gensym("lagrange"))
-            x->interp_type = InterpType::CubicLagrange;
+            x->interp_type = htl::interp_type::CUBIC_LAGRANGE;
         else
             object_error((t_object*)x, "%s: no interpolation mode %s", object_classname(x)->s_name, type->s_name);
     }
@@ -181,7 +181,7 @@ t_max_err ibuf_interp_attribute_set(T* x, t_attr* a, long argc, t_atom* argv)
         index = index < 0 ? 0 : index;
         index = index > 3 ? 3 : index;
 
-        x->interp_type = static_cast<InterpType>(index);
+        x->interp_type = static_cast<htl::interp_type>(index);
     }
 
     return MAX_ERR_NONE;
@@ -199,10 +199,10 @@ t_max_err ibuf_interp_attribute_get(T* x, t_object* attr, long* argc, t_atom** a
 
         switch (x->interp_type)
         {
-        case InterpType::Linear:            atom_setsym(*argv, gensym("linear"));       break;
-        case InterpType::CubicHermite:      atom_setsym(*argv, gensym("hermite"));      break;
-        case InterpType::CubicBSpline:      atom_setsym(*argv, gensym("bspline"));      break;
-        case InterpType::CubicLagrange:     atom_setsym(*argv, gensym("lagrange"));     break;
+        case htl::interp_type::LINEAR:          atom_setsym(*argv, gensym("linear"));       break;
+        case htl::interp_type::CUBIC_HERMITE:   atom_setsym(*argv, gensym("hermite"));      break;
+        case htl::interp_type::CUBIC_BSPLINE:   atom_setsym(*argv, gensym("bspline"));      break;
+        case htl::interp_type::CUBIC_LAGRANGE:  atom_setsym(*argv, gensym("lagrange"));     break;
 
         default:
             atom_setsym(*argv, gensym("linear"));
@@ -212,7 +212,7 @@ t_max_err ibuf_interp_attribute_get(T* x, t_object* attr, long* argc, t_atom** a
     return MAX_ERR_NONE;
 }
 
-template <class T, InterpType defaultValue>
+template <class T, htl::interp_type defaultValue>
 void add_ibuffer_interp_attribute(t_class* this_class, const char* attrname)
 {
     CLASS_ATTR_LONG(this_class, attrname, 0L, T, interp_type);

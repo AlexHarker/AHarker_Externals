@@ -15,7 +15,7 @@
 
 // Functions for converting alls bits on to 1 for output
 
-static SIMDType<double, 1> mask_one(const SIMDType<double, 1>& a) { return a.mVal ? 1.0 : 0.0; }
+static htl::simd_type<double, 1> mask_one(const htl::simd_type<double, 1>& a) { return a.m_val ? 1.0 : 0.0; }
 
 template<class T>
 T mask_one(const T& a) { return a & static_cast<typename T::scalar_type>(1); }

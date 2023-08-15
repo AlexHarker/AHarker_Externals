@@ -123,8 +123,8 @@ void multiply_loop(T *out, const T *a, const T *b, uintptr_t size)
 
 void module_window::calculate(const global_params& params, const double *frame, long size)
 {
-    constexpr long v_size = SIMDLimits<double>::max_size;
-    using V = SIMDType<double, v_size>;
+    constexpr long v_size = simd_limits<double>::max_size;
+    using V = simd_type<double, v_size>;
 
     double* windowed_frame = m_windowed_frame.data();
     const double* window = m_window.data();

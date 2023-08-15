@@ -23,9 +23,9 @@ struct mtof_functor
     static const double mtof_mul_constant;
     static const double mtof_add_constant;
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a)
     {
-        return nan_fixer()(exp(a.mVal * mtof_mul_constant + mtof_add_constant));
+        return nan_fixer()(exp(a.m_val * mtof_mul_constant + mtof_add_constant));
     }
     
     template <class T>

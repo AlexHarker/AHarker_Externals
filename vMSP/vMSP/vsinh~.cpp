@@ -17,7 +17,7 @@
 
 struct sinh_functor
 {
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return sinh(a.mVal); }
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a) { return sinh(a.m_val); }
     
     template <class T>
     void operator()(T *o, T *i, long size) { sinh_array(o, i, size); }

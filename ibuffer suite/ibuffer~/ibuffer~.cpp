@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "AudioFile/IAudioFile.h"
+#include <audio_file/in_file.hpp>
 #include <AH_Int_Handler.hpp>
 #include <ibuffer.hpp>
 
@@ -167,7 +167,7 @@ struct ibuffer_lock
 {
     // Manage lock and file through RAII
     
-    ibuffer_lock(t_ibuffer *x, HISSTools::IAudioFile *file) : m_ibuffer(x), m_file(file)
+    ibuffer_lock(t_ibuffer *x, htl::in_audio_file *file) : m_ibuffer(x), m_file(file)
     {
         // Set invalid and wait till we can become the only user
         
@@ -200,7 +200,7 @@ struct ibuffer_lock
     }
     
     t_ibuffer *m_ibuffer;
-    HISSTools::IAudioFile *m_file;
+    htl::in_audio_file *m_file;
 };
 
 // Path Helpers
@@ -285,7 +285,7 @@ void ibuffer_load(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
 void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 {
-    HISSTools::IAudioFile file;
+    htl::in_audio_file file;
     
     // Get path
     
@@ -322,22 +322,22 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
     
     ibuffer_lock lock(x, &file);
     
-    if (file.isOpen())
+    if (file.is_open())
     {
         // Load the format data and if we have a valid format load the sample
         
-        uint32_t num_frames = file.getFrames();
+        uint32_t num_frames = file.frames();
         
         x->frames = num_frames;
-        x->channels = file.getChannels();
-        x->sr = file.getSamplingRate();
-        
-        switch (file.getPCMFormat())
+        x->channels = file.channels();
+        x->sr = file.sampling_rate();
+
+        switch (file.get_pcm_format())
         {
-            case HISSTools::BaseAudioFile::kAudioFileInt16:    x->format = PCM_INT_16;    break;
-            case HISSTools::BaseAudioFile::kAudioFileInt24:    x->format = PCM_INT_24;    break;
-            case HISSTools::BaseAudioFile::kAudioFileInt32:    x->format = PCM_INT_32;    break;
-            case HISSTools::BaseAudioFile::kAudioFileFloat32:  x->format = PCM_FLOAT;     break;
+            case htl::audio_file_format::pcm_format::INT16:     x->format = PCM_INT_16;    break;
+            case htl::audio_file_format::pcm_format::INT24:     x->format = PCM_INT_24;    break;
+            case htl::audio_file_format::pcm_format::INT32:     x->format = PCM_INT_32;    break;
+            case htl::audio_file_format::pcm_format::FLOAT32:   x->format = PCM_FLOAT;     break;
                 
             default:
                 object_error((t_object *) x, "incorrect sample format");
@@ -357,7 +357,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         // Free previous memory and allocate memory to store the sample
         
         long num_chans_to_load = channel_order.size() ? static_cast<long>(channel_order.size()) : x->channels;
-        long sample_size = file.getByteDepth();
+        long sample_size = file.byte_depth();
         
         free(x->memory);
         x->memory = calloc(((num_frames + 4) * num_chans_to_load), sample_size);
@@ -374,7 +374,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         // Load the raw audio data and close the file
         
         if (!channel_order.size())
-            file.readRaw(x->samples, num_frames);
+            file.read_raw(x->samples, num_frames);
         else
         {
             constexpr uint32_t default_work_chunk = 0x2000;
@@ -389,7 +389,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
                 // Read chunk
                 
                 uint32_t work_chunk = std::min(default_work_chunk, num_frames - i);
-                file.readRaw(load_temp.data(), work_chunk);
+                file.read_raw(load_temp.data(), work_chunk);
                 
                 // Copy channels
                 
@@ -407,7 +407,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         // If the samples are in the wrong endianness then reverse the byte order for each sample
         
-        if (file.getAudioEndianness() == HISSTools::BaseAudioFile::kAudioFileBigEndian)
+        if (file.audio_endianness() == htl::audio_file_format::endianness::BIG)
             ibuffer_switch_endianness(x);
         
         // File is now loaded - destroy the lock and bang (must be in this order!)

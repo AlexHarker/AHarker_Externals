@@ -26,7 +26,7 @@
 
 #include <AH_Int_Handler.hpp>
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include "entry_database.hpp"
 #include "entrymatcher_common.hpp"
@@ -54,7 +54,7 @@ struct t_entrymatcher
     bool invalid_matchers;
     t_clock *invalid_clock;
     
-    random_generator<> gen;
+    htl::random_generator<> gen;
     
     const float *matcher_ins[256];
 };
@@ -288,7 +288,7 @@ void entrymatcher_perform64(t_entrymatcher *x, t_object *dsp64, double **ins, lo
     double *const *matcher_ins = ins + 2;
     double *out = outs[0];
     
-    random_generator<>& gen = x->gen;
+    htl::random_generator<>& gen = x->gen;
     
     auto database = database_get_read_access(x->database_object);
     matchers& matchers = x->matchers;

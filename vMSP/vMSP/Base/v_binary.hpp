@@ -16,7 +16,7 @@
 #include <string>
 #include <type_traits>
 
-#include "SIMDSupport.hpp"
+#include <simd_support.hpp>
 
 
 // Type Enums
@@ -119,7 +119,7 @@ public:
     {
         // Vector Op
 
-        constexpr int vec_size = SIMDLimits<double>::max_size;
+        constexpr int vec_size = htl::simd_limits<double>::max_size;
         
         switch (ins)
         {
@@ -161,7 +161,7 @@ public:
         
         // Use SIMD code where possible
         
-        if (Type != calculation_type::scalar && ((max_vec / SIMDLimits<double>::max_size) > 0))
+        if (Type != calculation_type::scalar && ((max_vec / htl::simd_limits<double>::max_size) > 0))
             perform_routine = dsp_vector_select64<T>(ins);
         else
             perform_routine = dsp_vector_select64<T, calculation_type::scalar>(ins);
@@ -176,12 +176,12 @@ public:
     {
         Functor &functor = x->m_functor;
 
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
-        SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
+        htl::simd_type<double, N> *in1 = reinterpret_cast<htl::simd_type<double, N> *>(ins[0]);
+        htl::simd_type<double, N> *out1 = reinterpret_cast<htl::simd_type<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->get_value(inputs::lhs));
+        htl::simd_type<double, N> double_val(x->get_value(inputs::lhs));
         
-        vec_size /= SIMDType<double, N>::size;
+        vec_size /= htl::simd_type<double, N>::size;
         
         while (vec_size--)
             *out1++ = functor(*in1++, double_val);
@@ -194,12 +194,12 @@ public:
     {
         Functor &functor = x->m_functor;
         
-        SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
-        SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
+        htl::simd_type<double, N> *in2 = reinterpret_cast<htl::simd_type<double, N> *>(ins[1]);
+        htl::simd_type<double, N> *out1 = reinterpret_cast<htl::simd_type<double, N> *>(outs[0]);
         
-        SIMDType<double, N> double_val(x->get_value(inputs::rhs));
+        htl::simd_type<double, N> double_val(x->get_value(inputs::rhs));
 
-        vec_size /= SIMDType<double, N>::size;
+        vec_size /= htl::simd_type<double, N>::size;
 
         while (vec_size--)
             *out1++ = functor(double_val, *in2++);
@@ -212,11 +212,11 @@ public:
     {
         Functor &functor = x->m_functor;
 
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
-        SIMDType<double, N> *in2 = reinterpret_cast<SIMDType<double, N> *>(ins[1]);
-        SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
+        htl::simd_type<double, N> *in1 = reinterpret_cast<htl::simd_type<double, N> *>(ins[0]);
+        htl::simd_type<double, N> *in2 = reinterpret_cast<htl::simd_type<double, N> *>(ins[1]);
+        htl::simd_type<double, N> *out1 = reinterpret_cast<htl::simd_type<double, N> *>(outs[0]);
 
-        vec_size /= SIMDType<double, N>::size;
+        vec_size /= htl::simd_type<double, N>::size;
 
         while (vec_size--)
             *out1++ = functor(*in1++, *in2++);

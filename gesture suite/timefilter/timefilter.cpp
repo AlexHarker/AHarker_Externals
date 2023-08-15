@@ -20,7 +20,7 @@
 #include <ext_obex.h>
 
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include <algorithm>
 
@@ -48,7 +48,7 @@ struct t_timefilter
     double stored_list[1024];
     long stored_length;
     
-    random_generator<> gen;
+    htl::random_generator<> gen;
 
     void *list_outlet;
 };
@@ -68,7 +68,7 @@ void timefilter_ordering(t_timefilter *x, t_atom_long ordering);
 void timefilter_reset(t_timefilter *x);
 
 void combsort(double *vals, long num_points);
-void randomsort(random_generator<>& gen, double *vals, long num_points);
+void randomsort(htl::random_generator<>& gen, double *vals, long num_points);
 
 // Main
 
@@ -263,7 +263,7 @@ void combsort(double *vals, long num_points)
     }
 }
 
-void randomsort(random_generator<>& gen, double *vals, long num_points)
+void randomsort(htl::random_generator<>& gen, double *vals, long num_points)
 {
     // Put the input in a random order
     

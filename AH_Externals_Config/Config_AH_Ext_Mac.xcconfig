@@ -7,7 +7,7 @@ PRODUCT_NAME = $TARGET_NAME
 
 C74SUPPORT = $(SRCROOT)/../../../max-sdk-base/c74support
 C74_HEADERS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
-HEADER_SEARCH_PATHS = "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(SRCROOT)/../../AH_Externals_Dependencies/HISSTools_Library" $C74_HEADERS
+HEADER_SEARCH_PATHS = "$(SRCROOT)/../../AH_MaxMSP_Headers" "$(SRCROOT)/../../AH_Externals_Dependencies/HISSTools_Library/include" $C74_HEADERS
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 
 // To install on build set SKIP_INSTALL to NO and DSTROOT to the desired location

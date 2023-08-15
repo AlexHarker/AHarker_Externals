@@ -18,7 +18,7 @@
 template <class Op, class T, typename... Args>
 void vector_loop(T *o, const T *i, long size, Args... args)
 {
-    using vec_type = SIMDType<T, SIMDLimits<T>::max_size>;
+    using vec_type = htl::simd_type<T, htl::simd_limits<T>::max_size>;
     
     const vec_type *v_i = reinterpret_cast<const vec_type *>(i);
     vec_type *v_o = reinterpret_cast<vec_type *>(o);
@@ -27,7 +27,7 @@ void vector_loop(T *o, const T *i, long size, Args... args)
     
     // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
 
-    for (; size > 0; size -= SIMDLimits<T>::max_size)
+    for (; size > 0; size -= htl::simd_limits<T>::max_size)
         *v_o++ = op(*v_i++, args...);
 }
 

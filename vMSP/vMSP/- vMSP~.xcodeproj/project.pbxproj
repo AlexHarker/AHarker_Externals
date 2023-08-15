@@ -410,7 +410,6 @@
 		B8E494931095AB4200A88A63 /* vlessthaneq~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlessthaneq~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E494A41095AB4500A88A63 /* vgreaterthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vgreaterthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E494B51095AB4800A88A63 /* vlessthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlessthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8F11CDE1FDEBD55003EE53A /* SIMDSupport.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDSupport.hpp; path = ../../AH_Externals_Dependencies/HISSTools_Library/SIMDSupport.hpp; sourceTree = "<group>"; };
 		B8FE3F931098759000780AF9 /* vpow~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vpow~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE3FA0109875BE00780AF9 /* vpow~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vpow~.cpp"; sourceTree = "<group>"; };
 		B8FE40681098790500780AF9 /* vatodb~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatodb~.cpp"; sourceTree = "<group>"; };
@@ -751,7 +750,6 @@
 		B8B574401FF9C97900A62902 /* SIMD Support */ = {
 			isa = PBXGroup;
 			children = (
-				B8F11CDE1FDEBD55003EE53A /* SIMDSupport.hpp */,
 				B83978C71FDF5A360004E515 /* SIMDExtended.hpp */,
 			);
 			name = "SIMD Support";
