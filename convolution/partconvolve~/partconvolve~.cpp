@@ -312,7 +312,7 @@ void partconvolve_free(t_partconvolve *x)
 {
     dsp_free(&x->x_obj);
     hisstools_destroy_setup(x->fft_setup_real);
-    deallocate_aligned(x->impulse_buffer.realp);
+    htl::deallocate_aligned(x->impulse_buffer.realp);
     htl::deallocate_aligned(x->fft_buffers[0]);
 }
 
@@ -652,7 +652,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     
     // FFT variables
     
-    htl::setup<float> fft_setup_real = x->fft_setup_real;
+    htl::setup_type<float> fft_setup_real = x->fft_setup_real;
     
     float **fft_buffers = x->fft_buffers;
     

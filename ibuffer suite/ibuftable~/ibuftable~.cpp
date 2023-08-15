@@ -67,7 +67,7 @@ int C74_EXPORT main()
     
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibuftable, htl::interp_type::LINEAR>(this_class, "interp");
+    add_ibuffer_interp_attribute<t_ibuftable, htl::interp_type::linear>(this_class, "interp");
     
     CLASS_ATTR_ATOM_LONG(this_class, "chan", 0L, t_ibuftable, chan);
     CLASS_ATTR_FILTER_MIN(this_class, "chan", 1);
@@ -118,7 +118,7 @@ void *ibuftable_new(t_symbol *s, long argc, t_atom *argv)
     x->end_samp = non_attr_argc > 2 ? atom_getlong(argv + 2) : std::max(end_samp, static_cast<t_atom_long>(0));
     x->chan = non_attr_argc > 3 ? atom_getlong(argv + 3) : std::max(chan, static_cast<t_atom_long>(1));
     
-    x->interp_type = htl::interp_type::LINEAR;
+    x->interp_type = htl::interp_type::linear;
     
     // Set attributes from arguments
     

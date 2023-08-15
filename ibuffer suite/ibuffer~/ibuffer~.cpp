@@ -334,10 +334,10 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
 
         switch (file.get_pcm_format())
         {
-            case htl::audio_file_format::pcm_format::INT16:     x->format = PCM_INT_16;    break;
-            case htl::audio_file_format::pcm_format::INT24:     x->format = PCM_INT_24;    break;
-            case htl::audio_file_format::pcm_format::INT32:     x->format = PCM_INT_32;    break;
-            case htl::audio_file_format::pcm_format::FLOAT32:   x->format = PCM_FLOAT;     break;
+            case htl::audio_file_format::pcm_format::int16:     x->format = PCM_INT_16;    break;
+            case htl::audio_file_format::pcm_format::int24:     x->format = PCM_INT_24;    break;
+            case htl::audio_file_format::pcm_format::int32:     x->format = PCM_INT_32;    break;
+            case htl::audio_file_format::pcm_format::float32:   x->format = PCM_FLOAT;     break;
                 
             default:
                 object_error((t_object *) x, "incorrect sample format");
@@ -407,7 +407,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         // If the samples are in the wrong endianness then reverse the byte order for each sample
         
-        if (file.audio_endianness() == htl::audio_file_format::endianness::BIG)
+        if (file.audio_endianness() == htl::audio_file_format::endianness::big)
             ibuffer_switch_endianness(x);
         
         // File is now loaded - destroy the lock and bang (must be in this order!)

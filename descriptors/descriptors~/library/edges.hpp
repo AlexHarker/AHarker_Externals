@@ -2,17 +2,17 @@
 #ifndef _EDGES_HPP_
 #define _EDGES_HPP_
 
-#include <TableReader.hpp>
+#include <table_reader.hpp>
 
 namespace impl
 {
     // Underlying fetch class
 
     template <class T>
-    struct edge_fetch : table_fetcher<T>
+    struct edge_fetch : htl::table_fetcher<T>
     {
         edge_fetch(const T *data, intptr_t size)
-        : table_fetcher<T>(size, 1.0), m_data(data) {}
+        : htl::table_fetcher<T>(size, 1.0), m_data(data) {}
 
         T operator()(intptr_t idx) { return m_data[idx]; }
 
@@ -56,15 +56,15 @@ private:
 };
 
 template <class T>
-using edges_extend  = impl::edges_base<T, table_fetcher_extend>;
+using edges_extend  = impl::edges_base<T, htl::table_fetcher_extend>;
 
 template <class T>
-using edges_wrap    = impl::edges_base<T, table_fetcher_wrap>;
+using edges_wrap    = impl::edges_base<T, htl::table_fetcher_wrap>;
 
 template <class T>
-using edges_fold    = impl::edges_base<T, table_fetcher_fold>;
+using edges_fold    = impl::edges_base<T, htl::table_fetcher_fold>;
 
 template <class T>
-using edges_mirror  = impl::edges_base<T, table_fetcher_mirror>;
+using edges_mirror  = impl::edges_base<T, htl::table_fetcher_mirror>;
 
 #endif /* _EDGES_HPP_ */

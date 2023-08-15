@@ -4,7 +4,7 @@
 
 #include "../library/median_filter.hpp"
 
-#include <Statistics.hpp>
+#include <statistics.hpp>
 
 #include <algorithm>
 
@@ -238,7 +238,7 @@ void stat_module_stddev::calculate(const global_params& params, const double *da
 
 void stat_module_range::calculate(const global_params& params, const double *data, long size)
 {
-    m_value = calculate_max(data, size) - stat_min(data, size);
+    m_value = calculate_max(data, size) - htl::stat_min(data, size);
 }
 
 // Specifiers

@@ -3,7 +3,7 @@
 #include "conversion_helpers.hpp"
 #include "../descriptors_graph.hpp"
 
-#include <Statistics.hpp>
+#include <statistics.hpp>
 
 #include <cmath>
 
@@ -37,8 +37,8 @@ void module_flux::calculate(const global_params& params, const double *frame, lo
     
     if (m_normalise_spectrum)
     {
-        norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
-        norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
+        norm_factor1 = htl::stat_sum(frame1 + m_min_bin, bin_count());
+        norm_factor2 = htl::stat_sum(frame2 + m_min_bin, bin_count());
     }
     
     norm_factor1 = norm_factor1 ? 1.0 / norm_factor1 : 1.0;
@@ -176,8 +176,8 @@ void module_mkl::calculate(const global_params& params, const double *frame, lon
    
     if (m_normalise_spectra)
     {
-        norm_factor1 = stat_sum(frame1 + m_min_bin, bin_count());
-        norm_factor2 = stat_sum(frame2 + m_min_bin, bin_count());
+        norm_factor1 = htl::stat_sum(frame1 + m_min_bin, bin_count());
+        norm_factor2 = htl::stat_sum(frame2 + m_min_bin, bin_count());
      
         norm_factor1 = std::max(norm_factor1, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));
         norm_factor2 = std::max(norm_factor2, dbtoa(db_calc_min()) * static_cast<double>(bin_count()));

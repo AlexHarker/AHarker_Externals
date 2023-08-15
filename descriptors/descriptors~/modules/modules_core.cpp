@@ -5,15 +5,15 @@
 #include "../descriptors_graph.hpp"
 
 #include <SIMDExtended.hpp>
-#include <Statistics.hpp>
-#include <WindowFunctions.hpp>
+#include <statistics.hpp>
+#include <window_functions.hpp>
 
 #include <algorithm>
 #include <numeric>
 
 // Power Spectrum Helper
 
-void calculate_power_spectrum(double *spectrum, const Split<double> &fft_frame, long num_bins)
+void calculate_power_spectrum(double *spectrum, const htl::split_type<double> &fft_frame, long num_bins)
 {
     VecType *power = reinterpret_cast<VecType *>(spectrum);
     const VecType *real = reinterpret_cast<const VecType *>(fft_frame.realp);
@@ -55,32 +55,32 @@ void module_window::prepare(const global_params& params)
 
     t_symbol *window_type = params.window_type();
     
-    window_functions::params win_params(6.8);
+    htl::window_functions::params win_params(6.8);
     
     if (window_type == gensym("rect"))
-        window_functions::rect(window, window_size, 0, window_size, win_params);
+        htl::window_functions::rect(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("hamming"))
-        window_functions::hamming(window, window_size, 0, window_size, win_params);
+        htl::window_functions::hamming(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("kaiser"))
-        window_functions::kaiser(window, window_size, 0, window_size, win_params);
+        htl::window_functions::kaiser(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("triangle"))
-        window_functions::triangle(window, window_size, 0, window_size, win_params);
+        htl::window_functions::triangle(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman"))
-        window_functions::exact_blackman(window, window_size, 0, window_size, win_params);
+        htl::window_functions::exact_blackman(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman62"))
-        window_functions::blackman_harris_62dB(window, window_size, 0, window_size, win_params);
+        htl::window_functions::blackman_harris_62dB(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman70"))
-        window_functions::blackman_harris_71dB(window, window_size, 0, window_size, win_params);
+        htl::window_functions::blackman_harris_71dB(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman74"))
-        window_functions::blackman_harris_74dB(window, window_size, 0, window_size, win_params);
+        htl::window_functions::blackman_harris_74dB(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman92"))
-        window_functions::blackman_harris_92dB(window, window_size, 0, window_size, win_params);
+        htl::window_functions::blackman_harris_92dB(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("blackman-harris"))
-        window_functions::blackman_harris_92dB(window, window_size, 0, window_size, win_params);
+        htl::window_functions::blackman_harris_92dB(window, window_size, 0, window_size, win_params);
     else if (window_type == gensym("flattop"))
-        window_functions::ni_flat_top(window, window_size, 0, window_size, win_params);
+        htl::window_functions::ni_flat_top(window, window_size, 0, window_size, win_params);
     else
-        window_functions::hann(window, window_size, 0, window_size, win_params);
+        htl::window_functions::hann(window, window_size, 0, window_size, win_params);
     
     // N.B. Default to hann
     
@@ -111,7 +111,7 @@ void module_window::prepare(const global_params& params)
     hisstools_rfft(setup.get(), raw_frame.data(), &spectrum.data(), frame_size, fft_size_log2);
     calculate_power_spectrum(power_spectrum.data(), spectrum.data(), num_bins);
     m_energy_compensation = gain_compensation(power_spectrum.data(), num_bins);
-    m_rms_compensation = 1.0 / stat_rms(raw_frame.data(), frame_size);
+    m_rms_compensation = 1.0 / htl::stat_rms(raw_frame.data(), frame_size);
 }
 
 template <class T>
@@ -123,8 +123,8 @@ void multiply_loop(T *out, const T *a, const T *b, uintptr_t size)
 
 void module_window::calculate(const global_params& params, const double *frame, long size)
 {
-    constexpr long v_size = simd_limits<double>::max_size;
-    using V = simd_type<double, v_size>;
+    constexpr long v_size = htl::simd_limits<double>::max_size;
+    using V = htl::simd_type<double, v_size>;
 
     double* windowed_frame = m_windowed_frame.data();
     const double* window = m_window.data();

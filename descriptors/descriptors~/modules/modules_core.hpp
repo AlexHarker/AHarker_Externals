@@ -50,7 +50,7 @@ struct module_fft : module_core<module_fft>
     void prepare(const global_params& params) override;
     void calculate(const global_params& params, const double *frame, long size) override;
     
-    const Split<double>& get_frame() const { return m_fft_frame.data(); }
+    const htl::split_type<double>& get_frame() const { return m_fft_frame.data(); }
     const double get_energy_compensation() const { return m_energy_compensation; }
 
 private:

@@ -12,7 +12,7 @@ struct aligned_vector
 {
     aligned_vector() : m_ptr(nullptr), m_size(0) {}
     aligned_vector(size_t size) : aligned_vector() { resize(size); }
-    ~aligned_vector() { deallocate_aligned(m_ptr); }
+    ~aligned_vector() { htl::deallocate_aligned(m_ptr); }
        
     aligned_vector(const aligned_vector&) = delete;
     aligned_vector& operator=(const aligned_vector&) = delete;
@@ -38,8 +38,8 @@ struct aligned_vector
     {
         if (size != m_size)
         {
-            deallocate_aligned(m_ptr);
-            m_ptr = allocate_aligned<T>(size);
+            htl::deallocate_aligned(m_ptr);
+            m_ptr = htl::allocate_aligned<T>(size);
             m_size = size;
         }
     }
@@ -70,14 +70,14 @@ struct fft_split
         m_split.imagp = m_vector.data() + (size >> 1);
     }
     
-    Split<double>& data() { return m_split; }
-    const Split<double>& data() const { return m_split; }
+    htl::split_type<double>& data() { return m_split; }
+    const htl::split_type<double>& data() const { return m_split; }
     size_t size() const { return m_vector.size(); }
 
 private:
 
     aligned_vector<> m_vector;
-    Split<double> m_split;
+    htl::split_type<double> m_split;
 };
 
 // An FFT Setup
@@ -101,12 +101,12 @@ struct fft_setup
         }
     }
     
-    Setup<double>& get() { return m_fft_setup; }
+    htl::setup_type<double>& get() { return m_fft_setup; }
     size_t size() const { return m_size; }
 
 private:
     
-    Setup<double> m_fft_setup;
+    htl::setup_type<double> m_fft_setup;
     size_t m_size;
 };
 
