@@ -165,13 +165,13 @@ t_max_err ibuf_interp_attribute_set(T* x, t_attr* a, long argc, t_atom* argv)
         t_symbol* type = atom_getsym(argv);
 
         if (type == gensym("linear"))
-            x->interp_type = htl::interp_type::LINEAR;
+            x->interp_type = htl::interp_type::linear;
         else if (type == gensym("hermite"))
-            x->interp_type = htl::interp_type::CUBIC_HERMITE;
+            x->interp_type = htl::interp_type::cubic_hermite;
         else if (type == gensym("bspline"))
-            x->interp_type = htl::interp_type::CUBIC_BSPLINE;
+            x->interp_type = htl::interp_type::cubic_bspline;
         else if (type == gensym("lagrange"))
-            x->interp_type = htl::interp_type::CUBIC_LAGRANGE;
+            x->interp_type = htl::interp_type::cubic_lagrange;
         else
             object_error((t_object*)x, "%s: no interpolation mode %s", object_classname(x)->s_name, type->s_name);
     }
@@ -199,10 +199,10 @@ t_max_err ibuf_interp_attribute_get(T* x, t_object* attr, long* argc, t_atom** a
 
         switch (x->interp_type)
         {
-        case htl::interp_type::LINEAR:          atom_setsym(*argv, gensym("linear"));       break;
-        case htl::interp_type::CUBIC_HERMITE:   atom_setsym(*argv, gensym("hermite"));      break;
-        case htl::interp_type::CUBIC_BSPLINE:   atom_setsym(*argv, gensym("bspline"));      break;
-        case htl::interp_type::CUBIC_LAGRANGE:  atom_setsym(*argv, gensym("lagrange"));     break;
+        case htl::interp_type::linear:          atom_setsym(*argv, gensym("linear"));       break;
+        case htl::interp_type::cubic_hermite:   atom_setsym(*argv, gensym("hermite"));      break;
+        case htl::interp_type::cubic_bspline:   atom_setsym(*argv, gensym("bspline"));      break;
+        case htl::interp_type::cubic_lagrange:  atom_setsym(*argv, gensym("lagrange"));     break;
 
         default:
             atom_setsym(*argv, gensym("linear"));
