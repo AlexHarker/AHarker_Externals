@@ -20,7 +20,11 @@ t_symbol* ibuffer_data::ps_ibuffer = gensym("ibuffer~");
 // IBuffer Proxy
 
 ibuffer_data::ibuffer_data(t_symbol* name)
-    : buffer_type(kBufferNone), samples(nullptr), length(0), num_chans(0), format(PCM_FLOAT), sample_rate(0.0)
+: buffer_type(kBufferNone)
+, samples(nullptr), length(0)
+, num_chans(0)
+, format(PCM_FLOAT)
+, sample_rate(0.0)
 {
     buffer_object = name ? name->s_thing : nullptr;
     acquire_buffer();
