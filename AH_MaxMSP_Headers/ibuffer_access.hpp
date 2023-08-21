@@ -83,8 +83,10 @@ template <class T, int64_t bit_scale>
 struct fetch : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-        : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << (bit_scale - 1))), samples(((T*)data.get_samples()) + chan), num_chans(data.get_num_chans()) {}
-
+    : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << (bit_scale - 1)))
+    , samples(((T*)data.get_samples()) + chan)
+    , num_chans(data.get_num_chans()) {}
+    
     float operator()(intptr_t offset) { return static_cast<float>(samples[offset * num_chans]); }
     double get(intptr_t offset) { return bit_scale != 1 ? scale * operator()(offset) : operator()(offset); }
 
@@ -96,7 +98,9 @@ template<>
 struct fetch<int32_t, 24> : public table_fetcher<float>
 {
     fetch(const ibuffer_data& data, long chan)
-        : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << 31)), samples(((uint8_t*)data.get_samples()) + 3 * chan), num_chans(data.get_num_chans()) {}
+    : table_fetcher(data.get_length(), 1.0 / ((int64_t)1 << 31))
+    , samples(((uint8_t*)data.get_samples()) + 3 * chan)
+    , num_chans(data.get_num_chans()) {}
 
     float operator()(intptr_t offset)
     {
@@ -140,10 +144,10 @@ static inline double ibuffer_get_samp(const ibuffer_data& buffer, intptr_t offse
 {
     switch (buffer.get_format())
     {
-    case PCM_FLOAT:     return fetch_float(buffer, chan).get(offset);
-    case PCM_INT_16:    return fetch_16bit(buffer, chan).get(offset);
-    case PCM_INT_24:    return fetch_24bit(buffer, chan).get(offset);
-    case PCM_INT_32:    return fetch_32bit(buffer, chan).get(offset);
+        case PCM_FLOAT:     return fetch_float(buffer, chan).get(offset);
+        case PCM_INT_16:    return fetch_16bit(buffer, chan).get(offset);
+        case PCM_INT_24:    return fetch_24bit(buffer, chan).get(offset);
+        case PCM_INT_32:    return fetch_32bit(buffer, chan).get(offset);
     }
 
     return 0.0;
@@ -199,13 +203,13 @@ t_max_err ibuf_interp_attribute_get(T* x, t_object* attr, long* argc, t_atom** a
 
         switch (x->interp_type)
         {
-        case InterpType::Linear:            atom_setsym(*argv, gensym("linear"));       break;
-        case InterpType::CubicHermite:      atom_setsym(*argv, gensym("hermite"));      break;
-        case InterpType::CubicBSpline:      atom_setsym(*argv, gensym("bspline"));      break;
-        case InterpType::CubicLagrange:     atom_setsym(*argv, gensym("lagrange"));     break;
+            case InterpType::Linear:            atom_setsym(*argv, gensym("linear"));       break;
+            case InterpType::CubicHermite:      atom_setsym(*argv, gensym("hermite"));      break;
+            case InterpType::CubicBSpline:      atom_setsym(*argv, gensym("bspline"));      break;
+            case InterpType::CubicLagrange:     atom_setsym(*argv, gensym("lagrange"));     break;
 
-        default:
-            atom_setsym(*argv, gensym("linear"));
+            default:
+                atom_setsym(*argv, gensym("linear"));
         }
     }
 
