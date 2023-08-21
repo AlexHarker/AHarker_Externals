@@ -111,7 +111,12 @@ struct fetch<int32_t, 24> : public table_fetcher<float>
 
     float operator()(intptr_t offset)
     {
-        return static_cast<float>((*reinterpret_cast<uint32_t*>(samples + (offset * 3 * num_chans - 1)) & 0xFFFFFF00));
+        // Read as an unsigned 32-bit int with an offset in order to mask
+        // The reinterpret as a signed int before casting to float
+        
+        const uint32_t u = *reinterpret_cast<uint32_t*>(samples + (offset * 3 * num_chans) - 1);
+        const uint32_t m = u & 0xFFFFFF00;
+        return static_cast<float>(*reinterpret_cast<const int32_t *>(&m));
     }
     
     double get(intptr_t offset)
