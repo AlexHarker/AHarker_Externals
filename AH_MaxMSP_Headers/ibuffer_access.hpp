@@ -87,8 +87,15 @@ struct fetch : public table_fetcher<float>
     , samples(reinterpret_cast<T*>(data.get_samples()) + chan)
     , num_chans(data.get_num_chans()) {}
     
-    float operator()(intptr_t offset) { return static_cast<float>(samples[offset * num_chans]); }
-    double get(intptr_t offset) { return bit_scale != 1 ? scale * operator()(offset) : operator()(offset); }
+    float operator()(intptr_t offset)
+    {
+        return static_cast<float>(samples[offset * num_chans]);
+    }
+    
+    double get(intptr_t offset)
+    {
+        return bit_scale != 1 ? scale * operator()(offset) : operator()(offset);
+    }
 
     T* samples;
     long num_chans;
@@ -106,7 +113,11 @@ struct fetch<int32_t, 24> : public table_fetcher<float>
     {
         return static_cast<float>((*reinterpret_cast<uint32_t*>(samples + (offset * 3 * num_chans - 1)) & 0xFFFFFF00));
     }
-    double get(intptr_t offset) { return scale * operator()(offset); }
+    
+    double get(intptr_t offset)
+    {
+        return scale * operator()(offset);
+    }
 
     uint8_t* samples;
     long num_chans;
