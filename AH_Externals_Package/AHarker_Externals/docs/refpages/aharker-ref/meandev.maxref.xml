@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="meandev" module="AHarker Externals" category="miscellaneous">
+  <digest>
+      Calculate the mean and deviation of data over time
+  </digest>
+  <description>
+    <o>meandev</o> is an object for calculating the mean and variance or standard deviation of a set of values over various ranges in the data's history. This makes it possible to compare these values for different ranges in time and make some assessment of how the data is changing. The age ranges are specified as having a maximum and a minimum age. The ranges may overlap. The final range is specified only in terms of maximum age and tracks the most recent data up to the specified age.
+  </description>
+  <methodlist>
+      
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    
+  </misc>
+  <seealsolist>
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>miscellaneous</description>
+    </entry>
+  </misc>
+</c74object>
