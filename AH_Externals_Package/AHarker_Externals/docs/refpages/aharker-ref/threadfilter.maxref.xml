@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="threadfilter" module="AHarker Externals" category="Threading">
+  <digest>
+      Separate out high and low prioity messages
+  </digest>
+  <description>
+    <o>threadfilter</o> filters its input into two streams, those in the low priority thread, and those in the high priority scheduler thread.
+  </description>
+  <methodlist>
+    <method name="bang">
+      <arglist>
+      </arglist>
+      <digest>
+        Output dependending on which thread the input is in.
+      </digest>
+      <description>
+          Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>bang</m> and outputs out the right outlet if it recieves a high priority <m>bang</m>.
+      </description>
+    </method>
+    <method name="int">
+        <arglist>
+            <arg name="input" optional="0" type="int" />
+        </arglist>
+      <digest>
+          Output dependending on which thread the input is in.
+      </digest>
+      <description>
+          Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>int</m> and outputs out the right outlet if it recieves a high priority <m>int</m>.
+      </description>
+    </method>
+    <method name="float">
+      <arglist>
+        <arg name="input" optional="0" type="float" />
+      </arglist>
+    <digest>
+        Output dependending on which thread the input is in.
+    </digest>
+    <description>
+        Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>float</m> and outputs out the right outlet if it recieves a high priority <m>float</m>.
+    </description>
+    </method>
+    <method name="list">
+        <arglist>
+            <arg name="input" optional="0" type="list" />
+        </arglist>
+        <digest>
+            Output dependending on which thread the input is in.
+        </digest>
+        <description>
+            Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>list</m>  and outputs out the right outlet if it recieves a high priority <m>list</m> .
+        </description>
+    </method>
+    <method name="anything">
+      <arglist>
+          <arg name="input" optional="0" type="list" />
+      </arglist>
+      <digest>
+          Output dependending on which thread the input is in.
+      </digest>
+      <description>
+          Outputs out the left outlet if <o>threadfilter</o> recieves a low priority message and outputs out the right outlet if it recieves a high priority message.
+      </description>
+    </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="int">
+        <description>
+            Outputs out the left outlet if <o>threadfilter</o> recieves a low priority input and outputs out the right outlet if it recieves a high priority input.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="schedulemessage" />
+    <seealso name="getthread" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>threading</description>
+    </entry>
+  </misc>
+</c74object>
