@@ -54,7 +54,7 @@
   <methodlist>
     <method name="signal">
         <arglist>
-            <arg name="input" optional="0" type="signal" />
+            <arg name="input" type="signal" />
         </arglist>
       <digest>
           Output the scaled input as a <m>signal</m>
@@ -65,7 +65,7 @@
     </method>
     <method name="message">
         <arglist>
-            <arg name="input" optional="0" type="message" />
+            <arg name="input" type="message" />
         </arglist>
         <digest>
             Changes the mode and scale of <o>valconvert~</o>.

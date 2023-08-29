@@ -54,7 +54,7 @@
   <methodlist>
     <method name="int">
         <arglist>
-            <arg name="input" optional="0" type="int" />
+            <arg name="input" type="int" />
         </arglist>
       <digest>
           Output the scaled input
@@ -65,7 +65,7 @@
     </method>
     <method name="float">
       <arglist>
-        <arg name="input" optional="0" type="float" />
+        <arg name="input" type="float" />
       </arglist>
     <digest>
         Output the scaled input
@@ -76,7 +76,7 @@
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" optional="0" type="list" />
+            <arg name="input" type="list" />
         </arglist>
         <digest>
             Outputs the scaled <m>list</m>.
@@ -87,7 +87,7 @@
     </method>
     <method name="message">
         <arglist>
-            <arg name="input" optional="0" type="message" />
+            <arg name="input" type="message" />
         </arglist>
         <digest>
             Changes the mode and scale of <o>valconvert</o>.
