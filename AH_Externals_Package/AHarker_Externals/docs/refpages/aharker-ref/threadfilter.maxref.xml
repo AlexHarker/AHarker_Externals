@@ -20,7 +20,7 @@
     </method>
     <method name="int">
         <arglist>
-            <arg name="input" optional="0" type="int" />
+            <arg name="input" type="int" />
         </arglist>
       <digest>
           Output dependending on which thread the input is in.
@@ -31,7 +31,7 @@
     </method>
     <method name="float">
       <arglist>
-        <arg name="input" optional="0" type="float" />
+        <arg name="input" type="float" />
       </arglist>
     <digest>
         Output dependending on which thread the input is in.
@@ -42,7 +42,7 @@
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" optional="0" type="list" />
+            <arg name="input" type="list" />
         </arglist>
         <digest>
             Output dependending on which thread the input is in.
@@ -53,7 +53,7 @@
     </method>
     <method name="anything">
       <arglist>
-          <arg name="input" optional="0" type="list" />
+          <arg name="input" type="list" />
       </arglist>
       <digest>
           Output dependending on which thread the input is in.
@@ -66,7 +66,7 @@
   <attributelist>
   </attributelist>
   <misc name="Output">
-    <entry name="int">
+    <entry name="bang">
         <description>
             Outputs out the left outlet if <o>threadfilter</o> recieves a low priority input and outputs out the right outlet if it recieves a high priority input.
         </description>
