@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="valconvert" module="AHarker Externals" category="Conversion">
+  <digest>
+      Useful scalings in a single object
+  </digest>
+  <description>
+    <o>valconvert</o> is used to perform several useful scaling operations in a single package. It will scale incoming <m>ints</m>, <m>floats</m> or even <m>lists</m>. The mode of operation can be easily changed and all scalings can also be inverted. There is also an audio-rate version: <o>valconvert~</o>.
+  </description>
+  
+  <objarglist>
+    <objarg name="mode" optional="0" type="message">
+        <digest>
+            Select the scaling mode for <o>valconvert</o>
+        </digest>
+        <description>
+            Sets the scaling mode to change how <o>valconvert</o> scales the input. The options are: <m>none</m>(no scaling), <m>scale</m>(linear scaling), <m>log</m> (logarithmic scaling), <m>exp</m> (exponential scaling), <m>pitch</m> (scales to semitones, then converts to speed multiplier), <m>ipitch</m> (scale from speed / freq multiplier to semitones then scale as specified to linear output), <m>amp</m> (scales to decibel range then coverts to linear amplitude), <m>iamp</m> (scales from linear amplitude to decibels and outputs in the specified linear output range).
+        </description>
+    </objarg>
+    <objarg name="input-low" optional="0" type="number">
+        <digest>
+            Set the low value of the input range
+        </digest>
+        <description>
+            Sets the low value of the expected input range. Incoming values are clipped to this range.
+        </description>
+    </objarg>
+    <objarg name="input-high" optional="1" type="number">
+        <digest>
+            Set the high value of the input range
+        </digest>
+        <description>
+            Sets the high value of the expected input range. Incoming values are clipped to this range.
+        </description>
+    </objarg>
+    <objarg name="output-low" optional="0" type="number">
+        <digest>
+            Set the low value of the output range
+        </digest>
+        <description>
+            Sets the low end of the output range. This will be the lowest possible output that the input gets scaled to. Incoming values are clipped to this range.
+        </description>
+    </objarg>
+    <objarg name="output-high" optional="0" type="number">
+        <digest>
+            Set the high value of the output range
+        </digest>
+        <description>
+            Sets the high end of the output range. This will be the highest possible output that the input gets scaled to. Incoming values are clipped to this range.
+        </description>
+    </objarg>
+  </objarglist>
+  
+  <methodlist>
+    <method name="int">
+        <arglist>
+            <arg name="input" optional="0" type="int" />
+        </arglist>
+      <digest>
+          Output the scaled input
+      </digest>
+      <description>
+          Scales the input and outputs a <m>float</m>.
+      </description>
+    </method>
+    <method name="float">
+      <arglist>
+        <arg name="input" optional="0" type="float" />
+      </arglist>
+    <digest>
+        Output the scaled input
+    </digest>
+    <description>
+        Scales the input and outputs a <m>float</m>.
+    </description>
+    </method>
+    <method name="list">
+        <arglist>
+            <arg name="input" optional="0" type="list" />
+        </arglist>
+        <digest>
+            Outputs the scaled <m>list</m>.
+        </digest>
+        <description>
+            Scales the input as a <m>list</m> of <m>floats</m>.
+        </description>
+    </method>
+    <method name="message">
+        <arglist>
+            <arg name="input" optional="0" type="message" />
+        </arglist>
+        <digest>
+            Changes the mode and scale of <o>valconvert</o>.
+        </digest>
+        <description>
+            By inputting a message formatted the same as the objects arguments (mode low-input high-input low-output high-output), one can dynamically change the scaling mode and ranges at any time.
+        </description>
+    </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="float">
+        <description>
+            When <o>valconvert</o> receives a value, that value is scaled, based on the chosen mode, to the indicated output range of values.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="valconvert~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>conversion</description>
+    </entry>
+  </misc>
+</c74object>
