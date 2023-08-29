@@ -121,7 +121,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 867.0, 535.0 ],
+						"rect" : [ 308.0, 162.0, 867.0, 535.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -158,11 +158,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 75.0, 390.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 15.0, 60.0, 390.0, 21.0 ],
 									"text" : "Here are a few examples of using valconvert~ in a musical context",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -856,6 +854,48 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-17",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 660.0, 165.0, 100.0, 25.0 ],
+									"text" : "change input"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-3",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 664.0, 345.0, 117.0, 25.0 ],
+									"text" : "converted back "
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-44",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 675.0, 253.0, 95.0, 25.0 ],
+									"text" : "scaled input"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"border" : 0,
 									"filename" : "ah.helpdetails.js",
 									"id" : "obj-5",
@@ -1124,10 +1164,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 75.0, 360.0, 21.0 ],
+									"patching_rect" : [ 15.0, 60.0, 360.0, 21.0 ],
 									"text" : "It is possible to perform a reverse conversion for any mode.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -1458,7 +1497,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 308.0, 162.0, 867.0, 535.0 ],
+						"rect" : [ 0.0, 26.0, 867.0, 535.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
