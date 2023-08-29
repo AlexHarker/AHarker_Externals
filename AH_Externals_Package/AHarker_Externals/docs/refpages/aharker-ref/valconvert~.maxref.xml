@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-    <objarg name="mode" optional="0" type="message">
+    <objarg name="mode" optional="1" type="message">
         <digest>
             Select the scaling mode for <o>valconvert~</o>
         </digest>
@@ -17,7 +17,7 @@
             Sets the scaling mode to change how <o>valconvert~</o> scales the input. The options are: <m>none</m>(no scaling), <m>scale</m>(linear scaling), <m>log</m> (logarithmic scaling), <m>exp</m> (exponential scaling), <m>pitch</m> (scales to semitones, then converts to speed multiplier), <m>ipitch</m> (scale from speed / freq multiplier to semitones then scale as specified to linear output), <m>amp</m> (scales to decibel range then coverts to linear amplitude), <m>iamp</m> (scales from linear amplitude to decibels and outputs in the specified linear output range).
         </description>
     </objarg>
-    <objarg name="input-low" optional="0" type="number">
+    <objarg name="input-low" optional="1" type="number">
         <digest>
             Set the low value of the input range
         </digest>
@@ -33,7 +33,7 @@
             Sets the high value of the expected input range. Incoming values are clipped to this range.
         </description>
     </objarg>
-    <objarg name="output-low" optional="0" type="number">
+    <objarg name="output-low" optional="1" type="number">
         <digest>
             Set the low value of the output range
         </digest>
@@ -41,7 +41,7 @@
             Sets the low end of the output range. This will be the lowest possible output that the input gets scaled to. Incoming values are clipped to this range.
         </description>
     </objarg>
-    <objarg name="output-high" optional="0" type="number">
+    <objarg name="output-high" optional="1" type="number">
         <digest>
             Set the high value of the output range
         </digest>
