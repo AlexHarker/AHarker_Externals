@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-      <objarg name="delay" optional="0" type="number">
+      <objarg name="delay" optional="1" type="number">
           <digest>
               Set delay time
           </digest>
@@ -32,7 +32,7 @@
     </method>
     <method name="int">
         <arglist>
-            <arg name="input" optional="0" type="int" />
+            <arg name="input" type="int" />
         </arglist>
       <digest>
           Outputs after the set amount of time.
@@ -43,7 +43,7 @@
     </method>
     <method name="float">
       <arglist>
-        <arg name="input" optional="0" type="float" />
+        <arg name="input" type="float" />
       </arglist>
     <digest>
         Outputs after the set amount of time.
@@ -54,7 +54,7 @@
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" optional="0" type="list" />
+            <arg name="input" type="list" />
         </arglist>
         <digest>
             Outputs after the set amount of time.
@@ -65,7 +65,7 @@
     </method>
     <method name="anything">
       <arglist>
-          <arg name="input" optional="0" type="list" />
+          <arg name="input" type="list" />
       </arglist>
       <digest>
           Outputs after the set amount of time.
