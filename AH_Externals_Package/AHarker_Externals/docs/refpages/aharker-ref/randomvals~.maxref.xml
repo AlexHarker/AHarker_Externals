@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="randomvals~" module="AHarker Externals" category="Random Numbers">
+  <digest>
+      High quality random values at audio rate
+  </digest>
+  <description>
+    <o>randomvals~</o> and its message rate counterpart (<o>randomvals</o>) generate high-quality pseudorandom numbers of a flat or gaussian-based distribution between 0 and 1. <o>randomvals~</o> requires triggering to cause output in order to conserve CPU (it is intended for sample-accurate control, rather than noise generation). The gaussian mode allows for the combination of multiple curves, each with its own parameters for mean (between 0 and 1), deviation and weight. More distributions may be added at a later stage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <objarglist>
+      <objarg name="input" optional="1" type="int">
+          <digest>
+              Trigger processing
+          </digest>
+          <description>
+              An <m>int</m> below 1 will give an output of 0.
+              <br />
+              <br />
+              An <m>int</m> of 1 to 2 will give a flat distribution of values between 0 and 1.
+              <br />
+              <br />
+              An <m>int</m> of higher than 2 will give a multiple windowed gaussian distribution of values between 0 and 1.
+          </description>
+      </objarg>
+      <objarg name="gaussian distribution" optional="1" type="list">
+          <digest>
+              Set a gaussian distribution
+          </digest>
+          <description>
+              A list of three values can be sent into <o>randomvals~</o> via a <m>message</m> to set a windowed gaussian distribution. The list must be formatted in the order:
+              <br />
+              <br />
+              <m>mean</m> / <m>deviation</m> /  <m>weight</m>.
+              <br />
+              <br />
+              Multiple windowed gaussian distributions can be set by a single <m>message</m> by providing more sets of three values.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs a high quality random values as an audio rate <m>signal</m> in the range of 0. to 1.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="randfloats" />
+    <seealso name="ahnoise~" />
+    <seealso name="randomvals" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>random numbers</description>
+    </entry>
+  </misc>
+</c74object>
