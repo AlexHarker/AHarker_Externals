@@ -9,10 +9,7 @@
   </description>
   
   <methodlist>
-  </methodlist>
-  
-  <objarglist>
-      <objarg name="input" optional="1" type="int">
+      <method name="input" optional="1" type="int">
           <digest>
               Trigger processing
           </digest>
@@ -22,8 +19,8 @@
               <br />
               An <m>int</m> of 2 or higher will give a multiple windowed gaussian distribution of values between 0 and 1.
           </description>
-      </objarg>
-      <objarg name="gaussian distribution" optional="1" type="list">
+      </method>
+      <method name="gaussian distribution" optional="1" type="list">
           <digest>
               Set a gaussian distribution
           </digest>
@@ -35,9 +32,11 @@
               <br />
               <br />
               Multiple windowed gaussian distributions can be set by a single <m>message</m> by providing more sets of three values.
-        
           </description>
-      </objarg>
+      </method>
+  </methodlist>
+  
+  <objarglist>
   </objarglist>
   
   <attributelist>
