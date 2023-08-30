@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ -1886.0, 113.0, 865.0, 564.0 ],
+						"rect" : [ 0.0, 26.0, 865.0, 564.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -95,7 +95,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 12.5, 75.0, 425.0, 21.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Floats can alos be generated in the range of 0-n by providing a multiplier",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -296,7 +295,6 @@
 					}
 ,
 					"patching_rect" : [ 75.0, 35.0, 67.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -387,7 +385,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 865.0, 564.0 ],
+						"rect" : [ -1886.0, 113.0, 865.0, 564.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -496,8 +494,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 51.0, 173.0, 168.0, 21.0 ],
-									"text" : "linearly distributed float (01)",
+									"patching_rect" : [ 51.0, 173.0, 174.0, 21.0 ],
+									"text" : "linearly distributed float (0-1)",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
 								}
