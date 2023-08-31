@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="timeconvolve~" module="AHarker Externals" category="Convolution">
+  <digest>
+      Time-based zero-latency convolution
+  </digest>
+  <description>
+    <o>timeconvolve~</o> copies samples from a buffer to use as a impulse response for real-time zero latency time-based convolution. Typically <o>timeconvolve~</o> is suitable for use in conjunction with <o>partconvolve~</o> for zero-latency convolution with longer impulses. The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+  </description>
+  
+  <objarglist>
+  </objarglist>
+  
+  <methodlist>
+      <method name="input">
+          <arglist>
+              <arg name="input" optional="1" type="signal" />
+          </arglist>
+          <digest>
+              The <m>signal</m> to apply convolution to.
+          </digest>
+          <description>
+              The <m>signal</m> to apply convolution to.
+          </description>
+      </method>
+      <method name="set">
+          <arglist>
+              <arg name="set" optional="1" type="message" />
+          </arglist>
+          <digest>
+              set the buffer from which to fetch the impulse
+          </digest>
+          <description>
+              Set the buffer from which to fetch the impulse.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>set</m> / impulse buffer
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+      <attribute name="offset" optional="1" type="int">
+          <digest>
+              Set the sample in the buffer from which to start
+          </digest>
+          <description>
+              Set the offset in samples from which to start processing the buffer.
+              <br />
+              The default is <m>0</m>.
+          </description>
+      </attribute>
+      <attribute name="length" optional="1" type="int">
+          <digest>
+              Set the length in samples of the buffer.
+          </digest>
+          <description>
+              Set the length in samples of the buffer from the <m>offset</m> sample.
+              <br />
+              The default is <m>0</m>, which is as much as possible up to a maximum of 2044 samples.
+          </description>
+      </attribute>
+      <attribute name="chan" optional="1" type="int">
+          <digest>
+              Set the channel in the buffer to use.
+          </digest>
+          <description>
+              Set the channel in the buffer to use.
+              <br />
+              The default is <m>1</m>.
+          </description>
+      </attribute>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            The output is the input <m>signal</m> with the convolution applied to it.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="kernelmaker~" />
+    <seealso name="partconvolve~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Convolution</description>
+    </entry>
+  </misc>
+</c74object>
