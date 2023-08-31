@@ -37,6 +37,7 @@
 		"tags" : "",
 		"style" : "",
 		"subpatcher_template" : "",
+		"showontab" : 1,
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
@@ -49,7 +50,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 420.0, 329.0, 348.0, 40.0 ],
-					"presentation_linecount" : 2,
 					"text" : "Some sources for free and commercial reverb impulses:"
 				}
 
@@ -135,7 +135,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 315.0, 539.5, 443.0, 36.0 ],
-					"presentation_linecount" : 4,
 					"text" : "This c. 7 sec impulse response is by Jez Wells and is used with permission.\n It can be found at: http://jezwells.org/Computer_music_tools.html",
 					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 					"textjustification" : 1
@@ -151,7 +150,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 420.0, 495.0, 294.0, 21.0 ],
-					"presentation_linecount" : 2,
 					"text" : "http://www.echochamber.ch/responses/index.html",
 					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 					"textjustification" : 1
@@ -167,7 +165,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 420.0, 465.0, 220.0, 21.0 ],
-					"presentation_linecount" : 2,
 					"text" : "http://www.space-net.org.uk/node/50",
 					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 					"textjustification" : 1
@@ -183,7 +180,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 420.0, 435.0, 214.0, 21.0 ],
-					"presentation_linecount" : 2,
 					"text" : "http://www.cksde.com/p_6_250.htm",
 					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 					"textjustification" : 1
@@ -199,7 +195,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 420.0, 404.333344000000011, 208.0, 21.0 ],
-					"presentation_linecount" : 2,
 					"text" : "http://www.voxengo.com/impulses/",
 					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 					"textjustification" : 1
@@ -480,13 +475,13 @@
 			}
 , 			{
 				"box" : 				{
-					"fontname" : "Arial Black",
+					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-15",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 67.0, 93.0, 154.0, 25.0 ],
+					"patching_rect" : [ 68.0, 97.0, 128.0, 21.0 ],
 					"text" : "Zero-latency Reverb"
 				}
 
