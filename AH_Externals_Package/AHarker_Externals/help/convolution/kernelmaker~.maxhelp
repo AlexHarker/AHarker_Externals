@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 87.0, 1222.0, 728.0 ],
+		"rect" : [ 47.0, 87.0, 1222.0, 728.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 84.0, 131.0, 640.0, 480.0 ],
+						"rect" : [ 0.0, 26.0, 1222.0, 702.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -86,7 +86,6 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [  ],
 						"lines" : [  ]
 					}
@@ -120,7 +119,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 59.0, 106.0, 640.0, 480.0 ],
+						"rect" : [ 47.0, 113.0, 1222.0, 702.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -149,7 +148,6 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-58",
@@ -158,7 +156,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 1036.0, 567.5, 24.0, 24.0 ]
+									"patching_rect" : [ 1036.0, 582.5, 24.0, 24.0 ]
 								}
 
 							}
@@ -170,7 +168,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 1036.0, 596.0, 149.0, 23.0 ],
+									"patching_rect" : [ 1036.0, 611.0, 149.0, 23.0 ],
 									"text" : "play~ kernelbuf @loop 1"
 								}
 
@@ -188,7 +186,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 905.0, 643.0, 20.0, 20.0 ],
+									"patching_rect" : [ 905.0, 658.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -205,7 +203,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 927.0, 640.5, 108.0, 25.0 ],
+									"patching_rect" : [ 927.0, 655.5, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -217,7 +215,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 1036.0, 630.0, 44.0, 44.0 ],
+									"patching_rect" : [ 1036.0, 645.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -230,7 +228,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 1068.0, 359.0, 72.0, 21.0 ],
+									"patching_rect" : [ 1068.0, 374.0, 72.0, 21.0 ],
 									"text" : "The Kernel",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -247,7 +245,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 1044.0, 474.0, 130.0, 55.0 ],
+									"patching_rect" : [ 1044.0, 489.0, 130.0, 55.0 ],
 									"text" : "click to see the buffers and windows",
 									"textjustification" : 1
 								}
@@ -261,8 +259,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 526.0, 600.0, 489.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 526.0, 615.0, 489.0, 21.0 ],
 									"text" : "target buffer / env 1 (0-1) /  env 2 (0-1) / env 3 (0-1) / env 4 (0-1) / length in samples",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -276,8 +273,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 577.0, 711.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 592.0, 711.0, 21.0 ],
 									"text" : "This mode is intended to create simplistic bandpass filter frequency repsonses, for use with the eq mode of partconvolve~.",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -291,8 +287,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 557.0, 434.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 572.0, 434.0, 21.0 ],
 									"text" : "Create a trapezoid with a height of 1 and the specificed length in samples.",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -306,7 +301,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 495.0, 486.0, 433.0, 21.0 ],
+									"patching_rect" : [ 495.0, 501.0, 433.0, 21.0 ],
 									"text" : "target buffer / source (i)buffer / modulation (i)buffer / offset in samples (int)",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -320,8 +315,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 457.0, 520.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 472.0, 520.0, 21.0 ],
 									"text" : "The kernel is faded in and out to avoid clicks (as specificide by the fade time in samples).",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -335,7 +329,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 436.0, 426.0, 21.0 ],
+									"patching_rect" : [ 210.0, 451.0, 426.0, 21.0 ],
 									"text" : "The modulation buffer is multiplied (ring modulated) by the source buffer.",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -349,8 +343,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 415.0, 689.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 430.0, 689.0, 21.0 ],
 									"text" : "Create a normalised kernel of the length of the modulation (i)buffer copying from the offset sample in the source buffer.",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -364,7 +357,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 516.0, 345.75, 554.0, 21.0 ],
+									"patching_rect" : [ 516.0, 360.75, 554.0, 21.0 ],
 									"text" : "target buffer / source (i)buffer / envelope (i)buffer / offset in samples(int)  / slide value (int)",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -381,8 +374,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 116.0, 567.5, 92.0, 40.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 116.0, 582.5, 92.0, 40.0 ],
 									"text" : "Trapezoid Mode",
 									"textjustification" : 1
 								}
@@ -399,8 +391,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 116.0, 452.5, 89.0, 40.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 116.0, 467.5, 89.0, 40.0 ],
 									"text" : "Ring Mod Mode",
 									"textjustification" : 1
 								}
@@ -417,8 +408,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 116.0, 328.399122714996338, 89.0, 40.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 116.0, 343.399122714996338, 89.0, 40.0 ],
 									"text" : "Envelope Mode",
 									"textjustification" : 1
 								}
@@ -435,7 +425,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 116.0, 180.0, 92.0, 40.0 ],
+									"patching_rect" : [ 116.0, 195.0, 92.0, 40.0 ],
 									"text" : "Windowed Mode",
 									"textjustification" : 1
 								}
@@ -449,7 +439,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 322.899122714996338, 520.0, 21.0 ],
+									"patching_rect" : [ 210.0, 337.899122714996338, 520.0, 21.0 ],
 									"text" : "The kernel is faded in and out to avoid clicks (as specificide by the fade time in samples).",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -463,8 +453,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 301.649122714996338, 833.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 316.649122714996338, 833.0, 21.0 ],
 									"text" : "The absolute values of the envelope (i)buffer are low-pass filtered to create an amplitude envelope (larger slide values increase the smoothing).",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -478,8 +467,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 280.399122714996338, 678.0, 21.0 ],
-									"presentation_linecount" : 2,
+									"patching_rect" : [ 210.0, 295.399122714996338, 678.0, 21.0 ],
 									"text" : "Create a normalised kernel of the length of the envelope (i)buffer copying from the offset sample in the source buffer.",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -493,7 +481,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 540.0, 208.0, 554.0, 21.0 ],
+									"patching_rect" : [ 540.0, 223.0, 554.0, 21.0 ],
 									"text" : "target buffer / source (i)buffer / window (i)buffer / offset in samples (int)  / length in samples (int)",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -507,7 +495,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 185.5, 625.0, 21.0 ],
+									"patching_rect" : [ 210.0, 200.5, 625.0, 21.0 ],
 									"text" : "The window (i)buffer should be a 513 sample window (where sample indices 0 and 512 are the end points).",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -521,10 +509,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 165.0, 811.0, 21.0 ],
+									"patching_rect" : [ 210.0, 180.0, 811.0, 21.0 ],
 									"text" : "Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window (i)buffer.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -537,7 +524,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 45.0, 311.75, 52.0, 23.0 ]
+									"patching_rect" : [ 45.0, 326.75, 52.0, 23.0 ]
 								}
 
 							}
@@ -567,7 +554,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 280.75, 85.0, 23.0 ],
+									"patching_rect" : [ 45.0, 295.75, 85.0, 23.0 ],
 									"text" : "loadmess 20"
 								}
 
@@ -850,7 +837,7 @@
 										"lines" : [  ]
 									}
 ,
-									"patching_rect" : [ 1035.0, 449.0, 148.0, 23.0 ],
+									"patching_rect" : [ 1035.0, 464.0, 148.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -873,7 +860,7 @@
 									"numinlets" : 5,
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 1035.0, 375.0, 148.0, 59.0 ],
+									"patching_rect" : [ 1035.0, 390.0, 148.0, 59.0 ],
 									"ruler" : 0
 								}
 
@@ -886,7 +873,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 303.0, 375.0, 394.0, 21.0 ],
+									"patching_rect" : [ 303.0, 390.0, 394.0, 21.0 ],
 									"text" : "<- optional int argument intialises fade times  (default 40 samples).",
 									"textcolor" : [ 0.0, 0.4, 1.0, 1.0 ]
 								}
@@ -901,7 +888,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 274.25, 118.0, 36.0 ],
+									"patching_rect" : [ 15.0, 289.25, 118.0, 36.0 ],
 									"text" : "int sets fade times (in samples)",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ],
 									"textjustification" : 1
@@ -916,7 +903,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 236.0, 91.0, 23.0 ],
+									"patching_rect" : [ 210.0, 251.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -929,7 +916,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 630.0, 91.0, 23.0 ],
+									"patching_rect" : [ 210.0, 645.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -942,7 +929,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 510.0, 116.0, 23.0 ],
+									"patching_rect" : [ 210.0, 525.0, 116.0, 23.0 ],
 									"text" : "kernelmaker~ 100"
 								}
 
@@ -955,7 +942,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 375.0, 91.0, 23.0 ],
+									"patching_rect" : [ 210.0, 390.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -969,7 +956,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 210.0, 345.75, 304.0, 23.0 ],
+									"patching_rect" : [ 210.0, 360.75, 304.0, 23.0 ],
 									"text" : "makekernel_env kernelbuf cellobuf jonglybuf 0 500"
 								}
 
@@ -983,7 +970,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 210.0, 480.0, 280.0, 23.0 ],
+									"patching_rect" : [ 210.0, 495.0, 280.0, 23.0 ],
 									"text" : "makekernel_ring kernelbuf cellobuf jonglybuf 0"
 								}
 
@@ -997,7 +984,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 210.0, 600.0, 306.0, 23.0 ],
+									"patching_rect" : [ 210.0, 615.0, 306.0, 23.0 ],
 									"text" : "makekernel_trap kernelbuf 0.2 0.35 0.6 0.76 44100"
 								}
 
@@ -1011,7 +998,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 210.0, 208.0, 329.0, 23.0 ],
+									"patching_rect" : [ 210.0, 223.0, 329.0, 23.0 ],
 									"text" : "makekernel_wind kernelbuf cellobuf vonnhann 0 44100"
 								}
 
@@ -1020,7 +1007,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 54.5, 370.017543792724609, 219.5, 370.017543792724609 ],
+									"midpoints" : [ 54.5, 385.017543792724609, 219.5, 385.017543792724609 ],
 									"order" : 1,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -1029,7 +1016,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"midpoints" : [ 54.5, 505.368421077728271, 219.5, 505.368421077728271 ],
+									"midpoints" : [ 54.5, 520.368421077728271, 219.5, 520.368421077728271 ],
 									"order" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
