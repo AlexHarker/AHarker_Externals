@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibufplayer~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Efficient (i)buffer~ playback
+  </digest>
+  <description>
+      An efficient playback object for <o>ibuffer~</o> and standard <o>buffer~</o> objects. <o>ibufplayer~</o> features SIMD optimisation, individual channel level controls, reduced CPU usage for integer playback speeds and fixed speed, or varispeed (with a base speed) playback. Three different kinds of cubic interpolation are avaiable. It should be at least (roughly) as fast as groove~ in worst case scenarios, and faster in various other situations.
+  </description>
+  
+  <objarglist>
+      <objarg name="channels" optional="1" type="int">
+          <digest>
+              Set number of output channels
+          </digest>
+          <description>
+              Setting an <m>int</m> as the first argument sets number of output channels.
+              <br />
+              The defualt number of channels is <m>1</m>.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="speed-input">
+          <arglist>
+              <arg name="speed-input" type="signal" />
+          </arglist>
+          <digest>
+              Set the playback speed
+          </digest>
+          <description>
+              A <m>signal</m> input will change the playback speed of the set <o>buffer~</o> / <o>ibuffer~</o>.
+              This will only have an effect if the <m>varispeed flag</m> has been raised on in the <m>play</m> message.
+              <br />
+              The playback speed will be centred on the base speed.
+          </description>
+      </method>
+      <method name="interp">
+          <arglist>
+              <arg name="interp" type="message" />
+          </arglist>
+          <digest>
+              Set the interpolation mode
+          </digest>
+          <description>
+              Set the interpolation mode from a choice of:
+              <br />
+              <m>bspline</m>, <m>lagrange</m> or <m>hermite</m>.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>interp</m> / <m>mode</m>
+              <br />
+              <br />
+              The most efficient (and defualt) mode is <m>bspline</m>
+          </description>
+      </method>
+      <method name="play">
+          <arglist>
+              <arg name="play" type="message" />
+          </arglist>
+          <digest>
+              Playback a(n) (i)buffer~
+          </digest>
+          <description>
+              Sending just the <m>play</m> message will play the full <o>ibuffer~</o> / <o>buffer~</o> set by the <m>set</m> message.
+              <br />
+              The <m>play</m> message can be set with five arguments in the order:
+              <br />
+              <br />
+              buffer name / base speed / start point / end point / varispeed flag.
+              <br />
+              <br />
+              The buffer name corresponds to the <o>ibuffer~</o> / <o>buffer~</o> that you would like to play.
+              <br />
+              The base speed is a playback multiplier applied to the <o>ibuffer~</o> / <o>buffer~</o> set as a <m>float</m>. The default is <m>1</m>.
+              <br />
+              The start point determines where (in milliseconds) in the <o>ibuffer~</o> / <o>buffer~</o> to begin playback set as an <m>int</m>. The default is <m>0</m>.
+              <br />
+              The end point determines where (in milliseconds) in the <o>ibuffer~</o> / <o>buffer~</o> to end the playback set as an <m>int</m>. The default is the end of the buffer. Negative numbers also indicate the end of the buffer.
+              <br />
+              The varispeed flag is an <m>int</m> (0 or 1) that determines if playback speed should be effected by the <m>speed-input</m>. The playback speed will be centred around the base speed.
+          </description>
+      </method>
+      <method name="set">
+         <arglist>
+             <arg name="set" type="message" />
+         </arglist>
+         <digest>
+            Set the name of the (i)buffer for playback
+         </digest>
+         <description>
+            Set the name of the <o>ibuffer~</o> / <o>buffer~</o> that <o>ibufplayer~</o> will play back when the play message is sent.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>set</m> / buffer name
+         </description>
+     </method>
+     <method name="stop">
+         <arglist>
+             <arg name="stop" type="message" />
+         </arglist>
+         <digest>
+            Stop the playback
+         </digest>
+         <description>
+            Stop the playback coming out of <o>ibufplayer~</o>.
+         </description>
+     </method>
+     <method name="vols">
+         <arglist>
+             <arg name="vols" type="message" />
+         </arglist>
+         <digest>
+             Set the volume for each channel
+         </digest>
+         <description>
+             Sending the <m>vols</m> message followed by a <m>list</m> of <m>floats</m> will set the output amplitudes, with each item in the <m>list</m> having a corresponding channel.
+             <br />
+             The message should be formatted as:
+             <br />
+             <br />
+             <m>vols</m> / <m>list</m> (where each item is a channel amplitude)
+         </description>
+     </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Output an interpolated value from a buffer as a <m>signal</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibufconcatenate~" />
+    <seealso name="ibuffermulti~" />
+    <seealso name="ibufinfo~" />
+    <seealso name="ibufmultitable~" />
+    <seealso name="ibuftable~" />
+    <seealso name="ibuffer~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>
