@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibuffer~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Load an audio file into memory in the same sample format as on disk
+  </digest>
+  <description>
+    <o>ibuffer~</o> is an audio file buffer that loads audio files in their stored integer format (or float format if relevant). This object is designed primarily for applications with large memory requirements where loading in 16 bit or 24 bit formats saves vital space in memory. It supports 16, 24 and 32 integer formats, as well as 32 bit float and can load either all channels or specified channels (up to 4 in either case). There are a corresponding set of playback and other objects that will also function with standard MSP buffers. Sound file loading is done using libsndfile by Erik de Castro Lopo (http://www.mega-nerd.com/libsndfile/).
+  </description>
+  
+  <objarglist>
+      <objarg name="name" optional="1" type="symbol">
+          <digest>
+              Set the ibuffer name
+          </digest>
+          <description>
+              The first argument is a name used by other objects to refer to the <o>ibuffer~</o> to access its contents.
+          </description>
+      </objarg>
+      <objarg name="filename" optional="1" type="symbol">
+          <digest>
+              Set the audio file to be loaded
+          </digest>
+          <description>
+              After the <o>ibuffer~</o> object's name, can type in the name of an audio file to load upon opening the patch.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+    <method name="name">
+        <arglist>
+            <arg name="name" type="message" />
+        </arglist>
+        <digest>
+            Set the name of the <o>ibuffer</o>
+        </digest>
+        <description>
+            Set the name used by other objects to refer to the <o>ibuffer~</o> to access its contents.
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>name</m> / buffer name
+        </description>
+    </method>
+    <method name="open">
+        <arglist>
+            <arg name="open" type="message" />
+        </arglist>
+        <digest>
+            Replace the contents of the <o>ibuffer</o>
+        </digest>
+        <description>
+            Replace the contents of the <o>ibuffer</o> and resize it.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>replace</m> / audio file
+            <br />
+            <br />
+            Adding an <m>int</m> at the end of the message specifies the channel of the audio file to be loaded.
+        </description>
+    </method>
+    <method name="replace">
+        <arglist>
+            <arg name="replace" type="message" />
+        </arglist>
+        <digest>
+            Replace the contents of the <o>ibuffer</o>
+        </digest>
+        <description>
+            Replace the contents of the <o>ibuffer</o> and resize it.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>replace</m> / audio file
+            <br />
+            <br />
+            Adding an <m>int</m> at the end of the message specifies the channel of the audio file to be loaded.
+        </description>
+    </method>
+    <method name="set">
+        <arglist>
+            <arg name="set" type="message" />
+        </arglist>
+        <digest>
+            Set the name of the <o>ibuffer</o>
+        </digest>
+        <description>
+            Set the name used by other objects to refer to the <o>ibuffer~</o> to access its contents.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>set</m> / buffer name
+        </description>
+    </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="bang">
+        <description>
+            Outputs a bang when a new file is loaded.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibufconcatenate~" />
+    <seealso name="ibuffermulti~" />
+    <seealso name="ibufinfo~" />
+    <seealso name="ibufmultitable~" />
+    <seealso name="ibufplayer~" />
+    <seealso name="ibuftable~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>
