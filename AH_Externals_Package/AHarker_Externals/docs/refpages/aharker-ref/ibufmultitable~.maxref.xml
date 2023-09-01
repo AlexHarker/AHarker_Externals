@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibufmultitable~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Efficient interpolated table lookup with multiple sample-accurate tables
+  </digest>
+  <description>
+      <o>ibufmultitable~</o> is exactly like <o>ibuftable~</o>, but with the added ability to specifiy an offset value (applied to the specified start sample) at signal rate. This allows the user to store multiple tables of the same size in a single buffer and access them at will in a sample accurate manner. You do need to account for the table size with your offset value (thus tables may also be overlapped).
+  </description>
+  
+  <objarglist>
+      <objarg name="buffer-name" optional="0" type="symbol">
+          <digest>
+              Set the (i)buffer name
+          </digest>
+          <description>
+              The first argument sets the name of the <o>ibuffer~</o> / <o>buffer~</o> that <o>ibufmultitable~</o> will read from.
+          </description>
+      </objarg>
+      <objarg name="start-sample" optional="1" type="int">
+          <digest>
+              Set the sample to start reading from
+          </digest>
+          <description>
+              The second argument sets the sample for <o>ibufmultitable~</o> to start reading from.
+              <br />
+              <br />
+              Default start sample is <m>0</m>.
+          </description>
+      </objarg>
+      <objarg name="end-sample" optional="1" type="int">
+          <digest>
+              Set the sample to read until
+          </digest>
+          <description>
+              The third argument sets the sample for <o>ibufmultitable~</o> to read until.
+              <br />
+              <br />
+              Default end sample is <m>512</m>.
+          </description>
+      </objarg>
+      <objarg name="channel" optional="1" type="int">
+          <digest>
+              Set the channel to read from
+          </digest>
+          <description>
+              The fourth argument sets the <o>ibuffer~</o> / <o>buffer~</o> channel for <o>ibufmultitable~</o> to read from.
+              <br />
+              <br />
+              Default channel is <m>1</m>.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="signal">
+          <arglist>
+              <arg name="signal" type="signal" />
+          </arglist>
+          <digest>
+              Read a range of samples
+          </digest>
+          <description>
+              Input <m>signal</m> values from 0 to 1 in the left-inlet read through the range of samples specified by the <m>start-sample</m> and <m>end-sample</m>.
+              <br />
+              A <o>phasor</o> can be used to linearly read through the specified samples in a loop, making <o>ibufmultitable~</o> function as an oscillator.
+          </description>
+      </method>
+      <method name="offset">
+          <arglist>
+              <arg name="offset" type="signal" />
+          </arglist>
+          <digest>
+              Apply an offset to the buffer samples being read.
+          </digest>
+          <description>
+              A <m>signal</m> input in the right inlet applies an offset to the samples set by <m>start-sample</m> and <m>end-sample</m>.
+          </description>
+      </method>
+      <method name="chan">
+          <arglist>
+              <arg name="chan" type="message" />
+          </arglist>
+          <digest>
+              Set the channel to read from
+          </digest>
+          <description>
+              Set the <o>ibuffer~</o> / <o>buffer~</o> channel for <o>ibuftable~</o> to read from.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>chan</m> / <m>int</m>
+              <br />
+              <br />
+              Default channel is <m>1</m>.
+          </description>
+      </method>
+      <method name="endsamp">
+          <arglist>
+              <arg name="endsamp" type="message" />
+          </arglist>
+          <digest>
+              Set the sample to read until
+          </digest>
+          <description>
+              Set the sample for <o>ibuftable~</o> to read until.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>endsamp</m> / <m>int</m>
+              <br />
+              <br />
+              Default end sample is <m>512</m>.
+          </description>
+      </method>
+      <method name="interp">
+          <arglist>
+              <arg name="interp" type="message" />
+          </arglist>
+          <digest>
+              Set the interpolation mode
+          </digest>
+          <description>
+              Set the interpolation mode from a choice of:
+              <br />
+              <m>linear</m>, <m>bspline</m>, <m>lagrange</m> or <m>hermite</m>.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>interp</m> / <m>mode</m>
+              <br />
+              <br />
+              Default mode is <m>linear</m>.
+          </description>
+      </method>
+    <method name="set">
+        <arglist>
+            <arg name="set" type="message" />
+        </arglist>
+        <digest>
+            Set the name of the <o>ibuffer</o>
+        </digest>
+        <description>
+            Set the name of the <o>ibuffer~</o> / <o>buffer~</o> that <o>ibuftable~</o> will read from.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>set</m> / buffer name
+        </description>
+    </method>
+    <method name="startsamp">
+        <arglist>
+            <arg name="startsamp" type="message" />
+        </arglist>
+        <digest>
+            Set the sample to start reading from
+        </digest>
+        <description>
+            Set the sample for <o>ibuftable~</o> to start reading from.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>startsamp</m> / <m>int</m>
+            <br />
+            <br />
+            Default start sample is <m>0</m>.
+        </description>
+    </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Output an interpolated value from a buffer as a <m>signal</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibufconcatenate~" />
+    <seealso name="ibuffermulti~" />
+    <seealso name="ibufinfo~" />
+    <seealso name="ibuftable~" />
+    <seealso name="ibufplayer~" />
+    <seealso name="ibuffer~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>
