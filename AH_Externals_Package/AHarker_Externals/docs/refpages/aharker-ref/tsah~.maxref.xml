@@ -8,7 +8,31 @@
       <o>tsah~</o> is like <o>sah~</o> but the output value is updated whenever the trigger input is non-zero (meaning the output can be updated once per sample if desired).
   </description>
   <methodlist>
-    
+      <method name="signal">
+          <arglist>
+              <arg name="input" type="signal" />
+          </arglist>
+          <digest>
+              The <m>signal</m> to be sampled
+          </digest>
+          <description>
+              The left inlet takes a <m>signal</m> to be sampled. When a tigger <m>signal</m> is recieved in the right inlet, the input is sampled and output as a constant <m>signal</m> value.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist>
+              <arg name="trigger" type="signal" />
+          </arglist>
+          <digest>
+              The trigger <m>signal</m>
+          </digest>
+          <description>
+              The right inlet takes a trigger <m>signal</m> used to determine when to sample and output the left inlets input.
+              <br />
+              <br />
+              <o>tsah~</o> can also take any non-zero <m>signal</m> in the right inlet to cause a constant output.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
