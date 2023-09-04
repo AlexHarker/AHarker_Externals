@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="vdbtoa~" module="AHarker Externals" category="vMSP">
+    <digest>
+        A SIMD version of dbtoa~
+    </digest>
+  <description>
+      <o>vdbtoa~</o> provides a CPU efficient version of <o>dbtoa~</o> using SIMD operations. See the <o>dbtoa~</o> helpfile for details on usage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+
+  <seealsolist>
+    <seealso name="dbtoa~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>vMSP</description>
+    </entry>
+  </misc>
+</c74object>
