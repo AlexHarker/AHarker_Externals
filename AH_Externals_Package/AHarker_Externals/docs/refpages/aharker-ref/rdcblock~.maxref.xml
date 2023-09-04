@@ -7,8 +7,48 @@
   <description>
       <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois. (http://www.music.columbia.edu/PeRColate/).
   </description>
+  <objarglist>
+      <objarg name="mode" optional="1" type="int">
+          <digest>
+              Set the mode
+          </digest>
+          <description>
+              The first argument sets the mode of <o>rdcblock~</o>.
+              <br />
+              <br />
+              In <m>mode 0</m> (default) the filter memory is totally zeroed on reset.
+              <br />
+              <br />
+              In <m>mode 1</m> the output memory is zeroed, whilst the input memory is set to the value of the incoming sample.
+              <br />
+              <br />
+              Neither will instantly adapt to a new DC level, but <m>mode 1</m> may be more effective in some cases (it gives ideal performance when there is no other input but the DC). Both modes outperform the situation in which the filter has no reset.
+          </description>
+      </objarg>
+  </objarglist>
   <methodlist>
-    
+      <method name="First-inlet">
+          <arglist>
+              <arg name="First-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Input
+          </digest>
+          <description>
+              The first inlet takes a <m>signal</m> to be processed by the filter.
+          </description>
+      </method>
+      <method name="Second-inlet">
+          <arglist>
+              <arg name="Second-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Reset input
+          </digest>
+          <description>
+              The second inlet is a dedicated reset input. It takes a trigger <m>signal</m> to clear the filters memory.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
