@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="vminus~" module="AHarker Externals" category="vMSP">
+    <digest>
+        A SIMD version of minus~
+    </digest>
+  <description>
+      <o>vminus~</o> provides a CPU efficient version of <o>minus~</o> using SIMD operations. See the <o>minus~</o> helpfile for details on usage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+
+  <seealsolist>
+    <seealso name="minus~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>vMSP</description>
+    </entry>
+  </misc>
+</c74object>
