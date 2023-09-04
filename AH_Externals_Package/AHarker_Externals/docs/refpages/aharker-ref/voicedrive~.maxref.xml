@@ -7,8 +7,79 @@
   <description>
       <o>voicedrive~</o> is a (sub)sample-accurate (usually non-interrupting) ramp generator with several useful outputs for driving grains, playback voices or other similar processes. Typically <o>voicedrive~</o> is used in connection with the <o>voicemanager~</o> object, as the drive unit for each individual voice of a process. Because <o>voicedrive~</o> is a non-interrupting (in default mode) it can also be used for other sample-accurate timing purposes such as random length ramping (for interpolation between values for example).
   </description>
+  <objarglist>
+      <objarg name="mode" optional="1" type="int">
+          <digest>
+              Set the mode
+          </digest>
+          <description>
+              The first argument sets the mode of <o>voicedrive~</o>.
+              <br />
+              <br />
+              <m>mode 1</m> - hi-res position mode flag (if on outputs position in hi-res for use with jkc's hr objects or similar).
+              <br />
+              <br />
+              <m>mode 2</m> - allow interrupts flag (normally you cannot interrupt a ramp / grain that is executing. If this flag is on triggers always start a new ramp).
+          </description>
+      </objarg>
+  </objarglist>
+
   <methodlist>
-    
+      <method name="First-inlet">
+          <arglist>
+              <arg name="First-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Triggers in
+          </digest>
+          <description>
+              The first inlet takes a trigger <m>signal</m> used to begin the ramp outputs.
+              <br />
+              When not in <m>mode 2</m>, consecutive triggers will be ignored until the busy flag is lowered.
+          </description>
+      </method>
+      <method name="Second-inlet">
+          <arglist>
+              <arg name="Second-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Lengths in
+          </digest>
+          <description>
+              The second inlet takes a <m>signal</m> to determine the length (in milliseconds) of the ramp outputs.
+              <br />
+              This will effect the duration of the ramps, as well as the values of the ramp coming from the first outlet.
+              <br />
+              The input value is sampled when a trigger is recieved in the first inlet.
+          </description>
+      </method>
+      <method name="Third-inlet">
+          <arglist>
+              <arg name="Third-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Subsample offset
+          </digest>
+          <description>
+              The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses et.) you can utilise this functionality.
+              <br />
+              <br />
+              It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process, detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of <o>voicedrive~</o> and <o>voicemanager~</o> also takes account of the subsample offset.
+          </description>
+      </method>
+      <method name="Fourth-inlet">
+          <arglist>
+              <arg name="Fourth-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Offsets in
+          </digest>
+          <description>
+              The fourth inlet takes a <m>signal</m> to determine the offset (start value) in milliseconds of the ramp being output from the first outlet.
+              <br />
+              The input value is sampled when a trigger is recieved in the first inlet.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
@@ -19,7 +90,7 @@
             <br />
             The second outlet outputs a normalised ramp <m>signal</m> (0-1).
             <br />
-            The third outlet outputs a <m>signal </m> trigger at the beginning of each ramp.
+            The third outlet outputs a <m>signal</m> trigger at the beginning of each ramp.
             <br />
             The fourth outlet outputs the busy flag.
         </description>
