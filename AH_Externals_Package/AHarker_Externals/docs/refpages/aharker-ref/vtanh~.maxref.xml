@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="vtanh~" module="AHarker Externals" category="vMSP">
+    <digest>
+        A SIMD version of tanh~
+    </digest>
+  <description>
+      <o>vtanh~</o> provides a CPU efficient version of <o>tanh~</o> using SIMD operations. See the <o>tanh~</o> helpfile for details on usage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+
+  <seealsolist>
+    <seealso name="tanh~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>vMSP</description>
+    </entry>
+  </misc>
+</c74object>
