@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="voicedrive~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      Sample-accurate ramp / grain / timing object
+  </digest>
+  <description>
+      <o>voicedrive~</o> is a (sub)sample-accurate (usually non-interrupting) ramp generator with several useful outputs for driving grains, playback voices or other similar processes. Typically <o>voicedrive~</o> is used in connection with the <o>voicemanager~</o> object, as the drive unit for each individual voice of a process. Because <o>voicedrive~</o> is a non-interrupting (in default mode) it can also be used for other sample-accurate timing purposes such as random length ramping (for interpolation between values for example).
+  </description>
+  <methodlist>
+    
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            The first outlet outputs a linear ramp <m>signal</m> to indicate a playback position in milliseconds.
+            <br />
+            The second outlet outputs a normalised ramp <m>signal</m> (0-1).
+            <br />
+            The third outlet outputs a <m>signal </m> trigger at the beginning of each ramp.
+            <br />
+            The fourth outlet outputs the busy flag.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="rdcblock~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="rsah~" />
+    <seealso name="voicemanager~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>

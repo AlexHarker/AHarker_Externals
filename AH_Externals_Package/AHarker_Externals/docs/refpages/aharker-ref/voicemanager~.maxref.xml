@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="voicemanager~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      Sample-accurate voice management
+  </digest>
+  <description>
+      <o>voicemanager~</o> is a (sub)sample-accurate voice manager for use with the <o>voicedrive~</o> object. Typically <o>voicemanager~</o> is located outside of a <o>poly~</o> (or <o>dynamicdsp~</o>) object within which the <o>voicedrive~</o> objects are hosted (in each voice). The trigger input causes a voice to be assigned with the given length and offset (which must be known before the voice starts). The object keeps track of which voices are free at any one time, assuming the incoming data is passed on correctly to each voice. Outgoing triggers are then numbered according to voice, and can be tested using an audio rate comparison to derive triggers for individual voices.
+  </description>
+  <methodlist>
+    
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            The first outlet outputs a trigger <m>signal</m> numbered with the voice.
+            <br />
+            The second outlet outputs a trigger <m>signal</m> with the amplitude corresponding to the length input.
+            <br />
+            The third outlet outputs a trigger <m>signal</m> corresponding to the subsample offset input.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="rdcblock~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="rsah~" />
+    <seealso name="voicedrive~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>

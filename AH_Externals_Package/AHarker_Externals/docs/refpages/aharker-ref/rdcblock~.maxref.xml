@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="rdcblock~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      DC blocking filter with sample accurate reset
+  </digest>
+  <description>
+      <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois. (http://www.music.columbia.edu/PeRColate/).
+  </description>
+  <methodlist>
+    
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs a DC blocked audio signal.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="tsah~" />
+    <seealso name="voicedrive~" />
+    <seealso name="voicemanager~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>

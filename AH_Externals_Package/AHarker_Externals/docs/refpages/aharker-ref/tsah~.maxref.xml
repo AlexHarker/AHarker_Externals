@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="tsah~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      Sample and hold on any non-zero trigger value
+  </digest>
+  <description>
+      <o>tsah~</o> is like <o>sah~</o> but the output value is updated whenever the trigger input is non-zero (meaning the output can be updated once per sample if desired).
+  </description>
+  <methodlist>
+    
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Output sample and hold data whenever the trigger data is non-zero.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="rdcblock~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="voicedrive~" />
+    <seealso name="voicemanager~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>

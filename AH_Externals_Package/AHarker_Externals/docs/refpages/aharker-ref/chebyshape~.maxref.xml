@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="chebyshape~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      Calculated chebyshev polynomial waveshaping
+  </digest>
+  <description>
+      <o>chebyshape~</o> is an object for waveshaping an audio input using chebyshev polynomials of the first kind. The output is calculated (rather than using a table method), which means the parameters can be updated  at audio rate. It should be noted that neither the input or the output are clipped at -1. or 1., so the output could become quite large if you are not careful. The input and / or output can be clipped to produce this behaviour if desired.
+  </description>
+  <methodlist>
+    
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs the waveshaped <m>signal</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="rdcblock~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="rsah~" />
+    <seealso name="voicedrive~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>
