@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="denormkiller~" module="AHarker Externals" category="Utility">
+  <digest>
+      Prevent CPU spiking from poor denorm handling
+  </digest>
+  <description>
+      <o>denormkiller~</o> can remedy CPU spikes from third party audio objects that are due to poor or no denormal handling. One object per audio thread is required.
+  </description>
+  <methodlist>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Note">
+      <entry >
+          <description>
+              Place the one copy of the <o>denormkiller~</o> object anywhere you wish (it does not need to be connected to anything). If you are multithreading in a <o>poly~</o> you should place an object within the hosted patch.
+              <br />
+              <br />
+              Note: On Max OS X most floating point calculations (including single value or scalar calculations) are performed on the vector unit (rather than the scalar unit). Although you cannot switch denormals off for the scalar unit, you can on the vector unit, which should solve any CPU spiking problems. You should note that there is a very very small possibility that turning off denormals may change the desired behaviour of some audio object in use.
+          </description>
+      </entry>
+  </misc>
+  <seealsolist>
+    
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>utility</description>
+    </entry>
+  </misc>
+</c74object>
