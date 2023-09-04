@@ -310,7 +310,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 344.600000000000023, 330.0, 404.0, 36.0 ],
-									"text" : "first argument it is number of coefficients (min 2)\nsee the dynamicdsp mode tab for info on the second argument",
+									"text" : "first argument is number of coefficients (min 2)\nsee the dynamicdsp mode tab for info on the second argument",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -825,7 +825,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 62.0, 808.0, 79.0 ],
+									"patching_rect" : [ 15.0, 62.0, 811.0, 79.0 ],
 									"text" : "For granular applications chebyshape~ has a special mode for use within dynamicdsp~. In this mode it updates its coefficients directly from the signal inlets of the dynamicdsp~ object, but only when triggered. This is much more efficient than using dynamic.in~ along with sah~ or tsah~ inside the dynamicdsp~ path. To use this mode the object is given two arguments - the first is the number of coefficients, the second is the inlet which corresponds to the first coefficient (coefficient 0). Subsequent inlets then correspond to the following coefficients in turn. In this mode the object has only two inlets - the audio input, and the trigger inlet for trigger parameter updating.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
