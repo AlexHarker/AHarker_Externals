@@ -7,8 +7,39 @@
   <description>
       <o>triggerlimit~</o> limits the rate of input triggers (non-zero samples) to a maximum rate specified in samples. The initial intention of this object was to avoid very rapid triggering in situations that would result in excessive CPU usage.
   </description>
+  <objarglist>
+      <objarg name="int" optional="1" type="int">
+          <digest>
+              Minimum gap in samples between non-zero values.
+          </digest>
+          <description>
+              An <m>int</m> argument sets the number of samples to be zeroed between consecutive non-zero values.
+          </description>
+      </objarg>
+  </objarglist>
   <methodlist>
-    
+      <method name="signal">
+          <arglist>
+              <arg name="signal" type="signal" />
+          </arglist>
+          <digest>
+              Audio input
+          </digest>
+          <description>
+              Takes a <m>signal</m> input to have the time between its non-zero samples limited. The number of samples between non-zero samples is set by an <m>int</m> in the same inlet.
+          </description>
+      </method>
+      <method name="int">
+          <arglist>
+              <arg name="int" type="signal" />
+          </arglist>
+          <digest>
+              Minimum gap in samples between non-zero values.
+          </digest>
+          <description>
+              An <m>int</m> sets the number of samples to be zeroed between consecutive non-zero values.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
