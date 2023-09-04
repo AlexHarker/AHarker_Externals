@@ -7,15 +7,54 @@
   <description>
       <o>chebyshape~</o> is an object for waveshaping an audio input using chebyshev polynomials of the first kind. The output is calculated (rather than using a table method), which means the parameters can be updated  at audio rate. It should be noted that neither the input or the output are clipped at -1. or 1., so the output could become quite large if you are not careful. The input and / or output can be clipped to produce this behaviour if desired.
   </description>
+  <objarglist>
+      <objarg name="Number-of-coefficients" optional="0" type="int">
+          <digest>
+              Set the number of coefficients
+          </digest>
+          <description>
+              The first argument sets the number of coefficients. A minimum of 2 is required
+          </description>
+      </objarg>
+      <objarg name="Dynamic-DSP" optional="1" type="int">
+          <digest>
+              Set the dynamicdsp~ inlet correspoding to coefficient 0.
+          </digest>
+          <description>
+              For granular applications <o>chebyshape~</o> has a special mode for use within <o>dynamicdsp~</o>. In this mode it updates its coefficients directly from the signal inlets of the <o>dynamicdsp~</o> object, but only when triggered. This is much more efficient than using <o>dynamic.in~</o> along with <o>sah~</o> or <o>tsah~</o> inside the <o>dynamicdsp~</o> path. To use this mode the object is given two arguments - the first is the number of coefficients, the second is the inlet which corresponds to the first coefficient (coefficient 0). Subsequent inlets then correspond to the following coefficients in turn. In this mode the object has only two inlets - the audio input, and the trigger inlet for trigger parameter updating.
+          </description>
+      </objarg>
+  </objarglist>
   <methodlist>
-    
+      <method name="signal">
+          <arglist>
+              <arg name="signal" type="signal" />
+          </arglist>
+          <digest>
+              Audio in
+          </digest>
+          <description>
+              The first inlet takes an audio <m>signal</m> to be waveshaped by <o>chebyshape~</o>.
+          </description>
+      </method>
+      <method name="coefficients">
+          <arglist>
+              <arg name="coefficients" type="signal" />
+          </arglist>
+          <digest>
+              Set the coefficients
+          </digest>
+          <description>
+              The number of inlets is determined by the first argument to <o>chebyshape</o>. Each inlet (excluding the first inlet) corresponds to a coefficient (starting from 0) that can be set/modulated using a <m>signal</m>.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
   <misc name="Output">
     <entry name="signal">
         <description>
-            Outputs the waveshaped <m>signal</m>.
+            Outputs the waveshaped <m>signal</m>. It should be noted that neither the input or the output are clipped at -1. or 1., so the output could become quite large if you are not careful.
         </description>
     </entry>
   </misc>
