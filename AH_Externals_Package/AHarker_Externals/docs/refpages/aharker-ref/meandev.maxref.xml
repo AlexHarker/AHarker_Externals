@@ -7,13 +7,111 @@
   <description>
     <o>meandev</o> is an object for calculating the mean and variance or standard deviation of a set of values over various ranges in the data's history. This makes it possible to compare these values for different ranges in time and make some assessment of how the data is changing. The age ranges are specified as having a maximum and a minimum age. The ranges may overlap. The final range is specified only in terms of maximum age and tracks the most recent data up to the specified age.
   </description>
+  <objarglist>
+      <objarg name="Mode" optional="1" type="int">
+          <digest>
+              Set the mode
+          </digest>
+          <description>
+              The first argument sets the mode of <o>meandev</o>.
+              <br />
+              <br />
+              <m>mode 0</m> - last n values mode
+              <br />
+              <m>mode 1</m> - last n milliseconds mode
+              <br />
+              <m>mode 2</m> - as mode 0 but with weightings
+              <br />
+              <m>mode 3</m> - as mode 1 but with weightings
+          </description>
+      </objarg>
+      <objarg name="Mean-mode" optional="1" type="int">
+          <digest>
+              Set the mean mode
+          </digest>
+          <description>
+              The second argument sets the mean mode of <o>meandev</o>.
+              <br />
+              <br />
+              <m>mean mode 0</m> - calculate means and deviations normally
+              <br />
+              <m>mean mode 1</m> - calculate deviations in relation to mean of means
+              <br />
+              <m>mean mode 2</m> - calculate mean of means (and deviations in relation to this)
+          </description>
+      </objarg>
+      <objarg name="Ages" optional="1" type="int">
+          <digest>
+              Set the age ranges
+          </digest>
+          <description>
+              From the third argument onwards, set up to 4 age ranges (min and max), plus a final max only (between max and 0)
+              <br />
+              <br />
+              For modes 0 and 2 the ranges are given in number of values
+              <br />
+              For modes 1 and 3 the ranges are given in milliseconds
+          </description>
+      </objarg>
+      <objarg name="Deviation-mode" optional="1" type="int">
+          <digest>
+              Set the deviation mode
+          </digest>
+          <description>
+              The final argument sets the deviation mode of <o>meandev</o>.
+              <br />
+              <br />
+              <m>0</m> outputs variances
+              <br />
+              <m>1</m> outputs standard deviations
+          </description>
+      </objarg>
+  </objarglist>
   <methodlist>
-      
+      <method name="Data">
+          <arglist>
+              <arg name="Data" type="float" />
+          </arglist>
+          <digest>
+              Input data
+          </digest>
+          <description>
+              Input data in the form of a <m>float</m> into the left inlet of <o>meandev</o>. This data is used to calculate the means and variance/standard deviations.
+          </description>
+      </method>
+      <method name="Reset">
+          <arglist>
+              <arg name="Reset" type="bang" />
+          </arglist>
+          <digest>
+              reset
+          </digest>
+          <description>
+              A <m>bang</m> into the right inlet of <o>meandev</o> causes a reset.
+          </description>
+      </method>
+      <method name="Weights">
+          <arglist>
+              <arg name="Weights" type="int" />
+          </arglist>
+          <digest>
+              Weight the data
+          </digest>
+          <description>
+              When in either <m>mode 2</m> or <m>mode 3</m>, an <m>int</m> in the right inlet applies a weighting value to the data. This value determines the relative weighting of the data in calculating the mean and and deviation.
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
   <misc name="Output">
-    
+      <entry name="float">
+          <description>
+              The number of outlets depends on the number of pairs of ages set as arguments (includng the max age).
+              <br />
+              Each pair of outlets outputs the mean and variance/standard deviation respectively and is calculated using their corresponding pair of age arguments.
+          </description>
+      </entry>
   </misc>
   <seealsolist>
   </seealsolist>
