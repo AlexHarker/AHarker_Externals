@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 87.0, 1073.0, 624.0 ],
+		"rect" : [ 34.0, 100.0, 1073.0, 624.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -119,7 +119,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 113.0, 1073.0, 598.0 ],
+						"rect" : [ 0.0, 26.0, 1073.0, 598.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -157,7 +157,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 102.799999999999997, 570.0, 209.0, 21.0 ],
-									"presentation_linecount" : 4,
 									"text" : "Mean and Deviation of data history",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -219,7 +218,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 309.200000000000045, 535.0, 74.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 3\n5000 - 0ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -236,7 +234,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 145.600000000000023, 535.0, 110.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 2\n12000 - 4000ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -253,7 +250,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 0.0, 535.0, 110.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 1\n30000 - 10000ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -270,7 +266,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 460.0, 201.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "0 - output variances\n1 - output standard deviations",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -286,7 +281,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 400.0, 435.0, 50.0 ],
-									"presentation_linecount" : 4,
 									"text" : "Up to 4 ranges (min and max), plus a final max only (between max and 0) \nFor modes 0 and 2 the ranges are given in number of values\nFor modes 1 and 3 the ranges are given in milliseconds",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -302,7 +296,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 342.0, 366.0, 50.0 ],
-									"presentation_linecount" : 6,
 									"text" : "0 - calculate means and deviations normally\n1 - calculate deviations in relation to mean of means\n2 - calculate mean of means (and deviations in relation to this)",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -318,7 +311,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 270.0, 201.0, 65.0 ],
-									"presentation_linecount" : 4,
 									"text" : "0 - last n values mode\n1 - last n milliseconds mode\n2 - as mode 0 but with weightings\n3 - as mode 1 but with weightings",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
@@ -333,10 +325,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 435.0, 240.0, 595.0, 21.0 ],
-									"presentation_linecount" : 3,
 									"text" : "Arguments are : Mode / Mean Mode / Max Age + Min Age Pairs (up to 4) /  Max Age / Deviation Mode ",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -406,7 +396,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 487.709679126739502, 458.0, 80.290320873260498, 40.0 ],
+									"patching_rect" : [ 487.709679126739502, 458.0, 83.0, 40.0 ],
 									"text" : "Deviation Mode:"
 								}
 
@@ -437,7 +427,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 509.0, 347.0, 61.295698165893555, 40.0 ],
+									"patching_rect" : [ 509.0, 347.0, 62.0, 40.0 ],
 									"text" : "Mean Mode:"
 								}
 
@@ -1102,7 +1092,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1073.0, 598.0 ],
+						"rect" : [ 34.0, 126.0, 1073.0, 598.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1141,10 +1131,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 64.0, 555.0, 36.0 ],
-									"presentation_linecount" : 20,
 									"text" : "In either of the two weighting modes the data is weighted by a value in the right inlet. This value determines the relative weighting of the data in calculating the mean and and deviation.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -1276,7 +1264,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 309.200000000000045, 535.0, 74.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 3\n5000 - 0ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -1293,7 +1280,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 145.600000000000023, 535.0, 110.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 2\n12000 - 4000ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -1310,7 +1296,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 0.0, 535.0, 110.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "Mean 1\n30000 - 10000ms",
 									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
@@ -1848,7 +1833,7 @@
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "float", "float" ],
 									"patching_rect" : [ 30.0, 422.0, 383.0, 23.0 ],
-									"text" : "meandev 1 0 30000 10000 12000 4000 5000"
+									"text" : "meandev 3 0 30000 10000 12000 4000 5000"
 								}
 
 							}
