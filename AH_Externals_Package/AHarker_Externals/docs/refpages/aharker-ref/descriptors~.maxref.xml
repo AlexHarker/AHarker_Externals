@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="descriptorsrt~" module="AHarker Externals" category="descriptors">
+  <digest>
+      Calculate and analyse audio descriptors (features) from a buffer
+  </digest>
+  <description>
+      The <o>descriptors~</o> object can be used to calculate a large number of audio descriptors (or features) from a sample stored in an MSP <o>buffer~</o> (or an <o>ibuffer~</o> object). Various statistical calculations may be performed on the resultant descriptors (mean / median / standard deviation / max n values etc.) to produce useful information about the sample. <o>descriptors~</o> is intended as a comprehensive analysis solution, and is the non real-time counterpart to the <o>descriptorsrt~</o> object - the two objects are very similar in terms of features and usage. <o>descriptors~</o> only calculates and outputs the descriptors that the user requests, and can also operate on subsections of a <o>buffer~</o> / <o>ibuffer~</o>. It is designed to be as efficient as possible, avoiding unnecessary calculations and re-calculations wherever possible and making extensive use of SIMD operations.
+  </description>
+  
+  <methodlist>
+      
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="entrymatcher~" />
+    <seealso name="entrymatcher" />
+    <seealso name="descriptorsrt~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>descriptors</description>
+    </entry>
+  </misc>
+</c74object>
