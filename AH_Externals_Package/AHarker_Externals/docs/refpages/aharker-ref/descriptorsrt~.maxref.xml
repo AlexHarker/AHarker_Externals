@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="descriptorsrt~" module="AHarker Externals" category="descriptors">
+  <digest>
+    Flexible matching / storage / querying of multidimensional data
+  </digest>
+  <description>
+      <o>descriptorsrt~</o> can be used to calculate a large number of audio descriptors (or features) in real-time from an incoming signal The results are output as a list. <o>descriptorsrt~</o> is intended as a comprehensive real-time analysis solution, being suitable for a wide range of tracking / following / detection applications. It is the real-time counterpart to the <o>descriptors~</o> object - the two objects are very similar in terms of features and usage. <o>descriptorsrt~</o> only calculates and outputs the descriptors that the user requests (these can be changed in realtime). It is designed to be as efficient as possible, avoiding unnecessary calculations and re-calculations wherever possible and making extensive use of SIMD operations.
+  </description>
+  
+  <methodlist>
+      
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="entrymatcher~" />
+    <seealso name="entrymatcher" />
+    <seealso name="descriptors~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>descriptors</description>
+    </entry>
+  </misc>
+</c74object>
