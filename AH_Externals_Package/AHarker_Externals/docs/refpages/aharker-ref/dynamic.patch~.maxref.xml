@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="dynamic.patch~" module="AHarker Externals" category="Dynamic_Suite">
+  <digest>
+      A simplified dynamic.this~
+  </digest>
+  <description>
+      <o>dynamic.patch~</o> is a less fully featured version of <o>dynamic.this~</o>, suitable for use in situations where the patch is busy at the same time as audio processing is on (mute is off). Like <o>dynamic.this~</o> you can also delete a patch from the inside, without affecting the audio processing of other patches (this also frees the slot into which the patch is loaded).
+  </description>
+  
+  <objarglist>
+      <objarg name="Initial_state" optional="1" type="int">
+          <digest>
+              Set the intial state
+          </digest>
+          <description>
+              An <m>int</m> argument sets the initial busy/mute state of <o>dynamic.patch~</o>.
+              <br />
+              <br />
+              <m>0</m> sets the busy flag off / mute flag on
+              <br />
+              <m>1</m> sets the busy flag on / mute flag off
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+              Bang an output
+          </digest>
+          <description>
+              Sending in a <m>bang</m> will cause <o>dynamic.patch~</o> to output the patch index when it is inside of a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+      <method name="state">
+          <arglist>
+              <arg name="state" type="int" />
+          </arglist>
+          <digest>
+              Set the busy/mute state
+          </digest>
+          <description>
+              An <m>int</m> input sets the initial busy/mute state of <o>dynamic.patch~</o>.
+              <br />
+              <br />
+              <m>0</m> sets the busy flag off / mute flag on
+              <br />
+              <m>1</m> sets the busy flag on / mute flag off
+          </description>
+      </method>
+      <method name="delete">
+          <arglist>
+              <arg name="delete" type="message" />
+          </arglist>
+          <digest>
+              Delete the patch
+          </digest>
+          <description>
+              Sending <o>dynamic.patch~</o> the <m>delete</m> message will delete that patch that it is in and free up the slot it was using in the <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="int">
+        <description>
+            <o>dynamic.patch</o> outputs the patch index (starting from 1) as an <m>int</m> when it recieves a <m>bang</m>. The <o>dynamic.patch</o> should be inside of a <o>dynamicdsp~</o> or <o>dynamicserial~</o> or else it will output <m>0</m>
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+      <seealso name="dynamic.out~" />
+      <seealso name="dynamic.in~" />
+      <seealso name="dynamic.request~" />
+      <seealso name="dynamic.this~" />
+      <seealso name="dynamicdsp~" />
+      <seealso name="dynamicserial~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Dynamic Suite</description>
+    </entry>
+  </misc>
+</c74object>
