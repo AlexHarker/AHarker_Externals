@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="dynamic.request~" module="AHarker Externals" category="Dynamic_Suite">
+  <digest>
+      Similar to an all-in-one dynamic.in~ and sah~
+  </digest>
+  <description>
+      For a patcher loaded within a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object, a non-zero signal input cause <o>dynamic.request~</o> to update its output by fetching a value from the associated signal inlet. The value is then held until a new trigger is received. This allows efficient parameter updating in sample accurate processing applications.
+  </description>
+  <objarglist>
+      <objarg name="inlet" optional="1" type="int">
+          <digest>
+              Set the initial inlet
+          </digest>
+          <description>
+              Set the inial inlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+              <br />
+              Default is <m>0</m> (off).
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="inlet">
+          <arglist>
+              <arg name="inlet" type="int" />
+          </arglist>
+          <digest>
+              Set the inlet
+          </digest>
+          <description>
+              Sending an <m>int</m> to the first inlet sets the inlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+      <method name="sample_and_hold">
+          <arglist>
+              <arg name="sample_and_hold" type="signal" />
+          </arglist>
+          <digest>
+              Sample the input
+          </digest>
+          <description>
+              A non-zero trigger <m>signal</m> into <o>dynamic.request~</o> will sample and hold the <m>signal</m> value from the selected inlet.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs the input from the correspoding inlet of the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that <o>dynamic.request~</o> is inside. The output is updated each time it recieves a non-zero trigger <m>signal</m>, making it function like <o>sah~</o>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+      <seealso name="dynamic.out~" />
+      <seealso name="dynamic.in~" />
+      <seealso name="dynamic.patch~" />
+      <seealso name="dynamic.this~" />
+      <seealso name="dynamicdsp~" />
+      <seealso name="dynamicserial~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Dynamic Suite</description>
+    </entry>
+  </misc>
+</c74object>
