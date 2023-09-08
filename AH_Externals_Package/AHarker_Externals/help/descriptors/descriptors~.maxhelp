@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 5,
-			"revision" : 5,
+			"revision" : 6,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 100.0, 1129.0, 769.0 ],
+		"rect" : [ 34.0, 100.0, 1101.0, 769.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -53,13 +53,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1129.0, 743.0 ],
+						"rect" : [ 34.0, 126.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -738,13 +738,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1129.0, 743.0 ],
+						"rect" : [ 0.0, 26.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -799,7 +799,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 928.0, 50.0 ],
-									"text" : "There are some desciptors that only return values for the entire chunk (rather than once per frame), and these do not take any statistical calculation arguments. Note that the spectral_peaks descriptor is one of these, and uses a cumulated spectral frame accross the entire buffer (unlike the descriptorsrt` object - which calculates the spectral peaks on a per frame basis). This works well for steady-state sounds, but will not return useful values in other cases.",
+									"text" : "There are some desciptors that only return values for the entire chunk (rather than once per frame), and these do not take any statistical calculation arguments. Note that the spectral_peaks descriptor is one of these, and uses a cumulated spectral frame accross the entire buffer (unlike the descriptorsrt~ object - which calculates the spectral peaks on a per frame basis). This works well for steady-state sounds, but will not return useful values in other cases.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -834,7 +834,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1361,7 +1361,7 @@
 									"outlettype" : [ "list", "", "", "" ],
 									"patching_rect" : [ 45.0, 263.0, 932.0, 55.0 ],
 									"rowhead" : 1,
-									"rows" : 3,
+									"rows" : 1,
 									"selmode" : 0,
 									"vscroll" : 0
 								}
@@ -1376,7 +1376,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 120.0, 195.0, 798.0, 21.0 ],
-									"text" : "output the N largest sinusoidal peaks (in pairs of frequency (Hz) and linear amplitudes) - only works well for steady state chunks / buffers",
+									"text" : "the duration of the analysed buffer or chunk of the buffer (takes no parameters)",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -1447,7 +1447,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 350.650554870530129, 12.0, 173.0, 22.0 ],
+					"patching_rect" : [ 494.650554870530129, 12.0, 173.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1472,13 +1472,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1129.0, 743.0 ],
+						"rect" : [ 0.0, 26.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1567,7 +1567,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1837,7 +1837,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 120.0, 450.0, 621.0, 21.0 ],
-									"text" : "N largest peaks that cross above a given threshold",
+									"text" : "N longest crossing points above the threshold (give both crossing points)",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -1961,7 +1961,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2179,7 +2179,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 120.0, 705.0, 614.0, 21.0 ],
-									"text" : "the peak value added to the given threshold value",
+									"text" : "the mean value multiplied by the given threshold value",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -2212,7 +2212,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.42856776714325, 570.0, 683.0, 50.0 ],
-									"text" : "masktime / value\t\t\t\t\t\t\t\t                                                        - set the mask time for relevant statistics in ms\n\nthreshold / threshold value / (optional threshold type)\t\t     - set the threshold for relevant statistics (default type is abs)",
+									"text" : "masktime / value\t\t\t\t\t\t\t\t                                                             - set the mask time for relevant statistics in ms\n\nthreshold / threshold value / (optional threshold type)\t\t     - set the threshold for relevant statistics (default type is abs)",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -2247,7 +2247,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2570,7 +2570,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2821,7 +2821,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -3027,11 +3027,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-3",
+									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 120.0, 135.0, 707.0, 21.0 ],
-									"text" : "mean value",
+									"patching_rect" : [ 120.0, 135.0, 707.0, 36.0 ],
+									"text" : "the time centroid is the mean of the frame times weighted by value - it is the tendency of the weight of the values over time",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -3188,7 +3189,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 529.148458692971644, 12.0, 139.0, 22.0 ],
+					"patching_rect" : [ 351.148458692971644, 12.0, 139.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -3213,13 +3214,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1129.0, 743.0 ],
+						"rect" : [ 0.0, 26.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -3344,8 +3345,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 44.0, 285.0, 569.0, 21.0 ],
-									"text" : "Use the umenu below to view all the avaiable desciptors along with a list of available parameters.",
+									"patching_rect" : [ 44.0, 285.0, 574.0, 21.0 ],
+									"text" : "Use the umenu below to view all the available descriptors along with a list of available parameters.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -3395,7 +3396,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -4012,7 +4013,7 @@
 									"outlettype" : [ "list", "", "", "" ],
 									"patching_rect" : [ 29.0, 450.0, 930.0, 150.0 ],
 									"rowhead" : 1,
-									"rows" : 8,
+									"rows" : 4,
 									"selmode" : 0,
 									"vscroll" : 0
 								}
@@ -4027,7 +4028,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 89.0, 390.0, 773.0, 21.0 ],
-									"text" : "the Modified Kullback Leibler difference measre- this is more advanced than the flux measure",
+									"text" : "the log brightness is found by dividing the log centroid by the fundamental pitch estimate",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -4122,13 +4123,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1129.0, 743.0 ],
+						"rect" : [ 0.0, 26.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -4185,13 +4186,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 1129.0, 743.0 ],
+						"rect" : [ 0.0, 26.0, 1101.0, 743.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -4231,8 +4232,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 775.0, 303.5, 225.0, 40.0 ],
-									"presentation_linecount" : 2,
-									"text" : "Double-click to learn more about calculating the memory size"
+									"text" : "Double-click to learn more about calculation memory size"
 								}
 
 							}
@@ -4282,7 +4282,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 117.0, 600.0, 716.0, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "maximum fft size (default 65536) / calculation memory size in bytes (default 4194304 or 4 MB) / descriptor feedback (default off - when on the object will post in the max window when the descriptors are correctly set)",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
@@ -4315,7 +4314,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -4905,7 +4904,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
