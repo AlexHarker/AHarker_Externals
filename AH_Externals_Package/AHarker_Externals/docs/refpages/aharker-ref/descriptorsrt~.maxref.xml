@@ -7,16 +7,128 @@
   <description>
       <o>descriptorsrt~</o> can be used to calculate a large number of audio descriptors (or features) in real-time from an incoming signal The results are output as a list. <o>descriptorsrt~</o> is intended as a comprehensive real-time analysis solution, being suitable for a wide range of tracking / following / detection applications. It is the real-time counterpart to the <o>descriptors~</o> object - the two objects are very similar in terms of features and usage. <o>descriptorsrt~</o> only calculates and outputs the descriptors that the user requests (these can be changed in realtime). It is designed to be as efficient as possible, avoiding unnecessary calculations and re-calculations wherever possible and making extensive use of SIMD operations.
   </description>
+  <objarglist>
+      <objarg name="maximum_fft_size" optional="1" type="symbol">
+          <digest>
+              Set the maximum fft size
+          </digest>
+          <description>
+              The first argument sets the maximum fft size that can be used. The default value is 65536.
+          </description>
+      </objarg>
+      <objarg name="descriptor_feedback" optional="1" type="symbol">
+          <digest>
+              Set the state of descriptor feedback
+          </digest>
+          <description>
+              The third argument sets the state of descriptor feedback. The default value is off.
+              <br />
+              when on the object will post in the max window when the descriptors are correctly set.
+          </description>
+      </objarg>
+  </objarglist>
   
   <methodlist>
-      
+      <method name="signal">
+          <arglist>
+              <arg name="signal" type="signal" />
+          </arglist>
+          <digest>
+              Audio input
+          </digest>
+          <description>
+              The <m>signal</m> input provides the audio data to be analysed using the descriptors set by the <m>descriptors</m> message.
+              <br />
+              The analysis of this <m>signal</m> is then output as a <m>list</m> with the contents and order set by the <m>descriptors</m> message.
+          </description>
+      </method>
+      <method name="descriptors">
+          <arglist>
+              <arg name="descriptors" type="message" />
+          </arglist>
+          <digest>
+              Set the descriptors to calculate
+          </digest>
+          <description>
+              The <m>descriptors</m> message is used to set the descriptors to be calculated on the <m>signal</m> input.
+              <br />
+              The desciptors message should be followed by a <m>list</m> of descriptors, each followed by any parameters you wish to set. Each descriptor may have a different number of parameters which are set in a pre-defined order, and each parameter has a default value which will be used in the absence of an argument to set the parameter explicitly. You may set as many, or as few of the parameters for each descriptor as you wish. Therefore, a list of descriptors to calculate is sufficient for default operation.
+              <br />
+              <br />
+              The calculated descriptors are output as a list. Note that you can change the required descriptors on-the-fly, so it is only necessary to calculate the descriptors you require at any particular time. There are no default descriptors, so it is necessary to send this message in order to get the object to calculate anything.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>descriptors</m> / [descriptor name / params...] (repeat...)
+              <br />
+              <br />
+              To see each of the descriptors and their parameters, see the setting_descriptors tab in the <o>descriptorsrt~</o> help file.
+          </description>
+      </method>
+      <method name="energythresh">
+          <arglist>
+              <arg name="energythresh" type="message" />
+          </arglist>
+          <digest>
+              Set the energy threshold
+          </digest>
+          <description>
+              The <m>energythresh</m> message is used to set the energy threshold to ignore frames below.
+              <br />
+              Sending just the <m>energythresh</m> message will turn energy threshold off (defualt).
+              <br />
+              Specifying an <m>int</m> after the message will set the energy threshold in dB.
+          </description>
+      </method>
+      <method name="fftparams">
+          <arglist>
+              <arg name="fftparams" type="message" />
+          </arglist>
+          <digest>
+              Set the fft parameters
+          </digest>
+          <description>
+              Set the fft parameters by sending the <m>fftparams</m> message.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>fftparams</m> / fftsize (should be a power of 2) / hopsize / window size (0 is the same as fftsize) / window type
+              <br />
+              <br />
+              FFT size (defualt 4096)
+              <br />
+              there is (as always) a trade-off between time and frequency resolutions. Higher FFt sizes give better frequency resolution at the expense of time resolution and vice versa.
+              <br />
+              <br />
+              Hop size (defualt 2048)
+              <br />
+              The distance in samples between consecutive frames - this determines the rate at which data will be produced by the object. Smaller hop sizes will require more CPU to calculate but will improve time resolution to some extent. If the hop size is greater than the fft size then some incoming samples will be missed (this is not advised but allowed).
+              <br />
+              <br />
+              Window size (defualt 4096)
+              <br />
+              If you wish to perform zero-padding you should set the window size smaller than the fft size. In this circumstance the pitch descriptor may not function correctly (use with caution). The window size cannot be larger than the fft size.
+              <br />
+              <br />
+              Window type (defualt hann)
+              <br />
+              Different windows have different characteristics - there are many good references (paper and internet) on this topic. For most purposes the default (hann) will be fine.
+              <br />
+              available windows (the kaiser window provided is for alpha = 6.8):
+              <br />
+              rectangle / hann / hamming / kaiser / triangle / blackman / blackman62 / blackman70 / blackman74 / blackman92 / blackman / flattop
+          </description>
+      </method>
   </methodlist>
   <attributelist>
   </attributelist>
   <misc name="Output">
     <entry name="list">
         <description>
-            
+            Outputs a <m>list</m> of calculated descriptor values with the contents and order set by the <m>descriptors</m> message.
         </description>
     </entry>
   </misc>
