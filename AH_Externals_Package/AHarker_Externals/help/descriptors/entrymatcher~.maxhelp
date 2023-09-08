@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 5,
-			"revision" : 5,
+			"revision" : 6,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -53,7 +53,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -241,7 +241,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 714.0, 921.0, 36.0 ],
+									"patching_rect" : [ 15.0, 729.0, 921.0, 36.0 ],
 									"text" : "Tests are performed in the given order. If the test does not match an entry no further tests are performed on that entry. Thus, if possible it is most efficicient to perform  tests so as to reject the greatest number of entries first, the second greatest number second and so on.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
@@ -255,7 +255,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 690.0, 120.0, 21.0 ],
+									"patching_rect" : [ 15.0, 705.0, 120.0, 21.0 ],
 									"text" : "Order of Matching:"
 								}
 
@@ -561,7 +561,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 4,
 									"outlettype" : [ "list", "", "", "" ],
-									"patching_rect" : [ 15.0, 180.0, 504.0, 109.0 ],
+									"patching_rect" : [ 15.0, 180.0, 502.0, 109.0 ],
 									"rowhead" : 1,
 									"rows" : 6,
 									"selmode" : 0,
@@ -677,7 +677,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -739,7 +739,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1244,7 +1244,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
 									"patching_rect" : [ 676.0, 750.0, 58.0, 23.0 ],
-									"sig" : -20.0
+									"sig" : 0.0
 								}
 
 							}
