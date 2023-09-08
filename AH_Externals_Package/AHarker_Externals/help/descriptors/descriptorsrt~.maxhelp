@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 5,
-			"revision" : 5,
+			"revision" : 6,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 36.0, 100.0, 1043.0, 706.0 ],
+		"rect" : [ 34.0, 100.0, 1043.0, 706.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -53,13 +53,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 36.0, 126.0, 1043.0, 680.0 ],
+						"rect" : [ 0.0, 26.0, 1043.0, 680.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -99,7 +99,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 540.0, 290.982759118080139, 195.0, 40.0 ],
-									"presentation_linecount" : 5,
 									"text" : "Toggle between the different descriptor examples"
 								}
 
@@ -1140,7 +1139,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1258,7 +1257,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 975.0, 50.0 ],
-									"text" : "The desciptors message should be followed by a list of descriptors, each followed by any parameters you wish to set. Each descriptor may have a different number of parameters which are set in a pre-defined order, and each parameter has a default  value which will be used in the absence of an argument to set the parameter explicitly. You may set as many, or as few of the parameters for each descriptor as you wish. Therefore, a list of descriptors to calculate is sufficient for default operation.",
+									"text" : "The desciptors message should be followed by a list of descriptors, each followed by any parameters you wish to set. Each descriptor may have a different number of parameters which are set in a pre-defined order, and each parameter has a default value which will be used in the absence of an argument to set the parameter explicitly. You may set as many, or as few of the parameters for each descriptor as you wish. Therefore, a list of descriptors to calculate is sufficient for default operation.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -1293,7 +1292,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2035,13 +2034,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 84.0, 144.0, 640.0, 480.0 ],
+						"rect" : [ 0.0, 26.0, 1043.0, 680.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2070,7 +2069,6 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [  ],
 						"lines" : [  ]
 					}
@@ -2098,13 +2096,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 5,
-							"revision" : 5,
+							"revision" : 6,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 59.0, 119.0, 640.0, 480.0 ],
+						"rect" : [ 34.0, 126.0, 1043.0, 680.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2133,7 +2131,6 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"border" : 0,
@@ -2320,7 +2317,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 5,
-											"revision" : 5,
+											"revision" : 6,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -2850,7 +2847,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 61.5, 345.0, 91.0, 25.0 ],
+									"patching_rect" : [ 60.0, 345.0, 91.0, 25.0 ],
 									"text" : "select input"
 								}
 
