@@ -131,6 +131,25 @@
   </methodlist>
   
   <attributelist>
+      <attribute name="interp" get="1" set="1" type="symbol" size="1">
+          <digest>
+              Interp mode
+          </digest>
+          <description>
+              Set the interpolation mode for <o>ibufplayer~</o> by specifying the mode as a <m>symbol</m>.
+              <br />
+              <br />
+              The modes are:
+              <br />
+              <m>linear</m>
+              <br />
+              <m>hermite</m> (defualt)
+              <br />
+              <m>bspline</m>
+              <br />
+              <m>lagrange</m>
+          </description>
+      </attribute>
   </attributelist>
   <misc name="Output">
     <entry name="signal">
