@@ -172,6 +172,16 @@
   </methodlist>
   
   <attributelist>
+      <attribute name="target" get="1" set="1" type="int" size="1">
+          <digest>
+              Target a specific patch
+          </digest>
+          <description>
+              Similarily to <o>poly~</o>, the <m>target</m> attribute will set inputs to target a specific patch.
+              <br />
+              default is <m>0</m> (target all patches).
+          </description>
+      </attribute>
   </attributelist>
   
   <misc name="Output">
