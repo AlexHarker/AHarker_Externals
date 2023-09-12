@@ -74,7 +74,7 @@
               Set the number of active threads
           </digest>
           <description>
-              The <m>activethreads</m> message followed by an <m>int</m> can be used to set the number of active threads. This is inernally limited to the number of cores available on the hardware.
+              The <m>activethreads</m> message followed by an <m>int</m> can be used to set the number of active threads. This is internally limited to the number of cores available on the hardware.
           </description>
       </method>
       <method name="autoloadbalance">
@@ -231,6 +231,48 @@
   </methodlist>
   
   <attributelist>
+      <attribute name="activethreads" get="1" set="1" type="int" size="1">
+          <digest>
+              Set the number of active threads
+          </digest>
+          <description>
+              An <m>int</m> can be used to set the number of active threads. This is internally limited to the number of cores available on the hardware.
+          </description>
+      </attribute>
+      <attribute name="autoloadbalance" get="1" set="1" type="int" size="1">
+          <digest>
+              Switch automatic load balancing on/off
+          </digest>
+          <description>
+              An <m>int</m> can be used to switch automatic load balancing on(1)/off(0) (defaults to off).
+              <br />
+              When on, each patch runs on whichever thread becomes available to process it first. When off, each patch is linked statically to a thread, as determined by the <m>threadmap</m>.
+              <br />
+              Automatic load balancing has slightly more overhead, but may result in better cpu usage in siuations where the processing load of each patch is varying in an unpredicatble way, or when there are other changing demands on the hardware. The ideal situation is for all threads to be under equal load to give the most efficient use of cpu power.
+          </description>
+      </attribute>
+      <attribute name="target" get="1" set="1" type="int" size="1">
+          <digest>
+              Target a specific patch
+          </digest>
+          <description>
+              Similarily to <o>poly~</o>, the <m>target</m> attribute will set inputs to target a specific patch.
+              <br />
+              default is <m>0</m> (target all patches).
+          </description>
+      </attribute>
+      <attribute name="multithread" get="1" set="1" type="int" size="1">
+          <digest>
+              Switch multithreading on/off
+          </digest>
+          <description>
+              An <m>int</m> can be used to switch multithreading on(1)/off(0).
+              <br />
+              <m>multithread</m> defaults to on unless nested - these default to off
+              <br />
+              Multithreading will add a small cpu overhead, so in some situations it may not produce any gain. In others the gain will be significant.
+          </description>
+      </attribute>
   </attributelist>
   
   <misc name="Output">
