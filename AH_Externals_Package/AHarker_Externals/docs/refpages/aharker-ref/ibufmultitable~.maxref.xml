@@ -85,7 +85,7 @@
               Set the channel to read from
           </digest>
           <description>
-              Set the <o>ibuffer~</o> / <o>buffer~</o> channel for <o>ibuftable~</o> to read from.
+              Set the <o>ibuffer~</o> / <o>buffer~</o> channel for <o>ibufmultitable~</o> to read from.
               <br />
               The message should be formatted as:
               <br />
@@ -104,7 +104,7 @@
               Set the sample to read until
           </digest>
           <description>
-              Set the sample for <o>ibuftable~</o> to read until.
+              Set the sample for <o>ibufmultitable~</o> to read until.
               <br />
               The message should be formatted as:
               <br />
@@ -145,7 +145,7 @@
             Set the name of the <o>ibuffer</o>
         </digest>
         <description>
-            Set the name of the <o>ibuffer~</o> / <o>buffer~</o> that <o>ibuftable~</o> will read from.
+            Set the name of the <o>ibuffer~</o> / <o>buffer~</o> that <o>ibufmultitable~</o> will read from.
             <br />
             The message should be formatted as:
             <br />
@@ -161,7 +161,7 @@
             Set the sample to start reading from
         </digest>
         <description>
-            Set the sample for <o>ibuftable~</o> to start reading from.
+            Set the sample for <o>ibufmultitable~</o> to start reading from.
             <br />
             The message should be formatted as:
             <br />
@@ -175,6 +175,53 @@
   </methodlist>
   
   <attributelist>
+      <attribute name="chan" get="1" set="1" type="int" size="1">
+          <digest>
+              Set the channel to read from
+          </digest>
+          <description>
+              Set the <o>ibuffer~</o> / <o>buffer~</o> channel for <o>ibufmultitable~</o> to read from using an <m>int</m>
+          </description>
+      </attribute>
+      <attribute name="endsamp" get="1" set="1" type="int" size="1">
+          <digest>
+              Set the sample to read until
+          </digest>
+          <description>
+              Set the sample for <o>ibufmultitable~</o> to read until as an <m>int</m>.
+              <br />
+              Default end sample is <m>512</m>.
+          </description>
+      </attribute>
+      <attribute name="interp" get="1" set="1" type="symbol" size="1">
+          <digest>
+              Interp mode
+          </digest>
+          <description>
+              Set the interpolation mode for <o>ibufmultitable~</o> by specifying the mode as a <m>symbol</m>.
+              <br />
+              <br />
+              The modes are:
+              <br />
+              <m>linear</m> (defualt)
+              <br />
+              <m>hermite</m>
+              <br />
+              <m>bspline</m>
+              <br />
+              <m>lagrange</m>
+          </description>
+      </attribute>
+      <attribute name="startsamp" get="1" set="1" type="int" size="1">
+          <digest>
+              Set the sample to start reading from
+          </digest>
+          <description>
+              Set the sample for <o>ibufmultitable~</o> to start reading from as an <m>int</m>.
+              <br />
+              Default start sample is <m>0</m>.
+          </description>
+      </attribute>
   </attributelist>
   <misc name="Output">
     <entry name="signal">
