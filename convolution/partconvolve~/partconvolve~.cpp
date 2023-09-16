@@ -289,7 +289,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     x->fft_buffers[4] = x->partition_temp.imagp + (max_fft_size / 2);
     
-    hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
+    htl::create_fft_setup(&x->fft_setup_real, x->max_fft_size_log2);
     
     x->memory_flag = x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
     
@@ -311,7 +311,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 void partconvolve_free(t_partconvolve *x)
 {
     dsp_free(&x->x_obj);
-    hisstools_destroy_setup(x->fft_setup_real);
+    htl::destroy_fft_setup(x->fft_setup_real);
     htl::deallocate_aligned(x->impulse_buffer.realp);
     htl::deallocate_aligned(x->fft_buffers[0]);
 }
@@ -564,7 +564,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
             
             t_ptr_int n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, temp_buffer, buffer_pos, n_samps, chan);
-            hisstools_rfft(fft_setup_real, temp_buffer, &impulse_buffer, n_samps, fft_size_log2);
+            htl::rfft(fft_setup_real, temp_buffer, &impulse_buffer, n_samps, fft_size_log2);
             impulse_length -= fft_size_halved;
             
             update_split_complex_pointers(impulse_buffer, impulse_buffer, fft_size_halved);
@@ -782,7 +782,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             // Do the fft and put into the input buffer
             
-            hisstools_rfft(fft_setup_real, fft_input, &buffer_temp, fft_size, fft_size_log2);
+            htl::rfft(fft_setup_real, fft_input, &buffer_temp, fft_size, fft_size_log2);
             
             // Process first partition here and accumulate the output (we need it now!)
             
@@ -793,7 +793,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             // Processing done - do inverse fft on the accumulation buffer
             
-            hisstools_rifft(fft_setup_real, &accum_buffer, fft_buffers[2], fft_size_log2);
+            htl::rifft(fft_setup_real, &accum_buffer, fft_buffers[2], fft_size_log2);
             
             // Store the result to the output buffer
             

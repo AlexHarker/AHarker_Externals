@@ -86,7 +86,7 @@ struct fft_setup
 {
     fft_setup() : m_fft_setup(nullptr), m_size(0) {}
     fft_setup(size_t size) : fft_setup() { resize(size); }
-    ~fft_setup() { hisstools_destroy_setup(m_fft_setup); }
+    ~fft_setup() { htl::destroy_fft_setup(m_fft_setup); }
     
     fft_setup(const fft_setup&) = delete;
     fft_setup& operator=(const fft_setup&) = delete;
@@ -95,8 +95,8 @@ struct fft_setup
     {
         if (size != m_size)
         {
-            hisstools_destroy_setup(m_fft_setup);
-            hisstools_create_setup(&m_fft_setup, size);
+            htl::destroy_fft_setup(m_fft_setup);
+            htl::create_fft_setup(&m_fft_setup, size);
             m_size = size;
         }
     }
