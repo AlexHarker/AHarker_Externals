@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="macaddress" module="AHarker Externals" category="Utility">
+  <digest>
+      Return the MAC address of any wireless interface
+  </digest>
+  <description>
+      <o>macaddress</o> is an object for obtaining the MAC address of any wireless interface to provide a unique identifier for the host computer.
+  </description>
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+              Output the MAC address
+          </digest>
+          <description>
+              A <m>bang</m> will cause <o>macaddress</o> to output the MAC address.
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="symbol">
+        <description>
+            Outputs the MAC address
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>utility</description>
+    </entry>
+  </misc>
+</c74object>
