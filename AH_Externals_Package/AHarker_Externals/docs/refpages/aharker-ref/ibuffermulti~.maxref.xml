@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibuffermulti~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Host multiple ibuffer~s in one object
+  </digest>
+  <description>
+      <o>ibuffermulti~</o> is a dynamic and memory efficient audio file loading solution that can host up to 4096 internal <o>ibuffer~</o>s.
+  </description>
+  
+  <objarglist>
+  </objarglist>
+  
+  <methodlist>
+    <method name="clear">
+        <arglist>
+            <arg name="clear" type="message" />
+        </arglist>
+        <digest>
+            Delete all the hosted ibuffer~s
+        </digest>
+        <description>
+            Delete all the currently hosted <o>ibuffer~</o>s
+        </description>
+    </method>
+    <method name="load">
+        <arglist>
+            <arg name="load" type="message" />
+        </arglist>
+        <digest>
+            Load an ibuffer~
+        </digest>
+        <description>
+            Send in the <m>load</m> message to load an <o>ibuffer~</o> into <o>ibuffermulti~</o>.
+            <br />
+            The full message should be formatted as:
+            <br />
+            <br />
+            <m>load</m> / buffer name / audio file name
+            <br />
+            <br />
+            You may also specify the channel at the end of the message similarily to <o>ibuffer~</o>.
+        </description>
+    </method>
+  </methodlist>
+  
+  <attributelist>
+      <attribute name="interp" get="1" set="1" type="symbol" size="1">
+          <digest>
+              Interp mode
+          </digest>
+          <description>
+              Set the interpolation mode for <o>ibuffermulti~</o> by specifying the mode as a <m>symbol</m>.
+              <br />
+              <br />
+              The modes are:
+              <br />
+              <m>linear</m>
+              <br />
+              <m>hermite</m> (defualt)
+              <br />
+              <m>bspline</m>
+              <br />
+              <m>lagrange</m>
+          </description>
+      </attribute>
+  </attributelist>
+  <misc name="Outputs">
+    <entry name="Number of hosted ibuffers">
+        <description>
+            Output the number of hosted <o>ibuffer~</o>s as an <m>int</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibufconcatenate~" />
+    <seealso name="ibufinfo~" />
+    <seealso name="ibuffer~" />
+    <seealso name="ibufmultitable~" />
+    <seealso name="ibufplayer~" />
+    <seealso name="ibuftable~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>
