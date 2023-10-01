@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="gesture_maker" module="AHarker Externals" category="Gesture_Suite">
+  <digest>
+      Complex gestural control over parametersDetermine the thread which a message is in
+  </digest>
+  <description>
+      <o>gesture_maker</o> is an object for creating multipart gestural control in MaxMSP. Typically, <o>gesture_maker</o> is used to drive a <o>line~</o> object for audio rate control, and the output is internally scaled to give useful output for musical control. Each gesture has two layers - the main layer, and the inflection layer. Each layer is scaled according to a certain range and scaling type, and the two layers are then combined through multiplication (which is appropriate for most musical cases). The basis of the gesture is the kernel which is made up of up to three curves, which may take a variety of shapes, using power and s-shaped curves. The main layer has only one kernel shape per gesture - the inflection layer has one or more kernel shapes (as specified), which occur one after the other. The shape of each gestural kernel over time can be given with varying degrees of specificity to allow either micro variation of a gesture, or radically different shapes from a single set of values. The timings of the inflection gestures can also be specified as desired. The object can either be triggered to output values at regular intervals (drive mode) over a specified time period, or to produce output at given points in time (events mode). Additionally, <o>gesture_maker</o> objects may be chained together to control multiple parameters in parallel.
+  </description>
+  <methodlist>
+      <method name="drive">
+          <arglist>
+              <arg name="drive" type="message" />
+          </arglist>
+          <digest>
+              Realise the gesture with drive mode
+          </digest>
+          <description>
+              Realise the gesture with the specified duration in <m>drive mode</m> by inputting the <m>drive</m> message to the left inlet.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>drive</m> / duration in milliseconds
+          </description>
+      </method>
+      <method name="events">
+          <arglist>
+              <arg name="events" type="message" />
+          </arglist>
+          <digest>
+              Realise the gesture with events mode
+          </digest>
+          <description>
+              Realise the gesture with the given timings in <m>events mode</m>. The gesture is evaluted at specific points in time as specified by a <m>list</m> of timing values.
+              <br />
+              The gesture is evaluated at time zero and then after each of the specified delays.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>events</m> / <m>list</m> of time points in milliseconds
+          </description>
+      </method>
+      <method name="external_drive">
+          <arglist>
+              <arg name="external_drive" type="list" />
+          </arglist>
+          <digest>
+              Externally drive gesture_maker
+          </digest>
+          <description>
+              <o>gesture_maker</o> can be externally driven by connecting the right outlet of one <o>gesture_maker</o> into the right inlet of another <o>gesture_maker</o>.
+              <br />
+              <br />
+              The format for the external_drive in/out is a <m>list</m> containing the normalised time (0-1) and the grain duration.
+          </description>
+      </method>
+      <method name="gesture_inflections">
+          <arglist>
+              <arg name="gesture_inflections" type="message" />
+          </arglist>
+          <digest>
+              Set duration between outputs
+          </digest>
+          <description>
+              Set the *next* inflection gesture kernel parameters. Each kernel is added to the internal inflection kernel <m>list</m>.
+              <br />
+              <br />
+              See <m>gesture_main</m> for a list of all the shapes.
+          </description>
+      </method>
+      <method name="gesture_main">
+          <arglist>
+              <arg name="gesture_main" type="message" />
+          </arglist>
+          <digest>
+              Set the main gesture kernel parameters
+          </digest>
+          <description>
+              Each kernel can have one of several shape types that allow only the minimum number of values to be specified.
+              <br />
+              The shape types are:
+              <br />
+              <br />
+              <m>flat</m>
+              <br />
+              kernel takes a single value for its duration.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>flat</m> / flat val
+              <br />
+              <br />
+              <m>line</m>
+              <br />
+              kernel is a single line or curved from one value to another.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>line</m> / start val / end val / curve vals
+              <br />
+              <br />
+              <m>line_flat</m>
+              <br />
+              A single line or curve until the given time value followed by a single value for the rest of the kernel .
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>line_flat</m> / time / start val / end val / curve vals
+              <br />
+              <br />
+              <m>flat_line</m>
+              <br />
+              A single value up until the specified time and then a single line or curve.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>flat_line</m> / time / start val / end val / curve vals
+              <br />
+              <br />
+              <m>triangle_return</m>
+              <br />
+              Two lines (or curves) - the second returns to the same value with which the kernel starts.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>triangle_return</m> / time / start val / target val / curve vals 1 / curve vals 2
+              <br />
+              <br />
+              <m>triangle</m>
+              <br />
+              Two lines (or curves).
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>triangle</m> / time / start val / target val / end val / curve vals 1 / curve vals 2
+              <br />
+              <br />
+              <m>plateau_return</m>
+              <br />
+              Three lines (or curves) - the central one is flat (single value) and the kernel ends on the same value it begins.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>plateau_return</m> / time 1 / time 2 / start val / target val / curve vals 1 / curve vals 2
+              <br />
+              <br />
+              <m>plateau</m>
+              <br />
+              Three lines (or curves) - the central one is flat (single value).
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>plateau</m> / time 1 / time 2 / start val / target val / end val / curve vals 1 / curve vals 2
+              <br />
+              <br />
+              <m>return</m>
+              <br />
+              Three lines (or curves) - the kernel begins and ends on the same value.
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>return</m> / time 1 / time 2 / start val / first target val / second target val / curve vals 1 / curve vals 2 / curve vals 3
+              <br />
+              <br />
+              <m>general</m>
+              <br />
+              a kernel with three unconstrained lines (or curves).
+              <br />
+              The message should be formatted as:
+              <br />
+              <m>gesture_main</m> / <m>general</m> / time 1 / time 2 / start val / first target val / second target val / end val / curve vals 1 / curve vals 2 / curve vals 3
+              <br />
+              All shapes are possible using the general shape, but it is usually simpler to use one of the more restricted forms.
+          </description>
+      </method>
+      <method name="graintime">
+          <arglist>
+              <arg name="graintime" type="message" />
+          </arglist>
+          <digest>
+              Set duration between outputs
+          </digest>
+          <description>
+              Set the duration in milliseconds between outputs when using <m>drive mode</m>.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>graintime</m> / time (defualt 20ms)
+              <br />
+              <br />
+              Longer <m>graintime</m> gives less temporal resolution, but reduce calculations per unit time.
+          </description>
+      </method>
+      <method name="initial_inflections">
+          <arglist>
+              <arg name="initial_inflections" type="message" />
+          </arglist>
+          <digest>
+              Set initial value for inflections layer
+          </digest>
+          <description>
+              Set the initial normalised <m>float</m> value (0-1) for the inflections layer (only needed when the first inflection starts with a value specified by the "last" specifier).
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>initial_inflections</m> / normalised <m>float</m> (0-1)
+          </description>
+      </method>
+      <method name="initial_main">
+          <arglist>
+              <arg name="initial_main" type="message" />
+          </arglist>
+          <digest>
+              Set initial value for main layer
+          </digest>
+          <description>
+              Set the initial normalised <m>float</m> value (0-1) for the main layer (only needed when the main kernel starts with a value specified by the "last" specifier).
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>initial_main</m> / normalised <m>float</m> (0-1)
+          </description>
+      </method>
+      <method name="reset">
+          <arglist>
+              <arg name="reset" type="message" />
+          </arglist>
+          <digest>
+              Clear gesture information
+          </digest>
+          <description>
+              Sending the <m>reset</m> message to the left inlet clears all stored gesture information.
+          </description>
+      </method>
+      <method name="scaling_inflections">
+          <arglist>
+              <arg name="scaling_inflections" type="message" />
+          </arglist>
+          <digest>
+              Set scaling for the inflection layer
+          </digest>
+          <description>
+              Set the scaling for the inflection layer using one of several useful musical scalings.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>scaling_main</m> / <m>mode</m> / min output / max output
+              <br />
+              <br />
+              The different <m>modes</m> are :
+              <br />
+              <m>none</m> - kernal left in 0-1 range
+              <br />
+              <m>scale</m> - linear scaling
+              <br />
+              <m>log</m> - scale from logarithmic 0-1 input to linear output (exponential scaling)
+              <br />
+              <m>exp</m> - scale from exponetial 0-1 input to linear output (logarithmic scaling)
+              <br />
+              <m>pitch</m> - scale from linear 0-1 input to range specified in semitones (linear scaling) then convert to  a speed / freq multiplier
+              <br />
+              <m>amp</m> - scale from linear (0-1) input to specified range in decibels (linear scaling) then output as linear amplitude
+          </description>
+      </method>
+      <method name="scaling_main">
+          <arglist>
+              <arg name="scaling_main" type="message" />
+          </arglist>
+          <digest>
+              Set scaling for the main layer
+          </digest>
+          <description>
+              Set the scaling for the main layer using one of several useful musical scalings.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>scaling_main</m> / <m>mode</m> / min output / max output
+              <br />
+              <br />
+              The different <m>modes</m> are :
+              <br />
+              <m>none</m> - kernal left in 0-1 range
+              <br />
+              <m>scale</m> - linear scaling
+              <br />
+              <m>log</m> - scale from logarithmic 0-1 input to linear output (exponential scaling)
+              <br />
+              <m>exp</m> - scale from exponetial 0-1 input to linear output (logarithmic scaling)
+              <br />
+              <m>pitch</m> - scale from linear 0-1 input to range specified in semitones (linear scaling) then convert to  a speed / freq multiplier
+              <br />
+              <m>amp</m> - scale from linear (0-1) input to specified range in decibels (linear scaling) then output as linear amplitude
+          </description>
+      </method>
+      <method name="stop">
+          <arglist>
+              <arg name="stop" type="message" />
+          </arglist>
+          <digest>
+              Stop the gesture
+          </digest>
+          <description>
+              Stop the gesture part way through (note that the last output of each kernel is always retained).
+          </description>
+      </method>
+      <method name="timings">
+          <arglist>
+              <arg name="timings" type="message" />
+          </arglist>
+          <digest>
+              Set timings for inflection gestures
+          </digest>
+          <description>
+              Set the timings for inflection gestures. The values should be specified in normalised time (0-1).
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>timings</m> / <m>list</m> of timings
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="output">
+        <description>
+           The first outlet outputs a <m>bang</m> when the gesture is complete.
+           <br />
+           <br />
+           The second outlet outputs the values over time to be fed into a <o>line~</o>.
+           <br />
+           <br />
+           The third outlet is the drive out output and is used to sync multiple <o>gesture_maker</o> objects together. The output is a <m>list</m> containing the normalised time (0-1) and the grain duration.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="timefilter" />
+    <seealso name="timemap" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Gesture_Suite</description>
+    </entry>
+  </misc>
+</c74object>
