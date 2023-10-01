@@ -20,7 +20,11 @@ t_symbol* ibuffer_data::ps_ibuffer = gensym("ibuffer~");
 // IBuffer Proxy
 
 ibuffer_data::ibuffer_data(t_symbol* name)
-    : buffer_type(kBufferNone), samples(nullptr), length(0), num_chans(0), format(PCM_FLOAT), sample_rate(0.0)
+: buffer_type(kBufferNone)
+, samples(nullptr), length(0)
+, num_chans(0)
+, format(PCM_FLOAT)
+, sample_rate(0.0)
 {
     buffer_object = name ? name->s_thing : nullptr;
     acquire_buffer();
@@ -129,10 +133,10 @@ void ibuffer_read_format(const ibuffer_data& buffer, T* out, U* positions, intpt
 {
     switch (buffer.get_format())
     {
-    case PCM_FLOAT:     table_read(fetch_float(buffer, chan), out, positions, n_samps, mul, interp);    break;
-    case PCM_INT_16:    table_read(fetch_16bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
-    case PCM_INT_24:    table_read(fetch_24bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
-    case PCM_INT_32:    table_read(fetch_32bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_FLOAT:     table_read(fetch_float(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_16:    table_read(fetch_16bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_24:    table_read(fetch_24bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
+        case PCM_INT_32:    table_read(fetch_32bit(buffer, chan), out, positions, n_samps, mul, interp);    break;
     }
 }
 
@@ -156,33 +160,33 @@ void ibuffer_read_format_edges(const ibuffer_data& buffer, T* out, U* positions,
 {
     switch (buffer.get_format())
     {
-    case PCM_FLOAT:
-    {
-        fetch_float fetch(buffer, chan);
-        table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
-        break;
-    }
+        case PCM_FLOAT:
+        {
+            fetch_float fetch(buffer, chan);
+            table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
+            break;
+        }
 
-    case PCM_INT_16:
-    {
-        fetch_16bit fetch(buffer, chan);
-        table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
-        break;
-    }
+        case PCM_INT_16:
+        {
+            fetch_16bit fetch(buffer, chan);
+            table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
+            break;
+        }
 
-    case PCM_INT_24:
-    {
-        fetch_24bit fetch(buffer, chan);
-        table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
-        break;
-    };
+        case PCM_INT_24:
+        {
+            fetch_24bit fetch(buffer, chan);
+            table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
+            break;
+        };
 
-    case PCM_INT_32:
-    {
-        fetch_32bit fetch(buffer, chan);
-        table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
-        break;
-    };
+        case PCM_INT_32:
+        {
+            fetch_32bit fetch(buffer, chan);
+            table_read_edges(fetch, out, positions, n_samps, mul, interp, edges, bound);
+            break;
+        };
     }
 }
 
@@ -221,10 +225,10 @@ void ibuffer_get_samps(const ibuffer_data& buffer, T* out, intptr_t offset, intp
 {
     switch (buffer.get_format())
     {
-    case PCM_FLOAT:     ibuffer_get_samps_loop(fetch_float(buffer, chan), out, offset, n_samps, reverse);     break;
-    case PCM_INT_16:    ibuffer_get_samps_loop(fetch_16bit(buffer, chan), out, offset, n_samps, reverse);     break;
-    case PCM_INT_24:    ibuffer_get_samps_loop(fetch_24bit(buffer, chan), out, offset, n_samps, reverse);     break;
-    case PCM_INT_32:    ibuffer_get_samps_loop(fetch_32bit(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_FLOAT:     ibuffer_get_samps_loop(fetch_float(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_16:    ibuffer_get_samps_loop(fetch_16bit(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_24:    ibuffer_get_samps_loop(fetch_24bit(buffer, chan), out, offset, n_samps, reverse);     break;
+        case PCM_INT_32:    ibuffer_get_samps_loop(fetch_32bit(buffer, chan), out, offset, n_samps, reverse);     break;
     }
 }
 
