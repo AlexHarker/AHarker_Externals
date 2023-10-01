@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="randfloats" module="AHarker Externals" category="Random Numbers">
+  <digest>
+      High quality random float values
+  </digest>
+  <description>
+    <o>randfloats</o> is an object for generating high quality random numbers (either 0-1 or 0-n) using either flat or windowed gaussian distributions. Three gaussian functions may also be used simultaneously to create a more complex distribution, with weighting values used to randomly determine which is used.
+  </description>
+  
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="first-inlet" optional="1" type="bang" />
+          </arglist>
+        <digest>
+            Output a linearly distributed <m>float</m>
+        </digest>
+        <description>
+            A <m>bang</m> to the first-inlet will cause an output of a linearly distributed <m>float</m> between 0. and 1.
+        </description>
+      </method>
+      <method name="bang">
+          <arglist>
+              <arg name="second-inlet" optional="1" type="bang" />
+          </arglist>
+        <digest>
+            Output a windowed gaussian distribution
+        </digest>
+        <description>
+            A <m>bang</m> to the second-inlet will cause a <m>float</m> output between 0. and 1. of a windowed gaussian distribution. The parameters for the distribution can be set by sending the <m>mean</m> and <m>deviation</m> as a single message in the left-inlet.
+        </description>
+      </method>
+      <method name="bang">
+          <arglist>
+              <arg name="third-inlet" optional="1" type="bang" />
+          </arglist>
+        <digest>
+            Output a triple windowed gaussian distribution
+        </digest>
+        <description>
+            A <m>bang</m> to the third-inlet will cause a <m>float</m> output between 0. and 1. of a triple windowed gaussian distribution. The parameters for the distribution can be set by sending three sets of:
+            <br />
+            <br />
+            <m>mean</m> / <m>deviation</m> / <m>weight</m>
+            <br />
+            <br />
+            as a single message in the left-inlet.
+        </description>
+      </method>
+      <method name="message">
+          <arglist>
+              <arg name="windowed gaussian distribution" optional="1" type="message" />
+          </arglist>
+        <digest>
+            Set the parameters for the windowed gaussian distribution
+        </digest>
+        <description>
+            A <m>message</m> to the left-inlet formatted as:
+            <br />
+            <br />
+            <m>mean</m> / <m>deviation</m>
+            <br />
+            <br />
+            will set the parameters for the windowed gaussian distribution for when a <m>bang</m> is sent the the second-inlet.
+        </description>
+      </method>
+      <method name="message">
+          <arglist>
+              <arg name="triple windowed gaussian distribution" optional="1" type="message" />
+          </arglist>
+        <digest>
+            Set the parameters for the triple windowed gaussian distribution
+        </digest>
+        <description>
+            A <m>message</m> to the left-inlet formatted as three sets of:
+            <br />
+            <br />
+            <m>mean</m> / <m>deviation</m> / <m>weight</m>
+            <br />
+            <br />
+            will set the parameters for the triple windowed gaussian distribution for when a <m>bang</m> is sent the the third-inlet.
+        </description>
+      </method>
+      <method name="int">
+          <arglist>
+              <arg name="multiplier" optional="1" type="int" />
+          </arglist>
+        <digest>
+            Set a multiplier for the output
+        </digest>
+        <description>
+            Sending an <m>int</m> (n) into any inlet of <o>randfloats</o> will cause its ouput to be multiplied by that value, changing the output range into 0 to n.
+        </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="float">
+        <description>
+            Outputs a high quality random <m>float</m> in the range of either 0. to 1. or 0 to n.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ahnoise~" />
+    <seealso name="randomvals" />
+    <seealso name="randomvals~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>random numbers</description>
+    </entry>
+  </misc>
+</c74object>

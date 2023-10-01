@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ahnoise~" module="AHarker Externals" category="Random Numbers">
+  <digest>
+      High quality white noise
+  </digest>
+  <description>
+    <o>ahnoise~</o> provides higher quality white noise (between -1. and 1.) than the standard MSP <o>noise~</o> object. <o>ahnoise~</o> is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation (see http://www.iro.umontreal.ca/~panneton/WELLRNG.html).
+  </description>
+  <methodlist>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs a high quality white noise <m>signal</m> in the range of -1. to 1.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="randfloats" />
+    <seealso name="randomvals" />
+    <seealso name="randomvals~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>random numbers</description>
+    </entry>
+  </misc>
+</c74object>
