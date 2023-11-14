@@ -103,7 +103,7 @@ jobs:
           fail_on_unmatched_files: true
           files: build/AHarker_Externals.zip
           target_commitish: ${{ github.sha }}
-          tag_name: latest-${{ steps.date.outputs.date }}
+          tag_name: latest-sse-${{ steps.date.outputs.date }}
           body: This is an automated build of AHarker Externals. Releases are currently in an alpha stage whilst some aspects of interface are finalised and for a small number of objects may not correspond exactly in behaviour to earlier public versions.
           generate_release_notes: true
     
