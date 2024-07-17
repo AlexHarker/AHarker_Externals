@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="recursivefolder" module="AHarker Externals" category="Utility">
+  <digest>
+      Recursively list the files in a specific folder
+  </digest>
+  <description>
+      <o>recursivefolder</o> is similar to the <o>folder</o> object, but unlike folder it is possibly to search recursively. Recursion can either be infinite (default), or to a specified depth. See the <o>folder</o> object help file for info on pathnames in MaxMSP.
+  </description>
+  <objarglist>
+      <objarg name="recursion-depth" optional="1" type="int">
+          <digest>
+              Set the recursion depth
+          </digest>
+          <description>
+              An optional <m>int</m> sets recursion depth (0 is default - ie. infinite recursion).
+          </description>
+      </objarg>
+      <objarg name="symbol" optional="1" type="symbol">
+          <digest>
+              Set symbols to search for
+          </digest>
+          <description>
+              Any additional optional <m>symbol</m>s set types to search for.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+              Output the folder contents
+          </digest>
+          <description>
+              A <m>bang</m> will output the folder contents again.
+          </description>
+      </method>
+      <method name="file-path">
+          <arglist>
+              <arg name="file-path" type="symbol" />
+          </arglist>
+          <digest>
+              Set the file path to output
+          </digest>
+          <description>
+              The file path of which the contents will be output.
+          </description>
+      </method>
+      <method name="type">
+          <arglist>
+              <arg name="type" type="message" />
+          </arglist>
+          <digest>
+              Select file types to list.
+          </digest>
+          <description>
+              The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive).
+              <br />
+              <br />
+              types / TEXT   -   text files
+              <br />
+              <br />
+              types / JSON   -   Max patches
+              <br />
+              <br />
+              types / iLaX   -   external objects
+              <br />
+              <br />
+              types / AIFF WAV   -   sound files
+              <br />
+              <br />
+              types / MooV   -   movies
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="symbol">
+        <description>
+            Outputs the paths of all found files.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>utility</description>
+    </entry>
+  </misc>
+</c74object>

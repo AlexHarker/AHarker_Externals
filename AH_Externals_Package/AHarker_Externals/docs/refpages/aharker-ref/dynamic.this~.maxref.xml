@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="dynamic.this~" module="AHarker Externals" category="Dynamic_Suite">
+  <digest>
+      The functionality of thispoly~ for dynamicdsp~ and dynamicserial~
+  </digest>
+  <description>
+      <o>dynamic.this~</o> allows you to determine which slot a patch is loaded into in a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object, as well as to set the mute and busy flags for voice allocation and CPU control. You can also delete a patch from the inside, without affecting the audio processing of other patches (this also frees the slot into which the patch is loaded).
+  </description>
+  <objarglist>
+      <objarg name="Audio-flag" optional="1" type="int">
+          <digest>
+              Set the intial state of the audio flag
+          </digest>
+          <description>
+              The first argument is an <m>int</m> to set the initial mute state of <o>dynamic.this~</o>.
+              <br />
+              <br />
+              <m>0</m> (default) sets the mute flag on, preventing any audio.
+              <br />
+              <m>1</m> sets the mute flag off, turning audio on.
+          </description>
+      </objarg>
+      <objarg name="busy-flag" optional="1" type="int">
+          <digest>
+              Set the intial state of the busy flag
+          </digest>
+          <description>
+              The second argument is an <m>int</m> to set the initial busy state of <o>dynamic.this~</o>.
+              <br />
+              <br />
+              <m>0</m> (default) sets the busy flag off.
+              <br />
+              <m>1</m> sets the busy flag on.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+              Bang an output
+          </digest>
+          <description>
+              Sending in a <m>bang</m> will cause <o>dynamic.this~</o> to output when it is inside of a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+      <method name="busy">
+          <arglist>
+              <arg name="busy" type="message" />
+          </arglist>
+          <digest>
+              Set the busy state
+          </digest>
+          <description>
+              Sending the <m>busy</m> message followed by an <m>int</m> sets the busy state of <o>dynamic.this~</o>.
+              <br />
+              <br />
+              <m>busy</m> / <m>0</m> sets the busy flag off.
+              <br />
+              <m>busy</m> / <m>1</m> sets the busy flag on.
+              <br />
+              <br />
+              Sending an <m>int</m>(0 or 1) into <o>dynamic.this~</o> without the <m>busy</m> message works the same.
+          </description>
+      </method>
+      <method name="delete">
+          <arglist>
+              <arg name="delete" type="message" />
+          </arglist>
+          <digest>
+              Delete the patch
+          </digest>
+          <description>
+              Sending <o>dynamic.this~</o> the <m>delete</m> message will delete that patch that it is in and free up the slot it was using in the <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+      <method name="flags">
+          <arglist>
+              <arg name="flags" type="int" />
+          </arglist>
+          <digest>
+              Set the busy/mute flags
+          </digest>
+          <description>
+              Sending the <m>flags</m> message followed by an <m>int</m> input sets the initial busy/mute state of <o>dynamic.this~</o>.
+              <br />
+              <br />
+              <m>flags</m> / <m>0</m> sets the busy flag off / mute flag on
+              <br />
+              <m>flags</m> / <m>1</m> sets the busy flag on / mute flag off
+          </description>
+      </method>
+      <method name="mute">
+          <arglist>
+              <arg name="mute" type="message" />
+          </arglist>
+          <digest>
+              Set the mute state
+          </digest>
+          <description>
+              Sending the <m>mute</m> message followed by an <m>int</m> sets the mute state of <o>dynamic.this~</o>.
+              <br />
+              <br />
+              <m>0</m> sets the mute flag on, preventing any audio.
+              <br />
+              <m>1</m> sets the mute flag off, turning audio on.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            <o>dynamic.this~</o> has three outlets.
+            <br />
+            <br />
+            The first outlet outputs the patch index (starting from 1) as an <m>int</m>.
+            <br />
+            <br />
+            The second outlet outputs the mute status as an <m>int</m>.
+            <br />
+            <m>0</m> is unmuted
+            <br />
+            <m>1</m> is muted
+            <br />
+            <br />
+            The third outlet outputs the busy status as an <m>int</m>.
+            <br />
+            <m>0</m> is not busy
+            <br />
+            <m>1</m> is busy
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+      <seealso name="dynamic.out~" />
+      <seealso name="dynamic.in~" />
+      <seealso name="dynamic.request~" />
+      <seealso name="dynamic.patch~" />
+      <seealso name="dynamicdsp~" />
+      <seealso name="dynamicserial~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Dynamic Suite</description>
+    </entry>
+  </misc>
+</c74object>

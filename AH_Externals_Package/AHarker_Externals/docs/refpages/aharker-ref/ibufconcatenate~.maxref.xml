@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibufconcatenate~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Concatenate buffers into one and store item data
+  </digest>
+  <description>
+      The <o>ibufconcatenate~</o> object is used to handle data to do with sections of a <o>buffer~</o>. It can be used in one of two ways. Firstly - entries - store start and end points for items in a buffer by entering them manually. Secondly - concatenation - concatenate multiple msp buffers into one <o>buffer~</o>, storing start and end points. The bounds of each chunk can be retrieved either as a message, or as a signal in a sample-accurate manner, according to the mode of the object. The <o>ibufconcatedrive~</o> object can also be used to give sample-accurate playback of only one item at a time.
+  </description>
+  
+  <objarglist>
+      <objarg name="name" optional="0" type="symbol">
+          <digest>
+              Set the (i)buffer name
+          </digest>
+          <description>
+              The first argument is the <o>ibuffer~</o> /<o>buffer~</o> to attach to. This is where contents will be stored when <o>ibufconcatenate~</o> recieves an <m>append</m> / <m>entry</m> message.
+          </description>
+      </objarg>
+      <objarg name="mode" optional="1" type="int">
+          <digest>
+              Set the mode
+          </digest>
+          <description>
+              The second argument sets the mode for <o>ibufconcatenate~</o>.
+              <br />
+              <m>mode 0 </m> allows querying and reporting with signals.
+              <br />
+              <m>mode 1 </m> allows querying and reporting with messages
+              <br />
+              <br />
+              If no mode is set, <o>ibufconcatenate~</o> defualts to <m>mode 0 </m>.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="signal">
+          <arglist>
+              <arg name="signal" type="signal" />
+          </arglist>
+          <digest>
+              Query an item in the (i)buffer
+          </digest>
+          <description>
+              Query an item in the set <o>ibuffer~</o> /<o>buffer~</o> by inputting its index/item as a <m>signal</m>.
+              <br />
+              This will then output the start/end times in milliseconds of the chosen item.
+              <br />
+              <br />
+              This only works in <m>mode 0</m>.
+          </description>
+      </method>
+      
+      <method name="message">
+          <arglist>
+              <arg name="message" type="message" />
+          </arglist>
+          <digest>
+              Query an item in the (i)buffer
+          </digest>
+          <description>
+              Query an item in the set <o>ibuffer~</o> /<o>buffer~</o> by inputting its index/item as an <m>int</m> <m>message</m>.
+              <br />
+              Inputting a <m>-1</m> will output the whole buffer.
+              <br />
+              This will then output the start time, end time and buffer sample rate as a <m>list</m>.
+              <br />
+              <br />
+              This only works in <m>mode 1</m>.
+          </description>
+      </method>
+      <method name="append">
+          <arglist>
+              <arg name="append" type="message" />
+          </arglist>
+          <digest>
+              Append a buffers conents as the next item.
+          </digest>
+          <description>
+              Append the contents of an <o>ibuffer~</o> /<o>buffer~</o> to the last item added.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>append</m> / buffer name
+              <br />
+              <br />
+              When clicked, the last entry will be output as a <m>list</m> from the fifth outlet.
+          </description>
+      </method>
+      <method name="clear">
+          <arglist>
+              <arg name="clear" type="message" />
+          </arglist>
+          <digest>
+              Clear all the entries
+          </digest>
+          <description>
+              Clears all the entries set using the <m>entry</m> or <m>append</m> messages.
+          </description>
+      </method>
+      <method name="entry">
+          <arglist>
+              <arg name="entry" type="message" />
+          </arglist>
+          <digest>
+              Add an entry in reference to the (i)buffer
+          </digest>
+          <description>
+              Add an entry in reference to audio already in the <o>ibuffer~</o> /<o>buffer~</o>.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>entry</m> / start millisecond / end millisecond
+              <br />
+              <br />
+              When clicked, the last entry will be output as a <m>list</m> from the fifth outlet.
+          </description>
+      </method>
+      <method name="set">
+          <arglist>
+              <arg name="set" type="message" />
+          </arglist>
+          <digest>
+              Set the (i)buffer to attach to
+          </digest>
+          <description>
+              Set the <o>ibuffer~</o> /<o>buffer~</o> to attach to. This is where contents will be stored when <o>ibufconcatenate~</o> recieves an <m>append</m> / <m>entry</m> message.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Outputs">
+    <entry name="Outputs">
+        <description>
+            When set to <m>mode 0</m>:
+            <br />
+            The first outlet outputs the start time in milliseconds.
+            <br />
+            The second outlet outputs the High-Res start.
+            <br />
+            The third outlet outputs the end time in milliseconds.
+            <br />
+            The fourth outlet outputs the High-Res end.
+            <br />
+            The fifth outlet outputs the last item added as a <m>list</m> (Number / start  time (ms) / end time (ms))
+            <br />
+            <br />
+            When set to <m>mode 1</m>:
+            <br />
+            The first outlet outputs the start time, end time and buffer sample rate as a <m>list</m>.
+            <br />
+            The second outlet outputs the last item added as a <m>list</m> (Number / start  time (ms) / end time (ms))
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufinfo~" />
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibuffermulti~" />
+    <seealso name="ibuffer~" />
+    <seealso name="ibufmultitable~" />
+    <seealso name="ibufplayer~" />
+    <seealso name="ibuftable~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>

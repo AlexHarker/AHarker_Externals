@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="dynamic.in~" module="AHarker Externals" category="Dynamic_Suite">
+  <digest>
+      The functionality of in~ within dynamicdsp~ or dynamicserial~
+  </digest>
+  <description>
+      <o>dynamic.in~</o> acts like <o>in~</o> but for patchers loaded inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object. Unlike <o>in~</o> the user can change the signal inlet which the object refers to by sending an <m>int</m> to the object.
+  </description>
+  <objarglist>
+      <objarg name="inlet" optional="1" type="int">
+          <digest>
+              Set the initial inlet
+          </digest>
+          <description>
+              Set the inial inlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+              <br />
+              Default is <m>0</m> (off).
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="inlet">
+          <arglist>
+              <arg name="inlet" type="int" />
+          </arglist>
+          <digest>
+              Set the inlet
+          </digest>
+          <description>
+              Sending an <m>int</m> to the first inlet sets the inlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs the input from the correspoding inlet of the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that <o>dynamic.in~</o> is inside.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+      <seealso name="dynamic.out~" />
+      <seealso name="dynamic.patch~" />
+      <seealso name="dynamic.request~" />
+      <seealso name="dynamic.this~" />
+      <seealso name="dynamicdsp~" />
+      <seealso name="dynamicserial~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Dynamic Suite</description>
+    </entry>
+  </misc>
+</c74object>

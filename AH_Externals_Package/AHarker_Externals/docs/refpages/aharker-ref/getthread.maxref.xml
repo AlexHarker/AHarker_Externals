@@ -68,7 +68,7 @@
   <misc name="Output">
     <entry name="int">
         <description>
-            A ny incoming message will cause the object to output <m>1</m> if the incoming message is in the high priority thread or <m>0</m> if in the main thread.
+            Any incoming message will cause the object to output <m>1</m> if the incoming message is in the high priority thread or <m>0</m> if in the main thread.
         </description>
     </entry>
   </misc>

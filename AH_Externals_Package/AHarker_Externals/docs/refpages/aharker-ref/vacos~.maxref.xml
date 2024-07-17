@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="vacos~" module="AHarker Externals" category="vMSP">
+  <digest>
+      A SIMD version of acos~  </digest>
+  <description>
+      <o>vacos~</o> provides a CPU efficient version of <o>acos~</o> using SIMD operations. See the <o>acos~</o> helpfile for details on usage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+
+  <seealsolist>
+    <seealso name="acos~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>vMSP</description>
+    </entry>
+  </misc>
+</c74object>

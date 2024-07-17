@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="schedulemessage" module="AHarker Externals" category="Threading">
+  <digest>
+    A generalised delay or pipe for any message type
+  </digest>
+  <description>
+      Schedule a message to happen at some point in the current timing thread (high priority when overdrive is on), otherwise all events are executed in a single low priority thread.
+  </description>
+  
+  <objarglist>
+      <objarg name="delay" optional="1" type="number">
+          <digest>
+              Set delay time
+          </digest>
+          <description>
+              Set the delay time in milliseconds before outputting. If no delay time is set, <o>schedulemessage</o> will output immediately.
+          </description>
+      </objarg>
+  </objarglist>
+      
+  <methodlist>
+    <method name="bang">
+      <arglist>
+      </arglist>
+      <digest>
+        Outputs after the set amount of time.
+      </digest>
+      <description>
+          Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+      </description>
+    </method>
+    <method name="int">
+        <arglist>
+            <arg name="input" type="int" />
+        </arglist>
+      <digest>
+          Outputs after the set amount of time.
+      </digest>
+      <description>
+          Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+      </description>
+    </method>
+    <method name="float">
+      <arglist>
+        <arg name="input" type="float" />
+      </arglist>
+    <digest>
+        Outputs after the set amount of time.
+    </digest>
+    <description>
+        Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+    </description>
+    </method>
+    <method name="list">
+        <arglist>
+            <arg name="input" type="list" />
+        </arglist>
+        <digest>
+            Outputs after the set amount of time.
+        </digest>
+        <description>
+            Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        </description>
+    </method>
+    <method name="anything">
+      <arglist>
+          <arg name="input" type="list" />
+      </arglist>
+      <digest>
+          Outputs after the set amount of time.
+      </digest>
+      <description>
+        Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+      </description>
+    </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="anything">
+        <description>
+            Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="getthread" />
+    <seealso name="threadfilter" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>threading</description>
+    </entry>
+  </misc>
+</c74object>

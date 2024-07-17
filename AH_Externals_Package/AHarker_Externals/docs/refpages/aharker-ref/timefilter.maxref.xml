@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="timefilter" module="AHarker Externals" category="Gesture_Suite">
+  <digest>
+      Filter a list to remove values that are too close together
+  </digest>
+  <description>
+      Originally intended for use with lists representing time values as part of a system of gestural representation, <o>timefilter</o> is an object for filtering and reordering values in a list of numbers. The stored list is first sorted (if desired) either into ascending order or randomly. Values may then either be filtered randomly, or according to a minimum required distance between values (originally to avoid events timed too closely together), or a combination of the two. The object may obviously be used on lists representing any parameter and in various other scenarios than the one from which it takes its name.
+  </description>
+  <methodlist>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+               Output and clear the list
+          </digest>
+          <description>
+              Output the <m>list</m> after sorting and filtering. Then clear to prepare for the next input.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="float" type="float" />
+          </arglist>
+          <digest>
+               Set distance between list items
+          </digest>
+          <description>
+              Set a <m>float</m> to determine the minimum distance between items in the <m>list</m>. Items that do no satisfy this limit are filtered out.
+          </description>
+      </method>
+      <method name="list">
+          <arglist>
+              <arg name="list" type="list" />
+          </arglist>
+          <digest>
+              Set the list to be filtered
+          </digest>
+          <description>
+              Set the <m>list</m> to be reordered and filtered when <o>timefilter</o> recieves a bang.
+          </description>
+      </method>
+      <method name="ordering">
+          <arglist>
+              <arg name="ordering" type="message" />
+          </arglist>
+          <digest>
+              Set the ordering mode of the list
+          </digest>
+          <description>
+              Set the ordering mode for the <m>list</m> processing. This determines the order before filtering is applied.
+              <br />
+              <br />
+              <m>ordering 0</m> - sort in ascending order
+              <br />
+              <m>ordering 1</m> - random sort
+              <br />
+              <m>ordering 2</m> - maintain input ordering
+          </description>
+      </method>
+      <method name="randfilter">
+          <arglist>
+              <arg name="randfilter" type="message" />
+          </arglist>
+          <digest>
+              Randomly filter the list
+          </digest>
+          <description>
+              Set a ratio by which to randomly filter the <m>list</m>.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>randfilter</m> / <m>float</m> (0-1)
+              <br />
+              <br />
+              Ex. <m>randfilter 0.2</m> will randomly filter out 20% of items.
+          </description>
+      </method>
+      <method name="reset">
+          <arglist>
+              <arg name="reset" type="message" />
+          </arglist>
+          <digest>
+              Clear the input list
+          </digest>
+          <description>
+              Clear the input <m>list</m> without outputting.
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            Outputs the input <m>list</m> as <m>floats</m> after being ordered then filtered.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="gesture_maker" />
+    <seealso name="timemap" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Gesture_Suite</description>
+    </entry>
+  </misc>
+</c74object>

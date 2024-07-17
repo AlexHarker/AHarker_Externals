@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="denormkiller~" module="AHarker Externals" category="Utility">
+  <digest>
+      Unpack without typing
+  </digest>
+  <description>
+      <o>depack</o> is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
+  </description>
+  <objarglist>
+      <objarg name="outlets" optional="1" type="int">
+          <digest>
+              Set the number of outlets
+          </digest>
+          <description>
+              Setting an <m>int</m> as the first argument defines the number of outlets, and in turn the number of list items that <o>depack</o> will recognise.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="input">
+          <arglist>
+              <arg name="input" type="list" />
+          </arglist>
+          <digest>
+              Input a list to be unpacked
+          </digest>
+          <description>
+              A <m>list</m> input will be unpacked with each item being output from its own outlet up to the specified number of outlets.
+              <br />
+              Items in the <m>list</m> do not need their types specified beforehand.
+              <br />
+              <br />
+              If the <m>list</m> length is greater than the number of outlets, the items past the range will be ignored.
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="anything">
+        <description>
+            The Nth outlet outputs the Nth item from the input list without the need to specify a type.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>utility</description>
+    </entry>
+  </misc>
+</c74object>
