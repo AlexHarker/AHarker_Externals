@@ -96,7 +96,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 60.0, 362.0, 36.0 ],
-									"text" : "This patch demonstrates the difference in CPU usage between the standard abs~ object against the vabs~ object."
+									"text" : "This tab demonstrates the difference in CPU usage between the standard abs~ object against the vabs~ object."
 								}
 
 							}
@@ -305,8 +305,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 30.0, 119.0, 153.0, 22.0 ],
-													"text" : "patchername 10000objects"
+													"patching_rect" : [ 30.0, 119.0, 147.0, 22.0 ],
+													"text" : "patchername 1000objects"
 												}
 
 											}
@@ -441,8 +441,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 241.0, 121.0, 23.0 ],
-									"text" : "poly~ 10000objects"
+									"patching_rect" : [ 31.0, 241.0, 114.0, 23.0 ],
+									"text" : "poly~ 1000objects"
 								}
 
 							}
