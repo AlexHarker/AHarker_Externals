@@ -5,10 +5,20 @@
         A SIMD version of atanh~
     </digest>
   <description>
-      <o>vatanh~</o> provides a CPU efficient version of <o>atanh~</o> using SIMD operations. See the <o>atanh~</o> helpfile for details on usage.
+      <o>vatanh~</o> provides a CPU efficient version of <o>atanh~</o> using SIMD operations.
+      <br/>
+      Use the <o>vatanh~</o> object to calculate and output a signal that is the hyperbolic arc-tangent function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic arc-tangent function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,21 @@
 
   <seealsolist>
     <seealso name="atanh~" />
+    <seealso name="atan~" />
+    <seealso name="vatan~" />
+    <seealso name="atan2~" />
+    <seealso name="tanh~" />
+    <seealso name="vtanh~" />
+    <seealso name="tanx~" />
+    <seealso name="vtanx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic arc-tangent of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
