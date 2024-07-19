@@ -5,10 +5,63 @@
         A SIMD version of rdiv~
     </digest>
   <description>
-      <o>vrdiv~</o> provides a CPU efficient version of <o>rdiv~</o> using SIMD operations. See the <o>rdiv~</o> helpfile for details on usage.
+      <o>vrdiv~</o> provides a CPU efficient version of <o>rdiv~</o> using SIMD operations.
+      <br/>
+      The <o>vrdiv~</o> object functions just like the <o>/~</o> object, but the inlet order is reversed.
   </description>
   
+  <objarglist>
+      <objarg name="initial-divisor" optional="1" type="number">
+          <digest>
+              Set initial divisor value
+          </digest>
+          <description>
+              Sets an initial value by which to divide the signal coming into the left inlet. If a signal is connected to the right inlet, the argument is ignored. If no argument is present, and no signal is connected to the right inlet, the initial value is <m>1</m> by default.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="int">
+          <arglist>
+              <arg name="input" optional="0" type="int" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: A number by which to divide the signal coming into the right inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: The number is divided by the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="input" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: A number by which to divide the signal coming into the right inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: The number is divided by the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: The signal is used as the divisor, to be divided into the signal coming into the right inlet, or the constant value received in the right inlet. All signal inputs to a single inlet are summed. If a signal and number are both sent to the left inlet, the specified operation will be performed with those values.
+              <br />
+              <br />
+              In right inlet: The signal is divided by a signal coming into the left inlet, or a constant value received in the left inlet. All signal inputs to a single inlet are summed.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +69,18 @@
 
   <seealsolist>
     <seealso name="rdiv~" />
+    <seealso name="div~" />
+    <seealso name="vdiv~" />
+    <seealso name="times~" />
+    <seealso name="vtimes~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The ratio of the two inputs, i.e. the right input divided by the left input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
