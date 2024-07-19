@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 717.0, 441.0 ],
+						"rect" : [ 0.0, 26.0, 717.0, 441.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -934,7 +934,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 717.0, 441.0 ],
+						"rect" : [ 100.0, 126.0, 717.0, 441.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -965,6 +965,22 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bubble" : 1,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-1",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 510.0, 223.0, 178.0, 54.0 ],
+									"presentation_linecount" : 10,
+									"text" : "limits signal to a positive range to produce amplitude modulation"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
 									"fontname" : "Arial Bold",
 									"hint" : "",
@@ -976,7 +992,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 507.0, 388.0, 20.0, 20.0 ],
+									"patching_rect" : [ 492.0, 388.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -992,24 +1008,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 426.0, 385.0, 79.0, 25.0 ],
+									"patching_rect" : [ 411.0, 385.0, 79.0, 25.0 ],
 									"text" : "start dsp"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"bubble" : 1,
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-19",
-									"linecount" : 3,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 510.0, 225.0, 170.0, 54.0 ],
-									"text" : "limits signal to a positive range to produce amplitude modulation",
-									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
 								}
 
 							}
@@ -1024,7 +1024,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 465.0, 165.0, 50.0, 23.0 ]
+									"patching_rect" : [ 450.0, 165.0, 50.0, 23.0 ]
 								}
 
 							}
@@ -1039,7 +1039,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 375.0, 165.0, 50.0, 23.0 ]
+									"patching_rect" : [ 360.0, 165.0, 50.0, 23.0 ]
 								}
 
 							}
@@ -1050,7 +1050,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 375.0, 375.0, 45.0, 45.0 ]
+									"patching_rect" : [ 360.0, 375.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -1065,7 +1065,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 375.0, 315.0, 135.0, 41.0 ],
+									"patching_rect" : [ 360.0, 315.0, 135.0, 41.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -30 ],
@@ -1094,7 +1094,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 465.0, 238.0, 44.0, 23.0 ],
+									"patching_rect" : [ 450.0, 238.0, 44.0, 23.0 ],
 									"text" : "vabs~"
 								}
 
@@ -1108,7 +1108,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 375.0, 285.0, 32.5, 23.0 ],
+									"patching_rect" : [ 360.0, 285.0, 32.5, 23.0 ],
 									"text" : "*~"
 								}
 
@@ -1122,7 +1122,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 465.0, 195.0, 79.0, 23.0 ],
+									"patching_rect" : [ 450.0, 195.0, 79.0, 23.0 ],
 									"text" : "cycle~ 220."
 								}
 
@@ -1136,7 +1136,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 375.0, 195.0, 79.0, 23.0 ],
+									"patching_rect" : [ 360.0, 195.0, 79.0, 23.0 ],
 									"text" : "cycle~ 200."
 								}
 
@@ -1244,7 +1244,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-11", 1 ],
-									"midpoints" : [ 474.5, 273.0, 398.0, 273.0 ],
+									"midpoints" : [ 459.5, 273.0, 383.0, 273.0 ],
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -1252,7 +1252,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-14", 1 ],
-									"midpoints" : [ 384.5, 365.5, 410.5, 365.5 ],
+									"midpoints" : [ 369.5, 365.5, 395.5, 365.5 ],
 									"order" : 0,
 									"source" : [ "obj-13", 0 ]
 								}
