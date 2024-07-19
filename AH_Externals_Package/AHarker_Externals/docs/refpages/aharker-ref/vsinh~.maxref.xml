@@ -5,10 +5,20 @@
         A SIMD version of sinh~
     </digest>
   <description>
-      <o>vsinh~</o> provides a CPU efficient version of <o>sinh~</o> using SIMD operations. See the <o>sinh~</o> helpfile for details on usage.
+      <o>vsinh~</o> provides a CPU efficient version of <o>sinh~</o> using SIMD operations.
+      <br/>
+      Use the <o>vsinh~</o> object to calculate and output a signal that is the hyperbolic sine function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic sine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,18 @@
 
   <seealsolist>
     <seealso name="sinh~" />
+    <seealso name="asinh~" />
+    <seealso name="vasinh~" />
+    <seealso name="sinx~" />
+    <seealso name="vsinx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic sine of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
