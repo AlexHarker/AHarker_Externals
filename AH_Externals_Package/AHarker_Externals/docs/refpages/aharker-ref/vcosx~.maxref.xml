@@ -5,10 +5,21 @@
         A SIMD version of cosx~
     </digest>
   <description>
-      <o>vcosx~</o> provides a CPU efficient version of <o>cosx~</o> using SIMD operations. See the <o>cosx~</o> helpfile for details on usage.
+      <o>vcosx~</o> provides a CPU efficient version of <o>cosx~</o> using SIMD operations.
+      <br/>
+      Use the <o>vcosx~</o> object to calculate and output a signal that is the cosine function of each sample of the input signal. The <o>vcosx~</o> object is a true π based function - it varies from the <o>vcos~</o> object, whose output is based around a value range of 0. - 1.0 and is intended for use as a lookup table with the <o>phasor~</o> object.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Output from a cosine function
+          </digest>
+          <description>
+              Output from a cosine function.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,38 @@
 
   <seealsolist>
     <seealso name="cosx~" />
+    <seealso name="acos~" />
+    <seealso name="vacos~" />
+    <seealso name="acosh~" />
+    <seealso name="vacosh~" />
+    <seealso name="asin~" />
+    <seealso name="vasin~" />
+    <seealso name="asinh~" />
+    <seealso name="vasinh~" />
+    <seealso name="atan~" />
+    <seealso name="vatan~" />
+    <seealso name="atanh~" />
+    <seealso name="vatanh~" />
+    <seealso name="atan2~" />
+    <seealso name="cos~" />
+    <seealso name="cosh~" />
+    <seealso name="vcosh~" />
+    <seealso name="sinh~" />
+    <seealso name="vsinh~" />
+    <seealso name="sinx~" />
+    <seealso name="vsinx~" />
+    <seealso name="tanh~" />
+    <seealso name="vtanh~" />
+    <seealso name="tanx~" />
+    <seealso name="vtanx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The cosine of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
