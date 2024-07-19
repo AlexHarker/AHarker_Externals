@@ -5,10 +5,21 @@
         A SIMD version of sqrt~
     </digest>
   <description>
-      <o>vsqrt~</o> provides a CPU efficient version of <o>sqrt~</o> using SIMD operations. See the <o>sqrt~</o> helpfile for details on usage.
+      <o>vsqrt~</o> provides a CPU efficient version of <o>sqrt~</o> using SIMD operations.
+      <br/>
+      <o>vsqrt~</o> will output a signal which is the square-root function of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Output a signal that is the square root of the input signal
+          </digest>
+          <description>
+              The object outputs a signal that is the square root of the input signal. A negative input has no real solution, so it causes an output of 0.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,19 @@
 
   <seealsolist>
     <seealso name="sqrt~" />
+    <seealso name="curve~" />
+    <seealso name="log~" />
+    <seealso name="vlog~" />
+    <seealso name="pow~" />
+    <seealso name="vpow~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The square root of the input signal.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
