@@ -5,7 +5,8 @@
       DC blocking filter with sample accurate reset
   </digest>
   <description>
-      <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois. (http://www.music.columbia.edu/PeRColate/).
+      <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois.
+      <a href="https://github.com/Cycling74/percolate/releases/tag/v1.0">(https://github.com/Cycling74/percolate/releases/tag/v1.0)</a>
   </description>
   <objarglist>
       <objarg name="mode" optional="1" type="int">
