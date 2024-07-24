@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-      <objarg name="delay" optional="1" type="number">
+      <objarg name="delay time" optional="1" type="number">
           <digest>
               Set delay time
           </digest>
