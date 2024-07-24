@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 61.0, 470.0, 894.0, 370.0 ],
+		"rect" : [ 36.0, 100.0, 894.0, 395.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -50,14 +50,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 894.0, 344.0 ],
+						"rect" : [ 0.0, 26.0, 894.0, 369.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -112,14 +112,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 61.0, 496.0, 894.0, 344.0 ],
+						"rect" : [ 36.0, 126.0, 894.0, 369.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -151,6 +151,22 @@
 						"boxes" : [ 							{
 								"box" : 								{
 									"border" : 0,
+									"filename" : "helpargs.js",
+									"id" : "obj-6",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "schedulemessage", 5 ],
+									"maxclass" : "jsui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 183.0, 270.0, 201.026016235351562, 39.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"border" : 0,
 									"filename" : "ah.helpdetails.js",
 									"id" : "obj-10",
 									"ignoreclick" : 1,
@@ -173,24 +189,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 600.0, 243.0, 177.0, 65.0 ],
+									"patching_rect" : [ 600.0, 266.0, 177.0, 65.0 ],
 									"text" : "If overdrive is on then messages coming out of schedulemessage will be in the high priority thread",
-									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-2",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 90.0, 272.0, 177.0, 36.0 ],
-									"text" : "optional int or float argument initialises delay time",
-									"textcolor" : [ 0.501961, 0.501961, 0.501961, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -204,7 +205,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 405.0, 135.0, 360.0, 40.0 ],
+									"patching_rect" : [ 405.0, 150.0, 360.0, 40.0 ],
 									"text" : "Move any message to the high priority thread (without delay)"
 								}
 
@@ -219,7 +220,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 214.0, 202.5, 168.0, 40.0 ],
+									"patching_rect" : [ 214.0, 218.0, 168.0, 40.0 ],
 									"text" : "int or float in right inlet sets time in milliseconds"
 								}
 
@@ -234,7 +235,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 135.0, 341.0, 40.0 ],
+									"patching_rect" : [ 15.0, 150.0, 341.0, 40.0 ],
 									"text" : "Delay any message (and move to the high priority thread)"
 								}
 
@@ -249,7 +250,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 160.0, 211.0, 52.0, 23.0 ]
+									"patching_rect" : [ 160.0, 226.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -263,7 +264,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 525.0, 285.0, 52.0, 23.0 ]
+									"patching_rect" : [ 525.0, 315.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -276,7 +277,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 643.0, 180.0, 74.0, 23.0 ],
+									"patching_rect" : [ 643.0, 195.0, 74.0, 23.0 ],
 									"text" : "low priority"
 								}
 
@@ -290,7 +291,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 525.0, 180.0, 79.0, 23.0 ],
+									"patching_rect" : [ 525.0, 195.0, 79.0, 23.0 ],
 									"text" : "high priority"
 								}
 
@@ -304,7 +305,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 525.0, 243.0, 66.0, 23.0 ],
+									"patching_rect" : [ 525.0, 270.0, 66.0, 23.0 ],
 									"text" : "getthread"
 								}
 
@@ -318,7 +319,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 525.0, 211.0, 116.0, 23.0 ],
+									"patching_rect" : [ 525.0, 226.0, 116.0, 23.0 ],
 									"text" : "schedulemessage"
 								}
 
@@ -332,7 +333,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 117.0, 180.0, 102.0, 23.0 ],
+									"patching_rect" : [ 117.0, 195.0, 102.0, 23.0 ],
 									"text" : "remind me later"
 								}
 
@@ -346,7 +347,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 180.0, 80.0, 23.0 ],
+									"patching_rect" : [ 30.0, 195.0, 80.0, 23.0 ],
 									"text" : "12 23 34 45"
 								}
 
@@ -359,7 +360,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 285.0, 37.0, 23.0 ],
+									"patching_rect" : [ 30.0, 315.0, 37.0, 23.0 ],
 									"text" : "print"
 								}
 
@@ -373,7 +374,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 243.0, 149.0, 23.0 ],
+									"patching_rect" : [ 30.0, 270.0, 149.0, 23.0 ],
 									"text" : "schedulemessage 1000"
 								}
 
@@ -396,7 +397,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 126.5, 218.25, 39.5, 218.25 ],
+									"midpoints" : [ 126.5, 233.25, 39.5, 233.25 ],
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -404,7 +405,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 652.5, 237.0, 534.5, 237.0 ],
+									"midpoints" : [ 652.5, 258.0, 534.5, 258.0 ],
 									"source" : [ "obj-16", 0 ]
 								}
 
