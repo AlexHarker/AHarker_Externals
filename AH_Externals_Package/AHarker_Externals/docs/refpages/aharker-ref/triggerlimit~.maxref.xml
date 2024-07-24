@@ -8,7 +8,7 @@
       <o>triggerlimit~</o> limits the rate of input triggers (non-zero samples) to a maximum rate specified in samples. The initial intention of this object was to avoid very rapid triggering in situations that would result in excessive CPU usage.
   </description>
   <objarglist>
-      <objarg name="int" optional="1" type="int">
+      <objarg name="gap-in-samples" optional="1" type="int">
           <digest>
               Minimum gap in samples between non-zero values.
           </digest>
