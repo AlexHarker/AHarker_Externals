@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -44,12 +44,40 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
+					"id" : "obj-21",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 131.0, 84.0, 76.0, 21.0 ],
+					"text" : "trigger inlet",
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 13.0,
+					"id" : "obj-19",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 45.0, 84.0, 57.0, 21.0 ],
+					"text" : "audio in",
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontname" : "Arial",
+					"fontsize" : 13.0,
 					"id" : "obj-4",
 					"maxclass" : "newobj",
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 150.0, 45.0, 34.0, 23.0 ],
+					"patching_rect" : [ 195.0, 59.0, 34.0, 23.0 ],
 					"text" : "==~"
 				}
 
@@ -62,7 +90,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 151.0, 100.0, 23.0 ],
+					"patching_rect" : [ 90.0, 165.0, 100.0, 23.0 ],
 					"text" : "dynamic.out~ 1"
 				}
 
@@ -76,22 +104,24 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 45.0, 120.0, 44.0, 23.0 ],
+					"patching_rect" : [ 90.0, 134.0, 44.0, 23.0 ],
 					"text" : "tanh~"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubble" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-5",
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 180.0, 90.0, 293.0, 21.0 ],
+					"patching_rect" : [ 225.0, 96.0, 181.0, 40.0 ],
 					"text" : "5 coefficients starting from inlet 1 of dynamicdsp~",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 				}
 
 			}
@@ -104,7 +134,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 150.0, 15.0, 123.0, 23.0 ],
+					"patching_rect" : [ 195.0, 29.0, 123.0, 23.0 ],
 					"text" : "count~ 0 20000 1 1"
 				}
 
@@ -118,8 +148,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 45.0, 15.0, 74.0, 23.0 ],
-					"text" : "cycle~ 540"
+					"patching_rect" : [ 90.0, 29.0, 71.0, 23.0 ],
+					"text" : "cycle~ 220"
 				}
 
 			}
@@ -129,10 +159,10 @@
 					"fontsize" : 13.0,
 					"id" : "obj-1",
 					"maxclass" : "newobj",
-					"numinlets" : 6,
+					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 45.0, 90.0, 124.0, 23.0 ],
+					"patching_rect" : [ 90.0, 104.0, 124.0, 23.0 ],
 					"text" : "chebyshape~ 5 1"
 				}
 
@@ -162,7 +192,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-1", 1 ],
-					"midpoints" : [ 159.5, 78.5, 75.5, 78.5 ],
+					"midpoints" : [ 204.5, 92.5, 204.5, 92.5 ],
 					"source" : [ "obj-4", 0 ]
 				}
 
@@ -174,8 +204,7 @@
 				}
 
 			}
- ],
-		"autosave" : 0
+ ]
 	}
 
 }

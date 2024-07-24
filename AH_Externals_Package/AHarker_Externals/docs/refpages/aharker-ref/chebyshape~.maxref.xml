@@ -16,7 +16,7 @@
               The first argument sets the number of coefficients. A minimum of 2 is required
           </description>
       </objarg>
-      <objarg name="Dynamic-DSP" optional="1" type="int">
+      <objarg name="dynamicdsp" optional="1" type="int">
           <digest>
               Set the dynamicdsp~ inlet correspoding to coefficient 0.
           </digest>
