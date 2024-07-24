@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 286.0, 87.0, 525.0, 562.0 ],
+		"rect" : [ 134.0, 172.0, 525.0, 607.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -51,7 +51,7 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 0.0, 206.0, 197.0, 21.0 ],
 					"text" : "reset after changing parameters)",
-					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
@@ -68,24 +68,25 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 0.0, 185.0, 120.0, 21.0 ],
 					"text" : "histogram of output",
-					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubbleside" : 3,
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-21",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 225.0, 165.0, 98.0, 21.0 ],
+					"patching_rect" : [ 225.0, 166.0, 98.0, 21.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 60.0, 0.0, 98.0, 21.0 ],
+					"presentation_rect" : [ 56.0, 1.0, 102.0, 21.0 ],
 					"text" : "reset histogram",
-					"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
