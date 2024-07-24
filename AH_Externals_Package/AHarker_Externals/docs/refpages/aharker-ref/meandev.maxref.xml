@@ -45,7 +45,20 @@
               Set the age ranges
           </digest>
           <description>
-              From the third argument onwards, set up to 4 age ranges (min and max), plus a final max only (between max and 0)
+              From the third argument onwards, set up to 4 age ranges (min and max)
+              <br />
+              <br />
+              For modes 0 and 2 the ranges are given in number of values
+              <br />
+              For modes 1 and 3 the ranges are given in milliseconds
+          </description>
+      </objarg>
+      <objarg name="Max-Age" optional="1" type="int">
+          <digest>
+              Set the maximum age
+          </digest>
+          <description>
+              Set a final maximum age (between max and 0)
               <br />
               <br />
               For modes 0 and 2 the ranges are given in number of values
