@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -50,8 +50,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -112,8 +112,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -172,7 +172,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 165.0, 150.0, 24.0, 24.0 ]
+									"patching_rect" : [ 135.0, 150.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -186,7 +186,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 59.0, 195.0, 88.0, 23.0 ],
+									"patching_rect" : [ 29.0, 195.0, 88.0, 23.0 ],
 									"text" : "loadmess set"
 								}
 
@@ -200,7 +200,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 165.0, 255.0, 113.0, 23.0 ]
+									"patching_rect" : [ 135.0, 255.0, 113.0, 23.0 ],
+									"text" : "6c:7e:67:d9:85:65"
 								}
 
 							}
@@ -213,7 +214,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 191.0, 150.0, 189.0, 25.0 ],
+									"patching_rect" : [ 161.0, 150.0, 189.0, 25.0 ],
 									"text" : "bang to return MAC address"
 								}
 
@@ -227,7 +228,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 165.0, 225.0, 80.0, 23.0 ],
+									"patching_rect" : [ 135.0, 225.0, 80.0, 23.0 ],
 									"text" : "prepend set"
 								}
 
@@ -241,7 +242,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 165.0, 195.0, 82.0, 23.0 ],
+									"patching_rect" : [ 135.0, 195.0, 82.0, 23.0 ],
 									"text" : "macaddress"
 								}
 
@@ -258,7 +259,7 @@
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
 									"hidden" : 1,
-									"midpoints" : [ 68.5, 251.5, 174.5, 251.5 ],
+									"midpoints" : [ 38.5, 251.5, 144.5, 251.5 ],
 									"source" : [ "obj-19", 0 ]
 								}
 
