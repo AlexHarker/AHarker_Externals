@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 95.0, 191.0, 576.0, 400.0 ],
+		"rect" : [ 548.0, 100.0, 576.0, 400.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -50,8 +50,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -112,14 +112,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 95.0, 217.0, 576.0, 374.0 ],
+						"rect" : [ 548.0, 126.0, 576.0, 374.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -172,7 +172,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 204.0, 287.446564674377441, 24.0, 24.0 ]
+									"patching_rect" : [ 219.0, 287.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -184,7 +184,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 150.0, 287.446564674377441, 24.0, 24.0 ]
+									"patching_rect" : [ 165.0, 287.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -193,13 +193,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-11",
-									"linecount" : 5,
+									"linecount" : 6,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 308.5, 165.0, 246.5, 79.0 ],
+									"patching_rect" : [ 324.0, 165.0, 231.0, 94.0 ],
 									"text" : "If overdrive is on then the messages from the metro and qmetro will be separated out - if overdrive is off then there is only one low priority thread and everything will be sent out of the left outlet",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -214,7 +214,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 228.0, 272.446564674377441, 146.0, 54.0 ],
+									"patching_rect" : [ 243.0, 272.0, 146.0, 54.0 ],
 									"text" : "high priority messages are sent out of the right outlet"
 								}
 
@@ -228,7 +228,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 165.0, 78.0, 23.0 ],
+									"patching_rect" : [ 165.0, 165.0, 78.0, 23.0 ],
 									"text" : "loadmess 1"
 								}
 
@@ -242,7 +242,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 150.0, 208.5, 77.0, 23.0 ],
+									"patching_rect" : [ 165.0, 209.0, 77.0, 23.0 ],
 									"text" : "qmetro 800"
 								}
 
@@ -256,7 +256,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 234.0, 208.5, 70.0, 23.0 ],
+									"patching_rect" : [ 249.0, 209.0, 70.0, 23.0 ],
 									"text" : "metro 200"
 								}
 
@@ -270,7 +270,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 150.0, 255.0, 73.0, 23.0 ],
+									"patching_rect" : [ 165.0, 255.0, 73.0, 23.0 ],
 									"text" : "threadfilter"
 								}
 
@@ -286,7 +286,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 9.0, 272.446564674377441, 141.0, 54.0 ],
+									"patching_rect" : [ 24.0, 272.0, 141.0, 54.0 ],
 									"text" : "low priority messages are sent out of the left outlet"
 								}
 
@@ -309,7 +309,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-2", 0 ],
-									"midpoints" : [ 159.5, 197.75, 243.5, 197.75 ],
+									"midpoints" : [ 174.5, 197.303435325622559, 258.5, 197.303435325622559 ],
 									"order" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -326,7 +326,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 243.5, 242.75, 159.5, 242.75 ],
+									"midpoints" : [ 258.5, 242.303435325622559, 174.5, 242.303435325622559 ],
 									"source" : [ "obj-2", 0 ]
 								}
 
