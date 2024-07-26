@@ -203,11 +203,11 @@
               <br />
               The modes are:
               <br />
-              <m>linear</m> (defualt)
+              <m>linear</m> (defualt),
               <br />
-              <m>hermite</m>
+              <m>hermite</m>,
               <br />
-              <m>bspline</m>
+              <m>bspline</m>,
               <br />
               <m>lagrange</m>
           </description>
@@ -238,6 +238,7 @@
     <seealso name="ibuftable~" />
     <seealso name="ibufplayer~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
