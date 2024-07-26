@@ -227,6 +227,7 @@
     <seealso name="ibufmultitable~" />
     <seealso name="ibufplayer~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
