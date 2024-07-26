@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-      <objarg name="name" optional="1" type="symbol">
+      <objarg name="(i)buffer-name" optional="1" type="symbol">
           <digest>
               Set the name of the (i)buffer
           </digest>
@@ -73,6 +73,7 @@
     <seealso name="ibufconcatenate~" />
     <seealso name="ibuffermulti~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
     <seealso name="ibufmultitable~" />
     <seealso name="ibufplayer~" />
     <seealso name="ibuftable~" />
