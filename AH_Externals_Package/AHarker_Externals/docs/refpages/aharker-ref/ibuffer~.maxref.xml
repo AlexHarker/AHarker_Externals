@@ -5,7 +5,7 @@
       Load an audio file into memory in the same sample format as on disk
   </digest>
   <description>
-    <o>ibuffer~</o> is an audio file buffer that loads audio files in their stored integer format (or float format if relevant). This object is designed primarily for applications with large memory requirements where loading in 16 bit or 24 bit formats saves vital space in memory. It supports 16, 24 and 32 integer formats, as well as 32 bit float and can load either all channels or specified channels (up to 4 in either case). There are a corresponding set of playback and other objects that will also function with standard MSP buffers. Sound file loading is done using libsndfile by Erik de Castro Lopo (http://www.mega-nerd.com/libsndfile/).
+    <o>ibuffer~</o> is an audio file buffer that loads audio files in their stored integer format (or float format if relevant). This object is designed primarily for applications with large memory requirements where loading in 16 bit or 24 bit formats saves vital space in memory. It supports 16, 24 and 32 integer formats, as well as 32 bit float and can load either all channels or specified channels (up to 4 in either case). There are a corresponding set of playback and other objects that will also function with standard MSP buffers. Sound file loading is done using libsndfile by Erik de Castro Lopo .<a href="http://www.mega-nerd.com/libsndfile/">(http://www.mega-nerd.com/libsndfile/)</a>
   </description>
   
   <objarglist>
@@ -110,11 +110,11 @@
               <br />
               The modes are:
               <br />
-              <m>linear</m>
+              <m>linear</m>,
               <br />
-              <m>hermite</m> (defualt)
+              <m>hermite</m> (defualt),
               <br />
-              <m>bspline</m>
+              <m>bspline</m>,
               <br />
               <m>lagrange</m>
           </description>
@@ -128,13 +128,15 @@
     </entry>
   </misc>
   <seealsolist>
-    <seealso name="ibufconcatedrive~" />
-    <seealso name="ibufconcatenate~" />
-    <seealso name="ibuffermulti~" />
-    <seealso name="ibufinfo~" />
-    <seealso name="ibufmultitable~" />
-    <seealso name="ibufplayer~" />
-    <seealso name="ibuftable~" />
+      <seealso name="buffer~" />
+      <seealso name="ibufconcatedrive~" />
+      <seealso name="ibufconcatedrive~" />
+      <seealso name="ibufconcatenate~" />
+      <seealso name="ibuffermulti~" />
+      <seealso name="ibufinfo~" />
+      <seealso name="ibufmultitable~" />
+      <seealso name="ibufplayer~" />
+      <seealso name="ibuftable~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
