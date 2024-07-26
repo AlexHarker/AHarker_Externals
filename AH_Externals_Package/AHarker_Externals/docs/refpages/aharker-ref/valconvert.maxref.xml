@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-    <objarg name="mode" optional="1" type="message">
+    <objarg name="mode" optional="1" type="symbol">
         <digest>
             Select the scaling mode for <o>valconvert</o>
         </digest>
@@ -109,6 +109,8 @@
   </misc>
   <seealsolist>
     <seealso name="valconvert~" />
+    <seealso name="scale~" />
+    <seealso name="scale" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
