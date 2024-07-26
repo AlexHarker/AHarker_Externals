@@ -73,6 +73,7 @@
     </entry>
   </misc>
   <seealsolist>
+    <seealso name="buffer~" />
     <seealso name="ibufconcatedrive~" />
     <seealso name="ibufconcatenate~" />
     <seealso name="ibufinfo~" />
