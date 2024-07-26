@@ -31,9 +31,9 @@
           </digest>
           <description>
               A <m>signal</m> input will change the playback speed of the set <o>buffer~</o> / <o>ibuffer~</o>.
-              This will only have an effect if the <m>varispeed flag</m> has been raised on in the <m>play</m> message.
+              This will only have an effect if the <m>varispeed flag</m> has been raised in the <m>play</m> message.
               <br />
-              The playback speed will be centred on the base speed.
+              The playback speed will be centred on the base speed set in the <m>play</m> message.
           </description>
       </method>
       <method name="interp">
@@ -166,6 +166,7 @@
     <seealso name="ibufmultitable~" />
     <seealso name="ibuftable~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
