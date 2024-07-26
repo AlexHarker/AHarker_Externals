@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-      <objarg name="name" optional="0" type="symbol">
+      <objarg name="(i)buffer-name" optional="0" type="symbol">
           <digest>
               Set the (i)buffer name
           </digest>
@@ -167,6 +167,8 @@
     <seealso name="ibufmultitable~" />
     <seealso name="ibufplayer~" />
     <seealso name="ibuftable~" />
+    <seealso name="buffer~" />
+    <seealso name="play~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
