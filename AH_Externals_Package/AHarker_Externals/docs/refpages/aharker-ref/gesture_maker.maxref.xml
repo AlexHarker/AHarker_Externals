@@ -345,6 +345,7 @@
   <seealsolist>
     <seealso name="timefilter" />
     <seealso name="timemap" />
+    <seealso name="line~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
