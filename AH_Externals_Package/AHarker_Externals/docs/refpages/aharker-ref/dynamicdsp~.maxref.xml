@@ -17,7 +17,7 @@
               The first argument sets the inital patch to load by setting its name as a <m>symbol</m>. This will only load one instance of the patch.
           </description>
       </objarg>
-      <objarg name="inlets/outlets" optional="1" type="int">
+      <objarg name="inlets/outlets" optional="1" type="list">
           <digest>
               Set the number of inlets and outlets
           </digest>
@@ -33,7 +33,7 @@
               number of message outlets
           </description>
       </objarg>
-      <objarg name="args" optional="1" type="int">
+      <objarg name="args" optional="1" type="list">
           <digest>
               Set arguments for the loaded patch
           </digest>
@@ -291,6 +291,8 @@
       <seealso name="dynamic.request~" />
       <seealso name="dynamic.this~" />
       <seealso name="dynamicserial~" />
+      <seealso name="in" />
+      <seealso name="out" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
