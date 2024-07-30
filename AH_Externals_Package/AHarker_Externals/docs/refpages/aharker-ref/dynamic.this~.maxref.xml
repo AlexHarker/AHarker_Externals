@@ -145,6 +145,8 @@
       <seealso name="dynamic.patch~" />
       <seealso name="dynamicdsp~" />
       <seealso name="dynamicserial~" />
+      <seealso name="thispatcher" />
+      <seealso name="thispoly~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
