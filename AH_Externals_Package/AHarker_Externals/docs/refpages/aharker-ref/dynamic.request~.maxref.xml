@@ -8,7 +8,7 @@
       For a patcher loaded within a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object, a non-zero signal input cause <o>dynamic.request~</o> to update its output by fetching a value from the associated signal inlet. The value is then held until a new trigger is received. This allows efficient parameter updating in sample accurate processing applications.
   </description>
   <objarglist>
-      <objarg name="inlet" optional="1" type="int">
+      <objarg name="initial-inlet" optional="1" type="int">
           <digest>
               Set the initial inlet
           </digest>
