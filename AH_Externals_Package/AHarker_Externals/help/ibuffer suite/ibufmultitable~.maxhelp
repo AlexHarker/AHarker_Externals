@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
+						"rect" : [ 48.0, 126.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -534,6 +534,7 @@
 										"subpatcher_template" : "",
 										"showontab" : 0,
 										"assistshowspatchername" : 0,
+										"visible" : 1,
 										"boxes" : [ 											{
 												"box" : 												{
 													"buffername" : "ibufmultwavetable",
@@ -556,7 +557,7 @@
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 15.0, 649.0, 21.0 ],
 													"text" : "Generate 4 wavetables, one after the other in the buffer. Each consecutive wavetable adds one more harmonic",
-													"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+													"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 												}
 
 											}
@@ -1467,7 +1468,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 48.0, 126.0, 682.0, 707.0 ],
+						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1497,6 +1498,46 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontname" : "Arial Bold",
+									"hint" : "",
+									"id" : "obj-4",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 495.0, 423.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "4",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontname" : "Arial Bold",
+									"hint" : "",
+									"id" : "obj-2",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 495.0, 325.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "3",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
@@ -1600,7 +1641,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 270.0, 434.5, 51.0, 23.0 ],
+									"patching_rect" : [ 270.0, 450.0, 51.0, 23.0 ],
 									"text" : "chan 2"
 								}
 
@@ -1617,7 +1658,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 316.0, 479.0, 184.574493408203125, 84.0 ]
+									"patching_rect" : [ 316.0, 494.0, 184.574493408203125, 84.0 ]
 								}
 
 							}
@@ -1755,7 +1796,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 332.0, 433.5, 153.0, 25.0 ],
+									"patching_rect" : [ 332.0, 449.0, 153.0, 25.0 ],
 									"text" : "set the channel to use",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1770,7 +1811,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 352.0, 405.0, 143.0, 25.0 ],
+									"patching_rect" : [ 352.0, 420.0, 143.0, 25.0 ],
 									"text" : "start the end sample",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1785,7 +1826,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 319.0, 375.0, 139.0, 25.0 ],
+									"patching_rect" : [ 319.0, 390.0, 139.0, 25.0 ],
 									"text" : "set the start sample",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1848,7 +1889,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 503.212753295898438, 495.0, 106.0, 65.0 ],
+									"patching_rect" : [ 503.0, 510.0, 106.0, 65.0 ],
 									"text" : "defaults: startsamp - 0, endsamp -  512  chan - 1",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1905,7 +1946,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 238.0, 375.0, 79.0, 23.0 ],
+									"patching_rect" : [ 238.0, 390.0, 79.0, 23.0 ],
 									"text" : "startsamp 3"
 								}
 
@@ -1919,7 +1960,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 254.0, 405.0, 98.0, 23.0 ],
+									"patching_rect" : [ 254.0, 420.0, 98.0, 23.0 ],
 									"text" : "endsamp 4096"
 								}
 
