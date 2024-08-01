@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 628.0, 544.0 ],
+						"rect" : [ 34.0, 126.0, 628.0, 544.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -415,7 +415,6 @@
 					}
 ,
 					"patching_rect" : [ 75.0, 14.0, 88.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -506,7 +505,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 628.0, 544.0 ],
+						"rect" : [ 0.0, 26.0, 628.0, 544.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -782,8 +781,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 195.0, 194.0, 100.0, 40.0 ],
-									"text" : "add a harmonic"
+									"patching_rect" : [ 164.5, 194.0, 131.0, 40.0 ],
+									"text" : "add some harmonics"
 								}
 
 							}
