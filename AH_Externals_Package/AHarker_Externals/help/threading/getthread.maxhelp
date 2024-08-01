@@ -95,9 +95,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 420.0, 195.0, 270.0, 123.0 ],
-									"presentation_linecount" : 10,
-									"text" : "jit. objects can be put into high priority by using jit.qfaker before the first jit. object in the chain. However you should not use jit.qfaker unless you are certain that it is safe to do so. Things like opening files, drawing to the screen, messages that make quicktime calls are *not* interrupt safe. \nSee jit.qfaker help file.",
+									"patching_rect" : [ 420.0, 195.0, 273.0, 123.0 ],
+									"text" : "jit. objects can be put into high priority by using jit.qfaker before the first jit. object in the chain. You should not use jit.qfaker unless you are certain that it is safe to do so. Things like opening files, drawing to the screen, messages that make quicktime calls are *not* interrupt safe. \nSee jit.qfaker help file.",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
@@ -112,10 +111,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 73.0, 460.0, 21.0 ],
-									"presentation_linecount" : 2,
 									"text" : "getthread can be useful for discovering unexpected thread changes in a patch.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 0
+									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
 								}
 
 							}
@@ -362,7 +359,6 @@
 					}
 ,
 					"patching_rect" : [ 75.0, 15.0, 70.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
