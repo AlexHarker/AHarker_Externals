@@ -119,7 +119,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 887.0, 720.0 ],
+						"rect" : [ 192.0, 128.0, 887.0, 720.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -702,7 +702,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 525.0, 705.0, 36.0 ],
 									"text" : "Note - The IR is fetched (copied) from the buffer when the set message is sent. Any changes to the buffer after that point will not affect the output.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
