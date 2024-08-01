@@ -96,7 +96,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 497.0, 36.0 ],
-									"text" : "This tab shows a very simple implementation of a mono granular patch that changes the filter cutoff per grain, accurately resetting the filter at the star of each grain.",
+									"text" : "This tab shows a simple implementation of a mono granular patch in which the filter cutoff us changed per grain, accurately resetting the filter at the star of each grain.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -973,7 +973,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 349.0, 446.0, 20.0, 20.0 ],
+									"patching_rect" : [ 319.0, 446.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]

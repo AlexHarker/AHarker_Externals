@@ -96,7 +96,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 225.0, 137.0, 65.0 ],
-									"presentation_linecount" : 4,
 									"text" : "due to this behaviour tsah~ does not need an initial-trigger-value argument ",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -107,13 +106,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-19",
-									"linecount" : 3,
+									"linecount" : 4,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 390.0, 360.0, 137.0, 50.0 ],
-									"presentation_linecount" : 3,
-									"text" : "unlike sah~, tsah~ can not be triggered using a phasor~.",
+									"patching_rect" : [ 390.0, 360.0, 137.0, 65.0 ],
+									"text" : "thus unlike sah~, tsah~ can not be triggered using a phasor~.",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -523,7 +521,6 @@
 					}
 ,
 					"patching_rect" : [ 77.0, 13.0, 81.0, 22.0 ],
-					"presentation_linecount" : 3,
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",

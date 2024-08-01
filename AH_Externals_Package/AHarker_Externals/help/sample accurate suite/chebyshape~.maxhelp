@@ -180,7 +180,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 180.0, 312.0, 157.0, 40.0 ],
-									"presentation_linecount" : 4,
 									"text" : "adjust volume level to hear the waveshaping"
 								}
 
@@ -230,7 +229,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 524.0, 239.0, 192.97900390625, 54.0 ]
+									"patching_rect" : [ 524.0, 239.0, 190.937973022460938, 54.0 ]
 								}
 
 							}
@@ -334,7 +333,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 512.97900390625, 295.0, 204.0, 36.0 ],
+									"patching_rect" : [ 512.97900390625, 295.0, 208.0, 36.0 ],
 									"text" : "see the dynamicdsp_mode tab for info on the second argument",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
@@ -731,7 +730,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 379.0, 341.0, 20.0, 20.0 ],
+									"patching_rect" : [ 373.0, 341.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -749,7 +748,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 213.0, 331.0, 157.0, 40.0 ],
-									"presentation_linecount" : 2,
 									"text" : "adjust volume level to hear the waveshaping"
 								}
 
@@ -801,7 +799,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 675.0, 287.0, 20.0, 20.0 ],
+									"patching_rect" : [ 680.0, 302.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -940,7 +938,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 455.0, 292.0, 218.0, 40.0 ],
+									"patching_rect" : [ 455.0, 292.0, 221.0, 40.0 ],
 									"text" : "Look inside to see the arguments and triggering method",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
