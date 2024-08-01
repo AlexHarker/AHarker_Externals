@@ -967,7 +967,8 @@
 								"box" : 								{
 									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
 									"bgoncolor" : [ 0.55, 0.55, 0.55, 1.0 ],
-									"fontname" : "Arial Bold",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
 									"hint" : "",
 									"id" : "obj-35",
 									"ignoreclick" : 1,
@@ -1060,14 +1061,14 @@
 								"box" : 								{
 									"fontface" : 0,
 									"fontname" : "Arial",
-									"fontsize" : 11.595186999999999,
+									"fontsize" : 13.0,
 									"id" : "obj-13",
 									"maxclass" : "number~",
 									"mode" : 2,
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 60.0, 210.0, 82.0, 21.0 ],
+									"patching_rect" : [ 60.0, 210.0, 85.0, 23.0 ],
 									"sig" : 0.0
 								}
 
@@ -1076,14 +1077,14 @@
 								"box" : 								{
 									"fontface" : 0,
 									"fontname" : "Arial",
-									"fontsize" : 11.595186999999999,
+									"fontsize" : 13.0,
 									"id" : "obj-14",
 									"maxclass" : "number~",
 									"mode" : 2,
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 30.0, 270.0, 62.0, 21.0 ],
+									"patching_rect" : [ 30.0, 270.0, 64.0, 23.0 ],
 									"sig" : 0.0
 								}
 
@@ -1091,13 +1092,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 11.595186999999999,
+									"fontsize" : 13.0,
 									"id" : "obj-17",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 30.0, 240.0, 44.0, 21.0 ],
+									"patching_rect" : [ 30.0, 240.0, 48.0, 23.0 ],
 									"text" : "vftom~"
 								}
 
@@ -1138,7 +1139,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 82.5, 295.0, 39.5, 295.0 ],
+									"midpoints" : [ 84.5, 295.0, 39.5, 295.0 ],
 									"source" : [ "obj-14", 1 ]
 								}
 

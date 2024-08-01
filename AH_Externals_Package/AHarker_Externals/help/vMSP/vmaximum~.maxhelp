@@ -986,7 +986,8 @@
 								"box" : 								{
 									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
 									"bgoncolor" : [ 0.55, 0.55, 0.55, 1.0 ],
-									"fontname" : "Arial Bold",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
 									"hint" : "",
 									"id" : "obj-35",
 									"ignoreclick" : 1,

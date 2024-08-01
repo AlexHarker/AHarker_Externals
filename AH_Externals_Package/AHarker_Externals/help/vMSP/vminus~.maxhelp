@@ -984,31 +984,34 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"fontsize" : 13.0,
 									"hidden" : 1,
 									"id" : "obj-9",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 150.0, 70.0, 22.0 ],
+									"patching_rect" : [ 30.0, 150.0, 75.0, 23.0 ],
 									"text" : "loadmess 0"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontsize" : 13.0,
 									"id" : "obj-8",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 30.0, 254.6875, 29.5, 22.0 ],
+									"patching_rect" : [ 30.0, 254.6875, 32.0, 23.0 ],
 									"text" : "+ 1"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-5",
 									"maxclass" : "live.text",
@@ -1016,7 +1019,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 30.0, 178.90625, 60.0, 30.0 ],
+									"patching_rect" : [ 30.0, 179.375, 75.0, 29.53125 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_enum" : [ "val1", "val2" ],
@@ -1038,7 +1041,8 @@
 , 							{
 								"box" : 								{
 									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
-									"fontname" : "Arial Bold",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
 									"hint" : "",
 									"id" : "obj-32",
 									"ignoreclick" : 1,
@@ -1048,7 +1052,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 91.71875, 184.375, 20.0, 20.0 ],
+									"patching_rect" : [ 105.0, 184.140625, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1058,7 +1062,8 @@
 , 							{
 								"box" : 								{
 									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
-									"fontname" : "Arial Bold",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
 									"hint" : "",
 									"id" : "obj-31",
 									"ignoreclick" : 1,
