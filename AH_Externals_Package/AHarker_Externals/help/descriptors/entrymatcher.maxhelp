@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 6,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -52,8 +52,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -115,7 +115,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 382.0, 467.0, 50.0 ],
 									"text" : "will match any entry where the \"height\" column is less than 300 with the results ranked according to absolute distance between the width column and the value 100 (values closer to 100 match better - ie. have smaller distance values)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -144,7 +144,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 293.0, 441.0, 50.0 ],
 									"text" : "will match any entry where the \"amp\" column is between -20 and -10 (within 5 of -15) and the \"freq\" column is between 50 and 200 or between 450 and 1800 (within a ratio of 2 in either direction of either 100 or 900)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -173,7 +173,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 210.0, 405.0, 36.0 ],
 									"text" : "will match any entry where the column named \"col1\" is either \"yes\", \"no\" or \"maybe\"",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -201,7 +201,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 450.0, 805.0, 21.0 ],
 									"text" : "S is the given scaling value, which is expected to be positive, and greater than 1. in the case of the ratio matches (otherwise 1 / S is used).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -215,7 +215,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 330.0, 326.0, 21.0 ],
 									"text" : "V is the value of an entry. T is the closest target value. ",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -230,19 +230,20 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 699.0, 921.0, 36.0 ],
 									"text" : "Tests are performed in the given order. If the test does not match an entry no further tests are performed on that entry. Thus, if possible it is most efficicient to perform  tests so as to reject the greatest number of entries first, the second greatest number second and so on.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-30",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 675.0, 120.0, 21.0 ],
+									"patching_rect" : [ 15.0, 675.0, 130.0, 21.0 ],
 									"text" : "Order of Matching:"
 								}
 
@@ -258,32 +259,34 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 610.0, 1000.0, 65.0 ],
 									"text" : "Matches are ranked by their distance (D) from the target values. Each entry starts with a nominal distance of zero from the targets, which means it matches the target exactly (larger values mean the entry is further away from the targets).For each test with a distance calculation the value is added to the total distance for that entry. If there are multiple target values only the lowest rated match is used. The final distance is then calculated as sqrt(D). Thus, the distance, scale and within tests produce scaled euclidean distances (note the squaring of the distance calculations). The ratio tests are more suitable for parameters that are perceived logarithmically (such as frequency),",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-25",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 585.0, 134.0, 21.0 ],
+									"patching_rect" : [ 15.0, 585.0, 145.0, 21.0 ],
 									"text" : "Distance Calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-19",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 585.0, 150.0, 74.0, 21.0 ],
+									"patching_rect" : [ 585.0, 150.0, 80.0, 21.0 ],
 									"text" : "Examples:"
 								}
 
@@ -572,39 +575,42 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-24",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 435.0, 347.0, 21.0 ],
+									"patching_rect" : [ 15.0, 435.0, 375.0, 21.0 ],
 									"text" : "Tests with a scaling value and a distance calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-23",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 315.0, 344.0, 21.0 ],
+									"patching_rect" : [ 15.0, 315.0, 375.0, 21.0 ],
 									"text" : "Tests with no scaling value but with a distance calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-29",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 150.0, 300.0, 21.0 ],
+									"patching_rect" : [ 15.0, 150.0, 328.0, 21.0 ],
 									"text" : "Tests with no scaling value or distance calculation:"
 								}
 
@@ -679,8 +685,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -783,7 +789,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 525.0, 149.0, 21.0 ],
 									"text" : "Data from lookup / index",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1131,8 +1137,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1193,8 +1199,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1230,6 +1236,22 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"border" : 0,
+									"filename" : "helpargs.js",
+									"id" : "obj-13",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "entrymatcher", 35 ],
+									"maxclass" : "jsui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 537.0, 1064.0, 231.296478271484375, 54.0 ]
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
@@ -1267,7 +1289,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 264.166666666666742, 538.0, 260.0, 25.0 ],
-									"presentation_linecount" : 2,
 									"text" : "read and write data to/from entrymatcher"
 								}
 
@@ -1422,7 +1443,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 181.666666666666686, 855.0, 706.0, 50.0 ],
 									"text" : "You can also optionally filter the results when matching. An int specifies the maximum number of matches to return and a float (0-1)  the ratio of found matches to return. These may be specified in either order. The entries returned will be the closest (best) matches. A third value specificies the largest allowable distance value to match",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1562,7 +1583,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 305.888888888888857, 1150.0, 122.0, 21.0 ],
 									"text" : "Matched Distances",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1576,7 +1597,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 251.666666666666686, 1155.0, 120.0, 40.0 ],
+									"patching_rect" : [ 252.0, 1170.0, 120.0, 40.0 ],
 									"text" : " Matching Outputs "
 								}
 
@@ -1591,7 +1612,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 193.277777777777771, 1150.0, 121.0, 21.0 ],
 									"text" : "Matched Identifiers",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1605,7 +1626,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 85.666666666666686, 1150.0, 106.0, 21.0 ],
 									"text" : "Matched Indices",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1619,7 +1640,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 423.888888888888857, 1150.0, 152.0, 21.0 ],
 									"text" : "Data from lookup / index",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1648,7 +1669,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 374.0, 240.0, 279.0, 21.0 ],
 									"text" : "(try clicking through in turn to demo the object)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1784,8 +1805,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 424.999999999999943, 1125.0, 110.0, 23.0 ],
-									"text" : "???"
+									"patching_rect" : [ 424.999999999999943, 1125.0, 110.0, 23.0 ]
 								}
 
 							}
@@ -1800,20 +1820,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 203.0, 330.0, 664.0, 25.0 ],
 									"text" : "add an entry - entries are specified by an identifier followed by data for each column in turn (of the correct type)"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-33",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 187.666666666666686, 1075.0, 544.0, 21.0 ],
-									"text" : "optional arguments are max number of entries (default 1) and number of columns (default 1)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
 							}
@@ -1917,13 +1923,14 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-15",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 240.0, 277.0, 21.0 ],
+									"patching_rect" : [ 30.0, 240.0, 298.0, 21.0 ],
 									"text" : "Set / change the contents of the entrymatcher:"
 								}
 
