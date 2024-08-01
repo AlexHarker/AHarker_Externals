@@ -3,8 +3,8 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 6,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -52,8 +52,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -108,7 +108,7 @@
 									"filename" : "ah.helpdetails.js",
 									"id" : "obj-1",
 									"ignoreclick" : 1,
-									"jsarguments" : [ "entrymatcher", 175 ],
+									"jsarguments" : [ "entrymatcher~", 175 ],
 									"maxclass" : "jsui",
 									"numinlets" : 1,
 									"numoutlets" : 1,
@@ -129,7 +129,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 350.5, 467.0, 65.0 ],
 									"text" : "will match any entry where the \"height\" column is less than the first input the results ranked according to absolute distance between the width column and the second input (closer values are ranked higher and therefore are more likely to be kept when limiting the number of matches kept).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -158,7 +158,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 270.0, 465.0, 36.0 ],
 									"text" : "will match any entry where the \"amp\" column is within 5 of the first input and the \"freq\" column is within a ratio of 2 in either direction of the second input.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -186,7 +186,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 210.0, 453.0, 21.0 ],
 									"text" : "will match any entry where the column named \"col1\" is equal to the first input.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -214,7 +214,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 450.0, 805.0, 21.0 ],
 									"text" : "S is the given scaling value, which is expected to be positive, and greater than 1. in the case of the ratio matches (otherwise 1 / S is used).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -228,7 +228,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 330.0, 326.0, 21.0 ],
 									"text" : "V is the value of an entry. T is the closest target value. ",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -243,19 +243,20 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 729.0, 921.0, 36.0 ],
 									"text" : "Tests are performed in the given order. If the test does not match an entry no further tests are performed on that entry. Thus, if possible it is most efficicient to perform  tests so as to reject the greatest number of entries first, the second greatest number second and so on.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-30",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 705.0, 120.0, 21.0 ],
+									"patching_rect" : [ 15.0, 705.0, 130.0, 21.0 ],
 									"text" : "Order of Matching:"
 								}
 
@@ -271,32 +272,34 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 610.0, 1051.0, 79.0 ],
 									"text" : "Matches are ranked by their distance (D) from the target values. Each entry starts with a nominal distance of zero from the targets, which means it matches the target exactly (larger values mean the entry is further away from the targets). For each test with a distance calculation the value is added to the total distance for that entry. The final distance is then calculated as sqrt(D). Thus, the distance, scale and within tests produce scaled euclidean distances (note the squaring of the distance calculations). The ratio tests are more suitable for parameters that are perceived logarithmically (such as frequency). In the entrymatcher~ object ther is no way to directly access the values, but they are used to rank the values prior to limiting the number of valid output matches, thus you can retain only the closest matches.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-25",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 585.0, 134.0, 21.0 ],
+									"patching_rect" : [ 15.0, 585.0, 145.0, 21.0 ],
 									"text" : "Distance Calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-19",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 585.0, 150.0, 74.0, 21.0 ],
+									"patching_rect" : [ 585.0, 150.0, 80.0, 21.0 ],
 									"text" : "Examples:"
 								}
 
@@ -571,39 +574,42 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-24",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 435.0, 347.0, 21.0 ],
+									"patching_rect" : [ 15.0, 435.0, 375.0, 21.0 ],
 									"text" : "Tests with a scaling value and a distance calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-23",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 315.0, 344.0, 21.0 ],
+									"patching_rect" : [ 15.0, 315.0, 375.0, 21.0 ],
 									"text" : "Tests with no scaling value but with a distance calculation:"
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-29",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 150.0, 300.0, 21.0 ],
+									"patching_rect" : [ 15.0, 150.0, 328.0, 21.0 ],
 									"text" : "Tests with no scaling value or distance calculation:"
 								}
 
@@ -676,8 +682,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -738,8 +744,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 6,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -776,6 +782,64 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgcolor2" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_angle" : 270.0,
+									"bgfillcolor_autogradient" : 0.0,
+									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 0.0 ],
+									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 0.0 ],
+									"bgfillcolor_proportion" : 0.5,
+									"bgfillcolor_type" : "color",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"gradient" : 1,
+									"id" : "obj-24",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.625912427902222, 1033.812986612319946, 327.0, 23.0 ],
+									"text" : "http://www.iro.umontreal.ca/~panneton/WELLRNG.html",
+									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Verdana",
+									"fontsize" : 8.0,
+									"hidden" : 1,
+									"id" : "obj-25",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 367.625912427902222, 1065.0, 104.0, 28.0 ],
+									"presentation_linecount" : 2,
+									"text" : ";\rmax launchbrowser $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"border" : 0,
+									"filename" : "helpargs.js",
+									"id" : "obj-11",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "entrymatcher~", 5 ],
+									"maxclass" : "jsui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 699.0, 926.0, 242.255477905273438, 69.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
@@ -798,7 +862,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 247.5, 463.0, 268.0, 25.0 ],
-									"presentation_linecount" : 2,
 									"text" : "read and write data to/from entrymatcher~"
 								}
 
@@ -851,19 +914,20 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 197.0, 373.5, 123.0, 25.0 ],
+									"patching_rect" : [ 200.0, 374.0, 123.0, 25.0 ],
 									"text" : "remove an entry "
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"fontsize" : 13.0,
 									"id" : "obj-55",
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 107.0, 375.0, 85.0, 22.0 ],
+									"patching_rect" : [ 107.0, 375.0, 92.0, 23.0 ],
 									"text" : "remove entry1"
 								}
 
@@ -968,7 +1032,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 784.600006000000008, 747.0, 20.0, 20.0 ],
+									"patching_rect" : [ 800.0, 422.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -984,7 +1048,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 674.600006000000008, 744.5, 108.0, 25.0 ],
+									"patching_rect" : [ 690.0, 420.5, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -996,7 +1060,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 629.600006000000008, 735.0, 44.0, 44.0 ],
+									"patching_rect" : [ 645.0, 410.5, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -1010,51 +1074,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.600006000000008, 1035.0, 615.0, 36.0 ],
-									"text" : "entrymatcher~  is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation (see http://www.iro.umontreal.ca/~panneton/WELLRNG.html).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-50",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 538.600006000000008, 1006.0, 191.0, 21.0 ],
-									"text" : "number of test inlets (default 1)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-47",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 538.600006000000008, 983.0, 184.0, 21.0 ],
-									"text" : "number of columns (default 1)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-45",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 538.600006000000008, 960.0, 207.0, 21.0 ],
-									"text" : "max number of entries (default 1)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"patching_rect" : [ 135.0, 1020.0, 615.0, 36.0 ],
+									"text" : "entrymatcher~  is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation. see ",
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1068,7 +1090,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 202.0, 870.0, 181.0, 21.0 ],
 									"text" : "choose every 20000 samples",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1082,7 +1104,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 450.800003000000004, 870.0, 181.0, 21.0 ],
 									"text" : "match every 100000 samples",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1096,7 +1118,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 149.100006000000008, 900.0, 218.0, 21.0 ],
 									"text" : "non-zero signal triggers new choice",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1110,7 +1132,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 418.600006000000008, 900.0, 188.0, 21.0 ],
 									"text" : "non-zero signal triggers match",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1152,7 +1174,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 671.600006000000008, 840.0, 149.0, 21.0 ],
 									"text" : "the value to test against",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1166,7 +1188,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 688.600006000000008, 900.0, 227.0, 21.0 ],
 									"text" : "one inlet for each test (only one here)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1321,7 +1343,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 163.600006000000008, 645.0, 736.0, 50.0 ],
 									"text" : "You can limit the number of matched entries by either a maximum number or a ratio of valid matches to keep (0-1) or by both. This is done using the limit message followed by the maximum number of matches to keep and then the ratio of matches to keep. Passing zero for either of these (or omitting a value) will turn that limit off. The closest (best) matches will be kept.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1467,23 +1489,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 309.5, 194.714234000000033, 279.0, 21.0 ],
+									"patching_rect" : [ 330.0, 195.0, 279.0, 21.0 ],
 									"text" : "(try clicking through in turn to demo the object)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-33",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 388.600006000000008, 960.0, 151.0, 21.0 ],
-									"text" : "Optional arguments are:",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1531,14 +1539,16 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-22",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 195.0, 277.0, 21.0 ],
-									"text" : "Set / change the contents of the entrymatcher:"
+									"patching_rect" : [ 30.0, 195.0, 298.0, 21.0 ],
+									"text" : "Set / change the contents of the entrymatcher:",
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1671,6 +1681,14 @@
 								"patchline" : 								{
 									"destination" : [ "obj-29", 0 ],
 									"source" : [ "obj-23", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-25", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-24", 0 ]
 								}
 
 							}
