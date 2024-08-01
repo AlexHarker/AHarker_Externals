@@ -576,7 +576,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 883.0, 741.0 ],
+						"rect" : [ 0.0, 26.0, 883.0, 741.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -914,13 +914,14 @@
 							}
 , 							{
 								"box" : 								{
+									"fontface" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-25",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 13.0, 510.0, 84.0, 21.0 ],
+									"patching_rect" : [ 13.0, 510.0, 89.0, 21.0 ],
 									"text" : "Direct Mode"
 								}
 
@@ -1025,6 +1026,7 @@
 							}
 , 							{
 								"box" : 								{
+									"contdata" : 1,
 									"id" : "obj-13",
 									"maxclass" : "multislider",
 									"numinlets" : 1,
