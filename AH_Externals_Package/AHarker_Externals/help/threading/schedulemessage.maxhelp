@@ -360,8 +360,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 315.0, 37.0, 23.0 ],
-									"text" : "print"
+									"patching_rect" : [ 30.0, 315.0, 154.0, 23.0 ],
+									"text" : "print message @popup 1"
 								}
 
 							}
