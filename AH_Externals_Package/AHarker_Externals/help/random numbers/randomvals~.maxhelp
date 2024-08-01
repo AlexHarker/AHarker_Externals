@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 850.0, 129.0, 794.0, 779.0 ],
+		"rect" : [ 684.0, 122.0, 794.0, 779.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 794.0, 753.0 ],
+						"rect" : [ 684.0, 148.0, 794.0, 753.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1334,7 +1334,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 850.0, 155.0, 794.0, 753.0 ],
+						"rect" : [ 0.0, 26.0, 794.0, 753.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1516,6 +1516,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
+									"hidden" : 1,
 									"id" : "obj-71",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
@@ -1911,6 +1912,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-9", 0 ],
+									"hidden" : 1,
 									"source" : [ "obj-71", 0 ]
 								}
 

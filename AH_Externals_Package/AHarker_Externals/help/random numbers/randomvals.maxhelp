@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 41.0, 126.0, 784.0, 738.0 ],
+						"rect" : [ 0.0, 26.0, 784.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1242,7 +1242,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 784.0, 738.0 ],
+						"rect" : [ 41.0, 126.0, 784.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1478,6 +1478,7 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
+									"hidden" : 1,
 									"id" : "obj-71",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
@@ -1745,6 +1746,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-9", 0 ],
+									"hidden" : 1,
 									"source" : [ "obj-71", 0 ]
 								}
 
