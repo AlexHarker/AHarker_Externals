@@ -5,10 +5,21 @@
         A SIMD version of mtof~
     </digest>
   <description>
-      <o>vmtof~</o> provides a CPU efficient version of <o>mtof~</o> using SIMD operations. See the <o>mtof~</o> helpfile for details on usage.
+      <o>vmtof~</o> provides a CPU efficient version of <o>mtof~</o> using SIMD operations. 
+      <br/>
+      Use <o>vmtof~</o> to convert MIDI note numbers to frequency at signal rate
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Convert MIDI note number to frequency
+          </digest>
+          <description>
+              Outputs the frequency corresponding to the input MIDI note number
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,19 @@
 
   <seealsolist>
     <seealso name="mtof~" />
+    <seealso name="expr" />
+    <seealso name="ftom" />
+    <seealso name="ftom~" />
+    <seealso name="vftom~" />
+    <seealso name="mtof" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The frequency corresponding to the input MIDI note number as a signal.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

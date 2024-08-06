@@ -5,10 +5,63 @@
         A SIMD version of plus~
     </digest>
   <description>
-      <o>vplus~</o> provides a CPU efficient version of <o>plus~</o> using SIMD operations. See the <o>plus~</o> helpfile for details on usage.
+      <o>vplus~</o> provides a CPU efficient version of <o>plus~</o> using SIMD operations. 
+      <br/>
+      Use the <o>vplus~</o> object to add two signals together, or to add an offset value to a signal.
   </description>
   
+  <objarglist>
+      <objarg name="initial-offset" optional="1" type="number">
+          <digest>
+              Initial signal offset
+          </digest>
+          <description>
+              Sets an initial offset to add to the signal coming into the left inlet. If a signal is connected to the right inlet, the argument is ignored. If no argument is present, and no signal is connected to the right inlet, the initial value is <m>0</m> by default.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="int">
+          <arglist>
+              <arg name="offset" optional="0" type="int" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: An offset to add to the signal coming into the right inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: An offset to add to the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="offset" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: An offset to add to the signal coming into the right inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: An offset to add to the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: The signal is added to the signal coming into the right inlet, or a constant value received in the right inlet. All signal inputs to a single inlet are summed. If a signal and number are both sent to the left inlet, the specified operation will be performed with those values.
+              <br />
+              <br />
+              In right inlet: The signal is added to the signal coming into the left inlet, or a constant value received in the left inlet. All signal inputs to a single inlet are summed.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +69,19 @@
 
   <seealsolist>
     <seealso name="plus~" />
+    <seealso name="plusequals~" />
+    <seealso name="minus~" />
+    <seealso name="vminus~" />
+    <seealso name="rminus~" />
+    <seealso name="vrminus~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The sum of the two inputs.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

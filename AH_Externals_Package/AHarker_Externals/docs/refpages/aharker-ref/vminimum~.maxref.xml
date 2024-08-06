@@ -5,10 +5,57 @@
         A SIMD version of minimum~
     </digest>
   <description>
-      <o>vminimum~</o> provides a CPU efficient version of <o>minimum~</o> using SIMD operations. See the <o>minimum~</o> helpfile for details on usage.
+      <o>vminimum~</o> provides a CPU efficient version of <o>minimum~</o> using SIMD operations. 
+      <br/>
+      <o>vminimum~</o> outputs a signal which is the minimum of two input signals.
   </description>
   
+  <objarglist>
+      <objarg name="initial-comparison-value" optional="1" type="number">
+          <digest>
+              Comparison value
+          </digest>
+          <description>
+              Sets an initial comparison value for the signal coming into the left inlet. If a signal is connected to the right inlet, the argument is ignored.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="int">
+          <arglist>
+              <arg name="comparison-value" optional="0" type="int" />
+          </arglist>
+          <digest>
+              Compare value with left input signal
+          </digest>
+          <description>
+              In right inlet: A number to be used for comparison with the signal coming into the left inlet. If a signal is also connected to the right inlet, a <m>float</m> or <m>int</m> is ignored.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="comparison-value" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Compare value with left input signal
+          </digest>
+          <description>
+              In right inlet: A number to be used for comparison with the signal coming into the left inlet. If a signal is also connected to the right inlet, a <m>float</m> or <m>int</m> is ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: The signal is compared to a signal coming into the right inlet, or a constant value received in the right inlet. The lesser of the two values is sent out the outlet.
+              <br />
+              <br />
+              In right inlet: The signal is used for comparison with the signal coming into the left inlet.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +63,28 @@
 
   <seealsolist>
     <seealso name="minimum~" />
+    <seealso name="maximum~" />
+    <seealso name="vmaximum~" />
+    <seealso name="lessthan~" />
+    <seealso name="vlessthan~" />
+    <seealso name="greaterthan~" />
+    <seealso name="vgreaterthan~" />
+    <seealso name="lessthaneq~" />
+    <seealso name="vlessthaneq~" />
+    <seealso name="greaterthaneq~" />
+    <seealso name="vgreaterthaneq~" />
+    <seealso name="equals~" />
+    <seealso name="vequals~" />
+    <seealso name="notequals~" />
+    <seealso name="vnotequals~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The lesser of the two signal values received in the left and right inlets is sent out.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

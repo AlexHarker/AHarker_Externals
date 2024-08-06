@@ -5,10 +5,21 @@
         A SIMD version of atodb~
     </digest>
   <description>
-      <o>vatodb~</o> provides a CPU efficient version of <o>atodb~</o> using SIMD operations. See the <o>atodb~</o> helpfile for details on usage.
+      <o>vatodb~</o> provides a CPU efficient version of <o>atodb~</o> using SIMD operations.
+      <br/>
+      Use the <o>vatodb~</o> to convert a signal representing a linear value to a deciBel equivalent.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              A signal representing a linear value
+          </digest>
+          <description>
+              A signal representing a linear value. It is converted to a gain/attenuation, expressed in deciBels, and output as a signal.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,19 @@
 
   <seealsolist>
     <seealso name="atodb~" />
+    <seealso name="expr" />
+    <seealso name="atodb" />
+    <seealso name="dbtoa" />
+    <seealso name="dbtoa~" />
+    <seealso name="vdbtoa~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The gain or attenuation from unity gain, expressed in deciBels, is output as a signal.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

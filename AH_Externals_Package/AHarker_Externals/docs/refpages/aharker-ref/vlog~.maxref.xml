@@ -5,10 +5,43 @@
         A SIMD version of log~
     </digest>
   <description>
-      <o>vlog~</o> provides a CPU efficient version of <o>log~</o> using SIMD operations. See the <o>log~</o> helpfile for details on usage.
+      <o>vlog~</o> provides a CPU efficient version of <o>log~</o> using SIMD operations.
+      <br/>
+      Use the <o>vlog~</o> object to output a signal composed of the logarithms of its input values. You can specify the logarithmic base.
   </description>
   
+  <objarglist>
+      <objarg name="logarithmic-base" optional="1" type="number">
+          <digest>
+              Logarithmic base
+          </digest>
+          <description>
+              Sets the base of the logarithm. The default value is 0.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="float">
+          <arglist>
+              <arg name="logarithmic-base" type="float" optional="0" />
+          </arglist>
+          <digest>
+              Set the base of the logarithm
+          </digest>
+          <description>
+              In right inlet: Sets the base of the logarithm. The default is 0, which is equivalent to the natural logarithm (log to the base e, or 2.71828182). log to the base of 1 is always 0.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Signal input to be evaluated
+          </digest>
+          <description>
+              In left inlet: <o>vlog~</o> sends out a signal that is the logarithm of the input signal, to the base specified by the typed-in argument or the value most recently received in the right inlet. If a value in the signal is less than or equal to 0, <o>vlog~</o> sends out a value of 0.00000001.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +49,19 @@
 
   <seealsolist>
     <seealso name="log~" />
+    <seealso name="pow~" />
+    <seealso name="vpow~" />
+    <seealso name="curve~" />
+    <seealso name="sqrt~" />
+    <seealso name="vsqrt~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The logarithm of the input signal to the base specified by the initial argument or the value most recently received in the right inlet.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

@@ -5,10 +5,57 @@
         A SIMD version of lessthan~
     </digest>
   <description>
-      <o>vlessthan~</o> provides a CPU efficient version of <o>lessthan~</o> using SIMD operations. See the <o>lessthan~</o> helpfile for details on usage.
+      <o>vlessthan~</o> provides a CPU efficient version of <o>lessthan~</o> using SIMD operations.
+      <br/>
+      <o>vlessthan~</o> outputs a 1 signal when the left input is less-than the right input and a 0 when it is greater-than or equal-to the right input. The right input can be a signal or a float.
   </description>
   
+  <objarglist>
+      <objarg name="initial-comparison-value" optional="1" type="float or int">
+          <digest>
+              Comparison value
+          </digest>
+          <description>
+              Sets an initial comparison value for the signal coming into the left inlet. <m>1</m> is sent out if the signal is less than the argument; otherwise, <m>0</m> is sent out. If a signal is connected to the right inlet, the argument is ignored. If no argument is present, and no signal is connected to the right inlet, the initial value is <m>0</m> by default.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="int">
+          <arglist>
+              <arg name="comparison-value" optional="0" type="int" />
+          </arglist>
+          <digest>
+              Compare value with left input signal
+          </digest>
+          <description>
+              In right inlet: A number to be used for comparison with the signal coming into the left inlet. If a signal is also connected to the right inlet, a <m>float</m> or <m>int</m> is ignored.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="comparison-value" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Compare value with left input signal
+          </digest>
+          <description>
+              In right inlet: A number to be used for comparison with the signal coming into the left inlet. If a signal is also connected to the right inlet, a <m>float</m> or <m>int</m> is ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: The signal is compared to a signal coming into the right inlet, or a constant value received in the right inlet. If it is less than the value in the right inlet, 1 is sent out; otherwise, 0 is sent out.
+              <br />
+              <br />
+              In right inlet: The signal is used for comparison with the signal coming into the left inlet.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +63,26 @@
 
   <seealsolist>
     <seealso name="lessthan~" />
+    <seealso name="lessthaneq~" />
+    <seealso name="vlessthaneq~" />
+    <seealso name="greaterthan~" />
+    <seealso name="vgreaterthan~" />
+    <seealso name="greaterthaneq~" />
+    <seealso name="vgreaterthaneq~" />
+    <seealso name="equals~" />
+    <seealso name="vequals~" />
+    <seealso name="notequals~" />
+    <seealso name="vnotequals~" />
+    <seealso name="sah~" />
+    <seealso name="tsah~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              If the signal in the left inlet is less than the value in the right inlet, <m>1</m> is sent out; otherwise, <m>0</m> is sent out.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

@@ -5,10 +5,63 @@
         A SIMD version of minus~
     </digest>
   <description>
-      <o>vminus~</o> provides a CPU efficient version of <o>minus~</o> using SIMD operations. See the <o>minus~</o> helpfile for details on usage.
+      <o>vminus~</o> provides a CPU efficient version of <o>minus~</o> using SIMD operations. 
+      <br/>
+      Use the <o>vminus~</o> object to perform signal subtraction (to output a signal which is the difference between two signals).
   </description>
   
+  <objarglist>
+      <objarg name="initial-subtraction-value" optional="1" type="number">
+          <digest>
+              Initial subtraction value
+          </digest>
+          <description>
+              Sets an initial amount to subtract from the signal coming into the left inlet. If a signal is connected to the right inlet, the argument is overidden. If no argument is present, and no signal is connected to the right inlet, the initial value is <m>0</m> by default.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="int">
+          <arglist>
+              <arg name="input" optional="0" type="int" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: Subtracts the signal coming into the right inlet from this value. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: An amount to subtract from the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="input" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: Subtracts the signal coming into the right inlet from this value. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+              <br />
+              <br />
+              In right inlet: An amount to subtract from the signal coming into the left inlet. If a signal is connected to both left and right inlets, a <m>float</m> or <m>int</m> connected to either inlet will be ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: The signal coming into the right inlet or a constant value received in the right inlet is subtracted from this signal. All signal inputs to a single inlet are summed. If a signal and number are both sent to the left inlet, the specified operation will be performed with those values.
+              <br />
+              <br />
+              In right inlet: The signal is subtracted from the signal coming into the left inlet, or a constant value received in the left inlet. All signal inputs to a single inlet are summed.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +69,18 @@
 
   <seealsolist>
     <seealso name="minus~" />
+    <seealso name="plus~" />
+    <seealso name="vplus~" />
+    <seealso name="rminus~" />
+    <seealso name="vrminus~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The difference between the two inputs.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
