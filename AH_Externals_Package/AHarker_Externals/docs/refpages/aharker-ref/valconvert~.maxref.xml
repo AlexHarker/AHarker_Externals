@@ -81,7 +81,7 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            When <o>valconvert~</o> receives a value, that value is scaled, based on the chosen mode, to the indicated output range of values and ouput as a signal.
+            When <o>valconvert~</o> receives an input signal, it gets scaled to the indicated output range based on the chosen mode before being ouput as a signal.
         </description>
     </entry>
   </misc>
