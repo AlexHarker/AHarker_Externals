@@ -15,15 +15,20 @@
           <description>
               The first argument sets the interface type for macaddress.
               <br/>
+              <br/>
               The options are:
+              <br/>
               <br/>
               <m>any</m>
               <br/>
+              <br/>
               <m>wifi</m>
+              <br/>
               <br/>
               <m>ethernet</m>
               <br/>
-              or the name of a network type
+              <br/>
+              a network interface name (e.g. <m>en0</m>).
           </description>
       </objarg>
   </objarglist>
@@ -49,15 +54,20 @@
           <description>
               The <m>set</m> message followed by a message will change the interface type and bang an output.
               <br/>
+              <br/>
               The options are:
+              <br/>
               <br/>
               <m>set any</m>
               <br/>
+              <br/>
               <m>set wifi</m>
+              <br/>
               <br/>
               <m>set ethernet</m>
               <br/>
-              or <m>set</m> the name of a network type
+              <br/>
+              <m>set</m> a network interface name (e.g. <m>en0</m>).
           </description>
       </method>
   </methodlist>
