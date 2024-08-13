@@ -7,6 +7,26 @@
   <description>
       <o>macaddress</o> is an object for obtaining the MAC address of any wireless interface to provide a unique identifier for the host computer.
   </description>
+  <objarglist>
+      <objarg name="interface-type" optional="1" type="symbol">
+          <digest>
+              Set the interface type
+          </digest>
+          <description>
+              The first argument sets the interface type for macaddress.
+              <br/>
+              The options are:
+              <br/>
+              <m>any</m>
+              <br/>
+              <m>wifi</m>
+              <br/>
+              <m>ethernet</m>
+              <br/>
+              or the name of a network type
+          </description>
+      </objarg>
+  </objarglist>
   <methodlist>
       <method name="bang">
           <arglist>
@@ -17,6 +37,27 @@
           </digest>
           <description>
               A <m>bang</m> will cause <o>macaddress</o> to output the MAC address.
+          </description>
+      </method>
+      <method name="set">
+          <arglist>
+              <arg name="set" type="message" />
+          </arglist>
+          <digest>
+              Set the interface type
+          </digest>
+          <description>
+              The <m>set</m> message followed by a message will change the interface type and bang an output.
+              <br/>
+              The options are:
+              <br/>
+              <m>set any</m>
+              <br/>
+              <m>set wifi</m>
+              <br/>
+              <m>set ethernet</m>
+              <br/>
+              or <m>set</m> the name of a network type
           </description>
       </method>
   </methodlist>
