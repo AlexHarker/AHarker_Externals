@@ -20,7 +20,7 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="inlet">
+      <method name="int">
           <arglist>
               <arg name="inlet" type="int" />
           </arglist>
