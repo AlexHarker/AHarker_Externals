@@ -28,26 +28,17 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="First-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="First-inlet" type="signal" />
           </arglist>
           <digest>
-              Input
+              Function depends on inlet.
           </digest>
           <description>
-              The first inlet takes a <m>signal</m> to be processed by the filter.
-          </description>
-      </method>
-      <method name="Second-inlet">
-          <arglist>
-              <arg name="Second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Reset input
-          </digest>
-          <description>
-              The second inlet is a dedicated reset input. It takes a trigger <m>signal</m> to clear the filters memory.
+              In the first inlet: A <m>signal</m> to be processed by the filter.
+              <br/>
+              <br/>
+              In the second inlet: A dedicated reset input. It takes a trigger <m>signal</m> to clear the filters memory.
           </description>
       </method>
   </methodlist>
