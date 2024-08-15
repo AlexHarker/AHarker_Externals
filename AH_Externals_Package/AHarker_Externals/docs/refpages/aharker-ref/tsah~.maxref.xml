@@ -10,27 +10,15 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="input" type="signal" />
           </arglist>
           <digest>
-              The <m>signal</m> to be sampled
+              Function depends on inlet.
           </digest>
           <description>
-              The left inlet takes a <m>signal</m> to be sampled. When a tigger <m>signal</m> is recieved in the right inlet, the input is sampled and output as a constant <m>signal</m> value.
-          </description>
-      </method>
-      <method name="signal">
-          <arglist>
-              <arg name="trigger" type="signal" />
-          </arglist>
-          <digest>
-              The trigger <m>signal</m>
-          </digest>
-          <description>
-              The right inlet takes a trigger <m>signal</m> used to determine when to sample and output the left inlet's input.
-              <br />
-              <br />
-              Thus for any non-zero <m>signal</m> in the right inlet, <o>tsah~</o> will constantly output the same value as at the left inlet.
+              In the left inlet: A <m>signal</m> to be sampled. When a tigger <m>signal</m> is recieved in the right inlet, the input is sampled and output as a constant <m>signal</m> value.
+              <br/>
+              <br/>
+              In the right inlet: A trigger <m>signal</m> used to determine when to sample and output the left inlet's input. For any non-zero <m>signal</m> in the right inlet, <o>tsah~</o> will constantly output the same value as at the left inlet.
           </description>
       </method>
   </methodlist>
