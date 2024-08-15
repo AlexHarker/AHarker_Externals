@@ -27,58 +27,30 @@
   </objarglist>
 
   <methodlist>
-      <method name="First-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="First-inlet" type="signal" />
           </arglist>
           <digest>
-              Triggers in
+              Function depends on inlet
           </digest>
           <description>
-              The first inlet takes a trigger <m>signal</m> used to begin the ramp outputs.
-              <br />
-              When not in <m>mode 2</m>, consecutive triggers will be ignored until the busy flag is lowered.
-          </description>
-      </method>
-      <method name="Second-inlet">
-          <arglist>
-              <arg name="Second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Lengths in
-          </digest>
-          <description>
-              The second inlet takes a <m>signal</m> to determine the length (in milliseconds) of the ramp outputs.
-              <br />
-              This will effect the duration of the ramps, as well as the values of the ramp coming from the first outlet.
-              <br />
+              In the first inlet: A trigger <m>signal</m> used to begin the ramp outputs. When not in <m>mode 2</m>, consecutive triggers will be ignored until the busy flag is lowered.
+              <br/>
+              <br/>
+              In the second inlet: A <m>signal</m> to determine the length (in milliseconds) of the ramp outputs. This will effect the duration of the ramps, as well as the values of the ramp coming from the first outlet.
+              <br/>
               The input value is sampled when a trigger is recieved in the first inlet.
-          </description>
-      </method>
-      <method name="Third-inlet">
-          <arglist>
-              <arg name="Third-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Subsample offset
-          </digest>
-          <description>
+              <br/>
+              <br/>
+              In the third inlet: The <m>signal</m> to determine the subsample offset.
+              <br/>
               The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses et.) you can utilise this functionality.
-              <br />
-              <br />
+              <br/>
               It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process, detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of <o>voicedrive~</o> and <o>voicemanager~</o> also takes account of the subsample offset.
-          </description>
-      </method>
-      <method name="Fourth-inlet">
-          <arglist>
-              <arg name="Fourth-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Offsets in
-          </digest>
-          <description>
-              The fourth inlet takes a <m>signal</m> to determine the offset (start value) in milliseconds of the ramp being output from the first outlet.
-              <br />
+              <br/>
+              <br/>
+              In the fourth inlet: A <m>signal</m> to determine the offset (start value) in milliseconds of the ramp being output from the first outlet.
+              <br/>
               The input value is sampled when a trigger is recieved in the first inlet.
           </description>
       </method>
@@ -89,9 +61,11 @@
     <entry name="signal">
         <description>
             The first outlet outputs a linear ramp <m>signal</m> to indicate a playback position in milliseconds.
-            <br />
+            <br/>
+            <br/>
             The second outlet outputs a normalised ramp <m>signal</m> (0-1).
-            <br />
+            <br/>
+            
             The third outlet outputs a <m>signal</m> trigger at the beginning of each ramp.
             <br />
             The fourth outlet outputs the busy flag.
