@@ -12,9 +12,8 @@
   </objarglist>
   
   <methodlist>
-      <method name="input">
+      <method name="signal">
           <arglist>
-              <arg name="input" optional="1" type="signal" />
           </arglist>
           <digest>
               The <m>signal</m> to apply convolution to.
@@ -25,7 +24,7 @@
       </method>
       <method name="set">
           <arglist>
-              <arg name="set" optional="1" type="message" />
+              <arg name="set" type="variable" />
           </arglist>
           <digest>
               set the buffer from which to fetch the impulse
