@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 380.0, 244.0, 571.0, 352.0 ],
+		"rect" : [ 558.0, 244.0, 393.0, 352.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,15 +40,51 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+					"fontname" : "Arial Bold",
+					"hint" : "",
+					"id" : "obj-25",
+					"ignoreclick" : 1,
+					"legacytextcolor" : 1,
+					"maxclass" : "textbutton",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "", "", "int" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 349.0, 17.0, 20.0, 20.0 ],
+					"rounded" : 60.0,
+					"text" : "4",
+					"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"border" : 0,
+					"filename" : "helpargs.js",
+					"id" : "obj-13",
+					"ignoreclick" : 1,
+					"jsarguments" : [ "dynamic.in~", 5 ],
+					"maxclass" : "jsui",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 138.0, 150.0, 174.135513305664062, 39.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-9",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 139.0, 120.0, 411.0, 21.0 ],
-					"text" : "optional int argument sets initial inlet to attach to (default is 0 - ie. off).",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"patching_rect" : [ 185.0, 191.0, 127.0, 21.0 ],
+					"text" : "(default is 0 - ie. off).",
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 				}
 
 			}
@@ -60,7 +96,7 @@
 					"maxclass" : "scope~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 150.0, 135.0, 135.0 ]
+					"patching_rect" : [ 45.0, 195.0, 135.0, 107.0 ]
 				}
 
 			}
@@ -73,22 +109,24 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 45.0, 120.0, 92.0, 23.0 ],
+					"patching_rect" : [ 45.0, 150.0, 92.0, 23.0 ],
 					"text" : "dynamic.in~ 1"
 				}
 
 			}
 , 			{
 				"box" : 				{
+					"bubble" : 1,
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-5",
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 105.0, 15.0, 430.0, 21.0 ],
+					"patching_rect" : [ 105.0, 7.0, 240.0, 40.0 ],
 					"text" : "select inlet to fetch audio from (out of range values produce zero output).",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 				}
 
 			}
@@ -114,7 +152,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 45.0, 75.0, 100.0, 23.0 ],
+					"patching_rect" : [ 45.0, 90.0, 100.0, 23.0 ],
 					"text" : "dynamic.out~ 1"
 				}
 
@@ -128,7 +166,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 45.0, 45.0, 81.0, 23.0 ],
+					"patching_rect" : [ 45.0, 60.0, 81.0, 23.0 ],
 					"text" : "dynamic.in~"
 				}
 

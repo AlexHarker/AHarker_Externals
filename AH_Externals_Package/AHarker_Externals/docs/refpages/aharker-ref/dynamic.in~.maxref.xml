@@ -8,7 +8,7 @@
       <o>dynamic.in~</o> acts like <o>in~</o> but for patchers loaded inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object. Unlike <o>in~</o> the user can change the signal inlet which the object refers to by sending an <m>int</m> to the object.
   </description>
   <objarglist>
-      <objarg name="inlet" optional="1" type="int">
+      <objarg name="initial-inlet" optional="1" type="int">
           <digest>
               Set the initial inlet
           </digest>
@@ -20,7 +20,7 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="inlet">
+      <method name="int">
           <arglist>
               <arg name="inlet" type="int" />
           </arglist>
@@ -50,6 +50,8 @@
       <seealso name="dynamic.this~" />
       <seealso name="dynamicdsp~" />
       <seealso name="dynamicserial~" />
+      <seealso name="in~" />
+      <seealso name="out~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">

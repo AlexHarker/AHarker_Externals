@@ -8,7 +8,7 @@
       <o>dynamic.out~</o> acts like <o>out~</o> but for patchers loaded inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object. Unlike <o>out~</o> the user can change the signal outlet which the object refers to by sending an <m>int</m> to the object.
   </description>
   <objarglist>
-      <objarg name="outlet" optional="1" type="int">
+      <objarg name="initial-outlet" optional="1" type="int">
           <digest>
               Set the initial outlet
           </digest>
@@ -20,7 +20,17 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="outlet">
+      <method name="signal">
+          <arglist>
+          </arglist>
+          <digest>
+              signal to be output
+          </digest>
+          <description>
+              When inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> patch, a <m>signal</m> is sent to the output matching either the first argument or an <m>int</m> input.
+          </description>
+      </method>
+      <method name="int">
           <arglist>
               <arg name="outlet" type="int" />
           </arglist>
@@ -37,7 +47,7 @@
   </attributelist>
   
   <misc name="Output">
-    <entry name="signal">
+    <entry name="none">
         <description>
             <o>dynamic.out~</o> has no outlet. It is used to output a <m>signal</m> from the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that it is inside, from the outlet specified by the argument or <m>int</m> input.
         </description>
@@ -50,6 +60,8 @@
     <seealso name="dynamic.this~" />
     <seealso name="dynamicdsp~" />
     <seealso name="dynamicserial~" />
+    <seealso name="in~" />
+    <seealso name="out~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
