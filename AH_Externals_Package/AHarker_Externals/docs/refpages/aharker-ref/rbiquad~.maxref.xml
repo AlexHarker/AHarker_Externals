@@ -27,7 +27,7 @@
               FF coefficient 0
           </digest>
           <description>
-              The second inlet takes the 0th FF coefficient (this can be generated using <o>filtercoeff~</o>).
+              The second inlet takes the 0th feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
           </description>
       </method>
       <method name="Third-inlet">
@@ -38,7 +38,7 @@
               FF coefficient 1
           </digest>
           <description>
-              The third inlet takes the 1st FF coefficient (this can be generated using <o>filtercoeff~</o>).
+              The third inlet takes the 1st feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
           </description>
       </method>
       <method name="Fourth-inlet">
@@ -49,7 +49,7 @@
               FF coefficient 2
           </digest>
           <description>
-              The fourth inlet takes the 2nd FF coefficient (this can be generated using <o>filtercoeff~</o>).
+              The fourth inlet takes the 2nd feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
           </description>
       </method>
       <method name="Fifth-inlet">
@@ -60,7 +60,7 @@
               FB coefficient 1
           </digest>
           <description>
-              The fifth inlet takes the 1st FB coefficient (this can be generated using <o>filtercoeff~</o>).
+              The fifth inlet takes the 1st feedback coefficient (this can be generated using <o>filtercoeff~</o>).
           </description>
       </method>
       <method name="Sixth-inlet">
@@ -71,7 +71,7 @@
               FB coefficient 2
           </digest>
           <description>
-              The sixth inlet takes the 2nd FB coefficient (this can be generated using <o>filtercoeff~</o>).
+              The sixth inlet takes the 2nd feedback coefficient (this can be generated using <o>filtercoeff~</o>).
           </description>
       </method>
       <method name="Seventh-inlet">
