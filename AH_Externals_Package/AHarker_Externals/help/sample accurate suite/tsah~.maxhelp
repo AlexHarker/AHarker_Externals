@@ -195,7 +195,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 30.0, 330.0, 59.0, 23.0 ],
+									"patching_rect" : [ 30.0, 330.0, 94.0, 23.0 ],
 									"text" : "sah~ 0.5"
 								}
 
