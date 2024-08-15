@@ -134,7 +134,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1030.0, 673.0 ],
+						"rect" : [ 34.0, 126.0, 1030.0, 673.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -453,7 +453,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 318.0, 480.0, 157.0, 21.0 ],
-									"text" : "apply vonn hann window ",
+									"text" : "apply hann window ",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -561,7 +561,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 63.0, 225.0, 121.0, 36.0 ],
-									"text" : "random triggers on 0.02% of samples",
+									"text" : "random triggers on 0.01% of samples",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -821,8 +821,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 283.666666666666629, 450.0, 121.0, 23.0 ],
-									"text" : "cycle~ vonnhann"
+									"patching_rect" : [ 283.666666666666629, 450.0, 121.333333333333371, 23.0 ],
+									"text" : "cycle~ hann"
 								}
 
 							}
