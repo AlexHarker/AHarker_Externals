@@ -44,13 +44,14 @@
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
 					"id" : "obj-20",
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 44.950495064258575, 570.0, 197.0, 21.0 ],
+					"patching_rect" : [ 44.950495064258575, 570.0, 197.0, 36.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 0.0, 206.0, 197.0, 21.0 ],
-					"text" : "reset after changing parameters)",
+					"presentation_rect" : [ 0.0, 206.0, 201.0, 21.0 ],
+					"text" : "(reset after changing parameters)",
 					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
