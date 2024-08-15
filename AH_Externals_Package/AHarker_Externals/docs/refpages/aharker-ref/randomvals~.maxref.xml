@@ -9,23 +9,23 @@
   </description>
   
   <methodlist>
-      <method name="input" optional="1" type="int">
+      <method name="signal">
           <digest>
               Trigger processing
           </digest>
           <description>
-              An <m>int</m> below 1 will give an output of 0.
+              A <m>signal</m> below 1 will give an output of 0.
               <br />
               <br />
-              An <m>int</m> of 1 to 2 will give a flat distribution of values between 0 and 1.
+              A <m>signal</m> of 1 to 2 will give a flat distribution of values between 0 and 1.
               <br />
               <br />
-              An <m>int</m> of higher than 2 will give a multiple windowed gaussian distribution of values between 0 and 1.
+              A <m>signal</m> of higher than 2 will give a multiple windowed gaussian distribution of values between 0 and 1.
           </description>
       </method>
-      <method name="gaussian distribution" optional="1" type="list">
+      <method name="list">
           <digest>
-              Set a gaussian distribution
+              Function depends on list length
           </digest>
           <description>
               A list of three values can be sent into <o>randomvals~</o> via a <m>message</m> to set a windowed gaussian distribution. The list must be formatted in the order:
