@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 41.0, 100.0, 784.0, 764.0 ],
+		"rect" : [ 41.0, 100.0, 775.0, 764.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 784.0, 738.0 ],
+						"rect" : [ 0.0, 26.0, 775.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -836,7 +836,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 784.0, 738.0 ],
+						"rect" : [ 0.0, 26.0, 775.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1180,7 +1180,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 784.0, 738.0 ],
+						"rect" : [ 0.0, 26.0, 775.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1242,7 +1242,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 41.0, 126.0, 784.0, 738.0 ],
+						"rect" : [ 41.0, 126.0, 775.0, 738.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -1275,14 +1275,127 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-2",
+									"id" : "obj-5",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 555.0, 374.0, 36.0 ],
-									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:",
+									"patching_rect" : [ 270.0, 450.0, 447.0, 36.0 ],
+									"text" : "randomvals is currently implemented using a complementary modulo with carry algorithm (proposed by George Marsaglia). See:",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_autogradient" : 0.79,
+									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
+									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 1.0 ],
+									"bgfillcolor_type" : "gradient",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"gradient" : 0,
+									"id" : "obj-18",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 270.0, 481.0, 485.0, 23.0 ],
+									"text" : "http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm",
+									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Verdana",
+									"fontsize" : 9.0,
+									"hidden" : 1,
+									"id" : "obj-58",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 270.0, 510.0, 120.0, 30.0 ],
+									"text" : ";\rmax launchbrowser $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontname" : "Arial Bold",
+									"fontsize" : 13.0,
+									"hint" : "",
+									"id" : "obj-24",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 710.0, 331.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "2",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontname" : "Arial Bold",
+									"fontsize" : 13.0,
+									"hint" : "",
+									"id" : "obj-21",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 589.0, 287.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "1",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+									"fontname" : "Arial Bold",
+									"fontsize" : 13.0,
+									"hint" : "",
+									"id" : "obj-19",
+									"ignoreclick" : 1,
+									"legacytextcolor" : 1,
+									"maxclass" : "textbutton",
+									"numinlets" : 1,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "int" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 260.0, 167.0, 20.0, 20.0 ],
+									"rounded" : 60.0,
+									"text" : "3",
+									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"id" : "obj-6",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 75.0, 165.0, 179.0, 25.0 ],
+									"text" : "generate random numbers"
 								}
 
 							}
@@ -1290,13 +1403,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-5",
+									"id" : "obj-2",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 465.0, 447.0, 36.0 ],
-									"text" : "randfloats~ is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation. See:",
+									"patching_rect" : [ 270.0, 555.0, 374.0, 36.0 ],
+									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -1318,7 +1431,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 285.0, 586.0, 373.0, 38.0 ],
+									"patching_rect" : [ 270.0, 586.0, 345.0, 38.0 ],
 									"text" : "https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/",
 									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
 								}
@@ -1335,45 +1448,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 285.0, 632.0, 116.0, 30.0 ],
-									"text" : ";\rmax launchbrowser $1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
-									"bgfillcolor_autogradient" : 0.79,
-									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
-									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
-									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 1.0 ],
-									"bgfillcolor_type" : "gradient",
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"gradient" : 0,
-									"id" : "obj-18",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 285.0, 496.0, 327.0, 23.0 ],
-									"text" : "http://www.iro.umontreal.ca/~panneton/WELLRNG.html",
-									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Verdana",
-									"fontsize" : 9.0,
-									"hidden" : 1,
-									"id" : "obj-58",
-									"linecount" : 2,
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 285.0, 525.0, 116.0, 30.0 ],
+									"patching_rect" : [ 270.0, 632.0, 116.0, 30.0 ],
 									"text" : ";\rmax launchbrowser $1"
 								}
 
@@ -1402,7 +1477,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 564.0, 306.0, 158.0, 40.0 ],
+									"patching_rect" : [ 549.0, 321.0, 158.0, 40.0 ],
 									"text" : "each triple represents mean / dev / weight"
 								}
 
@@ -1414,7 +1489,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 405.0, 269.0, 197.0, 25.0 ],
+									"patching_rect" : [ 390.0, 284.0, 197.0, 25.0 ],
 									"text" : "list sets gaussian distributions"
 								}
 
@@ -1427,7 +1502,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 60.0, 165.0, 24.0, 24.0 ]
+									"patching_rect" : [ 45.0, 165.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -1440,7 +1515,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 451.0, 344.0, 271.0, 36.0 ],
+									"patching_rect" : [ 436.0, 359.0, 271.0, 36.0 ],
 									"text" : "weight is the relative probability of using the corresponding mean and dev parameters",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1454,7 +1529,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.0, 202.0, 453.0, 21.0 ],
+									"patching_rect" : [ 120.0, 217.0, 453.0, 21.0 ],
 									"text" : "int of 2 or above gives a multiple windowed gaussian distribution (0-1) output",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1468,7 +1543,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.0, 183.0, 300.0, 21.0 ],
+									"patching_rect" : [ 120.0, 198.0, 300.0, 21.0 ],
 									"text" : "int of 1 or below gives  flat distribution (0-1) output",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1484,7 +1559,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 315.0, 225.0, 66.0, 23.0 ],
+									"patching_rect" : [ 300.0, 240.0, 66.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -1498,7 +1573,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 330.0, 314.0, 226.0, 23.0 ],
+									"patching_rect" : [ 315.0, 329.0, 226.0, 23.0 ],
 									"text" : "0.23 0.01 1. 0.75 0.01 0.5 0.5 10. 0.1"
 								}
 
@@ -1513,7 +1588,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 60.0, 314.0, 54.0, 23.0 ]
+									"patching_rect" : [ 45.0, 329.0, 54.0, 23.0 ]
 								}
 
 							}
@@ -1532,7 +1607,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"offset" : [ 0.0, 0.0 ],
-									"patching_rect" : [ 60.0, 405.0, 217.0, 234.0 ],
+									"patching_rect" : [ 45.0, 420.0, 217.0, 234.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -1546,7 +1621,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 60.0, 225.0, 57.0, 23.0 ],
+									"patching_rect" : [ 45.0, 240.0, 57.0, 23.0 ],
 									"text" : "metro 5"
 								}
 
@@ -1560,7 +1635,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 60.0, 360.0, 80.0, 23.0 ],
+									"patching_rect" : [ 45.0, 375.0, 80.0, 23.0 ],
 									"text" : "randomvals"
 								}
 
@@ -1574,7 +1649,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 259.0, 225.0, 36.0, 23.0 ],
+									"patching_rect" : [ 244.0, 240.0, 36.0, 23.0 ],
 									"text" : "3"
 								}
 
@@ -1588,7 +1663,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 218.0, 225.0, 36.0, 23.0 ],
+									"patching_rect" : [ 203.0, 240.0, 36.0, 23.0 ],
 									"text" : "2"
 								}
 
@@ -1602,7 +1677,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 315.0, 270.0, 81.0, 23.0 ],
+									"patching_rect" : [ 300.0, 285.0, 81.0, 23.0 ],
 									"text" : "0.5 0.002 1."
 								}
 
@@ -1616,7 +1691,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 177.0, 225.0, 36.0, 23.0 ],
+									"patching_rect" : [ 162.0, 240.0, 36.0, 23.0 ],
 									"text" : "1"
 								}
 
@@ -1630,7 +1705,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 135.0, 225.0, 37.0, 23.0 ],
+									"patching_rect" : [ 120.0, 240.0, 37.0, 23.0 ],
 									"text" : "0"
 								}
 
@@ -1644,7 +1719,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 60.0, 270.0, 36.0, 23.0 ],
+									"patching_rect" : [ 45.0, 285.0, 36.0, 23.0 ],
 									"text" : "i"
 								}
 
@@ -1660,7 +1735,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 227.5, 257.5, 69.5, 257.5 ],
+									"midpoints" : [ 212.5, 272.5, 54.5, 272.5 ],
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -1676,7 +1751,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 268.5, 257.5, 69.5, 257.5 ],
+									"midpoints" : [ 253.5, 272.5, 54.5, 272.5 ],
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -1684,7 +1759,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-20", 0 ],
-									"midpoints" : [ 69.5, 393.5, 69.5, 393.5 ],
+									"midpoints" : [ 54.5, 408.5, 54.5, 408.5 ],
 									"source" : [ "obj-16", 0 ]
 								}
 
@@ -1692,7 +1767,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 69.5, 259.5, 69.5, 259.5 ],
+									"midpoints" : [ 54.5, 274.5, 54.5, 274.5 ],
 									"source" : [ "obj-17", 0 ]
 								}
 
@@ -1715,7 +1790,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"midpoints" : [ 339.5, 353.0, 69.5, 353.0 ],
+									"midpoints" : [ 324.5, 368.0, 54.5, 368.0 ],
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -1730,7 +1805,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 144.5, 257.5, 69.5, 257.5 ],
+									"midpoints" : [ 129.5, 272.5, 54.5, 272.5 ],
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -1738,7 +1813,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 186.5, 257.5, 69.5, 257.5 ],
+									"midpoints" : [ 171.5, 272.5, 54.5, 272.5 ],
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -1754,7 +1829,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-16", 0 ],
-									"midpoints" : [ 324.5, 345.0, 69.5, 345.0 ],
+									"midpoints" : [ 309.5, 360.0, 54.5, 360.0 ],
 									"source" : [ "obj-9", 0 ]
 								}
 
