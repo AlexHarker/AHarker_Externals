@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 106.0, 100.0, 911.0, 798.0 ],
+		"rect" : [ 445.0, 106.0, 911.0, 798.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -96,7 +96,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 617.5, 36.0 ],
-									"presentation_linecount" : 2,
 									"text" : "an example of a simple mono granular synth in which the filter cutoff changes per grain according to a triple windowed gaussian distribution.",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
@@ -334,7 +333,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 474.536060929298401, 195.360822200775146, 160.0, 65.0 ],
-									"presentation_linecount" : 4,
 									"text" : "each group of three sliders sets the mean/deviation/weight for three windows",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -371,7 +369,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 479.690699815750122, 150.0, 105.208329319953918, 40.0 ],
-									"presentation_linecount" : 2,
 									"text" : "set gaussian distributions"
 								}
 
@@ -500,7 +497,6 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 90.0, 178.865977764129639, 90.0, 52.0 ],
-									"presentation_linecount" : 3,
 									"text" : "0.2 0.1 0.3 0.75 0.05 0.9 0.5 1. 0.2"
 								}
 
@@ -1149,7 +1145,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 106.0, 126.0, 911.0, 772.0 ],
+						"rect" : [ 445.0, 132.0, 911.0, 772.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1182,14 +1178,53 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-7",
+									"id" : "obj-8",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 493.0, 673.0, 374.0, 36.0 ],
-									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:",
+									"patching_rect" : [ 30.0, 660.0, 447.0, 36.0 ],
+									"text" : "randomvals is currently implemented using a complementary modulo with carry algorithm (proposed by George Marsaglia). See:",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_autogradient" : 0.79,
+									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
+									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 1.0 ],
+									"bgfillcolor_type" : "gradient",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"gradient" : 0,
+									"id" : "obj-18",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 30.0, 691.0, 360.0, 38.0 ],
+									"text" : "http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm",
+									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Verdana",
+									"fontsize" : 9.0,
+									"hidden" : 1,
+									"id" : "obj-58",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 30.0, 735.0, 120.0, 30.0 ],
+									"text" : ";\rmax launchbrowser $1"
 								}
 
 							}
@@ -1197,13 +1232,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-10",
+									"id" : "obj-7",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 673.0, 447.0, 36.0 ],
-									"text" : "randfloats~ is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation. See:",
+									"patching_rect" : [ 493.0, 658.0, 374.0, 36.0 ],
+									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -1225,7 +1260,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 493.0, 704.0, 373.0, 38.0 ],
+									"patching_rect" : [ 493.0, 689.0, 347.0, 38.0 ],
 									"text" : "https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/",
 									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
 								}
@@ -1234,7 +1269,7 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Verdana",
-									"fontsize" : 13.0,
+									"fontsize" : 8.0,
 									"hidden" : 1,
 									"id" : "obj-12",
 									"linecount" : 2,
@@ -1242,45 +1277,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 493.0, 750.0, 160.0, 40.0 ],
-									"text" : ";\rmax launchbrowser $1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
-									"bgfillcolor_autogradient" : 0.79,
-									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
-									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
-									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 1.0 ],
-									"bgfillcolor_type" : "gradient",
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"gradient" : 0,
-									"id" : "obj-13",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 704.0, 327.0, 23.0 ],
-									"text" : "http://www.iro.umontreal.ca/~panneton/WELLRNG.html",
-									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Verdana",
-									"fontsize" : 13.0,
-									"hidden" : 1,
-									"id" : "obj-58",
-									"linecount" : 2,
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 750.0, 160.0, 40.0 ],
+									"patching_rect" : [ 493.0, 735.0, 102.0, 28.0 ],
 									"text" : ";\rmax launchbrowser $1"
 								}
 
@@ -1680,7 +1677,7 @@
 								"patchline" : 								{
 									"destination" : [ "obj-58", 0 ],
 									"hidden" : 1,
-									"source" : [ "obj-13", 0 ]
+									"source" : [ "obj-18", 0 ]
 								}
 
 							}
