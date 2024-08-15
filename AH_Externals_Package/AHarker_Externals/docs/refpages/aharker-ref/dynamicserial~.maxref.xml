@@ -44,53 +44,9 @@
   </objarglist>
   
   <methodlist>
-      <method name="message">
-          <arglist>
-              <arg name="message" type="message" />
-          </arglist>
-          <digest>
-              Input a message
-          </digest>
-          <description>
-              A <m>message</m> can be sent into any of the <m>message</m> inlets specified by the message inlets argument. This will be sent to all targeted slots in series. The <m>message</m> should be recieved by an <o>in</o> (matching the inlet it was sent to) inside the loaded patch.
-          </description>
-      </method>
-      <method name="signal">
-          <arglist>
-              <arg name="signal" type="signal" />
-          </arglist>
-          <digest>
-              Input a signal
-          </digest>
-          <description>
-              A <m>signal</m> can be sent into any of the <m>signal</m> inlets specified by the signal inlets argument. This will be sent to all available slots in series. The <m>signal</m> should be recieved by a <o>dynamic.in~</o> or <o>dynamic.request~</o> (matching the inlet it was sent to) inside the loaded patch.
-          </description>
-      </method>
-      <method name="clear">
-          <arglist>
-              <arg name="clear" type="message" />
-          </arglist>
-          <digest>
-              Clear all slots
-          </digest>
-          <description>
-              Sending the <m>clear</m> message will clear all the currently occupied slots within the <o>dynamicserial~</o>.
-          </description>
-      </method>
-      <method name="deletepatch">
-          <arglist>
-              <arg name="deletepatch" type="message" />
-          </arglist>
-          <digest>
-              Delete a patch from a specific slot
-          </digest>
-          <description>
-              Sending the <m>deletepatch</m> message followed by an <m>int</m> will delete the patch from that slot within the <o>dynamicserial~</o>.
-          </description>
-      </method>
       <method name="loadpatch">
           <arglist>
-              <arg name="loadpatch" type="message" />
+              <arg name="loadpatch" type="variable" />
           </arglist>
           <digest>
               Load a patch into a free slot
@@ -110,9 +66,70 @@
               Each slot in <o>dynamicserial~</o> can contain a different patch by changing the patch name in the <m>loadpatch</m> message.
           </description>
       </method>
+      <method name="anything">
+          <arglist>
+              <arg name="anything" type="variable" />
+          </arglist>
+          <digest>
+              Input a message
+          </digest>
+          <description>
+              A <m>message</m> can be sent into any of the <m>message</m> inlets specified by the message inlets argument. This will be sent to all targeted slots in series. The <m>message</m> should be recieved by an <o>in</o> (matching the inlet it was sent to) inside the loaded patch.
+          </description>
+      </method>
+      <method name="bang">
+          <arglist>
+          </arglist>
+          <digest>
+              Input a bang
+          </digest>
+          <description>
+              Functions the same as <m>anything</m>
+          </description>
+      </method>
+      <method name="int">
+          <arglist>
+          </arglist>
+          <digest>
+              Input a int
+          </digest>
+          <description>
+              Functions the same as <m>anything</m>
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+          </arglist>
+          <digest>
+              Input a float
+          </digest>
+          <description>
+              Functions the same as <m>anything</m>
+          </description>
+      </method>
+      <method name="list">
+          <arglist>
+          </arglist>
+          <digest>
+              Input a list
+          </digest>
+          <description>
+              Functions the same as <m>anything</m>
+          </description>
+      </method>
+      <method name="signal">
+          <arglist>
+          </arglist>
+          <digest>
+              Input a signal
+          </digest>
+          <description>
+              A <m>signal</m> can be sent into any of the <m>signal</m> inlets specified by the signal inlets argument. This will be sent to all available slots in series. The <m>signal</m> should be recieved by a <o>dynamic.in~</o> or <o>dynamic.request~</o> (matching the inlet it was sent to) inside the loaded patch.
+          </description>
+      </method>
       <method name="open">
           <arglist>
-              <arg name="open" type="message" />
+              <arg name="open" type="int" />
           </arglist>
           <digest>
               Open a specific patch window
@@ -121,9 +138,41 @@
               Sending the <m>open</m> message followed by an <m>int</m> will open that specific patch window from inside <o>dynamicserial~</o> provided that there is a patch there.
           </description>
       </method>
+      <method name="wclose">
+          <arglist>
+              <arg name="wclose" type="int" />
+          </arglist>
+          <digest>
+              Close a specific patch window
+          </digest>
+          <description>
+              Sending the <m>wclose</m> message followed by an <m>int</m> will close that specific patch window provided that it was open.
+          </description>
+      </method>
+      <method name="deletepatch">
+          <arglist>
+              <arg name="deletepatch" type="int" />
+          </arglist>
+          <digest>
+              Delete a patch from a specific slot
+          </digest>
+          <description>
+              Sending the <m>deletepatch</m> message followed by an <m>int</m> will delete the patch from that slot within the <o>dynamicserial~</o>.
+          </description>
+      </method>
+      <method name="clear">
+          <arglist>
+          </arglist>
+          <digest>
+              Clear all slots
+          </digest>
+          <description>
+              Sending the <m>clear</m> message will clear all the currently occupied slots within the <o>dynamicserial~</o>.
+          </description>
+      </method>
       <method name="target">
           <arglist>
-              <arg name="target" type="message" />
+              <arg name="target" type="int" />
           </arglist>
           <digest>
               Target a specific patch
@@ -136,7 +185,7 @@
       </method>
       <method name="targetfree">
           <arglist>
-              <arg name="targetfree" type="message" />
+              <arg name="targetfree" type="variable" />
           </arglist>
           <digest>
               Target a free patch
@@ -158,17 +207,6 @@
               Ex. <m>targetfree 3 9</m> targets any free patch between slots 3 and 9 (inclusive).
           </description>
       </method>
-      <method name="wclose">
-          <arglist>
-              <arg name="wclose" type="message" />
-          </arglist>
-          <digest>
-              Close a specific patch window
-          </digest>
-          <description>
-              Sending the <m>wclose</m> message followed by an <m>int</m> will close that specific patch window provided that it was open.
-          </description>
-      </method>
   </methodlist>
   
   <attributelist>
@@ -187,9 +225,10 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            he number of outputs is specified by the signal outputs and message outputs arguments. <m>signals</m> and <m>messages</m> will each have their own outlets instead of sharing like they do with inlets.
-            <br />
-            The outputs are <m>signals</m>/<m>messages</m> from the patches loaded into <o>dynamicserial~</o> processed in series in the order they are loaded. <o>dynamic.out~</o> and <o>out</o> should be used within the loaded <o>dynamicserial~</o> patch to determine which outlet to output from.
+            The number of outputs is specified by the signal outputs and message outputs arguments. <m>signals</m> and <m>anything</m> will each have their own outlets instead of sharing like they do with inlets.
+            <br/>
+            <br/>
+            The outputs are <m>signals</m>/<m>anything</m> from the patches loaded into <o>dynamicserial~</o> processed in series in the order they are loaded. <o>dynamic.out~</o> and <o>out</o> should be used within the loaded <o>dynamicserial~</o> patch to determine which outlet to output from.
         </description>
     </entry>
   </misc>
