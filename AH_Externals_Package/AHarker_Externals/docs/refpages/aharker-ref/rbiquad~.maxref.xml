@@ -8,81 +8,32 @@
       <o>rbiquad~</o> is a biquad filter that accepts only signal rate coefficients. The memory can be cleared on a sample-accurate basis, using a dedicated reset input. In granular applications with filtering per voice this allows correct reset of the filter before each new grain.
   </description>
   <methodlist>
-      <method name="First-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="First-inlet" type="signal" />
           </arglist>
           <digest>
-              The audio input to be filtered
+              Function depends on inlet
           </digest>
           <description>
-              The first inlet takes an audio <m>signal</m> to be filtered.
-          </description>
-      </method>
-      <method name="Second-inlet">
-          <arglist>
-              <arg name="Second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              FF coefficient 0
-          </digest>
-          <description>
-              The second inlet takes the 0th feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
-          </description>
-      </method>
-      <method name="Third-inlet">
-          <arglist>
-              <arg name="Third-inlet" type="signal" />
-          </arglist>
-          <digest>
-              FF coefficient 1
-          </digest>
-          <description>
-              The third inlet takes the 1st feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
-          </description>
-      </method>
-      <method name="Fourth-inlet">
-          <arglist>
-              <arg name="Fourth-inlet" type="signal" />
-          </arglist>
-          <digest>
-              FF coefficient 2
-          </digest>
-          <description>
-              The fourth inlet takes the 2nd feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
-          </description>
-      </method>
-      <method name="Fifth-inlet">
-          <arglist>
-              <arg name="Fifth-inlet" type="signal" />
-          </arglist>
-          <digest>
-              FB coefficient 1
-          </digest>
-          <description>
-              The fifth inlet takes the 1st feedback coefficient (this can be generated using <o>filtercoeff~</o>).
-          </description>
-      </method>
-      <method name="Sixth-inlet">
-          <arglist>
-              <arg name="Sixth-inlet" type="signal" />
-          </arglist>
-          <digest>
-              FB coefficient 2
-          </digest>
-          <description>
-              The sixth inlet takes the 2nd feedback coefficient (this can be generated using <o>filtercoeff~</o>).
-          </description>
-      </method>
-      <method name="Seventh-inlet">
-          <arglist>
-              <arg name="Seventh-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Reset input
-          </digest>
-          <description>
-              The seventh inlet takes a trigger <m>signal</m> used to clear the filters memory. In granular applications with filtering per voice this allows correct reset of the filter before each new grain.
+              In first inlet: An audio <m>signal</m> to be filtered.
+              <br/>
+              <br/>
+              In second inlet: The 0th feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
+              <br/>
+              <br/>
+              In third inlet: The 1st feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
+              <br/>
+              <br/>
+              In the fourth inlet: The 2nd feedforward coefficient (this can be generated using <o>filtercoeff~</o>).
+              <br/>
+              <br/>
+              In the fifth inlet: The 1st feedback coefficient (this can be generated using <o>filtercoeff~</o>).
+              <br/>
+              <br/>
+              In the sixth inlet: The 2nd feedback coefficient (this can be generated using <o>filtercoeff~</o>).
+              <br/>
+              <br/>
+              In the seventh inlet: A trigger <m>signal</m> used to clear the filters memory. In granular applications with filtering per voice this allows correct reset of the filter before each new grain.
           </description>
       </method>
   </methodlist>
