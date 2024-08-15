@@ -34,9 +34,8 @@
   </objarglist>
   
   <methodlist>
-      <method name="input">
+      <method name="signal">
           <arglist>
-              <arg name="input" optional="1" type="signal" />
           </arglist>
           <digest>
               The <m>signal</m> to apply convolution to.
@@ -47,18 +46,17 @@
       </method>
       <method name="memoryusage">
           <arglist>
-              <arg name="memoryusage" optional="1" type="int" />
           </arglist>
           <digest>
               report memory usage to the max window.
           </digest>
           <description>
-              Report memory usage to the max window.
+              The <m>memoryusage</m> reports memory usage to the max window.
           </description>
       </method>
       <method name="set">
           <arglist>
-              <arg name="set" optional="1" type="message" />
+              <arg name="set" type="variable" />
           </arglist>
           <digest>
               set the buffer from which to fetch the impulse
@@ -77,7 +75,7 @@
       </method>
       <method name="eq">
           <arglist>
-              <arg name="eq" optional="1" type="message" />
+              <arg name="eq" type="variable" />
           </arglist>
           <digest>
               set the buffer from which to fetch the eq
@@ -94,6 +92,16 @@
               <br />
               <br />
               The latency in this mode is the fft size.
+          </description>
+      </method>
+      <method name="direct">
+          <arglist>
+              <arg name="direct" type="variable" />
+          </arglist>
+          <digest>
+          </digest>
+          <description>
+              The <m>direct</m> mode is an experimental mode that expects the buffer to contain calculated and scaled fft data for the correct size of fft stored by frame, first real points (N / 2 + 1 points) and then imaginary data ( N / 2 - 1 points) for each frame in turn. This mode is not advised for general use, and you should proceed with caution (although it should not crash). There is no further documentation at this time on this mode.
           </description>
       </method>
   </methodlist>
