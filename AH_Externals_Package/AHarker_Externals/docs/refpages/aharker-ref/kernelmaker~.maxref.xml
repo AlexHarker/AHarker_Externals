@@ -22,7 +22,7 @@
   </objarglist>
   
   <methodlist>
-      <method name="fade_time">
+      <method name="int">
           <arglist>
               <arg name="fade_time" optional="1" type="int" />
           </arglist>
@@ -35,9 +35,9 @@
               This is useful in Envelope mode and Ring mod mode.
           </description>
       </method>
-      <method name="Windowed_mode">
+      <method name="makekernel_wind">
           <arglist>
-              <arg name="Windowed_mode" optional="1" type="message" />
+              <arg name="makekernel_wind" optional="1" type="variable" />
           </arglist>
           <digest>
               Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window buffer.
@@ -56,9 +56,9 @@
               The window buffer should be a 513 sample window (where sample indices 0 and 512 are the end points).
           </description>
       </method>
-      <method name="Envelope_mode">
+      <method name="makekernel_env">
           <arglist>
-              <arg name="Envelope_mode" optional="1" type="message" />
+              <arg name="makekernel_env" optional="1" type="variable" />
           </arglist>
           <digest>
               Create a normalised kernel of the length of the envelope buffer copying from the offset sample in the source buffer.
@@ -78,9 +78,9 @@
               The kernel can be faded in and out to avoid clicks.
           </description>
       </method>
-      <method name="Ring_mod_mode">
+      <method name="makekernel_ring">
           <arglist>
-              <arg name="Ring_mod_mode" optional="1" type="message" />
+              <arg name="makekernel_ring" optional="1" type="variable" />
           </arglist>
           <digest>
               Create a normalised kernel of the length of the modulation buffer copying from the offset sample in the source buffer.
@@ -100,9 +100,9 @@
               The kernel can be faded in and out to avoid clicks.
           </description>
       </method>
-      <method name="Trapezoid_mode">
+      <method name="makekernel_trap">
           <arglist>
-              <arg name="Trapezoid_mode" optional="1" type="message" />
+              <arg name="makekernel_trap" optional="1" type="variable" />
           </arglist>
           <digest>
               Create a trapezoid with a height of 1 and the specificed length in samples.
