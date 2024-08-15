@@ -73,11 +73,13 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            The first outlet outputs a trigger <m>signal</m> numbered with the voice.
-            <br />
-            The second outlet outputs a trigger <m>signal</m> with the amplitude corresponding to the length input.
-            <br />
-            The third outlet outputs a trigger <m>signal</m> corresponding to the subsample offset input.
+            Upon receiving a trigger in the first inlet, the first outlet outputs a voice number as a <m>signal</m>, otherwise outputs zero.
+            <br/>
+            <br/>
+            Upon receiving a trigger in the first inlet, the second outlet outputs the current value of the lengths input (second inlet) as a <m>signal</m>, otherwise outputs zero.
+            <br/>
+            <br/>
+            Upon receiving a trigger in the first inlet, the third outlet outputs the current value of the subsample offset input (third inlet) as a <m>signal</m>, otherwise outputs zero.
         </description>
     </entry>
   </misc>
