@@ -30,7 +30,7 @@
               The right inlet takes a trigger <m>signal</m> used to determine when to sample and output the left inlet's input.
               <br />
               <br />
-              Thus for any non-zero <m>signal<m/> in the right inlet, <o>tsah~</o> will constantly output the same value as at the left inlet.
+              Thus for any non-zero <m>signal</m> in the right inlet, <o>tsah~</o> will constantly output the same value as at the left inlet.
           </description>
       </method>
   </methodlist>
