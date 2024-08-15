@@ -20,7 +20,17 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="outlet">
+      <method name="signal">
+          <arglist>
+          </arglist>
+          <digest>
+              signal to be output
+          </digest>
+          <description>
+              When inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> patch, a <m>signal</m> is sent to the output matching either the first argument or an <m>int</m> input.
+          </description>
+      </method>
+      <method name="int">
           <arglist>
               <arg name="outlet" type="int" />
           </arglist>
@@ -37,7 +47,7 @@
   </attributelist>
   
   <misc name="Output">
-    <entry name="signal">
+    <entry name="none">
         <description>
             <o>dynamic.out~</o> has no outlet. It is used to output a <m>signal</m> from the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that it is inside, from the outlet specified by the argument or <m>int</m> input.
         </description>
