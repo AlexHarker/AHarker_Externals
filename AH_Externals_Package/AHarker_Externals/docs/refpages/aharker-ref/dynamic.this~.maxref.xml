@@ -38,7 +38,6 @@
   <methodlist>
       <method name="bang">
           <arglist>
-              <arg name="bang" type="bang" />
           </arglist>
           <digest>
               Bang an output
@@ -49,7 +48,7 @@
       </method>
       <method name="busy">
           <arglist>
-              <arg name="busy" type="message" />
+              <arg name="busy" type="int" />
           </arglist>
           <digest>
               Set the busy state
@@ -66,15 +65,14 @@
               Sending an <m>int</m>(0 or 1) into <o>dynamic.this~</o> without the <m>busy</m> message works the same.
           </description>
       </method>
-      <method name="delete">
+      <method name="int">
           <arglist>
-              <arg name="delete" type="message" />
           </arglist>
           <digest>
-              Delete the patch
+              Set the busy state
           </digest>
           <description>
-              Sending <o>dynamic.this~</o> the <m>delete</m> message will delete that patch that it is in and free up the slot it was using in the <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+              Functions the same as <m>busy</m>
           </description>
       </method>
       <method name="flags">
@@ -95,7 +93,7 @@
       </method>
       <method name="mute">
           <arglist>
-              <arg name="mute" type="message" />
+              <arg name="mute" type="int" />
           </arglist>
           <digest>
               Set the mute state
@@ -109,13 +107,23 @@
               <m>1</m> sets the mute flag off, turning audio on.
           </description>
       </method>
+      <method name="delete">
+          <arglist>
+          </arglist>
+          <digest>
+              Delete the patch
+          </digest>
+          <description>
+              Sending <o>dynamic.this~</o> the <m>delete</m> message will delete that patch that it is in and free up the slot it was using in the <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
   </attributelist>
   
   <misc name="Output">
-    <entry name="signal">
+    <entry name="int">
         <description>
             <o>dynamic.this~</o> has three outlets.
             <br />
