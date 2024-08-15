@@ -102,7 +102,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 134.0, 172.0, 405.0, 213.0 ],
+						"rect" : [ 134.0, 172.0, 486.0, 231.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -130,30 +130,31 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-38",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 75.0, 180.0, 127.0, 22.0 ],
-									"text" : "buffer~ vonnhann 200"
+									"patching_rect" : [ 76.000000178813934, 180.0, 107.0, 23.0 ],
+									"text" : "buffer~ hann 200"
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-37",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 30.0, 15.0, 60.0, 22.0 ],
+									"patching_rect" : [ 30.0, 15.0, 65.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -161,13 +162,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-36",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 120.0, 90.0, 41.0, 22.0 ],
+									"patching_rect" : [ 120.0, 90.0, 44.0, 23.0 ],
 									"text" : "/ 512."
 								}
 
@@ -175,13 +176,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-35",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 3,
 									"outlettype" : [ "bang", "bang", "int" ],
-									"patching_rect" : [ 30.0, 45.0, 63.800000071525574, 22.0 ],
+									"patching_rect" : [ 30.0, 45.0, 65.0, 23.0 ],
 									"text" : "uzi 513 0"
 								}
 
@@ -189,27 +190,27 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-5",
 									"maxclass" : "newobj",
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 75.0, 150.0, 109.000000357627869, 22.0 ],
-									"text" : "peek~ vonnhann"
+									"patching_rect" : [ 76.000000178813934, 150.0, 107.0, 23.0 ],
+									"text" : "peek~ hann"
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-7",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 120.000000178813934, 119.800000011920929, 272.0, 22.0 ],
+									"patching_rect" : [ 120.000000178813934, 119.800000011920929, 295.0, 23.0 ],
 									"text" : "expr 0.5 + (0.5 * cos(3.141593 + 6.283186 * $f1))"
 								}
 
@@ -218,7 +219,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-36", 0 ],
-									"midpoints" : [ 84.300000071525574, 74.5, 129.5, 74.5 ],
+									"midpoints" : [ 85.5, 74.5, 129.5, 74.5 ],
 									"order" : 0,
 									"source" : [ "obj-35", 2 ]
 								}
@@ -256,7 +257,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 405.0, 165.0, 130.0, 23.0 ],
+					"patching_rect" : [ 405.0, 165.0, 99.0, 23.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -264,7 +265,7 @@
 						"tags" : ""
 					}
 ,
-					"text" : "p vonnhann_window"
+					"text" : "p hann_window"
 				}
 
 			}
@@ -544,6 +545,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -1035,7 +1037,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 28.0, 58.0, 636.0, 74.0 ],
-									"text" : "It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process (such as the one used here with phasor~), detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compenstae for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of voicedrive~ and voicemanager~ also takes account of the subsample offset."
+									"text" : "It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process (such as the one used here with phasor~), detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of voicedrive~ and voicemanager~ also takes account of the subsample offset."
 								}
 
 							}
@@ -1049,7 +1051,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 28.0, 17.0, 633.0, 33.0 ],
-									"text" : "The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses et.) you can utilise this functionality."
+									"text" : "The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses etc.) you can utilise this functionality."
 								}
 
 							}
