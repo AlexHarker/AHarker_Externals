@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 192.0, 102.0, 887.0, 746.0 ],
+		"rect" : [ 34.0, 100.0, 887.0, 746.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -119,7 +119,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 192.0, 128.0, 887.0, 720.0 ],
+						"rect" : [ 34.0, 126.0, 887.0, 720.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -162,7 +162,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 290.0, 182.5, 20.0, 20.0 ],
+									"patching_rect" : [ 290.0, 213.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -177,7 +177,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 348.0, 43.0, 23.0 ],
+									"patching_rect" : [ 45.0, 378.0, 43.0, 23.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -196,7 +196,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 353.0, 386.0, 20.0, 20.0 ],
+									"patching_rect" : [ 353.0, 416.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -213,7 +213,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 191.0, 369.0, 156.0, 54.0 ],
+									"patching_rect" : [ 191.0, 399.0, 156.0, 54.0 ],
 									"text" : "adjust volume level to hear noise convolved a random impulse"
 								}
 
@@ -230,7 +230,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 45.0, 390.0, 136.0, 35.0 ],
+									"patching_rect" : [ 45.0, 420.0, 136.0, 35.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -260,7 +260,7 @@
 									"numinlets" : 5,
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 450.0, 300.0, 192.0, 64.0 ],
+									"patching_rect" : [ 450.0, 330.0, 192.0, 64.0 ],
 									"selectioncolor" : [ 0.929411764705882, 0.929411764705882, 0.352941176470588, 0.0 ]
 								}
 
@@ -290,7 +290,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 105.0, 180.0, 24.0, 24.0 ]
+									"patching_rect" : [ 105.0, 210.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -308,7 +308,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 201.0, 460.0, 20.0, 20.0 ],
+									"patching_rect" : [ 201.0, 490.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -324,7 +324,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 91.0, 460.0, 109.0, 25.0 ],
+									"patching_rect" : [ 91.0, 490.0, 109.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -336,7 +336,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 450.0, 44.0, 44.0 ],
+									"patching_rect" : [ 45.0, 480.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -350,7 +350,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.0, 180.0, 153.0, 25.0 ],
+									"patching_rect" : [ 135.0, 210.0, 153.0, 25.0 ],
 									"text" : "generate new impulse"
 								}
 
@@ -364,7 +364,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 207.0, 270.0, 140.0, 25.0 ],
+									"patching_rect" : [ 207.0, 300.0, 140.0, 25.0 ],
 									"text" : "set the buffer to use",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -380,7 +380,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 105.0, 152.0, 65.0, 23.0 ],
+									"patching_rect" : [ 105.0, 182.0, 65.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -637,7 +637,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 105.0, 226.0, 115.0, 23.0 ],
+									"patching_rect" : [ 105.0, 256.0, 115.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -657,7 +657,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 480.0, 281.0, 113.0, 21.0 ],
+									"patching_rect" : [ 480.0, 311.0, 113.0, 21.0 ],
 									"text" : "impulse response",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -672,7 +672,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 105.0, 270.0, 91.0, 23.0 ],
+									"patching_rect" : [ 105.0, 300.0, 91.0, 23.0 ],
 									"text" : "set random_ir"
 								}
 
@@ -686,7 +686,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 450.0, 372.0, 192.0, 23.0 ],
+									"patching_rect" : [ 450.0, 402.0, 192.0, 23.0 ],
 									"text" : "buffer~ random_ir @samps 200"
 								}
 
@@ -700,7 +700,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 525.0, 705.0, 36.0 ],
+									"patching_rect" : [ 45.0, 585.0, 705.0, 36.0 ],
 									"text" : "Note - The IR is fetched (copied) from the buffer when the set message is sent. Any changes to the buffer after that point will not affect the output.",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -715,7 +715,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 270.0, 43.0, 23.0 ],
+									"patching_rect" : [ 45.0, 300.0, 43.0, 23.0 ],
 									"text" : "pink~"
 								}
 
@@ -729,7 +729,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 316.0, 288.0, 23.0 ],
+									"patching_rect" : [ 45.0, 346.0, 288.0, 23.0 ],
 									"text" : "timeconvolve~ @offset 0 @length 200 @chan 1"
 								}
 
@@ -775,7 +775,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 114.5, 304.0, 54.5, 304.0 ],
+									"midpoints" : [ 114.5, 334.0, 54.5, 334.0 ],
 									"source" : [ "obj-18", 0 ]
 								}
 
