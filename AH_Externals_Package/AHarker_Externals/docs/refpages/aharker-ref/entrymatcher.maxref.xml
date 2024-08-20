@@ -30,7 +30,6 @@
   <methodlist>
       <method name="bang">
           <arglist>
-              <arg name="bang" type="message" />
           </arglist>
           <digest>
               Output all matches
@@ -41,7 +40,6 @@
       </method>
       <method name="clear">
           <arglist>
-              <arg name="clear" type="message" />
           </arglist>
           <digest>
               Clear <o>entrymatcher</o>
@@ -50,9 +48,19 @@
               The <m>clear</m> message clears all the currently stored entries and matchers. The <m>reset</m> message does the same.
           </description>
       </method>
+      <method name="dictionary">
+          <arglist>
+              <arg name="dictionary" type="symbol" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
       <method name="dump">
           <arglist>
-              <arg name="dump" type="message" />
           </arglist>
           <digest>
               output all data
@@ -61,20 +69,9 @@
               The <m>dump</m> message will output all the stored data out the fourth outlet.
           </description>
       </method>
-      <method name="dictionary">
-          <arglist>
-              <arg name="dictionary" type="message" />
-          </arglist>
-          <digest>
-              TEXT HERE
-          </digest>
-          <description>
-              TEXT HERE
-          </description>
-      </method>
       <method name="entry">
           <arglist>
-              <arg name="entry" type="message" />
+              <arg name="entry" type="variable" />
           </arglist>
           <digest>
               Set the columns for each entry
@@ -101,7 +98,7 @@
       </method>
       <method name="index">
           <arglist>
-              <arg name="index" type="message" />
+              <arg name="index" type="variable" />
           </arglist>
           <digest>
               query an entry and output out the fourth outlet
@@ -124,7 +121,7 @@
       </method>
       <method name="labelmodes">
           <arglist>
-              <arg name="labelmodes" type="message" />
+              <arg name="labelmodes" type="variable" />
           </arglist>
           <digest>
               Set the labelmodes for each column
@@ -142,7 +139,7 @@
       </method>
       <method name="lookup">
           <arglist>
-              <arg name="lookup" type="message" />
+              <arg name="lookup" type="variable" />
           </arglist>
           <digest>
               query an entry and output out the fourth outlet
@@ -162,7 +159,7 @@
       </method>
       <method name="looporder">
           <arglist>
-              <arg name="looporder" type="message" />
+              <arg name="looporder" type="int" />
           </arglist>
           <digest>
               TEXT HERE
@@ -173,7 +170,7 @@
       </method>
       <method name="match">
           <arglist>
-              <arg name="match" type="message" />
+              <arg name="match" type="variable" />
           </arglist>
           <digest>
               Output matches
@@ -202,7 +199,7 @@
       </method>
       <method name="matchers">
           <arglist>
-              <arg name="matchers" type="message" />
+              <arg name="matchers" type="variable" />
           </arglist>
           <digest>
               Set the rules for match
@@ -224,7 +221,7 @@
       </method>
       <method name="names">
           <arglist>
-              <arg name="names" type="message" />
+              <arg name="names" type="variable" />
           </arglist>
           <digest>
               Set the name for each column
@@ -242,7 +239,6 @@
       </method>
       <method name="open">
           <arglist>
-              <arg name="open" type="message" />
           </arglist>
           <digest>
               View the contents
@@ -253,7 +249,7 @@
       </method>
       <method name="read">
           <arglist>
-              <arg name="read" type="message" />
+              <arg name="read" type="symbol" />
           </arglist>
           <digest>
               Read a new file
@@ -264,7 +260,7 @@
       </method>
       <method name="refer">
           <arglist>
-              <arg name="refer" type="message" />
+              <arg name="refer" type="symbol" />
           </arglist>
           <digest>
               TEXT HERE
@@ -275,7 +271,7 @@
       </method>
       <method name="remove">
           <arglist>
-              <arg name="remove" type="message" />
+              <arg name="remove" type="variable" />
           </arglist>
           <digest>
               Remove an entry
@@ -286,7 +282,7 @@
       </method>
       <method name="removeif">
           <arglist>
-              <arg name="removeif" type="message" />
+              <arg name="removeif" type="variable" />
           </arglist>
           <digest>
               TEXT HERE
@@ -297,7 +293,6 @@
       </method>
       <method name="reset">
           <arglist>
-              <arg name="reset" type="message" />
           </arglist>
           <digest>
               Reset <o>entrymatcher</o>
@@ -308,7 +303,7 @@
       </method>
       <method name="resize">
           <arglist>
-              <arg name="resize" type="message" />
+              <arg name="resize" type="int" />
           </arglist>
           <digest>
               TEXT HERE
@@ -319,7 +314,7 @@
       </method>
       <method name="stats">
           <arglist>
-              <arg name="stats" type="message" />
+              <arg name="stats" type="variable" />
           </arglist>
           <digest>
               TEXT HERE
@@ -330,7 +325,7 @@
       </method>
       <method name="write">
           <arglist>
-              <arg name="write" type="message" />
+              <arg name="write" type="symbol" />
           </arglist>
           <digest>
               Write a new file
