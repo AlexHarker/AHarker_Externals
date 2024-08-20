@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 48.0, 100.0, 682.0, 733.0 ],
+		"rect" : [ 34.0, 100.0, 682.0, 733.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 48.0, 126.0, 682.0, 707.0 ],
+						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -534,7 +534,6 @@
 										"subpatcher_template" : "",
 										"showontab" : 0,
 										"assistshowspatchername" : 0,
-										"visible" : 1,
 										"boxes" : [ 											{
 												"box" : 												{
 													"buffername" : "ibufmultwavetable",
@@ -1468,7 +1467,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
+						"rect" : [ 34.0, 126.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
