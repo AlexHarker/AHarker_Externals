@@ -10,7 +10,7 @@
   <methodlist>
       <method name="drive">
           <arglist>
-              <arg name="drive" type="message" />
+              <arg name="drive" type="float" />
           </arglist>
           <digest>
               Realise the gesture with drive mode
@@ -26,7 +26,7 @@
       </method>
       <method name="events">
           <arglist>
-              <arg name="events" type="message" />
+              <arg name="events" type="variable" />
           </arglist>
           <digest>
               Realise the gesture with events mode
@@ -42,9 +42,9 @@
               <m>events</m> / <m>list</m> of time points in milliseconds
           </description>
       </method>
-      <method name="external_drive">
+      <method name="list">
           <arglist>
-              <arg name="external_drive" type="list" />
+              <arg name="external_drive" type="variable" />
           </arglist>
           <digest>
               Externally drive gesture_maker
@@ -58,7 +58,7 @@
       </method>
       <method name="gesture_inflections">
           <arglist>
-              <arg name="gesture_inflections" type="message" />
+              <arg name="gesture_inflections" type="variable" />
           </arglist>
           <digest>
               Set duration between outputs
@@ -72,7 +72,7 @@
       </method>
       <method name="gesture_main">
           <arglist>
-              <arg name="gesture_main" type="message" />
+              <arg name="gesture_main" type="variable" />
           </arglist>
           <digest>
               Set the main gesture kernel parameters
@@ -177,7 +177,7 @@
       </method>
       <method name="graintime">
           <arglist>
-              <arg name="graintime" type="message" />
+              <arg name="graintime" type="float" />
           </arglist>
           <digest>
               Set duration between outputs
@@ -196,7 +196,7 @@
       </method>
       <method name="initial_inflections">
           <arglist>
-              <arg name="initial_inflections" type="message" />
+              <arg name="initial_inflections" type="float" />
           </arglist>
           <digest>
               Set initial value for inflections layer
@@ -212,7 +212,7 @@
       </method>
       <method name="initial_main">
           <arglist>
-              <arg name="initial_main" type="message" />
+              <arg name="initial_main" type="float" />
           </arglist>
           <digest>
               Set initial value for main layer
@@ -228,7 +228,6 @@
       </method>
       <method name="reset">
           <arglist>
-              <arg name="reset" type="message" />
           </arglist>
           <digest>
               Clear gesture information
@@ -239,7 +238,7 @@
       </method>
       <method name="scaling_inflections">
           <arglist>
-              <arg name="scaling_inflections" type="message" />
+              <arg name="scaling_inflections" type="varaible" />
           </arglist>
           <digest>
               Set scaling for the inflection layer
@@ -270,7 +269,7 @@
       </method>
       <method name="scaling_main">
           <arglist>
-              <arg name="scaling_main" type="message" />
+              <arg name="scaling_main" type="variable" />
           </arglist>
           <digest>
               Set scaling for the main layer
@@ -301,7 +300,6 @@
       </method>
       <method name="stop">
           <arglist>
-              <arg name="stop" type="message" />
           </arglist>
           <digest>
               Stop the gesture
@@ -312,7 +310,7 @@
       </method>
       <method name="timings">
           <arglist>
-              <arg name="timings" type="message" />
+              <arg name="timings" type="varaible" />
           </arglist>
           <digest>
               Set timings for inflection gestures
