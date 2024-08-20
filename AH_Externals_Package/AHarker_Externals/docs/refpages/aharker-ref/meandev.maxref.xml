@@ -16,13 +16,13 @@
               The first argument sets the mode of <o>meandev</o>.
               <br />
               <br />
-              <m>mode 0</m> - last n values mode
+              <m>0</m> - last n values mode
               <br />
-              <m>mode 1</m> - last n milliseconds mode
+              <m>1</m> - last n milliseconds mode
               <br />
-              <m>mode 2</m> - as mode 0 but with weightings
+              <m>2</m> - as mode 0 but with weightings
               <br />
-              <m>mode 3</m> - as mode 1 but with weightings
+              <m>3</m> - as mode 1 but with weightings
           </description>
       </objarg>
       <objarg name="Mean-mode" optional="1" type="int">
@@ -33,11 +33,11 @@
               The second argument sets the mean mode of <o>meandev</o>.
               <br />
               <br />
-              <m>mean mode 0</m> - calculate means and deviations normally
+              <m>0</m> - calculate means and deviations normally
               <br />
-              <m>mean mode 1</m> - calculate deviations in relation to mean of means
+              <m>1</m> - calculate deviations in relation to mean of means
               <br />
-              <m>mean mode 2</m> - calculate mean of means (and deviations in relation to this)
+              <m>2</m> - calculate mean of means (and deviations in relation to this)
           </description>
       </objarg>
       <objarg name="Ages" optional="1" type="int">
@@ -81,18 +81,35 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="Data">
+      <method name="int">
+          <arglist>
+              <arg name="Data" type="int" />
+          </arglist>
+          <digest>
+              Function depends on input
+          </digest>
+          <description>
+              In the left inlet: Input data in the form of an <m>int</m> into <o>meandev</o>. This data is used to calculate the means and variance/standard deviations.
+              <br/>
+              <br/>
+              In the right inlet: When the <m>mode</m> argument is set to <m>2</m> or <m>3</m>, an <m>int</m> applies a weighting value to the data. This value determines the relative weighting of the data in calculating the mean and and deviation.
+          </description>
+      </method>
+      <method name="float">
           <arglist>
               <arg name="Data" type="float" />
           </arglist>
           <digest>
-              Input data
+              Function depends on input
           </digest>
           <description>
-              Input data in the form of a <m>float</m> into the left inlet of <o>meandev</o>. This data is used to calculate the means and variance/standard deviations.
+              In the left inlet: Input data in the form of a <m>float</m> into <o>meandev</o>. This data is used to calculate the means and variance/standard deviations.
+              <br/>
+              <br/>
+              In the right inlet: When the <m>mode</m> argument is set to <m>2</m> or <m>3</m>, a <m>float</m> applies a weighting value to the data. This value determines the relative weighting of the data in calculating the mean and and deviation.
           </description>
       </method>
-      <method name="Reset">
+      <method name="bang">
           <arglist>
               <arg name="Reset" type="bang" />
           </arglist>
@@ -100,18 +117,7 @@
               reset
           </digest>
           <description>
-              A <m>bang</m> into the right inlet of <o>meandev</o> causes a reset.
-          </description>
-      </method>
-      <method name="Weights">
-          <arglist>
-              <arg name="Weights" type="int" />
-          </arglist>
-          <digest>
-              Weight the data
-          </digest>
-          <description>
-              When in either <m>mode 2</m> or <m>mode 3</m>, an <m>int</m> in the right inlet applies a weighting value to the data. This value determines the relative weighting of the data in calculating the mean and and deviation.
+              In the right inlet: A <m>bang</m> causes <o>meandev</o> to reset its stored data.
           </description>
       </method>
   </methodlist>
