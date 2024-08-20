@@ -38,7 +38,10 @@
           Outputs after the set amount of time.
       </digest>
       <description>
-          Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+          In the left inlet: Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+          <br/>
+          <br/>
+          In the right inlet: Set the delay time in milliseconds.
       </description>
     </method>
     <method name="float">
@@ -49,12 +52,15 @@
         Outputs after the set amount of time.
     </digest>
     <description>
-        Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        In the left inlet: Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        <br/>
+        <br/>
+        In the right inlet: Set the delay time in milliseconds.
     </description>
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" type="list" />
+            <arg name="input" type="variable" />
         </arglist>
         <digest>
             Outputs after the set amount of time.
@@ -65,7 +71,7 @@
     </method>
     <method name="anything">
       <arglist>
-          <arg name="input" type="list" />
+          <arg name="input" type="variable" />
       </arglist>
       <digest>
           Outputs after the set amount of time.
