@@ -30,7 +30,7 @@
   <methodlist>
     <method name="name">
         <arglist>
-            <arg name="name" type="message" />
+            <arg name="name" type="variable" />
         </arglist>
         <digest>
             Set the name of the <o>ibuffer</o>
@@ -45,7 +45,7 @@
     </method>
     <method name="open">
         <arglist>
-            <arg name="open" type="message" />
+            <arg name="open" type="variable" />
         </arglist>
         <digest>
             Replace the contents of the <o>ibuffer</o>
@@ -64,7 +64,7 @@
     </method>
     <method name="replace">
         <arglist>
-            <arg name="replace" type="message" />
+            <arg name="replace" type="variable" />
         </arglist>
         <digest>
             Replace the contents of the <o>ibuffer</o>
@@ -83,7 +83,7 @@
     </method>
     <method name="set">
         <arglist>
-            <arg name="set" type="message" />
+            <arg name="set" type="variable" />
         </arglist>
         <digest>
             Set the name of the <o>ibuffer</o>
