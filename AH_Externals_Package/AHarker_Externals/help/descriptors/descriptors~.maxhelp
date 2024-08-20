@@ -59,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 177.0, 1121.0, 406.0 ],
+						"rect" : [ 0.0, 26.0, 1084.0, 762.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -88,7 +88,6 @@
 						"subpatcher_template" : "",
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -127,7 +126,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 626.0, 1050.0, 65.0 ],
-									"presentation_linecount" : 6,
 									"text" : "The default of 4MB should be fine for most purposes. If you are processing very large buffers you may wish to increase this value. Larger sizes will sometimes allow more efficient processing by reducing recalculation, but you are only likely to run into this scenario when you are both analysing long buffers and requesting a lot of descriptors. More importantly, if the buffer is sufficiently long there may not be enough space to store the necessary one value per frame in order to calculate even a single descriptor. If this happens you will receive an error message and should increase the memory allocation accordingly. For most efficient calculation (without memory re-usage) you can use the following calculation:",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
