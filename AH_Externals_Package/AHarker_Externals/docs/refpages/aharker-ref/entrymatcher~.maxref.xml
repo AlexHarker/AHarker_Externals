@@ -36,41 +36,20 @@
   </objarglist>
   
   <methodlist>
-      <method name="first-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="first-inlet" type="signal" />
           </arglist>
           <digest>
-              Trigger an output
+              Function depends on input
           </digest>
           <description>
-              A non-zero <m>signal</m> to the first inlet will trigger an output.
-              <br />
-              This output will be a randomly selected index of an <m>entry</m> that satisfies the <m>matchers</m> message and is not filtered out by the <m>limit</m> message.
-          </description>
-      </method>
-      <method name="second-inlet">
-          <arglist>
-              <arg name="second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Trigger a match
-          </digest>
-          <description>
-              A non-zero <m>signal</m> to the second inlet will trigger a match.
-              <br />
-              This will cause <o>entrymatcher~</o> to update to the latest selected <m>matchers</m> message and compare to the latest test value(s) in any inlet from the third onwards.
-          </description>
-      </method>
-      <method name="third-inlet">
-          <arglist>
-              <arg name="third-inlet" type="signal" />
-          </arglist>
-          <digest>
-              The value to test against
-          </digest>
-          <description>
-              The third inlet takes a <m>signal</m> value to be tested against each time a non-zero trigger <m>signal</m> is recieved in the second inlet.
+              In the first inlet: A non-zero <m>signal</m> will trigger an output. This output will be a randomly selected index of an <m>entry</m> that satisfies the <m>matchers</m> message and is not filtered out by the <m>limit</m> message.
+              <br/>
+              <br/>
+              In the second inlet: A non-zero <m>signal</m> will trigger a match. This will cause <o>entrymatcher~</o> to update to the latest selected <m>matchers</m> message and compare to the latest test value(s) in any inlet from the third onwards.
+              <br/>
+              <br/>
+              In the third inlet: A <m>signal</m> value to be tested against each time a non-zero trigger <m>signal</m> is recieved in the second inlet.
               <br />
               <br />
               Any further inlets (specified by the third argument) work the same as the third inlet. Using the <m>matchers</m> message, you may specify up to as many tests as you have created inputs for with the third argument to <o>entrymatcher~</o>. If no test is defined for an input then that input is ignored.
@@ -78,7 +57,6 @@
       </method>
       <method name="clear">
           <arglist>
-              <arg name="clear" type="message" />
           </arglist>
           <digest>
               Clear <o>entrymatcher~</o>
@@ -89,7 +67,7 @@
       </method>
       <method name="dictionary">
           <arglist>
-              <arg name="dictionary" type="message" />
+              <arg name="dictionary" type="symbol" />
           </arglist>
           <digest>
               TEXT HERE
@@ -100,7 +78,7 @@
       </method>
       <method name="entry">
           <arglist>
-              <arg name="entry" type="message" />
+              <arg name="entry" type="variable" />
           </arglist>
           <digest>
               Set the columns for each entry
@@ -121,7 +99,7 @@
       </method>
       <method name="labelmodes">
           <arglist>
-              <arg name="labelmodes" type="message" />
+              <arg name="labelmodes" type="variable" />
           </arglist>
           <digest>
               Set the labelmodes for each column
@@ -139,7 +117,7 @@
       </method>
       <method name="limit">
           <arglist>
-              <arg name="limit" type="message" />
+              <arg name="limit" type="variable" />
           </arglist>
           <digest>
               Limit the number of matches.
@@ -153,7 +131,7 @@
       </method>
       <method name="looporder">
           <arglist>
-              <arg name="looporder" type="message" />
+              <arg name="looporder" type="int" />
           </arglist>
           <digest>
               TEXT HERE
@@ -164,7 +142,7 @@
       </method>
       <method name="matchers">
           <arglist>
-              <arg name="matchers" type="message" />
+              <arg name="matchers" type="variable" />
           </arglist>
           <digest>
               Set the rules for entry matching
@@ -188,7 +166,7 @@
       </method>
       <method name="names">
           <arglist>
-              <arg name="names" type="message" />
+              <arg name="names" type="variable" />
           </arglist>
           <digest>
               Set the name for each column
@@ -205,7 +183,6 @@
       </method>
       <method name="open">
           <arglist>
-              <arg name="open" type="message" />
           </arglist>
           <digest>
               View the contents
@@ -216,7 +193,7 @@
       </method>
       <method name="read">
           <arglist>
-              <arg name="read" type="message" />
+              <arg name="read" type="symbol" />
           </arglist>
           <digest>
               Read a new file
@@ -227,7 +204,7 @@
       </method>
       <method name="refer">
           <arglist>
-              <arg name="refer" type="message" />
+              <arg name="refer" type="symbol" />
           </arglist>
           <digest>
               TEXT HERE
@@ -238,7 +215,7 @@
       </method>
       <method name="remove">
           <arglist>
-              <arg name="remove" type="message" />
+              <arg name="remove" type="variable" />
           </arglist>
           <digest>
               Remove an entry
@@ -249,7 +226,7 @@
       </method>
       <method name="removeif">
           <arglist>
-              <arg name="removeif" type="message" />
+              <arg name="removeif" type="variable" />
           </arglist>
           <digest>
               TEXT HERE
@@ -260,7 +237,6 @@
       </method>
       <method name="reset">
           <arglist>
-              <arg name="reset" type="message" />
           </arglist>
           <digest>
               Reset <o>entrymatcher~</o>
@@ -271,7 +247,7 @@
       </method>
       <method name="resize">
           <arglist>
-              <arg name="resize" type="message" />
+              <arg name="resize" type="int" />
           </arglist>
           <digest>
               TEXT HERE
@@ -282,7 +258,7 @@
       </method>
       <method name="write">
           <arglist>
-              <arg name="write" type="message" />
+              <arg name="write" type="symbol" />
           </arglist>
           <digest>
               Write a new file
