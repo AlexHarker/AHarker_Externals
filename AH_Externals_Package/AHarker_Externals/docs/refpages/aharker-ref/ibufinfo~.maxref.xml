@@ -22,7 +22,6 @@
   <methodlist>
     <method name="bang">
         <arglist>
-            <arg name="bang" type="bang" />
         </arglist>
         <digest>
             Output the infomation about the (i)buffer
@@ -35,7 +34,7 @@
     </method>
     <method name="set">
         <arglist>
-            <arg name="set" type="message" />
+            <arg name="set" type="symbol" />
         </arglist>
         <digest>
             Set the name of the (i)buffer
