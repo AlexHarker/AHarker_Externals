@@ -40,7 +40,7 @@
   <methodlist>
       <method name="analyse">
           <arglist>
-              <arg name="analyse" type="message" />
+              <arg name="analyse" type="variable" />
           </arglist>
           <digest>
               Analyse a buffer
@@ -59,9 +59,20 @@
               <m>analyse</m> / <o>buffer~</o> name / OPTIONAL chan / OPTIONAL start point (ms) / OPTIONAL end point (ms)
           </description>
       </method>
+      <method name="analyze">
+          <arglist>
+              <arg name="analyze" type="variable" />
+          </arglist>
+          <digest>
+              Analyze a buffer
+          </digest>
+          <description>
+              Functions the same as <m>analyse</m>.
+          </description>
+      </method>
       <method name="descriptors">
           <arglist>
-              <arg name="descriptors" type="message" />
+              <arg name="descriptors" type="variable" />
           </arglist>
           <digest>
               Set the descriptors to calculate
@@ -87,7 +98,7 @@
       </method>
       <method name="energythresh">
           <arglist>
-              <arg name="energythresh" type="message" />
+              <arg name="energythresh" type="variable" />
           </arglist>
           <digest>
               Set the energy threshold
@@ -102,7 +113,7 @@
       </method>
       <method name="fftparams">
           <arglist>
-              <arg name="fftparams" type="message" />
+              <arg name="fftparams" type="variable" />
           </arglist>
           <digest>
               Set the fft parameters
