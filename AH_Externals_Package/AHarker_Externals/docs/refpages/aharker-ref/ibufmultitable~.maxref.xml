@@ -55,31 +55,22 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="signal" type="signal" />
           </arglist>
           <digest>
-              Read a range of samples
+              Function depends on input
           </digest>
           <description>
-              Input <m>signal</m> values from 0 to 1 in the left-inlet read through the range of samples specified by the <m>start-sample</m> and <m>end-sample</m>.
-              <br />
+              In the left inlet: <m>signal</m> values from 0 to 1 read through the range of samples specified by the <m>start-sample</m> and <m>end-sample</m> messages.
+              <br/>
               A <o>phasor</o> can be used to linearly read through the specified samples in a loop, making <o>ibufmultitable~</o> function as an oscillator.
-          </description>
-      </method>
-      <method name="offset">
-          <arglist>
-              <arg name="offset" type="signal" />
-          </arglist>
-          <digest>
-              Apply an offset to the buffer samples being read.
-          </digest>
-          <description>
-              A <m>signal</m> input in the right inlet applies an offset to the samples set by <m>start-sample</m> and <m>end-sample</m>.
+              <br/>
+              <br/>
+              In the right inlet: Apply a sample offset to the samples set by <m>start-sample</m> and <m>end-sample</m>.
           </description>
       </method>
       <method name="chan">
           <arglist>
-              <arg name="chan" type="message" />
+              <arg name="chan" type="int" />
           </arglist>
           <digest>
               Set the channel to read from
@@ -96,28 +87,9 @@
               Default channel is <m>1</m>.
           </description>
       </method>
-      <method name="endsamp">
-          <arglist>
-              <arg name="endsamp" type="message" />
-          </arglist>
-          <digest>
-              Set the sample to read until
-          </digest>
-          <description>
-              Set the sample for <o>ibufmultitable~</o> to read until.
-              <br />
-              The message should be formatted as:
-              <br />
-              <br />
-              <m>endsamp</m> / <m>int</m>
-              <br />
-              <br />
-              Default end sample is <m>512</m>.
-          </description>
-      </method>
       <method name="interp">
           <arglist>
-              <arg name="interp" type="message" />
+              <arg name="interp" type="symbol" />
           </arglist>
           <digest>
               Set the interpolation mode
@@ -139,7 +111,7 @@
       </method>
     <method name="set">
         <arglist>
-            <arg name="set" type="message" />
+            <arg name="set" type="symbol" />
         </arglist>
         <digest>
             Set the name of the <o>ibuffer</o>
@@ -155,7 +127,7 @@
     </method>
     <method name="startsamp">
         <arglist>
-            <arg name="startsamp" type="message" />
+            <arg name="startsamp" type="int" />
         </arglist>
         <digest>
             Set the sample to start reading from
@@ -170,6 +142,25 @@
             <br />
             <br />
             Default start sample is <m>0</m>.
+        </description>
+    </method>
+    <method name="endsamp">
+        <arglist>
+            <arg name="endsamp" type="int" />
+        </arglist>
+        <digest>
+            Set the sample to read until
+        </digest>
+        <description>
+            Set the sample for <o>ibufmultitable~</o> to read until.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>endsamp</m> / <m>int</m>
+            <br />
+            <br />
+            Default end sample is <m>512</m>.
         </description>
     </method>
   </methodlist>
