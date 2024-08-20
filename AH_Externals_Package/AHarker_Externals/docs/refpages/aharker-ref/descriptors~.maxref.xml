@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="descriptorsrt~" module="AHarker Externals" category="descriptors">
+  <digest>
+      Calculate and analyse audio descriptors (features) from a buffer
+  </digest>
+  <description>
+      The <o>descriptors~</o> object can be used to calculate a large number of audio descriptors (or features) from a sample stored in an MSP <o>buffer~</o> (or an <o>ibuffer~</o> object). Various statistical calculations may be performed on the resultant descriptors (mean / median / standard deviation / max n values etc.) to produce useful information about the sample. <o>descriptors~</o> is intended as a comprehensive analysis solution, and is the non real-time counterpart to the <o>descriptorsrt~</o> object - the two objects are very similar in terms of features and usage. <o>descriptors~</o> only calculates and outputs the descriptors that the user requests, and can also operate on subsections of a <o>buffer~</o> / <o>ibuffer~</o>. It is designed to be as efficient as possible, avoiding unnecessary calculations and re-calculations wherever possible and making extensive use of SIMD operations.
+  </description>
+  <objarglist>
+      <objarg name="maximum_fft_size" optional="1" type="symbol">
+          <digest>
+              Set the maximum fft size
+          </digest>
+          <description>
+              The first argument sets the maximum fft size that can be used. The default value is 65536.
+          </description>
+      </objarg>
+      <objarg name="calculation_memory_size" optional="1" type="symbol">
+          <digest>
+              Set the calculation memory size
+          </digest>
+          <description>
+              The second argument sets the calculation memory size in bytes. The default value is 4194304 (or 4 MB).
+              <br />
+              (see the <m>calculating memory</m> section at the bottom of the page for more details on setting this argument)
+          </description>
+      </objarg>
+      <objarg name="descriptor_feedback" optional="1" type="symbol">
+          <digest>
+              Set the state of descriptor feedback
+          </digest>
+          <description>
+              The third argument sets the state of descriptor feedback. The default value is off.
+              <br />
+              when on the object will post in the max window when the descriptors are correctly set.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="analyse">
+          <arglist>
+              <arg name="analyse" type="variable" />
+          </arglist>
+          <digest>
+              Analyse a buffer
+          </digest>
+          <description>
+              The <m>analyse</m> message (can also be spelt <m>analyze</m>) is used to process a chosen (i)buffer.
+              <br />
+              The message should be followed by a <m>symbol</m> matching the name of a <o>buffer~</o>. This will output a <m>list</m> of calculated descriptor values set by the <m>descriptors</m> message for the whole <o>buffer~</o>.
+              <br />
+              Optionally, you can specify the channel / start point (in milliseconds) / end point (in milliseconds), by adding <m>ints</m> to the message. Not setting a channel will default to channel 1.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>analyse</m> / <o>buffer~</o> name / OPTIONAL chan / OPTIONAL start point (ms) / OPTIONAL end point (ms)
+          </description>
+      </method>
+      <method name="analyze">
+          <arglist>
+              <arg name="analyze" type="variable" />
+          </arglist>
+          <digest>
+              Analyze a buffer
+          </digest>
+          <description>
+              Functions the same as <m>analyse</m>.
+          </description>
+      </method>
+      <method name="descriptors">
+          <arglist>
+              <arg name="descriptors" type="variable" />
+          </arglist>
+          <digest>
+              Set the descriptors to calculate
+          </digest>
+          <description>
+              The <m>descriptors</m> message is used to set the descriptors and statistical calculations to be performed when the <m>analyse</m> message is sent.
+              <br />
+              The descriptors message should be followed by a <m>list</m> of descriptors, each followed by any parameters you wish to set. Each descriptor and parameter set may optionally be followed by a set of statistical calculations to perform on the data. If no calculations are present, the mean of the values for all frames will be returned. You may specify as many statistics to calculate as you like after each descriptor and parameter set. Each statistic may be followed by a parameter argument if relevant. Finally you can specify a mask time and threshold for those statistical calculations which require them.
+              <br />
+              Each descriptor may have a different number of parameters which are set in a pre-defined order, and each parameter has a default value which will be used in the absence of an argument to set the parameter explicitly. You may set as many, or as few of the parameters for each descriptor as you wish. Therefore, a list of descriptors to calculate is sufficient for default operation.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>descriptors</m> / [descriptor name / params... / [statistical calculation / param](repeated) / [threshold... / masktime...]] (repeat...)
+              <br />
+              <br />
+              To see each of the descriptors and their parameters, see the setting_descriptors_and_statistical_calculations tab in the help file.
+              <br />
+              To see each of the statistical calculations and their parameters, see the statistical_calculations tab in the help file.
+          </description>
+      </method>
+      <method name="energythresh">
+          <arglist>
+              <arg name="energythresh" type="variable" />
+          </arglist>
+          <digest>
+              Set the energy threshold
+          </digest>
+          <description>
+              The <m>energythresh</m> message is used to set the energy threshold to ignore frames below.
+              <br />
+              Sending just the <m>energythresh</m> message will turn energy threshold off (defualt).
+              <br />
+              Specifying an <m>int</m> after the message will set the energy threshold in dB.
+          </description>
+      </method>
+      <method name="fftparams">
+          <arglist>
+              <arg name="fftparams" type="variable" />
+          </arglist>
+          <digest>
+              Set the fft parameters
+          </digest>
+          <description>
+              Set the fft parameters by sending the <m>fftparams</m> message.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>fftparams</m> / fftsize (should be a power of 2) / hopsize / window size (0 is the same as fftsize) / window type
+              <br />
+              <br />
+              FFT size (defualt 4096)
+              <br />
+              there is (as always) a trade-off between time and frequency resolutions. Higher FFt sizes give better frequency resolution at the expense of time resolution and vice versa.
+              <br />
+              <br />
+              Hop size (defualt 2048)
+              <br />
+              The distance in samples between consecutive frames - this determines the rate at which data will be produced by the object. Smaller hop sizes will require more CPU to calculate but will improve time resolution to some extent. If the hop size is greater than the fft size then some incoming samples will be missed (this is not advised but allowed).
+              <br />
+              <br />
+              Window size (defualt 4096)
+              <br />
+              If you wish to perform zero-padding you should set the window size smaller than the fft size. In this circumstance the pitch descriptor may not function correctly (use with caution). The window size cannot be larger than the fft size.
+              <br />
+              <br />
+              Window type (defualt hann)
+              <br />
+              Different windows have different characteristics - there are many good references (paper and internet) on this topic. For most purposes the default (hann) will be fine.
+              <br />
+              available windows (the kaiser window provided is for alpha = 6.8):
+              <br />
+              rectangle / hann / hamming / kaiser / triangle / blackman / blackman62 / blackman70 / blackman74 / blackman92 / blackman / flattop
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            Outputs a <m>list</m> of calculated descriptor values when the <m>analyse</m> message is sent.
+        </description>
+    </entry>
+  </misc>
+  <misc name="calculating memory">
+    <entry>
+        <description>
+            The default of 4MB should be fine for most purposes. If you are processing very large buffers you may wish to increase this value. Larger sizes will sometimes allow more efficient processing by reducing recalculation, but you are only likely to run into this scenario when you are both analysing long buffers and requesting a lot of descriptors. More importantly, if the <o>buffer~</o> is sufficiently long there may not be enough space to store the necessary one value per frame in order to calculate even a single descriptor. If this happens you will receive an error message and should increase the memory allocation accordingly. For most efficient calculation (without memory re-usage) you can use the following calculation:
+            <br />
+            <br />
+            (max buffer length in samples / hop size) * number of descriptors * 8 bytes
+            <br />
+            Note that the calculated values are stored as doubles (hence the 8 bytes in the calculation above).
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="entrymatcher~" />
+    <seealso name="entrymatcher" />
+    <seealso name="descriptorsrt~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>descriptors</description>
+    </entry>
+  </misc>
+</c74object>

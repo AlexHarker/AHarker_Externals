@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="entrymatcher~" module="AHarker Externals" category="descriptors">
+  <digest>
+      Flexible matching of multidimensional data at signal rate
+  </digest>
+  <description>
+      <o>entrymatcher~</o> is the audio rate counterpart of <o>entrymatcher</o>, capable of matching with sample-accurate timing. It is intended primarily for use in granular synthesis applications requiring sample accuracy for audio matching using descriptors. <o>entrymatcher~</o> does not offer all the features of <o>entrymatcher</o>, and there are some key differences to the max version. 1 - <o>entrymatcher~</o> takes values for matching at signal rate, and has a different message structure for setting matching criteria. 2 - <o>entrymatcher~</o> randomly selects a value from all the valid matches and outputs only that one value. 3 - for reasons of efficiency the matching process and the randomisation processes can be triggered separately to allow variation over small time scales, without the expense of recalculating matches. 4 - only numeric data can be used (although entries and columns can still be referred to using symbols).
+  </description>
+  
+  <objarglist>
+      <objarg name="Max_entries" optional="1" type="int">
+          <digest>
+              Set the max entries
+          </digest>
+          <description>
+              The first argument takes an <m>int</m> to set the maximum number of entries that <o>entrymatcher~</o> will recognise. The default max entries is <m>1</m>.
+          </description>
+      </objarg>
+      <objarg name="Number_of_columns" optional="1" type="int">
+          <digest>
+              Set the number of columns
+          </digest>
+          <description>
+              The second argument takes an <m>int</m> to set the number of columns allowed per entry. The default number of columns is <m>1</m>
+          </description>
+      </objarg>
+      <objarg name="Number_of_test_inlets" optional="1" type="int">
+          <digest>
+              Set the number of test inlets
+          </digest>
+          <description>
+              The third argument takes an <m>int</m> to set the number of test inlets to compared entries to. The default number of test inlets is <m>1</m>
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="signal">
+          <arglist>
+          </arglist>
+          <digest>
+              Function depends on input
+          </digest>
+          <description>
+              In the first inlet: A non-zero <m>signal</m> will trigger an output. This output will be a randomly selected index of an <m>entry</m> that satisfies the <m>matchers</m> message and is not filtered out by the <m>limit</m> message.
+              <br/>
+              <br/>
+              In the second inlet: A non-zero <m>signal</m> will trigger a match. This will cause <o>entrymatcher~</o> to update to the latest selected <m>matchers</m> message and compare to the latest test value(s) in any inlet from the third onwards.
+              <br/>
+              <br/>
+              In the third inlet: A <m>signal</m> value to be tested against each time a non-zero trigger <m>signal</m> is recieved in the second inlet.
+              <br />
+              <br />
+              Any further inlets (specified by the third argument) work the same as the third inlet. Using the <m>matchers</m> message, you may specify up to as many tests as you have created inputs for with the third argument to <o>entrymatcher~</o>. If no test is defined for an input then that input is ignored.
+          </description>
+      </method>
+      <method name="clear">
+          <arglist>
+          </arglist>
+          <digest>
+              Clear <o>entrymatcher~</o>
+          </digest>
+          <description>
+              The <m>clear</m> message clears all the currently stored entries and matchers. The <m>reset</m> message does the same.
+          </description>
+      </method>
+      <method name="dictionary">
+          <arglist>
+              <arg name="dictionary" type="symbol" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="entry">
+          <arglist>
+              <arg name="entry" type="variable" />
+          </arglist>
+          <digest>
+              Set the columns for each entry
+          </digest>
+          <description>
+              The <m>entry</m> message is used to send data into <o>entrymatcher~</o> to be queried when the first inlet recieves a non-zero trigger <m>signal</m>.
+              <br />
+              The <m>entry</m> message should first contain a unique <m>identifier</m> (of any data type). The message should then contain a <m>list</m> with length equal to the columns argument in the <o>entrymatcher~</o> object. The <m>list</m> should contain only numeric data.
+              <br />
+              <br />
+              An entry should be formatted as:
+              <br />
+              <m>entry</m> / <m>identifier</m> / <m>list</m> of numeric data
+              <br />
+              <br />
+              If a new <m>entry</m> is set with an <m>identifier</m> already in use, the old <m>entry</m> will be replaced.
+          </description>
+      </method>
+      <method name="labelmodes">
+          <arglist>
+              <arg name="labelmodes" type="variable" />
+          </arglist>
+          <digest>
+              Set the labelmodes for each column
+          </digest>
+          <description>
+              The <m>labelmodes</m> message followed by a <m>list</m> of <m>ints</m> sets the <m>labelmodes</m> for each column. The <m>list</m> should have a length equal to the columns argument in the <o>entrymatcher~</o> object.
+              <br />
+              The <m>list</m> should contain <m>ints</m> of either <m>0</m> or <m>1</m>, where a <m>0</m> represents a numeric label, and a <m>1</m> represents a symbolic label for each column.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>labelmodes</m> / <m>list</m> of modes
+          </description>
+      </method>
+      <method name="limit">
+          <arglist>
+              <arg name="limit" type="variable" />
+          </arglist>
+          <digest>
+              Limit the number of matches.
+          </digest>
+          <description>
+              The <m>limit</m> message by itself will result in no limiting, allowing all matches to output. This is the defualt mode.
+              <br />
+              <br />
+              You can limit the number of matched entries by either a maximum number as an <m>int</m>, or a ratio of valid matches to keep as a <m>float</m>(0-1) or by both. This is done using the <m>limit</m> message followed by the maximum number of matches to keep and then the ratio of matches to keep. Passing zero for either of these (or omitting a value) will turn that limit off. The closest (best) matches will be kept.
+          </description>
+      </method>
+      <method name="looporder">
+          <arglist>
+              <arg name="looporder" type="int" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="matchers">
+          <arglist>
+              <arg name="matchers" type="variable" />
+          </arglist>
+          <digest>
+              Set the rules for entry matching
+          </digest>
+          <description>
+              The <m>matchers</m> message is used to set a number of tests that entries must satisfy. You may specify up to as many tests as you have created inputs for with the third argument to <o>entrymatcher~</o>. If no test is defined for an input then that input is ignored.
+              <br />
+              Some of the tests have a calculation that is used to find the distance. This distance value is then used to determine which values are closest and is used when the <m>limit</m> message filters out certain matches.
+              <br />
+              New <m>matchers</m> messages will not be recognised until a non-zero trigger <m>signal</m> has been input into the second inlet of <o>entrymatcher~</o>.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>matchers</m> / column <m>identifier</m> or number / test symbol or name / (repeat for multiple tests)
+              <br />
+              <br />
+              To see how <m>matchers</m> work and a list of all the symbols it accepts, see the second tab of the <o>entrymatcher~</o> help file.
+          </description>
+      </method>
+      <method name="names">
+          <arglist>
+              <arg name="names" type="variable" />
+          </arglist>
+          <digest>
+              Set the name for each column
+          </digest>
+          <description>
+              The <m>names</m> message followed by a <m>list</m> of <m>symbols</m> sets the <m>names</m> for each column. The <m>list</m> should have a length equal to the columns argument in the <o>entrymatcher~</o> object.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>names</m> / <m>list</m> of names
+          </description>
+      </method>
+      <method name="open">
+          <arglist>
+          </arglist>
+          <digest>
+              View the contents
+          </digest>
+          <description>
+              The <m>open</m> message will open a table displaying all the contents of <o>entrymatcher~</o>. The colums are labelled as the index(#), identifier, and then the names set with the <m>names</m> message.
+          </description>
+      </method>
+      <method name="read">
+          <arglist>
+              <arg name="read" type="symbol" />
+          </arglist>
+          <digest>
+              Read a new file
+          </digest>
+          <description>
+              The <m>read</m> message will prompt you to open a new file, such as one written previously using the <m>write</m> message. The data in the new file will then replace the contents of <o>entrymatcher~</o>.
+          </description>
+      </method>
+      <method name="refer">
+          <arglist>
+              <arg name="refer" type="symbol" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="remove">
+          <arglist>
+              <arg name="remove" type="variable" />
+          </arglist>
+          <digest>
+              Remove an entry
+          </digest>
+          <description>
+              The <m>remove</m> message followed by a <m>symbol</m> corresponding to an identifier will remove that item from <o>entrymatcher~</o>.
+          </description>
+      </method>
+      <method name="removeif">
+          <arglist>
+              <arg name="removeif" type="variable" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="reset">
+          <arglist>
+          </arglist>
+          <digest>
+              Reset <o>entrymatcher~</o>
+          </digest>
+          <description>
+              Same as <m>clear</m>.
+          </description>
+      </method>
+      <method name="resize">
+          <arglist>
+              <arg name="resize" type="int" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="write">
+          <arglist>
+              <arg name="write" type="symbol" />
+          </arglist>
+          <digest>
+              Write a new file
+          </digest>
+          <description>
+              The <m>write</m> message will create a new file containing a dict of the contents inside <o>entrymatcher~</o>
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+      <attribute name="embed" get="1" set="1" type="int" size="1">
+          <digest>
+              Save the data with the patch
+          </digest>
+          <description>
+              An <m>int</m> (0/off or 1/on) can be used to <m>embed</m> the data within the patch when the patch is saved.
+          </description>
+      </attribute>
+      <attribute name="parameter_enable" get="1" set="1" type="int" size="1">
+          <digest>
+              Turn on/off parameter enable
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </attribute>
+      <attribute name="parameter_mappable" get="1" set="1" type="int" size="1">
+          <digest>
+              Turn on/off parameter mappable
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </attribute>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            Outputs a <m>signal</m> representing the index of the chosen match. This output is randomly generated from any of the possible matched indexes every time a non-zero trigger <m>signal</m> is recieved in the first inlet.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="entrymatcher" />
+    <seealso name="descriptorsrt~" />
+    <seealso name="descriptors~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>descriptors</description>
+    </entry>
+  </misc>
+</c74object>
