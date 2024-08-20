@@ -59,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 936.0, 660.0 ],
+						"rect" : [ 0.0, 26.0, 936.0, 660.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -289,8 +289,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 180.0, 510.0, 416.0, 23.0 ],
-									"text" : "0.125 0.875 0.375 0.5 0.25 0.75 0.625"
+									"patching_rect" : [ 180.0, 510.0, 416.0, 23.0 ]
 								}
 
 							}
@@ -1092,8 +1091,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 270.0, 570.0, 466.0, 23.0 ],
-									"text" : "2.354129 5.194258 10.375588 10.655071 11.382562 29.317707 33.716296"
+									"patching_rect" : [ 270.0, 570.0, 466.0, 23.0 ]
 								}
 
 							}
@@ -1435,7 +1433,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 936.0, 660.0 ],
+						"rect" : [ 34.0, 126.0, 936.0, 660.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1612,7 +1610,7 @@
 									"peakcolor" : [ 0.498039, 0.498039, 0.498039, 1.0 ],
 									"setminmax" : [ 0.0, 1.0 ],
 									"setstyle" : 1,
-									"size" : 4
+									"size" : 6
 								}
 
 							}
@@ -1755,8 +1753,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 704.5, 255.0, 82.0, 40.0 ],
-									"text" : "Max Interval"
+									"patching_rect" : [ 689.5, 255.0, 112.0, 40.0 ],
+									"text" : "Max Interval (0-1)"
 								}
 
 							}
@@ -1770,8 +1768,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 585.0, 255.0, 79.0, 40.0 ],
-									"text" : "Min Interval"
+									"patching_rect" : [ 570.0, 255.0, 109.0, 40.0 ],
+									"text" : "Min Interval (0-1)"
 								}
 
 							}
@@ -1830,7 +1828,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 180.0, 480.0, 416.0, 23.0 ],
-									"text" : "0.125 0.375 0.625 0.875"
+									"text" : "0.364131 0.742108 0.151611 0.206 0.969303 0.612358"
 								}
 
 							}
