@@ -37,7 +37,6 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="signal" type="signal" />
           </arglist>
           <digest>
               Query an item in the (i)buffer
@@ -52,9 +51,9 @@
           </description>
       </method>
       
-      <method name="message">
+      <method name="int">
           <arglist>
-              <arg name="message" type="message" />
+              <arg name="query" type="int" />
           </arglist>
           <digest>
               Query an item in the (i)buffer
@@ -72,7 +71,7 @@
       </method>
       <method name="append">
           <arglist>
-              <arg name="append" type="message" />
+              <arg name="append" type="symbol" />
           </arglist>
           <digest>
               Append a buffers conents as the next item.
@@ -91,7 +90,6 @@
       </method>
       <method name="clear">
           <arglist>
-              <arg name="clear" type="message" />
           </arglist>
           <digest>
               Clear all the entries
@@ -102,7 +100,7 @@
       </method>
       <method name="entry">
           <arglist>
-              <arg name="entry" type="message" />
+              <arg name="entry" type="variable" />
           </arglist>
           <digest>
               Add an entry in reference to the (i)buffer
@@ -121,7 +119,7 @@
       </method>
       <method name="set">
           <arglist>
-              <arg name="set" type="message" />
+              <arg name="set" type="symbol" />
           </arglist>
           <digest>
               Set the (i)buffer to attach to
