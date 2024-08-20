@@ -30,53 +30,28 @@
   </objarglist>
 
   <methodlist>
-      <method name="Speed_in">
+      <method name="signal">
           <arglist>
-              <arg name="Speed_in" type="signal" />
           </arglist>
           <digest>
-              Set the speed
+              Function depends on inlet
           </digest>
           <description>
-              The first inlet takes a <m>signal</m> to set the playback speed.
-          </description>
-      </method>
-      <method name="Item_in">
-          <arglist>
-              <arg name="Item_in" type="signal" />
-          </arglist>
-          <digest>
-              Set the item
-          </digest>
-          <description>
-              The second inlet takes a <m>signal</m> to set the item to playback from <o>ibufconcatenate~</o>.
-          </description>
-      </method>
-      <method name="Reset_value">
-          <arglist>
-              <arg name="Reset_value" type="signal" />
-          </arglist>
-          <digest>
-              Set the value to reset to
-          </digest>
-          <description>
-              The third inlet takes a <m>signal</m> to set the start position in milliseconds to begin playback from when a <m>reset trigger</m> is received.
-          </description>
-      </method>
-      <method name="Reset_trigger">
-          <arglist>
-              <arg name="Reset_trigger" type="signal" />
-          </arglist>
-          <digest>
-              Trigger a reset
-          </digest>
-          <description>
-              The fourth inlet takes a tigger <m>signal</m> to reset the playback position to the <m>reset value</m>.
+              In the first inlet: Set the playback speed multiplier.
+              <br/>
+              <br/>
+              In the second inlet: Set the item stored in <o>ibufconcatenate~</o> to play.
+              <br/>
+              <br/>
+              In the third inlet: Set the start position in milliseconds to begin playback from when a reset trigger is received in the fourth inlet.
+              <br/>
+              <br/>
+              In the fourth inlet: A tigger <m>signal</m> will reset the playback position to the position set by the third inlet.
           </description>
       </method>
       <method name="set">
           <arglist>
-              <arg name="set" type="message" />
+              <arg name="set" type="symbol" />
           </arglist>
           <digest>
               Set the (i)buffer to attach to
