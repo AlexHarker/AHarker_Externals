@@ -31,7 +31,6 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="signal" type="signal" />
           </arglist>
           <digest>
               Audio input
@@ -44,7 +43,7 @@
       </method>
       <method name="descriptors">
           <arglist>
-              <arg name="descriptors" type="message" />
+              <arg name="descriptors" type="variable" />
           </arglist>
           <digest>
               Set the descriptors to calculate
@@ -69,7 +68,7 @@
       </method>
       <method name="energythresh">
           <arglist>
-              <arg name="energythresh" type="message" />
+              <arg name="energythresh" type="variable" />
           </arglist>
           <digest>
               Set the energy threshold
@@ -84,7 +83,7 @@
       </method>
       <method name="fftparams">
           <arglist>
-              <arg name="fftparams" type="message" />
+              <arg name="fftparams" type="variable" />
           </arglist>
           <digest>
               Set the fft parameters
