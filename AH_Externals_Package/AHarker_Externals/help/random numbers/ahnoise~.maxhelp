@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 129.0, 90.0, 640.0, 343.0 ],
+		"rect" : [ 115.0, 170.0, 640.0, 343.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -50,8 +50,8 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -112,14 +112,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 129.0, 116.0, 640.0, 317.0 ],
+						"rect" : [ 115.0, 196.0, 640.0, 317.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -150,32 +150,74 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
-									"border" : 0,
-									"filename" : "ah.helpdetails.js",
-									"id" : "obj-1",
-									"ignoreclick" : 1,
-									"jsarguments" : [ "ahnoise~", 100 ],
-									"maxclass" : "jsui",
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-8",
+									"linecount" : 2,
+									"maxclass" : "comment",
 									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"parameter_enable" : 0,
-									"patching_rect" : [ 12.5, 15.0, 617.5, 135.0 ]
+									"numoutlets" : 0,
+									"patching_rect" : [ 135.0, 135.0, 447.0, 36.0 ],
+									"presentation_linecount" : 2,
+									"text" : "ahnoise~ is currently implemented using a complementary modulo with carry algorithm (proposed by George Marsaglia). See:",
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_autogradient" : 0.79,
+									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
+									"bgfillcolor_color1" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
+									"bgfillcolor_color2" : [ 0.07451, 0.027451, 1.0, 1.0 ],
+									"bgfillcolor_type" : "gradient",
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-21",
-									"maxclass" : "comment",
+									"gradient" : 0,
+									"id" : "obj-18",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 135.0, 168.0, 360.0, 38.0 ],
+									"presentation_linecount" : 2,
+									"text" : "http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm",
+									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Verdana",
+									"fontsize" : 9.0,
+									"hidden" : 1,
+									"id" : "obj-58",
+									"linecount" : 2,
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 135.0, 212.0, 120.0, 30.0 ],
+									"presentation_linecount" : 2,
+									"text" : ";\rmax launchbrowser $1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"border" : 0,
+									"filename" : "ah.helpdetails.js",
+									"id" : "obj-1",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "ahnoise~", 110 ],
+									"maxclass" : "jsui",
 									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 282.0, 190.0, 61.0, 21.0 ],
-									"text" : "noise out",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
-									"textjustification" : 1
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 12.5, 15.0, 617.5, 105.0 ]
 								}
 
 							}
@@ -193,7 +235,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 411.0, 268.5, 20.0, 20.0 ],
+									"patching_rect" : [ 201.0, 254.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -209,7 +251,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 299.5, 266.0, 108.0, 25.0 ],
+									"patching_rect" : [ 90.0, 251.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -221,7 +263,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 253.5, 256.5, 44.0, 44.0 ],
+									"patching_rect" : [ 44.0, 242.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -235,8 +277,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 255.0, 210.0, 47.0, 23.0 ],
-									"text" : "*~ 0.2"
+									"patching_rect" : [ 45.0, 180.0, 50.0, 23.0 ],
+									"text" : "*~ 0.01"
 								}
 
 							}
@@ -249,7 +291,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 255.0, 165.0, 66.0, 23.0 ],
+									"patching_rect" : [ 45.0, 135.0, 66.0, 23.0 ],
 									"text" : "ahnoise~"
 								}
 
@@ -275,6 +317,14 @@
 									"destination" : [ "obj-2", 0 ],
 									"order" : 1,
 									"source" : [ "obj-15", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-58", 0 ],
+									"hidden" : 1,
+									"source" : [ "obj-18", 0 ]
 								}
 
 							}

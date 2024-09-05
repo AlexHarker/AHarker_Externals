@@ -11,74 +11,42 @@
   <methodlist>
       <method name="bang">
           <arglist>
-              <arg name="first-inlet" optional="1" type="bang" />
           </arglist>
         <digest>
-            Output a linearly distributed <m>float</m>
+            Function depends on inlet
         </digest>
         <description>
-            A <m>bang</m> to the first-inlet will cause an output of a linearly distributed <m>float</m> between 0. and 1.
-        </description>
-      </method>
-      <method name="bang">
-          <arglist>
-              <arg name="second-inlet" optional="1" type="bang" />
-          </arglist>
-        <digest>
-            Output a windowed gaussian distribution
-        </digest>
-        <description>
-            A <m>bang</m> to the second-inlet will cause a <m>float</m> output between 0. and 1. of a windowed gaussian distribution. The parameters for the distribution can be set by sending the <m>mean</m> and <m>deviation</m> as a single message in the left-inlet.
-        </description>
-      </method>
-      <method name="bang">
-          <arglist>
-              <arg name="third-inlet" optional="1" type="bang" />
-          </arglist>
-        <digest>
-            Output a triple windowed gaussian distribution
-        </digest>
-        <description>
-            A <m>bang</m> to the third-inlet will cause a <m>float</m> output between 0. and 1. of a triple windowed gaussian distribution. The parameters for the distribution can be set by sending three sets of:
-            <br />
-            <br />
+            In the first inlet: A <m>bang</m> will cause an output of a linearly distributed <m>float</m> between 0. and 1.
+            <br/>
+            <br/>
+            In the second inlet: A <m>bang</m> cause a <m>float</m> output between 0. and 1. of a windowed gaussian distribution. The parameters for the distribution can be set by sending the <m>mean</m> and <m>deviation</m> as a single message in the left-inlet.
+            <br/>
+            <br/>
+            In the third inlet: A <m>bang</m> will cause a <m>float</m> output between 0. and 1. of a triple windowed gaussian distribution. The parameters for the distribution can be set by sending three sets of:
+            <br/>
             <m>mean</m> / <m>deviation</m> / <m>weight</m>
-            <br />
-            <br />
+            <br/>
             as a single message in the left-inlet.
         </description>
       </method>
-      <method name="message">
+      <method name="list">
           <arglist>
-              <arg name="windowed gaussian distribution" optional="1" type="message" />
           </arglist>
         <digest>
-            Set the parameters for the windowed gaussian distribution
+            Function depends on list length.
         </digest>
         <description>
             A <m>message</m> to the left-inlet formatted as:
-            <br />
-            <br />
+            <br/>
             <m>mean</m> / <m>deviation</m>
-            <br />
-            <br />
+            <br/>
             will set the parameters for the windowed gaussian distribution for when a <m>bang</m> is sent the the second-inlet.
-        </description>
-      </method>
-      <method name="message">
-          <arglist>
-              <arg name="triple windowed gaussian distribution" optional="1" type="message" />
-          </arglist>
-        <digest>
-            Set the parameters for the triple windowed gaussian distribution
-        </digest>
-        <description>
+            <br/>
+            <br/>
             A <m>message</m> to the left-inlet formatted as three sets of:
-            <br />
-            <br />
+            <br/>
             <m>mean</m> / <m>deviation</m> / <m>weight</m>
-            <br />
-            <br />
+            <br/>
             will set the parameters for the triple windowed gaussian distribution for when a <m>bang</m> is sent the the third-inlet.
         </description>
       </method>
