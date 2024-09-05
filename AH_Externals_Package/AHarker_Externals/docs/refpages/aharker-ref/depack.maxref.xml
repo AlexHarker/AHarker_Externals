@@ -20,7 +20,7 @@
   <methodlist>
       <method name="list">
           <arglist>
-              <arg name="list" type="variable" />
+              <arg name="input" type="list" />
           </arglist>
           <digest>
               Input a list to be unpacked
@@ -36,7 +36,7 @@
       </method>
       <method name="anything">
           <arglist>
-              <arg name="anything" type="variable" />
+              <arg name="input" type="variable" />
           </arglist>
           <digest>
               Input a message to be unpacked
@@ -47,7 +47,7 @@
       </method>
       <method name="int">
           <arglist>
-              <arg name="int" type="int" />
+              <arg name="input" type="int" />
           </arglist>
           <digest>
               Input an int to be passed through
@@ -58,7 +58,7 @@
       </method>
       <method name="float">
           <arglist>
-              <arg name="float" type="float" />
+              <arg name="input" type="float" />
           </arglist>
           <digest>
               Input an float to be passed through
