@@ -44,7 +44,7 @@
       </method>
       <method name="list">
           <arglist>
-              <arg name="external_drive" type="variable" />
+              <arg name="input" type="list" />
           </arglist>
           <digest>
               Externally drive gesture_maker
