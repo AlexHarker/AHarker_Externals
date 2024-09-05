@@ -42,7 +42,7 @@
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" type="variable" />
+            <arg name="input" type="list" />
         </arglist>
         <digest>
             Output depending on which thread the input is in.
