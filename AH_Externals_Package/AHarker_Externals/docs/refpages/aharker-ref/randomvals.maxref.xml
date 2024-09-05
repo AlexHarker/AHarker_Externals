@@ -22,7 +22,7 @@
       </method>
       <method name="list">
           <arglist>
-              <arg name="list" type="variable" />
+              <arg name="input" type="list" />
           </arglist>
           <digest>
               set gaussian distributions
