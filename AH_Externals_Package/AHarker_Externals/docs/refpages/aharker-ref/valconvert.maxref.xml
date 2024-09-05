@@ -76,7 +76,7 @@
     </method>
     <method name="list">
         <arglist>
-            <arg name="input" type="variable" />
+            <arg name="input" type="list" />
         </arglist>
         <digest>
             Outputs the scaled <m>list</m>.
