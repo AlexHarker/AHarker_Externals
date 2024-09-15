@@ -8,7 +8,7 @@
       <o>depack</o> is a non-typed version of unpack for situations in which you need to unpack a list of unknown, or varying types.
   </description>
   <objarglist>
-      <objarg name="outlets" optional="1" type="int">
+      <objarg name="number-of-outlets" optional="1" type="int">
           <digest>
               Set the number of outlets
           </digest>
@@ -18,7 +18,7 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="input">
+      <method name="list">
           <arglist>
               <arg name="input" type="list" />
           </arglist>
@@ -32,6 +32,39 @@
               <br />
               <br />
               If the <m>list</m> length is greater than the number of outlets, the items past the range will be ignored.
+          </description>
+      </method>
+      <method name="anything">
+          <arglist>
+              <arg name="input" type="variable" />
+          </arglist>
+          <digest>
+              Input a message to be unpacked
+          </digest>
+          <description>
+              Performs the same function as list.
+          </description>
+      </method>
+      <method name="int">
+          <arglist>
+              <arg name="input" type="int" />
+          </arglist>
+          <digest>
+              Input an int to be passed through
+          </digest>
+          <description>
+              A <m>int</m> input will be output through the first outlet.
+          </description>
+      </method>
+      <method name="float">
+          <arglist>
+              <arg name="input" type="float" />
+          </arglist>
+          <digest>
+              Input an float to be passed through
+          </digest>
+          <description>
+              A <m>float</m> input will be output through the first outlet.
           </description>
       </method>
   </methodlist>

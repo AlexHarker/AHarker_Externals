@@ -46,13 +46,13 @@
       </method>
       <method name="set">
           <arglist>
-              <arg name="set" type="message" />
+              <arg name="set" type="symbol" />
           </arglist>
           <digest>
               Set the interface type
           </digest>
           <description>
-              The <m>set</m> message followed by a message will change the interface type and bang an output.
+              The <m>set</m> message followed by a symbol will change the interface type and bang an output.
               <br/>
               <br/>
               The options are:
