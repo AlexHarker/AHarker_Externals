@@ -71,7 +71,7 @@
     </method>
     <method name="anything">
       <arglist>
-          <arg name="input" type="variable" />
+          <arg name="input" type="list" />
       </arglist>
       <digest>
           Outputs after the set amount of time.
