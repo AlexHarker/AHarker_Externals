@@ -37,20 +37,20 @@
               A <m>bang</m> will output the folder contents again.
           </description>
       </method>
-      <method name="file-path">
+      <method name="message">
           <arglist>
-              <arg name="file-path" type="symbol" />
+              <arg name="message" type="symbol" />
           </arglist>
           <digest>
               Set the file path to output
           </digest>
           <description>
-              The file path of which the contents will be output.
+              Any symbol or message starting with a symbol with the path will set the file path of which the contents will be output.
           </description>
       </method>
-      <method name="type">
+      <method name="types">
           <arglist>
-              <arg name="type" type="message" />
+              <arg name="types" type="message" />
           </arglist>
           <digest>
               Select file types to list.
@@ -59,19 +59,19 @@
               The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive).
               <br />
               <br />
-              types / TEXT   -   text files
+              <m>types TEXT</m>   -   text files
               <br />
               <br />
-              types / JSON   -   Max patches
+              <m>types JSON</m>  -   Max patches
               <br />
               <br />
-              types / iLaX   -   external objects
+              <m>types iLaX</m>   -   external objects
               <br />
               <br />
-              types / AIFF WAV   -   sound files
+              <m>types AIFF WAV</m>   -   sound files
               <br />
               <br />
-              types / MooV   -   movies
+              <m>types MooV</m>   -   movies
           </description>
       </method>
   </methodlist>
@@ -85,7 +85,7 @@
     </entry>
   </misc>
   <seealsolist>
-    
+      <seealso name="folder" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">

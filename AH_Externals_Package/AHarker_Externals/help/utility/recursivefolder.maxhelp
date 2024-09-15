@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 100.0, 907.0, 551.0 ],
+		"rect" : [ 34.0, 100.0, 832.0, 551.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -50,14 +50,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 907.0, 525.0 ],
+						"rect" : [ 0.0, 26.0, 832.0, 525.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -112,14 +112,14 @@
 						"fileversion" : 1,
 						"appversion" : 						{
 							"major" : 8,
-							"minor" : 5,
-							"revision" : 5,
+							"minor" : 6,
+							"revision" : 1,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 907.0, 525.0 ],
+						"rect" : [ 34.0, 126.0, 832.0, 525.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -151,6 +151,22 @@
 						"boxes" : [ 							{
 								"box" : 								{
 									"border" : 0,
+									"filename" : "helpargs.js",
+									"id" : "obj-6",
+									"ignoreclick" : 1,
+									"jsarguments" : [ "recursivefolder", 5 ],
+									"maxclass" : "jsui",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"parameter_enable" : 0,
+									"patching_rect" : [ 292.0, 270.0, 204.581497192382812, 54.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"border" : 0,
 									"filename" : "ah.helpdetails.js",
 									"id" : "obj-4",
 									"ignoreclick" : 1,
@@ -172,21 +188,22 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 165.0, 285.0, 24.0, 24.0 ]
+									"patching_rect" : [ 150.0, 225.0, 24.0, 24.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-55",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 359.0, 361.0, 281.0, 21.0 ],
+									"patching_rect" : [ 329.0, 331.0, 295.0, 25.0 ],
 									"text" : "right outlet gives the total number of found files",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -199,9 +216,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 90.0, 150.0, 120.0, 36.0 ],
+									"patching_rect" : [ 58.0, 149.0, 120.0, 36.0 ],
 									"text" : "filename or path in to list the contents.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -213,9 +230,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 510.0, 480.0, 83.0, 21.0 ],
+									"patching_rect" : [ 480.0, 495.0, 83.0, 21.0 ],
 									"text" : "empty folder",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -227,9 +244,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 480.0, 84.0, 21.0 ],
+									"patching_rect" : [ 330.0, 495.0, 84.0, 21.0 ],
 									"text" : "end of folder",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -241,9 +258,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 480.0, 98.0, 21.0 ],
+									"patching_rect" : [ 180.0, 495.0, 98.0, 21.0 ],
 									"text" : "start of a folder",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -255,38 +272,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 622.0, 480.0, 173.0, 21.0 ],
+									"patching_rect" : [ 592.0, 495.0, 173.0, 21.0 ],
 									"text" : "full pathnames of found files",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-43",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 374.0, 180.0, 424.0, 36.0 ],
-									"text" : "1 - optional int to set recursion depth (0 is default - ie. infinite recursion).\n2 - additional optional symbols set types to search for",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-41",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 374.0, 150.0, 129.0, 21.0 ],
-									"text" : "optional arguments: ",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -298,7 +286,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 210.0, 450.0, 138.0, 23.0 ],
+									"patching_rect" : [ 180.0, 465.0, 138.0, 23.0 ],
 									"text" : "print start_of_a_folder"
 								}
 
@@ -311,7 +299,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 450.0, 134.0, 23.0 ],
+									"patching_rect" : [ 330.0, 465.0, 134.0, 23.0 ],
 									"text" : "print end_of_a_folder"
 								}
 
@@ -324,7 +312,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 510.0, 450.0, 122.0, 23.0 ],
+									"patching_rect" : [ 480.0, 465.0, 122.0, 23.0 ],
 									"text" : "print empty_folders"
 								}
 
@@ -338,7 +326,7 @@
 									"numinlets" : 4,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 210.0, 420.0, 469.0, 23.0 ],
+									"patching_rect" : [ 180.0, 420.0, 469.0, 23.0 ],
 									"text" : "route start end empty"
 								}
 
@@ -351,7 +339,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 690.0, 450.0, 37.0, 23.0 ],
+									"patching_rect" : [ 660.0, 465.0, 37.0, 23.0 ],
 									"text" : "print"
 								}
 
@@ -366,7 +354,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 295.0, 360.0, 53.0, 23.0 ]
+									"patching_rect" : [ 265.0, 330.0, 53.0, 23.0 ]
 								}
 
 							}
@@ -379,7 +367,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 210.0, 390.0, 499.0, 23.0 ],
+									"patching_rect" : [ 180.0, 375.0, 499.0, 23.0 ],
 									"text" : "route folder"
 								}
 
@@ -392,9 +380,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 749.0, 261.0, 53.0, 21.0 ],
+									"patching_rect" : [ 643.0, 201.0, 53.0, 21.0 ],
 									"text" : "movies",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -407,7 +395,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 735.5, 285.0, 80.0, 23.0 ],
+									"patching_rect" : [ 630.0, 225.0, 80.0, 23.0 ],
 									"text" : "types MooV"
 								}
 
@@ -420,7 +408,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 212.0, 156.0, 118.0, 21.0 ],
+									"patching_rect" : [ 180.0, 156.0, 118.0, 21.0 ],
 									"text" : "drop a folder here!",
 									"textcolor" : [ 0.701960784313725, 0.694117647058824, 0.694117647058824, 1.0 ]
 								}
@@ -433,7 +421,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 210.0, 150.0, 118.0, 33.0 ]
+									"patching_rect" : [ 180.0, 150.0, 118.0, 33.0 ]
 								}
 
 							}
@@ -445,9 +433,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 605.0, 261.0, 74.0, 21.0 ],
+									"patching_rect" : [ 511.0, 201.0, 74.0, 21.0 ],
 									"text" : "sound files",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -460,7 +448,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 585.5, 285.0, 116.0, 23.0 ],
+									"patching_rect" : [ 492.0, 225.0, 116.0, 23.0 ],
 									"text" : "types AIFF WAVE"
 								}
 
@@ -474,7 +462,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "int" ],
-									"patching_rect" : [ 210.0, 330.0, 104.0, 23.0 ],
+									"patching_rect" : [ 180.0, 270.0, 104.0, 23.0 ],
 									"text" : "recursivefolder"
 								}
 
@@ -488,7 +476,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 480.5, 285.0, 69.0, 23.0 ],
+									"patching_rect" : [ 404.0, 225.0, 69.0, 23.0 ],
 									"text" : "types iLaX"
 								}
 
@@ -502,7 +490,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 360.5, 285.0, 78.0, 23.0 ],
+									"patching_rect" : [ 300.0, 225.0, 78.0, 23.0 ],
 									"text" : "types JSON"
 								}
 
@@ -516,7 +504,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 240.0, 285.0, 76.0, 23.0 ],
+									"patching_rect" : [ 210.0, 225.0, 76.0, 23.0 ],
 									"text" : "types TEXT"
 								}
 
@@ -529,9 +517,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 250.0, 261.0, 56.0, 21.0 ],
+									"patching_rect" : [ 220.0, 201.0, 56.0, 21.0 ],
 									"text" : "text files",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -543,9 +531,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 357.0, 261.0, 85.0, 21.0 ],
+									"patching_rect" : [ 296.0, 201.0, 85.0, 21.0 ],
 									"text" : "Max patches",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -557,38 +545,43 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 463.5, 261.0, 103.0, 21.0 ],
+									"patching_rect" : [ 387.0, 201.0, 103.0, 21.0 ],
 									"text" : "external objects",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
 , 							{
 								"box" : 								{
+									"bubble" : 1,
+									"bubbleside" : 2,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-27",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 225.0, 225.0, 670.0, 21.0 ],
-									"text" : "The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-29",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 23.0, 279.0, 140.0, 36.0 ],
+									"patching_rect" : [ 315.0, 150.0, 367.0, 55.0 ],
+									"text" : "The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive).",
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"bubble" : 1,
+									"bubbleside" : 3,
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-29",
+									"linecount" : 3,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 37.0, 210.0, 111.0, 54.0 ],
 									"text" : "bang outputs the folder contents again",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -596,7 +589,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 595.0, 318.5, 219.5, 318.5 ],
+									"midpoints" : [ 501.5, 258.5, 189.5, 258.5 ],
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -639,7 +632,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 490.0, 318.5, 219.5, 318.5 ],
+									"midpoints" : [ 413.5, 258.5, 189.5, 258.5 ],
 									"source" : [ "obj-19", 0 ]
 								}
 
@@ -647,7 +640,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 370.0, 318.5, 219.5, 318.5 ],
+									"midpoints" : [ 309.5, 258.5, 189.5, 258.5 ],
 									"source" : [ "obj-20", 0 ]
 								}
 
@@ -655,7 +648,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 249.5, 318.5, 219.5, 318.5 ],
+									"midpoints" : [ 219.5, 258.5, 189.5, 258.5 ],
 									"source" : [ "obj-21", 0 ]
 								}
 
@@ -663,7 +656,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 745.0, 318.5, 219.5, 318.5 ],
+									"midpoints" : [ 639.5, 258.5, 189.5, 258.5 ],
 									"source" : [ "obj-31", 0 ]
 								}
 
@@ -692,7 +685,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 174.5, 319.0, 219.5, 319.0 ],
+									"midpoints" : [ 159.5, 259.0, 189.5, 259.0 ],
 									"source" : [ "obj-7", 0 ]
 								}
 
