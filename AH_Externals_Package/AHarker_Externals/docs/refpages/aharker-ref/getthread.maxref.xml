@@ -53,7 +53,7 @@
     </method>
     <method name="anything">
       <arglist>
-          <arg name="input" optional="0" type="list" />
+          <arg name="input" optional="0" type="variable" />
       </arglist>
       <digest>
         Output the thread which the message is received in
