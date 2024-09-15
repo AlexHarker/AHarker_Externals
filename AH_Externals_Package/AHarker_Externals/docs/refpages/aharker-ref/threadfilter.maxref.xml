@@ -12,7 +12,7 @@
       <arglist>
       </arglist>
       <digest>
-        Output dependending on which thread the input is in.
+        Output depending on which thread the input is in.
       </digest>
       <description>
           Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>bang</m> and outputs out the right outlet if it recieves a high priority <m>bang</m>.
@@ -23,7 +23,7 @@
             <arg name="input" type="int" />
         </arglist>
       <digest>
-          Output dependending on which thread the input is in.
+          Output depending on which thread the input is in.
       </digest>
       <description>
           Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>int</m> and outputs out the right outlet if it recieves a high priority <m>int</m>.
@@ -34,7 +34,7 @@
         <arg name="input" type="float" />
       </arglist>
     <digest>
-        Output dependending on which thread the input is in.
+        Output depending on which thread the input is in.
     </digest>
     <description>
         Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>float</m> and outputs out the right outlet if it recieves a high priority <m>float</m>.
@@ -45,7 +45,7 @@
             <arg name="input" type="list" />
         </arglist>
         <digest>
-            Output dependending on which thread the input is in.
+            Output depending on which thread the input is in.
         </digest>
         <description>
             Outputs out the left outlet if <o>threadfilter</o> recieves a low priority <m>list</m>  and outputs out the right outlet if it recieves a high priority <m>list</m> .
@@ -56,7 +56,7 @@
           <arg name="input" type="list" />
       </arglist>
       <digest>
-          Output dependending on which thread the input is in.
+          Output depending on which thread the input is in.
       </digest>
       <description>
           Outputs out the left outlet if <o>threadfilter</o> recieves a low priority message and outputs out the right outlet if it recieves a high priority message.

@@ -5,11 +5,11 @@
       Useful audio-rate scalings in a single object
   </digest>
   <description>
-      <o>valconvert~</o> provides several useful audio-rate scaling operations in a single package. The mode of operation can be easily changed and all scalings can also be inverted. There is also an max message version: <o>valconvert</o>.
+      <o>valconvert~</o> provides several useful audio-rate scaling operations in a single package. The mode of operation can be easily changed and all scalings can also be inverted. There is also a max message version: <o>valconvert</o>.
   </description>
   
   <objarglist>
-    <objarg name="mode" optional="1" type="message">
+    <objarg name="mode" optional="1" type="symbol">
         <digest>
             Select the scaling mode for <o>valconvert~</o>
         </digest>
@@ -54,7 +54,6 @@
   <methodlist>
     <method name="signal">
         <arglist>
-            <arg name="input" type="signal" />
         </arglist>
       <digest>
           Output the scaled input as a <m>signal</m>
@@ -63,15 +62,46 @@
           Scales the input and outputs a <m>signal</m> at audio-rate.
       </description>
     </method>
-    <method name="message">
+    <method name="anything">
         <arglist>
-            <arg name="input" type="message" />
         </arglist>
         <digest>
             Changes the mode and scale of <o>valconvert~</o>.
         </digest>
         <description>
-            By inputting a message formatted the same as the objects arguments (mode low-input high-input low-output high-output), one can dynamically change the scaling mode and ranges at any time.
+            By inputting a message formatted the same as the objects arguments:
+            <br/>
+            <m>mode</m> / <m>low-input</m> / <m>high-input</m> / <m>low-output</m> / <m>high-output</m>
+            <br/>
+            one can dynamically change the scaling mode and ranges at any time.
+            <br/>
+            <br/>
+            <br/>
+            The optional modes are:
+            <br/>
+            <br/>
+            <m>none</m> - no scaling (pass through input as is)
+            <br/>
+            <br/>
+            <m>scale</m> - linear scaling
+            <br/>
+            <br/>
+            <m>log</m> - scale from logarithmic input to linear output (exponential scaling)
+            <br/>
+            <br/>
+            <m>exp</m> - scale from exponential input to linear output (logarithmic scaling)
+            <br/>
+            <br/>
+            <m>pitch</m> - scale from linear input to range specified in semitones (linear scaling) then convert to  a speed / freq multiplier
+            <br/>
+            <br/>
+            <m>ipitch</m> - scale from speed / freq multiplier to semitones then scale as specified to linear output (linear scaling)
+            <br/>
+            <br/>
+            <m>amp</m> - scale from linear input to specified range in decibels (linear scaling) then output as linear amplitude
+            <br/>
+            <br/>
+            <m>iamp</m> - scale from linear amplitude to decibels then scale as specified to linear output (linear scaling)
         </description>
     </method>
   </methodlist>
@@ -81,12 +111,14 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            When <o>valconvert~</o> receives a value, that value is scaled, based on the chosen mode, to the indicated output range of values and ouput as a signal.
+            When <o>valconvert~</o> receives an input <m>signal</m>, it gets scaled to the indicated output range based on the chosen mode before being ouput as a signal.
         </description>
     </entry>
   </misc>
   <seealsolist>
     <seealso name="valconvert" />
+    <seealso name="scale" />
+    <seealso name="scale~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">

@@ -134,6 +134,7 @@
     </entry>
   </misc>
   <seealsolist>
+    <seealso name="buffer~" />
     <seealso name="partconvolve~" />
     <seealso name="timeconvolve~" />
   </seealsolist>

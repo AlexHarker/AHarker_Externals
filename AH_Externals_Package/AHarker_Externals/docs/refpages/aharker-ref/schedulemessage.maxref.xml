@@ -9,7 +9,7 @@
   </description>
   
   <objarglist>
-      <objarg name="delay" optional="1" type="number">
+      <objarg name="delay time" optional="1" type="number">
           <digest>
               Set delay time
           </digest>
@@ -38,7 +38,10 @@
           Outputs after the set amount of time.
       </digest>
       <description>
-          Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+          In the left inlet: Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+          <br/>
+          <br/>
+          In the right inlet: Set the delay time in milliseconds.
       </description>
     </method>
     <method name="float">
@@ -49,7 +52,10 @@
         Outputs after the set amount of time.
     </digest>
     <description>
-        Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        In the left inlet: Outputs the same as the input after the set amount of time. If overdrive is on then the output will be in the high priority thread.
+        <br/>
+        <br/>
+        In the right inlet: Set the delay time in milliseconds.
     </description>
     </method>
     <method name="list">
