@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="voicemanager~" module="AHarker Externals" category="sample accurate suite">
+  <digest>
+      Sample-accurate voice management
+  </digest>
+  <description>
+      <o>voicemanager~</o> is a (sub)sample-accurate voice manager for use with the <o>voicedrive~</o> object. Typically <o>voicemanager~</o> is located outside of a <o>poly~</o> (or <o>dynamicdsp~</o>) object within which the <o>voicedrive~</o> objects are hosted (in each voice). The trigger input causes a voice to be assigned with the given length and offset (which must be known before the voice starts). The object keeps track of which voices are free at any one time, assuming the incoming data is passed on correctly to each voice. Outgoing triggers are then numbered according to voice, and can be tested using an audio rate comparison to derive triggers for individual voices.
+  </description>
+  <objarglist>
+      <objarg name="Number-of-voices" optional="1" type="int">
+          <digest>
+              Set the number of voices
+          </digest>
+          <description>
+              Set the maximum number of voices that <o>voicemanager~</o> can output to.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="First-inlet">
+          <arglist>
+              <arg name="First-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Triggers in
+          </digest>
+          <description>
+              The first inlet takes a trigger <m>signal</m>. This causes a trigger output numbered with a free voice from the first outlet.
+          </description>
+      </method>
+      <method name="Second-inlet">
+          <arglist>
+              <arg name="Second-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Lengths in
+          </digest>
+          <description>
+              The second inlet takes a <m>signal</m> to determine the length (in milliseconds) to send out of the second outlet. This can then be for the length input of <o>voicedrive~</o>.
+              <br />
+              The input value is sampled when a trigger is recieved in the first inlet.
+          </description>
+      </method>
+      <method name="Third-inlet">
+          <arglist>
+              <arg name="Third-inlet" type="signal" />
+          </arglist>
+          <digest>
+              Subsample offset
+          </digest>
+          <description>
+              The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses et.) you can utilise this functionality.
+              <br />
+              <br />
+              It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process, detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of <o>voicedrive~</o> and <o>voicemanager~</o> also takes account of the subsample offset.
+          </description>
+      </method>
+      <method name="Fourth-inlet">
+          <arglist>
+              <arg name="Fourth-inlet" type="signal" />
+          </arglist>
+          <digest>
+             Number of active voices
+          </digest>
+          <description>
+              The fourth inlet takes a <m>signal</m> to determine the number of active voices being processed by <o>voicemanager~</o>. This overrides the number of voices argument.
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            The first outlet outputs a trigger <m>signal</m> numbered with the voice.
+            <br />
+            The second outlet outputs a trigger <m>signal</m> with the amplitude corresponding to the length input.
+            <br />
+            The third outlet outputs a trigger <m>signal</m> corresponding to the subsample offset input.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="chebyshape~" />
+    <seealso name="rbiquad~" />
+    <seealso name="rdcblock~" />
+    <seealso name="triggerlimit~" />
+    <seealso name="rsah~" />
+    <seealso name="voicedrive~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>sample accurate suite</description>
+    </entry>
+  </misc>
+</c74object>

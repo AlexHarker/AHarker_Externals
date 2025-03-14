@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="vlessthaneq~" module="AHarker Externals" category="vMSP">
+    <digest>
+        A SIMD version of lessthaneq~
+    </digest>
+  <description>
+      <o>vlessthaneq~</o> provides a CPU efficient version of <o>lessthaneq~</o> using SIMD operations. See the <o>lessthaneq~</o> helpfile for details on usage.
+  </description>
+  
+  <methodlist>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+
+  <seealsolist>
+    <seealso name="lessthaneq~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>vMSP</description>
+    </entry>
+  </misc>
+</c74object>

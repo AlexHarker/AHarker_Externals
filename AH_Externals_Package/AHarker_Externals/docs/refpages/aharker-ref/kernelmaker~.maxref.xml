@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="Kernelmaker~" module="AHarker Externals" category="Convolution">
+  <digest>
+      Create kernels for convolution
+  </digest>
+  <description>
+    <o>kernelmaker~</o> copies samples from a buffer, in some kind of combination with samples from (an)other buffer(s) acting as modifiers (window functions etc.). <o>kernelmaker~</o> can also be used to create simple bandpass filter kernels for <o>partconvolve~</o>'s eq mode - more shapes may be added later. This object is intended to allow the creation of small convolution kernels or impulse responses which can then be used with <o>timeconvolve~</o> and/or <o>partconvolve~</o>. Because those externals copy the input of the buffer, you can dispose of the buffer, or change it once setting the convolution externals impulse response. In practice this means you can repeatedly use the same <o>kernelmaker~</o> object, and buffer for creating impulses.
+  </description>
+  
+  <objarglist>
+      <objarg name="fade_time" optional="1" type="int">
+          <digest>
+              Set the fade in/out time
+          </digest>
+          <description>
+              Setting an <m>int</m> value sets the fade in/out time in samples in the output buffer to avoid clicks. Default is 40 samples.
+              <br />
+              This is useful in Envelope mode and Ring mod mode.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="fade_time">
+          <arglist>
+              <arg name="fade_time" optional="1" type="int" />
+          </arglist>
+          <digest>
+              Set the fade in/out time
+          </digest>
+          <description>
+              Setting an <m>int</m> value sets the fade in/out time in samples in the output buffer to avoid clicks. Default is 40 samples.
+              <br />
+              This is useful in Envelope mode and Ring mod mode.
+          </description>
+      </method>
+      <method name="Windowed_mode">
+          <arglist>
+              <arg name="Windowed_mode" optional="1" type="message" />
+          </arglist>
+          <digest>
+              Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window buffer.
+          </digest>
+          <description>
+              Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window buffer.
+              <br />
+              Set <o>kernelmaker~</o> to windowed mode by inputting the message <m>makekernel_wind</m>.
+              <br />
+              The full message must be structured as:
+              <br />
+              <br />
+              <m>makekernel_wind</m> / target buffer / source buffer / window buffer / offset (<m>int</m> samples) / length (<m>int</m> samples)
+              <br />
+              <br />
+              The window buffer should be a 513 sample window (where sample indices 0 and 512 are the end points).
+          </description>
+      </method>
+      <method name="Envelope_mode">
+          <arglist>
+              <arg name="Envelope_mode" optional="1" type="message" />
+          </arglist>
+          <digest>
+              Create a normalised kernel of the length of the envelope buffer copying from the offset sample in the source buffer.
+          </digest>
+          <description>
+              Create a normalised kernel of the length of the envelope buffer copying from the offset sample in the source buffer.
+              <br />
+              Set <o>kernelmaker~</o> to envelope mode by inputting the message <m>makekernel_env</m>.
+              <br />
+              The full message must be structured as:
+              <br />
+              <br />
+              <m>makekernel_env</m> / target buffer / source buffer / envelope buffer / offset (<m>int</m> samples) / slide value (<m>int</m>)
+              <br />
+              <br />
+              The absolute values of the envelope buffer are low-pass filtered to create an amplitude envelope (larger slide values increase the smoothing).
+              The kernel can be faded in and out to avoid clicks.
+          </description>
+      </method>
+      <method name="Ring_mod_mode">
+          <arglist>
+              <arg name="Ring_mod_mode" optional="1" type="message" />
+          </arglist>
+          <digest>
+              Create a normalised kernel of the length of the modulation buffer copying from the offset sample in the source buffer.
+          </digest>
+          <description>
+              Create a normalised kernel of the length of the modulation buffer copying from the offset sample in the source buffer.
+              <br />
+              Set <o>kernelmaker~</o> to ring mod mode by inputting the message <m>makekernel_ring</m>.
+              <br />
+              The full message must be structured as:
+              <br />
+              <br />
+              <m>makekernel_ring</m> / target buffer / source buffer / modulation buffer / offset (<m>int</m> samples)
+              <br />
+              <br />
+              The modulation buffer is multiplied (ring modulated) by the source buffer.
+              The kernel can be faded in and out to avoid clicks.
+          </description>
+      </method>
+      <method name="Trapezoid_mode">
+          <arglist>
+              <arg name="Trapezoid_mode" optional="1" type="message" />
+          </arglist>
+          <digest>
+              Create a trapezoid with a height of 1 and the specificed length in samples.
+          </digest>
+          <description>
+              Create a trapezoid with a height of 1 and the specificed length in samples.
+              <br />
+              Set <o>kernelmaker~</o> to trapezoid mode by inputting the message <m>makekernel_trap</m>.
+              <br />
+              The full message must be structured as:
+              <br />
+              <br />
+              <m>makekernel_trap</m> / target buffer / env 1 (0-1) / env 2 (0-1) / env 3 (0-1) / env 4 (0-1) /length (<m>int</m> samples)
+              <br />
+              <br />
+              This mode is intended to create simplistic bandpass filter frequency repsonses, for use with the eq mode of <o>partconvolve~</o>.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="buffer">
+        <description>
+            The output is sent to a buffer specified by the input message.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="buffer~" />
+    <seealso name="partconvolve~" />
+    <seealso name="timeconvolve~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Convolution</description>
+    </entry>
+  </misc>
+</c74object>

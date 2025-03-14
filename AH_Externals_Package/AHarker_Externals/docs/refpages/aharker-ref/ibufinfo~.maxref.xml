@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="ibufinfo~" module="AHarker Externals" category="ibuffer suite">
+  <digest>
+      Get info about an ibuffer~ (or buffer~)
+  </digest>
+  <description>
+      Returns length, sample rate and number of channels for <o>ibuffer~</o> or <o>buffer~</o> objects. Does not output if the named <o>ibuffer~</o> / <o>buffer~</o> does not exist.
+  </description>
+  
+  <objarglist>
+      <objarg name="name" optional="1" type="symbol">
+          <digest>
+              Set the name of the (i)buffer
+          </digest>
+          <description>
+              Set the name of the <o>ibuffer~</o> / <o>buffer~</o> to output info on
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+    <method name="bang">
+        <arglist>
+            <arg name="bang" type="bang" />
+        </arglist>
+        <digest>
+            Output the infomation about the (i)buffer
+        </digest>
+        <description>
+            Output the <m>length</m>, <m>sample rate</m> and <m>number of channels</m> each out their own outlet.
+            <br />
+            Also causes a <m>bang</m> out each outlet.
+        </description>
+    </method>
+    <method name="set">
+        <arglist>
+            <arg name="set" type="message" />
+        </arglist>
+        <digest>
+            Set the name of the (i)buffer
+        </digest>
+        <description>
+            Set the name of the <o>ibuffer~</o> / <o>buffer~</o> to output information about.
+            <br />
+            Setting also causes an immediate output.
+            <br />
+            The set message should be formatted as:
+            <br />
+            <br />
+            <m>set</m> / buffer name
+        </description>
+    </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  <misc name="Outputs">
+    <entry name="Outputs">
+        <description>
+            First outlet outputs the size of the <o>ibuffer~</o> / <o>buffer~</o> as a <m>float</m> in milliseconds.
+            <br />
+            <br />
+            Second outlet outputs the sample rate of the <o>ibuffer~</o> / <o>buffer~</o> as an <m>int</m>.
+            <br />
+            <br />
+            Third outlet outputs the number of channels in the <o>ibuffer~</o> / <o>buffer~</o> as an <m>int</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="ibufconcatedrive~" />
+    <seealso name="ibufconcatenate~" />
+    <seealso name="ibuffermulti~" />
+    <seealso name="ibuffer~" />
+    <seealso name="ibufmultitable~" />
+    <seealso name="ibufplayer~" />
+    <seealso name="ibuftable~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>ibuffer suite</description>
+    </entry>
+  </misc>
+</c74object>

@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="recursivefolder" module="AHarker Externals" category="Utility">
+  <digest>
+      Recursively list the files in a specific folder
+  </digest>
+  <description>
+      <o>recursivefolder</o> is similar to the <o>folder</o> object, but unlike folder it is possibly to search recursively. Recursion can either be infinite (default), or to a specified depth. See the <o>folder</o> object help file for info on pathnames in MaxMSP.
+  </description>
+  <objarglist>
+      <objarg name="recursion-depth" optional="1" type="int">
+          <digest>
+              Set the recursion depth
+          </digest>
+          <description>
+              An optional <m>int</m> sets recursion depth (0 is default - ie. infinite recursion).
+          </description>
+      </objarg>
+      <objarg name="symbol" optional="1" type="symbol">
+          <digest>
+              Set symbols to search for
+          </digest>
+          <description>
+              Any additional optional <m>symbol</m>s set types to search for.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="anything">
+          <arglist>
+              <arg name="anything" type="variable" />
+          </arglist>
+          <digest>
+              Set the file path to output
+          </digest>
+          <description>
+              Any symbol or message starting with a symbol with the path will set the file path of which the contents will be output.
+          </description>
+      </method>
+      <method name="symbol">
+          <arglist>
+              <arg name="symbol" type="symbol" />
+          </arglist>
+          <digest>
+              Set the file path to output
+          </digest>
+          <description>
+              Performs the same function as <m>anything</m>.
+          </description>
+      </method>
+      <method name="bang">
+          <arglist>
+              <arg name="bang" type="bang" />
+          </arglist>
+          <digest>
+              Output the folder contents
+          </digest>
+          <description>
+              A <m>bang</m> will output the folder contents again.
+          </description>
+      </method>
+      <method name="int">
+          <arglist>
+              <arg name="int" type="int" />
+          </arglist>
+          <digest>
+              Output the folder contents
+          </digest>
+          <description>
+              Performs the same function as <m>bang</m>.
+          </description>
+      </method>
+      <method name="types">
+          <arglist>
+              <arg name="types" type="message" />
+          </arglist>
+          <digest>
+              Select file types to list.
+          </digest>
+          <description>
+              The <m>types</m> message allows you to list only certain types of file. Files have a four-character file type (case sensitive).
+              <br />
+              <br />
+              <m>types TEXT</m>   -   text files
+              <br />
+              <br />
+              <m>types JSON</m>  -   Max patches
+              <br />
+              <br />
+              <m>types iLaX</m>   -   external objects
+              <br />
+              <br />
+              <m>types AIFF WAV</m>   -   sound files
+              <br />
+              <br />
+              <m>types MooV</m>   -   movies
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="symbol">
+        <description>
+            Outputs the paths of all found files.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+      <seealso name="folder" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>utility</description>
+    </entry>
+  </misc>
+</c74object>

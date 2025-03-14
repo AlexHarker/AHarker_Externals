@@ -359,9 +359,11 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         long num_chans_to_load = channel_order.size() ? static_cast<long>(channel_order.size()) : x->channels;
         long sample_size = file.byte_depth();
         
+        // Padding accounts for cubic interpolation and possible 24 bit offsets
+        
         free(x->memory);
-        x->memory = calloc(((num_frames + 4) * num_chans_to_load), sample_size);
-        x->samples = reinterpret_cast<uint8_t *>(x->memory) + (num_chans_to_load * sample_size);
+        x->memory = calloc(((num_frames + 4) * num_chans_to_load + 8), sample_size);
+        x->samples = reinterpret_cast<uint8_t *>(x->memory) + (num_chans_to_load * sample_size) + 4;
         
         // Bail if no memory
         

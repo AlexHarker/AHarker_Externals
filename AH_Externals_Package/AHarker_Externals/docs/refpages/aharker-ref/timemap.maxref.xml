@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="timemap" module="AHarker Externals" category="Gesture_Suite">
+  <digest>
+      Create semi-random / semi-determinate lists
+  </digest>
+  <description>
+      Originally intended to create lists representing timing values as part of a system of gestural representation , <o>timemap</o> is an object that creates random lists of values with definable characteristics. The basic principle to start with a list of equidistant values (between 0 and 1 - and subsequently scaled if desired) and through randomisation and warping reach the values in the final list. The intention is to allow the creation of lists with shapes and characteristics that are to some extent determinate, but randomised within the given parameters. The values can either be generated independently, or in "streams", where the generated values are accumulated through addition or multiplication. A number of scalings are supported, appropriate to a range of musical parameters.
+  </description>
+  <objarglist>
+      <objarg name="Random-amount" optional="1" type="float">
+          <digest>
+              Set the random amount
+          </digest>
+          <description>
+              The first argument sets the random amount as a <m>float</m> (0-1).
+              <br />
+              <br />
+              <m>0</m> produces exactly equidistant values
+              <br />
+              <m>1</m> produces entirely random values
+          </description>
+      </objarg>
+      <objarg name="Centre" optional="1" type="float">
+          <digest>
+              Set the centre value
+          </digest>
+          <description>
+              The second argument sets the centre point as a <m>float</m> (0-1) around which to perform clumping.
+          </description>
+      </objarg>
+      <objarg name="Clumping-factor" optional="1" type="float">
+          <digest>
+              Set the clumping factor
+          </digest>
+          <description>
+              The second argument sets the centre point as a <m>float</m> (0-1) around which to perform clumping.
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="length">
+          <arglist>
+              <arg name="length" type="int" />
+          </arglist>
+          <digest>
+              Set the list length
+          </digest>
+          <description>
+              An <m>int</m> to the first inlet sets the <m>list</m> length and triggers output.
+          </description>
+      </method>
+      <method name="Random-amount">
+          <arglist>
+              <arg name="Random-amount" type="float" />
+          </arglist>
+          <digest>
+              Set the random amount
+          </digest>
+          <description>
+              In the second inlet set the random amount as a <m>float</m> (0-1).
+              <br />
+              <br />
+              <m>0</m> produces exactly equidistant values
+              <br />
+              <m>1</m> produces entirely random values
+          </description>
+      </method>
+      <method name="Centre">
+          <arglist>
+              <arg name="Centre" type="float" />
+          </arglist>
+          <digest>
+              Set the centre value
+          </digest>
+          <description>
+              The third argument sets the clumping factor as a <m>float</m>.
+              <br />
+              <br />
+              values between <m>0</m> and <m>1</m> warps away from the centre
+              <br />
+              <m>1</m> produces no clumping
+              <br />
+              values larger than <m>1</m> clumps towards the centre
+          </description>
+      </method>
+      <method name="Clumping-factor">
+          <arglist>
+              <arg name="Clumping-factor" type="float" />
+          </arglist>
+          <digest>
+              Set the clumping factor
+          </digest>
+          <description>
+              The fourth inlet sets the clumping factor as a <m>float</m>.
+              <br />
+              <br />
+              values between <m>0</m> and <m>1</m> warps away from the centre
+              <br />
+              <m>1</m> produces no clumping
+              <br />
+              values larger than <m>1</m> clumps towards the centre
+          </description>
+      </method>
+      <method name="Min-interval">
+          <arglist>
+              <arg name="Min-interval" type="float" />
+          </arglist>
+          <digest>
+              Set the minimum interval
+          </digest>
+          <description>
+              The fifth inlet sets the minimum absolute difference between consecutive values as a <m>float</m> (0-1) (default 0).
+          </description>
+      </method>
+      <method name="Max-interval">
+          <arglist>
+              <arg name="Max-interval" type="float" />
+          </arglist>
+          <digest>
+              Set the maximum interval
+          </digest>
+          <description>
+              the sixth inlet sets the maximum absolute difference between consecutive values as a <m>float</m> (0-1) (default 1).
+          </description>
+      </method>
+      <method name="Max-retries">
+          <arglist>
+              <arg name="Max-retries" type="int" />
+          </arglist>
+          <digest>
+              Set the maximum interval
+          </digest>
+          <description>
+              The seventh inlet sets the maximum number of retries as an <m>int</m> for generating each value before giving up (default 10).
+          </description>
+      </method>
+      <method name="random_order">
+          <arglist>
+              <arg name="random_order" type="message" />
+          </arglist>
+          <digest>
+              Set the random order state
+          </digest>
+          <description>
+              The random order message will turn on/off the random <m>list</m> order.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>random_order</m> / <m>int</m>
+              <br />
+              <br />
+              <m>0</m> outputs the <m>list</m> in ascending order.
+              <m>1</m> outputs the <m>list</m> in a random order.
+          </description>
+      </method>
+      <method name="Scaling">
+          <arglist>
+              <arg name="Scaling" type="message" />
+          </arglist>
+          <digest>
+              Set the scaling mode
+          </digest>
+          <description>
+              The scaling message is used to set the scaling mode and ranges for <o>timemap</o>.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>scaling</m> / mode / min value / max value
+              <br />
+              <br />
+              The different modes are:
+              <br />
+              <m>none</m>, <m>scale</m> (linear scaling), <m>log</m> (logarithmic scaling), <m>exp</m> (exponential scaling), <m>amp</m>, <m>pitch</m>, <m>div</m>.
+              <br />
+              <br />
+              Note that the min and max intervals are in relation to the scaled output vals.
+          </description>
+      </method>
+      <method name="Stream">
+          <arglist>
+              <arg name="Stream" type="message" />
+          </arglist>
+          <digest>
+              Set the stream mode
+          </digest>
+          <description>
+              In stream mode values are accumulated from one to the next. The initlal values are formed in the same way (with scaling if appropriate), but the final output is an accumulation of the scaled values from an initial point. The output is constrained within the given range. Note that it is possible to provide parameters that are impossible to realise (or improbable). Thus, the maximum retries value may be even more relevant in this mode.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>stream</m> / mode / initial value / minimum output value / maximum output value
+              <br />
+              <br />
+              <m>mode 1</m> accumulates values by addition.
+              <br />
+              <m>mode 2</m> accumulates values by multiplication.
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            Outputs the generated <m>list</m>.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="gesture_maker" />
+    <seealso name="timefilter" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Gesture_Suite</description>
+    </entry>
+  </misc>
+</c74object>

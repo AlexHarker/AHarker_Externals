@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="partconvolve~" module="AHarker Externals" category="Convolution">
+  <digest>
+      FFT-based partitioned convolution
+  </digest>
+  <description>
+    <o>partconvolve~</o> copies samples from a buffer to use as a impulse response for FFT-based partitioned convolution. It can also be used to perform a simple static FFT-based FIR filter on an incoming signal. Typically <o>partconvolve~</o> might be used in conjuction with <o>timeconvolve~</o> for zero-latency convolution with longer impulses. The two objects have similar attributes / arguments and can be easily combined to design custom partitioning schemes.
+  </description>
+  
+  <objarglist>
+      <objarg name="Impulse_length" optional="1" type="int">
+          <digest>
+              Set the max impulse length
+          </digest>
+          <description>
+              Set the maximum impulse length in samples.
+              <br />
+              The defualt length is 1323000 samples (30 seconds at 44.1kHz)
+          </description>
+      </objarg>
+      <objarg name="Max_FFT_size" optional="1" type="int">
+          <digest>
+              Set the max FFT size
+          </digest>
+          <description>
+              Set the maximum FFT size as a power of 2.
+              <br />
+              The defualt size is 65536.
+              <br />
+              The absolute maximum is 1048576.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="input">
+          <arglist>
+              <arg name="input" optional="1" type="signal" />
+          </arglist>
+          <digest>
+              The <m>signal</m> to apply convolution to.
+          </digest>
+          <description>
+              The <m>signal</m> to apply convolution to.
+          </description>
+      </method>
+      <method name="memoryusage">
+          <arglist>
+              <arg name="memoryusage" optional="1" type="int" />
+          </arglist>
+          <digest>
+              report memory usage to the max window.
+          </digest>
+          <description>
+              Report memory usage to the max window.
+          </description>
+      </method>
+      <method name="set">
+          <arglist>
+              <arg name="set" optional="1" type="message" />
+          </arglist>
+          <digest>
+              set the buffer from which to fetch the impulse
+          </digest>
+          <description>
+              Set the buffer from which to fetch the impulse.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>set</m> / impulse buffer
+              <br />
+              <br />
+              The IO latency in this mode is half of the fft size.
+          </description>
+      </method>
+      <method name="eq">
+          <arglist>
+              <arg name="eq" optional="1" type="message" />
+          </arglist>
+          <digest>
+              set the buffer from which to fetch the eq
+          </digest>
+          <description>
+              Set the buffer from which to fetch the eq.
+              <br />
+              In EQ mode the object acts as a simple FFT-based FIR filter of the given fft size. The buffer should contain N / 2 points, which determine the frequency response of the filter.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>set</m> / eq buffer
+              <br />
+              <br />
+              The latency in this mode is the fft size.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+      <attribute name="fftsize" optional="1" type="int">
+          <digest>
+              Set the fft size
+          </digest>
+          <description>
+              Set the fft size for <o>partconvolve~</o>. It should be a power of 2 between a minumum of 32 and the <m>max fft size</m>.
+              <br />
+              The default is the <m>max fft size</m>.
+          </description>
+      </attribute>
+      <attribute name="offset" optional="1" type="int">
+          <digest>
+              Set the sample in the buffer from which to start
+          </digest>
+          <description>
+              Set the offset in samples from which to start processing the buffer.
+              <br />
+              The default is <m>0</m>.
+          </description>
+      </attribute>
+      <attribute name="length" optional="1" type="int">
+          <digest>
+              Set the length in samples of the buffer.
+          </digest>
+          <description>
+              Set the length in samples of the buffer from the <m>offset</m> sample.
+              <br />
+              The default is <m>0</m>, which is the whole rest of the buffer from the <m>offset</m> sample.
+          </description>
+      </attribute>
+      <attribute name="chan" optional="1" type="int">
+          <digest>
+              Set the channel in the buffer to use.
+          </digest>
+          <description>
+              Set the channel in the buffer to use.
+              <br />
+              The default is <m>1</m>.
+          </description>
+      </attribute>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            The output is the input <m>signal</m> with the convolution applied to it.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="kernelmaker~" />
+    <seealso name="timeconvolve~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Convolution</description>
+    </entry>
+  </misc>
+</c74object>

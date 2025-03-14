@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="dynamic.out~" module="AHarker Externals" category="Dynamic_Suite">
+  <digest>
+      The functionality of out~ within dynamicdsp~ or dynamicserial~
+  </digest>
+  <description>
+      <o>dynamic.out~</o> acts like <o>out~</o> but for patchers loaded inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object. Unlike <o>out~</o> the user can change the signal outlet which the object refers to by sending an <m>int</m> to the object.
+  </description>
+  <objarglist>
+      <objarg name="outlet" optional="1" type="int">
+          <digest>
+              Set the initial outlet
+          </digest>
+          <description>
+              Set the inial outlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+              <br />
+              Default is <m>0</m> (off).
+          </description>
+      </objarg>
+  </objarglist>
+  <methodlist>
+      <method name="outlet">
+          <arglist>
+              <arg name="outlet" type="int" />
+          </arglist>
+          <digest>
+              Set the outlet
+          </digest>
+          <description>
+              Sending an <m>int</m> to the first inlet sets the outlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
+          </description>
+      </method>
+  </methodlist>
+  
+  <attributelist>
+  </attributelist>
+  
+  <misc name="Output">
+    <entry name="signal">
+        <description>
+            <o>dynamic.out~</o> has no outlet. It is used to output a <m>signal</m> from the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that it is inside, from the outlet specified by the argument or <m>int</m> input.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="dynamic.in~" />
+    <seealso name="dynamic.patch~" />
+    <seealso name="dynamic.request~" />
+    <seealso name="dynamic.this~" />
+    <seealso name="dynamicdsp~" />
+    <seealso name="dynamicserial~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>Dynamic Suite</description>
+    </entry>
+  </misc>
+</c74object>
