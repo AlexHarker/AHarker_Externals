@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: "ah-externals"
+          submodules: "recursive"
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
       - name: Upload windows builds
@@ -49,6 +50,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: "ah-externals"
+          submodules: "recursive"
       - name: Download windows builds
         uses: actions/download-artifact@v4
         with:
