@@ -34,7 +34,7 @@
       <AdditionalOptions>/EXPORT:main %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_Externals_Dependencies\HissTools_Library;..\..\..\max-sdk-base\c74support\max-includes;..\..\..\max-sdk-base\c74support\msp-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\AH_MaxMSP_Headers;..\..\AH_Externals_Dependencies\HISSTools_Library\include;..\..\..\max-sdk-base\c74support\max-includes;..\..\..\max-sdk-base\c74support\msp-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_USE_MATH_DEFINES;WIN_VERSION;WIN32;_DEBUG;_WINDOWS;_USRDLL;WIN_EXT_VERSION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
