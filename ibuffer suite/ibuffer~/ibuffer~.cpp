@@ -409,7 +409,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
         
         // If the samples are in the wrong endianness then reverse the byte order for each sample
         
-        if (file.audio_endianness() == htl::audio_file_format::endianness::big)
+        if (file.audio_endianness() == htl::audio_file_format::endian_type::big)
             ibuffer_switch_endianness(x);
         
         // File is now loaded - destroy the lock and bang (must be in this order!)
