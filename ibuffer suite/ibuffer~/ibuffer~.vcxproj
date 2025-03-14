@@ -60,12 +60,10 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\IAudioFile.cpp" />
     <ClCompile Include="ibuffer~.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\BaseAudioFile.h" />
-    <ClInclude Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\IAudioFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
