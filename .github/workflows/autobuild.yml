@@ -29,7 +29,7 @@ jobs:
       - name: Build windows externals
         run: msbuild "ah-externals/AH Externals.sln" /p:configuration="Release" /p:platform=x64 /v:q /clp:ErrorsOnly /nologo /m
       - name: Upload windows builds
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deploy-win
           path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
@@ -50,7 +50,7 @@ jobs:
         with:
           path: "ah-externals"
       - name: Download windows builds
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: deploy-win
           path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
