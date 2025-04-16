@@ -5,7 +5,7 @@
       Create semi-random / semi-determinate lists
   </digest>
   <description>
-      Originally intended to create lists representing timing values as part of a system of gestural representation , <o>timemap</o> is an object that creates random lists of values with definable characteristics. The basic principle to start with a list of equidistant values (between 0 and 1 - and subsequently scaled if desired) and through randomisation and warping reach the values in the final list. The intention is to allow the creation of lists with shapes and characteristics that are to some extent determinate, but randomised within the given parameters. The values can either be generated independently, or in "streams", where the generated values are accumulated through addition or multiplication. A number of scalings are supported, appropriate to a range of musical parameters.
+      Originally intended to create lists representing timing values as part of a system of gestural representation, <o>timemap</o> is an object that creates random lists of values with definable characteristics. The basic principle to start with a list of equidistant values (between 0 and 1 - and subsequently scaled if desired) and through randomisation and warping reach the values in the final list. The intention is to allow the creation of lists with shapes and characteristics that are to some extent determinate, but randomised within the given parameters. The values can either be generated independently, or in "streams", where the generated values are accumulated through addition or multiplication. A number of scalings are supported, appropriate to a range of musical parameters.
   </description>
   <objarglist>
       <objarg name="Random-amount" optional="1" type="float">
@@ -39,105 +39,54 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="length">
+      <method name="int">
           <arglist>
-              <arg name="length" type="int" />
           </arglist>
           <digest>
-              Set the list length
+              Function depends on inlet
           </digest>
           <description>
-              An <m>int</m> to the first inlet sets the <m>list</m> length and triggers output.
+              In the first inlet: Set the <m>list</m> Length and trigger an output.
+              <br/>
+              <br/>
+              In the seventh inlet: Set the Maximum Number of Retries as an <m>int</m> for generating each value before giving up (default 10).
           </description>
       </method>
-      <method name="Random-amount">
+      <method name="float">
           <arglist>
-              <arg name="Random-amount" type="float" />
           </arglist>
           <digest>
-              Set the random amount
+              Function depends on inlet
           </digest>
           <description>
-              In the second inlet set the random amount as a <m>float</m> (0-1).
-              <br />
+              In the second inlet: Set the Random Amount as a <m>float</m> (0-1).
               <br />
               <m>0</m> produces exactly equidistant values
               <br />
               <m>1</m> produces entirely random values
-          </description>
-      </method>
-      <method name="Centre">
-          <arglist>
-              <arg name="Centre" type="float" />
-          </arglist>
-          <digest>
-              Set the centre value
-          </digest>
-          <description>
-              The third argument sets the clumping factor as a <m>float</m>.
+              <br/>
+              <br/>
+              In the third inlet: Set the Centre point around which to perform clumping as a <m>float</m> (0-1).
+              <br/>
+              <br/>
+              In the fourth inlet: Set the Clumping Factor as a <m>float</m>.
               <br />
-              <br />
-              values between <m>0</m> and <m>1</m> warps away from the centre
+              values between <m>0</m> and <m>1</m> warp away from the centre
               <br />
               <m>1</m> produces no clumping
               <br />
-              values larger than <m>1</m> clumps towards the centre
-          </description>
-      </method>
-      <method name="Clumping-factor">
-          <arglist>
-              <arg name="Clumping-factor" type="float" />
-          </arglist>
-          <digest>
-              Set the clumping factor
-          </digest>
-          <description>
-              The fourth inlet sets the clumping factor as a <m>float</m>.
-              <br />
-              <br />
-              values between <m>0</m> and <m>1</m> warps away from the centre
-              <br />
-              <m>1</m> produces no clumping
-              <br />
-              values larger than <m>1</m> clumps towards the centre
-          </description>
-      </method>
-      <method name="Min-interval">
-          <arglist>
-              <arg name="Min-interval" type="float" />
-          </arglist>
-          <digest>
-              Set the minimum interval
-          </digest>
-          <description>
-              The fifth inlet sets the minimum absolute difference between consecutive values as a <m>float</m> (0-1) (default 0).
-          </description>
-      </method>
-      <method name="Max-interval">
-          <arglist>
-              <arg name="Max-interval" type="float" />
-          </arglist>
-          <digest>
-              Set the maximum interval
-          </digest>
-          <description>
-              the sixth inlet sets the maximum absolute difference between consecutive values as a <m>float</m> (0-1) (default 1).
-          </description>
-      </method>
-      <method name="Max-retries">
-          <arglist>
-              <arg name="Max-retries" type="int" />
-          </arglist>
-          <digest>
-              Set the maximum interval
-          </digest>
-          <description>
-              The seventh inlet sets the maximum number of retries as an <m>int</m> for generating each value before giving up (default 10).
+              values larger than <m>1</m> clump towards the centre
+              <br/>
+              <br/>
+              In the fifth inlet: Det the Minimum Absolute Difference between consecutive values as a <m>float</m> (0-1) (default 0).
+              <br/>
+              <br/>
+              In the sixth inlet: Det the Maximum Absolute Difference between consecutive values as a <m>float</m> (0-1) (default 1).
           </description>
       </method>
       <method name="random_order">
           <arglist>
-              <arg name="random_order" type="message" />
+              <arg name="random_order" type="int" />
           </arglist>
           <digest>
               Set the random order state
@@ -157,7 +106,7 @@
       </method>
       <method name="Scaling">
           <arglist>
-              <arg name="Scaling" type="message" />
+              <arg name="Scaling" type="variable" />
           </arglist>
           <digest>
               Set the scaling mode
@@ -181,7 +130,7 @@
       </method>
       <method name="Stream">
           <arglist>
-              <arg name="Stream" type="message" />
+              <arg name="Stream" type="varaible" />
           </arglist>
           <digest>
               Set the stream mode
