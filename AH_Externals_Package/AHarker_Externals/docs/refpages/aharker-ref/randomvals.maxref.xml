@@ -9,7 +9,7 @@
   </description>
   
   <methodlist>
-      <method name="input" optional="1" type="int">
+      <method name="int">
           <digest>
               Trigger processing
           </digest>
@@ -20,12 +20,15 @@
               An <m>int</m> of 2 or higher will give a multiple windowed gaussian distribution of values between 0 and 1.
           </description>
       </method>
-      <method name="gaussian distribution" optional="1" type="list">
+      <method name="list">
+          <arglist>
+              <arg name="input" type="list" />
+          </arglist>
           <digest>
-              Set a gaussian distribution
+              set gaussian distributions
           </digest>
           <description>
-              A list of three values can be sent into <o>randomvals</o> via a <m>message</m>. The list must be formatted in the order:
+              A list of three values can be sent into <o>randomvals</o> via a <m>message</m> to set gaussian distributions. The list must be formatted in the order:
               <br />
               <br />
               <m>mean</m> / <m>deviation</m> /  <m>weight</m>.

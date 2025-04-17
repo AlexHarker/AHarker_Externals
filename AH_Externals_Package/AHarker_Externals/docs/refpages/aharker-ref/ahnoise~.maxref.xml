@@ -5,7 +5,7 @@
       High quality white noise
   </digest>
   <description>
-    <o>ahnoise~</o> provides higher quality white noise (between -1. and 1.) than the standard MSP <o>noise~</o> object. <o>ahnoise~</o> is currently implemented using WELLRNG by Francois Panneton and Pierre L'Ecuyer for pseudorandom number generation (see http://www.iro.umontreal.ca/~panneton/WELLRNG.html).
+    <o>ahnoise~</o> provides higher quality white noise (between -1. and 1.) than the standard MSP <o>noise~</o> object.
   </description>
   <methodlist>
   </methodlist>
@@ -22,6 +22,7 @@
     <seealso name="randfloats" />
     <seealso name="randomvals" />
     <seealso name="randomvals~" />
+    <seealso name="noise~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
