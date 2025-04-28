@@ -232,6 +232,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXContainerItemProxy section */
+		B818DC1D2DC028090032823B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0F051465F57A007FAC6A /* rbiquad~.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B81F571D0D2422E0000D5E50;
+			remoteInfo = "rbiquad~";
+		};
 		B82F133C1465FA90007FAC6A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B8B56C161465ED1500FE85B0 /* Project object */;
@@ -1487,6 +1494,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		B818DC192DC028090032823B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B818DC1E2DC028090032823B /* rbiquad~.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		B82F0DBF1465F0B0007FAC6A /* conversion */ = {
 			isa = PBXGroup;
 			children = (
@@ -2075,6 +2090,10 @@
 					ProjectRef = B82F0E8A1465F316007FAC6A /* randomvals~.xcodeproj */;
 				},
 				{
+					ProductGroup = B818DC192DC028090032823B /* Products */;
+					ProjectRef = B82F0F051465F57A007FAC6A /* rbiquad~.xcodeproj */;
+				},
+				{
 					ProductGroup = B83044A22DC0129E00558125 /* Products */;
 					ProjectRef = B82F0EFC1465F573007FAC6A /* rdcblock~.xcodeproj */;
 				},
@@ -2147,6 +2166,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		B818DC1E2DC028090032823B /* rbiquad~.mxo */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "rbiquad~.mxo";
+			remoteRef = B818DC1D2DC028090032823B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B83043CD2DC011DE00558125 /* valconvert.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -2325,42 +2351,42 @@
 		B83044A12DC0129500558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "chebyshape~.mxo";
 			remoteRef = B83044A02DC0129500558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B83044A62DC0129E00558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "rdcblock~.mxo";
 			remoteRef = B83044A52DC0129E00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B83044AB2DC012B800558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "triggerlimit~.mxo";
 			remoteRef = B83044AA2DC012B800558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B83044B02DC012BE00558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "tsah~.mxo";
 			remoteRef = B83044AF2DC012BE00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B83044B52DC012C400558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "voicedrive~.mxo";
 			remoteRef = B83044B42DC012C400558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		B83044BA2DC012CB00558125 /* .bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = .bundle;
+			path = "voicemanager~.mxo";
 			remoteRef = B83044B92DC012CB00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
