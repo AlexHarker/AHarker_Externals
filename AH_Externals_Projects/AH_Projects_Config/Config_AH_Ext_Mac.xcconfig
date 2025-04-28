@@ -1,0 +1,60 @@
+
+// Xcode target configuration settings 
+
+PRODUCT_NAME = $TARGET_NAME
+
+// Paths
+
+C74SUPPORT = $(SRCROOT)/../../max-sdk-base/c74support
+C74_HEADERS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+HEADER_SEARCH_PATHS = "$(SRCROOT)/../include" "$(SRCROOT)/../AH_Externals_Dependencies/HISSTools_Library/include" $C74_HEADERS
+FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
+
+// To install on build set SKIP_INSTALL to NO and DSTROOT to the desired location
+
+SKIP_INSTALL = NO
+DEPLOYMENT_LOCATION = YES
+DSTROOT = $(SRCROOT)/../AH_Externals_Package/AHarker_Externals/externals
+INSTALL_PATH = /
+COPY_PHASE_STRIP = NO
+
+// Special Files
+
+GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
+GCC_PRECOMPILE_PREFIX_HEADER = YES
+INFOPLIST_FILE = AH_Projects_Config/AH_Externals_Info.plist
+
+// Per architecture and deployment settings
+
+MACOSX_DEPLOYMENT_TARGET = 10.11
+CLANG_CXX_LANGUAGE_STANDARD = c++14
+CLANG_CXX_LIBRARY = libc++
+CLANG_X86_VECTOR_INSTRUCTIONS = avx
+//CLANG_X86_VECTOR_INSTRUCTIONS = sse4.2
+
+ARCHS = x86_64 arm64
+
+// Static Configuration (don't change these)
+
+WRAPPER_EXTENSION = mxo
+GENERATE_PKGINFO_FILE = YES
+
+// Increase warnings to minimise time spent working in Visual Studio and turn off unhelpful warnings
+
+WARNING_CFLAGS = -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -Wdeclaration-after-statement
+//-Werror -Wno-deprecated-declarations
+
+// Flags to enforce some build-time checks for the symbols used while not actually performing a hard link
+
+C74_SYM_LINKER_FLAGS = @$(C74SUPPORT)/max-includes/c74_linker_flags.txt
+
+OTHER_LDFLAGS = -framework MaxAudioAPI -framework JitterAPI -framework Accelerate $(C74_SYM_LINKER_FLAGS)
+
+// hide all symbols by default
+// mark a function to be exported with the C74_EXPORT macro -- most likely this will only apply to the main() function
+
+OTHER_CFLAGS = -fvisibility=hidden
+
+// Avoid XCode warning for deprecated feature
+
+ALWAYS_SEARCH_USER_PATHS = NO
