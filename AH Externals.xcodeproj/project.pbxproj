@@ -1491,6 +1491,7 @@
 		B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "kernelmaker~.xcodeproj"; path = "AH_Externals_Projects/kernelmaker~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "AH_Externals_Projects/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "AH_Externals_Projects/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
+		B8F777462DC0EC28002E18C9 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Externals_Projects/AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -1729,7 +1730,7 @@
 		B830449D2DC0129500558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044A12DC0129500558125 /* .bundle */,
+				B83044A12DC0129500558125 /* chebyshape~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1737,7 +1738,7 @@
 		B83044A22DC0129E00558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044A62DC0129E00558125 /* .bundle */,
+				B83044A62DC0129E00558125 /* rdcblock~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1745,7 +1746,7 @@
 		B83044A72DC012B800558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044AB2DC012B800558125 /* .bundle */,
+				B83044AB2DC012B800558125 /* triggerlimit~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1753,7 +1754,7 @@
 		B83044AC2DC012BE00558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044B02DC012BE00558125 /* .bundle */,
+				B83044B02DC012BE00558125 /* tsah~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1761,7 +1762,7 @@
 		B83044B12DC012C400558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044B52DC012C400558125 /* .bundle */,
+				B83044B52DC012C400558125 /* voicedrive~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1769,7 +1770,7 @@
 		B83044B62DC012CB00558125 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B83044BA2DC012CB00558125 /* .bundle */,
+				B83044BA2DC012CB00558125 /* voicemanager~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1932,6 +1933,7 @@
 		B8B56C141465ED1500FE85B0 = {
 			isa = PBXGroup;
 			children = (
+				B8F777462DC0EC28002E18C9 /* Config_AH_Ext_Mac.xcconfig */,
 				B83B28F8274008C900951E7A /* include */,
 				B82F0DBF1465F0B0007FAC6A /* conversion */,
 				B8B56CC31465EFC100FE85B0 /* convolution */,
@@ -2348,42 +2350,42 @@
 			remoteRef = B830449B2DC0128E00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044A12DC0129500558125 /* .bundle */ = {
+		B83044A12DC0129500558125 /* chebyshape~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "chebyshape~.mxo";
 			remoteRef = B83044A02DC0129500558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044A62DC0129E00558125 /* .bundle */ = {
+		B83044A62DC0129E00558125 /* rdcblock~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "rdcblock~.mxo";
 			remoteRef = B83044A52DC0129E00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044AB2DC012B800558125 /* .bundle */ = {
+		B83044AB2DC012B800558125 /* triggerlimit~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "triggerlimit~.mxo";
 			remoteRef = B83044AA2DC012B800558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044B02DC012BE00558125 /* .bundle */ = {
+		B83044B02DC012BE00558125 /* tsah~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "tsah~.mxo";
 			remoteRef = B83044AF2DC012BE00558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044B52DC012C400558125 /* .bundle */ = {
+		B83044B52DC012C400558125 /* voicedrive~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "voicedrive~.mxo";
 			remoteRef = B83044B42DC012C400558125 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B83044BA2DC012CB00558125 /* .bundle */ = {
+		B83044BA2DC012CB00558125 /* voicemanager~.mxo */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "voicemanager~.mxo";
