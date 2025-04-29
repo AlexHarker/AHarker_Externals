@@ -5,7 +5,7 @@ PRODUCT_NAME = $TARGET_NAME
 
 // Paths
 
-C74SUPPORT = $(SRCROOT)/../../max-sdk-base/c74support
+C74SUPPORT = $(SRCROOT)/../AH_Externals_Dependencies/max-sdk-base/c74support
 C74_HEADERS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
 HEADER_SEARCH_PATHS = "$(SRCROOT)/../include" "$(SRCROOT)/../AH_Externals_Dependencies/HISSTools_Library/include" $C74_HEADERS
 FRAMEWORK_SEARCH_PATHS = "$(C74SUPPORT)/max-includes" "$(C74SUPPORT)/msp-includes" "$(C74SUPPORT)/jit-includes"
