@@ -9,8 +9,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(MACOS_UNIVERSAL "Build universal architecture (if off builds native architecture only)" OFF)
 
-set(COMMON_INCLUDES ${CMAKE_SOURCE_DIR}/source/includes)
-    
+set(COMMON_INCLUDES ${CMAKE_SOURCE_DIR}/include)
+set(HISSTOOLS_LIB_INCLUDES ${CMAKE_SOURCE_DIR}/AH_Externals_Dependencies/HISSTools_Library/include) 
+
 if (APPLE)
     if (${CMAKE_GENERATOR} MATCHES "Xcode")
             if (${XCODE_VERSION} VERSION_LESS 10)
