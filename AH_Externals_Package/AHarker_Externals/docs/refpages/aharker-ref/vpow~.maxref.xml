@@ -5,10 +5,49 @@
         A SIMD version of pow~
     </digest>
   <description>
-      <o>vpow~</o> provides a CPU efficient version of <o>pow~</o> using SIMD operations. See the <o>pow~</o> helpfile for details on usage.
+      <o>vpow~</o> provides a CPU efficient version of <o>pow~</o> using SIMD operations. 
+      <br/>
+      <o>vpow~</o> raises the base value (set in the right inlet) to the power of the exponent (set in the left inlet). Either inlet can receive a <m>signal</m>, <m>float</m> or <m>int</m>.
   </description>
   
+  <objarglist>
+      <objarg name="base-value" optional="1" type="number">
+          <digest>
+              Base value
+          </digest>
+          <description>
+              Sets the base value. The default value is 0. If a <m>signal</m> is connected to the right inlet, the argument is ignored.
+          </description>
+      </objarg>
+  </objarglist>
+  
   <methodlist>
+      <method name="float">
+          <arglist>
+              <arg name="exponent/base-value" optional="0" type="float" />
+          </arglist>
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: Sets the exponent. If there is a <m>signal</m> connected to the left inlet, a number received in the left inlet is ignored.
+              <br />
+              <br />
+              In right inlet: Sets the base value. If there is a signal connected to the right inlet, a number received in the right inlet is ignored.
+          </description>
+      </method>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Function depends on inlet
+          </digest>
+          <description>
+              In left inlet: Sets the exponent.
+              <br />
+              <br />
+              In right inlet: Sets the base value.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +55,17 @@
 
   <seealsolist>
     <seealso name="pow~" />
+    <seealso name="log~" />
+    <seealso name="vlog~" />
+    <seealso name="curve~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The base value (from the right inlet) raised to the exponent (from the left inlet).
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

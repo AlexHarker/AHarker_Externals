@@ -5,18 +5,42 @@
         A SIMD version of atan~
     </digest>
   <description>
-      <o>vatan~</o> provides a CPU efficient version of <o>atan~</o> using SIMD operations. See the <o>atan~</o> helpfile for details on usage.
+      <o>vatan~</o> provides a CPU efficient version of <o>atan~</o> using SIMD operations.
+      <br/>
+      Use the <o>vatan~</o> object to calculate and output a signal that is the arc-tangent function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to arc-tangent function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
   </attributelist>
 
   <seealsolist>
-    <seealso name="atan~" />
+    <seealso name="atan~" />    
+    <seealso name="atanh~" />
+    <seealso name="vatanh~" />
+    <seealso name="atan2~" />
+    <seealso name="tanh~" />
+    <seealso name="vtanh~" />
+    <seealso name="tanx~" />
+    <seealso name="vtanx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The arc-tangent of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

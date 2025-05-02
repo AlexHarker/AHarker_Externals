@@ -5,10 +5,21 @@
         A SIMD version of trunc~
     </digest>
   <description>
-      <o>vtrunc~</o> provides a CPU efficient version of <o>trunc~</o> using SIMD operations. See the <o>trunc~</o> helpfile for details on usage.
+      <o>vtrunc~</o> provides a CPU efficient version of <o>trunc~</o> using SIMD operations. 
+      <br/>
+      <o>vtrunc~</o> converts signals with values such as 1.75 to 1.0. Negative values are modified so that -1.75 becomes -1.0. This object is very simple but computationally expensive.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Signal to be truncated
+          </digest>
+          <description>
+              A signal whose values will be truncated. The <o>trunc~</o> object converts signals with fractional values to the nearest lower integer value (e.g., a value of 1.75 is truncated to 1.0, and -1.75 is truncated to -1.0). This object is simple but computationally expensive.
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,16 @@
 
   <seealsolist>
     <seealso name="trunc~" />
+    <seealso name="clip~" />
+    <seealso name="round~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The truncated input signal.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
