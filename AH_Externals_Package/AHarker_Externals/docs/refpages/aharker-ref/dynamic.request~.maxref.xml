@@ -8,7 +8,7 @@
       For a patcher loaded within a <o>dynamicdsp~</o> or <o>dynamicserial~</o> object, a non-zero signal input cause <o>dynamic.request~</o> to update its output by fetching a value from the associated signal inlet. The value is then held until a new trigger is received. This allows efficient parameter updating in sample accurate processing applications.
   </description>
   <objarglist>
-      <objarg name="inlet" optional="1" type="int">
+      <objarg name="initial-inlet" optional="1" type="int">
           <digest>
               Set the initial inlet
           </digest>
@@ -20,7 +20,7 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="inlet">
+      <method name="int">
           <arglist>
               <arg name="inlet" type="int" />
           </arglist>
@@ -31,15 +31,14 @@
               Sending an <m>int</m> to the first inlet sets the inlet to attach to when inside a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
           </description>
       </method>
-      <method name="sample_and_hold">
+      <method name="signal">
           <arglist>
-              <arg name="sample_and_hold" type="signal" />
           </arglist>
           <digest>
-              Sample the input
+              Sample and hold the input
           </digest>
           <description>
-              A non-zero trigger <m>signal</m> into <o>dynamic.request~</o> will sample and hold the <m>signal</m> value from the selected inlet.
+              A non-zero trigger <m>signal</m> into <o>dynamic.request~</o> will sample and hold the <m>signal</m> value from the selected inlet. Thus if the <m>signal</m> is constantly non-zero, <o>dynamic.request~</o> will continually output.
           </description>
       </method>
   </methodlist>
@@ -50,7 +49,7 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            Outputs the input from the correspoding inlet of the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that <o>dynamic.request~</o> is inside. The output is updated each time it recieves a non-zero trigger <m>signal</m>, making it function like <o>sah~</o>.
+            Outputs the input from the correspoding inlet of the <o>dynamicdsp~</o> or <o>dynamicserial~</o> that <o>dynamic.request~</o> is inside. The output is updated each time it recieves a non-zero trigger <m>signal</m>, making it function like <o>tsah~</o>.
         </description>
     </entry>
   </misc>
@@ -61,6 +60,8 @@
       <seealso name="dynamic.this~" />
       <seealso name="dynamicdsp~" />
       <seealso name="dynamicserial~" />
+      <seealso name="sah~" />
+      <seealso name="tsah~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">

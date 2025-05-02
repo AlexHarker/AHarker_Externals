@@ -27,7 +27,6 @@
   <methodlist>
       <method name="bang">
           <arglist>
-              <arg name="bang" type="bang" />
           </arglist>
           <digest>
               Bang an output
@@ -36,7 +35,7 @@
               Sending in a <m>bang</m> will cause <o>dynamic.patch~</o> to output the patch index when it is inside of a <o>dynamicdsp~</o> or <o>dynamicserial~</o>.
           </description>
       </method>
-      <method name="state">
+      <method name="int">
           <arglist>
               <arg name="state" type="int" />
           </arglist>
@@ -54,7 +53,6 @@
       </method>
       <method name="delete">
           <arglist>
-              <arg name="delete" type="message" />
           </arglist>
           <digest>
               Delete the patch
@@ -82,6 +80,8 @@
       <seealso name="dynamic.this~" />
       <seealso name="dynamicdsp~" />
       <seealso name="dynamicserial~" />
+      <seealso name="thispatcher" />
+      <seealso name="thispoly~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
