@@ -18,53 +18,50 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="First-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="First-inlet" type="signal" />
           </arglist>
           <digest>
-              Triggers in
+              Function depends on inlet
           </digest>
           <description>
-              The first inlet takes a trigger <m>signal</m>. This causes a trigger output numbered with a free voice from the first outlet.
-          </description>
-      </method>
-      <method name="Second-inlet">
-          <arglist>
-              <arg name="Second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Lengths in
-          </digest>
-          <description>
-              The second inlet takes a <m>signal</m> to determine the length (in milliseconds) to send out of the second outlet. This can then be for the length input of <o>voicedrive~</o>.
-              <br />
+              In the first inlet: A trigger <m>signal</m>. This causes an output numbered with a free voice from the first outlet.
+              <br/>
+              <br/>
+              In the second inlet: A <m>signal</m> to determine the length (in milliseconds) to send out of the second outlet. This can then be used for the length input of <o>voicedrive~</o>.
+              <br/>
               The input value is sampled when a trigger is recieved in the first inlet.
-          </description>
-      </method>
-      <method name="Third-inlet">
-          <arglist>
-              <arg name="Third-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Subsample offset
-          </digest>
-          <description>
+              <br/>
+              <br/>
+              The the third inlet: A <m>signal</m> input sets the subsample offset.
+              <br/>
               The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses et.) you can utilise this functionality.
-              <br />
-              <br />
+              <br/>
               It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process, detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of <o>voicedrive~</o> and <o>voicemanager~</o> also takes account of the subsample offset.
+              <br/>
+              <br/>
+              In the fourth inlet: A <m>signal</m> to determine the number of active voices being processed by <o>voicemanager~</o>. This overrides the number of voices argument.
           </description>
       </method>
-      <method name="Fourth-inlet">
+      <method name="active">
           <arglist>
-              <arg name="Fourth-inlet" type="signal" />
+              <arg name="active" type="int" />
           </arglist>
           <digest>
-             Number of active voices
+              Number of active voices
           </digest>
           <description>
-              The fourth inlet takes a <m>signal</m> to determine the number of active voices being processed by <o>voicemanager~</o>. This overrides the number of voices argument.
+              The <m>active</m> appended with an int sets the number of active voices. being processed by <o>voicemanager~</o>. This overrides the number of voices argument.
+          </description>
+      </method>
+      <method name="reset">
+          <arglist>
+          </arglist>
+          <digest>
+              Reset <o>voicemanager~</o>
+          </digest>
+          <description>
+              The <m>reset</m> message will restart <o>voicemanager~</o> once all its active voices have finished.
           </description>
       </method>
   </methodlist>
@@ -73,11 +70,13 @@
   <misc name="Output">
     <entry name="signal">
         <description>
-            The first outlet outputs a trigger <m>signal</m> numbered with the voice.
-            <br />
-            The second outlet outputs a trigger <m>signal</m> with the amplitude corresponding to the length input.
-            <br />
-            The third outlet outputs a trigger <m>signal</m> corresponding to the subsample offset input.
+            Upon receiving a trigger in the first inlet, the first outlet outputs a voice number as a <m>signal</m>, otherwise outputs zero.
+            <br/>
+            <br/>
+            Upon receiving a trigger in the first inlet, the second outlet outputs the current value of the lengths input (second inlet) as a <m>signal</m>, otherwise outputs zero.
+            <br/>
+            <br/>
+            Upon receiving a trigger in the first inlet, the third outlet outputs the current value of the subsample offset input (third inlet) as a <m>signal</m>, otherwise outputs zero.
         </description>
     </entry>
   </misc>
