@@ -71,6 +71,7 @@ function(add_msp_external)
         "${MAX_SDK_MSP_INCLUDES}"
         "${MAX_SDK_JIT_INCLUDES}"
         "${COMMON_INCLUDES}"
+        "${IBUFFER_ACCESS_INCLUDES}"
         "${HISSTOOLS_LIB_INCLUDES}"
     )
 

@@ -11,6 +11,7 @@ option(MACOS_UNIVERSAL "Build universal architecture (if off builds native archi
 
 set(COMMON_INCLUDES ${CMAKE_SOURCE_DIR}/include)
 set(HISSTOOLS_LIB_INCLUDES ${CMAKE_SOURCE_DIR}/AH_Externals_Dependencies/HISSTools_Library/include) 
+set(IBUFFER_ACCESS_INCLUDES ${CMAKE_SOURCE_DIR}/AH_Externals_Dependencies/ibuffer_access/)
 
 if (APPLE)
     if (${CMAKE_GENERATOR} MATCHES "Xcode")
@@ -57,3 +58,5 @@ foreach (cat_dir ${CATEGORY_DIRS})
     endif ()
   endforeach ()
 endforeach ()
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/AH_Externals_Dependencies)

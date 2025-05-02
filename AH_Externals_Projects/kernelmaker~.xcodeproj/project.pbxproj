@@ -13,9 +13,9 @@
 
 /* Begin PBXFileReference section */
 		B81F571D0D2422E0000D5E50 /* kernelmaker~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "kernelmaker~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B83047082DC01C9100558125 /* ibuffer_access.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../include/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
+		B83047082DC01C9100558125 /* ibuffer_access.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
 		B89EF5D910EB78CA00D86409 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../include/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
+		B89EF5DA10EB78D100D86409 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B8DEE4C00EE2B38800803D2F /* kernelmaker~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "kernelmaker~.cpp"; path = "../source/convolution/kernelmaker~/kernelmaker~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

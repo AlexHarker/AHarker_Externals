@@ -14,9 +14,9 @@
 
 /* Begin PBXFileReference section */
 		B81F571D0D2422E0000D5E50 /* ibuftable~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ibuftable~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B891ABAC10EB51250017BB19 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../include/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
+		B891ABAC10EB51250017BB19 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.cpp; sourceTree = SOURCE_ROOT; };
 		B891ABAE10EB51430017BB19 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8DAF5C6181D38F60049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../include/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
+		B8DAF5C6181D38F60049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
 		B8DE14DC0EB46B030050BDFE /* ibuftable~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "ibuftable~.cpp"; path = "../source/ibuffer suite/ibuftable~/ibuftable~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

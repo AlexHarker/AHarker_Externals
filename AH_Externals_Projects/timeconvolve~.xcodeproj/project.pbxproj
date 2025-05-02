@@ -13,9 +13,9 @@
 
 /* Begin PBXFileReference section */
 		B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../include/ibuffer_access.cpp; sourceTree = "<group>"; };
+		B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* timeconvolve~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timeconvolve~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8DAF7E0181D8DD50049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../include/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
+		B8DAF7E0181D8DD50049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../AH_Externals_Dependencies/ibuffer_access/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
 		B8DEE5820EE2F52700803D2F /* timeconvolve~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "timeconvolve~.cpp"; path = "../source/convolution/timeconvolve~/timeconvolve~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
