@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B863E8F52DC4F9C8008E1A21 /* vminimum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B863E8F32DC4F9AC008E1A21 /* vminimum~.cpp */; };
 		B8BFF9CD10AED226008EB5B2 /* vmaximum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */; };
-		B8BFF9D410AED239008EB5B2 /* vminimum~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */; };
 		B8BFFB9410AEF013008EB5B2 /* vtanh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */; };
 		B8BFFB9610AEF01E008EB5B2 /* vsinh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */; };
 		B8BFFB9810AEF02B008EB5B2 /* vcosh~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */; };
@@ -49,14 +49,14 @@
 		B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = nans.hpp; sourceTree = "<group>"; };
 		B829A6AA1FDDE6DC0058CA39 /* v_binary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = v_binary.hpp; sourceTree = "<group>"; };
 		B83978C71FDF5A360004E515 /* SIMDExtended.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SIMDExtended.hpp; path = ../include/SIMDExtended.hpp; sourceTree = "<group>"; };
+		B863E8F32DC4F9AC008E1A21 /* vminimum~.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = "vminimum~.cpp"; path = "vminimum~/vminimum~.cpp"; sourceTree = "<group>"; };
 		B866CA5922CEC513005A20C3 /* vector_loop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector_loop.hpp; sourceTree = "<group>"; };
 		B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = precision_handlers.hpp; sourceTree = "<group>"; };
 		B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = conversions.hpp; sourceTree = "<group>"; };
 		B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminimum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmaximum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vmaximum~.cpp"; sourceTree = "<group>"; };
-		B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vminimum~.cpp"; sourceTree = "<group>"; };
+		B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vmaximum~.cpp"; path = "vmaximum~/vmaximum~.cpp"; sourceTree = "<group>"; };
 		B8BFFA9810AEEE18008EB5B2 /* vsinx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsinx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFFAAA10AEEE1C008EB5B2 /* vtanx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtanx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFFABC10AEEE1F008EB5B2 /* vacos~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vacos~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,44 +68,44 @@
 		B8BFFB4610AEEE77008EB5B2 /* vacosh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vacosh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFFB5810AEEE77008EB5B2 /* vasinh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vasinh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFFB6A10AEEE77008EB5B2 /* vatanh~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatanh~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vtanh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vsinh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vcosh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vasin~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatanh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vasinh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vacos~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vacosh~.cpp"; sourceTree = "<group>"; };
-		B8BFFB9E10AEF053008EB5B2 /* vatan~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatan~.cpp"; sourceTree = "<group>"; };
-		B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vsinx~.cpp"; sourceTree = "<group>"; };
-		B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vtanx~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vtanh~.cpp"; path = "vtanh~/vtanh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vsinh~.cpp"; path = "vsinh~/vsinh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vcosh~.cpp"; path = "vcosh~/vcosh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vasin~.cpp"; path = "vasin~/vasin~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vatanh~.cpp"; path = "vatanh~/vatanh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vasinh~.cpp"; path = "vasinh~/vasinh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vacos~.cpp"; path = "vacos~/vacos~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vacosh~.cpp"; path = "vacosh~/vacosh~.cpp"; sourceTree = "<group>"; };
+		B8BFFB9E10AEF053008EB5B2 /* vatan~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vatan~.cpp"; path = "vatan~/vatan~.cpp"; sourceTree = "<group>"; };
+		B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vsinx~.cpp"; path = "vsinx~/vsinx~.cpp"; sourceTree = "<group>"; };
+		B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vtanx~.cpp"; path = "vtanx~/vtanx~.cpp"; sourceTree = "<group>"; };
 		B8C4C21B1FDF10310062CC55 /* comparisons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = comparisons.hpp; sourceTree = "<group>"; };
 		B8DA7B631FDDBC520037D848 /* v_unary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = v_unary.hpp; sourceTree = "<group>"; };
 		B8E393761095B8640081D095 /* vnotequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vnotequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E3937D1095B8990081D095 /* vnotequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vnotequals~.cpp"; sourceTree = "<group>"; };
+		B8E3937D1095B8990081D095 /* vnotequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vnotequals~.cpp"; path = "vnotequals~/vnotequals~.cpp"; sourceTree = "<group>"; };
 		B8E3956F1096138D0081D095 /* vcosx~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vcosx~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39581109613900081D095 /* vabs~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vabs~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E39595109613C90081D095 /* vabs~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vabs~.cpp"; sourceTree = "<group>"; };
-		B8E3959A109613F40081D095 /* vcosx~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vcosx~.cpp"; sourceTree = "<group>"; };
+		B8E39595109613C90081D095 /* vabs~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vabs~.cpp"; path = "vabs~/vabs~.cpp"; sourceTree = "<group>"; };
+		B8E3959A109613F40081D095 /* vcosx~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vcosx~.cpp"; path = "vcosx~/vcosx~.cpp"; sourceTree = "<group>"; };
 		B8E395FB109616AB0081D095 /* vlog~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlog~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E3960D109616B20081D095 /* vsqrt~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vsqrt~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E39624109616ED0081D095 /* vtrunc~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vtrunc~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E39627109617180081D095 /* vtrunc~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vtrunc~.cpp"; sourceTree = "<group>"; };
-		B8E3962A1096172C0081D095 /* vlog~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlog~.cpp"; sourceTree = "<group>"; };
-		B8E3962D1096173F0081D095 /* vsqrt~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vsqrt~.cpp"; sourceTree = "<group>"; };
-		B8E492E21095A2EA00A88A63 /* vtimes~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vtimes~.cpp"; sourceTree = "<group>"; };
-		B8E492E81095A2FA00A88A63 /* vplus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vplus~.cpp"; sourceTree = "<group>"; };
-		B8E492EE1095A30E00A88A63 /* vequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vequals~.cpp"; sourceTree = "<group>"; };
+		B8E39627109617180081D095 /* vtrunc~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vtrunc~.cpp"; path = "vtrunc~/vtrunc~.cpp"; sourceTree = "<group>"; };
+		B8E3962A1096172C0081D095 /* vlog~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vlog~.cpp"; path = "vlog~/vlog~.cpp"; sourceTree = "<group>"; };
+		B8E3962D1096173F0081D095 /* vsqrt~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vsqrt~.cpp"; path = "vsqrt~/vsqrt~.cpp"; sourceTree = "<group>"; };
+		B8E492E21095A2EA00A88A63 /* vtimes~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vtimes~.cpp"; path = "vtimes~/vtimes~.cpp"; sourceTree = "<group>"; };
+		B8E492E81095A2FA00A88A63 /* vplus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vplus~.cpp"; path = "vplus~/vplus~.cpp"; sourceTree = "<group>"; };
+		B8E492EE1095A30E00A88A63 /* vequals~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vequals~.cpp"; path = "vequals~/vequals~.cpp"; sourceTree = "<group>"; };
 		B8E493021095A32500A88A63 /* vplus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vplus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E493131095A32800A88A63 /* vequals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vequals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8E493BF1095A73900A88A63 /* vdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vdiv~.cpp"; sourceTree = "<group>"; };
-		B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vgreaterthan~.cpp"; sourceTree = "<group>"; };
-		B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlessthan~.cpp"; sourceTree = "<group>"; };
-		B8E493CF1095A79000A88A63 /* vminus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vminus~.cpp"; sourceTree = "<group>"; };
-		B8E493E81095AA0E00A88A63 /* vrminus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vrminus~.cpp"; sourceTree = "<group>"; };
-		B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vrdiv~.cpp"; sourceTree = "<group>"; };
-		B8E493F01095AA4000A88A63 /* vgreaterthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vgreaterthaneq~.cpp"; sourceTree = "<group>"; };
-		B8E493F31095AA4F00A88A63 /* vlessthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vlessthaneq~.cpp"; sourceTree = "<group>"; };
+		B8E493BF1095A73900A88A63 /* vdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vdiv~.cpp"; path = "vdiv~/vdiv~.cpp"; sourceTree = "<group>"; };
+		B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vgreaterthan~.cpp"; path = "vgreaterthan~/vgreaterthan~.cpp"; sourceTree = "<group>"; };
+		B8E493CA1095A76A00A88A63 /* vlessthan~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vlessthan~.cpp"; path = "vlessthan~/vlessthan~.cpp"; sourceTree = "<group>"; };
+		B8E493CF1095A79000A88A63 /* vminus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vminus~.cpp"; path = "vminus~/vminus~.cpp"; sourceTree = "<group>"; };
+		B8E493E81095AA0E00A88A63 /* vrminus~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vrminus~.cpp"; path = "vrminus~/vrminus~.cpp"; sourceTree = "<group>"; };
+		B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vrdiv~.cpp"; path = "vrdiv~/vrdiv~.cpp"; sourceTree = "<group>"; };
+		B8E493F01095AA4000A88A63 /* vgreaterthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vgreaterthaneq~.cpp"; path = "vgreaterthaneq~/vgreaterthaneq~.cpp"; sourceTree = "<group>"; };
+		B8E493F31095AA4F00A88A63 /* vlessthaneq~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vlessthaneq~.cpp"; path = "vlessthaneq~/vlessthaneq~.cpp"; sourceTree = "<group>"; };
 		B8E4943E1095AB2B00A88A63 /* vdiv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vdiv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E4944F1095AB2F00A88A63 /* vrdiv~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vrdiv~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E494601095AB3200A88A63 /* vminus~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminus~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,11 +115,11 @@
 		B8E494A41095AB4500A88A63 /* vgreaterthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vgreaterthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E494B51095AB4800A88A63 /* vlessthan~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vlessthan~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE3F931098759000780AF9 /* vpow~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vpow~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8FE3FA0109875BE00780AF9 /* vpow~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "vpow~.cpp"; sourceTree = "<group>"; };
-		B8FE40681098790500780AF9 /* vatodb~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vatodb~.cpp"; sourceTree = "<group>"; };
-		B8FE40691098791600780AF9 /* vdbtoa~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vdbtoa~.cpp"; sourceTree = "<group>"; };
-		B8FE406A1098792000780AF9 /* vmtof~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vmtof~.cpp"; sourceTree = "<group>"; };
-		B8FE406E1098793200780AF9 /* vftom~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "vftom~.cpp"; sourceTree = "<group>"; };
+		B8FE3FA0109875BE00780AF9 /* vpow~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vpow~.cpp"; path = "vpow~/vpow~.cpp"; sourceTree = "<group>"; };
+		B8FE40681098790500780AF9 /* vatodb~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vatodb~.cpp"; path = "vatodb~/vatodb~.cpp"; sourceTree = "<group>"; };
+		B8FE40691098791600780AF9 /* vdbtoa~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vdbtoa~.cpp"; path = "vdbtoa~/vdbtoa~.cpp"; sourceTree = "<group>"; };
+		B8FE406A1098792000780AF9 /* vmtof~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vmtof~.cpp"; path = "vmtof~/vmtof~.cpp"; sourceTree = "<group>"; };
+		B8FE406E1098793200780AF9 /* vftom~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "vftom~.cpp"; path = "vftom~/vftom~.cpp"; sourceTree = "<group>"; };
 		B8FE40881098795600780AF9 /* vftom~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vftom~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE40991098795A00780AF9 /* vmtof~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmtof~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FE40AA1098795D00780AF9 /* vatodb~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vatodb~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -201,7 +201,7 @@
 				B80412FB1FF7AFBA00EAD8A6 /* nans.hpp */,
 			);
 			name = "Base Classes";
-			path = ../source/vMSP/vMSP/Base;
+			path = ../source/vMSP/Base;
 			sourceTree = "<group>";
 		};
 		B8B574401FF9C97900A62902 /* SIMD Support */ = {
@@ -215,19 +215,19 @@
 		B8B574411FF9C9A000A62902 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,
-				B8E3962A1096172C0081D095 /* vlog~.cpp */,
+				B8E39595109613C90081D095 /* vabs~.cpp */,
+				B8E39627109617180081D095 /* vtrunc~.cpp */,
 				B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */,
-				B8BFF9D310AED239008EB5B2 /* vminimum~.cpp */,
-				B8E493CF1095A79000A88A63 /* vminus~.cpp */,
+				B863E8F32DC4F9AC008E1A21 /* vminimum~.cpp */,
+				B8E493BF1095A73900A88A63 /* vdiv~.cpp */,
 				B8E492E81095A2FA00A88A63 /* vplus~.cpp */,
 				B8FE3FA0109875BE00780AF9 /* vpow~.cpp */,
+				B8E493CF1095A79000A88A63 /* vminus~.cpp */,
 				B8E493E81095AA0E00A88A63 /* vrminus~.cpp */,
 				B8E493EB1095AA2400A88A63 /* vrdiv~.cpp */,
 				B8E3962D1096173F0081D095 /* vsqrt~.cpp */,
 				B8E492E21095A2EA00A88A63 /* vtimes~.cpp */,
-				B8E39595109613C90081D095 /* vabs~.cpp */,
-				B8E39627109617180081D095 /* vtrunc~.cpp */,
+				B8E3962A1096172C0081D095 /* vlog~.cpp */,
 				B8E492EE1095A30E00A88A63 /* vequals~.cpp */,
 				B8E3937D1095B8990081D095 /* vnotequals~.cpp */,
 				B8E493C41095A74D00A88A63 /* vgreaterthan~.cpp */,
@@ -238,21 +238,21 @@
 				B8FE40691098791600780AF9 /* vdbtoa~.cpp */,
 				B8FE406E1098793200780AF9 /* vftom~.cpp */,
 				B8FE406A1098792000780AF9 /* vmtof~.cpp */,
-				B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */,
 				B8BFFB9C10AEF053008EB5B2 /* vacos~.cpp */,
+				B8BFFB9910AEF053008EB5B2 /* vasin~.cpp */,
 				B8BFFB9E10AEF053008EB5B2 /* vatan~.cpp */,
-				B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */,
 				B8BFFB9D10AEF053008EB5B2 /* vacosh~.cpp */,
+				B8BFFB9B10AEF053008EB5B2 /* vasinh~.cpp */,
 				B8BFFB9A10AEF053008EB5B2 /* vatanh~.cpp */,
-				B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */,
 				B8BFFB9710AEF02B008EB5B2 /* vcosh~.cpp */,
+				B8BFFB9510AEF01E008EB5B2 /* vsinh~.cpp */,
 				B8BFFB9310AEF013008EB5B2 /* vtanh~.cpp */,
-				B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */,
 				B8E3959A109613F40081D095 /* vcosx~.cpp */,
+				B8BFFBC310AEF07E008EB5B2 /* vsinx~.cpp */,
 				B8BFFBC510AEF08B008EB5B2 /* vtanx~.cpp */,
 			);
 			name = Objects;
-			path = ../source/vMSP/vMSP;
+			path = ../source/vMSP;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -893,7 +893,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8BFF9D410AED239008EB5B2 /* vminimum~.cpp in Sources */,
+				B863E8F52DC4F9C8008E1A21 /* vminimum~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
