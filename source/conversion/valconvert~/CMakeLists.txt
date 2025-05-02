@@ -3,8 +3,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-b
 add_msp_external(
 	PROJECT_SOURCE
 		${CMAKE_CURRENT_SOURCE_DIR}/../valconvert/valconvert.cpp
-	COMPILE_DEFINITIONS
-		"MSP_VERSION"
 )
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-base/script/max-posttarget.cmake)
