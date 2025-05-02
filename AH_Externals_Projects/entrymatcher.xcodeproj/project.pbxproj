@@ -25,7 +25,7 @@
 		B80770B71F3B9DAA006E6C0B /* entries.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = entries.hpp; sourceTree = "<group>"; };
 		B85C98EC1F3DDA96003F468F /* matchers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matchers.cpp; sourceTree = "<group>"; };
 		B85C98ED1F3DDA96003F468F /* matchers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matchers.hpp; sourceTree = "<group>"; };
-		B85C98F21F3DDE5F003F468F /* entrymatcher_audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entrymatcher_audio.cpp; sourceTree = "<group>"; };
+		B85C98F21F3DDE5F003F468F /* entrymatcher_audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = entrymatcher_audio.cpp; path = "../entrymatcher~/entrymatcher_audio.cpp"; sourceTree = "<group>"; };
 		B8998A4811CECDFB0028A17C /* entrymatcher~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "entrymatcher~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BACCD41F3F9923001589D8 /* atom_types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = atom_types.hpp; sourceTree = "<group>"; };
 		B8BACCD81F3FD879001589D8 /* entry_database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = entry_database.cpp; sourceTree = "<group>"; };

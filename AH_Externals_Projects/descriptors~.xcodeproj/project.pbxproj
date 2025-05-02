@@ -55,7 +55,7 @@
 		B85830E227B6D5A20083BA8E /* modules_content.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_content.hpp; sourceTree = "<group>"; };
 		B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_modules.hpp; sourceTree = "<group>"; };
 		B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_rt.cpp; sourceTree = "<group>"; };
+		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = descriptors_rt.cpp; path = "../descriptorsrt~/descriptors_rt.cpp"; sourceTree = "<group>"; };
 		B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_non_rt.cpp; sourceTree = "<group>"; };
 		B8BE4093286C52AD00D3D7A5 /* modules_summary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_summary.cpp; sourceTree = "<group>"; };
 		B8D5FA2327BB1C6D00D20EE7 /* peak_finder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = peak_finder.hpp; sourceTree = "<group>"; };
