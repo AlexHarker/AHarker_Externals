@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='./_c74_ref.xsl' type='text/xsl'?>
+<c74object name="entrymatcher" module="AHarker Externals" category="descriptors">
+  <digest>
+    Flexible matching / storage / querying of multidimensional data
+  </digest>
+  <description>
+      <o>entrymatcher</o> is an object for finding the most closely matching items in a scalable N-dimensional space, using variable matching criteria. The original reason for creating the <o>entrymatcher</o> object was to provide a way of matching audio samples using audio features (or descriptors) that had been calculated using the <o>descriptors~</o> object. Data is added to the object in "entries", which are rows of values (<m>ints</m>, <m>floats</m> or <m>symbols</m>) that fill a predetermined number of columns. Columns are named to allow them to be specified by descriptive name, rather than only by index number, making it possible to alter the order and size of data sets easily. Each entry is also specified with an identifier (of any basic max data type), so that it can also be referred to regardless of position in the data set. Various tests may be performed on each column of data, either individually or in combination, as appropriate to the data (exact match, within given distance, greater than, less than etc.) to determine matching entries. Values from specified columns may be queried at will (in the case where each entry represents a sample this is useful in retrieving data once a particular sample has been matched). Matched entries are returned as a set of lists, with the best (closest) matches first. In practice a large number of matching scenarios and data lookup requirements can be satisfied.
+  </description>
+  
+  <objarglist>
+      <objarg name="Max_entries" optional="1" type="int">
+          <digest>
+              Set the max entries
+          </digest>
+          <description>
+              The first argument takes an <m>int</m> to set the maximum number of entries that <o>entrymatcher</o> will recognise. The default max entries is <m>1</m>
+          </description>
+      </objarg>
+      <objarg name="Number_of_columns" optional="1" type="int">
+          <digest>
+              Set the number of columns
+          </digest>
+          <description>
+              The second argument takes an <m>int</m> to set the number of columns allowed per entry.
+          </description>
+      </objarg>
+  </objarglist>
+  
+  <methodlist>
+      <method name="bang">
+          <arglist>
+          </arglist>
+          <digest>
+              Output all matches
+          </digest>
+          <description>
+              A <m>bang</m> causes an output of all the data that satisfies the <m>matchers</m> message (maximum 1024).
+          </description>
+      </method>
+      <method name="clear">
+          <arglist>
+          </arglist>
+          <digest>
+              Clear <o>entrymatcher</o>
+          </digest>
+          <description>
+              The <m>clear</m> message clears all the currently stored entries and matchers. The <m>reset</m> message does the same.
+          </description>
+      </method>
+      <method name="dictionary">
+          <arglist>
+              <arg name="dictionary" type="symbol" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="dump">
+          <arglist>
+          </arglist>
+          <digest>
+              output all data
+          </digest>
+          <description>
+              The <m>dump</m> message will output all the stored data out the fourth outlet.
+          </description>
+      </method>
+      <method name="entry">
+          <arglist>
+              <arg name="entry" type="variable" />
+          </arglist>
+          <digest>
+              Set the columns for each entry
+          </digest>
+          <description>
+              The <m>entry</m> message is used to send data into <o>entrymatcher</o> that can be queried using the <m>index</m>, <m>lookup</m> and <m>match</m> messages.
+              <br />
+              The <m>entry</m> message should first contain a unique <m>identifier</m> (of any data type) that can be used by the <m>index</m> and <m>lookup</m> messages to query it. The message should then contain a <m>list</m> with length equal to the columns argument in the <o>entrymatcher</o> object. The <m>list</m> should contain data corresponding to the data types specified by the <m>labelmodes</m> message.
+              <br />
+              <br />
+              Ex.
+              <br />
+              with labelmode set as:
+              <br />
+              <m>labelmode</m> / <m>0</m> <m>0</m> <m>1</m>
+              <br />
+              An entry should look like:
+              <br />
+              <m>entry</m> / <m>identifier</m> / <m>numeric</m> <m>numeric</m> <m>symbolic</m>
+              <br />
+              <br />
+              If a new <m>entry</m> is set with an <m>identifier</m> already in use, the old <m>entry</m> will be replaced.
+          </description>
+      </method>
+      <method name="index">
+          <arglist>
+              <arg name="index" type="variable" />
+          </arglist>
+          <digest>
+              query an entry and output out the fourth outlet
+          </digest>
+          <description>
+              Sending the <m>index</m> message followed by an <m>int</m> will output the corresponding <m>entry</m> in its entirety as a <m>list</m> out the fourth outlet. The <m>index</m> message is dependent on the order that the entries are input (<m>index 2</m> is the second <m>entry</m> that was input).
+              <br />
+              <br />
+              The <m>index</m> message can also include a <m>list</m> of <m>names</m> (set by the <m>names</m> message) or <m>ints</m> (corresponding to the column index) to return only specific columns in any order.
+              <br />
+              <br />
+              Also adding the <m>symbol</m> `identifier` to the message will output the identifier of the <m>entry</m>. This can again be in any order.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>index</m> / <m>int</m> (index of entry to query) / OPTIONAL <m>list</m> of <m>names</m> or <m>ints</m> (in any order) / OPTIONAL <m>identifier</m> (can be at any point in the list of names)
+          </description>
+      </method>
+      <method name="labelmodes">
+          <arglist>
+              <arg name="labelmodes" type="variable" />
+          </arglist>
+          <digest>
+              Set the labelmodes for each column
+          </digest>
+          <description>
+              The <m>labelmodes</m> message followed by a <m>list</m> of <m>ints</m> sets the <m>labelmodes</m> for each column. The <m>list</m> should have a length equal to the columns argument in the <o>entrymatcher</o> object.
+              <br />
+              The <m>list</m> should contain <m>ints</m> of either <m>0</m> or <m>1</m>, where a <m>0</m> represents a numeric label, and a <m>1</m> represents a symbolic label for each column.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>labelmodes</m> / <m>list</m> of modes
+          </description>
+      </method>
+      <method name="lookup">
+          <arglist>
+              <arg name="lookup" type="variable" />
+          </arglist>
+          <digest>
+              query an entry and output out the fourth outlet
+          </digest>
+          <description>
+              Sending the <m>lookup</m> message followed by the <m>identifier</m> of a specific <m>entry</m>, will output the <m>entry</m> in its entirety as a <m>list</m> out the fourth outlet.
+              <br />
+              <br />
+              The <m>lookup</m> message can also include a <m>list</m> of <m>names</m> (set by the <m>names</m> message) or <m>ints</m> (corresponding to the column index) to return only specific columns in any order.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>lookup</m> / <m>identifier</m> (name of entry to query) / OPTIONAL <m>list</m> of <m>names</m> or <m>ints</m> (in any order)
+          </description>
+      </method>
+      <method name="looporder">
+          <arglist>
+              <arg name="looporder" type="int" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="match">
+          <arglist>
+              <arg name="match" type="variable" />
+          </arglist>
+          <digest>
+              Output matches
+          </digest>
+          <description>
+              Sending the <m>match</m> message with no arguments works the same as sending a <m>bang</m>.
+              <br />
+              <br />
+              Adding an <m>int</m> (n) to the message will tell <o>entrymatcher</o> to only output the closest n matches.
+              <br />
+              <br />
+              Adding a <m>float</m> to the message will set a ratio of matches for <o>entrymatcher</o> to output.
+              <br />
+              For example: <m>match</m> / <m>0.5</m> will only return the top 50% of matches.
+              <br />
+              <br />
+              Both an <m>int</m> and a <m>float</m> can be specified in any order to provide to conditions for <m>match</m>.
+              <br />
+              For example: <m>match</m> / <m>0.5</m> / <m>2</m> will only return the top 50% of matches and no more than 2.
+              <br />
+              <br />
+              A third value can be set to specify the largest allowable distance value to match.
+              <br />
+              For example: <m>match</m> / <m>1024</m> / <m>1.</m> / <m>0.3</m> will return up to 1024 matches, the top 100% (all of them), keeping all matches with a distance value of 0.3 or less.
+          </description>
+      </method>
+      <method name="matchers">
+          <arglist>
+              <arg name="matchers" type="variable" />
+          </arglist>
+          <digest>
+              Set the rules for match
+          </digest>
+          <description>
+              The <m>matchers</m> message is used to set a number of tests that entries must satisfy when the <m>match</m> message is sent in order to be output. For each test you may specify multiple target values. If one of these matches then the <m>entry</m> will match.
+              <br />
+              Some of the tests have a calculation that is used to find the distance. This distance value is then used to determine which values are closest when the <m>match</m> message is sent with arguments that filter the distance.
+              <br />
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>matchers</m> / column <m>identifier</m> or number / test symbol or name / scaling value (if required) / target values / (repeat for multiple tests)
+              <br />
+              <br />
+              To see how <m>matchers</m> work and a list of all the symbols it accepts, see the third tab of the <o>entrymatcher</o> help file.
+          </description>
+      </method>
+      <method name="names">
+          <arglist>
+              <arg name="names" type="variable" />
+          </arglist>
+          <digest>
+              Set the name for each column
+          </digest>
+          <description>
+              The <m>names</m> message followed by a <m>list</m> of <m>symbols</m> sets the <m>names</m> for each column. The <m>list</m> should have a length equal to the columns argument in the <o>entrymatcher</o> object.
+              <br />
+              The <m>list</m> should contain <m>symbols</m> which can be used by the <m>index</m> and <m>lookup</m> messages to query specific columns.
+              <br />
+              The message should be formatted as:
+              <br />
+              <br />
+              <m>names</m> / <m>list</m> of names
+          </description>
+      </method>
+      <method name="open">
+          <arglist>
+          </arglist>
+          <digest>
+              View the contents
+          </digest>
+          <description>
+              The <m>open</m> message will open a table displaying all the contents of <o>entrymatcher</o>. The colums are labelled as the index(#), identifier, and then the names set with the <m>names</m> message.
+          </description>
+      </method>
+      <method name="read">
+          <arglist>
+              <arg name="read" type="symbol" />
+          </arglist>
+          <digest>
+              Read a new file
+          </digest>
+          <description>
+              The <m>read</m> message will prompt you to open a new file, such as one written previously using the <m>write</m> message. The data in the new file will then replace the contents of <o>entrymatcher</o>.
+          </description>
+      </method>
+      <method name="refer">
+          <arglist>
+              <arg name="refer" type="symbol" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="remove">
+          <arglist>
+              <arg name="remove" type="variable" />
+          </arglist>
+          <digest>
+              Remove an entry
+          </digest>
+          <description>
+              The <m>remove</m> message followed by a <m>symbol</m> corresponding to an identifier will remove that item from <o>entrymatcher</o>.
+          </description>
+      </method>
+      <method name="removeif">
+          <arglist>
+              <arg name="removeif" type="variable" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="reset">
+          <arglist>
+          </arglist>
+          <digest>
+              Reset <o>entrymatcher</o>
+          </digest>
+          <description>
+              Same as <m>clear</m>.
+          </description>
+      </method>
+      <method name="resize">
+          <arglist>
+              <arg name="resize" type="int" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="stats">
+          <arglist>
+              <arg name="stats" type="variable" />
+          </arglist>
+          <digest>
+              TEXT HERE
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </method>
+      <method name="write">
+          <arglist>
+              <arg name="write" type="symbol" />
+          </arglist>
+          <digest>
+              Write a new file
+          </digest>
+          <description>
+              The <m>write</m> message will create a new file containing a dict of the contents inside <o>entrymatcher</o>
+          </description>
+      </method>
+  </methodlist>
+  <attributelist>
+      <attribute name="embed" get="1" set="1" type="int" size="1">
+          <digest>
+              Save the data with the patch
+          </digest>
+          <description>
+              An <m>int</m> (0/off or 1/on) can be used to <m>embed</m> the data within the patch when the patch is saved.
+          </description>
+      </attribute>
+      <attribute name="parameter_enable" get="1" set="1" type="int" size="1">
+          <digest>
+              Turn on/off parameter enable
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </attribute>
+      <attribute name="parameter_mappable" get="1" set="1" type="int" size="1">
+          <digest>
+              Turn on/off parameter mappable
+          </digest>
+          <description>
+              TEXT HERE
+          </description>
+      </attribute>
+  </attributelist>
+  <misc name="Output">
+    <entry name="list">
+        <description>
+            <o>entrymatcher</o> has four outlets.
+            <br />
+            <br />
+            The first outlet outputs a <m>list</m> of the indicies of entries that satisfied the <m>matchers</m> message when the <m>match</m> message is received.
+            <br />
+            <br />
+            The second outlet outputs a <m>list</m> of the <m>identifiers</m> of entries that satisfied the <m>matchers</m> message when the <m>match</m> message is received.
+            <br />
+            <br />
+            The third outlet outputs a <m>list</m> of the distances of entries (calculated according to the <m>matchers</m> message)that satisfied the <m>matchers</m> message when the <m>match</m> message is received.
+            <br />
+            <br />
+            The fourth outlet outputs a <m>list</m> of the <m>entry</m> columns that are satisfied when the <m>lookup</m> or <m>index</m> message is received. It also outputs all the data when the <m>dump</m> message is received.
+        </description>
+    </entry>
+  </misc>
+  <seealsolist>
+    <seealso name="entrymatcher~" />
+    <seealso name="descriptorsrt~" />
+    <seealso name="descriptors~" />
+  </seealsolist>
+  <misc name="Discussion">
+    <entry name="Keywords">
+      <description>descriptors</description>
+    </entry>
+  </misc>
+</c74object>
