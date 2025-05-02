@@ -16,7 +16,7 @@
 #include <libkern/OSAtomic.h>
 #include <pthread.h>
 #include <mach/semaphore.h>
-#include <mach/task.h>
+#include <mach/mach.h>
 
 // Mac OS specific definitions
 

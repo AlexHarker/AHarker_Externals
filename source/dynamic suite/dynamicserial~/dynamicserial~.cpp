@@ -25,8 +25,8 @@
 
 #include <simd_support.hpp>
 
-#include "Common/patch_set.hpp"
-#include "Common/dynamic_host.hpp"
+#include "../Common/patch_set.hpp"
+#include "../Common/dynamic_host.hpp"
 
 
 // Global Variables

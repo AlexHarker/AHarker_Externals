@@ -22,12 +22,12 @@
 /* Begin PBXFileReference section */
 		B1D995FF0A4BA74D00CE1530 /* dynamicdsp~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamicdsp~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B803277711CCFC69009E69AD /* dynamic.request~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.request~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B803279811CCFCB3009E69AD /* dynamic.request~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.request~.cpp"; sourceTree = "<group>"; };
-		B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicdsp~.cpp"; sourceTree = "<group>"; };
+		B803279811CCFCB3009E69AD /* dynamic.request~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamic.request~.cpp"; path = "dynamic.request~/dynamic.request~.cpp"; sourceTree = "<group>"; };
+		B81B30B40D038BA600D03560 /* dynamicdsp~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamicdsp~.cpp"; path = "dynamicdsp~/dynamicdsp~.cpp"; sourceTree = "<group>"; };
 		B85B63AB1CC4236600381391 /* thread_set.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = thread_set.cpp; sourceTree = "<group>"; };
 		B85B63AC1CC4236600381391 /* thread_set.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = thread_set.hpp; sourceTree = "<group>"; };
 		B8600FBC12C22A6500864B9B /* dynamicserial~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamicserial~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamicserial~.cpp"; sourceTree = "<group>"; };
+		B8600FEA12C22C6700864B9B /* dynamicserial~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamicserial~.cpp"; path = "dynamicserial~/dynamicserial~.cpp"; sourceTree = "<group>"; };
 		B87283961CC38D2D00A1C38E /* dynamic~.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = "dynamic~.hpp"; path = "../include/dynamic~.hpp"; sourceTree = "<group>"; };
 		B87283981CC39A5100A1C38E /* patch_set.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_set.hpp; sourceTree = "<group>"; };
 		B87A88EA26AC677E00AC8A5D /* dynamic_host.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dynamic_host.hpp; sourceTree = "<group>"; };
@@ -35,10 +35,10 @@
 		B8CD5C0C1CC2989200CE262E /* patch_slot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = patch_slot.cpp; sourceTree = "<group>"; };
 		B8CD5C0D1CC2989200CE262E /* patch_slot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = patch_slot.hpp; sourceTree = "<group>"; };
 		B8EC176E10836C3600316C82 /* dynamic.this~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.this~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8EC17B31083727700316C82 /* dynamic.this~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.this~.cpp"; sourceTree = "<group>"; };
-		B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.in~.cpp"; sourceTree = "<group>"; };
-		B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.out~.cpp"; sourceTree = "<group>"; };
-		B8ECA0170F0A577100B26D31 /* dynamic.patch~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = "dynamic.patch~.cpp"; sourceTree = "<group>"; };
+		B8EC17B31083727700316C82 /* dynamic.this~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamic.this~.cpp"; path = "dynamic.this~/dynamic.this~.cpp"; sourceTree = "<group>"; };
+		B8ECA0150F0A577100B26D31 /* dynamic.in~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamic.in~.cpp"; path = "dynamic.in~/dynamic.in~.cpp"; sourceTree = "<group>"; };
+		B8ECA0160F0A577100B26D31 /* dynamic.out~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamic.out~.cpp"; path = "dynamic.out~/dynamic.out~.cpp"; sourceTree = "<group>"; };
+		B8ECA0170F0A577100B26D31 /* dynamic.patch~.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = "dynamic.patch~.cpp"; path = "dynamic.patch~/dynamic.patch~.cpp"; sourceTree = "<group>"; };
 		B8ECA02A0F0A578000B26D31 /* dynamic.patch~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.patch~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ECA03B0F0A578900B26D31 /* dynamic.in~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.in~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8ECA04E0F0A57A800B26D31 /* dynamic.out~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dynamic.out~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +69,7 @@
 				B803279811CCFCB3009E69AD /* dynamic.request~.cpp */,
 			);
 			name = Source;
-			path = "../source/dynamic suite/dynamic~";
+			path = "../source/dynamic suite";
 			sourceTree = "<group>";
 		};
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {

@@ -28,9 +28,9 @@
 
 #include <AH_Int_Handler.hpp>
 
-#include "Common/patch_set.hpp"
-#include "Common/thread_set.hpp"
-#include "Common/dynamic_host.hpp"
+#include "../Common/patch_set.hpp"
+#include "../Common/thread_set.hpp"
+#include "../Common/dynamic_host.hpp"
 
 
 // TODO - potential adc~ crashes / no audio - cannot get traction on this
