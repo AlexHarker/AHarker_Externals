@@ -16,7 +16,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include "ibufconcatenate_info.hpp"
+#include "../ibufconcatenate~/ibufconcatenate_info.hpp"
 
 #include <algorithm>
 #include <limits>
