@@ -173,30 +173,32 @@ void gesture_maker_free(t_gesture_maker *x)
 
 void gesture_maker_assist(t_gesture_maker *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
         switch (a)
     {
         case 0:
-            sprintf(s,"Control");
+            snprintf(s, maxAssist, "Control");
             break;
             
         case 1:
-            sprintf(s,"External Drive (for chaining)");
+            snprintf(s, maxAssist, "External Drive (for chaining)");
             break;
     }
     else
         switch (a)
     {
         case 0:
-            sprintf(s,"Gesture Done (bang)");
+            snprintf(s, maxAssist, "Gesture Done (bang)");
             break;
             
         case 1:
-            sprintf(s,"Gesture Value and Time");
+            snprintf(s, maxAssist, "Gesture Value and Time");
             break;
             
         case 2:
-            sprintf(s,"Drive Out (for chaining)");
+            snprintf(s, maxAssist, "Drive Out (for chaining)");
             break;
     }
 }

@@ -119,15 +119,17 @@ void timefilter_free(t_timefilter *x)
 
 void timefilter_assist(t_timefilter *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
         switch (a)
     {
         case 0:
-            sprintf(s,"Lists In / Float (Filter Value) / Bang to Filter");
+            snprintf(s, maxAssist, "Lists In / Float (Filter Value) / Bang to Filter");
             break;
     }
     else
-        sprintf(s,"List Out");
+        snprintf(s, maxAssist, "List Out");
 }
 
 // List Storage

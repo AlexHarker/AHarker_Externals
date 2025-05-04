@@ -93,13 +93,15 @@ void ibuffermulti_free(t_ibuffermulti *x)
 
 void ibuffermulti_assist(t_ibuffermulti *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"Num of Buffers Loaded");
+        snprintf(s, maxAssist, "Num of Buffers Loaded");
     }
     else
     {
-        sprintf(s,"File Operations");
+        snprintf(s, maxAssist, "File Operations");
     }
 }
 

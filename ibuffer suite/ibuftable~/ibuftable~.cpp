@@ -134,10 +134,12 @@ void ibuftable_free(t_ibuftable *x)
 
 void ibuftable_assist(t_ibuftable *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(signal) Output");
+        snprintf(s, maxAssist, "(signal) Output");
     else
-        sprintf(s,"(signal) Position Input (0-1)");
+        snprintf(s, maxAssist, "(signal) Position Input (0-1)");
 }
 
 // Buffer Setting

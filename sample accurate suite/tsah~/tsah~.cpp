@@ -199,19 +199,21 @@ void tsah_dsp64(t_tsah *x, t_object *dsp64, short *count, double sample_rate, lo
 
 void tsah_assist(t_tsah *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Signal To Sample");
+                snprintf(s, maxAssist, "(signal) Signal To Sample");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Trigger");
+                snprintf(s, maxAssist, "(signal) Trigger");
                 break;
         }
     }
     else
-        sprintf(s,"(signal) Held Values");
+        snprintf(s, maxAssist, "(signal) Held Values");
 }

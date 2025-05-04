@@ -196,16 +196,18 @@ void ibufconcatedrive_dsp64(t_ibufconcatedrive *x, t_object *dsp64, short *count
 
 void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Output (ms)");
+                snprintf(s, maxAssist, "(signal) Output (ms)");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) High Resolution Output (ms)");
+                snprintf(s, maxAssist, "(signal) High Resolution Output (ms)");
                 break;
         }
     }
@@ -214,19 +216,19 @@ void ibufconcatedrive_assist(t_ibufconcatedrive *x, void *b, long m, long a, cha
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Speed");
+                snprintf(s, maxAssist, "(signal) Speed");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Item In");
+                snprintf(s, maxAssist, "(signal) Item In");
                 break;
                 
             case 2:
-                sprintf(s,"(signal) Reset Value (ms)");
+                snprintf(s, maxAssist, "(signal) Reset Value (ms)");
                 break;
                 
             case 3:
-                sprintf(s,"(signal) Reset Trigger");
+                snprintf(s, maxAssist, "(signal) Reset Trigger");
                 break;
         }
     }

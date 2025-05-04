@@ -234,20 +234,22 @@ public:
     
     static void assist(v_binary *x, void *b, long m, long a, char *s)
     {
+        static constexpr int maxAssist = 256;
+
         if (m == ASSIST_INLET)
         {
             switch (a)
             {
                 case 0:
-                    sprintf(s,"(signal, float) In 1");
+                    snprintf(s, maxAssist, "(signal, float) In 1");
                     break;
                 case 1:
-                    sprintf(s,"(signal, float) In 2");
+                    snprintf(s, maxAssist, "(signal, float) In 2");
                     break;
             }
         }
         else
-            sprintf(s,"(signal) Out");
+            snprintf(s, maxAssist, "(signal) Out");
     }
     
 private:

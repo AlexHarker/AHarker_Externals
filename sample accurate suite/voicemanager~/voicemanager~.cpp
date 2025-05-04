@@ -230,22 +230,24 @@ void voicemanager_dsp64(t_voicemanager *x, t_object *dsp64, short *count, double
 
 void voicemanager_assist(t_voicemanager *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     switch (a)
     {
         case 0:
-            sprintf(s,"(signal) Triggers");
+            snprintf(s, maxAssist, "(signal) Triggers");
             break;
             
         case 1:
-            sprintf(s,"(signal) Lengths");
+            snprintf(s, maxAssist, "(signal) Lengths");
             break;
             
         case 2:
-            sprintf(s,"(signal) Subsample Offset");
+            snprintf(s, maxAssist, "(signal) Subsample Offset");
             break;
             
         case 3:
-            sprintf(s,"(signal) Number Active Voices");
+            snprintf(s, maxAssist, "(signal) Number Active Voices");
             break;
     }
 }

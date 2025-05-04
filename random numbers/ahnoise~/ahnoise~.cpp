@@ -101,12 +101,14 @@ void ahnoise_dsp64(t_ahnoise *x, t_object *dsp64, short *count, double sample_ra
 
 void ahnoise_assist(t_ahnoise *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"(signal) Noise");
+        snprintf(s, maxAssist, "(signal) Noise");
     }
     else
     {
-        sprintf(s,"(signal) Dummy");
+        snprintf(s, maxAssist, "(signal) Dummy");
     }
 }

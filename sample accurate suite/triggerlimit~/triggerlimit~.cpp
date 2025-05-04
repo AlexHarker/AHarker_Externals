@@ -138,8 +138,10 @@ void triggerlimit_dsp64(t_triggerlimit *x, t_object *dsp64, short *count, double
 
 void triggerlimit_assist(t_triggerlimit *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
-        sprintf(s,"(signal) Triggers In ");
+        snprintf(s, maxAssist, "(signal) Triggers In ");
     else
-        sprintf(s,"(signal) Triggers Out");
+        snprintf(s, maxAssist, "(signal) Triggers Out");
 }

@@ -253,13 +253,15 @@ void randomvals_int(t_randomvals *x, t_atom_long value)
 
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s, "(signal) Random Vals Out");
+        snprintf(s, maxAssist, "(signal) Random Vals Out");
     }
     else
     {
-        sprintf(s, "(signal/messages) Triggers / Parameters");
+        snprintf(s, maxAssist, "(signal/messages) Triggers / Parameters");
     }
     
 }
@@ -268,13 +270,15 @@ void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 
 void randomvals_assist(t_randomvals *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s, "Random Vals Out");
+        snprintf(s, maxAssist, "Random Vals Out");
     }
     else
     {
-        sprintf(s, "(messages) Triggers / Parameters");
+        snprintf(s, maxAssist, "(messages) Triggers / Parameters");
     }
     
 }

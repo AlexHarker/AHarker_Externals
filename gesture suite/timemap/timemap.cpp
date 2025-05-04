@@ -193,35 +193,37 @@ void timemap_free(t_timemap *x)
 
 void timemap_assist(t_timemap *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"Do Mapping");
+                snprintf(s, maxAssist, "Do Mapping");
                 break;
             case 1:
-                sprintf(s,"Random Amount (0-1)");
+                snprintf(s, maxAssist, "Random Amount (0-1)");
                 break;
             case 2:
-                sprintf(s,"Centre (0-1)");
+                snprintf(s, maxAssist, "Centre (0-1)");
                 break;
             case 3:
-                sprintf(s,"Clumping Factor");
+                snprintf(s, maxAssist, "Clumping Factor");
                 break;
             case 4:
-                sprintf(s,"Min Interval (0-1)");
+                snprintf(s, maxAssist, "Min Interval (0-1)");
                 break;
             case 5:
-                sprintf(s,"Max Interval (0-1)");
+                snprintf(s, maxAssist, "Max Interval (0-1)");
                 break;
             case 6:
-                sprintf(s,"Max Retries");
+                snprintf(s, maxAssist, "Max Retries");
                 break;
         }
     }
     else
-        sprintf(s,"List Out");
+        snprintf(s, maxAssist, "List Out");
 }
 
 // Streaming Template

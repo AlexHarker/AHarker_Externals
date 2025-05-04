@@ -117,24 +117,26 @@ void dynamic_this_free(t_dynamic_this *x)
 
 void dynamic_this_assist(t_dynamic_this *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"Patch Index");
+                snprintf(s, maxAssist, "Patch Index");
                 break;
             case 1:
-                sprintf(s,"Mute Status");
+                snprintf(s, maxAssist, "Mute Status");
                 break;
             case 2:
-                sprintf(s,"Busy Status");
+                snprintf(s, maxAssist, "Busy Status");
                 break;
         }
     }
     else
     {
-        sprintf(s,"Set Mute / Busy / Flags, Bang for Report");
+        snprintf(s, maxAssist, "Set Mute / Busy / Flags, Bang for Report");
     }
 }
 

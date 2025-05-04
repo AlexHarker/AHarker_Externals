@@ -124,10 +124,12 @@ void ibuffer_free(t_ibuffer *x)
 
 void ibuffer_assist(t_ibuffer *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(bang) Buffer Loaded");
+        snprintf(s, maxAssist, "(bang) Buffer Loaded");
     else
-        sprintf(s,"File Operations");
+        snprintf(s, maxAssist, "File Operations");
 }
 
 // Name / Valid

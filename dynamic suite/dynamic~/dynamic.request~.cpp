@@ -103,10 +103,12 @@ void dynamic_request_free(t_dynamic_request *x)
 
 void dynamic_request_assist(t_dynamic_request *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(signal) Requested Input %ld of Patcher", (long) x->inlet_num);
+        snprintf(s, maxAssist, "(signal) Requested Input %ld of Patcher", (long) x->inlet_num);
     else
-        sprintf(s,"(signal) Request Value / (int) Inlet Number");
+        snprintf(s, maxAssist, "(signal) Request Value / (int) Inlet Number");
 }
 
 // Int Handler

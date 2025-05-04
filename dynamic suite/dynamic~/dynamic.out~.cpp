@@ -95,7 +95,9 @@ void dynamic_out_free(t_dynamic_out *x)
 
 void dynamic_out_assist(t_dynamic_out *x, void *b, long m, long a, char *s)
 {
-    sprintf(s,"(signal) Signal Output %ld of Patcher / (int) Outlet Number",(long)  x->outlet_num);
+    static constexpr int maxAssist = 256;
+
+    snprintf(s, maxAssist, "(signal) Signal Output %ld of Patcher / (int) Outlet Number",(long)  x->outlet_num);
 }
 
 // Int Handler
