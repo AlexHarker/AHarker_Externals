@@ -107,6 +107,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				B86282192DC830B600F88916 /* PBXTargetDependency */,
 				B83047172DC0232200558125 /* PBXTargetDependency */,
 				B83047192DC0232200558125 /* PBXTargetDependency */,
 				B830471D2DC0232200558125 /* PBXTargetDependency */,
@@ -1442,6 +1443,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
 			remoteInfo = "voicemanager~";
+		};
+		B86282182DC830B600F88916 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B82F0F051465F57A007FAC6A /* rbiquad~.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = "rbiquad~";
 		};
 		B8D138F628508C9B00D282A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3199,6 +3207,11 @@
 			isa = PBXTargetDependency;
 			name = "voicemanager~";
 			targetProxy = B83047222DC0232200558125 /* PBXContainerItemProxy */;
+		};
+		B86282192DC830B600F88916 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "rbiquad~";
+			targetProxy = B86282182DC830B600F88916 /* PBXContainerItemProxy */;
 		};
 		B8D138F728508C9B00D282A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
