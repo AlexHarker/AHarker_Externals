@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-base/script/max-pretarget.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/max-sdk-base/script/max-pretarget.cmake)
 
 set(DESCRIPTORS ${CMAKE_CURRENT_SOURCE_DIR}/../descriptors~)
 
@@ -17,7 +17,7 @@ add_msp_external(
 		${DESCRIPTORS}/modules
 )
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-base/script/max-posttarget.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/max-sdk-base/script/max-posttarget.cmake)
 
 
 

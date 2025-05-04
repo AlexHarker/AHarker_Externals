@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: deploy-win
-          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+          path: "ah-externals/package/AHarker_Externals/externals/"
   deploy-mac:
     runs-on: macos-latest
     needs: deploy-win
@@ -55,7 +55,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: deploy-win
-          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+          path: "ah-externals/package/AHarker_Externals/externals/"
       - name: Build mac externals
         run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
       - name: Setup keychain and identities
@@ -84,7 +84,7 @@ jobs:
         # install fd /cd to package make temp folder with mxos / sign mxos / copy to folder / zip / notarize upload / deleete temps / staple
         run: |
              brew install fd
-             cd ah-externals/AH_Externals_Package
+             cd ah-externals/package
              mkdir -p Notarization
              fd $MXO_GLOB -E .git -I
              fd $MXO_GLOB -E .git -I -x codesign --force --timestamp --sign "Developer ID Application" {}
@@ -96,7 +96,7 @@ jobs:
       - name: Make zip
         run: |
              mkdir build/
-             cd ah-externals/AH_Externals_Package/
+             cd ah-externals/package/
              zip -r ../../build/AHarker_Externals.zip AHarker_Externals
       - name: Make release
         uses: "softprops/action-gh-release@v1"

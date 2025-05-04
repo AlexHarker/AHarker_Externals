@@ -1,6 +1,0 @@
-[submodule "AH_Externals_Dependencies/HISSTools_Library"]
-	path = AH_Externals_Dependencies/HISSTools_Library
-	url = https://github.com/AlexHarker/HISSTools_Library
-[submodule "AH_Externals_Dependencies/max-sdk-base"]
-	path = AH_Externals_Dependencies/max-sdk-base
-	url = https://github.com/Cycling74/max-sdk-base

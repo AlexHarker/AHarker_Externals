@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-base/script/max-pretarget.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/max-sdk-base/script/max-pretarget.cmake)
 
 set(MODULES ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 
@@ -18,7 +18,7 @@ add_msp_external(
     	ibuffer_access
 )
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/../../../AH_Externals_Dependencies/max-sdk-base/script/max-posttarget.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../dependencies/max-sdk-base/script/max-posttarget.cmake)
 
 
 
