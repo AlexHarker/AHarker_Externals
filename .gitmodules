@@ -1,0 +1,6 @@
+[submodule "dependencies/max-sdk-base"]
+	path = dependencies/max-sdk-base
+	url = https://github.com/Cycling74/max-sdk-base
+[submodule "dependencies/hisstools_library"]
+	path = dependencies/hisstools_library
+	url = https://github.com/AlexHarker/HISSTools_Library
