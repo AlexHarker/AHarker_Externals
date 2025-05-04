@@ -8,7 +8,7 @@
       <AdditionalIncludeDirectories>"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\include";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib\intel64";%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib\";%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>mkl_intel_lp64.lib;mkl_sequential.lib;mkl_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
