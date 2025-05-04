@@ -25,169 +25,169 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gesture suite", "gesture su
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "random numbers", "random numbers", "{D3B5A520-69F6-4087-AF29-639D91F06C37}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kernelmaker~", "convolution\kernelmaker~\kernelmaker~.vcxproj", "{E528D177-4FC5-4E5C-8ED1-A7E44A2BB9D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kernelmaker~", "AH_Externals_Projects\kernelmaker~.vcxproj", "{E528D177-4FC5-4E5C-8ED1-A7E44A2BB9D7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "partconvolve~", "convolution\partconvolve~\partconvolve~.vcxproj", "{4A32A4F0-8931-4FFB-8D81-32106F834912}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "partconvolve~", "AH_Externals_Projects\partconvolve~.vcxproj", "{4A32A4F0-8931-4FFB-8D81-32106F834912}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timeconvolve~", "convolution\timeconvolve~\timeconvolve~.vcxproj", "{A29468CB-6DEB-4A8E-9326-89C7D5331D29}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timeconvolve~", "AH_Externals_Projects\timeconvolve~.vcxproj", "{A29468CB-6DEB-4A8E-9326-89C7D5331D29}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "descriptors~", "descriptors\descriptors~\descriptors~.vcxproj", "{62EFB66B-9A08-42CE-9D93-4BC068D92BFB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "descriptors~", "AH_Externals_Projects\descriptors~.vcxproj", "{62EFB66B-9A08-42CE-9D93-4BC068D92BFB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "descriptorsrt~", "descriptors\descriptors~\descriptorsrt~.vcxproj", "{0F21B0FC-936E-46D1-BE9C-0646FB39919D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "descriptorsrt~", "AH_Externals_Projects\descriptorsrt~.vcxproj", "{0F21B0FC-936E-46D1-BE9C-0646FB39919D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entrymatcher", "descriptors\entrymatcher\entrymatcher.vcxproj", "{754D998E-C066-49B1-8A78-28BAAC76A015}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entrymatcher", "AH_Externals_Projects\entrymatcher.vcxproj", "{754D998E-C066-49B1-8A78-28BAAC76A015}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entrymatcher~", "descriptors\entrymatcher\entrymatcher~.vcxproj", "{8231D537-D18E-4A89-B5A3-2EA0F3F9AF22}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entrymatcher~", "AH_Externals_Projects\entrymatcher~.vcxproj", "{8231D537-D18E-4A89-B5A3-2EA0F3F9AF22}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getthread", "threading\getthread\getthread.vcxproj", "{BF3C8E28-BED8-44D3-8603-9FBC8637C002}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getthread", "AH_Externals_Projects\getthread.vcxproj", "{BF3C8E28-BED8-44D3-8603-9FBC8637C002}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "schedulemessage", "threading\schedulemessage\schedulemessage.vcxproj", "{F90DDB6C-F1A2-40CA-9AB8-259257A8F076}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "schedulemessage", "AH_Externals_Projects\schedulemessage.vcxproj", "{F90DDB6C-F1A2-40CA-9AB8-259257A8F076}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "threadfilter", "threading\threadfilter\threadfilter.vcxproj", "{3C373D0E-18ED-4AF7-BF75-01A94745EC31}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "threadfilter", "AH_Externals_Projects\threadfilter.vcxproj", "{3C373D0E-18ED-4AF7-BF75-01A94745EC31}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ahnoise~", "random numbers\ahnoise~\ahnoise~.vcxproj", "{A48E074A-4E8D-468B-92A2-23B9CE0E44D7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ahnoise~", "AH_Externals_Projects\ahnoise~.vcxproj", "{A48E074A-4E8D-468B-92A2-23B9CE0E44D7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randfloats", "random numbers\randfloats\randfloats.vcxproj", "{D47D2165-DE18-477E-B4FE-FB51E8CC5C28}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randfloats", "AH_Externals_Projects\randfloats.vcxproj", "{D47D2165-DE18-477E-B4FE-FB51E8CC5C28}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randomvals", "random numbers\randomvals~\randomvals.vcxproj", "{A03BABA1-B8D1-4A32-86CA-D6A755F4DB81}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randomvals", "AH_Externals_Projects\randomvals.vcxproj", "{A03BABA1-B8D1-4A32-86CA-D6A755F4DB81}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randomvals~", "random numbers\randomvals~\randomvals~.vcxproj", "{84FFBEC6-53D0-41DD-BFD9-F0A7DA84958A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "randomvals~", "AH_Externals_Projects\randomvals~.vcxproj", "{84FFBEC6-53D0-41DD-BFD9-F0A7DA84958A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "meandev", "miscellaneous\meandev\meandev.vcxproj", "{5B196784-D795-47F6-9603-5C9C7136E3BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "meandev", "AH_Externals_Projects\meandev.vcxproj", "{5B196784-D795-47F6-9603-5C9C7136E3BD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "valconvert", "conversion\valconvert\valconvert.vcxproj", "{CDC0948F-8CE0-4319-8C72-888B48494E05}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "valconvert", "AH_Externals_Projects\valconvert.vcxproj", "{CDC0948F-8CE0-4319-8C72-888B48494E05}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "valconvert~", "conversion\valconvert\valconvert~.vcxproj", "{BB6383A3-6ADB-4435-A113-A620A8A5A9BA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "valconvert~", "AH_Externals_Projects\valconvert~.vcxproj", "{BB6383A3-6ADB-4435-A113-A620A8A5A9BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utility", "utility", "{711EC3F9-5C9E-4D91-BBDC-98C835DD3121}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "denormkiller~", "utility\denormkiller~\denormkiller~.vcxproj", "{9A7C1563-82A5-4C60-8B59-0C52AF6CD775}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "denormkiller~", "AH_Externals_Projects\denormkiller~.vcxproj", "{9A7C1563-82A5-4C60-8B59-0C52AF6CD775}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "depack", "utility\depack\depack.vcxproj", "{97A2B728-3D28-45C6-9418-734CC48FC79E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "depack", "AH_Externals_Projects\depack.vcxproj", "{97A2B728-3D28-45C6-9418-734CC48FC79E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "macaddress", "utility\macaddress\macaddress.vcxproj", "{CEE1040B-9126-4648-AE4F-89F6AAE53304}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "macaddress", "AH_Externals_Projects\macaddress.vcxproj", "{CEE1040B-9126-4648-AE4F-89F6AAE53304}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recursivefolder", "utility\recursivefolder\recursivefolder.vcxproj", "{EA83F1B2-51D4-419F-8330-932072DAEEBE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recursivefolder", "AH_Externals_Projects\recursivefolder.vcxproj", "{EA83F1B2-51D4-419F-8330-932072DAEEBE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gesture_maker", "gesture suite\gesture_maker\gesture_maker.vcxproj", "{7139094B-1DBE-463A-94F3-47FBD2AE384D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gesture_maker", "AH_Externals_Projects\gesture_maker.vcxproj", "{7139094B-1DBE-463A-94F3-47FBD2AE384D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timefilter", "gesture suite\timefilter\timefilter.vcxproj", "{3AEDB326-B5B9-42E3-BCE9-71FA129B80B9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timefilter", "AH_Externals_Projects\timefilter.vcxproj", "{3AEDB326-B5B9-42E3-BCE9-71FA129B80B9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timemap", "gesture suite\timemap\timemap.vcxproj", "{9EEF2F94-00CB-4661-82E5-A093C072DCC9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "timemap", "AH_Externals_Projects\timemap.vcxproj", "{9EEF2F94-00CB-4661-82E5-A093C072DCC9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chebyshape~", "sample accurate suite\chebyshape~\chebyshape~.vcxproj", "{88D11FD1-D2C5-4313-8172-268E15D9B54B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chebyshape~", "AH_Externals_Projects\chebyshape~.vcxproj", "{88D11FD1-D2C5-4313-8172-268E15D9B54B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voicemanager~", "sample accurate suite\voicemanager~\voicemanager~.vcxproj", "{5074E968-0D41-4A65-B451-F7E1CB17B130}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voicemanager~", "AH_Externals_Projects\voicemanager~.vcxproj", "{5074E968-0D41-4A65-B451-F7E1CB17B130}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voicedrive~", "sample accurate suite\voicedrive~\voicedrive~.vcxproj", "{A775BB0A-08DE-490B-8A3C-2131EEE164D1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voicedrive~", "AH_Externals_Projects\voicedrive~.vcxproj", "{A775BB0A-08DE-490B-8A3C-2131EEE164D1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsah~", "sample accurate suite\tsah~\tsah~.vcxproj", "{846EE610-8950-4DFE-89C8-5667F1203B37}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tsah~", "AH_Externals_Projects\tsah~.vcxproj", "{846EE610-8950-4DFE-89C8-5667F1203B37}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triggerlimit~", "sample accurate suite\triggerlimit~\triggerlimit~.vcxproj", "{F6FA6EA8-DE0C-4DA9-8BC8-03E2C793036C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "triggerlimit~", "AH_Externals_Projects\triggerlimit~.vcxproj", "{F6FA6EA8-DE0C-4DA9-8BC8-03E2C793036C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rdcblock~", "sample accurate suite\rdcblock~\rdcblock~.vcxproj", "{C64FC28C-7AA4-48A7-85B0-8302A7F6B9A4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rdcblock~", "AH_Externals_Projects\rdcblock~.vcxproj", "{C64FC28C-7AA4-48A7-85B0-8302A7F6B9A4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rbiquad~", "sample accurate suite\rbiquad~\rbiquad~.vcxproj", "{6E8A11EA-2409-48C8-8301-0E83E537F228}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rbiquad~", "AH_Externals_Projects\rbiquad~.vcxproj", "{6E8A11EA-2409-48C8-8301-0E83E537F228}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicdsp~", "dynamic suite\dynamic~\dynamicdsp~.vcxproj", "{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicdsp~", "AH_Externals_Projects\dynamicdsp~.vcxproj", "{A79AAA5B-41EE-4D4A-AF98-11A7B95E6ED0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicserial~", "dynamic suite\dynamic~\dynamicserial~.vcxproj", "{C2763BF4-A91C-473D-A833-547FCDADD624}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamicserial~", "AH_Externals_Projects\dynamicserial~.vcxproj", "{C2763BF4-A91C-473D-A833-547FCDADD624}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.this~", "dynamic suite\dynamic~\dynamic.this~.vcxproj", "{E436D27C-0FE8-4977-B405-2A95186689B2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.this~", "AH_Externals_Projects\dynamic.this~.vcxproj", "{E436D27C-0FE8-4977-B405-2A95186689B2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.patch~", "dynamic suite\dynamic~\dynamic.patch~.vcxproj", "{6B5FC5C2-416E-48AD-98E0-06736022F4FE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.patch~", "AH_Externals_Projects\dynamic.patch~.vcxproj", "{6B5FC5C2-416E-48AD-98E0-06736022F4FE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.in~", "dynamic suite\dynamic~\dynamic.in~.vcxproj", "{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.in~", "AH_Externals_Projects\dynamic.in~.vcxproj", "{4B0E86F2-51D1-4F6D-AB1D-426D1567FA7C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.out~", "dynamic suite\dynamic~\dynamic.out~.vcxproj", "{7B3FA083-3B7C-4676-8528-4F4046676B65}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.out~", "AH_Externals_Projects\dynamic.out~.vcxproj", "{7B3FA083-3B7C-4676-8528-4F4046676B65}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.request~", "dynamic suite\dynamic~\dynamic.request~.vcxproj", "{876BE8F8-D655-4D0F-82A7-70C540FE714F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dynamic.request~", "AH_Externals_Projects\dynamic.request~.vcxproj", "{876BE8F8-D655-4D0F-82A7-70C540FE714F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuftable~", "ibuffer suite\ibuftable~\ibuftable~.vcxproj", "{C881C0CC-4846-4EF3-9CD5-198D6489B696}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuftable~", "AH_Externals_Projects\ibuftable~.vcxproj", "{C881C0CC-4846-4EF3-9CD5-198D6489B696}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufplayer~", "ibuffer suite\ibufplayer~\ibufplayer~.vcxproj", "{3D355790-FB70-4F20-BA36-83FE7169A814}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufplayer~", "AH_Externals_Projects\ibufplayer~.vcxproj", "{3D355790-FB70-4F20-BA36-83FE7169A814}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufmultitable~", "ibuffer suite\ibufmultitable~\ibufmultitable~.vcxproj", "{F2CA75A1-AFB0-418B-AE13-E733E061EBC9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufmultitable~", "AH_Externals_Projects\ibufmultitable~.vcxproj", "{F2CA75A1-AFB0-418B-AE13-E733E061EBC9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufinfo~", "ibuffer suite\ibufinfo~\ibufinfo~.vcxproj", "{C7908F6E-8DBB-4640-99F3-B00C8BFC553D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufinfo~", "AH_Externals_Projects\ibufinfo~.vcxproj", "{C7908F6E-8DBB-4640-99F3-B00C8BFC553D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffermulti~", "ibuffer suite\ibuffermulti~\ibuffermulti~.vcxproj", "{F4038975-384B-46DA-A5B6-3AA8AE58C724}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffermulti~", "AH_Externals_Projects\ibuffermulti~.vcxproj", "{F4038975-384B-46DA-A5B6-3AA8AE58C724}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffer~", "ibuffer suite\ibuffer~\ibuffer~.vcxproj", "{7FA19981-2A24-4B74-AF10-237295C88D2B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffer~", ""AH_Externals_Projects\ibuffer~.vcxproj", "{7FA19981-2A24-4B74-AF10-237295C88D2B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufconcatedrive~", "ibuffer suite\ibufconcatenate~\ibufconcatedrive~.vcxproj", "{2934ADF9-A3D4-4A0D-96A3-2A4BF00E47CD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufconcatedrive~", "AH_Externals_Projects\ibufconcatedrive~.vcxproj", "{2934ADF9-A3D4-4A0D-96A3-2A4BF00E47CD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufconcatenate~", "ibuffer suite\ibufconcatenate~\ibufconcatenate~.vcxproj", "{31CC9322-E1FB-45CD-9ECD-6B15AF9CB87C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufconcatenate~", "AH_Externals_Projects\ibufconcatenate~.vcxproj", "{31CC9322-E1FB-45CD-9ECD-6B15AF9CB87C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vabs~", "vMSP\vMSP_VS_Projects\vabs~.vcxproj", "{8E423082-2787-49A2-A8D1-95E4082A918A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vabs~", "AH_Externals_Projects\vMSP_VS_Projects\vabs~.vcxproj", "{8E423082-2787-49A2-A8D1-95E4082A918A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtrunc~", "vMSP\vMSP_VS_Projects\vtrunc~.vcxproj", "{BF6D8629-3D92-4872-B482-1FD53005DCC3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtrunc~", "AH_Externals_Projects\vMSP_VS_Projects\vtrunc~.vcxproj", "{BF6D8629-3D92-4872-B482-1FD53005DCC3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vmaximum~", "vMSP\vMSP_VS_Projects\vmaximum~.vcxproj", "{CDBF75F6-A6EC-4DDE-9BED-36863D75F2DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vmaximum~", "AH_Externals_Projects\vMSP_VS_Projects\vmaximum~.vcxproj", "{CDBF75F6-A6EC-4DDE-9BED-36863D75F2DA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vminimum~", "vMSP\vMSP_VS_Projects\vminimum~.vcxproj", "{8DD45A41-92B9-43B0-9214-2D1D165D339E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vminimum~", "AH_Externals_Projects\vMSP_VS_Projects\vminimum~.vcxproj", "{8DD45A41-92B9-43B0-9214-2D1D165D339E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlog~", "vMSP\vMSP_VS_Projects\vlog~.vcxproj", "{DAB4F747-58EF-4535-A37E-E3CEF0745F28}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlog~", "AH_Externals_Projects\vMSP_VS_Projects\vlog~.vcxproj", "{DAB4F747-58EF-4535-A37E-E3CEF0745F28}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatodb~", "vMSP\vMSP_VS_Projects\vatodb~.vcxproj", "{6CF17F3C-1337-4036-8409-E0A435B062F0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatodb~", "AH_Externals_Projects\vMSP_VS_Projects\vatodb~.vcxproj", "{6CF17F3C-1337-4036-8409-E0A435B062F0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vdbtoa~", "vMSP\vMSP_VS_Projects\vdbtoa~.vcxproj", "{4B49CDB9-9648-4122-BF10-4A17F93FA156}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vdbtoa~", "AH_Externals_Projects\vMSP_VS_Projects\vdbtoa~.vcxproj", "{4B49CDB9-9648-4122-BF10-4A17F93FA156}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vftom~", "vMSP\vMSP_VS_Projects\vftom~.vcxproj", "{1DDFCEEC-DC53-42BC-9C3A-40BAF4FAB9D9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vftom~", "AH_Externals_Projects\vMSP_VS_Projects\vftom~.vcxproj", "{1DDFCEEC-DC53-42BC-9C3A-40BAF4FAB9D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vmtof~", "vMSP\vMSP_VS_Projects\vmtof~.vcxproj", "{01CD0971-1C46-4789-9270-A85AC484C00A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vmtof~", "AH_Externals_Projects\vMSP_VS_Projects\vmtof~.vcxproj", "{01CD0971-1C46-4789-9270-A85AC484C00A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vdiv~", "vMSP\vMSP_VS_Projects\vdiv~.vcxproj", "{1DFCC969-C1B2-48E2-9A9E-1A83222A930A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vdiv~", "AH_Externals_Projects\vMSP_VS_Projects\vdiv~.vcxproj", "{1DFCC969-C1B2-48E2-9A9E-1A83222A930A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vgreaterthan~", "vMSP\vMSP_VS_Projects\vgreaterthan~.vcxproj", "{4A1E933C-4C9A-4BDD-B592-2AB198C8D698}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vgreaterthan~", "AH_Externals_Projects\vMSP_VS_Projects\vgreaterthan~.vcxproj", "{4A1E933C-4C9A-4BDD-B592-2AB198C8D698}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vequals~", "vMSP\vMSP_VS_Projects\vequals~.vcxproj", "{65B95FD2-524B-48BD-A613-EC061CD34E34}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vequals~", "AH_Externals_Projects\vMSP_VS_Projects\vequals~.vcxproj", "{65B95FD2-524B-48BD-A613-EC061CD34E34}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlessthan~", "vMSP\vMSP_VS_Projects\vlessthan~.vcxproj", "{24CAB44F-83F2-4AE7-B4A4-C2C03EA66A92}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlessthan~", "AH_Externals_Projects\vMSP_VS_Projects\vlessthan~.vcxproj", "{24CAB44F-83F2-4AE7-B4A4-C2C03EA66A92}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlessthaneq~", "vMSP\vMSP_VS_Projects\vlessthaneq~.vcxproj", "{DEB9365E-A77E-4B8C-A164-581C63434159}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlessthaneq~", "AH_Externals_Projects\vMSP_VS_Projects\vlessthaneq~.vcxproj", "{DEB9365E-A77E-4B8C-A164-581C63434159}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vgreaterthaneq~", "vMSP\vMSP_VS_Projects\vgreaterthaneq~.vcxproj", "{D0D452E1-3E74-44B6-9D06-6273CB9AA15C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vgreaterthaneq~", "AH_Externals_Projects\vMSP_VS_Projects\vgreaterthaneq~.vcxproj", "{D0D452E1-3E74-44B6-9D06-6273CB9AA15C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsqrt~", "vMSP\vMSP_VS_Projects\vsqrt~.vcxproj", "{C4CC24D5-CA41-44C2-88D8-75CE70128C8D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsqrt~", "AH_Externals_Projects\vMSP_VS_Projects\vsqrt~.vcxproj", "{C4CC24D5-CA41-44C2-88D8-75CE70128C8D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtimes~", "vMSP\vMSP_VS_Projects\vtimes~.vcxproj", "{E4E8CF12-0A13-4FFE-9018-7C3BA8277ABF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtimes~", "AH_Externals_Projects\vMSP_VS_Projects\vtimes~.vcxproj", "{E4E8CF12-0A13-4FFE-9018-7C3BA8277ABF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vrminus~", "vMSP\vMSP_VS_Projects\vrminus~.vcxproj", "{E822BE4F-F286-4E78-B35D-46924E22C810}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vrminus~", "AH_Externals_Projects\vMSP_VS_Projects\vrminus~.vcxproj", "{E822BE4F-F286-4E78-B35D-46924E22C810}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vminus~", "vMSP\vMSP_VS_Projects\vminus~.vcxproj", "{7441DCCB-29A6-46C8-A425-B6A78D758F20}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vminus~", "AH_Externals_Projects\vMSP_VS_Projects\vminus~.vcxproj", "{7441DCCB-29A6-46C8-A425-B6A78D758F20}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vnotequals~", "vMSP\vMSP_VS_Projects\vnotequals~.vcxproj", "{2FF633E8-3613-4B20-B197-F43BA6C4B4A8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vnotequals~", "AH_Externals_Projects\vMSP_VS_Projects\vnotequals~.vcxproj", "{2FF633E8-3613-4B20-B197-F43BA6C4B4A8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcosx~", "vMSP\vMSP_VS_Projects\vcosx~.vcxproj", "{F2957999-80EC-41A6-ABB5-885A966CE70F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcosx~", "AH_Externals_Projects\vMSP_VS_Projects\vcosx~.vcxproj", "{F2957999-80EC-41A6-ABB5-885A966CE70F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsinx~", "vMSP\vMSP_VS_Projects\vsinx~.vcxproj", "{615909C7-584E-4BC7-8A0D-78904E50028C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsinx~", "AH_Externals_Projects\vMSP_VS_Projects\vsinx~.vcxproj", "{615909C7-584E-4BC7-8A0D-78904E50028C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vpow~", "vMSP\vMSP_VS_Projects\vpow~.vcxproj", "{36BA55BE-8988-413D-A6F8-3FD8297B3B68}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vpow~", "AH_Externals_Projects\vMSP_VS_Projects\vpow~.vcxproj", "{36BA55BE-8988-413D-A6F8-3FD8297B3B68}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vrdiv~", "vMSP\vMSP_VS_Projects\vrdiv~.vcxproj", "{6F2E36DA-C210-4118-96AB-68B5AE6A574D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vrdiv~", "AH_Externals_Projects\vMSP_VS_Projects\vrdiv~.vcxproj", "{6F2E36DA-C210-4118-96AB-68B5AE6A574D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vplus~", "vMSP\vMSP_VS_Projects\vplus~.vcxproj", "{A43864D9-C31C-4317-844F-8761926E1B23}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vplus~", "AH_Externals_Projects\vMSP_VS_Projects\vplus~.vcxproj", "{A43864D9-C31C-4317-844F-8761926E1B23}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vacos~", "vMSP\vMSP_VS_Projects\vacos~.vcxproj", "{1482DD45-D02B-4B2B-866A-4E83AA12B724}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vacos~", "AH_Externals_Projects\vMSP_VS_Projects\vacos~.vcxproj", "{1482DD45-D02B-4B2B-866A-4E83AA12B724}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vacosh~", "vMSP\vMSP_VS_Projects\vacosh~.vcxproj", "{4B54CEEC-6A3C-4042-BE9F-447DB1F858B2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vacosh~", "AH_Externals_Projects\vMSP_VS_Projects\vacosh~.vcxproj", "{4B54CEEC-6A3C-4042-BE9F-447DB1F858B2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vasin~", "vMSP\vMSP_VS_Projects\vasin~.vcxproj", "{61EE2BFB-A13A-4139-9681-1250C5F72DE3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vasin~", "AH_Externals_Projects\vMSP_VS_Projects\vasin~.vcxproj", "{61EE2BFB-A13A-4139-9681-1250C5F72DE3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vasinh~", "vMSP\vMSP_VS_Projects\vasinh~.vcxproj", "{38267158-A631-4C65-A58C-147C0A67C635}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vasinh~", "AH_Externals_Projects\vMSP_VS_Projects\vasinh~.vcxproj", "{38267158-A631-4C65-A58C-147C0A67C635}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtanx~", "vMSP\vMSP_VS_Projects\vtanx~.vcxproj", "{AB99F58C-7561-4DD0-A2C0-50C803232FB5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtanx~", "AH_Externals_Projects\vMSP_VS_Projects\vtanx~.vcxproj", "{AB99F58C-7561-4DD0-A2C0-50C803232FB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsinh~", "vMSP\vMSP_VS_Projects\vsinh~.vcxproj", "{0AA03B01-1E42-4CA5-A28A-4490E29DB20C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vsinh~", "AH_Externals_Projects\vMSP_VS_Projects\vsinh~.vcxproj", "{0AA03B01-1E42-4CA5-A28A-4490E29DB20C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtanh~", "vMSP\vMSP_VS_Projects\vtanh~.vcxproj", "{42E23670-2583-4EB3-A28D-F5797A367AFC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vtanh~", "AH_Externals_Projects\vMSP_VS_Projects\vtanh~.vcxproj", "{42E23670-2583-4EB3-A28D-F5797A367AFC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatan~", "vMSP\vMSP_VS_Projects\vatan~.vcxproj", "{0592111B-1BDD-43AF-AAA3-86CF1CFD01F6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatan~", "AH_Externals_Projects\vMSP_VS_Projects\vatan~.vcxproj", "{0592111B-1BDD-43AF-AAA3-86CF1CFD01F6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatanh~", "vMSP\vMSP_VS_Projects\vatanh~.vcxproj", "{133F5319-729C-4795-A5E1-F806CDED4CAA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vatanh~", "AH_Externals_Projects\vMSP_VS_Projects\vatanh~.vcxproj", "{133F5319-729C-4795-A5E1-F806CDED4CAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcosh~", "vMSP\vMSP_VS_Projects\vcosh~.vcxproj", "{2F7FF71C-2D20-4DA2-AFBA-E01213FE0883}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vcosh~", "AH_Externals_Projects\vMSP_VS_Projects\vcosh~.vcxproj", "{2F7FF71C-2D20-4DA2-AFBA-E01213FE0883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
