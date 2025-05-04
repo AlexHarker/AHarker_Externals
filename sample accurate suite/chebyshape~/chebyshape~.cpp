@@ -311,23 +311,25 @@ void chebyshape_dsp64(t_chebyshape *x, t_object *dsp64, short *count, double sam
 
 void chebyshape_assist(t_chebyshape *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"(signal) Waveshaped Output");
+        snprintf(s, maxAssist, "(signal) Waveshaped Output");
     }
     else
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Input");
+                snprintf(s, maxAssist, "(signal) Input");
                 break;
                 
             default:
                 if (x->offset)
-                    sprintf(s,"(signal) Triggers");
+                    snprintf(s, maxAssist, "(signal) Triggers");
                 else
-                    sprintf(s,"(signal) Coefficient %ld", a - 1);
+                    snprintf(s, maxAssist, "(signal) Coefficient %ld", a - 1);
         }
     }
 }

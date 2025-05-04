@@ -198,25 +198,26 @@ void voicedrive_dsp64(t_voicedrive *x, t_object *dsp64, short *count, double sam
 
 void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s)
 {
-    
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Triggers");
+                snprintf(s, maxAssist, "(signal) Triggers");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Lengths");
+                snprintf(s, maxAssist, "(signal) Lengths");
                 break;
                 
             case 2:
-                sprintf(s,"(signal) Subsample Offset");
+                snprintf(s, maxAssist, "(signal) Subsample Offset");
                 break;
                 
             case 3:
-                sprintf(s,"(signal) Output Offset");
+                snprintf(s, maxAssist, "(signal) Output Offset");
                 break;
         }
     }
@@ -228,23 +229,23 @@ void voicedrive_assist(t_voicedrive *x, void *b, long m, long a, char *s)
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Position (ms)");
+                snprintf(s, maxAssist, "(signal) Position (ms)");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Position Hi-Res (ms)");
+                snprintf(s, maxAssist, "(signal) Position Hi-Res (ms)");
                 break;
                 
             case 2:
-                sprintf(s,"(signal) Normalised Position (0-1)");
+                snprintf(s, maxAssist, "(signal) Normalised Position (0-1)");
                 break;
                 
             case 3:
-                sprintf(s,"(signal) Triggers");
+                snprintf(s, maxAssist, "(signal) Triggers");
                 break;
                 
             case 4:
-                sprintf(s,"(signal) Busy");
+                snprintf(s, maxAssist, "(signal) Busy");
                 break;
         }
     }

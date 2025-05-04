@@ -154,20 +154,22 @@ void schedulemessage_delay(t_schedulemessage *x, double delay)
 
 void schedulemessage_assist(t_schedulemessage *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s, "Scheduled Message");
+        snprintf(s, maxAssist, "Scheduled Message");
     }
     else
     {
         switch (a)
         {
             case 0:
-                sprintf(s, "Input (anything)");
+                snprintf(s, maxAssist, "Input (anything)");
                 break;
                 
             case 1:
-                sprintf(s, "Set Delay Time In Milliseconds");
+                snprintf(s, maxAssist, "Set Delay Time In Milliseconds");
                 break;
         }
     }

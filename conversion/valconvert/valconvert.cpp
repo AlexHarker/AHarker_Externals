@@ -285,10 +285,12 @@ void valconvert_dsp64(t_valconvert *x, t_object *dsp64, short *count, double sam
 
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s, "(signal) Scaled Output");
+        snprintf(s, maxAssist, "(signal) Scaled Output");
     else
-        sprintf(s, "(signal) Input / (message) Parameters");
+        snprintf(s, maxAssist, "(signal) Input / (message) Parameters");
 }
 
 #else
@@ -330,10 +332,12 @@ void valconvert_list(t_valconvert *x, t_symbol *msg, long argc, t_atom *argv)
 
 void valconvert_assist(t_valconvert *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s, "Scaled Output");
+        snprintf(s, maxAssist, "Scaled Output");
     else
-        sprintf(s, "Input / Parameters");
+        snprintf(s, maxAssist, "Input / Parameters");
 }
 
 #endif

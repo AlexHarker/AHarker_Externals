@@ -128,6 +128,8 @@ void ibufconcatenate_free(t_ibufconcatenate *x)
 
 void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (!x->max_mode)
     {
         if (m == ASSIST_OUTLET)
@@ -135,29 +137,29 @@ void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char 
             switch (a)
             {
                 case 0:
-                    sprintf(s,"(signal) Start (ms)");
+                    snprintf(s, maxAssist, "(signal) Start (ms)");
                     break;
                     
                 case 1:
-                    sprintf(s,"(signal) Start High Resolution (ms)");
+                    snprintf(s, maxAssist, "(signal) Start High Resolution (ms)");
                     break;
                     
                 case 2:
-                    sprintf(s,"(signal) End (ms)");
+                    snprintf(s, maxAssist, "(signal) End (ms)");
                     break;
                     
                 case 3:
-                    sprintf(s,"(signal) End High Resolution (ms)");
+                    snprintf(s, maxAssist, "(signal) End High Resolution (ms)");
                     break;
                     
                 case 4:
-                    sprintf(s,"Last Item Added");
+                    snprintf(s, maxAssist, "Last Item Added");
                     break;
             }
         }
         else
         {
-            sprintf(s,"(signal) Item / Entries / Concatenation Instructions");
+            snprintf(s, maxAssist, "(signal) Item / Entries / Concatenation Instructions");
         }
     }
     else
@@ -167,16 +169,16 @@ void ibufconcatenate_assist(t_ibufconcatenate *x, void *b, long m, long a, char 
             switch (a)
             {
                 case 0:
-                    sprintf(s,"Item Info Out");
+                    snprintf(s, maxAssist, "Item Info Out");
                     break;
                     
                 case 1:
-                    sprintf(s,"Last Item Added");
+                    snprintf(s, maxAssist, "Last Item Added");
                     break;
             }
         }
         else
-            sprintf(s,"Entries / Concatenation Instructions / Item (int)");
+            snprintf(s, maxAssist, "Entries / Concatenation Instructions / Item (int)");
     }
 }
 

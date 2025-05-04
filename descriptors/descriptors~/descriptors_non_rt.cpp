@@ -114,6 +114,8 @@ int C74_EXPORT main()
     class_addmethod(this_class, (method) descriptors_fft_params, "fftparams", A_GIMME, 0);
     class_addmethod(this_class, (method) descriptors_energy_thresh, "energythresh", A_GIMME, 0);
 
+    class_addmethod(this_class, (method) descriptors_assist, "assist", A_CANT, 0);
+
     class_register(CLASS_BOX, this_class);
     
     // Per-frame Descriptors
@@ -244,6 +246,20 @@ void descriptors_free(t_descriptors *x)
     destroy_object(x->m_lock);
     destroy_object(x->output_list);
     destroy_object(x->m_graph);
+}
+
+void descriptors_assist(t_descriptors *x, void *b, long m, long a, char *s)
+{
+    static constexpr int maxAssist = 256;
+
+    if (m == ASSIST_OUTLET)
+    {
+        snprintf(s, maxAssist, "Descriptors Out");
+    }
+    else
+    {
+        snprintf(s, maxAssist, "(signal / messages) All Messages / Input");
+    }
 }
 
 // FFT Params

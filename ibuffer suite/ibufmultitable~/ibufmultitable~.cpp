@@ -133,20 +133,22 @@ void ibufmultitable_free(t_ibufmultitable *x)
 
 void ibufmultitable_assist(t_ibufmultitable *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"(signal) Output");
+        snprintf(s, maxAssist, "(signal) Output");
     }
     else
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Position Input (0-1)");
+                snprintf(s, maxAssist, "(signal) Position Input (0-1)");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Sample Offset");
+                snprintf(s, maxAssist, "(signal) Sample Offset");
                 break;
         }
     }

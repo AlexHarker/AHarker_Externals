@@ -146,10 +146,12 @@ public:
     
     static void assist(v_unary *x, void *b, long m, long a, char *s)
     {
+        static constexpr int maxAssist = 256;
+
         if (m == ASSIST_INLET)
-            sprintf(s,"(signal) In");
+            snprintf(s, maxAssist, "(signal) In");
         else
-            sprintf(s,"(signal) Out");
+            snprintf(s, maxAssist, "(signal) Out");
     }
     
 private:

@@ -98,10 +98,12 @@ void dynamic_in_free(t_dynamic_in *x)
 
 void dynamic_in_assist(t_dynamic_in *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(signal) Signal Input %ld of Patcher", (long) x->inlet_num);
+        snprintf(s, maxAssist, "(signal) Signal Input %ld of Patcher", (long) x->inlet_num);
     else
-        sprintf(s,"(int) Inlet Number");
+        snprintf(s, maxAssist, "(int) Inlet Number");
 }
 
 // Int Handler

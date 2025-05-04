@@ -152,23 +152,25 @@ void entrymatcher_free(t_entrymatcher *x)
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
-        sprintf(s,"Entries / Names / Instructions");
+        snprintf(s, maxAssist, "Entries / Names / Instructions");
     else
     {
          switch (a)
         {
             case 0:
-                sprintf(s,"Matched Indices");
+                snprintf(s, maxAssist, "Matched Indices");
                 break;
             case 1:
-                sprintf(s,"Matched Identifiers");
+                snprintf(s, maxAssist, "Matched Identifiers");
                 break;
             case 2:
-                sprintf(s,"Matched Distances");
+                snprintf(s, maxAssist, "Matched Distances");
                 break;
             case 3:
-                sprintf(s,"Data from Lookup");
+                snprintf(s, maxAssist, "Data from Lookup");
                 break;
         }
     }
