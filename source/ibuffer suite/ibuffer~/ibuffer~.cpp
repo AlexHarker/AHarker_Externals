@@ -91,8 +91,8 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
     x->channels = 0;
     x->format = PCM_FLOAT;
     x->sr = 0;
-    x->inuse = 0;
-    x->valid = 1;
+    x->inuse.store(0);
+    x->valid.store(1);
     
     x->bang_out = bangout(x);
     
@@ -113,7 +113,7 @@ void *ibuffer_new(t_symbol *name, t_symbol *path_sym)
 
 void ibuffer_free(t_ibuffer *x)
 {
-    x->valid = 0;
+    x->valid.store(0);
     
     dsp_free(&x->x_obj);
     free(x->memory);
@@ -160,7 +160,7 @@ void ibuffer_name_internal(t_ibuffer *x, t_symbol *name, short argc, t_atom *arg
 
 void *ibuffer_valid(t_ibuffer *x)
 {
-    return (void *) &x->valid;
+    return reinterpret_cast<void *>(static_cast<intptr_t>(x->valid.load()));
 }
 
 // Load Helpers
@@ -173,8 +173,11 @@ struct ibuffer_lock
     {
         // Set invalid and wait till we can become the only user
         
-        while (!ATOMIC_COMPARE_SWAP32(1, 0, &x->valid));
-        while (!ATOMIC_COMPARE_SWAP32(0, 1, &x->inuse));
+        int32_t one = 1;
+        int32_t zero = 0;
+        
+        while (!m_ibuffer->valid.compare_exchange_weak(one, 0));
+        while (!m_ibuffer->inuse.compare_exchange_weak(zero, 1));
     }
     
     ~ibuffer_lock()
@@ -190,8 +193,10 @@ struct ibuffer_lock
         
         if (m_ibuffer)
         {
-            while (!ATOMIC_COMPARE_SWAP32(0, 1, &m_ibuffer->valid));
-            ATOMIC_DECREMENT_BARRIER(&m_ibuffer->inuse);
+            int32_t zero = 0;
+            
+            while (!m_ibuffer->valid.compare_exchange_weak(zero, 1));
+            m_ibuffer->inuse--;
         }
         
         if (m_file)
@@ -328,7 +333,7 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
     {
         // Load the format data and if we have a valid format load the sample
         
-        uint32_t num_frames = file.frames();
+        uint32_t num_frames = static_cast<uint32_t>(file.frames());
         
         x->frames = num_frames;
         x->channels = file.channels();

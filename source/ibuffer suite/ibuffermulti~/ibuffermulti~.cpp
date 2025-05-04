@@ -158,9 +158,9 @@ void ibuffermulti_load_internal(t_ibuffermulti *x, t_symbol *s, short argc, t_at
         
         object_method_typed(ibuffer, ps_set, 1, argv, &return_val);
         object_method_typed(ibuffer, ps_replace, argc - 1, argv + 1, &return_val);
-        long *valid_val = (long *) object_method(ibuffer, ps_valid);
+        void *valid = object_method(ibuffer, ps_valid);
         
-        if (valid_val && *valid_val)
+        if (valid)
             buffer_loaded = true;
     }
     

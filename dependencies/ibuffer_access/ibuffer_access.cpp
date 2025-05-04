@@ -101,7 +101,7 @@ void ibuffer_data::acquire_buffer()
         {
             t_ibuffer* buffer = reinterpret_cast<t_ibuffer*>(buffer_object);
 
-            ATOMIC_INCREMENT(&buffer->inuse);
+            buffer->inuse++;
 
             if (buffer->valid)
             {
@@ -113,7 +113,7 @@ void ibuffer_data::acquire_buffer()
                 sample_rate = buffer->sr;
             }
             else
-                ATOMIC_DECREMENT(&buffer->inuse);
+                buffer->inuse--;
         }
     }
 }
@@ -123,7 +123,7 @@ void ibuffer_data::release_buffer()
     if (buffer_type == kBufferMaxBuffer)
         buffer_unlocksamples(buffer_object);
     else if (buffer_type == kBufferIBuffer)
-        ATOMIC_DECREMENT(&reinterpret_cast<t_ibuffer*>(buffer_object)->inuse);
+        reinterpret_cast<t_ibuffer*>(buffer_object)->inuse--;
 }
 
 // Functions

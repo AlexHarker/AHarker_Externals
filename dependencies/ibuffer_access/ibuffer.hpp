@@ -16,7 +16,9 @@
 #include <ext.h>
 #include <z_dsp.h>
 #include <buffer.h>
-#include <stdint.h>
+
+#include <atomic>
+#include <cstdint>
 
 // Format enum
 
@@ -47,8 +49,8 @@ struct t_ibuffer
     long channels;              // number of channels
     t_ibuffer_format format;    // sample format
     
-    t_int32_atomic valid;       // set to 0 when loading / unable to load
-    t_int32_atomic inuse;       // count for num objects currently using this ibuffer~
+    std::atomic_int32_t valid;  // set to 0 when loading / unable to load
+    std::atomic_int32_t inuse;  // count for num objects currently using this ibuffer~
     
     void *bang_out;             // bangs on load
 };
