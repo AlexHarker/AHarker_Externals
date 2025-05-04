@@ -113,21 +113,23 @@ void threadfilter_anything(t_threadfilter *x, t_symbol *msg, long argc, t_atom *
 
 void threadfilter_assist(t_threadfilter *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s, "Low Priority Messages");
+                snprintf(s, maxAssist, "Low Priority Messages");
                 break;
                 
             case 1:
-                sprintf(s, "High Priority Messages");
+                snprintf(s, maxAssist, "High Priority Messages");
                 break;
         }
     }
     else
     {
-        sprintf(s, "Input (anything)");
+        snprintf(s, maxAssist, "Input (anything)");
     }
 }

@@ -232,28 +232,30 @@ void ibufplayer_free(t_ibufplayer *x)
 
 void ibufplayer_assist(t_ibufplayer *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         if (a < x->obj_n_chans)
         {
-            sprintf(s,"(signal) Output %ld", a + 1);
+            snprintf(s, maxAssist, "(signal) Output %ld", a + 1);
         }
         else
         {
             switch (a - x->obj_n_chans)
             {
                 case 0:
-                    sprintf(s,"(signal) Position Output (0-1)");
+                    snprintf(s, maxAssist, "(signal) Position Output (0-1)");
                     break;
                 case 1:
-                    sprintf(s,"(bang) Done Playing");
+                    snprintf(s, maxAssist, "(bang) Done Playing");
                     break;
             }
         }
     }
     else
     {
-        sprintf(s,"(signal) Speed Input");
+        snprintf(s, maxAssist, "(signal) Speed Input");
     }
 }
 

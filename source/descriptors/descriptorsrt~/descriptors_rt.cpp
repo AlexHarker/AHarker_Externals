@@ -224,13 +224,15 @@ void descriptorsrt_free(t_descriptorsrt *x)
 
 void descriptorsrt_assist(t_descriptorsrt *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"Descriptors Out");
+        snprintf(s, maxAssist, "Descriptors Out");
     }
     else
     {
-        sprintf(s,"(signal / messages) All Messages / Input");
+        snprintf(s, maxAssist, "(signal / messages) All Messages / Input");
     }
 }
 

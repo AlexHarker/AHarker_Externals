@@ -323,8 +323,10 @@ void timeconvolve_dsp64(t_timeconvolve *x, t_object *dsp64, short *count, double
 
 void timeconvolve_assist(t_timeconvolve *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(signal) Convolved Output");
+        snprintf(s, maxAssist, "(signal) Convolved Output");
     else
-        sprintf(s,"(signal) Input");
+        snprintf(s, maxAssist, "(signal) Input");
 }

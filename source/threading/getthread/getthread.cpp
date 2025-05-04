@@ -102,12 +102,14 @@ void getthread_anything(t_getthread *x, t_symbol *msg, long argc, t_atom *argv)
 
 void getthread_assist(t_getthread *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s, "Thread ID Out");
+        snprintf(s, maxAssist, "Thread ID Out");
     }
     else
     {
-        sprintf(s, "Input (anything)");
+        snprintf(s, maxAssist, "Input (anything)");
     }
 }

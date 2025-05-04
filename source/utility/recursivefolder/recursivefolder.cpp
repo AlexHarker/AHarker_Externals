@@ -115,11 +115,13 @@ void *recursive_folder_new(t_symbol *s, long argc, t_atom *argv)
 
 void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
     {
         switch (a)
         {
-            case 0: sprintf(s,"Path Name of Folder to List"); break;
+            case 0: snprintf(s, maxAssist, "Path Name of Folder to List"); break;
         }
     }
     else
@@ -128,8 +130,8 @@ void recursive_folder_assist(t_recursive_folder *x, void *b, long m, long a, cha
         {
             switch (a)
             {
-                case 0: sprintf(s,"File Name List"); break;
-                case 1: sprintf(s,"Count of Items Listed"); break;
+                case 0: snprintf(s, maxAssist, "File Name List"); break;
+                case 1: snprintf(s, maxAssist, "Count of Items Listed"); break;
             }
         }
     }

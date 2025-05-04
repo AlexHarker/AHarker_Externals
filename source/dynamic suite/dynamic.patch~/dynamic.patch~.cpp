@@ -99,10 +99,12 @@ void dynamic_patch_free(t_dynamic_patch *x)
 
 void dynamic_patch_assist(t_dynamic_patch *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"Patch Index");
+        snprintf(s, maxAssist, "Patch Index");
     else
-        sprintf(s,"Busy / On (0 or 1), Bang for Index");
+        snprintf(s, maxAssist, "Busy / On (0 or 1), Bang for Index");
 }
 
 // State

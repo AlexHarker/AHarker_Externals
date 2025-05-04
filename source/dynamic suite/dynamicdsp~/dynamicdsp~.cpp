@@ -364,15 +364,17 @@ void dynamicdsp_free(t_dynamicdsp *x)
 
 void dynamicdsp_assist(t_dynamicdsp *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         if (a < x->num_sig_outs)
-            sprintf(s,"Signal Out %ld", a + 1);
+            snprintf(s, maxAssist, "Signal Out %ld", a + 1);
         else
-            sprintf(s,"Message Out %ld", a - x->num_sig_outs + 1);
+            snprintf(s, maxAssist, "Message Out %ld", a - x->num_sig_outs + 1);
     }
     else
-        sprintf(s,"Signal / Message In %ld", a + 1);
+        snprintf(s, maxAssist, "Signal / Message In %ld", a + 1);
 }
 
 // Patcher Loading

@@ -525,18 +525,20 @@ void meandev_free(t_meandev *x)
 
 void meandev_assist(t_meandev *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         if (a % 2)
         {
             if (x->standard_var)
-                sprintf(s,"Stardard Deviation Out %ld", (a >> 1) + 1);
+                snprintf(s, maxAssist, "Stardard Deviation Out %ld", (a >> 1) + 1);
             else
-                sprintf(s,"Variance Out %ld", (a >> 1) + 1);
+                snprintf(s, maxAssist, "Variance Out %ld", (a >> 1) + 1);
         }
         else
         {
-            sprintf(s,"Mean Out %ld", a >> 1);
+            snprintf(s, maxAssist, "Mean Out %ld", a >> 1);
         }
     }
     else
@@ -544,13 +546,13 @@ void meandev_assist(t_meandev *x, void *b, long m, long a, char *s)
         switch (a)
         {
             case 0:
-                sprintf(s,"Data In");
+                snprintf(s, maxAssist, "Data In");
                 break;
             case 1:
                 if (x->weights_mode)
-                    sprintf(s,"Weights In / Reset");
+                    snprintf(s, maxAssist, "Weights In / Reset");
                 else
-                    sprintf(s,"Reset: bang To Reset");
+                    snprintf(s, maxAssist, "Reset: bang To Reset");
                 break;
         }
     }

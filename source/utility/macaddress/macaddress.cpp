@@ -322,8 +322,10 @@ void macaddress_bang(t_macaddress *x)
 
 void macaddress_assist(t_macaddress *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
-        sprintf(s,"Bang to Output");
+        snprintf(s, maxAssist, "Bang to Output");
     else
-        sprintf(s,"MAC Address");
+        snprintf(s, maxAssist, "MAC Address");
 }

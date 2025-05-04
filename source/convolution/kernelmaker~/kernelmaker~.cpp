@@ -90,7 +90,9 @@ void *kernelmaker_new(t_atom_long fades)
 
 void kernelmaker_assist(t_kernelmaker *x, void *b, long m, long a, char *s)
 {
-    sprintf(s,"Instructions To Build Kernel");
+    static constexpr int maxAssist = 256;
+
+    snprintf(s, maxAssist, "Instructions To Build Kernel");
 }
 
 // Int (set fades)

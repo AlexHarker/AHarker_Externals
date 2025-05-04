@@ -181,19 +181,21 @@ void rdcblock_dsp64(t_rdcblock *x, t_object *dsp64, short *count, double sample_
 
 void rdcblock_assist(t_rdcblock *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"(signal) Input");
+                snprintf(s, maxAssist, "(signal) Input");
                 break;
                 
             case 1:
-                sprintf(s,"(signal) Reset Trigger");
+                snprintf(s, maxAssist, "(signal) Reset Trigger");
                 break;
         }
     }
     else
-        sprintf(s,"(signal) Output");
+        snprintf(s, maxAssist, "(signal) Output");
 }

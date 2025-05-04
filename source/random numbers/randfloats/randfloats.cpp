@@ -122,20 +122,22 @@ void randfloats_free(t_randfloats *x)
 
 void randfloats_assist(t_randfloats *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
-        sprintf(s,"Random Float Out");
+        snprintf(s, maxAssist, "Random Float Out");
     }
     else {
         switch (a) {
             case 0:
-                sprintf(s,"Flat Random / Parameters");
+                snprintf(s, maxAssist, "Flat Random / Parameters");
                 break;
             case 1:
-                sprintf(s,"Gaussian Random");
+                snprintf(s, maxAssist, "Gaussian Random");
                 break;
             case 2:
-                sprintf(s,"Three Gauss. Random");
+                snprintf(s, maxAssist, "Three Gauss. Random");
                 break;
         }
     }

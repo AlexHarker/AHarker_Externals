@@ -71,8 +71,10 @@ void *denormkiller_new()
 
 void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
-        sprintf(s, "Dummy");
+        snprintf(s, maxAssist, "Dummy");
 }
 
 // Perform

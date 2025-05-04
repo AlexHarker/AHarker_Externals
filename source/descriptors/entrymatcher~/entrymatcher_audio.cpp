@@ -150,17 +150,19 @@ void entrymatcher_free(t_entrymatcher *x)
 
 void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_INLET)
         switch (a)
     {
         case 0:
-            sprintf(s,"(signal) Choose Triggers / Matching Parameters");
+            snprintf(s, maxAssist, "(signal) Choose Triggers / Matching Parameters");
             break;
         case 1:
-            sprintf(s,"(signal) Match Triggers");
+            snprintf(s, maxAssist, "(signal) Match Triggers");
             break;
         default:
-            sprintf(s,"(signal) Matcher Value %ld", a - 1);
+            snprintf(s, maxAssist, "(signal) Matcher Value %ld", a - 1);
             break;
     }
     else
@@ -168,16 +170,16 @@ void entrymatcher_assist(t_entrymatcher *x, void *b, long m, long a, char *s)
         switch (a)
         {
             case 0:
-                sprintf(s,"Matched Indices");
+                snprintf(s, maxAssist, "Matched Indices");
                 break;
             case 1:
-                sprintf(s,"Matched Labels");
+                snprintf(s, maxAssist, "Matched Labels");
                 break;
             case 2:
-                sprintf(s,"Matched Distances");
+                snprintf(s, maxAssist, "Matched Distances");
                 break;
             case 3:
-                sprintf(s,"Data from Lookup");
+                snprintf(s, maxAssist, "Data from Lookup");
                 break;
         }
     }

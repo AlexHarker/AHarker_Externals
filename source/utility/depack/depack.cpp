@@ -146,8 +146,10 @@ void depack_anything(t_depack *x, t_symbol *msg, long argc, t_atom *argv)
 
 void depack_assist(t_depack *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s, "Outlet %ld", a + 1);
+        snprintf(s, maxAssist, "Outlet %ld", a + 1);
     else
-        sprintf(s, "Input (anything)");
+        snprintf(s, maxAssist, "Input (anything)");
 }

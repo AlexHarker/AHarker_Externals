@@ -893,8 +893,10 @@ void partconvolve_memoryusage(t_partconvolve *x)
 
 void partconvolve_assist(t_partconvolve *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
-        sprintf(s,"(signal) Convolved Output");
+        snprintf(s, maxAssist, "(signal) Convolved Output");
     else
-        sprintf(s,"(signal) Input");
+        snprintf(s, maxAssist, "(signal) Input");
 }

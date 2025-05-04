@@ -77,24 +77,26 @@ void *ibufinfo_new(t_symbol *buffer_name)
 
 void ibufinfo_assist(t_ibufinfo *x, void *b, long m, long a, char *s)
 {
+    static constexpr int maxAssist = 256;
+
     if (m == ASSIST_OUTLET)
     {
         switch (a)
         {
             case 0:
-                sprintf(s,"Length (ms)");
+                snprintf(s, maxAssist, "Length (ms)");
                 break;
             case 1:
-                sprintf(s,"Sample Rate");
+                snprintf(s, maxAssist, "Sample Rate");
                 break;
             case 2:
-                sprintf(s,"Channels");
+                snprintf(s, maxAssist, "Channels");
                 break;
         }
     }
     else
     {
-        sprintf(s, "Buffer Name / bang");
+        snprintf(s, maxAssist, "Buffer Name / bang");
     }
 }
 

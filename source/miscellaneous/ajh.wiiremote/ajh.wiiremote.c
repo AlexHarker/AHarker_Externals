@@ -973,14 +973,14 @@ void ajhwiiremote_assist(t_ajhwiiremote *x, void *b, long m, long a, char *s)
 {
 	if (m == ASSIST_INLET)
 	{
-		sprintf(s,"connect, bang, disconnect....");
+		snprintf(s, maxAssist, "connect, bang, disconnect....");
 	}
 	else  
 	{
 		switch(a)
 		{
-			case 0: sprintf(s,"data messages"); break;
-			case 1: sprintf(s,"status messages"); break;
+			case 0: snprintf(s, maxAssist, "data messages"); break;
+			case 1: snprintf(s, maxAssist, "status messages"); break;
 		}
 	}
 }
