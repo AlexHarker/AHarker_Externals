@@ -31,12 +31,12 @@
 #include "descriptors_fft_params.hpp"
 #include "descriptors_graph.hpp"
 
-#include "modules/modules_core.hpp"
-#include "modules/modules_change.hpp"
-#include "modules/modules_content.hpp"
-#include "modules/modules_level.hpp"
-#include "modules/modules_pitch.hpp"
-#include "modules/modules_spectral.hpp"
+#include "../descriptors~/modules/modules_core.hpp"
+#include "../descriptors~/modules/modules_change.hpp"
+#include "../descriptors~/modules/modules_content.hpp"
+#include "../descriptors~/modules/modules_level.hpp"
+#include "../descriptors~/modules/modules_pitch.hpp"
+#include "../descriptors~/modules/modules_spectral.hpp"
 
 
 // Globals and Object Structure
