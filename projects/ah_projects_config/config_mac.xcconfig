@@ -22,7 +22,7 @@ COPY_PHASE_STRIP = NO
 
 GCC_PREFIX_HEADER = $(C74SUPPORT)/max-includes/macho-prefix.pch
 GCC_PRECOMPILE_PREFIX_HEADER = YES
-INFOPLIST_FILE = AH_Projects_Config/AH_Externals_Info.plist
+INFOPLIST_FILE = ah_projects_config/info.plist
 
 // Per architecture and deployment settings
 

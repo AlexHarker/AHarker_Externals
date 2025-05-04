@@ -13,7 +13,7 @@
 
 /* Begin PBXFileReference section */
 		B81F571D0D2422E0000D5E50 /* randomvals~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "randomvals~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8589F2719A7D506003F8618 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8589F2719A7D506003F8618 /* config_mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8DE14DC0EB46B030050BDFE /* randomvals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = randomvals.cpp; path = "../source/random numbers/randomvals/randomvals.cpp"; sourceTree = "<group>"; };
 		B8E15A1711E33C5500FA3CFA /* randomvals.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = randomvals.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -22,7 +22,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8589F2719A7D506003F8618 /* Config_AH_Ext_Mac.xcconfig */,
+				B8589F2719A7D506003F8618 /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -173,7 +173,7 @@
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8589F2719A7D506003F8618 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -209,7 +209,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8589F2719A7D506003F8618 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -243,7 +243,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8589F2719A7D506003F8618 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8589F2719A7D506003F8618 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;

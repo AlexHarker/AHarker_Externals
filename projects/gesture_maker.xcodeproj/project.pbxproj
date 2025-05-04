@@ -17,7 +17,7 @@
 
 /* Begin PBXFileReference section */
 		8D01CCD20486CAD60068D4B7 /* gesture_maker.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gesture_maker.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		B80B9429183BD7230014C9C4 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B80B9429183BD7230014C9C4 /* config_mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B848BF5811AC2EF700C2AB6B /* gesture_multipart.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gesture_multipart.hpp; sourceTree = "<group>"; };
 		B89E6C0D11AC07260002AC2B /* gesture_convert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gesture_convert.cpp; sourceTree = "<group>"; };
 		B89E6C1211AC072F0002AC2B /* gesture_kernel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gesture_kernel.cpp; sourceTree = "<group>"; };
@@ -35,7 +35,7 @@
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B80B9429183BD7230014C9C4 /* Config_AH_Ext_Mac.xcconfig */,
+				B80B9429183BD7230014C9C4 /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -135,7 +135,7 @@
 /* Begin XCBuildConfiguration section */
 		0FF6670B096B494E00E9E0B4 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80B9429183BD7230014C9C4 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B80B9429183BD7230014C9C4 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -144,7 +144,7 @@
 		};
 		0FF6670C096B494E00E9E0B4 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80B9429183BD7230014C9C4 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B80B9429183BD7230014C9C4 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
@@ -152,7 +152,7 @@
 		};
 		0FF6670D096B494E00E9E0B4 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B80B9429183BD7230014C9C4 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B80B9429183BD7230014C9C4 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 			};

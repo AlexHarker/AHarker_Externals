@@ -54,7 +54,7 @@
 		B85830E127B6D5A20083BA8E /* modules_content.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_content.cpp; sourceTree = "<group>"; };
 		B85830E227B6D5A20083BA8E /* modules_content.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = modules_content.hpp; sourceTree = "<group>"; };
 		B889D6A6286CC0A700BD1EE9 /* descriptors_summary_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = descriptors_summary_modules.hpp; sourceTree = "<group>"; };
-		B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B89B092011088AA300715138 /* config_mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8A49AB1110C6EE400738FDC /* descriptors_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = descriptors_rt.cpp; path = "../descriptorsrt~/descriptors_rt.cpp"; sourceTree = "<group>"; };
 		B8A49AB3110C6EF000738FDC /* descriptors_non_rt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descriptors_non_rt.cpp; sourceTree = "<group>"; };
 		B8BE4093286C52AD00D3D7A5 /* modules_summary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = modules_summary.cpp; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */,
+				B89B092011088AA300715138 /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -260,7 +260,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -269,7 +269,7 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -278,7 +278,7 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};
@@ -393,7 +393,7 @@
 		};
 		B8FE3F2F10986C1000780AF9 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -402,7 +402,7 @@
 		};
 		B8FE3F3010986C1000780AF9 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -411,7 +411,7 @@
 		};
 		B8FE3F3110986C1000780AF9 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B89B092011088AA300715138 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B89B092011088AA300715138 /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};

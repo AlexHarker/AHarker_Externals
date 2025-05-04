@@ -1499,7 +1499,7 @@
 		B8B56CC41465EFCE00FE85B0 /* kernelmaker~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "kernelmaker~.xcodeproj"; path = "projects/kernelmaker~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CCD1465EFD500FE85B0 /* partconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "partconvolve~.xcodeproj"; path = "projects/partconvolve~.xcodeproj"; sourceTree = "<group>"; };
 		B8B56CDC1465EFDC00FE85B0 /* timeconvolve~.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "timeconvolve~.xcodeproj"; path = "projects/timeconvolve~.xcodeproj"; sourceTree = "<group>"; };
-		B8F777462DC0EC28002E18C9 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = projects/AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = "<group>"; };
+		B8F777462DC0EC28002E18C9 /* config_mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = projects/ah_projects_config/config_mac.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -1941,7 +1941,7 @@
 		B8B56C141465ED1500FE85B0 = {
 			isa = PBXGroup;
 			children = (
-				B8F777462DC0EC28002E18C9 /* Config_AH_Ext_Mac.xcconfig */,
+				B8F777462DC0EC28002E18C9 /* config_mac.xcconfig */,
 				B83B28F8274008C900951E7A /* include */,
 				B82F0DBF1465F0B0007FAC6A /* conversion */,
 				B8B56CC31465EFC100FE85B0 /* convolution */,

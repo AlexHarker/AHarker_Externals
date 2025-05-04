@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8141A8F10EB52C000CB75FA /* config_mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B816420F1FED241C00CF6F87 /* ibuffer_access.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ibuffer_access.cpp; path = ../dependencies/ibuffer_access/ibuffer_access.cpp; sourceTree = "<group>"; };
 		B81F571D0D2422E0000D5E50 /* timeconvolve~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "timeconvolve~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8DAF7E0181D8DD50049FB27 /* ibuffer_access.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ibuffer_access.hpp; path = ../dependencies/ibuffer_access/ibuffer_access.hpp; sourceTree = SOURCE_ROOT; };
@@ -23,7 +23,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */,
+				B8141A8F10EB52C000CB75FA /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -110,7 +110,7 @@
 /* Begin XCBuildConfiguration section */
 		0FFBC541097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -119,7 +119,7 @@
 		};
 		0FFBC542097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -128,7 +128,7 @@
 		};
 		0FFBC543097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8141A8F10EB52C000CB75FA /* config_mac.xcconfig */;
 			buildSettings = {
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 			};

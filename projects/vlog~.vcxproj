@@ -38,12 +38,12 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="AH_Projects_Config\Config_AH_Ext_Win_Release.props" />
-    <Import Project="AH_Projects_Config\Config_OneMKL.props" />
+    <Import Project="ah_projects_config\config_win_release.props" />
+    <Import Project="ah_projects_config\config_one_mkl.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="AH_Projects_Config\Config_AH_Ext_Win_Debug.props" />
-    <Import Project="AH_Projects_Config\Config_OneMKL.props" />
+    <Import Project="ah_projects_config\config_win_debug.props" />
+    <Import Project="ah_projects_config\config_one_mkl.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>

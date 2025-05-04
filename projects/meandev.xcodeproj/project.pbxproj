@@ -13,14 +13,14 @@
 /* Begin PBXFileReference section */
 		B8BEAA750CD67E2B00F906C8 /* meandev.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = meandev.cpp; path = ../source/miscellaneous/meandev/meandev.cpp; sourceTree = "<group>"; };
 		B8BEAA8F0CD67F7700F906C8 /* meandev.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = meandev.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8C4F3CE1274340500CC6508 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8C4F3CE1274340500CC6508 /* config_mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		089C166AFE841209C02AAC07 /* maximum */ = {
 			isa = PBXGroup;
 			children = (
-				B8C4F3CE1274340500CC6508 /* Config_AH_Ext_Mac.xcconfig */,
+				B8C4F3CE1274340500CC6508 /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -205,7 +205,7 @@
 		};
 		B8BEAA8C0CD67F7700F906C8 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -214,7 +214,7 @@
 		};
 		B8BEAA8D0CD67F7700F906C8 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 			};
@@ -222,7 +222,7 @@
 		};
 		B8BEAA8E0CD67F7700F906C8 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8C4F3CE1274340500CC6508 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 			};

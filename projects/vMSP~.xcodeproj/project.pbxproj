@@ -53,7 +53,7 @@
 		B866CA5922CEC513005A20C3 /* vector_loop.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vector_loop.hpp; sourceTree = "<group>"; };
 		B874F42B22CEDC5300CD39A7 /* precision_handlers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = precision_handlers.hpp; sourceTree = "<group>"; };
 		B89D5CB31FDFDEFF00E11D0E /* conversions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = conversions.hpp; sourceTree = "<group>"; };
-		B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config_AH_Ext_Mac.xcconfig; path = AH_Projects_Config/Config_AH_Ext_Mac.xcconfig; sourceTree = SOURCE_ROOT; };
+		B8ABBF6319A78C9C00DB5F87 /* config_mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
 		B8BFF98A10AED1BE008EB5B2 /* vminimum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vminimum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF99B10AED1C5008EB5B2 /* vmaximum~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "vmaximum~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8BFF9CC10AED226008EB5B2 /* vmaximum~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "vmaximum~.cpp"; path = "vmaximum~/vmaximum~.cpp"; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		089C166AFE841209C02AAC07 /* plus~ */ = {
 			isa = PBXGroup;
 			children = (
-				B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */,
+				B8ABBF6319A78C9C00DB5F87 /* config_mac.xcconfig */,
 				08FB77ADFE841716C02AAC07 /* Source */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
 			);
@@ -1188,7 +1188,7 @@
 		};
 		0FFBC545097463A900D78707 /* Development */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1225,7 +1225,7 @@
 		};
 		0FFBC546097463A900D78707 /* Deployment */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1260,7 +1260,7 @@
 		};
 		0FFBC547097463A900D78707 /* Default */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* Config_AH_Ext_Mac.xcconfig */;
+			baseConfigurationReference = B8ABBF6319A78C9C00DB5F87 /* config_mac.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
