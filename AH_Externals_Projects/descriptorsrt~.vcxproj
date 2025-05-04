@@ -11,32 +11,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="descriptors_fft_params.hpp" />
-    <ClInclude Include="descriptors_graph.hpp" />
-    <ClInclude Include="descriptors_modules.hpp" />
-    <ClInclude Include="library\edges.hpp" />
-    <ClInclude Include="library\median_filter.hpp" />
-    <ClInclude Include="library\peak_finder.hpp" />
-    <ClInclude Include="library\sort.hpp" />
-    <ClInclude Include="modules\conversion_helpers.hpp" />
-    <ClInclude Include="modules\modules_change.hpp" />
-    <ClInclude Include="modules\modules_content.hpp" />
-    <ClInclude Include="modules\modules_core.hpp" />
-    <ClInclude Include="modules\modules_level.hpp" />
-    <ClInclude Include="modules\modules_pitch.hpp" />
-    <ClInclude Include="modules\modules_spectral.hpp" />
-    <ClInclude Include="modules\processing_containers.hpp" />
-    <ClInclude Include="modules\utility_definitions.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_fft_params.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_graph.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_modules.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\edges.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\median_filter.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\peak_finder.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\sort.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\conversion_helpers.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_change.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_content.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_core.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_level.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_pitch.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_spectral.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\processing_containers.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\utility_definitions.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="descriptors_graph.cpp" />
-    <ClCompile Include="descriptors_rt.cpp" />
-    <ClCompile Include="modules\modules_change.cpp" />
-    <ClCompile Include="modules\modules_content.cpp" />
-    <ClCompile Include="modules\modules_core.cpp" />
-    <ClCompile Include="modules\modules_level.cpp" />
-    <ClCompile Include="modules\modules_pitch.cpp" />
-    <ClCompile Include="modules\modules_spectral.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_graph.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptorsrt~\descriptors_rt.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_change.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_content.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_core.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_level.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_pitch.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_spectral.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>descriptorsrt~</ProjectName>
@@ -53,14 +53,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

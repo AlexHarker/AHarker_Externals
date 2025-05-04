@@ -28,8 +28,8 @@
 #include <AH_Lifecycle.hpp>
 #include <AH_Locks.hpp>
 
-#include "descriptors_fft_params.hpp"
-#include "descriptors_graph.hpp"
+#include "../descriptors~/descriptors_fft_params.hpp"
+#include "../descriptors~/descriptors_graph.hpp"
 
 #include "../descriptors~/modules/modules_core.hpp"
 #include "../descriptors~/modules/modules_change.hpp"

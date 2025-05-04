@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -35,7 +35,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <WholeProgramOptimization>false</WholeProgramOptimization>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -61,20 +61,20 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="entries.cpp" />
-    <ClCompile Include="entrymatcher_audio.cpp" />
-    <ClCompile Include="entry_database.cpp" />
-    <ClCompile Include="database_view.cpp" />
-    <ClCompile Include="matchers.cpp" />
+    <ClCompile Include="..\source\descriptors\entrymatcher\entries.cpp" />
+    <ClCompile Include="..\source\descriptors\entrymatcher~\entrymatcher_audio.cpp" />
+    <ClCompile Include="..\source\descriptors\entrymatcher\entry_database.cpp" />
+    <ClCompile Include="..\source\descriptors\entrymatcher\database_view.cpp" />
+    <ClCompile Include="..\source\descriptors\entrymatcher\matchers.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="atom_types.hpp" />
-    <ClInclude Include="entries.hpp" />
-    <ClInclude Include="entrymatcher_common.hpp" />
-    <ClInclude Include="entry_database.hpp" />
-    <ClInclude Include="database_view.hpp" />
-    <ClInclude Include="matchers.hpp" />
-    <ClInclude Include="sort.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\atom_types.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\entries.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\entrymatcher_common.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\entry_database.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\database_view.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\matchers.hpp" />
+    <ClInclude Include="..\source\descriptors\entrymatcher\sort.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

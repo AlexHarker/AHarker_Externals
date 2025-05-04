@@ -28,9 +28,9 @@
 #include <AH_Lifecycle.hpp>
 #include <random_generator.hpp>
 
-#include "entry_database.hpp"
-#include "entrymatcher_common.hpp"
-#include "matchers.hpp"
+#include "../entrymatcher/entry_database.hpp"
+#include "../entrymatcher/entrymatcher_common.hpp"
+#include "../entrymatcher/matchers.hpp"
 
 
 // Globals and Object Structure

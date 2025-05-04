@@ -25,14 +25,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -48,15 +48,15 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="Common\patch_slot.cpp" />
-    <ClCompile Include="Common\thread_set.cpp" />
-    <ClCompile Include="dynamicdsp~.cpp" />
+    <ClCompile Include="..\source\dynamic suite\Common\patch_slot.cpp" />
+    <ClCompile Include="..\source\dynamic suite\Common\thread_set.cpp" />
+    <ClCompile Include="..\source\dynamic suite\dynamicdsp~\dynamicdsp~.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\dynamic_host.hpp" />
-    <ClInclude Include="Common\patch_set.hpp" />
-    <ClInclude Include="Common\patch_slot.hpp" />
-    <ClInclude Include="Common\thread_set.hpp" />
+    <ClInclude Include="..\source\dynamic suite\Common\dynamic_host.hpp" />
+    <ClInclude Include="..\source\dynamic suite\Common\patch_set.hpp" />
+    <ClInclude Include="..\source\dynamic suite\Common\patch_slot.hpp" />
+    <ClInclude Include="..\source\dynamic suite\Common\thread_set.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
