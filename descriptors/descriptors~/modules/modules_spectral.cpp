@@ -3,7 +3,7 @@
 #include "utility_definitions.hpp"
 #include "../descriptors_graph.hpp"
 
-#include <Statistics.hpp>
+#include <statistics.hpp>
 
 #include <algorithm>
 #include <cmath>
@@ -36,7 +36,7 @@ void module_sfm::calculate(const global_params& params, const double *frame, lon
     const double *amplitudes = m_amplitude_module->get_frame();
     const double mean = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin) / bin_count();
     
-    const double sfm = stat_geometric_mean(amplitudes + m_min_bin, bin_count()) / mean;
+    const double sfm = htl::stat_geometric_mean(amplitudes + m_min_bin, bin_count()) / mean;
     
     m_value = mean ? (m_report_db ? atodb(sfm) : sfm) : infinity();
 }
@@ -143,8 +143,8 @@ void module_spectral_crest::calculate(const global_params& params, const double 
 
     // N.B. - This doesn't use stat_crest as the denominator is simply the mean
 
-    const double max = stat_max(amps + m_min_bin, bin_count());
-    const double mean = stat_mean(amps + m_min_bin, bin_count());
+    const double max = htl::stat_max(amps + m_min_bin, bin_count());
+    const double mean = htl::stat_mean(amps + m_min_bin, bin_count());
     const double crest = mean ? max / mean : infinity();
             
     m_value = m_report_db ? atodb(crest) : crest;
@@ -200,7 +200,7 @@ void module_lin_centroid::calculate(const global_params& params, const double *f
     const double *data = m_amplitude_module->get_frame() + m_min_bin;
     
     m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
-    m_raw = m_sum ? stat_weighted_sum(data, bin_count()) / m_sum : infinity();
+    m_raw = m_sum ? htl::stat_weighted_sum(data, bin_count()) / m_sum : infinity();
     m_value = (m_raw + m_min_bin) * params.bin_freq();
 }
 
@@ -213,14 +213,14 @@ void module_lin_spread::add_requirements(graph& g)
 
 void module_lin_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::indices_diff_op<impl::pow2>;
+    using calculation = htl::impl::indices_diff_op<htl::impl::pow2>;
     
     const double *data = m_centroid_module->get_frame() + m_min_bin;
     
     const double centroid = m_centroid_module->get_raw_centroid();
     const double sum = m_centroid_module->get_sum();
 
-    m_raw = sum ? sqrt(stat_weighted_sum(calculation(centroid), data, bin_count()) / sum) : infinity();
+    m_raw = sum ? sqrt(htl::stat_weighted_sum(calculation(centroid), data, bin_count()) / sum) : infinity();
     m_value = m_raw * params.bin_freq();
 }
 
@@ -233,7 +233,7 @@ void module_lin_skewness::add_requirements(graph& g)
 
 void module_lin_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::indices_diff_op<impl::pow3>;
+    using calculation = htl::impl::indices_diff_op<htl::impl::pow3>;
 
     const double *data = m_spread_module->get_frame() + m_min_bin;
     
@@ -241,8 +241,8 @@ void module_lin_skewness::calculate(const global_params& params, const double *f
     const double spread = m_spread_module->get_raw_spread();
     const double sum = m_spread_module->get_sum();
     
-    double denominator = impl::pow3()(spread) * sum;
-    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
+    double denominator = htl::impl::pow3()(spread) * sum;
+    m_value = sum ? htl::stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Kurtosis
@@ -254,7 +254,7 @@ void module_lin_kurtosis::add_requirements(graph& g)
 
 void module_lin_kurtosis::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::indices_diff_op<impl::pow4>;
+    using calculation = htl::impl::indices_diff_op<htl::impl::pow4>;
 
     const double *data = m_spread_module->get_frame() + m_min_bin;
 
@@ -262,8 +262,8 @@ void module_lin_kurtosis::calculate(const global_params& params, const double *f
     const double spread = m_spread_module->get_raw_spread();
     const double sum = m_spread_module->get_sum();
     
-    double denominator = impl::pow4()(spread) * sum;
-    m_value = sum ? stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
+    double denominator = htl::impl::pow4()(spread) * sum;
+    m_value = sum ? htl::stat_weighted_sum(calculation(centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Spectral Log Shape Modules
@@ -283,7 +283,7 @@ void module_log_centroid::calculate(const global_params& params, const double *f
     const double *log_bins = m_log_bins_module->get_log_bins() + m_min_bin;
 
     m_sum = m_amplitude_sum_module->get_sum(m_min_bin, m_max_bin);
-    m_raw = m_sum ? stat_weighted_sum(log_bins, data, bin_count()) / m_sum : infinity();
+    m_raw = m_sum ? htl::stat_weighted_sum(log_bins, data, bin_count()) / m_sum : infinity();
     m_value = exp2(m_raw) * params.bin_freq();
 }
 
@@ -296,7 +296,7 @@ void module_log_spread::add_requirements(graph& g)
 
 void module_log_spread::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::modified_diff_data<const double *, impl::pow2>;
+    using calculation = htl::impl::modified_diff_data<const double *, htl::impl::pow2>;
     
     const double *data = m_centroid_module->get_frame() + m_min_bin;
     const double *log_bins = m_centroid_module->get_log_bins() + m_min_bin;
@@ -304,7 +304,7 @@ void module_log_spread::calculate(const global_params& params, const double *fra
     const double centroid = m_centroid_module->get_raw_centroid();
     const double sum = m_centroid_module->get_sum();
     
-    m_raw = sum ? sqrt(stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / sum) : infinity();
+    m_raw = sum ? sqrt(htl::stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / sum) : infinity();
     m_value = m_raw;
 }
 
@@ -317,7 +317,7 @@ void module_log_skewness::add_requirements(graph& g)
 
 void module_log_skewness::calculate(const global_params& params, const double *frame, long size)
 {
-    using calculation = impl::modified_diff_data<const double *, impl::pow3>;
+    using calculation = htl::impl::modified_diff_data<const double *, htl::impl::pow3>;
     
     const double *data = m_spread_module->get_frame() + m_min_bin;
     const double *log_bins = m_spread_module->get_log_bins() + m_min_bin;
@@ -326,8 +326,8 @@ void module_log_skewness::calculate(const global_params& params, const double *f
     const double spread = m_spread_module->get_raw_spread();
     const double sum = m_spread_module->get_sum();
     
-    double denominator = impl::pow3()(spread) * sum;
-    m_value = sum ? stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
+    double denominator = htl::impl::pow3()(spread) * sum;
+    m_value = sum ? htl::stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
 }
 
 // Kurtosis
@@ -339,7 +339,7 @@ void module_log_kurtosis::add_requirements(graph& g)
 
 void module_log_kurtosis::calculate(const global_params& params, const double *frame, long size) 
 {
-    using calculation = impl::modified_diff_data<const double *, impl::pow4>;
+    using calculation = htl::impl::modified_diff_data<const double *, htl::impl::pow4>;
     
     const double *data = m_spread_module->get_frame() + m_min_bin;
     const double *log_bins = m_spread_module->get_log_bins() + m_min_bin;
@@ -348,6 +348,6 @@ void module_log_kurtosis::calculate(const global_params& params, const double *f
     const double spread = m_spread_module->get_raw_spread();
     const double sum = m_spread_module->get_sum();
     
-    double denominator = impl::pow4()(spread) * sum;
-    m_value = sum ? stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
+    double denominator = htl::impl::pow4()(spread) * sum;
+    m_value = sum ? htl::stat_weighted_sum(calculation(log_bins, centroid), data, bin_count()) / denominator : infinity();
 }

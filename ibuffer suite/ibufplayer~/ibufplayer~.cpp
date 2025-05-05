@@ -22,7 +22,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 #include <ibuffer_access.hpp>
 
 #include <limits>
@@ -50,7 +50,7 @@ struct t_ibufplayer
     
     transport_flag mode_flag;
     
-    InterpType interp_type;
+    htl::interp_type interp_type;
     
     double drive;
     double speed;
@@ -165,7 +165,7 @@ int C74_EXPORT main()
     
     // Add Attributes
     
-    add_ibuffer_interp_attribute<t_ibufplayer, InterpType::CubicHermite>(this_class, "interp");
+    add_ibuffer_interp_attribute<t_ibufplayer, htl::interp_type::cubic_hermite>(this_class, "interp");
     
     class_dspinit(this_class);
     class_register(CLASS_BOX, this_class);
@@ -213,7 +213,7 @@ void *ibufplayer_new(t_symbol *s, long argc, t_atom *argv)
     for (long i = 0 ; i < max_num_chans; i++)
         x->vols[i] = 1.0;
     
-    x->interp_type = InterpType::CubicHermite;
+    x->interp_type = htl::interp_type::cubic_hermite;
     
     x->done_clock = clock_new(x, (method) ibufplayer_done_bang);
     
@@ -393,10 +393,10 @@ void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const pha
     for (int i = 0; i < N; i++, pos += info.speed())
         pos_array[i] = pos;
     
-    SIMDType<double, N> v_pos(pos_array);
-    SIMDType<double, N> v_speed(info.speed() * N);
-    SIMDType<double, N> *v_positions = reinterpret_cast<SIMDType<double, N> *>(positions);
-    SIMDType<T, N>* v_phases = reinterpret_cast<SIMDType<T, N> *>(phases);
+    htl::simd_type<double, N> v_pos(pos_array);
+    htl::simd_type<double, N> v_speed(info.speed() * N);
+    htl::simd_type<double, N> *v_positions = reinterpret_cast<htl::simd_type<double, N> *>(positions);
+    htl::simd_type<T, N>* v_phases = reinterpret_cast<htl::simd_type<T, N> *>(phases);
     
     for (long i = 0; i < n_vecs; i++)
         ibufplayer_update_phase(v_positions, v_phases, v_pos, v_speed, info);
@@ -408,7 +408,7 @@ void ibufplayer_phase_fixed(double *positions, T *phases, double& pos, const pha
 template <class T>
 void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *positions, long vec_size)
 {
-    constexpr int N = SIMDLimits<double>::max_size;
+    constexpr int N = htl::simd_limits<double>::max_size;
     
     ibuffer_data buffer(x->buffer_name);
     
@@ -438,7 +438,7 @@ void perform_core(t_ibufplayer *x, const T *in, T **outs, T *phase_out, double *
         {
             x->playing = true;
             
-            InterpType interp_type = info.speed_is_int() ?InterpType::None : x->interp_type;
+            htl::interp_type interp_type = info.speed_is_int() ? htl::interp_type::none : x->interp_type;
             
             // Calculate the phasor block
             

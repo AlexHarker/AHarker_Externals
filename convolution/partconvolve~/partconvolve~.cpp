@@ -17,19 +17,20 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <HISSTools_FFT/HISSTools_FFT.h>
-#include <AH_Int_Handler.hpp>
-#include <RandomGenerator.hpp>
-#include <SIMDSupport.hpp>
+#include <fft/fft.hpp>
+#include <random_generator.hpp>
+#include <simd_support.hpp>
+
 #include <ibuffer_access.hpp>
+
+#include <AH_Int_Handler.hpp>
 
 #include <algorithm>
 
-
 // Utility
 
-using vec_type = SIMDType<float, 4>;
-using split_type = FFT_SPLIT_COMPLEX_F;
+using vec_type = htl::simd_type<float, 4>;
+using split_type = htl::split_type<float>;
 
 void update_split_complex_pointers(split_type &complex1, const split_type complex2, long offset)
 {
@@ -66,7 +67,7 @@ long int_log2(long long in, long *inexact)
 
 t_class *this_class;
 
-random_generator<> rand_gen;
+htl::random_generator<> rand_gen;
 
 constexpr static int MIN_FFT_SIZE_LOG2          = 5;
 constexpr static int MAX_FFT_SIZE_LOG2          = 20;
@@ -79,7 +80,7 @@ struct t_partconvolve
     
     // FFT variables
     
-    FFT_SETUP_F fft_setup_real;
+    htl::setup_type<float> fft_setup_real;
     
     long max_fft_size;
     long max_fft_size_log2;
@@ -269,14 +270,14 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
         max_impulse_length *= (max_fft_size / 2);
     }
     
-    x->impulse_buffer.realp = allocate_aligned<float>(max_impulse_length * 4);
+    x->impulse_buffer.realp = htl::allocate_aligned<float>(max_impulse_length * 4);
     x->impulse_buffer.imagp = x->impulse_buffer.realp + max_impulse_length;
     x->input_buffer.realp = x->impulse_buffer.imagp + max_impulse_length;
     x->input_buffer.imagp = x->input_buffer.realp + max_impulse_length;
     
     // Allocate fft and temporary buffers
     
-    x->fft_buffers[0] = allocate_aligned<float>(max_fft_size * 7);
+    x->fft_buffers[0] = htl::allocate_aligned<float>(max_fft_size * 7);
     x->fft_buffers[1] = x->fft_buffers[0] + max_fft_size;
     x->fft_buffers[2] = x->fft_buffers[1] + max_fft_size;
     x->fft_buffers[3] = x->fft_buffers[2] + max_fft_size;
@@ -288,7 +289,7 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     x->fft_buffers[4] = x->partition_temp.imagp + (max_fft_size / 2);
     
-    hisstools_create_setup(&x->fft_setup_real, x->max_fft_size_log2);
+    htl::create_fft_setup(&x->fft_setup_real, x->max_fft_size_log2);
     
     x->memory_flag = x->fft_buffers[0] && x->impulse_buffer.realp && x->fft_setup_real;
     
@@ -310,9 +311,9 @@ void *partconvolve_new(t_symbol *s, long argc, t_atom *argv)
 void partconvolve_free(t_partconvolve *x)
 {
     dsp_free(&x->x_obj);
-    hisstools_destroy_setup(x->fft_setup_real);
-    deallocate_aligned(x->impulse_buffer.realp);
-    deallocate_aligned(x->fft_buffers[0]);
+    htl::destroy_fft_setup(x->fft_setup_real);
+    htl::deallocate_aligned(x->impulse_buffer.realp);
+    htl::deallocate_aligned(x->fft_buffers[0]);
 }
 
 // Max FFT Size Setter
@@ -487,7 +488,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
     
     // FFT variables / attributes
     
-    FFT_SETUP_F fft_setup_real = x->fft_setup_real;
+    htl::setup_type<float> fft_setup_real = x->fft_setup_real;
     
     long fft_size_halved = x->fft_size >> 1;
     long fft_size_log2 = x->fft_size_log2;
@@ -563,7 +564,7 @@ void partconvolve_partition(t_partconvolve *x, long direct_flag)
             
             t_ptr_int n_samps = std::min(impulse_length, static_cast<t_ptr_int>(fft_size_halved));
             ibuffer_get_samps(buffer, temp_buffer, buffer_pos, n_samps, chan);
-            hisstools_rfft(fft_setup_real, temp_buffer, &impulse_buffer, n_samps, fft_size_log2);
+            htl::rfft(fft_setup_real, temp_buffer, &impulse_buffer, n_samps, fft_size_log2);
             impulse_length -= fft_size_halved;
             
             update_split_complex_pointers(impulse_buffer, impulse_buffer, fft_size_halved);
@@ -651,7 +652,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
     
     // FFT variables
     
-    FFT_SETUP_F fft_setup_real = x->fft_setup_real;
+    htl::setup_type<float> fft_setup_real = x->fft_setup_real;
     
     float **fft_buffers = x->fft_buffers;
     
@@ -781,7 +782,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             // Do the fft and put into the input buffer
             
-            hisstools_rfft(fft_setup_real, fft_input, &buffer_temp, fft_size, fft_size_log2);
+            htl::rfft(fft_setup_real, fft_input, &buffer_temp, fft_size, fft_size_log2);
             
             // Process first partition here and accumulate the output (we need it now!)
             
@@ -792,7 +793,7 @@ void partconvolve_perform_internal(t_partconvolve *x, float *in, float *out, lon
             
             // Processing done - do inverse fft on the accumulation buffer
             
-            hisstools_rifft(fft_setup_real, &accum_buffer, fft_buffers[2], fft_size_log2);
+            htl::rifft(fft_setup_real, &accum_buffer, fft_buffers[2], fft_size_log2);
             
             // Store the result to the output buffer
             

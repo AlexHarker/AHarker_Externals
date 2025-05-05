@@ -12,7 +12,7 @@
 #ifndef _CONVERSIONS_HPP_
 #define _CONVERSIONS_HPP_
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
 #include "vector_loop.hpp"
 
@@ -36,7 +36,7 @@ struct mul_add_functor
 template <class T>
 void mul_const_array(T *o, const T *i, long size, T mul)
 {
-    SIMDType<T, SIMDLimits<T>::max_size> v_mul(mul);
+    htl::simd_type<T, htl::simd_limits<T>::max_size> v_mul(mul);
     
     vector_loop<mul_functor>(o, i, size, v_mul);
 }
@@ -50,8 +50,8 @@ void mul_const_array(T *io, long size, T mul)
 template <class T>
 void mul_add_const_array(T *o, const T *i, long size, T mul, T add)
 {
-    SIMDType<T, SIMDLimits<T>::max_size> v_mul(mul);
-    SIMDType<T, SIMDLimits<T>::max_size> v_add(add);
+    htl::simd_type<T, htl::simd_limits<T>::max_size> v_mul(mul);
+    htl::simd_type<T, htl::simd_limits<T>::max_size> v_add(add);
 
     vector_loop<mul_add_functor>(o, i, size, v_mul, v_add);
 }

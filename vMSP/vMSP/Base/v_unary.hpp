@@ -16,7 +16,7 @@
 #include <string>
 #include <type_traits>
 
-#include "SIMDSupport.hpp"
+#include <simd_support.hpp>
 
 
 // Calculation Type Enum
@@ -91,7 +91,7 @@ public:
     {
         // Vector Op
 
-        constexpr int simd_width = SIMDLimits<double>::max_size;
+        constexpr int simd_width = htl::simd_limits<double>::max_size;
         return reinterpret_cast<method>(perform64_op<T, simd_width>);
     }
     
@@ -112,7 +112,7 @@ public:
         
         // Use SIMD routines if possible
 
-        if ((Type != calculation_type::scalar) && ((max_vec / SIMDLimits<double>::max_size) > 0))
+        if ((Type != calculation_type::scalar) && ((max_vec / htl::simd_limits<double>::max_size) > 0))
             current_perform_routine = dsp_vector_select64<T>(x);
         
         object_method(dsp64, gensym("dsp_add64"), x, current_perform_routine, 0, 0);
@@ -133,10 +133,10 @@ public:
     {
         Functor &functor = x->m_functor;
 
-        SIMDType<double, N> *in1 = reinterpret_cast<SIMDType<double, N> *>(ins[0]);
-        SIMDType<double, N> *out1 = reinterpret_cast<SIMDType<double, N> *>(outs[0]);
+        htl::simd_type<double, N> *in1 = reinterpret_cast<htl::simd_type<double, N> *>(ins[0]);
+        htl::simd_type<double, N> *out1 = reinterpret_cast<htl::simd_type<double, N> *>(outs[0]);
         
-        vec_size /= SIMDType<double, N>::size;
+        vec_size /= htl::simd_type<double, N>::size;
             
         while (vec_size--)
             *out1++ = functor(*in1++);

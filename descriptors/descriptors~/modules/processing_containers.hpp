@@ -2,8 +2,8 @@
 #ifndef _PROCESSING_CONTAINERS_HPP_
 #define _PROCESSING_CONTAINERS_HPP_
 
-#include <HISSTools_FFT/HISSTools_FFT.h>
-#include <SIMDSupport.hpp>
+#include <fft/fft.hpp>
+#include <simd_support.hpp>
 
 // A Memory Aligned Vector
 
@@ -12,7 +12,7 @@ struct aligned_vector
 {
     aligned_vector() : m_ptr(nullptr), m_size(0) {}
     aligned_vector(size_t size) : aligned_vector() { resize(size); }
-    ~aligned_vector() { deallocate_aligned(m_ptr); }
+    ~aligned_vector() { htl::deallocate_aligned(m_ptr); }
        
     aligned_vector(const aligned_vector&) = delete;
     aligned_vector& operator=(const aligned_vector&) = delete;
@@ -38,8 +38,8 @@ struct aligned_vector
     {
         if (size != m_size)
         {
-            deallocate_aligned(m_ptr);
-            m_ptr = allocate_aligned<T>(size);
+            htl::deallocate_aligned(m_ptr);
+            m_ptr = htl::allocate_aligned<T>(size);
             m_size = size;
         }
     }
@@ -70,14 +70,14 @@ struct fft_split
         m_split.imagp = m_vector.data() + (size >> 1);
     }
     
-    FFT_SPLIT_COMPLEX_D& data() { return m_split; }
-    const FFT_SPLIT_COMPLEX_D& data() const { return m_split; }
+    htl::split_type<double>& data() { return m_split; }
+    const htl::split_type<double>& data() const { return m_split; }
     size_t size() const { return m_vector.size(); }
 
 private:
 
     aligned_vector<> m_vector;
-    FFT_SPLIT_COMPLEX_D m_split;
+    htl::split_type<double> m_split;
 };
 
 // An FFT Setup
@@ -86,7 +86,7 @@ struct fft_setup
 {
     fft_setup() : m_fft_setup(nullptr), m_size(0) {}
     fft_setup(size_t size) : fft_setup() { resize(size); }
-    ~fft_setup() { hisstools_destroy_setup(m_fft_setup); }
+    ~fft_setup() { htl::destroy_fft_setup(m_fft_setup); }
     
     fft_setup(const fft_setup&) = delete;
     fft_setup& operator=(const fft_setup&) = delete;
@@ -95,18 +95,18 @@ struct fft_setup
     {
         if (size != m_size)
         {
-            hisstools_destroy_setup(m_fft_setup);
-            hisstools_create_setup(&m_fft_setup, size);
+            htl::destroy_fft_setup(m_fft_setup);
+            htl::create_fft_setup(&m_fft_setup, size);
             m_size = size;
         }
     }
     
-    FFT_SETUP_D& get() { return m_fft_setup; }
+    htl::setup_type<double>& get() { return m_fft_setup; }
     size_t size() const { return m_size; }
 
 private:
     
-    FFT_SETUP_D m_fft_setup;
+    htl::setup_type<double> m_fft_setup;
     size_t m_size;
 };
 

@@ -21,7 +21,7 @@
 #include <ext_obex.h>
 
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -29,7 +29,7 @@
 
 // Globals and Object Structure
 
-using rand_gen = random_generator<>;
+using rand_gen = htl::random_generator<>;
 
 t_class *this_class;
 

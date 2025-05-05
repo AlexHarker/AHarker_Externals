@@ -17,7 +17,7 @@
 
 struct atan_functor
 {
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a) { return atan(a.mVal); }
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a) { return atan(a.m_val); }
     
     template <class T>
     void operator()(T *o, T *i, long size) { atan_array(o, i, size); }

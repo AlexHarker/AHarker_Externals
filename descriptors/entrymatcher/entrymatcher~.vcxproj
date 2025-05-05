@@ -41,10 +41,10 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="..\..\AH_Win_Debug.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_AH_Ext_Win_Debug.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="..\..\AH_Win_Release.props" />
+    <Import Project="..\..\AH_Externals_Config\Config_AH_Ext_Win_Release.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>

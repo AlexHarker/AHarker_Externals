@@ -13,14 +13,14 @@
 
 #include "gesture_random.hpp"
 
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include <algorithm>
 
 
 // Random number generator
 
-random_generator<> rand_gen;
+htl::random_generator<> rand_gen;
 
 // Return a band number from a specifing atom (choosing randomly when a range is given)
 

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include <Statistics.hpp>
+#include <statistics.hpp>
 
 void module_noise_ratio::add_requirements(graph& g)
 {
@@ -21,7 +21,7 @@ void module_noise_ratio::calculate(const global_params& params, const double *fr
     double power_sum = m_power_sum_module->get_sum(0, params.num_bins());
             
     if (power_sum)
-        m_value = std::min(1.0, stat_sum_squares(median_amplitudes, params.num_bins()) / power_sum);
+        m_value = std::min(1.0, htl::stat_sum_squares(median_amplitudes, params.num_bins()) / power_sum);
     else
         m_value = infinity();
 }

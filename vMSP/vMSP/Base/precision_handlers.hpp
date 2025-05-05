@@ -22,15 +22,15 @@ struct unary_precision_handler
 {
     // Scalar Operators
     
-    SIMDType<float, 1> operator()(const SIMDType<float, 1> a)
+    simd_type<float, 1> operator()(const simd_type<float, 1> a)
     {
         return op(a);
     }
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)
+    simd_type<double, 1> operator()(const simd_type<double, 1> a)
     {
-        const SIMDType<float, 1> b = op(SIMDType<float, 1>(static_cast<float>(a.mVal)));
-        return SIMDType<double, 1>(b.mVal);
+        const simd_type<float, 1> b = op(simd_type<float, 1>(static_cast<float>(a.mVal)));
+        return simd_type<double, 1>(b.mVal);
     }
     
     // Array Operators

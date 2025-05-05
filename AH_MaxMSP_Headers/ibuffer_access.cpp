@@ -129,7 +129,7 @@ void ibuffer_data::release_buffer()
 // Functions
 
 template <class T, class U>
-void ibuffer_read_format(const ibuffer_data& buffer, T* out, U* positions, intptr_t n_samps, long chan, T mul, InterpType interp)
+void ibuffer_read_format(const ibuffer_data& buffer, T* out, U* positions, intptr_t n_samps, long chan, T mul, htl::interp_type interp)
 {
     switch (buffer.get_format())
     {
@@ -140,23 +140,23 @@ void ibuffer_read_format(const ibuffer_data& buffer, T* out, U* positions, intpt
     }
 }
 
-void ibuffer_read(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, InterpType interp)
+void ibuffer_read(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, htl::interp_type interp)
 {
     ibuffer_read_format<double>(buffer, out, positions, n_samps, chan, mul, interp);
 }
 
-void ibuffer_read(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, InterpType interp)
+void ibuffer_read(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp)
 {
     ibuffer_read_format<float>(buffer, out, positions, n_samps, chan, mul, interp);
 }
 
-void ibuffer_read(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, InterpType interp)
+void ibuffer_read(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp)
 {
     ibuffer_read_format<float>(buffer, out, positions, n_samps, chan, mul, interp);
 }
 
 template <class T, class U>
-void ibuffer_read_format_edges(const ibuffer_data& buffer, T* out, U* positions, intptr_t n_samps, long chan, T mul, InterpType interp, EdgeMode edges, bool bound)
+void ibuffer_read_format_edges(const ibuffer_data& buffer, T* out, U* positions, intptr_t n_samps, long chan, T mul, htl::interp_type interp, htl::edge_mode edges, bool bound)
 {
     switch (buffer.get_format())
     {
@@ -190,17 +190,17 @@ void ibuffer_read_format_edges(const ibuffer_data& buffer, T* out, U* positions,
     }
 }
 
-void ibuffer_read_edges(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, InterpType interp, EdgeMode edges, bool bound)
+void ibuffer_read_edges(const ibuffer_data& buffer, double* out, const double* positions, intptr_t n_samps, long chan, double mul, htl::interp_type interp, htl::edge_mode edges, bool bound)
 {
     ibuffer_read_format_edges<double>(buffer, out, positions, n_samps, chan, mul, interp, edges, bound);
 }
 
-void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, InterpType interp, EdgeMode edges, bool bound, float pad_lo, float pad_hi)
+void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const double* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp, htl::edge_mode edges, bool bound, float pad_lo, float pad_hi)
 {
     ibuffer_read_format_edges<float>(buffer, out, positions, n_samps, chan, mul, interp, edges, bound);
 }
 
-void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, InterpType interp, EdgeMode edges, bool bound, float pad_lo, float pad_hi)
+void ibuffer_read_edges(const ibuffer_data& buffer, float* out, const float* positions, intptr_t n_samps, long chan, float mul, htl::interp_type interp, htl::edge_mode edges, bool bound, float pad_lo, float pad_hi)
 {
     ibuffer_read_format_edges<float>(buffer, out, positions, n_samps, chan, mul, interp, edges, bound);
 }

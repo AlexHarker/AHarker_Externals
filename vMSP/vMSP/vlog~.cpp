@@ -70,15 +70,15 @@ struct log_functor
     
     // Ops + Array Operators
 
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a, const htl::simd_type<double, 1> b)
     {
-        return log(a.mVal > 0.0 ? a.mVal : min_constant) * update_base(b.mVal);
+        return log(a.m_val > 0.0 ? a.m_val : min_constant) * update_base(b.m_val);
     }
     
     template <class T>
     void operator()(T *o, T *i1, T *i2, long size, double val, inputs type)
     {
-        constexpr int simd_width = SIMDLimits<T>::max_size;
+        constexpr int simd_width = htl::simd_limits<T>::max_size;
         
         switch (type)
         {
@@ -107,8 +107,8 @@ struct log_functor
                 vector_loop<replace_input_functor>(o, i1, size);
                 log_array(o, o, size);
 
-                SIMDType<T, simd_width> *v_io = reinterpret_cast<SIMDType<T, simd_width> *>(o);
-                SIMDType<T, simd_width> *v_i2 = reinterpret_cast<SIMDType<T, simd_width> *>(t);
+                htl::simd_type<T, simd_width> *v_io = reinterpret_cast<htl::simd_type<T, simd_width> *>(o);
+                htl::simd_type<T, simd_width> *v_i2 = reinterpret_cast<htl::simd_type<T, simd_width> *>(t);
 
                 // N.B. we can assume that there are an exact number of vectors and that vectors are aligned
                 

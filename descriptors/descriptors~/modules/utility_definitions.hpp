@@ -3,9 +3,9 @@
 #define _UTILITY_DEFINITIONS_HPP_
 
 #include <limits>
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
-using VecType = SIMDType<double, SIMDLimits<double>::max_size>;
+using VecType = htl::simd_type<double, htl::simd_limits<double>::max_size>;
 
 static constexpr double infinity() { return std::numeric_limits<double>::infinity(); }
 

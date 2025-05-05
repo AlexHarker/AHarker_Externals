@@ -19,7 +19,7 @@
 #include <z_dsp.h>
 
 #include <AH_Lifecycle.hpp>
-#include <RandomGenerator.hpp>
+#include <random_generator.hpp>
 
 #include <algorithm>
 
@@ -32,7 +32,7 @@ struct t_randfloats
 {
     t_object a_obj;
     
-    random_generator<> gen;
+    htl::random_generator<> gen;
     
     double params[12];
     
@@ -56,7 +56,7 @@ void randfloats_bang(t_randfloats *x);
 
 void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv);
 
-double triple_gauss_rand(random_generator<>& gen, double *params);
+double triple_gauss_rand(htl::random_generator<>& gen, double *params);
 double erf_weighting(double mean, double dev);
 
 // Main
@@ -226,7 +226,7 @@ void randfloats_list(t_randfloats *x, t_symbol *msg, long argc, t_atom *argv)
 
 // Helpers
 
-double triple_gauss_rand(random_generator<>& gen, double *params)
+double triple_gauss_rand(htl::random_generator<>& gen, double *params)
 {
     // Choose which of the three sets of parameters to use
     

@@ -25,9 +25,9 @@ struct pow_functor
 {
     double m_exp = 1.0;
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a, const SIMDType<double, 1> b)
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a, const htl::simd_type<double, 1> b)
     {
-        return nan_fixer()(pow(b.mVal, a.mVal));
+        return nan_fixer()(pow(b.m_val, a.m_val));
     }
  
     template <class T>

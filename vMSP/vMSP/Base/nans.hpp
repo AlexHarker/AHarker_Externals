@@ -37,14 +37,14 @@ struct nan_and_inf_fixer
     
     // Scalar Fixing Operators
     
-    SIMDType<double, 1> operator()(const SIMDType<double, 1> a)     { return operator()(a.mVal); }
+    htl::simd_type<double, 1> operator()(const htl::simd_type<double, 1> a)     { return operator()(a.m_val); }
     
     // Vector Fixing Operators
     
     template <class T, int N>
-    SIMDType<T, N> operator()(const SIMDType<T, N> a)
+    htl::simd_type<T, N> operator()(const htl::simd_type<T, N> a)
     {
-        const SIMDType<T, N> v_inf(std::numeric_limits<T>::infinity());
+        const htl::simd_type<T, N> v_inf(std::numeric_limits<T>::infinity());
         
         if (FixInfs)
             return and_not(v_inf == (a & v_inf), a);

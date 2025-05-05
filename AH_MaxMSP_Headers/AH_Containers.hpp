@@ -28,7 +28,7 @@ public:
             release();
         }
         
-        // Calling release() invaluidates the list referenced by operator()
+        // Calling release() invalidates the list referenced by operator()
         
         void release()
         {

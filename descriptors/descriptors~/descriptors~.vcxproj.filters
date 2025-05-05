@@ -79,7 +79,6 @@
     <ClCompile Include="modules\modules_summary.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\AH_MaxMSP_Headers\HISSTools_FFT\HISSTools_FFT.cpp" />
     <ClCompile Include="..\..\AH_MaxMSP_Headers\ibuffer_access.cpp" />
     <ClCompile Include="descriptors_graph.cpp" />
     <ClCompile Include="descriptors_non_rt.cpp" />

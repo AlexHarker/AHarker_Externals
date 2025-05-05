@@ -213,6 +213,10 @@ void *descriptors_new(t_symbol *s, short argc, t_atom *argv)
     long max_fft_size = 0;
     t_atom_long descriptor_data_size = 0;
 
+    // This exists for historical reasons so make sure the compiler knows we aren't using it
+    
+    static_cast<void>(descriptor_data_size);
+    
     // Get arguments
 
     if (argc)

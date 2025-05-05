@@ -17,7 +17,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 
 
 // Globals and Object Structure
@@ -81,7 +81,7 @@ void denormkiller_assist(t_denormkiller *x, void *b, long m, long a, char *s)
 
 void denormkiller_perform64(t_denormkiller *x, t_object *dsp64, double **ins, long numins, double **outs, long numouts, long vec_size, long flags, void *userparam)
 {    
-    SIMDDenormals::off();
+    htl::simd_denormals::off();
 }
 
 // DSP

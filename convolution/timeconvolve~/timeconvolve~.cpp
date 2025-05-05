@@ -18,7 +18,7 @@
 #include <ext_obex.h>
 #include <z_dsp.h>
 
-#include <SIMDSupport.hpp>
+#include <simd_support.hpp>
 #include <AH_Int_Handler.hpp>
 #include <ibuffer_access.hpp>
 
@@ -31,7 +31,7 @@
 
 // Utility
 
-using vec_type = SIMDType<float, 4>;
+using vec_type = htl::simd_type<float, 4>;
 
 #ifdef __APPLE__
 t_ptr_int pad_length(t_ptr_int length)
@@ -152,8 +152,8 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
     
     // Allocate impulse buffer and input buffer
     
-    x->impulse_buffer = allocate_aligned<float>(2048);
-    x->input_buffer = allocate_aligned<float>(8192);
+    x->impulse_buffer = htl::allocate_aligned<float>(2048);
+    x->input_buffer = htl::allocate_aligned<float>(8192);
     
     std::fill_n(x->impulse_buffer, 2048, 0.f);
     std::fill_n(x->input_buffer, 8192, 0.f);
@@ -169,8 +169,8 @@ void *timeconvolve_new(t_symbol *s, long argc, t_atom *argv)
 void timeconvolve_free(t_timeconvolve *x)
 {
     dsp_free(&x->x_obj);
-    deallocate_aligned(x->impulse_buffer);
-    deallocate_aligned(x->input_buffer);
+    htl::deallocate_aligned(x->impulse_buffer);
+    htl::deallocate_aligned(x->input_buffer);
 }
 
 // Set Method
