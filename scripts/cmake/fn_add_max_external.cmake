@@ -111,7 +111,6 @@ function(add_max_external)
         ${AHEXT_PROJECT_NAME}
         PRIVATE
         ${AHEXT_COMPILE_OPTIONS}
-        $<$<PLATFORM_ID:Windows>:/O2>
         $<$<PLATFORM_ID:Windows>:/MT>
         $<$<PLATFORM_ID:Darwin>:-Wmost>
         $<$<PLATFORM_ID:Darwin>:-Wno-four-char-constants>
