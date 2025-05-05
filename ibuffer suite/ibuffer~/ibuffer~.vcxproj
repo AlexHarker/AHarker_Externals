@@ -62,9 +62,6 @@
   <ItemGroup>
     <ClCompile Include="ibuffer~.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\AH_Externals_Dependencies\HISSTools_Library\AudioFile\BaseAudioFile.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
