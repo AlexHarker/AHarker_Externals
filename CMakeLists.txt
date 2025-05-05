@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(MACOS_UNIVERSAL "Build universal architecture (if off builds native architecture only)" OFF)
+set(CMAKE_XCODE_GENERATE_TOP_LEVEL_PROJECT_ONLY ON)
 
 set(COMMON_INCLUDES ${CMAKE_SOURCE_DIR}/include)
 set(HISSTOOLS_LIB_INCLUDES ${CMAKE_SOURCE_DIR}/dependencies/HISSTools_Library/include) 
