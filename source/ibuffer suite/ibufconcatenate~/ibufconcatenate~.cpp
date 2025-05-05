@@ -375,7 +375,7 @@ void ibufconcatenate_int(t_ibufconcatenate *x, long item)
     t_ibufconcatenate_info::read_access access(x->attachment);
     
     double full_length = ibuffer_full_length(access.buffername());
-    double sr = 0;
+    double sr = ibuffer_data(access.buffername()).get_sample_rate();
     
     t_atom atom_out[3];
     
