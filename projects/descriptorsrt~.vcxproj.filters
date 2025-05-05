@@ -9,69 +9,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="library\edges.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\library\edges.hpp">
       <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="library\median_filter.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\library\median_filter.hpp">
       <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="library\peak_finder.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\library\peak_finder.hpp">
       <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="library\sort.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\library\sort.hpp">
       <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="modules\conversion_helpers.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\conversion_helpers.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_change.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_change.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_content.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_content.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_core.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_core.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_level.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_level.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_pitch.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_pitch.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\modules_spectral.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_spectral.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\processing_containers.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\processing_containers.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="modules\utility_definitions.hpp">
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\utility_definitions.hpp">
       <Filter>modules</Filter>
     </ClInclude>
-    <ClInclude Include="descriptors_fft_params.hpp" />
-    <ClInclude Include="descriptors_graph.hpp" />
-    <ClInclude Include="descriptors_modules.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_fft_params.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_graph.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_modules.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="modules\modules_change.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_change.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="modules\modules_content.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_content.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="modules\modules_core.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_core.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="modules\modules_level.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_level.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="modules\modules_pitch.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_pitch.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="modules\modules_spectral.cpp">
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_spectral.cpp">
       <Filter>modules</Filter>
     </ClCompile>
-    <ClCompile Include="descriptors_graph.cpp" />
-    <ClCompile Include="descriptors_rt.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_graph.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_rt.cpp" />
   </ItemGroup>
 </Project>
