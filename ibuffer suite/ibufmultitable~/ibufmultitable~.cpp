@@ -169,7 +169,7 @@ void ibufmultitable_set(t_ibufmultitable *x, t_symbol *s)
 // Core Perform Routine
 
 template <int N, class T>
-void perform_positions(T *positions, const T *in, const T *offsets, long n_samps, double start, double end, double last)
+void perform_positions(T *positions, const T *in, const T *offsets, long n_vecs, double start, double end, double last)
 {
     htl::simd_type<T, N> *v_positions = reinterpret_cast<htl::simd_type<T, N> *>(positions);
     const htl::simd_type<T, N> *v_in = reinterpret_cast<const htl::simd_type<T, N> *>(in);
@@ -180,9 +180,7 @@ void perform_positions(T *positions, const T *in, const T *offsets, long n_samps
     const htl::simd_type<T, N> limit(static_cast<T>(last));
     const htl::simd_type<T, N> zero(static_cast<T>(0));
     const htl::simd_type<T, N> one(static_cast<T>(1));
-    
-    long n_vecs = n_samps / N;
-    
+        
     for (long i = 0; i < n_vecs; i++)
     {
         htl::simd_type<T, N> position = min(one, max(zero, *v_in++)) * mul + add + *v_offsets++;
@@ -222,7 +220,7 @@ void perform_core(t_ibufmultitable *x, const T *in, const T *offset_in, T *out, 
         // Read from buffer
         
         perform_positions<N>(out + 0, in + 0, offset_in + 0, v_count, start_samp, end_samp, last_samp);
-        perform_positions<1>(out + S, in + S, offset_in + S, (v_count - S), start_samp, end_samp, last_samp);
+        perform_positions<1>(out + S, in + S, offset_in + S, (vec_size - S), start_samp, end_samp, last_samp);
         
         ibuffer_read(buffer, out, out, vec_size, chan, 1.f, x->interp_type);
     }
