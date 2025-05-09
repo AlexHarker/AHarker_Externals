@@ -30,8 +30,7 @@ xcuserdata/
 
 # Windows Build Directories
 
-AH_Externals_Builds/
-AH_Externals_Intermediate/
+build/*
 
 # CVS Folders
 

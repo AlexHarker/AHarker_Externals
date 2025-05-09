@@ -1,11 +1,11 @@
 name: build-github
 on: [workflow_dispatch]
 env: 
-  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
+  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/d9c567fd-df1c-4477-9030-682c66058324/intel-onemkl-2025.1.0.802_offline.exe
   MXO_GLOB: -e mxo
 jobs:
   deploy-win:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Install oneMKL
         shell: bash
@@ -17,11 +17,6 @@ jobs:
              ./webimage_extracted/bootstrapper.exe -s --action install --eula accept -p=NEED_VS2022_INTEGRATION=1
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      - name: Checkout max-sdk-base
-        uses: actions/checkout@v3
-        with:
-          repository: 'Cycling74/max-sdk-base'
-          path: "max-sdk-base"
       - name: Checkout main repo
         uses: actions/checkout@v3
         with:
@@ -33,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: deploy-win
-          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+          path: "ah-externals/package/AHarker_Externals/externals/"
   deploy-mac:
     runs-on: macos-latest
     needs: deploy-win
@@ -41,11 +36,6 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - name: Checkout max-sdk-base
-        uses: actions/checkout@v3
-        with:
-          repository: 'Cycling74/max-sdk-base'
-          path: "max-sdk-base"
       - name: Checkout main repo
         uses: actions/checkout@v3
         with:
@@ -55,7 +45,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: deploy-win
-          path: "ah-externals/AH_Externals_Package/AHarker_Externals/externals/"
+          path: "ah-externals/package/AHarker_Externals/externals/"
       - name: Build mac externals
         run: xcodebuild -project 'ah-externals/AH Externals.xcodeproj' -scheme 'AH Externals' -destination 'platform=OS X,arch=x86_64' -configuration Deployment -quiet build CODE_SIGNING_ALLOWED=YES
       - name: Setup keychain and identities
@@ -84,7 +74,7 @@ jobs:
         # install fd /cd to package make temp folder with mxos / sign mxos / copy to folder / zip / notarize upload / deleete temps / staple
         run: |
              brew install fd
-             cd ah-externals/AH_Externals_Package
+             cd ah-externals/package
              mkdir -p Notarization
              fd $MXO_GLOB -E .git -I
              fd $MXO_GLOB -E .git -I -x codesign --force --timestamp --sign "Developer ID Application" {}
@@ -96,7 +86,7 @@ jobs:
       - name: Make zip
         run: |
              mkdir build/
-             cd ah-externals/AH_Externals_Package/
+             cd ah-externals/package/
              zip -r ../../build/AHarker_Externals.zip AHarker_Externals
       - name: Make release
         uses: "softprops/action-gh-release@v1"

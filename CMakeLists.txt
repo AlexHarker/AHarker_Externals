@@ -1,0 +1,63 @@
+cmake_minimum_required(VERSION 3.19)
+
+string(REGEX REPLACE "(.*)/" "" THIS_FOLDER_NAME "${CMAKE_CURRENT_SOURCE_DIR}")
+project(${THIS_FOLDER_NAME})
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(MACOS_UNIVERSAL "Build universal architecture (if off builds native architecture only)" OFF)
+set(CMAKE_XCODE_GENERATE_TOP_LEVEL_PROJECT_ONLY ON)
+
+set(COMMON_INCLUDES ${CMAKE_SOURCE_DIR}/include)
+set(HISSTOOLS_LIB_INCLUDES ${CMAKE_SOURCE_DIR}/dependencies/HISSTools_Library/include) 
+set(IBUFFER_ACCESS_INCLUDES ${CMAKE_SOURCE_DIR}/dependencies/ibuffer_access/)
+
+if (APPLE)
+    if (${CMAKE_GENERATOR} MATCHES "Xcode")
+            if (${XCODE_VERSION} VERSION_LESS 10)
+                message(STATUS "Xcode 10 or higher is required. Please install from the Mac App Store.")
+                return ()
+            endif ()
+    endif ()
+
+    if (NOT CMAKE_OSX_ARCHITECTURES)
+        if(MACOS_UNIVERSAL)
+            set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "macOS architecture" FORCE)
+        else()
+            set(CMAKE_OSX_ARCHITECTURES ${CMAKE_SYSTEM_PROCESSOR} CACHE STRING "macOS architecture" FORCE)
+        endif()
+        message("CMAKE_OSX_ARCHITECTURES set to ${CMAKE_OSX_ARCHITECTURES}")
+    endif()
+endif()
+
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/fn_add_msp_external.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/fn_add_max_external.cmake)
+
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+        LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
+
+# Generate a project for every folder in the "source/category" folder
+SUBDIRLIST(CATEGORY_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/source)
+foreach (cat_dir ${CATEGORY_DIRS})
+  SUBDIRLIST(PROJECT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/source/${cat_dir})
+  foreach (project_dir ${PROJECT_DIRS})
+    set(project_path ${CMAKE_CURRENT_SOURCE_DIR}/source/${cat_dir}/${project_dir})
+    #message("checking in: ${project_path}")
+    if (EXISTS "${project_path}/CMakeLists.txt")
+      message("Generating: ${project_dir}")
+      add_subdirectory(${project_path})
+    endif ()
+  endforeach ()
+endforeach ()
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/dependencies)

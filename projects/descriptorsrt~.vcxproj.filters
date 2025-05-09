@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="library">
+      <UniqueIdentifier>{2bf0598d-8e7b-459b-b541-d8003190b6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{d4f059df-cc2c-42e4-9dee-8fd102d505eb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\descriptors\descriptors~\library\edges.hpp">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\library\median_filter.hpp">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\library\peak_finder.hpp">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\library\sort.hpp">
+      <Filter>library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\conversion_helpers.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_change.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_content.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_core.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_level.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_pitch.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_spectral.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\processing_containers.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\utility_definitions.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_fft_params.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_graph.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_modules.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_change.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_content.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_core.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_level.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_pitch.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_spectral.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_graph.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_rt.cpp" />
+  </ItemGroup>
+</Project>

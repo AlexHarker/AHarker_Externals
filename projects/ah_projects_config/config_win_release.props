@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>../package/AHarker_Externals/externals/</OutDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IntDir>../build/vs-build/$(ProjectName)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetExt>.mxe64</TargetExt>
+    <_PropertySheetDisplayName>Config_Release</_PropertySheetDisplayName>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+	  <AdditionalLibraryDirectories>..\dependencies\max-sdk-base\c74support\max-includes\x64;..\dependencies\max-sdk-base\c74support\msp-includes\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	  <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalDependencies>MaxAPI.lib;MaxAudio.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <MergeSections>
+      </MergeSections>
+      <ImportLibrary>$(IntDir)$(ProjectName).lib</ImportLibrary>
+      <AdditionalOptions>/EXPORT:main %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ClCompile>
+	  <AdditionalIncludeDirectories>..\include;..\dependencies\ibuffer_access;..\dependencies\HISSTools_Library\include;..\dependencies\max-sdk-base\c74support\max-includes;..\dependencies\max-sdk-base\c74support\msp-includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  <PreprocessorDefinitions>NOMINMAX;_USE_MATH_DEFINES;WIN_VERSION;WIN64;_WINDOWS;_USRDLL;WIN_EXT_VERSION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <ProgramDataBaseFileName>$(IntDir)\pdb\$(ProjectName).pdb</ProgramDataBaseFileName>
+      <AssemblerListingLocation>$(IntDir)$(TargetName).asm</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <StringPooling>true</StringPooling>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

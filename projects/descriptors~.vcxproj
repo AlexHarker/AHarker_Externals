@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_fft_params.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_graph.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_modules.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_summary_graph.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\descriptors_summary_modules.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\edges.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\median_filter.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\peak_finder.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\library\sort.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\conversion_helpers.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_change.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_content.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_core.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_level.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_pitch.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_spectral.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\modules_summary.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\processing_containers.hpp" />
+    <ClInclude Include="..\source\descriptors\descriptors~\modules\utility_definitions.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\dependencies\ibuffer_access\ibuffer_access.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_graph.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_non_rt.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\descriptors_summary_graph.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_change.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_content.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_core.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_level.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_pitch.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_spectral.cpp" />
+    <ClCompile Include="..\source\descriptors\descriptors~\modules\modules_summary.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>descriptors~</ProjectName>
+    <ProjectGuid>{62EFB66B-9A08-42CE-9D93-4BC068D92BFB}</ProjectGuid>
+    <RootNamespace>jslider</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="ah_projects_config\config_win_debug.props" />
+    <Import Project="ah_projects_config\config_one_mkl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="ah_projects_config\config_win_release.props" />
+    <Import Project="ah_projects_config\config_one_mkl.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
