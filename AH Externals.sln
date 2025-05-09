@@ -113,7 +113,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufinfo~", "projects\ibufi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffermulti~", "projects\ibuffermulti~.vcxproj", "{F4038975-384B-46DA-A5B6-3AA8AE58C724}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffer~", ""projects\ibuffer~.vcxproj", "{7FA19981-2A24-4B74-AF10-237295C88D2B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibuffer~", "projects\ibuffer~.vcxproj", "{7FA19981-2A24-4B74-AF10-237295C88D2B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ibufconcatedrive~", "projects\ibufconcatedrive~.vcxproj", "{2934ADF9-A3D4-4A0D-96A3-2A4BF00E47CD}"
 EndProject
