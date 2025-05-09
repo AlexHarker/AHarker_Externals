@@ -5,7 +5,7 @@ env:
   MXO_GLOB: -e mxo
 jobs:
   deploy-win:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Install oneMKL
         shell: bash
@@ -17,11 +17,6 @@ jobs:
              ./webimage_extracted/bootstrapper.exe -s --action install --eula accept -p=NEED_VS2022_INTEGRATION=1
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      - name: Checkout max-sdk-base
-        uses: actions/checkout@v3
-        with:
-          repository: 'Cycling74/max-sdk-base'
-          path: "max-sdk-base"
       - name: Checkout main repo
         uses: actions/checkout@v3
         with:
@@ -41,11 +36,6 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - name: Checkout max-sdk-base
-        uses: actions/checkout@v3
-        with:
-          repository: 'Cycling74/max-sdk-base'
-          path: "max-sdk-base"
       - name: Checkout main repo
         uses: actions/checkout@v3
         with:
