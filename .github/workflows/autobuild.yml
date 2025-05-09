@@ -1,7 +1,7 @@
 name: build-github
 on: [workflow_dispatch]
 env: 
-  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/18723/w_onemkl_p_2022.1.0.192_offline.exe
+  WIN_ONEAPI: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/d9c567fd-df1c-4477-9030-682c66058324/intel-onemkl-2025.1.0.802_offline.exe
   MXO_GLOB: -e mxo
 jobs:
   deploy-win:
