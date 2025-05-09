@@ -32,12 +32,12 @@ Package Releases / Binaries
 - Please note that the behaviour of *descriptors~ / descriptorsrt~* may differ from earlier versions. 
 - Please report any issues with the issues page on GitHub. 
 
-Compiling
+Building using Provided Projects
 ---------
 
 This repositiory uses submodules.
-Make sure these are correctly cloned/updated before trying to compile.
-Should you wish to compile the externals yourself you will require the following:
+Make sure these are correctly cloned/updated before trying to build.
+Should you wish to build the externals yourself you will require the following:
 
 **Mac:**
 1. Xcode
@@ -48,9 +48,34 @@ Should you wish to compile the externals yourself you will require the following
 
 **Windows:**
 1. Visual Studio
-2. OneMKL *or* OneAPI Base Toolkit (which includes OneMKL)
-    - https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html
-    - https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html
+2. OneMKL - https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html
+
+Building using CMake
+---------
+
+Alternatively you can generate projects and build via cmake by following the commands below (requires cmake in addition to the above, and python on windows for the MKL installation):
+
+**Mac:**
+
+```sh
+mkdir build
+cd build
+cmake .. -GXcode
+cmake --build . --config Release
+```
+
+**Windows:**
+
+In this case OneMKL is installed via a python script (rather than the installer above)
+
+```sh
+mkdir build (or New-Item -ItemType Directory -Path build) # use the latter if in  Powershell
+python source/scripts/install_mkl.py # once to install mkl
+cd build
+cmake ..
+cmake --build . --config Release
+```
+With thanks to shakfu (https://github.com/shakfu) for providing cmake support
 
 Contact
 ---------
