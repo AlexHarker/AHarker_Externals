@@ -326,6 +326,16 @@ void ibuffer_load_internal(t_ibuffer *x, t_symbol *s, short argc, t_atom *argv)
     
     if (file.is_open())
     {
+        if (file.is_error())
+        {
+            auto errors = file.get_errors();
+            
+            for (auto it = errors.begin(); it != errors.end(); it++)
+                object_error((t_object *) x, htl::base_audio_file::error_string(*it).c_str());
+            
+            return;
+        }
+        
         // Load the format data and if we have a valid format load the sample
         
         uint32_t num_frames = file.frames();
