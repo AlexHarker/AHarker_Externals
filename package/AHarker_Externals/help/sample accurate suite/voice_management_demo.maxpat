@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -41,12 +41,12 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"fontsize" : 36.0,
+					"fontsize" : 40.0,
 					"id" : "obj-36",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 277.0, 17.0, 41.0, 47.0 ],
+					"patching_rect" : [ 279.0, 14.0, 47.0, 51.0 ],
 					"text" : "&"
 				}
 
@@ -63,7 +63,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 320.0, 13.0, 340.25, 58.0 ]
+					"patching_rect" : [ 321.0, 12.0, 340.25, 58.0 ]
 				}
 
 			}
@@ -79,7 +79,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 15.5, 13.0, 254.5, 58.0 ]
+					"patching_rect" : [ 15.0, 13.0, 254.5, 58.0 ]
 				}
 
 			}
@@ -96,7 +96,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -130,7 +130,6 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
@@ -297,7 +296,7 @@
 					"numoutlets" : 3,
 					"outlettype" : [ "", "", "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 684.0, 302.0, 20.0, 20.0 ],
+					"patching_rect" : [ 678.0, 302.0, 20.0, 20.0 ],
 					"rounded" : 60.0,
 					"text" : "4",
 					"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -448,9 +447,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 165.0, 195.0, 163.0, 65.0 ],
+					"patching_rect" : [ 165.0, 180.0, 163.0, 65.0 ],
 					"text" : "ensure that we catch every trigger immediately (set phasor~  output to 0 when it is 1).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"textjustification" : 1
 				}
 
 			}
@@ -491,8 +490,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 260.0, 326.0, 203.0, 21.0 ],
-					"text" : "see here for subsample accuracy",
-					"textcolor" : [ 0.0, 0.372549, 1.0, 1.0 ]
+					"text" : "see here for subsample accuracy"
 				}
 
 			}
@@ -511,13 +509,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 80.0, 110.0, 700.0, 520.0 ],
+						"rect" : [ 80.0, 110.0, 722.0, 524.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -545,16 +543,15 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
-						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-11",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 244.0, 223.0, 353.0, 20.0 ],
+									"patching_rect" : [ 216.0, 223.0, 383.0, 21.0 ],
 									"text" : "look in here to see how this calculation works in terms of algebra"
 								}
 
@@ -563,7 +560,7 @@
 								"box" : 								{
 									"color" : [ 0.0, 0.396078, 1.0, 1.0 ],
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-7",
 									"maxclass" : "newobj",
 									"numinlets" : 0,
@@ -573,7 +570,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -936,7 +933,7 @@
 										"lines" : [  ]
 									}
 ,
-									"patching_rect" : [ 183.0, 223.0, 53.0, 22.0 ],
+									"patching_rect" : [ 155.0, 223.0, 58.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -951,12 +948,12 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-25",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 130.0, 355.833344000000011, 544.0, 20.0 ],
+									"patching_rect" : [ 120.0, 370.0, 590.0, 21.0 ],
 									"text" : "divide the result by the increment (gives subsample crossing point in relation to the previous sample)"
 								}
 
@@ -964,13 +961,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-23",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 28.0, 150.0, 634.0, 33.0 ],
+									"patching_rect" : [ 18.0, 150.0, 640.0, 36.0 ],
 									"text" : "Here, we used use some simple algebra to find the point at which the zero-crossing took place (assuming a straight line between the last two samples)."
 								}
 
@@ -978,12 +975,12 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-21",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 130.0, 324.833312999999976, 193.0, 20.0 ],
+									"patching_rect" : [ 120.0, 337.0, 209.0, 21.0 ],
 									"text" : "subtract the current phasor~ value"
 								}
 
@@ -991,12 +988,12 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-19",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 130.0, 384.833344000000011, 456.0, 20.0 ],
+									"patching_rect" : [ 120.0, 402.0, 494.0, 21.0 ],
 									"text" : "take away from one to calculate how long ago zero-crossing took place (in samples)"
 								}
 
@@ -1004,12 +1001,12 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-17",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 130.0, 294.0, 292.0, 20.0 ],
+									"patching_rect" : [ 120.0, 305.0, 316.0, 21.0 ],
 									"text" : "calculate wrapped increment between last 2 samples"
 								}
 
@@ -1017,12 +1014,12 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-12",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 81.0, 448.0, 171.0, 20.0 ],
+									"patching_rect" : [ 68.0, 470.5, 185.0, 21.0 ],
 									"text" : "Subsample accuracy out (0-1)"
 								}
 
@@ -1030,13 +1027,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-10",
 									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 28.0, 58.0, 636.0, 74.0 ],
+									"patching_rect" : [ 18.0, 58.0, 681.0, 79.0 ],
 									"text" : "It works by pre-advancing the ramps by the given subsample offset (between 0 and 1). The logic behind this is that for detection process (such as the one used here with phasor~), detection can only happen after the event (in this case crossing the 0 or 1 point) has taken place. Thus, the trigger occurs late by a fraction of a sample. To compensate for this, we advance the ramps by that amount to acheive subsample accuracy. Offset is applied to both the normalised and position ramps of voicedrive~ and voicemanager~ also takes account of the subsample offset."
 								}
 
@@ -1044,13 +1041,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-8",
 									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 28.0, 17.0, 633.0, 33.0 ],
+									"patching_rect" : [ 18.0, 17.0, 655.0, 36.0 ],
 									"text" : "The subsample offset is for many applications not necessary. However, if for some reason you need better than sample-accurate timing (for pitched prcoesses etc.) you can utilise this functionality."
 								}
 
@@ -1058,13 +1055,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-5",
 									"maxclass" : "newobj",
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 416.0, 56.0, 22.0 ],
+									"patching_rect" : [ 29.0, 434.0, 60.0, 23.0 ],
 									"text" : "clip~ 0 1"
 								}
 
@@ -1072,13 +1069,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-15",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 384.833344000000011, 35.0, 22.0 ],
+									"patching_rect" : [ 29.0, 401.0, 38.0, 23.0 ],
 									"text" : "!-~ 1"
 								}
 
@@ -1086,13 +1083,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-14",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 355.833344000000011, 32.5, 22.0 ],
+									"patching_rect" : [ 29.0, 369.0, 34.0, 23.0 ],
 									"text" : "!/~"
 								}
 
@@ -1100,13 +1097,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-13",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 55.0, 324.833312999999976, 64.0, 22.0 ],
+									"patching_rect" : [ 43.0, 336.0, 64.0, 23.0 ],
 									"text" : "-~"
 								}
 
@@ -1114,13 +1111,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-6",
 									"maxclass" : "newobj",
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 264.833312999999976, 60.0, 22.0 ],
+									"patching_rect" : [ 29.0, 271.0, 65.0, 23.0 ],
 									"text" : "clip~ -1 0"
 								}
 
@@ -1128,13 +1125,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-4",
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 294.833312999999976, 35.0, 22.0 ],
+									"patching_rect" : [ 29.0, 304.0, 38.0, 23.0 ],
 									"text" : "+~ 1"
 								}
 
@@ -1142,13 +1139,13 @@
 , 							{
 								"box" : 								{
 									"fontname" : "Arial",
-									"fontsize" : 12.0,
+									"fontsize" : 13.0,
 									"id" : "obj-3",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 234.833327999999995, 44.0, 22.0 ],
+									"patching_rect" : [ 29.0, 239.0, 47.0, 23.0 ],
 									"text" : "delta~"
 								}
 
@@ -1161,7 +1158,7 @@
 									"maxclass" : "outlet",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 41.0, 446.0, 25.0, 25.0 ]
+									"patching_rect" : [ 29.0, 466.0, 30.0, 30.0 ]
 								}
 
 							}
@@ -1174,7 +1171,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 41.0, 198.0, 25.0, 25.0 ]
+									"patching_rect" : [ 29.0, 199.0, 30.0, 30.0 ]
 								}
 
 							}
@@ -1182,7 +1179,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 1 ],
-									"midpoints" : [ 50.5, 229.0, 109.5, 229.0 ],
+									"midpoints" : [ 38.5, 235.0, 97.5, 235.0 ],
 									"order" : 0,
 									"source" : [ "obj-1", 0 ]
 								}
@@ -1227,7 +1224,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 0 ],
-									"midpoints" : [ 50.5, 319.333312999999976, 64.5, 319.333312999999976 ],
+									"midpoints" : [ 38.5, 330.333312999999976, 52.5, 330.333312999999976 ],
 									"order" : 0,
 									"source" : [ "obj-4", 0 ]
 								}
@@ -1295,8 +1292,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 112.0, 134.0, 80.0, 25.0 ],
-					"text" : "grain rate",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "grain rate"
 				}
 
 			}
@@ -1309,8 +1305,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 165.0, 262.0, 223.0, 21.0 ],
-					"text" : "set length to get overlap of 10 voices",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "set length to get overlap of 10 voices"
 				}
 
 			}
@@ -1326,7 +1321,6 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 403.0, 452.0, 183.0, 36.0 ],
 					"text" : "sum busy flags\ngives number of active voices ",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
@@ -1340,9 +1334,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 531.0, 299.0, 148.0, 25.0 ],
-					"text" : "offset into buffer (ms)",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 525.0, 299.0, 148.0, 25.0 ],
+					"text" : "offset into buffer (ms)"
 				}
 
 			}

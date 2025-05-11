@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,13 +113,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 887.0, 498.0 ],
+						"rect" : [ 150.0, 126.0, 887.0, 498.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -263,7 +263,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 208.0, 414.0, 20.0, 20.0 ],
+									"patching_rect" : [ 210.0, 414.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -279,7 +279,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 97.0, 412.0, 109.0, 25.0 ],
+									"patching_rect" : [ 99.0, 412.0, 109.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -305,8 +305,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 92.0, 270.0, 177.0, 21.0 ],
-									"text" : "soft-clip to the range -1. to 1.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "soft-clip to the range -1. to 1."
 								}
 
 							}
@@ -335,7 +334,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 512.97900390625, 295.0, 208.0, 36.0 ],
 									"text" : "see the dynamicdsp_mode tab for info on the second argument",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -349,8 +347,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 269.0, 157.0, 141.0, 21.0 ],
-									"text" : "modulating coefficients",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "modulating coefficients"
 								}
 
 							}
@@ -681,13 +678,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 150.0, 126.0, 887.0, 498.0 ],
+						"rect" : [ 0.0, 26.0, 887.0, 498.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -730,7 +727,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 373.0, 341.0, 20.0, 20.0 ],
+									"patching_rect" : [ 378.0, 340.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -747,7 +744,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 213.0, 331.0, 157.0, 40.0 ],
+									"patching_rect" : [ 218.0, 330.0, 157.0, 40.0 ],
 									"text" : "adjust volume level to hear the waveshaping"
 								}
 
@@ -836,7 +833,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 225.0, 448.0, 20.0, 20.0 ],
+									"patching_rect" : [ 230.0, 448.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -852,7 +849,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 120.0, 445.0, 101.0, 25.0 ],
+									"patching_rect" : [ 125.0, 445.0, 101.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -880,8 +877,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 480.0, 412.0, 315.0, 40.0 ],
-									"text" : "second argument is dynamicdsp~ mode (only works in a hosted patch with enough signal inlets).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "second argument is dynamicdsp~ mode (only works in a hosted patch with enough signal inlets)."
 								}
 
 							}
@@ -939,8 +935,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 455.0, 292.0, 221.0, 40.0 ],
-									"text" : "Look inside to see the arguments and triggering method",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Look inside to see the arguments and triggering method"
 								}
 
 							}

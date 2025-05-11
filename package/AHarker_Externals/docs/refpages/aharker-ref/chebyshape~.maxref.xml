@@ -5,7 +5,7 @@
       Calculated chebyshev polynomial waveshaping
   </digest>
   <description>
-      <o>chebyshape~</o> is an object for waveshaping an audio input using chebyshev polynomials of the first kind. The output is calculated (rather than using a table method), which means the parameters can be updated  at audio rate. It should be noted that neither the input or the output are clipped at -1. or 1., so the output could become quite large if you are not careful. The input and / or output can be clipped to produce this behaviour if desired.
+      <o>chebyshape~</o> is an object for waveshaping an audio input using chebyshev polynomials of the first kind. The output is calculated (rather than using a table method), which means the parameters can be updated  at audio rate. It should be noted that neither the input or the output are clipped at -1 or 1, so the output could become quite large if you are not careful. The input and / or output can be clipped to produce this behaviour if desired.
   </description>
   <objarglist>
       <objarg name="Number-of-coefficients" optional="0" type="int">

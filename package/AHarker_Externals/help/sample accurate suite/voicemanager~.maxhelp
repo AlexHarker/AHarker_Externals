@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,7 +113,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -176,7 +176,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 495.283041894435883, 222.641519784927368, 111.0, 36.0 ],
 									"text" : "subsample offset\n(see demo tab)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -193,7 +192,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 15.0, 15.0, 945.0, 150.0 ]
+									"patching_rect" : [ 15.0, 13.0, 945.0, 150.0 ]
 								}
 
 							}
@@ -254,8 +253,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 135.0, 195.0, 101.415102541446686, 36.0 ],
-									"text" : "trigger every 10000 samples",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "trigger every 10000 samples"
 								}
 
 							}
@@ -268,8 +266,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 420.0, 174.0, 21.0 ],
-									"text" : "select voice number triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "select voice number triggers"
 								}
 
 							}
@@ -282,8 +279,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 90.0, 450.0, 105.0, 21.0 ],
-									"text" : "example voice 2",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "example voice 2"
 								}
 
 							}
@@ -382,8 +378,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 330.0, 174.0, 21.0 ],
-									"text" : "select voice number triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "select voice number triggers"
 								}
 
 							}
@@ -396,8 +391,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 105.0, 360.0, 105.0, 21.0 ],
-									"text" : "example voice 1",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "example voice 1"
 								}
 
 							}
@@ -456,7 +450,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 630.188708543777466, 222.641519784927368, 147.169818162918091, 36.0 ],
 									"text" : "num active voices\n(limit number of voices)",
-									"textcolor" : [ 0.231372549019608, 0.231372549019608, 0.231372549019608, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -470,8 +463,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 404.71699994802475, 236.792463839054108, 53.0, 21.0 ],
-									"text" : "lengths",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "lengths"
 								}
 
 							}
@@ -484,8 +476,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 273.58491837978363, 236.792463839054108, 55.0, 21.0 ],
-									"text" : "triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "triggers"
 								}
 
 							}
@@ -498,8 +489,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 704.717013895511627, 315.094354271888733, 203.0, 21.0 ],
-									"text" : "subsample offset (same as input)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "subsample offset (same as input)"
 								}
 
 							}
@@ -511,9 +501,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 480.0, 285.0, 147.0, 21.0 ],
-									"text" : "lengths (same as input)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 480.0, 287.0, 147.0, 21.0 ],
+									"text" : "lengths (same as input)"
 								}
 
 							}
@@ -525,9 +514,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 255.0, 285.0, 186.0, 21.0 ],
-									"text" : "triggers (numbered with voice)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 255.0, 287.0, 186.0, 21.0 ],
+									"text" : "triggers (numbered with voice)"
 								}
 
 							}
