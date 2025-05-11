@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 445.0, 106.0, 911.0, 798.0 ],
+		"rect" : [ 61.0, 100.0, 911.0, 798.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 911.0, 772.0 ],
+						"rect" : [ 61.0, 126.0, 911.0, 772.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -91,13 +91,11 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-1",
-									"linecount" : 2,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 75.0, 617.5, 36.0 ],
-									"text" : "an example of a simple mono granular synth in which the filter cutoff changes per grain according to a triple windowed gaussian distribution.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"patching_rect" : [ 15.0, 75.0, 825.0, 21.0 ],
+									"text" : "an example of a simple mono granular synth in which the filter cutoff changes per grain according to a triple windowed gaussian distribution."
 								}
 
 							}
@@ -108,7 +106,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 60.103094458580017, 584.020594239234924, 40.0, 22.0 ],
+									"patching_rect" : [ 75.0, 584.0, 40.0, 22.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -126,7 +124,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 341.546377658843994, 608.762860894203186, 20.0, 20.0 ],
+									"patching_rect" : [ 357.0, 609.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -142,7 +140,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 198.247416615486145, 605.670077562332153, 140.0, 25.0 ],
+									"patching_rect" : [ 213.0, 606.0, 140.0, 25.0 ],
 									"text" : "adjust volume level "
 								}
 
@@ -159,7 +157,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 60.103094458580017, 613.917499780654907, 136.0, 35.0 ],
+									"patching_rect" : [ 75.0, 614.0, 136.0, 35.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -187,7 +185,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 149.793811082839966, 478.865960955619812, 44.0, 22.0 ],
+									"patching_rect" : [ 165.0, 479.0, 44.0, 22.0 ],
 									"text" : "noise~"
 								}
 
@@ -206,7 +204,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 216.804116606712341, 687.113371968269348, 20.0, 20.0 ],
+									"patching_rect" : [ 236.0, 687.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -222,7 +220,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 106.494844436645508, 682.989660859107971, 108.0, 25.0 ],
+									"patching_rect" : [ 129.0, 684.0, 101.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -234,7 +232,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 60.103094458580017, 673.711310863494873, 44.0, 44.0 ],
+									"patching_rect" : [ 75.0, 674.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -246,7 +244,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 60.103094458580017, 554.123688697814941, 107.894735813140869, 22.0 ],
+									"patching_rect" : [ 75.0, 554.0, 107.894735813140869, 22.0 ],
 									"text" : "*~"
 								}
 
@@ -258,7 +256,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 60.103094458580017, 508.762866497039795, 49.0, 22.0 ],
+									"patching_rect" : [ 75.0, 509.0, 49.0, 22.0 ],
 									"text" : "cycle~"
 								}
 
@@ -270,7 +268,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 90.0, 478.865960955619812, 40.0, 22.0 ],
+									"patching_rect" : [ 105.0, 479.0, 40.0, 22.0 ],
 									"text" : "*~ 0.5"
 								}
 
@@ -282,7 +280,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 90.0, 447.938127636909485, 40.0, 22.0 ],
+									"patching_rect" : [ 105.0, 448.0, 40.0, 22.0 ],
 									"text" : "-~ 0.5"
 								}
 
@@ -294,7 +292,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 4,
 									"outlettype" : [ "signal", "signal", "signal", "signal" ],
-									"patching_rect" : [ 148.762883305549622, 510.824722051620483, 141.0, 22.0 ],
+									"patching_rect" : [ 164.0, 511.0, 141.0, 22.0 ],
 									"text" : "svf~ 1000 0.7"
 								}
 
@@ -306,7 +304,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 209.587622165679932, 478.865960955619812, 32.0, 22.0 ],
+									"patching_rect" : [ 225.0, 479.0, 32.0, 22.0 ],
 									"text" : "mtof"
 								}
 
@@ -318,7 +316,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 209.587622165679932, 447.938127636909485, 40.0, 22.0 ],
+									"patching_rect" : [ 225.0, 448.0, 40.0, 22.0 ],
 									"text" : "* 127."
 								}
 
@@ -328,13 +326,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-20",
-									"linecount" : 4,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 474.536060929298401, 195.360822200775146, 160.0, 65.0 ],
-									"text" : "each group of three sliders sets the mean/deviation/weight for three windows",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 490.0, 195.0, 245.0, 50.0 ],
+									"text" : "each group of three sliders sets the mean / deviation / weight for one of the three distributions.",
+									"textjustification" : 1
 								}
 
 							}
@@ -351,7 +349,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 584.845333099365234, 160.309277772903442, 20.0, 20.0 ],
+									"patching_rect" : [ 604.0, 160.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -368,7 +366,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 479.690699815750122, 150.0, 105.208329319953918, 40.0 ],
+									"patching_rect" : [ 495.0, 150.0, 105.208329319953918, 40.0 ],
 									"text" : "set gaussian distributions"
 								}
 
@@ -379,7 +377,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 441.546372056007385, 133.505155563354492, 20.0, 20.0 ],
+									"patching_rect" : [ 457.0, 134.0, 20.0, 20.0 ],
 									"text" : "W"
 								}
 
@@ -390,7 +388,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 411.649466514587402, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 427.0, 134.0, 19.0, 20.0 ],
 									"text" : "D"
 								}
 
@@ -401,7 +399,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 382.783488750457764, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 398.0, 134.0, 19.0, 20.0 ],
 									"text" : "M"
 								}
 
@@ -412,7 +410,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 355.979366540908813, 133.505155563354492, 20.0, 20.0 ],
+									"patching_rect" : [ 371.0, 134.0, 20.0, 20.0 ],
 									"text" : "W"
 								}
 
@@ -423,7 +421,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 328.144316554069519, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 343.0, 134.0, 19.0, 20.0 ],
 									"text" : "D"
 								}
 
@@ -434,7 +432,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 299.27833878993988, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 314.0, 134.0, 19.0, 20.0 ],
 									"text" : "M"
 								}
 
@@ -445,7 +443,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 271.443288803100586, 133.505155563354492, 20.0, 20.0 ],
+									"patching_rect" : [ 286.0, 134.0, 20.0, 20.0 ],
 									"text" : "W"
 								}
 
@@ -456,7 +454,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 242.577311038970947, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 258.0, 134.0, 19.0, 20.0 ],
 									"text" : "D"
 								}
 
@@ -467,7 +465,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 213.711333274841309, 133.505155563354492, 19.0, 20.0 ],
+									"patching_rect" : [ 229.0, 134.0, 19.0, 20.0 ],
 									"text" : "M"
 								}
 
@@ -480,7 +478,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 90.0, 150.0, 58.0, 22.0 ],
+									"patching_rect" : [ 105.0, 150.0, 58.0, 22.0 ],
 									"text" : "loadbang"
 								}
 
@@ -496,7 +494,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 90.0, 178.865977764129639, 90.0, 52.0 ],
+									"patching_rect" : [ 105.0, 179.0, 90.0, 52.0 ],
 									"text" : "0.2 0.1 0.3 0.75 0.05 0.9 0.5 1. 0.2"
 								}
 
@@ -512,8 +510,8 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 209.587622165679932, 150.0, 256.0, 110.0 ],
-									"setminmax" : [ 0.0, 1.0 ],
+									"patching_rect" : [ 225.0, 150.0, 256.0, 110.0 ],
+									"setminmax" : [ 0.000099999997474, 1.0 ],
 									"size" : 9,
 									"spacing" : 3
 								}
@@ -534,7 +532,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"offset" : [ 0.0, 0.0 ],
-									"patching_rect" : [ 375.566994309425354, 447.938127636909485, 210.0, 232.0 ],
+									"patching_rect" : [ 391.0, 448.0, 210.0, 232.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -546,7 +544,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 209.587622165679932, 403.608233213424683, 64.0, 22.0 ],
+									"patching_rect" : [ 225.0, 404.0, 64.0, 22.0 ],
 									"text" : "randfloats"
 								}
 
@@ -558,7 +556,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "bang", "bang" ],
-									"patching_rect" : [ 254.948444366455078, 372.680399894714355, 42.0, 22.0 ],
+									"patching_rect" : [ 270.0, 373.0, 42.0, 22.0 ],
 									"text" : "edge~"
 								}
 
@@ -572,7 +570,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 254.948444366455078, 342.783494353294373, 34.0, 23.0 ],
+									"patching_rect" : [ 270.0, 343.0, 34.0, 23.0 ],
 									"text" : "<~"
 								}
 
@@ -586,7 +584,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 254.948444366455078, 313.917516589164734, 47.0, 23.0 ],
+									"patching_rect" : [ 270.0, 314.0, 47.0, 23.0 ],
 									"text" : "delta~"
 								}
 
@@ -600,7 +598,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 254.948444366455078, 269.587622165679932, 74.0, 23.0 ],
+									"patching_rect" : [ 270.0, 270.0, 74.0, 23.0 ],
 									"text" : "phasor~ 12"
 								}
 
@@ -633,7 +631,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-54", 0 ],
-									"midpoints" : [ 219.087622165679932, 436.505155563354492, 385.066994309425354, 436.505155563354492 ],
+									"midpoints" : [ 234.5, 436.391783595085144, 400.5, 436.391783595085144 ],
 									"order" : 1,
 									"source" : [ "obj-11", 0 ]
 								}
@@ -656,7 +654,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-27", 1 ],
-									"midpoints" : [ 239.596216638882936, 542.938127636909485, 158.497830271720886, 542.938127636909485 ],
+									"midpoints" : [ 254.833333333333314, 542.824755668640137, 173.394735813140869, 542.824755668640137 ],
 									"source" : [ "obj-18", 2 ]
 								}
 
@@ -713,7 +711,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-29", 1 ],
-									"midpoints" : [ 69.603094458580017, 660.912341415882111, 94.603094458580017, 660.912341415882111 ],
+									"midpoints" : [ 84.5, 660.798969447612762, 109.5, 660.798969447612762 ],
 									"order" : 0,
 									"source" : [ "obj-36", 0 ]
 								}
@@ -722,7 +720,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-29", 0 ],
-									"midpoints" : [ 69.603094458580017, 660.912341415882111, 69.603094458580017, 660.912341415882111 ],
+									"midpoints" : [ 84.5, 660.798969447612762, 84.5, 660.798969447612762 ],
 									"order" : 1,
 									"source" : [ "obj-36", 0 ]
 								}
@@ -747,7 +745,7 @@
 								"patchline" : 								{
 									"destination" : [ "obj-38", 0 ],
 									"hidden" : 1,
-									"midpoints" : [ 99.5, 242.005155563354492, 195.587622165679932, 242.005155563354492, 195.587622165679932, 137.505155563354492, 219.087622165679932, 137.505155563354492 ],
+									"midpoints" : [ 114.5, 241.891783595085144, 210.78350555896759, 241.891783595085144, 210.78350555896759, 137.391783595085144, 234.5, 137.391783595085144 ],
 									"source" : [ "obj-41", 0 ]
 								}
 
@@ -762,7 +760,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-19", 0 ],
-									"midpoints" : [ 264.448444366455078, 305.329888820648193, 99.5, 305.329888820648193 ],
+									"midpoints" : [ 279.5, 305.216516852378845, 114.5, 305.216516852378845 ],
 									"order" : 1,
 									"source" : [ "obj-6", 0 ]
 								}
@@ -809,7 +807,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -854,7 +852,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 12.5, 75.0, 449.0, 21.0 ],
 									"text" : "Floats can also be generated in the range of 0-n by providing a multiplier (n).",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -868,9 +865,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 247.0, 165.0, 120.0, 25.0 ],
+									"patching_rect" : [ 253.0, 165.0, 120.0, 25.0 ],
 									"text" : "Output multiplier",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -900,9 +896,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 105.0, 330.0, 255.0, 50.0 ],
+									"patching_rect" : [ 75.0, 330.0, 255.0, 50.0 ],
 									"text" : "a float or int in any inlet does the same thing as a bang with the difference that  the output is multiplied by the input value.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"textjustification" : 1
 								}
 
 							}
@@ -1077,7 +1073,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1139,13 +1135,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 445.0, 132.0, 911.0, 772.0 ],
+						"rect" : [ 0.0, 26.0, 911.0, 772.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1176,21 +1172,6 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-8",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 660.0, 447.0, 36.0 ],
-									"text" : "randomvals is currently implemented using a complementary modulo with carry algorithm (proposed by George Marsaglia). See:",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"bgcolor" : [ 0.866667, 0.866667, 0.866667, 0.0 ],
 									"bgfillcolor_autogradient" : 0.79,
 									"bgfillcolor_color" : [ 0.2, 0.2, 0.2, 1 ],
@@ -1201,12 +1182,11 @@
 									"fontsize" : 13.0,
 									"gradient" : 0,
 									"id" : "obj-18",
-									"linecount" : 2,
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 691.0, 360.0, 38.0 ],
+									"patching_rect" : [ 130.0, 690.0, 485.0, 23.0 ],
 									"text" : "http://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1725&context=jmasm",
 									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
 								}
@@ -1223,23 +1203,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 735.0, 120.0, 30.0 ],
+									"patching_rect" : [ 150.0, 678.0, 120.0, 30.0 ],
 									"text" : ";\rmax launchbrowser $1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-7",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 493.0, 658.0, 374.0, 36.0 ],
-									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -1255,12 +1220,11 @@
 									"fontsize" : 13.0,
 									"gradient" : 0,
 									"id" : "obj-11",
-									"linecount" : 2,
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 493.0, 689.0, 347.0, 38.0 ],
+									"patching_rect" : [ 88.0, 735.0, 548.0, 23.0 ],
 									"text" : "https://web.archive.org/web/20151030215612/http://home.online.no/~pjacklam/notes/invnorm/",
 									"textcolor" : [ 0.054901960784314, 0.466666666666667, 0.741176470588235, 1.0 ]
 								}
@@ -1277,7 +1241,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 493.0, 735.0, 102.0, 28.0 ],
+									"patching_rect" : [ 105.0, 724.0, 102.0, 28.0 ],
 									"text" : ";\rmax launchbrowser $1"
 								}
 
@@ -1286,28 +1250,13 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-5",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 622.0, 517.0, 21.0 ],
-									"text" : "Weightings may be any positive (or zero) values and are purely relative.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
 									"id" : "obj-20",
-									"linecount" : 3,
+									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 30.0, 570.0, 760.0, 50.0 ],
-									"text" : "N.B. weightings for randfloats (unlike the randomvals and randomvals~ objects) set the height of each curve, rather than the relative probability of each curve. Thus, two curves with the same weighting will have the same probability of producing their mean value, regardless of their deviation values.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 30.0, 585.0, 804.0, 79.0 ],
+									"text" : "N.B. weightings for randfloats (unlike the randomvals and randomvals~ objects) set the height of each curve, rather than the relative probability of each curve. Thus, two curves with the same weighting will have the same probability of producing their mean value, regardless of their deviation values.\n\nWeightings may be any positive (or zero) values and are purely relative."
 								}
 
 							}
@@ -1337,8 +1286,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 105.0, 150.0, 66.0, 21.0 ],
-									"text" : "Left Inlet",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Left Inlet"
 								}
 
 							}
@@ -1352,8 +1300,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 373.0, 150.0, 83.0, 21.0 ],
-									"text" : "Middle Inlet",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Middle Inlet"
 								}
 
 							}
@@ -1367,8 +1314,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 652.0, 150.0, 75.0, 21.0 ],
-									"text" : "Right Inlet",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Right Inlet"
 								}
 
 							}
@@ -1382,7 +1328,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 48.0, 187.5, 174.0, 21.0 ],
 									"text" : "linearly distributed float (0-1)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1398,7 +1343,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 284.0, 173.0, 255.0, 50.0 ],
 									"text" : " windowed gaussian distribution (0-1)\nlist of two values sets mean and deviation\nmeans should be between 0 and 1",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1413,8 +1357,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 173.0, 255.0, 50.0 ],
-									"text" : "triple windowed gaussian distribution (0-1)\nlist of three sets of triples set parameters\ntriples are mean/dev/weight",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
+									"text" : "triple windowed gaussian distribution (0-1)\nlist of three sets of triples set parameters\ntriples are mean / deviation / weight",
 									"textjustification" : 1
 								}
 
@@ -1427,7 +1370,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 810.0, 225.0, 24.0, 24.0 ]
+									"patching_rect" : [ 810.0, 240.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -1439,7 +1382,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 421.0, 225.0, 24.0, 24.0 ]
+									"patching_rect" : [ 421.0, 240.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -1451,7 +1394,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 30.0, 225.0, 24.0, 24.0 ]
+									"patching_rect" : [ 30.0, 240.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -1485,7 +1428,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"offset" : [ 0.0, 0.0 ],
-									"patching_rect" : [ 570.0, 323.0, 210.0, 232.0 ],
+									"patching_rect" : [ 570.0, 338.0, 210.0, 232.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -1499,7 +1442,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 588.0, 255.0, 196.0, 23.0 ],
+									"patching_rect" : [ 588.0, 270.0, 196.0, 23.0 ],
 									"text" : "1. 0.2 0.1 0.75 0.01 1. 0.5 10. 0."
 								}
 
@@ -1513,7 +1456,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 810.0, 254.0, 56.0, 23.0 ],
+									"patching_rect" : [ 810.0, 269.0, 56.0, 23.0 ],
 									"text" : "metro 5"
 								}
 
@@ -1527,7 +1470,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 570.0, 285.0, 69.0, 23.0 ],
+									"patching_rect" : [ 570.0, 306.0, 69.0, 23.0 ],
 									"text" : "randfloats"
 								}
 
@@ -1541,7 +1484,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 300.0, 255.0, 118.0, 23.0 ],
+									"patching_rect" : [ 300.0, 270.0, 118.0, 23.0 ],
 									"text" : "loadmess 0.5 0.02"
 								}
 
@@ -1561,7 +1504,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"offset" : [ 0.0, 0.0 ],
-									"patching_rect" : [ 300.0, 323.0, 210.0, 232.0 ],
+									"patching_rect" : [ 300.0, 338.0, 210.0, 232.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -1575,7 +1518,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 421.0, 255.0, 56.0, 23.0 ],
+									"patching_rect" : [ 421.0, 270.0, 56.0, 23.0 ],
 									"text" : "metro 5"
 								}
 
@@ -1589,7 +1532,7 @@
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 300.0, 285.0, 69.0, 23.0 ],
+									"patching_rect" : [ 300.0, 306.0, 69.0, 23.0 ],
 									"text" : "randfloats"
 								}
 
@@ -1603,7 +1546,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 570.0, 225.0, 232.0, 23.0 ],
+									"patching_rect" : [ 570.0, 240.0, 232.0, 23.0 ],
 									"text" : "0.23 0.01 1. 0.75 0.01 0.5 0.5 10. 0.01"
 								}
 
@@ -1623,7 +1566,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"offset" : [ 0.0, 0.0 ],
-									"patching_rect" : [ 30.0, 323.0, 210.0, 232.0 ],
+									"patching_rect" : [ 30.0, 338.0, 210.0, 232.0 ],
 									"viewvisibility" : 1
 								}
 
@@ -1637,7 +1580,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 30.0, 255.0, 56.0, 23.0 ],
+									"patching_rect" : [ 30.0, 270.0, 56.0, 23.0 ],
 									"text" : "metro 5"
 								}
 
@@ -1651,8 +1594,36 @@
 									"numinlets" : 3,
 									"numoutlets" : 1,
 									"outlettype" : [ "float" ],
-									"patching_rect" : [ 30.0, 285.0, 69.0, 23.0 ],
+									"patching_rect" : [ 30.0, 306.0, 69.0, 23.0 ],
 									"text" : "randfloats"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-7",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 30.0, 720.0, 675.0, 36.0 ],
+									"text" : "For windowed gaussian distributions it also uses lower quantile code based on that taken from Peter J. Acklam's site. See:"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 13.0,
+									"id" : "obj-8",
+									"linecount" : 2,
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 30.0, 675.0, 675.0, 36.0 ],
+									"text" : "randomvals is currently implemented using a complementary modulo with carry algorithm (proposed by George Marsaglia). See:"
 								}
 
 							}
@@ -1705,7 +1676,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-54", 0 ],
-									"midpoints" : [ 39.5, 317.5, 39.5, 317.5 ],
+									"midpoints" : [ 39.5, 332.5, 39.5, 332.5 ],
 									"source" : [ "obj-57", 0 ]
 								}
 
@@ -1720,7 +1691,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-68", 1 ],
-									"midpoints" : [ 430.5, 281.5, 334.5, 281.5 ],
+									"midpoints" : [ 430.5, 299.0, 334.5, 299.0 ],
 									"source" : [ "obj-67", 0 ]
 								}
 
@@ -1728,7 +1699,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-65", 0 ],
-									"midpoints" : [ 309.5, 321.5, 309.5, 321.5 ],
+									"midpoints" : [ 309.5, 336.5, 309.5, 336.5 ],
 									"source" : [ "obj-68", 0 ]
 								}
 
@@ -1736,7 +1707,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-68", 0 ],
-									"midpoints" : [ 309.5, 281.5, 309.5, 281.5 ],
+									"midpoints" : [ 309.5, 296.5, 309.5, 296.5 ],
 									"source" : [ "obj-70", 0 ]
 								}
 
@@ -1744,7 +1715,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-77", 2 ],
-									"midpoints" : [ 819.5, 281.0, 629.5, 281.0 ],
+									"midpoints" : [ 819.5, 298.5, 629.5, 298.5 ],
 									"source" : [ "obj-76", 0 ]
 								}
 
@@ -1752,7 +1723,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-2", 0 ],
-									"midpoints" : [ 579.5, 318.5, 579.5, 318.5 ],
+									"midpoints" : [ 579.5, 333.5, 579.5, 333.5 ],
 									"source" : [ "obj-77", 0 ]
 								}
 
@@ -1760,7 +1731,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-77", 0 ],
-									"midpoints" : [ 597.5, 281.5, 579.5, 281.5 ],
+									"midpoints" : [ 597.5, 299.0, 579.5, 299.0 ],
 									"source" : [ "obj-89", 0 ]
 								}
 

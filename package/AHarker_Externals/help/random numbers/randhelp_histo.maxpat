@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -50,9 +50,8 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 44.950495064258575, 570.0, 197.0, 36.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 0.0, 206.0, 201.0, 21.0 ],
+					"presentation_rect" : [ -0.5, 211.0, 201.0, 21.0 ],
 					"text" : "(reset after changing parameters)",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
@@ -67,9 +66,8 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 44.950495064258575, 540.0, 120.0, 21.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 0.0, 185.0, 120.0, 21.0 ],
+					"presentation_rect" : [ 0.0, 188.0, 120.0, 21.0 ],
 					"text" : "histogram of output",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
@@ -87,7 +85,6 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 56.0, 1.0, 102.0, 21.0 ],
 					"text" : "reset histogram",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
