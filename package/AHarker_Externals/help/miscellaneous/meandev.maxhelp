@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 484.0, 110.0, 831.0, 624.0 ],
+		"rect" : [ 100.0, 100.0, 831.0, 624.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,13 +113,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 831.0, 598.0 ],
+						"rect" : [ 100.0, 126.0, 831.0, 598.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -221,7 +221,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 683.764495849609375, 452.0, 107.235504150390625, 65.0 ],
-									"text" : "Ages argument consists of Max Age + Min Age Pairs (up to 4)",
+									"text" : "Ages arguments consists of Max Age + Min Age Pairs (up to 4)",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -525,7 +525,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1060,13 +1060,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 484.0, 136.0, 831.0, 598.0 ],
+						"rect" : [ 0.0, 26.0, 831.0, 598.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1145,7 +1145,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 404.210538625717163, 375.789480686187744, 70.0, 21.0 ],
+									"patching_rect" : [ 404.2105393409729, 370.0, 70.0, 21.0 ],
 									"text" : "Weights In",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
@@ -1419,13 +1419,13 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 134.0, 172.0, 611.0, 419.0 ],
+										"rect" : [ 134.0, 172.0, 451.0, 355.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -1532,7 +1532,7 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "bang" ],
-													"patching_rect" : [ 39.0, 60.0, 63.0, 23.0 ],
+													"patching_rect" : [ 39.0, 54.0, 63.0, 23.0 ],
 													"text" : "metro 50"
 												}
 
@@ -1939,7 +1939,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-15", 1 ],
-									"midpoints" : [ 86.342105865478516, 394.78948712348938, 433.5, 394.78948712348938 ],
+									"midpoints" : [ 86.342105865478516, 400.78948712348938, 433.5, 400.78948712348938 ],
 									"source" : [ "obj-16", 0 ]
 								}
 
@@ -1982,7 +1982,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 109.0, 46.0, 116.0, 22.0 ],
+					"patching_rect" : [ 109.0, 46.0, 112.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -1990,7 +1990,7 @@
 						"tags" : ""
 					}
 ,
-					"text" : "p Weighting_Modes"
+					"text" : "p weighting_modes"
 				}
 
 			}
