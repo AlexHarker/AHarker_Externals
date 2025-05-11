@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 115.0, 126.0, 655.0, 712.0 ],
+						"rect" : [ 0.0, 26.0, 655.0, 712.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -151,7 +151,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 165.0, 402.0, 123.0, 41.0 ],
+									"patching_rect" : [ 165.0, 405.0, 123.0, 41.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -182,7 +182,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 375.0, 126.5, 141.0, 40.0 ],
+									"patching_rect" : [ 381.5, 126.5, 141.0, 40.0 ],
 									"text" : "double-click to see the wavetables"
 								}
 
@@ -288,7 +288,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -662,8 +662,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 345.0, 95.5, 50.0 ],
-									"text" : "multiply right chan by sin coefficient",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "multiply right chan by sin coefficient"
 								}
 
 							}
@@ -677,8 +676,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 73.0, 345.0, 90.0, 50.0 ],
-									"text" : "multiply left chan by cos coefficient",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "multiply left chan by cos coefficient"
 								}
 
 							}
@@ -925,7 +923,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -987,13 +985,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 655.0, 712.0 ],
+						"rect" : [ 115.0, 126.0, 655.0, 712.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1338,8 +1336,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 332.0, 449.0, 153.0, 25.0 ],
-									"text" : "set the channel to use",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the channel to use"
 								}
 
 							}
@@ -1353,8 +1350,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 352.0, 420.0, 143.0, 25.0 ],
-									"text" : "start the end sample",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "start the end sample"
 								}
 
 							}
@@ -1368,8 +1364,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 319.0, 390.0, 139.0, 25.0 ],
-									"text" : "set the start sample",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the start sample"
 								}
 
 							}
@@ -1385,7 +1380,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 323.0, 321.0, 99.999998569488525, 40.0 ],
 									"text" : "set the buffer to use",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1399,8 +1393,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 288.0, 249.0, 281.0, 21.0 ],
-									"text" : "(the latter three are cubic and more expensive)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(the latter three are cubic and more expensive)"
 								}
 
 							}
@@ -1414,9 +1407,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 288.0, 207.0, 251.868422031402588, 40.0 ],
+									"patching_rect" : [ 288.0, 201.5, 251.868422031402588, 40.0 ],
 									"text" : "interpolation can be linear (default), bspline, lagrange or hermite",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1431,8 +1423,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 427.0, 510.0, 106.0, 65.0 ],
-									"text" : "defaults: startsamp - 0, endsamp -  512  chan - 1",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "defaults: startsamp - 0, endsamp -  512  chan - 1"
 								}
 
 							}

@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 682.0, 707.0 ],
+						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -92,7 +92,7 @@
 									"maxclass" : "scope~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 450.0, 180.0, 90.0 ]
+									"patching_rect" : [ 360.0, 465.0, 180.0, 90.0 ]
 								}
 
 							}
@@ -109,7 +109,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 324.0, 477.0, 20.0, 20.0 ],
+									"patching_rect" : [ 324.0, 492.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -125,7 +125,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 180.0, 474.0, 140.0, 25.0 ],
+									"patching_rect" : [ 180.0, 489.0, 140.0, 25.0 ],
 									"text" : "adjust volume level "
 								}
 
@@ -142,7 +142,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 45.0, 480.0, 136.0, 35.0 ],
+									"patching_rect" : [ 45.0, 495.0, 136.0, 35.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -176,7 +176,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 207.0, 538.0, 20.0, 20.0 ],
+									"patching_rect" : [ 207.0, 553.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -192,7 +192,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 97.0, 535.0, 108.0, 25.0 ],
+									"patching_rect" : [ 97.0, 550.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -204,7 +204,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 525.0, 48.0, 48.0 ]
+									"patching_rect" : [ 45.0, 540.0, 48.0, 48.0 ]
 								}
 
 							}
@@ -221,7 +221,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 73.0, 240.0, 124.0, 55.0 ],
 									"text" : "double click to see the wavetables",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -250,9 +249,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 390.0, 405.0, 86.0, 21.0 ],
-									"text" : "sample offset",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 390.0, 420.0, 86.0, 21.0 ],
+									"text" : "sample offset"
 								}
 
 							}
@@ -266,9 +264,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 429.0, 157.0, 210.0, 40.0 ],
-									"text" : "set to above 100 to slow the effect to a clearly audible speed",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 435.0, 156.5, 210.0, 40.0 ],
+									"text" : "set to above 100 to slow the effect to a clearly audible speed"
 								}
 
 							}
@@ -283,7 +280,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 327.0, 405.0, 56.0, 22.0 ],
+									"patching_rect" : [ 327.0, 420.0, 56.0, 22.0 ],
 									"sig" : 0.0
 								}
 
@@ -297,8 +294,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 270.0, 161.0, 21.0 ],
-									"text" : "make sure we never get 4",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "make sure we never get 4"
 								}
 
 							}
@@ -311,8 +307,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 360.0, 300.0, 139.0, 21.0 ],
-									"text" : "truncate to a int 0-3",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "truncate to a int 0-3"
 								}
 
 							}
@@ -325,8 +320,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 360.0, 330.0, 157.0, 21.0 ],
-									"text" : "multiply by  the table size",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "multiply by  the table size"
 								}
 
 							}
@@ -339,8 +333,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 344.0, 375.0, 177.0, 21.0 ],
-									"text" : "update the offset every cycle",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "update the offset every cycle"
 								}
 
 							}
@@ -354,8 +347,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 367.0, 210.0, 156.0, 50.0 ],
-									"text" : "set number of cycles over which to go through all four waveforms",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set number of cycles over which to go through all four waveforms"
 								}
 
 							}
@@ -467,7 +459,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 300.0, 330.0, 57.0, 23.0 ],
+									"patching_rect" : [ 300.0, 329.0, 57.0, 23.0 ],
 									"text" : "*~ 1024"
 								}
 
@@ -555,8 +547,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 46.0, 15.0, 649.0, 21.0 ],
-													"text" : "Generate 4 wavetables, one after the other in the buffer. Each consecutive wavetable adds one more harmonic",
-													"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+													"text" : "Generate 4 wavetables, one after the other in the buffer. Each consecutive wavetable adds one more harmonic"
 												}
 
 											}
@@ -1196,7 +1187,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 450.0, 46.0, 23.0 ],
+									"patching_rect" : [ 45.0, 465.0, 46.0, 23.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -1224,7 +1215,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 405.0, 274.0, 23.0 ],
+									"patching_rect" : [ 45.0, 420.0, 274.0, 23.0 ],
 									"text" : "ibufmultitable~ ibufmultwavetable 0 1023"
 								}
 
@@ -1241,7 +1232,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-8", 0 ],
-									"midpoints" : [ 309.5, 401.5, 336.5, 401.5 ],
+									"midpoints" : [ 309.5, 408.5, 336.5, 408.5 ],
 									"order" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -1274,7 +1265,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-41", 0 ],
-									"midpoints" : [ 54.5, 441.238094627857208, 369.5, 441.238094627857208 ],
+									"midpoints" : [ 54.5, 456.238094627857208, 369.5, 456.238094627857208 ],
 									"order" : 0,
 									"source" : [ "obj-16", 0 ]
 								}
@@ -1344,7 +1335,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 1 ],
-									"midpoints" : [ 54.5, 519.5, 83.5, 519.5 ],
+									"midpoints" : [ 54.5, 534.5, 83.5, 534.5 ],
 									"order" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
@@ -1353,7 +1344,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-18", 0 ],
-									"midpoints" : [ 54.5, 519.5, 54.5, 519.5 ],
+									"midpoints" : [ 54.5, 534.5, 54.5, 534.5 ],
 									"order" : 1,
 									"source" : [ "obj-3", 0 ]
 								}
@@ -1467,7 +1458,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 682.0, 707.0 ],
+						"rect" : [ 34.0, 126.0, 682.0, 707.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1674,7 +1665,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 222.0, 643.0, 20.0, 20.0 ],
+									"patching_rect" : [ 228.0, 654.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1690,7 +1681,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 112.0, 640.0, 108.0, 25.0 ],
+									"patching_rect" : [ 118.0, 651.5, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -1728,7 +1719,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 60.0, 630.0, 48.0, 48.0 ]
+									"patching_rect" : [ 60.0, 640.0, 48.0, 48.0 ]
 								}
 
 							}
@@ -1796,8 +1787,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 332.0, 449.0, 153.0, 25.0 ],
-									"text" : "set the channel to use",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the channel to use"
 								}
 
 							}
@@ -1811,8 +1801,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 352.0, 420.0, 143.0, 25.0 ],
-									"text" : "start the end sample",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "start the end sample"
 								}
 
 							}
@@ -1826,8 +1815,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 319.0, 390.0, 139.0, 25.0 ],
-									"text" : "set the start sample",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the start sample"
 								}
 
 							}
@@ -1843,7 +1831,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 383.0, 315.0, 105.0, 40.0 ],
 									"text" : "set the buffer to use",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1857,8 +1844,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 288.0, 249.0, 281.0, 21.0 ],
-									"text" : "(the latter three are cubic and more expensive)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(the latter three are cubic and more expensive)"
 								}
 
 							}
@@ -1874,7 +1860,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 288.0, 207.0, 251.868422031402588, 40.0 ],
 									"text" : "interpolation can be linear (default), bspline, lagrange or hermite",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1889,8 +1874,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 503.0, 510.0, 106.0, 65.0 ],
-									"text" : "defaults: startsamp - 0, endsamp -  512  chan - 1",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "defaults: startsamp - 0, endsamp -  512  chan - 1"
 								}
 
 							}
@@ -2022,7 +2006,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-9", 1 ],
-									"midpoints" : [ 69.5, 624.5, 98.5, 624.5 ],
+									"midpoints" : [ 69.5, 630.5, 98.5, 630.5 ],
 									"order" : 0,
 									"source" : [ "obj-21", 0 ]
 								}

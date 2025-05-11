@@ -249,8 +249,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 26.0, 272.0, 94.0, 21.0 ],
-									"text" : "bangs on input",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "bangs on input"
 								}
 
 							}
@@ -387,8 +386,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 435.0, 171.5, 167.0, 40.0 ],
-									"text" : "set message sets buffer and outputs information",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set message sets buffer and outputs information"
 								}
 
 							}
@@ -402,8 +400,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 90.0, 434.0, 195.0, 36.0 ],
-									"text" : "works with either a standard MaxMSP buffer~ or an ibuffer~",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "works with either a standard MaxMSP buffer~ or an ibuffer~"
 								}
 
 							}
@@ -444,8 +441,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 341.0, 301.0, 64.0, 21.0 ],
-									"text" : "channels",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "channels"
 								}
 
 							}
@@ -458,8 +454,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 247.0, 301.0, 79.0, 21.0 ],
-									"text" : "sample rate",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "sample rate"
 								}
 
 							}
@@ -472,8 +467,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 157.0, 301.0, 77.0, 21.0 ],
-									"text" : "length (ms)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "length (ms)"
 								}
 
 							}

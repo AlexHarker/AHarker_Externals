@@ -354,7 +354,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 720.0, 170.0, 135.0, 69.0 ],
 									"text" : "play the ibuffer~s \n(after you have loaded them into ibuffermulti~)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -567,8 +566,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 91.0, 345.0, 182.0, 25.0 ],
-									"text" : "Number of hosted ibuffer~s",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Number of hosted ibuffer~s"
 								}
 
 							}
@@ -582,8 +580,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 389.0, 470.0, 36.0 ],
-									"text" : "load message loads a file into an ibuffer~ - arguments are the ibuffer name, followed by the standard arguments for the replace or open message to ibuffer~ ",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "load message loads a file into an ibuffer~ - arguments are the ibuffer name, followed by the standard arguments for the replace or open message to ibuffer~ "
 								}
 
 							}
@@ -625,8 +622,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 127.0, 269.0, 174.0, 25.0 ],
-									"text" : "delete all hosted ibuffer~s",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "delete all hosted ibuffer~s"
 								}
 
 							}

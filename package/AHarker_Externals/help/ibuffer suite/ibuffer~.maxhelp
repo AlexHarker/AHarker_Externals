@@ -413,7 +413,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 615.0, 224.0, 113.0, 69.0 ],
 									"text" : "play the ibuffer~s \n(after you have loaded them)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -526,8 +525,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 159.0, 540.0, 269.0, 25.0 ],
-									"text" : "load only the left channel of a stereo file.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "load only the left channel of a stereo file."
 								}
 
 							}
@@ -541,9 +539,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 151.0, 570.0, 271.0, 65.0 ],
-									"text" : "if you follow a file name or path with a list of channels, only the specified channels will be loaded into the ibuffer~ in the specified order. You may load a channel more than once.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
+									"text" : "if you follow a file name or path with a list of channels, only the specified channels will be loaded into the ibuffer~ in the specified order. You may load a channel more than once."								}
 
 							}
 , 							{
@@ -585,8 +581,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 277.0, 390.0, 225.0, 54.0 ],
-									"text" : "replace and open are synonms that replace the contents of the ibuffer~ with that of the named file.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "replace and open are synonms that replace the contents of the ibuffer~ with that of the named file."
 								}
 
 							}
@@ -642,8 +637,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 210.0, 315.0, 253.0, 50.0 ],
-									"text" : "unlike buffer~ only one ibuffer~ object can use a specific name. See the error in the console when trying to click 'set ibuf1buf",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "unlike buffer~ only one ibuffer~ object can use a specific name. See the error in the console when trying to click 'set ibuf1buf"
 								}
 
 							}
@@ -658,8 +652,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 330.0, 261.5, 257.0, 40.0 ],
-									"text" : "name and set are synonms that change the name used to refer to the ibuffer~.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "name and set are synonms that change the name used to refer to the ibuffer~."
 								}
 
 							}
@@ -672,8 +665,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 56.0, 480.0, 87.0, 21.0 ],
-									"text" : "bang on load",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "bang on load"
 								}
 
 							}
