@@ -307,8 +307,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 420.0, 674.0, 65.0 ],
-									"text" : "The argument sets the mode. In mode 0 (default) the filter memory is totally zeroed on reset. In mode 1 the output memory is zeroed, whilst the input memory is set to the value of the incoming sample. Neither will instantly adapt to a new DC level, but mode 1 may be more effective in some cases (it gives ideal performance when there is no other input but the DC). Both modes outperform the situation in which the filter has no reset.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "The argument sets the mode. In mode 0 (default) the filter memory is totally zeroed on reset. In mode 1 the output memory is zeroed, whilst the input memory is set to the value of the incoming sample. Neither will instantly adapt to a new DC level, but mode 1 may be more effective in some cases (it gives ideal performance when there is no other input but the DC). Both modes outperform the situation in which the filter has no reset."
 								}
 
 							}
@@ -321,8 +320,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 391.0, 144.0, 21.0 ],
-									"text" : "With rdcblock~ mode 0",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "With rdcblock~ mode 0"
 								}
 
 							}
@@ -335,8 +333,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 495.0, 391.0, 144.0, 21.0 ],
-									"text" : "With rdcblock mode~ 1",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "With rdcblock mode~ 1"
 								}
 
 							}
@@ -349,8 +346,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 391.0, 142.0, 21.0 ],
-									"text" : "Randomly stepped DC",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Randomly stepped DC"
 								}
 
 							}

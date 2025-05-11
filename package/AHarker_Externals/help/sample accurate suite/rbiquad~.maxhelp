@@ -991,8 +991,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 525.0, 314.0, 146.0, 25.0 ],
-									"text" : "Toggle reset On/Off",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Toggle reset On/Off"
 								}
 
 							}
@@ -1353,8 +1352,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 395.0, 164.0, 113.0, 25.0 ],
-									"text" : "regular triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "regular triggers"
 								}
 
 							}
@@ -1384,8 +1382,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 540.0, 345.0, 147.0, 36.0 ],
-									"text" : "when reset is off \nfilter will continue to ring",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "when reset is off \nfilter will continue to ring"
 								}
 
 							}
@@ -1413,8 +1410,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 370.0, 270.0, 58.0, 21.0 ],
-									"text" : "(high Q)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(high Q)"
 								}
 
 							}
@@ -1428,8 +1424,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 175.0, 224.0, 130.0, 25.0 ],
-									"text" : "random frequency",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "random frequency"
 								}
 
 							}
@@ -1443,8 +1438,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 375.0, 390.0, 91.0, 25.0 ],
-									"text" : "reset input",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "reset input"
 								}
 
 							}
@@ -1458,8 +1452,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 316.0, 332.0, 76.0, 36.0 ],
-									"text" : "filter coefficients",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "filter coefficients"
 								}
 
 							}
@@ -1475,8 +1468,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 75.0, 172.0, 146.0, 40.0 ],
-									"text" : "click to resonate rbiquad~ (until reset)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "click to resonate rbiquad~ (until reset)"
 								}
 
 							}

@@ -177,8 +177,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 257.0, 155.0, 106.0, 25.0 ],
-									"text" : "play a sample",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "play a sample"
 								}
 
 							}
@@ -299,8 +298,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 150.0, 246.0, 246.0, 40.0 ],
-									"text" : "set the minimum number of samples between consecutive non-zero values",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the minimum number of samples between consecutive non-zero values"
 								}
 
 							}
@@ -665,8 +663,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 93.0, 361.0, 559.0, 21.0 ],
-									"text" : "output filters out non-zero values that are too close together - otherwise passing the input value",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "output filters out non-zero values that are too close together - otherwise passing the input value"
 								}
 
 							}
@@ -681,8 +678,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 190.0, 261.5, 246.0, 40.0 ],
-									"text" : "set the minimum number of samples between consecutive non-zero values",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the minimum number of samples between consecutive non-zero values"
 								}
 
 							}
@@ -752,8 +748,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 105.0, 151.0, 397.0, 21.0 ],
-									"text" : "create some random single sample impulses (varying in amplitude)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "create some random single sample impulses (varying in amplitude)"
 								}
 
 							}

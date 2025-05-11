@@ -96,8 +96,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 225.0, 137.0, 65.0 ],
-									"text" : "due to this behaviour tsah~ does not need an initial-trigger-value argument ",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "due to this behaviour tsah~ does not need an initial-trigger-value argument "
 								}
 
 							}
@@ -111,8 +110,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 360.0, 137.0, 79.0 ],
-									"text" : "thus unlike sah~, tsah~ cannot be used to conver the signal of a phasor~ to a set of regular triggers.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "thus unlike sah~, tsah~ cannot be used to conver the signal of a phasor~ to a set of regular triggers."
 								}
 
 							}
@@ -327,8 +325,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 150.0, 137.0, 50.0 ],
-									"text" : "unlike sah~, tsah~ outputs constantly if trigger input != 0",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "unlike sah~, tsah~ outputs constantly if trigger input != 0"
 								}
 
 							}
@@ -782,7 +779,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 96.0, 330.0, 182.0, 50.0 ],
 									"text" : "nasty random arpeggiator out (including delightful single sample change clicks).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -797,7 +793,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 96.0, 210.0, 117.0, 21.0 ],
 									"text" : "random frequency ",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -811,8 +806,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 190.0, 269.0, 100.0, 21.0 ],
-									"text" : "random triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "random triggers"
 								}
 
 							}
