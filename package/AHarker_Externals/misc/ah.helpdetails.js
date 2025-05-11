@@ -45,7 +45,12 @@ function paint()
             if (shortDesc)
                 show_text(shortDesc);
             move_to(4, 90);
-            var detailstextcolor = this.patcher.getattr("accentcolor");
+            var detailstextcolor = textcolor;
+            var maxVersion = max.version;
+            if (maxVersion < 900)
+            {
+                detailstextcolor = this.patcher.getattr("accentcolor");
+            }
             set_source_rgba(detailstextcolor);
             if (longDesc!=null)
             {
