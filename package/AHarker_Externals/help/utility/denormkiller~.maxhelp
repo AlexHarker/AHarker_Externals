@@ -174,8 +174,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 240.0, 450.0, 94.0 ],
-									"text" : "Note: On Max OS X most floating point calculations (including single value or scalar calculations) are performed on the vector unit (rather than the scalar unit). Although you cannot switch denormals off for the scalar unit, you can on the vector unit, which should solve any CPU spiking problems. You should note that there is a very very small possibility that turning off denormals may change the desired behaviour of some audio object in use.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Note: On Max OS X most floating point calculations (including single value or scalar calculations) are performed on the vector unit (rather than the scalar unit). Although you cannot switch denormals off for the scalar unit, you can on the vector unit, which should solve any CPU spiking problems. You should note that there is a very very small possibility that turning off denormals may change the desired behaviour of some audio object in use."
 								}
 
 							}
@@ -189,8 +188,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 180.0, 450.0, 50.0 ],
-									"text" : "Place the one copy of the denormkiller~ object anywhere you wish (it does not need to be connected to anything). If you are multithreading in a poly~ you should place an object within the hosted patch.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Place the one copy of the denormkiller~ object anywhere you wish (it does not need to be connected to anything). If you are multithreading in a poly~ you should place an object within the hosted patch."
 								}
 
 							}

@@ -290,8 +290,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 150.0, 492.0, 21.0 ],
-									"text" : "Any message or list will be split into individual elements, up to the number of outlets",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Any message or list will be split into individual elements, up to the number of outlets"
 								}
 
 							}
@@ -305,8 +304,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 30.0, 330.0, 268.0, 36.0 ],
-									"text" : "unlike unpack, depack does not store its last output, so sending a bang has no effect.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "unlike unpack, depack does not store its last output, so sending a bang has no effect."
 								}
 
 							}

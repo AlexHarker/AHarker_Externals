@@ -202,8 +202,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 329.0, 331.0, 295.0, 25.0 ],
-									"text" : "right outlet gives the total number of found files",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "right outlet gives the total number of found files"
 								}
 
 							}
@@ -217,8 +216,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 58.0, 149.0, 120.0, 36.0 ],
-									"text" : "filename or path in to list the contents.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "filename or path in to list the contents."
 								}
 
 							}
@@ -231,8 +229,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 480.0, 495.0, 83.0, 21.0 ],
-									"text" : "empty folder",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "empty folder"
 								}
 
 							}
@@ -245,8 +242,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 330.0, 495.0, 84.0, 21.0 ],
-									"text" : "end of folder",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "end of folder"
 								}
 
 							}
@@ -259,8 +255,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 180.0, 495.0, 98.0, 21.0 ],
-									"text" : "start of a folder",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "start of a folder"
 								}
 
 							}
@@ -273,8 +268,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 592.0, 495.0, 173.0, 21.0 ],
-									"text" : "full pathnames of found files",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "full pathnames of found files"
 								}
 
 							}
@@ -381,8 +375,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 643.0, 201.0, 53.0, 21.0 ],
-									"text" : "movies",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "movies"
 								}
 
 							}
@@ -434,8 +427,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 511.0, 201.0, 74.0, 21.0 ],
-									"text" : "sound files",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "sound files"
 								}
 
 							}
@@ -518,8 +510,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 220.0, 201.0, 56.0, 21.0 ],
-									"text" : "text files",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "text files"
 								}
 
 							}
@@ -532,8 +523,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 296.0, 201.0, 85.0, 21.0 ],
-									"text" : "Max patches",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Max patches"
 								}
 
 							}
@@ -546,8 +536,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 387.0, 201.0, 103.0, 21.0 ],
-									"text" : "external objects",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "external objects"
 								}
 
 							}
@@ -563,8 +552,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 315.0, 150.0, 367.0, 55.0 ],
-									"text" : "The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive)."
 								}
 
 							}
@@ -580,8 +568,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 37.0, 210.0, 111.0, 54.0 ],
-									"text" : "bang outputs the folder contents again",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "bang outputs the folder contents again"
 								}
 
 							}

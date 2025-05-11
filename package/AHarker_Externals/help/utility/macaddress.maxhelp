@@ -231,8 +231,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 210.0, 277.0, 230.0, 40.0 ],
-									"text" : "can also use a network interface name (e.g. en0) in the set message",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "can also use a network interface name (e.g. en0) in the set message"
 								}
 
 							}
