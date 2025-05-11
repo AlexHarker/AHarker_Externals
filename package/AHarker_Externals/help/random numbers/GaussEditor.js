@@ -3,7 +3,7 @@
  
  Gauss Editor
  
- This is an ediotr primarily for use with randomvals and randomvals~
+ This is an editor primarily for use with randomvals and randomvals~
  
  You can set the mean and dev values of multiple gaussian curves, as well as adding and removing curves.
  
@@ -202,7 +202,7 @@ function draw()
 					
 						g1 = 0;    
 						g1 = (x1 - mean_local) / dev_local;
-						g1 =  max_height * weight_local * Math.exp (-0.5 * (g1 * g1));
+						g1 =  max_height * weight_local * Math.exp(-0.5 * (g1 * g1));
 					}
 				}
 				
@@ -215,7 +215,7 @@ function draw()
 				x1 = norm2x(x1);
 				g1 = norm2y(g1);
 				
-				quad (x2, -y_scale, 0, x2, g2, 0, x1, g1, 0, x1, -y_scale, 0)
+				quad(x2, -y_scale, 0, x2, g2, 0, x1, g1, 0, x1, -y_scale, 0)
 				
 				x2 = x1;
 				g2 = g1;
@@ -243,7 +243,7 @@ function draw()
 				x1 = norm2x(j / numpoints);
 				g1 = norm2y(final_curve[j] / norm_val);
 				
-				quad (x2, -y_scale, 0, x2, g2, 0, x1, g1, 0, x1, -y_scale, 0)
+				quad(x2, -y_scale, 0, x2, g2, 0, x1, g1, 0, x1, -y_scale, 0)
 				
 				x2 = x1;
 				g2 = g1;
@@ -271,8 +271,8 @@ function draw()
 			tagy = weight2height(weight_list[k]);
 			tagw = dev2width(dev_list[k]);
 			
-			moveto (tagx, tagy);
-			circle (tag_r);
+			moveto(tagx, tagy);
+			circle(tag_r);
 			
 			gllinewidth(handle_l);
 			
@@ -285,12 +285,12 @@ function draw()
 			y1 = tagy + (y_scale * handle_h);
 			y2 = tagy - (y_scale * handle_h);
 			
-			linesegment (l1, y1, 0, l1, y2, 0);
-			linesegment (l1 - halfline, y1, 0, l2, y1, 0);
-			linesegment (l1 - halfline, y2, 0, l2, y2, 0);
-			linesegment (r1, y1, 0, r1, y2, 0);
-			linesegment (r1 + halfline, y1, 0, r2, y1, 0);
-			linesegment (r1 + halfline, y2, 0, r2, y2, 0);
+			linesegment(l1, y1, 0, l1, y2, 0);
+			linesegment(l1 - halfline, y1, 0, l2, y1, 0);
+			linesegment(l1 - halfline, y2, 0, l2, y2, 0);
+			linesegment(r1, y1, 0, r1, y2, 0);
+			linesegment(r1 + halfline, y1, 0, r2, y1, 0);
+			linesegment(r1 + halfline, y2, 0, r2, y2, 0);
 		}
 	}
 }
