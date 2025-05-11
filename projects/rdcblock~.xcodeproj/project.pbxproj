@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B8DBD5060EDEB1DC00049F0E /* rbiquad~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* rbiquad~.cpp */; };
+		B8DBD5060EDEB1DC00049F0E /* rdcblock~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B81F571D0D2422E0000D5E50 /* .bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = .bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		B81F571D0D2422E0000D5E50 /* rdcblock~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "rdcblock~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C1837919A8036C00304236 /* config_mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = config_mac.xcconfig; path = ah_projects_config/config_mac.xcconfig; sourceTree = SOURCE_ROOT; };
-		B8DE14DC0EB46B030050BDFE /* rbiquad~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "rbiquad~.cpp"; path = "../source/sample accurate suite/rbiquad~/rbiquad~.cpp"; sourceTree = "<group>"; };
+		B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "rdcblock~.cpp"; path = "../source/sample accurate suite/rdcblock~/rdcblock~.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -30,7 +30,7 @@
 		08FB77ADFE841716C02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B8DE14DC0EB46B030050BDFE /* rbiquad~.cpp */,
+				B8DE14DC0EB46B030050BDFE /* rdcblock~.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -38,7 +38,7 @@
 		19C28FB4FE9D528D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B81F571D0D2422E0000D5E50 /* .bundle */,
+				B81F571D0D2422E0000D5E50 /* rdcblock~.mxo */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,7 +59,7 @@
 			name = "rdcblock~";
 			productInstallPath = "$(HOME)/Library/Bundles";
 			productName = MSPExternal;
-			productReference = B81F571D0D2422E0000D5E50 /* .bundle */;
+			productReference = B81F571D0D2422E0000D5E50 /* rdcblock~.mxo */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -95,7 +95,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8DBD5060EDEB1DC00049F0E /* rbiquad~.cpp in Sources */,
+				B8DBD5060EDEB1DC00049F0E /* rdcblock~.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
