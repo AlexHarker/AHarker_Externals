@@ -3,14 +3,14 @@
 		"fileversion" : 1,
 		"appversion" : 		{
 			"major" : 8,
-			"minor" : 5,
-			"revision" : 5,
+			"minor" : 6,
+			"revision" : 1,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 549.0, 241.0, 523.0, 153.0 ],
+		"rect" : [ 822.0, 286.0, 516.0, 248.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -41,15 +41,38 @@
 		"title" : "dynamic.out~_demo (1)",
 		"boxes" : [ 			{
 				"box" : 				{
-					"fontname" : "Arial",
+					"bgcolor" : [ 1.0, 0.788235, 0.470588, 1.0 ],
+					"fontname" : "Arial Bold",
 					"fontsize" : 13.0,
-					"id" : "obj-6",
-					"maxclass" : "comment",
+					"hint" : "",
+					"id" : "obj-20",
+					"ignoreclick" : 1,
+					"legacytextcolor" : 1,
+					"maxclass" : "textbutton",
 					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 180.0, 90.0, 292.0, 21.0 ],
-					"text" : "optional int sets initial outlet (defualt is 0 - ie. off).",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"numoutlets" : 3,
+					"outlettype" : [ "", "", "int" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 450.0, 48.0, 20.0, 20.0 ],
+					"rounded" : 60.0,
+					"text" : "4",
+					"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"border" : 0,
+					"filename" : "helpargs.js",
+					"id" : "obj-17",
+					"ignoreclick" : 1,
+					"jsarguments" : [ "dynamic.out~", 5 ],
+					"maxclass" : "jsui",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 105.0, 135.0, 183.040496826171875, 39.0 ]
 				}
 
 			}
@@ -57,13 +80,29 @@
 				"box" : 				{
 					"fontname" : "Arial",
 					"fontsize" : 13.0,
-					"id" : "obj-5",
+					"id" : "obj-6",
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 15.0, 15.0, 492.0, 21.0 ],
+					"patching_rect" : [ 165.040496826171875, 176.0, 123.0, 21.0 ],
+					"text" : "(defualt is 0 - ie. off)",
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"fontname" : "Arial",
+					"fontsize" : 13.0,
+					"id" : "obj-5",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 180.0, 36.5, 272.0, 40.0 ],
 					"text" : "select outlet to send audio to (out of range values turn off processing for this object).",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 				}
 
 			}
@@ -77,7 +116,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 15.0, 45.0, 52.0, 23.0 ]
+					"patching_rect" : [ 120.0, 45.0, 52.0, 23.0 ]
 				}
 
 			}
@@ -89,7 +128,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 75.0, 90.0, 86.0, 23.0 ],
+					"patching_rect" : [ 15.0, 135.0, 86.0, 23.0 ],
 					"text" : "dynamic.out~"
 				}
 
@@ -103,7 +142,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 75.0, 45.0, 92.0, 23.0 ],
+					"patching_rect" : [ 15.0, 45.0, 92.0, 23.0 ],
 					"text" : "dynamic.in~ 1"
 				}
 
@@ -119,12 +158,13 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-2", 0 ],
-					"midpoints" : [ 24.5, 78.25, 84.5, 78.25 ],
+					"midpoints" : [ 129.5, 101.0, 24.5, 101.0 ],
 					"source" : [ "obj-4", 0 ]
 				}
 
 			}
- ]
+ ],
+		"autosave" : 0
 	}
 
 }
