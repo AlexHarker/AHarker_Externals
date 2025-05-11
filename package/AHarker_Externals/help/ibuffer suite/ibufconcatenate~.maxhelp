@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 214.0, 109.0, 878.0, 632.0 ],
+		"rect" : [ 100.0, 204.0, 878.0, 632.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 214.0, 135.0, 878.0, 606.0 ],
+						"rect" : [ 0.0, 26.0, 878.0, 606.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -813,7 +813,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -875,7 +875,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -920,8 +920,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 342.0, 165.0, 50.0 ],
-									"text" : "(1 as a mode argument allows querying and reporting with messages).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(1 as a mode argument allows querying and reporting with messages)."
 								}
 
 							}
@@ -969,7 +968,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 180.0, 180.0, 156.0, 36.0 ],
 									"text" : "Make sure the buffer on tab 1 has been filled!",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -983,8 +981,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 105.0, 405.0, 359.0, 21.0 ],
-									"text" : "List data out [Start sample / End sample / Buffer sample rate]",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "List data out [Start sample / End sample / Buffer sample rate]"
 								}
 
 							}
@@ -1009,8 +1006,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 14.0, 135.0, 468.0, 21.0 ],
-									"text" : "This allows you to make more accurate data output than the float format allows.",
+									"patching_rect" : [ 14.0, 135.0, 543.0, 21.0 ],
+									"text" : "The use of samples allowsmore accurate data output than the float format previously allowed",
 									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
 								}
 
@@ -1081,8 +1078,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 315.0, 226.0, 334.0, 25.0 ],
-									"text" : "Query item info for numbered item (-1 is whole buffer)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Query item info for numbered item (-1 is whole buffer)"
 								}
 
 							}
@@ -1215,13 +1211,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 878.0, 606.0 ],
+						"rect" : [ 100.0, 230.0, 878.0, 606.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1252,6 +1248,18 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"fontsize" : 13.0,
+									"id" : "obj-5",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 103.5, 495.0, 637.0, 21.0 ],
+									"text" : "High resolution outputs are now redundant, but have been maintained for backwards compatibility of patches."
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
@@ -1260,8 +1268,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 285.0, 315.0, 334.0, 25.0 ],
-									"text" : "Query item info for numbered item (-1 is whole buffer)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Query item info for numbered item (-1 is whole buffer)"
 								}
 
 							}
@@ -1291,8 +1298,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 376.0, 420.0, 224.0, 36.0 ],
-									"text" : "(0 or no mode argument allows querying and reporting with signals).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(0 or no mode argument allows querying and reporting with signals)."
 								}
 
 							}
@@ -1322,7 +1328,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 331.0, 240.0, 156.0, 36.0 ],
 									"text" : "Make sure the buffer on tab 1 has been filled!",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1398,8 +1403,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 273.0, 433.0, 64.0, 21.0 ],
-									"text" : "End (ms)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "End (ms)"
 								}
 
 							}
@@ -1412,8 +1416,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 106.0, 433.0, 37.0, 21.0 ],
-									"text" : "Item",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "Item"
 								}
 
 							}
@@ -1426,8 +1429,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 180.0, 433.0, 69.0, 21.0 ],
-									"text" : "Start (ms)",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "Start (ms)"
 								}
 
 							}
@@ -1440,8 +1442,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 217.0, 315.0, 51.0, 21.0 ],
-									"text" : "Item in",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Item in"
 								}
 
 							}
@@ -1676,7 +1677,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1832,8 +1833,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 279.0, 273.0, 254.0, 36.0 ],
-									"text" : "Note that this does not clear the buffer~, only ibufconcatentaes~ memory of entries",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Note that this does not clear the buffer~, only ibufconcatentaes~ memory of entries"
 								}
 
 							}
@@ -1845,8 +1845,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 239.0, 510.0, 259.0, 23.0 ],
-									"text" : "0 0.041667 2592.5"
+									"patching_rect" : [ 239.0, 510.0, 259.0, 23.0 ]
 								}
 
 							}
@@ -1941,28 +1940,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-5",
-									"linecount" : 2,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 570.0, 810.0, 36.0 ],
-									"text" : "N.B. This object requires the ibufconcatenate_attach.mxo to be present in your search path. This object cannot be instantiated in an object box, but is necessary for behind-the-scenes operations.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
 									"id" : "obj-69",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 240.0, 391.0, 371.0, 21.0 ],
-									"text" : "if necessary the buffer is resized to accomodate the extra data",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 242.5, 391.0, 371.0, 21.0 ],
+									"text" : "if necessary the buffer is resized to accomodate the extra data"
 								}
 
 							}
@@ -1975,8 +1958,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 224.0, 534.0, 295.0, 21.0 ],
-									"text" : "Last Item Added [Number / Start (ms) / End (ms)]",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Last Item Added [Number / Start (ms) / End (ms)]"
 								}
 
 							}
@@ -1989,8 +1971,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 345.0, 465.0, 89.0, 21.0 ],
-									"text" : "End High-Res",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "End High-Res"
 								}
 
 							}
@@ -2003,8 +1984,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 120.0, 465.0, 98.0, 21.0 ],
-									"text" : "Start High-Res",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Start High-Res"
 								}
 
 							}
@@ -2017,8 +1997,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 225.0, 465.0, 94.0, 21.0 ],
-									"text" : "Item End (ms)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Item End (ms)"
 								}
 
 							}
@@ -2031,8 +2010,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 465.0, 102.0, 21.0 ],
-									"text" : " Item Start (ms)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : " Item Start (ms)"
 								}
 
 							}
@@ -2073,8 +2051,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 233.0, 360.0, 548.0, 25.0 ],
-									"text" : "append the contents of another buffer~ to the attached buffer~ and make that the next item",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "append the contents of another buffer~ to the attached buffer~ and make that the next item"
 								}
 
 							}
@@ -2088,8 +2065,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 198.0, 315.0, 338.0, 25.0 ],
-									"text" : "add an entry in reference to audio already in the buffer",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "add an entry in reference to audio already in the buffer"
 								}
 
 							}
@@ -2103,8 +2079,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 120.0, 270.0, 135.0, 25.0 ],
-									"text" : "clear all the entries",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "clear all the entries"
 								}
 
 							}
@@ -2118,8 +2093,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 570.0, 210.0, 240.0, 36.0 ],
-									"text" : "Note different objects with the same buffer~ refer remotely to the same data.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Note different objects with the same buffer~ refer remotely to the same data."
 								}
 
 							}
@@ -2133,8 +2107,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 165.0, 225.0, 169.0, 25.0 ],
-									"text" : "set the buffer to attach to",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the buffer to attach to"
 								}
 
 							}

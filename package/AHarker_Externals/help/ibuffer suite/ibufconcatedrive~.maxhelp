@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 85.0, 135.0, 1148.0, 713.0 ],
+		"rect" : [ 85.0, 135.0, 1151.0, 713.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1148.0, 687.0 ],
+						"rect" : [ 0.0, 26.0, 1151.0, 687.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -113,13 +113,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 85.0, 161.0, 1148.0, 687.0 ],
+						"rect" : [ 85.0, 161.0, 1151.0, 687.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -149,6 +149,18 @@
 						"showontab" : 1,
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
+								"box" : 								{
+									"fontsize" : 13.0,
+									"id" : "obj-24",
+									"maxclass" : "comment",
+									"numinlets" : 1,
+									"numoutlets" : 0,
+									"patching_rect" : [ 165.0, 630.0, 637.0, 21.0 ],
+									"text" : "High resolution outputs are now redundant, but have been maintained for backwards compatibility of patches."
+								}
+
+							}
+, 							{
 								"box" : 								{
 									"fontsize" : 13.0,
 									"id" : "obj-38",
@@ -192,7 +204,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 327.0, 518.0, 140.0, 25.0 ],
-									"presentation_linecount" : 2,
 									"text" : "adjust volume level "
 								}
 
@@ -394,28 +405,14 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-24",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 630.0, 1126.0, 21.0 ],
-									"text" : "N.B. This object requires the ibufconcatenate_attach.mxo to be present in your search path. This object cannot be instantiated in an object box, but is necessary for behind-the-scenes operations.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
 									"id" : "obj-26",
 									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 900.0, 300.0, 222.0, 79.0 ],
+									"patching_rect" : [ 900.0, 315.0, 222.0, 79.0 ],
 									"text" : "although the sounds are in a single buffer~, the ibufconcatedrive~ object does not allow playback to go outside of the range for the specified item.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"textjustification" : 1
 								}
 
 							}
@@ -441,9 +438,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 300.0, 73.0, 21.0 ],
-									"text" : "(and back)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 60.0, 300.0, 91.0, 21.0 ],
+									"text" : "set buffer data"
 								}
 
 							}
@@ -465,27 +461,12 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
-									"id" : "obj-52",
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 34.0, 232.0, 120.0, 21.0 ],
-									"text" : "change buffer data",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
 									"id" : "obj-47",
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 339.0, 194.0, 115.0, 21.0 ],
-									"text" : "random item (1-4)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "random item (1-4)"
 								}
 
 							}
@@ -498,9 +479,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 900.0, 224.0, 105.0, 50.0 ],
+									"patching_rect" : [ 897.0, 211.5, 108.0, 50.0 ],
 									"text" : "regular sample-accurate triggers",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"textjustification" : 1
 								}
 
 							}
@@ -513,8 +494,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 180.0, 262.0, 68.0, 21.0 ],
-									"text" : "varispeed",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "varispeed"
 								}
 
 							}
@@ -527,8 +507,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 465.0, 256.0, 205.0, 21.0 ],
-									"text" : "concatentate four buffers into one",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "concatentate four buffers into one"
 								}
 
 							}
@@ -556,8 +535,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 197.0, 412.0, 96.0, 21.0 ],
-									"text" : "position output",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "position output"
 								}
 
 							}
@@ -572,7 +550,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 401.0, 412.0, 134.0, 36.0 ],
 									"text" : "hi-res output \n(for use with hr.play~)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -586,8 +563,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 507.0, 359.0, 81.0, 21.0 ],
-									"text" : "reset trigger",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "reset trigger"
 								}
 
 							}
@@ -599,9 +575,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 401.0, 359.0, 61.0, 21.0 ],
-									"text" : "reset val",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 406.0, 359.0, 61.0, 21.0 ],
+									"text" : "reset val"
 								}
 
 							}
@@ -613,9 +588,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 296.0, 359.0, 50.0, 21.0 ],
-									"text" : "item in",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 306.0, 359.0, 50.0, 21.0 ],
+									"text" : "item in"
 								}
 
 							}
@@ -627,9 +601,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 189.0, 359.0, 61.0, 21.0 ],
-									"text" : "speed in",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 197.0, 359.0, 61.0, 21.0 ],
+									"text" : "speed in"
 								}
 
 							}
@@ -843,20 +816,6 @@
 								}
 
 							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-50",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 255.0, 95.0, 23.0 ],
-									"text" : "set anotherbuf"
-								}
-
-							}
  ],
 						"lines" : [ 							{
 								"patchline" : 								{
@@ -973,14 +932,6 @@
 								"patchline" : 								{
 									"destination" : [ "obj-6", 0 ],
 									"source" : [ "obj-5", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 39.5, 377.5, 189.5, 377.5 ],
-									"source" : [ "obj-50", 0 ]
 								}
 
 							}
