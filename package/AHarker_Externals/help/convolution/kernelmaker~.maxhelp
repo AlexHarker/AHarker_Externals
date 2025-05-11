@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 100.0, 1103.0, 729.0 ],
+		"rect" : [ 34.0, 100.0, 1097.0, 736.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1103.0, 703.0 ],
+						"rect" : [ 34.0, 126.0, 1097.0, 710.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -94,7 +94,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 45.0, 423.0, 62.0, 23.0 ],
+									"patching_rect" : [ 75.0, 375.0, 62.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -107,7 +107,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 45.0, 105.0, 62.0, 23.0 ],
+									"patching_rect" : [ 75.0, 144.0, 62.0, 23.0 ],
 									"text" : "loadbang"
 								}
 
@@ -121,9 +121,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 368.5, 359.0, 89.0, 25.0 ],
-									"text" : "The Kernel",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 909.0, 248.0, 89.0, 25.0 ],
+									"text" : "The Kernel"
 								}
 
 							}
@@ -134,7 +133,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 558.0, 43.0, 23.0 ],
+									"patching_rect" : [ 75.0, 507.0, 43.0, 23.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -148,8 +147,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 744.0, 21.0 ],
-									"text" : "Trapezoid mode is intended to create simplistic bandpass filter frequency repsonses, for use with the eq mode of partconvolve~.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "Trapezoid mode is intended to create simplistic bandpass filter frequency repsonses, for use with the eq mode of partconvolve~."
 								}
 
 							}
@@ -158,12 +156,13 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-23",
-									"linecount" : 4,
+									"linecount" : 3,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 420.0, 260.0, 183.0, 65.0 ],
-									"text" : "Notice that the output does not change until partconvolve is updated with the eq message"
+									"patching_rect" : [ 435.0, 261.0, 183.0, 50.0 ],
+									"text" : "Notice that the output will not change until partconvolve~ is updated with the eq message",
+									"textjustification" : 1
 								}
 
 							}
@@ -181,7 +180,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 319.0, 462.0, 20.0, 20.0 ],
+									"patching_rect" : [ 348.0, 419.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -198,7 +197,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 156.0, 452.0, 159.0, 40.0 ],
+									"patching_rect" : [ 185.0, 409.0, 159.0, 40.0 ],
 									"text" : "update partconvolve~ with the eq message"
 								}
 
@@ -217,7 +216,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 590.0, 236.0, 20.0, 20.0 ],
+									"patching_rect" : [ 620.0, 236.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -233,7 +232,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 405.0, 233.0, 183.0, 25.0 ],
+									"patching_rect" : [ 435.0, 233.0, 183.0, 25.0 ],
 									"text" : "choose a trapezoid kernel"
 								}
 
@@ -247,7 +246,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 121.0, 273.0, 282.0, 23.0 ],
+									"patching_rect" : [ 150.0, 274.0, 282.0, 23.0 ],
 									"text" : "makekernel_trap trapkernelbuf 0. 0. 0.5 0.5 512"
 								}
 
@@ -261,7 +260,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 105.0, 240.0, 286.0, 23.0 ],
+									"patching_rect" : [ 129.0, 240.0, 286.0, 23.0 ],
 									"text" : "makekernel_trap trapkernelbuf 0.4 0.5 0.9 1 512"
 								}
 
@@ -275,7 +274,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 75.0, 210.0, 319.0, 23.0 ],
+									"patching_rect" : [ 105.0, 210.0, 319.0, 23.0 ],
 									"text" : "makekernel_trap trapkernelbuf 0.01 0.02 0.1 0.12 512"
 								}
 
@@ -294,7 +293,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 345.0, 586.0, 20.0, 20.0 ],
+									"patching_rect" : [ 375.0, 538.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -311,7 +310,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 183.0, 576.0, 156.0, 40.0 ],
+									"patching_rect" : [ 213.0, 528.0, 156.0, 40.0 ],
 									"text" : "adjust volume level to hear filtered noise "
 								}
 
@@ -328,7 +327,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 45.0, 591.0, 136.0, 35.0 ],
+									"patching_rect" : [ 75.0, 543.0, 136.0, 35.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -363,7 +362,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 199.0, 649.0, 20.0, 20.0 ],
+									"patching_rect" : [ 243.0, 603.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -379,7 +378,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 89.0, 645.0, 109.0, 25.0 ],
+									"patching_rect" : [ 133.0, 600.0, 101.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -391,7 +390,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 638.0, 44.0, 44.0 ],
+									"patching_rect" : [ 75.0, 590.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -405,7 +404,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 453.0, 102.0, 23.0 ],
+									"patching_rect" : [ 75.0, 417.0, 102.0, 23.0 ],
 									"text" : "eq trapkernelbuf"
 								}
 
@@ -419,7 +418,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 87.0, 483.0, 51.0, 23.0 ],
+									"patching_rect" : [ 399.0, 418.0, 51.0, 23.0 ],
 									"text" : "noise~"
 								}
 
@@ -433,7 +432,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 45.0, 513.0, 159.0, 23.0 ],
+									"patching_rect" : [ 75.0, 465.0, 159.0, 23.0 ],
 									"text" : "partconvolve~ 1024 1024"
 								}
 
@@ -447,7 +446,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 157.5, 405.0, 209.0, 23.0 ],
+									"patching_rect" : [ 690.0, 330.0, 209.0, 23.0 ],
 									"text" : "buffer~ trapkernelbuf @samps 512"
 								}
 
@@ -461,9 +460,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 361.0, 150.0, 549.0, 25.0 ],
-									"text" : "mode / target buffer / env 1 (0-1) /  env 2 (0-1) / env 3 (0-1) / env 4 (0-1) / length in samples",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 391.0, 165.0, 549.0, 25.0 ],
+									"text" : "mode / target buffer / env 1 (0-1) /  env 2 (0-1) / env 3 (0-1) / env 4 (0-1) / length in samples"
 								}
 
 							}
@@ -475,9 +473,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 82.0, 130.0, 434.0, 21.0 ],
-									"text" : "Create a trapezoid with a height of 1 and the specificed length in samples.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 74.0, 135.0, 434.0, 21.0 ],
+									"text" : "Create a trapezoid with a height of 1 and the specificed length in samples."
 								}
 
 							}
@@ -508,7 +505,7 @@
 									"numinlets" : 5,
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 157.5, 330.0, 209.0, 71.0 ],
+									"patching_rect" : [ 690.0, 211.0, 209.0, 100.0 ],
 									"ruler" : 0
 								}
 
@@ -521,7 +518,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 45.0, 330.0, 91.0, 23.0 ],
+									"patching_rect" : [ 75.0, 330.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -535,7 +532,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 151.0, 311.0, 23.0 ],
+									"patching_rect" : [ 75.0, 166.0, 311.0, 23.0 ],
 									"text" : "makekernel_trap trapkernelbuf 0.2 0.35 0.6 0.76 512"
 								}
 
@@ -559,7 +556,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 84.5, 281.0, 54.5, 281.0 ],
+									"midpoints" : [ 114.5, 281.5, 84.5, 281.5 ],
 									"source" : [ "obj-11", 0 ]
 								}
 
@@ -567,7 +564,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 96.5, 508.0, 54.5, 508.0 ],
+									"midpoints" : [ 408.5, 459.5, 84.5, 459.5 ],
 									"source" : [ "obj-12", 0 ]
 								}
 
@@ -575,7 +572,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 114.5, 296.0, 54.5, 296.0 ],
+									"midpoints" : [ 138.5, 296.5, 84.5, 296.5 ],
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -583,7 +580,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 130.5, 312.5, 54.5, 312.5 ],
+									"midpoints" : [ 159.5, 313.0, 84.5, 313.0 ],
 									"source" : [ "obj-15", 0 ]
 								}
 
@@ -629,7 +626,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 54.5, 251.0, 54.5, 251.0 ],
+									"midpoints" : [ 84.5, 251.5, 84.5, 251.5 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -661,13 +658,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1103.0, 703.0 ],
+						"rect" : [ 0.0, 26.0, 1097.0, 710.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -723,13 +720,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 1103.0, 703.0 ],
+						"rect" : [ 0.0, 26.0, 1097.0, 710.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -765,7 +762,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 781.0, 615.0, 43.0, 23.0 ],
+									"patching_rect" : [ 810.0, 615.0, 43.0, 23.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -783,7 +780,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 110.0, 260.5, 20.0, 20.0 ],
+									"patching_rect" : [ 80.0, 292.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -803,7 +800,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 31.0, 476.0, 20.0, 20.0 ],
+									"patching_rect" : [ 44.0, 476.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -823,7 +820,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 31.0, 329.0, 20.0, 20.0 ],
+									"patching_rect" : [ 44.0, 329.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -843,7 +840,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 31.0, 190.0, 20.0, 20.0 ],
+									"patching_rect" : [ 44.0, 190.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -863,7 +860,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 900.0, 557.5, 20.0, 20.0 ],
+									"patching_rect" : [ 929.0, 557.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "6",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -879,7 +876,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 810.0, 555.0, 86.0, 25.0 ],
+									"patching_rect" : [ 839.0, 554.0, 86.0, 25.0 ],
 									"text" : "Play audio"
 								}
 
@@ -893,7 +890,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 345.0, 585.0, 142.0, 23.0 ],
+									"patching_rect" : [ 480.0, 652.0, 142.0, 23.0 ],
 									"text" : "buffer~ kernelbuf 1000"
 								}
 
@@ -911,7 +908,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -1071,7 +1068,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 345.0, 615.0, 99.0, 23.0 ],
+									"patching_rect" : [ 660.0, 585.0, 99.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -1092,7 +1089,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 150.0, 615.0, 163.0, 23.0 ],
+									"patching_rect" : [ 479.5, 619.0, 163.0, 23.0 ],
 									"text" : "buffer~ cellobuf cello-f2.aif"
 								}
 
@@ -1106,7 +1103,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 150.0, 585.0, 162.0, 23.0 ],
+									"patching_rect" : [ 480.0, 585.0, 162.0, 23.0 ],
 									"text" : "buffer~ jonglybuf jongly.aif"
 								}
 
@@ -1123,7 +1120,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 240.0, 251.0, 170.066513061523438, 39.0 ]
+									"patching_rect" : [ 255.0, 253.0, 170.066513061523438, 39.0 ]
 								}
 
 							}
@@ -1135,7 +1132,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 781.0, 555.0, 24.0, 24.0 ]
+									"patching_rect" : [ 810.0, 555.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -1147,7 +1144,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 781.0, 589.0, 149.0, 23.0 ],
+									"patching_rect" : [ 810.0, 585.0, 149.0, 23.0 ],
 									"text" : "play~ kernelbuf @loop 1"
 								}
 
@@ -1165,7 +1162,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 938.0, 658.0, 20.0, 20.0 ],
+									"patching_rect" : [ 967.0, 665.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1181,7 +1178,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 824.0, 655.0, 108.0, 25.0 ],
+									"patching_rect" : [ 853.0, 662.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -1193,7 +1190,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 781.0, 645.0, 44.0, 44.0 ],
+									"patching_rect" : [ 810.0, 652.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -1207,9 +1204,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 645.0, 601.0, 89.0, 25.0 ],
-									"text" : "The Kernel",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 357.0, 618.0, 89.0, 25.0 ],
+									"text" : "The Kernel"
 								}
 
 							}
@@ -1222,9 +1218,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 437.0, 509.0, 493.0, 25.0 ],
-									"text" : "mode / target buffer / source (i)buffer / modulation (i)buffer / offset in samples (int)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 452.0, 509.0, 493.0, 25.0 ],
+									"text" : "mode / target buffer / source (i)buffer / modulation (i)buffer / offset in samples (int)"
 								}
 
 							}
@@ -1236,9 +1231,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 487.0, 520.0, 21.0 ],
-									"text" : "The kernel is faded in and out to avoid clicks (as specificide by the fade time in samples).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 487.0, 520.0, 21.0 ],
+									"text" : "The kernel is faded in and out to avoid clicks (as specificide by the fade time in samples)."
 								}
 
 							}
@@ -1250,9 +1244,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 466.0, 426.0, 21.0 ],
-									"text" : "The modulation buffer is multiplied (ring modulated) by the source buffer.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 466.0, 426.0, 21.0 ],
+									"text" : "The modulation buffer is multiplied (ring modulated) by the source buffer."
 								}
 
 							}
@@ -1264,9 +1257,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 445.0, 689.0, 21.0 ],
-									"text" : "Create a normalised kernel of the length of the modulation (i)buffer copying from the offset sample in the source buffer.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 445.0, 689.0, 21.0 ],
+									"text" : "Create a normalised kernel of the length of the modulation (i)buffer copying from the offset sample in the source buffer."
 								}
 
 							}
@@ -1279,9 +1271,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 456.0, 376.0, 581.0, 25.0 ],
-									"text" : "mode / target buffer / source (i)buffer / envelope (i)buffer / offset in samples(int)  / slide value (int)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 471.0, 376.0, 581.0, 25.0 ],
+									"text" : "mode / target buffer / source (i)buffer / envelope (i)buffer / offset in samples(int)  / slide value (int)"
 								}
 
 							}
@@ -1296,7 +1287,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 58.0, 466.0, 89.0, 40.0 ],
+									"patching_rect" : [ 70.0, 466.0, 89.0, 40.0 ],
 									"text" : "Ring Mod Mode",
 									"textjustification" : 1
 								}
@@ -1313,7 +1304,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 58.0, 319.0, 89.0, 40.0 ],
+									"patching_rect" : [ 70.0, 319.0, 89.0, 40.0 ],
 									"text" : "Envelope Mode",
 									"textjustification" : 1
 								}
@@ -1330,7 +1321,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 56.0, 180.0, 92.0, 40.0 ],
+									"patching_rect" : [ 68.0, 180.0, 92.0, 40.0 ],
 									"text" : "Windowed Mode",
 									"textjustification" : 1
 								}
@@ -1344,9 +1335,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 353.0, 520.0, 21.0 ],
-									"text" : "The kernel is faded in and out to avoid clicks (as specificide by the fade time in samples).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 353.0, 520.0, 21.0 ],
+									"text" : "The kernel is faded in and out to avoid clicks (as specified by the fade time in samples)."
 								}
 
 							}
@@ -1358,9 +1348,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 332.0, 833.0, 21.0 ],
-									"text" : "The absolute values of the envelope (i)buffer are low-pass filtered to create an amplitude envelope (larger slide values increase the smoothing).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 332.0, 833.0, 21.0 ],
+									"text" : "The absolute values of the envelope (i)buffer are low-pass filtered to create an amplitude envelope (larger slide values increase the smoothing)."
 								}
 
 							}
@@ -1372,9 +1361,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 310.0, 678.0, 21.0 ],
-									"text" : "Create a normalised kernel of the length of the envelope (i)buffer copying from the offset sample in the source buffer.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 310.0, 678.0, 21.0 ],
+									"text" : "Create a normalised kernel of the length of the envelope (i)buffer copying from the offset sample in the source buffer."
 								}
 
 							}
@@ -1387,9 +1375,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 450.0, 222.0, 615.0, 25.0 ],
-									"text" : "mode / target buffer / source (i)buffer / window (i)buffer / offset in samples (int)  / length in samples (int)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 465.0, 224.0, 615.0, 25.0 ],
+									"text" : "mode / target buffer / source (i)buffer / window (i)buffer / offset in samples (int)  / length in samples (int)"
 								}
 
 							}
@@ -1401,9 +1388,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 201.0, 625.0, 21.0 ],
-									"text" : "The window (i)buffer should be a 513 sample window (where sample indices 0 and 512 are the end points).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 201.0, 625.0, 21.0 ],
+									"text" : "The window (i)buffer should be a 513 sample window (where sample indices 0 and 512 are the end points)."
 								}
 
 							}
@@ -1415,9 +1401,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 180.0, 811.0, 21.0 ],
-									"text" : "Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window (i)buffer.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 165.0, 180.0, 811.0, 21.0 ],
+									"text" : "Create normalised kernel of specificied length copying from the offset sample in the source buffer and windowing using the window (i)buffer."
 								}
 
 							}
@@ -1430,7 +1415,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 45.0, 282.0, 52.0, 23.0 ]
+									"patching_rect" : [ 22.0, 290.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -1460,7 +1445,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 45.0, 251.0, 85.0, 23.0 ],
+									"patching_rect" : [ 22.0, 259.0, 85.0, 23.0 ],
 									"text" : "loadmess 20"
 								}
 
@@ -1476,7 +1461,7 @@
 									"numinlets" : 5,
 									"numoutlets" : 6,
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 495.0, 584.0, 148.0, 59.0 ],
+									"patching_rect" : [ 165.0, 585.0, 180.0, 90.0 ],
 									"ruler" : 0
 								}
 
@@ -1484,6 +1469,7 @@
 , 							{
 								"box" : 								{
 									"bubble" : 1,
+									"bubblepoint" : 0.2,
 									"bubbleside" : 2,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
@@ -1492,9 +1478,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 229.0, 119.0, 55.0 ],
+									"patching_rect" : [ 22.0, 228.0, 119.0, 55.0 ],
 									"text" : "int sets fade times (in samples)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1507,7 +1492,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 251.0, 91.0, 23.0 ],
+									"patching_rect" : [ 165.0, 253.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -1520,7 +1505,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 540.0, 116.0, 23.0 ],
+									"patching_rect" : [ 165.0, 540.0, 116.0, 23.0 ],
 									"text" : "kernelmaker~ 100"
 								}
 
@@ -1533,7 +1518,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 405.0, 91.0, 23.0 ],
+									"patching_rect" : [ 165.0, 405.0, 91.0, 23.0 ],
 									"text" : "kernelmaker~"
 								}
 
@@ -1547,7 +1532,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 376.0, 304.0, 23.0 ],
+									"patching_rect" : [ 165.0, 376.0, 304.0, 23.0 ],
 									"text" : "makekernel_env kernelbuf cellobuf jonglybuf 0 500"
 								}
 
@@ -1561,7 +1546,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 510.0, 280.0, 23.0 ],
+									"patching_rect" : [ 165.0, 510.0, 280.0, 23.0 ],
 									"text" : "makekernel_ring kernelbuf cellobuf jonglybuf 0"
 								}
 
@@ -1575,7 +1560,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 223.0, 298.0, 23.0 ],
+									"patching_rect" : [ 165.0, 225.0, 298.0, 23.0 ],
 									"text" : "makekernel_wind kernelbuf cellobuf hann 0 44100"
 								}
 
@@ -1584,7 +1569,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
-									"midpoints" : [ 54.5, 401.017543792724609, 159.5, 401.017543792724609 ],
+									"midpoints" : [ 31.5, 401.017543792724609, 174.5, 401.017543792724609 ],
 									"order" : 1,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -1593,7 +1578,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-5", 0 ],
-									"midpoints" : [ 54.5, 533.368421077728271, 159.5, 533.368421077728271 ],
+									"midpoints" : [ 31.5, 533.368421077728271, 174.5, 533.368421077728271 ],
 									"order" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -1617,6 +1602,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-55", 1 ],
+									"midpoints" : [ 819.5, 644.5, 844.5, 644.5 ],
 									"order" : 0,
 									"source" : [ "obj-28", 0 ]
 								}

@@ -192,7 +192,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 15.0, 13.0, 945.0, 150.0 ]
+									"patching_rect" : [ 15.0, 15.0, 945.0, 150.0 ]
 								}
 
 							}

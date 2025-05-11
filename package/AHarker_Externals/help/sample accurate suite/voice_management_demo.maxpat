@@ -46,7 +46,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 279.0, 14.0, 47.0, 51.0 ],
+					"patching_rect" : [ 279.0, 18.0, 47.0, 51.0 ],
 					"text" : "&"
 				}
 
@@ -63,7 +63,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 321.0, 12.0, 340.25, 58.0 ]
+					"patching_rect" : [ 321.0, 15.0, 340.25, 58.0 ]
 				}
 
 			}
@@ -79,7 +79,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 15.0, 13.0, 254.5, 58.0 ]
+					"patching_rect" : [ 15.0, 15.0, 254.5, 58.0 ]
 				}
 
 			}
