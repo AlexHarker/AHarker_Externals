@@ -5,18 +5,35 @@
       A SIMD version of abs~
   </digest>
   <description>
-      <o>vabs~</o> provides a CPU efficient version of <o>abs~</o> using SIMD operations. See the <o>abs~</o> helpfile for details on usage.
+      <o>vabs~</o> provides a CPU efficient version of <o>abs~</o> using SIMD operations.
+      <br/>
+      Use the <o>vabs~</o> object to take any given signal and output only the absolute (non-negative) translation of that signal (i.e. a rectified waveform). All negative values in the input signal are converted to positive values in the output.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Signal to be evaluated
+          </digest>
+          <description>
+              The <o>vabs~</o> object takes an input signal and output only the absolute (non-negative) translation of that signal - all negative values in the input signal are converted to positive values in the output.
+          </description>
+      </method>
   </methodlist>
   
-  <attributelist>
-  </attributelist>
 
   <seealsolist>
     <seealso name="abs~" />
+    <seealso name="avg~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              A signal consisting of samples which are the absolute (i.e., non-negative) value of the samples in the input signal.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

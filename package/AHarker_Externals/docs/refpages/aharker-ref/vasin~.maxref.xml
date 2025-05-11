@@ -5,10 +5,20 @@
         A SIMD version of asin~
     </digest>
   <description>
-      <o>vasin~</o> provides a CPU efficient version of <o>asin~</o> using SIMD operations. See the <o>asin~</o> helpfile for details on usage.
+      <o>vasin~</o> provides a CPU efficient version of <o>asin~</o> using SIMD operations.
+      <br/>
+      Use the <o>vasin~</o> object to calculate and output a signal that is the arc-sine function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to arc-sine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,20 @@
 
   <seealsolist>
     <seealso name="asin~" />
+    <seealso name="asinh~" />
+    <seealso name="vasinh~" />
+    <seealso name="sinh~" />
+    <seealso name="vsinh~" />
+    <seealso name="sinx~" />
+    <seealso name="vsinx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The arc-sine of the input in radians.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

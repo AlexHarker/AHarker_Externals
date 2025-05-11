@@ -5,10 +5,20 @@
         A SIMD version of tanh~
     </digest>
   <description>
-      <o>vtanh~</o> provides a CPU efficient version of <o>tanh~</o> using SIMD operations. See the <o>tanh~</o> helpfile for details on usage.
+      <o>vtanh~</o> provides a CPU efficient version of <o>tanh~</o> using SIMD operations. 
+      <br/>
+      Use the <o>vtanh~</o> object to calculate and output a signal that is the hyperbolic tangent function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic tangent function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,21 @@
 
   <seealsolist>
     <seealso name="tanh~" />
+    <seealso name="atan~" />
+    <seealso name="vatan~" />
+    <seealso name="atanh~" />
+    <seealso name="vatanh~" />
+    <seealso name="atan2~" />
+    <seealso name="tanx~" />
+    <seealso name="vtanx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic tangent of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

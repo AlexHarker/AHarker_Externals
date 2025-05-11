@@ -5,10 +5,20 @@
         A SIMD version of acosh~
     </digest>
   <description>
-      <o>vacosh~</o> provides a CPU efficient version of <o>acosh~</o> using SIMD operations. See the <o>acosh~</o> helpfile for details on usage.
+      <o>vacosh~</o> provides a CPU efficient version of <o>acosh~</o> using SIMD operations.
+      <br/>
+      Use the <o>vacosh~</o> object to calculate and output a signal that is the hyperbolic arc-cosine function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic arc-cosine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,21 @@
 
   <seealsolist>
     <seealso name="acosh~" />
+    <seealso name="acos~" />
+    <seealso name="vacos~" />
+    <seealso name="cos~" />
+    <seealso name="cosh~" />
+    <seealso name="vcosh~" />
+    <seealso name="cosx~" />
+    <seealso name="vcosx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic arc-cosine of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

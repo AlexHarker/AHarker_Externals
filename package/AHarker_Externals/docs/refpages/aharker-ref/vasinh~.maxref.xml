@@ -5,10 +5,20 @@
         A SIMD version of asinh~
     </digest>
   <description>
-      <o>vasinh~</o> provides a CPU efficient version of <o>asinh~</o> using SIMD operations. See the <o>asinh~</o> helpfile for details on usage.
+      <o>vasinh~</o> provides a CPU efficient version of <o>asinh~</o> using SIMD operations.
+      <br/>
+      Use the <o>vasinh~</o> object to calculate and output a signal that is the hyperbolic arc-sine function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic arc-sine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,20 @@
 
   <seealsolist>
     <seealso name="asinh~" />
+    <seealso name="asin~" />
+    <seealso name="vasin~" />
+    <seealso name="sinh~" />
+    <seealso name="vsinh~" />
+    <seealso name="sinx~" />
+    <seealso name="vsinx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic arc-sine of the input in radians.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

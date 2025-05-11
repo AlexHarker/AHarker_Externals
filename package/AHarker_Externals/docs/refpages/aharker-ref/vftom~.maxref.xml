@@ -5,10 +5,21 @@
         A SIMD version of ftom~
     </digest>
   <description>
-      <o>vftom~</o> provides a CPU efficient version of <o>ftom~</o> using SIMD operations. See the <o>ftom~</o> helpfile for details on usage.
+      <o>vftom~</o> provides a CPU efficient version of <o>ftom~</o> using SIMD operations.
+      <br/>
+      Use <o>vftom~</o> to convert frequency to MIDI note numbers at signal rate.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Convert frequency to MIDI note number
+          </digest>
+          <description>
+              Outputs the MIDI note number (from 0 to 127) corresponding to the input frequency
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +27,19 @@
 
   <seealsolist>
     <seealso name="ftom~" />
+    <seealso name="expr" />
+    <seealso name="ftom" />
+    <seealso name="mtof" />
+    <seealso name="mtof~" />
+    <seealso name="vmtof~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The MIDI note number that corresponds to the input frequency is output as a signal. When an input frequency falls between two pitches, the fractional part of the MIDI value is included.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

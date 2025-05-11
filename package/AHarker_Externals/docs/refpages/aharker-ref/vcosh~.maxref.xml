@@ -5,10 +5,20 @@
         A SIMD version of cosh~
     </digest>
   <description>
-      <o>vcosh~</o> provides a CPU efficient version of <o>cosh~</o> using SIMD operations. See the <o>cosh~</o> helpfile for details on usage.
+      <o>vcosh~</o> provides a CPU efficient version of <o>cosh~</o> using SIMD operations.
+      <br/>
+      Use the <o>vcosh~</o> object to calculate and output a signal that is the hyperbolic cosine function of each sample of the input signal.
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to hyperbolic cosine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,38 @@
 
   <seealsolist>
     <seealso name="cosh~" />
+    <seealso name="acos~" />
+    <seealso name="vacos~" />
+    <seealso name="acosh~" />
+    <seealso name="vacosh~" />
+    <seealso name="asin~" />
+    <seealso name="vasin~" />
+    <seealso name="asinh~" />
+    <seealso name="vasinh~" />
+    <seealso name="atan~" />
+    <seealso name="vatan~" />
+    <seealso name="atanh~" />
+    <seealso name="vatanh~" />
+    <seealso name="atan2~" />
+    <seealso name="cos~" />
+    <seealso name="cosx~" />
+    <seealso name="vcosx~" />
+    <seealso name="sinh~" />
+    <seealso name="vsinh~" />
+    <seealso name="sinx~" />
+    <seealso name="vsinx~" />
+    <seealso name="tanh~" />
+    <seealso name="vtanh~" />
+    <seealso name="tanx~" />
+    <seealso name="vtanx~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The hyperbolic cosine of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>

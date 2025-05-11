@@ -5,10 +5,20 @@
         A SIMD version of sinx~
     </digest>
   <description>
-      <o>vsinx~</o> provides a CPU efficient version of <o>sinx~</o> using SIMD operations. See the <o>sinx~</o> helpfile for details on usage.
+      <o>vsinx~</o> provides a CPU efficient version of <o>sinx~</o> using SIMD operations.
+      <br/>
+      <o>vsinx~</o> is a real sine function whose input expects values between 0 and 2π (similar to <o>vcosx~</o> but unlike <o>cos~</o> which is designed to work with <o>phasor~</o>'s output from 0 to 1).
   </description>
   
   <methodlist>
+      <method name="signal">
+          <arglist />
+          <digest>
+              Input to sine function
+          </digest>
+          <description>
+          </description>
+      </method>
   </methodlist>
   
   <attributelist>
@@ -16,7 +26,18 @@
 
   <seealsolist>
     <seealso name="sinx~" />
+    <seealso name="asinh~" />
+    <seealso name="vasinh~" />
+    <seealso name="sinh~" />
+    <seealso name="vsinh~" />
   </seealsolist>
+  <misc name="Output">
+      <entry name="signal">
+          <description>
+              The sine of the input.
+          </description>
+      </entry>
+  </misc>
   <misc name="Discussion">
     <entry name="Keywords">
       <description>vMSP</description>
