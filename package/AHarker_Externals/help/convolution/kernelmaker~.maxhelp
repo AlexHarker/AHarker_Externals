@@ -57,7 +57,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 1103.0, 703.0 ],
+						"rect" : [ 0.0, 26.0, 1103.0, 703.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -729,7 +729,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 1103.0, 703.0 ],
+						"rect" : [ 34.0, 126.0, 1103.0, 703.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 13.0,
@@ -917,7 +917,7 @@
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 34.0, 87.0, 412.0, 202.0 ],
+										"rect" : [ 134.0, 172.0, 498.0, 283.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -948,27 +948,27 @@
 										"boxes" : [ 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-38",
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 2,
 													"outlettype" : [ "float", "bang" ],
-													"patching_rect" : [ 78.0, 156.0, 127.0, 22.0 ],
-													"text" : "buffer~ vonnhann 200"
+													"patching_rect" : [ 83.0, 170.0, 107.0, 23.0 ],
+													"text" : "buffer~ hann 200"
 												}
 
 											}
 , 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-37",
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
 													"outlettype" : [ "bang" ],
-													"patching_rect" : [ 38.0, 22.0, 60.0, 22.0 ],
+													"patching_rect" : [ 38.0, 15.0, 65.0, 23.0 ],
 													"text" : "loadbang"
 												}
 
@@ -976,13 +976,13 @@
 , 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-36",
 													"maxclass" : "newobj",
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "float" ],
-													"patching_rect" : [ 119.0, 75.0, 41.0, 22.0 ],
+													"patching_rect" : [ 124.0, 82.0, 44.0, 23.0 ],
 													"text" : "/ 512."
 												}
 
@@ -990,13 +990,13 @@
 , 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-35",
 													"maxclass" : "newobj",
 													"numinlets" : 2,
 													"numoutlets" : 3,
 													"outlettype" : [ "bang", "bang", "int" ],
-													"patching_rect" : [ 38.0, 46.0, 59.0, 22.0 ],
+													"patching_rect" : [ 38.0, 46.0, 64.0, 23.0 ],
 													"text" : "uzi 513 0"
 												}
 
@@ -1004,27 +1004,27 @@
 , 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-5",
 													"maxclass" : "newobj",
 													"numinlets" : 3,
 													"numoutlets" : 1,
 													"outlettype" : [ "float" ],
-													"patching_rect" : [ 78.0, 127.0, 100.0, 22.0 ],
-													"text" : "peek~ vonnhann"
+													"patching_rect" : [ 83.0, 141.0, 101.0, 23.0 ],
+													"text" : "peek~ hann"
 												}
 
 											}
 , 											{
 												"box" : 												{
 													"fontname" : "Arial",
-													"fontsize" : 12.0,
+													"fontsize" : 13.0,
 													"id" : "obj-7",
 													"maxclass" : "newobj",
 													"numinlets" : 1,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 119.0, 101.0, 272.0, 22.0 ],
+													"patching_rect" : [ 124.0, 108.0, 295.0, 23.0 ],
 													"text" : "expr 0.5 + (0.5 * cos(3.141593 + 6.283186 * $f1))"
 												}
 
@@ -1033,7 +1033,7 @@
 										"lines" : [ 											{
 												"patchline" : 												{
 													"destination" : [ "obj-36", 0 ],
-													"midpoints" : [ 87.5, 71.5, 128.5, 71.5 ],
+													"midpoints" : [ 92.5, 75.0, 133.5, 75.0 ],
 													"order" : 0,
 													"source" : [ "obj-35", 2 ]
 												}
@@ -1071,7 +1071,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 345.0, 615.0, 130.0, 23.0 ],
+									"patching_rect" : [ 345.0, 615.0, 99.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -1079,7 +1079,7 @@
 										"tags" : ""
 									}
 ,
-									"text" : "p vonnhann_window"
+									"text" : "p hann_window"
 								}
 
 							}
@@ -1387,7 +1387,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 480.0, 223.0, 615.0, 25.0 ],
+									"patching_rect" : [ 450.0, 222.0, 615.0, 25.0 ],
 									"text" : "mode / target buffer / source (i)buffer / window (i)buffer / offset in samples (int)  / length in samples (int)",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
@@ -1575,8 +1575,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 150.0, 223.0, 329.0, 23.0 ],
-									"text" : "makekernel_wind kernelbuf cellobuf vonnhann 0 44100"
+									"patching_rect" : [ 150.0, 223.0, 298.0, 23.0 ],
+									"text" : "makekernel_wind kernelbuf cellobuf hann 0 44100"
 								}
 
 							}
