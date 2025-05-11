@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -91,12 +91,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-20",
-									"linecount" : 8,
+									"linecount" : 9,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 420.0, 195.0, 273.0, 123.0 ],
-									"text" : "jit. objects can be put into high priority by using jit.qfaker before the first jit. object in the chain. You should not use jit.qfaker unless you are certain that it is safe to do so. Things like opening files, drawing to the screen, messages that make quicktime calls are *not* interrupt safe. \nSee jit.qfaker help file.",
+									"patching_rect" : [ 420.0, 195.0, 274.0, 137.0 ],
+									"text" : "jit. objects can be put into high priority by using jit.qfaker before the first jit. object in the chain. You should not use jit.qfaker unless you are certain that it is safe to do so. Things like opening files, drawing to the screen, messages that make quicktime calls are *not* interrupt safe. \n\nSee jit.qfaker help file.",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
@@ -381,7 +381,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -443,7 +443,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
