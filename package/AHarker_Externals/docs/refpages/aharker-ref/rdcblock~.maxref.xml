@@ -5,7 +5,8 @@
       DC blocking filter with sample accurate reset
   </digest>
   <description>
-      <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois. (http://www.music.columbia.edu/PeRColate/).
+      <o>rdcblock~</o> is a simple dc blocking filter in which the filter memory can be reset on a sample-accurate basis, using a dedicated reset input. The original use was for use in granular applications where the DC varies according to the grain parameters. <o>rdcblock~</o>  is heavily based on <o>dcblock~</o> from the PeRColate objects by Dan Trueman and R. Luke DuBois.
+      <a href="https://github.com/Cycling74/percolate/releases/tag/v1.0">(https://github.com/Cycling74/percolate/releases/tag/v1.0)</a>
   </description>
   <objarglist>
       <objarg name="mode" optional="1" type="int">
@@ -27,26 +28,17 @@
       </objarg>
   </objarglist>
   <methodlist>
-      <method name="First-inlet">
+      <method name="signal">
           <arglist>
-              <arg name="First-inlet" type="signal" />
           </arglist>
           <digest>
-              Input
+              Function depends on inlet.
           </digest>
           <description>
-              The first inlet takes a <m>signal</m> to be processed by the filter.
-          </description>
-      </method>
-      <method name="Second-inlet">
-          <arglist>
-              <arg name="Second-inlet" type="signal" />
-          </arglist>
-          <digest>
-              Reset input
-          </digest>
-          <description>
-              The second inlet is a dedicated reset input. It takes a trigger <m>signal</m> to clear the filters memory.
+              In the first inlet: A <m>signal</m> to be processed by the filter.
+              <br/>
+              <br/>
+              In the second inlet: A dedicated reset input. It takes a trigger <m>signal</m> to clear the filters memory.
           </description>
       </method>
   </methodlist>

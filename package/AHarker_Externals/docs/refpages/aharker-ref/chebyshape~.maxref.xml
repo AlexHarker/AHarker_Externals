@@ -16,7 +16,7 @@
               The first argument sets the number of coefficients. A minimum of 2 is required
           </description>
       </objarg>
-      <objarg name="Dynamic-DSP" optional="1" type="int">
+      <objarg name="dynamicdsp" optional="1" type="int">
           <digest>
               Set the dynamicdsp~ inlet correspoding to coefficient 0.
           </digest>
@@ -28,23 +28,14 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="signal" type="signal" />
           </arglist>
           <digest>
-              Audio in
+              Function depends on inlet
           </digest>
           <description>
-              The first inlet takes an audio <m>signal</m> to be waveshaped by <o>chebyshape~</o>.
-          </description>
-      </method>
-      <method name="coefficients">
-          <arglist>
-              <arg name="coefficients" type="signal" />
-          </arglist>
-          <digest>
-              Set the coefficients
-          </digest>
-          <description>
+              In the first inlet: An audio <m>signal</m> to be waveshaped by <o>chebyshape~</o>.
+              <br/>
+              <br/>
               The number of inlets is determined by the first argument to <o>chebyshape</o>. Each inlet (excluding the first inlet) corresponds to a coefficient (starting from 0) that can be set/modulated using a <m>signal</m>.
           </description>
       </method>
