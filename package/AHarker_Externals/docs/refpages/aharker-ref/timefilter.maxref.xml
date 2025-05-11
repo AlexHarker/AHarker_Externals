@@ -10,7 +10,6 @@
   <methodlist>
       <method name="bang">
           <arglist>
-              <arg name="bang" type="bang" />
           </arglist>
           <digest>
                Output and clear the list
@@ -21,7 +20,6 @@
       </method>
       <method name="float">
           <arglist>
-              <arg name="float" type="float" />
           </arglist>
           <digest>
                Set distance between list items
@@ -32,7 +30,7 @@
       </method>
       <method name="list">
           <arglist>
-              <arg name="list" type="list" />
+              <arg name="input" type="list" />
           </arglist>
           <digest>
               Set the list to be filtered
@@ -43,7 +41,7 @@
       </method>
       <method name="ordering">
           <arglist>
-              <arg name="ordering" type="message" />
+              <arg name="ordering" type="int" />
           </arglist>
           <digest>
               Set the ordering mode of the list
@@ -61,7 +59,7 @@
       </method>
       <method name="randfilter">
           <arglist>
-              <arg name="randfilter" type="message" />
+              <arg name="randfilter" type="float" />
           </arglist>
           <digest>
               Randomly filter the list
@@ -80,7 +78,6 @@
       </method>
       <method name="reset">
           <arglist>
-              <arg name="reset" type="message" />
           </arglist>
           <digest>
               Clear the input list
