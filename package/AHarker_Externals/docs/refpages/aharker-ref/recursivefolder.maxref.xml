@@ -5,7 +5,7 @@
       Recursively list the files in a specific folder
   </digest>
   <description>
-      <o>recursivefolder</o> is similar to the <o>folder</o> object, but unlike folder it is possibly to search recursively. Recursion can either be infinite (default), or to a specified depth. See the <o>folder</o> object help file for info on pathnames in MaxMSP.
+      <o>recursivefolder</o> is similar to the <o>folder</o> object, but unlike folder it is possible to search recursively. Recursion can either be infinite (default), or to a specified depth. See the <o>folder</o> object help file for info on pathnames in MaxMSP.
   </description>
   <objarglist>
       <objarg name="recursion-depth" optional="1" type="int">
