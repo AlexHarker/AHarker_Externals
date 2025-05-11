@@ -110,10 +110,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 73.0, 460.0, 21.0 ],
-									"text" : "getthread can be useful for discovering unexpected thread changes in a patch.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "getthread can be useful for discovering unexpected thread changes in a patch."
 								}
-
 							}
 , 							{
 								"box" : 								{

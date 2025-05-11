@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 956.0, 313.0, 252.0, 246.0 ],
+		"rect" : [ 956.0, 313.0, 243.0, 266.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -48,7 +48,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 15.0, 150.0, 41.0, 23.0 ],
+					"patching_rect" : [ 15.0, 165.0, 41.0, 23.0 ],
 					"text" : "mtof~"
 				}
 
@@ -62,7 +62,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 135.0, 92.0, 86.0, 40.0 ],
+					"patching_rect" : [ 135.0, 107.0, 86.0, 40.0 ],
 					"text" : "Random Sequence"
 				}
 
@@ -75,7 +75,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 15.0, 180.0, 46.0, 23.0 ],
+					"patching_rect" : [ 15.0, 195.0, 46.0, 23.0 ],
 					"text" : "cycle~"
 				}
 
@@ -88,7 +88,7 @@
 					"numinlets" : 6,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 15.0, 120.0, 109.0, 23.0 ],
+					"patching_rect" : [ 15.0, 135.0, 109.0, 23.0 ],
 					"text" : "scale~ -1 1 48 60"
 				}
 
@@ -101,7 +101,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 60.0, 50.0, 23.0 ],
+					"patching_rect" : [ 90.0, 75.0, 50.0, 23.0 ],
 					"text" : "<~ -0.5"
 				}
 
@@ -114,7 +114,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 30.0, 44.0, 23.0 ],
+					"patching_rect" : [ 90.0, 45.0, 44.0, 23.0 ],
 					"text" : "delta~"
 				}
 
@@ -127,7 +127,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 0.0, 89.0, 23.0 ],
+					"patching_rect" : [ 90.0, 15.0, 89.0, 23.0 ],
 					"text" : "dynamic.in~ 1"
 				}
 
@@ -140,7 +140,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 15.0, 90.0, 94.0, 23.0 ],
+					"patching_rect" : [ 15.0, 105.0, 94.0, 23.0 ],
 					"text" : "sah~ 0.5"
 				}
 
@@ -153,7 +153,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 15.0, 60.0, 47.0, 23.0 ],
+					"patching_rect" : [ 15.0, 75.0, 47.0, 23.0 ],
 					"text" : "noise~"
 				}
 
@@ -166,7 +166,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 15.0, 210.0, 100.0, 23.0 ],
+					"patching_rect" : [ 15.0, 225.0, 100.0, 23.0 ],
 					"text" : "dynamic.out~ 1"
 				}
 
@@ -228,7 +228,8 @@
 				}
 
 			}
- ]
+ ],
+		"autosave" : 0
 	}
 
 }

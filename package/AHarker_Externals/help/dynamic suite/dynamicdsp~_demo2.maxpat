@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -77,9 +77,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 106.0, 105.0, 180.0, 50.0 ],
+					"patching_rect" : [ 75.0, 108.0, 180.0, 50.0 ],
 					"text" : "Use dynamic.this or the simpler dynamic.patch to monitor the patch index",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"textjustification" : 1
 				}
 
 			}
@@ -93,8 +93,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 220.0, 74.0, 94.0, 25.0 ],
-					"text" : "Patch Index",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "Patch Index"
 				}
 
 			}

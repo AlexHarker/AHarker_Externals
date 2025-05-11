@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -86,9 +86,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 120.0, 240.0, 369.0, 21.0 ],
-					"text" : "N.B. if you have no arguments - audio processing will be OFF!",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 120.0, 240.0, 444.0, 21.0 ],
+					"text" : "N.B. if you provide  no arguments - audio processing will be OFF by default!"
 				}
 
 			}
@@ -101,9 +100,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 395.5, 44.0, 217.0, 25.0 ],
-					"text" : "delete this patch and free the slot",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 410.0, 44.0, 217.0, 25.0 ],
+					"text" : "delete this patch and free the slot"
 				}
 
 			}
@@ -116,9 +114,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 146.0, 44.5, 199.0, 25.0 ],
-					"text" : "set busy flag on / mute flag off",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 148.0, 45.0, 199.0, 25.0 ],
+					"text" : "set busy flag on / mute flag off"
 				}
 
 			}
@@ -131,9 +128,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 41.0, 44.5, 62.0, 25.0 ],
-					"text" : "output",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 43.0, 45.0, 62.0, 25.0 ],
+					"text" : "output"
 				}
 
 			}
@@ -146,9 +142,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 161.0, 150.0, 94.0, 25.0 ],
-					"text" : "Patch Index",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 163.0, 149.0, 94.0, 25.0 ],
+					"text" : "Patch Index"
 				}
 
 			}
@@ -244,7 +239,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 349.5, 45.0, 44.0, 23.0 ],
+					"patching_rect" : [ 362.0, 45.0, 44.0, 23.0 ],
 					"text" : "delete"
 				}
 
@@ -253,7 +248,7 @@
 		"lines" : [ 			{
 				"patchline" : 				{
 					"destination" : [ "obj-8", 0 ],
-					"midpoints" : [ 359.0, 79.5, 24.5, 79.5 ],
+					"midpoints" : [ 371.5, 79.5, 24.5, 79.5 ],
 					"source" : [ "obj-16", 0 ]
 				}
 

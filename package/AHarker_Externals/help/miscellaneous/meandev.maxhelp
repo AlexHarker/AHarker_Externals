@@ -1831,8 +1831,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 64.0, 616.0, 36.0 ],
-									"text" : "In either of the two weighting modes (2 and 3) the data is weighted by a value in the right inlet. This value determines the relative weighting of the data in calculating the mean and and deviation.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "In either of the two weighting modes (2 and 3) the data is weighted by a value in the right inlet. This value determines the relative weighting of the data in calculating the mean and and deviation."
 								}
 
 							}

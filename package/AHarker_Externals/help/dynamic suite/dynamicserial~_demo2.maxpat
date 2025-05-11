@@ -49,8 +49,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 38.0, 45.0, 152.0, 50.0 ],
-					"text" : "Use dynamic.this or the simpler dynamic.patch to monitor the patch index",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "Use dynamic.this or the simpler dynamic.patch to monitor the patch index"
 				}
 
 			}
@@ -64,8 +63,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 300.0, 74.0, 94.0, 25.0 ],
-					"text" : "Patch Index",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "Patch Index"
 				}
 
 			}

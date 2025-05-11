@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 628.0, 544.0 ],
+						"rect" : [ 0.0, 26.0, 628.0, 544.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -95,8 +95,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 90.0, 287.0, 21.0 ],
-									"text" : "A simple patch that deletes itself after 5 seconds",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "A simple patch that deletes itself after 5 seconds"
 								}
 
 							}
@@ -237,8 +236,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 345.0, 262.5, 158.0, 40.0 ],
-									"text" : "double-click to see the patch without deleting",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "double-click to see the patch without deleting"
 								}
 
 							}
@@ -310,8 +308,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 300.0, 192.0, 94.0, 21.0 ],
-									"text" : "(and then wait)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(and then wait)"
 								}
 
 							}
@@ -437,7 +434,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -499,13 +496,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 628.0, 544.0 ],
+						"rect" : [ 34.0, 126.0, 628.0, 544.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -567,7 +564,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 453.0, 287.5, 20.0, 20.0 ],
+									"patching_rect" : [ 455.0, 288.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -587,7 +584,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 541.0, 196.5, 20.0, 20.0 ],
+									"patching_rect" : [ 543.0, 197.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -710,7 +707,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 216.0, 477.0, 20.0, 20.0 ],
+									"patching_rect" : [ 218.0, 477.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -726,7 +723,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 106.0, 475.0, 108.0, 25.0 ],
+									"patching_rect" : [ 108.0, 475.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -751,9 +748,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 234.0, 310.0, 233.0, 21.0 ],
-									"text" : "(add a harmonic and then double-click)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 236.0, 310.0, 233.0, 21.0 ],
+									"text" : "(add a harmonic and then double-click)"
 								}
 
 							}
@@ -766,7 +762,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 414.0, 194.0, 125.0, 25.0 ],
+									"patching_rect" : [ 416.0, 194.0, 125.0, 25.0 ],
 									"text" : "open patch index"
 								}
 
@@ -796,7 +792,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 194.0, 98.0, 40.0 ],
+									"patching_rect" : [ 31.0, 194.0, 88.0, 40.0 ],
 									"text" : "clear patches"
 								}
 
@@ -840,7 +836,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 250.0, 285.0, 201.0, 25.0 ],
+									"patching_rect" : [ 252.0, 285.0, 201.0, 25.0 ],
 									"text" : "look inside to see how it works"
 								}
 

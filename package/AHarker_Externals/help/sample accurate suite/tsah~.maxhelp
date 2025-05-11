@@ -310,8 +310,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 230.0, 21.0 ],
-									"text" : "Comparison with standard sah~ object",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "Comparison with standard sah~ object"
 								}
 
 							}

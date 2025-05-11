@@ -1277,8 +1277,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 15.0, 75.0, 789.0, 36.0 ],
-					"text" : "This demo illustrates how you might use voicemanger~ and voicedrive~ in combination to create a subsample-accurate granular synth patch with the voices hosted in a poly~ object. Unfortunately, you can't use the muting facilities of poly~, so all voices must be left on.",
-					"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+					"text" : "This demo illustrates how you might use voicemanger~ and voicedrive~ in combination to create a subsample-accurate granular synth patch with the voices hosted in a poly~ object. Unfortunately, you can't use the muting facilities of poly~, so all voices must be left on."
 				}
 
 			}

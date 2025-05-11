@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -100,7 +100,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 320.5, 466.0, 20.0, 20.0 ],
+									"patching_rect" : [ 320.0, 451.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "7",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -116,7 +116,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.5, 464.0, 179.0, 25.0 ],
+									"patching_rect" : [ 135.0, 449.0, 179.0, 25.0 ],
 									"text" : "clear all slots to start again"
 								}
 
@@ -129,9 +129,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 315.0, 207.0, 184.0, 21.0 ],
-									"text" : "(be wary of the output volume)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 314.0, 192.0, 184.0, 21.0 ],
+									"text" : "(be wary of the output volume)"
 								}
 
 							}
@@ -149,7 +148,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 531.0, 175.0, 20.0, 20.0 ],
+									"patching_rect" : [ 530.0, 160.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -165,9 +164,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 289.0, 199.0, 36.0 ],
-									"text" : "(this will replace the effect in a chosen slot if it is already active)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 359.0, 274.0, 199.0, 36.0 ],
+									"text" : "(this will replace the effect in a chosen slot if it is already active)"
 								}
 
 							}
@@ -180,9 +178,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 106.5, 289.0, 199.0, 36.0 ],
-									"text" : "(this will replace the effect in a chosen slot if it is already active)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 106.0, 274.0, 199.0, 36.0 ],
+									"text" : "(this will replace the effect in a chosen slot if it is already active)"
 								}
 
 							}
@@ -196,7 +193,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 285.0, 165.0, 240.0, 40.0 ],
+									"patching_rect" : [ 284.0, 150.0, 240.0, 40.0 ],
 									"text" : "start adding voices, they will always load in the next available slot"
 								}
 
@@ -215,7 +212,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 544.0, 257.0, 20.0, 20.0 ],
+									"patching_rect" : [ 543.0, 242.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -232,7 +229,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 405.0, 247.0, 135.0, 40.0 ],
+									"patching_rect" : [ 404.0, 232.0, 136.0, 40.0 ],
 									"text" : "add a stepped seq in a specific slot"
 								}
 
@@ -249,7 +246,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 345.0, 255.0, 52.0, 23.0 ]
+									"patching_rect" : [ 344.0, 240.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -262,7 +259,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 345.0, 330.0, 195.0, 23.0 ],
+									"patching_rect" : [ 344.0, 315.0, 195.0, 23.0 ],
 									"text" : "loadpatch $1 dynamicdsp~_step"
 								}
 
@@ -281,7 +278,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 302.0, 257.0, 20.0, 20.0 ],
+									"patching_rect" : [ 301.0, 242.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -298,7 +295,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 247.0, 150.0, 40.0 ],
+									"patching_rect" : [ 149.0, 232.0, 150.0, 40.0 ],
 									"text" : "add a random seq in a specific slot"
 								}
 
@@ -315,7 +312,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 90.0, 255.0, 52.0, 23.0 ]
+									"patching_rect" : [ 89.0, 240.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -328,7 +325,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 90.0, 330.0, 197.0, 23.0 ],
+									"patching_rect" : [ 89.0, 315.0, 197.0, 23.0 ],
 									"text" : "loadpatch $1 dynamicdsp~_rand"
 								}
 
@@ -347,7 +344,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 345.0, 405.0, 20.0, 20.0 ],
+									"patching_rect" : [ 344.0, 390.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "6",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -364,7 +361,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 150.0, 388.0, 194.0, 54.0 ],
+									"patching_rect" : [ 149.0, 373.0, 194.0, 54.0 ],
 									"text" : "Open a secific patch window to see different patches loaded in different slots"
 								}
 
@@ -381,7 +378,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 90.0, 390.0, 52.0, 23.0 ]
+									"patching_rect" : [ 89.0, 375.0, 52.0, 23.0 ]
 								}
 
 							}
@@ -394,7 +391,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 90.0, 420.0, 55.0, 23.0 ],
+									"patching_rect" : [ 89.0, 405.0, 55.0, 23.0 ],
 									"text" : "open $1"
 								}
 
@@ -408,7 +405,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 88.5, 195.0, 177.0, 23.0 ],
+									"patching_rect" : [ 88.0, 180.0, 177.0, 23.0 ],
 									"text" : "loadpatch dynamicdsp~_step"
 								}
 
@@ -421,7 +418,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 90.0, 510.0, 86.0, 23.0 ],
+									"patching_rect" : [ 89.0, 495.0, 86.0, 23.0 ],
 									"text" : "loadmess 0.5"
 								}
 
@@ -434,7 +431,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 90.0, 540.0, 56.0, 23.0 ],
+									"patching_rect" : [ 89.0, 525.0, 56.0, 23.0 ],
 									"text" : "phasor~"
 								}
 
@@ -447,7 +444,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 90.0, 465.0, 37.0, 23.0 ],
+									"patching_rect" : [ 89.0, 450.0, 37.0, 23.0 ],
 									"text" : "clear"
 								}
 
@@ -460,7 +457,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 61.0, 600.0, 43.0, 23.0 ],
+									"patching_rect" : [ 60.0, 585.0, 43.0, 23.0 ],
 									"text" : "*~ 0.2"
 								}
 
@@ -474,7 +471,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 61.0, 165.0, 179.0, 23.0 ],
+									"patching_rect" : [ 60.0, 150.0, 179.0, 23.0 ],
 									"text" : "loadpatch dynamicdsp~_rand"
 								}
 
@@ -491,7 +488,7 @@
 									"orientation" : 1,
 									"outlettype" : [ "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 61.0, 630.0, 136.0, 35.0 ],
+									"patching_rect" : [ 60.0, 615.0, 136.0, 35.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_initial" : [ -70 ],
@@ -526,7 +523,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 312.0, 623.0, 20.0, 20.0 ],
+									"patching_rect" : [ 311.0, 608.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -543,7 +540,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 198.0, 613.0, 112.0, 40.0 ],
+									"patching_rect" : [ 197.0, 598.0, 112.0, 40.0 ],
 									"text" : "adjust volume level carefully"
 								}
 
@@ -562,7 +559,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 219.0, 700.0, 20.0, 20.0 ],
+									"patching_rect" : [ 218.0, 685.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -578,7 +575,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 109.0, 698.0, 108.0, 25.0 ],
+									"patching_rect" : [ 108.0, 683.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -590,7 +587,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 62.0, 688.0, 44.0, 44.0 ],
+									"patching_rect" : [ 61.0, 673.0, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -604,7 +601,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 61.0, 570.0, 129.0, 23.0 ],
+									"patching_rect" : [ 60.0, 555.0, 129.0, 23.0 ],
 									"text" : "dynamicdsp~ 1 1 0 0"
 								}
 
@@ -618,9 +615,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 90.0, 585.0, 36.0 ],
-									"text" : "unlike poly~, dynamicdsp~ and dynamicserial~ can have different patches loaded in each slot. For dynamicdsp~ this allows different voices to be run in parallel from the same object.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"patching_rect" : [ 15.0, 90.0, 690.0, 36.0 ],
+									"text" : "unlike poly~, dynamicdsp~ and dynamicserial~ are specifically designed to have different patches loaded in each slot. For dynamicdsp~ this allows different voices to be run in parallel from the same object."
 								}
 
 							}
@@ -637,21 +633,6 @@
 									"outlettype" : [ "" ],
 									"parameter_enable" : 0,
 									"patching_rect" : [ 15.0, 15.0, 300.0, 58.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"fontname" : "Arial",
-									"fontsize" : 13.0,
-									"id" : "obj-18",
-									"linecount" : 10,
-									"maxclass" : "comment",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 390.0, 405.0, 347.0, 152.0 ],
-									"text" : "It is suggested that in situations where multiple instances of a number of patches are loaded into a single dynamicdsp~ (for efficient use of cpu resources), each set of similar instances are loaded into consecutive slots. For example, if there are 10 synth1 patches and 20 synth2 patches then loading the synth1 patches into slots 1-10 and the synth2 patches into slots 11-30 then the message [targetfree 1 10] can be used to target a synth1 patch, and the message [targetfree 11 30] can be used to target a synth2 patch.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
 							}
@@ -673,7 +654,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 98.0, 229.0, 70.5, 229.0 ],
+									"midpoints" : [ 97.5, 214.0, 69.5, 214.0 ],
 									"source" : [ "obj-2", 0 ]
 								}
 
@@ -688,7 +669,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 354.5, 373.5, 70.5, 373.5 ],
+									"midpoints" : [ 353.5, 358.5, 69.5, 358.5 ],
 									"source" : [ "obj-22", 0 ]
 								}
 
@@ -696,7 +677,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 99.5, 499.0, 70.5, 499.0 ],
+									"midpoints" : [ 98.5, 484.0, 69.5, 484.0 ],
 									"source" : [ "obj-23", 0 ]
 								}
 
@@ -718,7 +699,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-20", 1 ],
-									"midpoints" : [ 70.5, 670.928570508956909, 96.5, 670.928570508956909 ],
+									"midpoints" : [ 69.5, 655.928570508956909, 95.5, 655.928570508956909 ],
 									"order" : 0,
 									"source" : [ "obj-37", 0 ]
 								}
@@ -727,7 +708,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-20", 0 ],
-									"midpoints" : [ 70.5, 670.928570508956909, 71.5, 670.928570508956909 ],
+									"midpoints" : [ 69.5, 655.928570508956909, 70.5, 655.928570508956909 ],
 									"order" : 1,
 									"source" : [ "obj-37", 0 ]
 								}
@@ -736,7 +717,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 99.5, 372.0, 70.5, 372.0 ],
+									"midpoints" : [ 98.5, 357.0, 69.5, 357.0 ],
 									"source" : [ "obj-46", 0 ]
 								}
 
@@ -751,7 +732,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 99.5, 457.0, 70.5, 457.0 ],
+									"midpoints" : [ 98.5, 442.0, 69.5, 442.0 ],
 									"source" : [ "obj-7", 0 ]
 								}
 
@@ -759,7 +740,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 99.5, 565.5, 70.5, 565.5 ],
+									"midpoints" : [ 98.5, 550.5, 69.5, 550.5 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -797,7 +778,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -837,13 +818,12 @@
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
 									"id" : "obj-25",
-									"linecount" : 5,
+									"linecount" : 6,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 590.0, 312.0, 285.0, 79.0 ],
-									"text" : "Select a target message and click aMessage to activate a specific voice.\nthe targetfree message must be reclicked after pressing aMessage so that it can select a new free slot",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
+									"patching_rect" : [ 590.0, 300.0, 285.0, 94.0 ],
+									"text" : "Select a target message and click aMessage to activate a specific voice.\n\nThe targetfree message must be reclicked after pressing aMessage so that it can select a new free slot",
 									"textjustification" : 1
 								}
 
@@ -871,9 +851,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 231.0, 476.0, 280.0, 36.0 ],
+									"patching_rect" : [ 224.0, 479.0, 280.0, 36.0 ],
 									"text" : "(this will activate a voice and set it to busy depending on the selected target message)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"textjustification" : 1
 								}
 
 							}
@@ -935,8 +915,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 448.0, 562.0, 150.0, 40.0 ],
-									"text" : "See which voice has recieved aMessage",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "See which voice has recieved aMessage"
 								}
 
 							}
@@ -975,7 +954,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 877.0, 312.0, 20.0, 20.0 ],
+									"patching_rect" : [ 882.0, 312.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1013,8 +992,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 94.0, 165.0, 178.0, 25.0 ],
-									"text" : "Load 9 copies of the patch",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Load 9 copies of the patch"
 								}
 
 							}
@@ -1239,8 +1217,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 231.0, 451.0, 211.0, 25.0 ],
-									"text" : "Send a message to the instance",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Send a message to the instance"
 								}
 
 							}
@@ -1275,9 +1252,9 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 330.0, 165.0, 525.0, 94.0 ],
+									"patching_rect" : [ 315.0, 165.0, 525.0, 94.0 ],
 									"text" : "It is suggested that in situations where multiple instances of a number of patches are loaded into a single dynamicdsp~ (for efficient use of cpu resources), each set of similar instances are loaded into consecutive slots. For example, if there are 10 synth1 patches and 20 synth2 patches then loading the synth1 patches into slots 1-10 and the synth2 patches into slots 11-30 then the message [targetfree 1 10] can be used to target a synth1 patch, and the message [targetfree 11 30] can be used to target a synth2 patch.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"textjustification" : 1
 								}
 
 							}
@@ -1291,8 +1268,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 197.0, 360.0, 379.0, 25.0 ],
-									"text" : "Target any free patch in the slots between 1 and 5 (inclusive).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Target any free patch in the slots between 1 and 5 (inclusive)."
 								}
 
 							}
@@ -1306,8 +1282,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 224.0, 393.0, 379.0, 25.0 ],
-									"text" : "Target any free patch in the slots between 3 and 9 (inclusive).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Target any free patch in the slots between 3 and 9 (inclusive)."
 								}
 
 							}
@@ -1321,8 +1296,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 173.0, 330.0, 151.0, 25.0 ],
-									"text" : "Target any free patch.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Target any free patch."
 								}
 
 							}
@@ -1364,8 +1338,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 149.0, 300.0, 439.0, 25.0 ],
-									"text" : "As with poly~ - target the specified patch (here the patch in the 8th slot).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "As with poly~ - target the specified patch (here the patch in the 8th slot)."
 								}
 
 							}
@@ -1379,8 +1352,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 90.0, 840.0, 50.0 ],
-									"text" : "Unlike poly~ there is no note or midinote message for dynamicdsp~. Instead there is the addition of the targetfree message, which allows the user to find a non-busy patch and forward all subsequent messages to that patch. The equivalent of thispoly~ is dynamic.this~ (or the simpler dynamic.patch~), which can be used to set the busy flag for a patch. Default behaviour is to target all patches (target 0 as with poly~).",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "Unlike poly~ there is no note or midinote message for dynamicdsp~. Instead there is the addition of the targetfree message, which allows the user to find a non-busy patch and forward all subsequent messages to that patch. The equivalent of thispoly~ is dynamic.this~ (or the simpler dynamic.patch~), which can be used to set the busy flag for a patch. Default behaviour is to target all patches (target 0 as with poly~)."
 								}
 
 							}
@@ -1555,13 +1527,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 954.0, 741.0 ],
+						"rect" : [ 94.0, 158.0, 954.0, 741.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1621,8 +1593,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 265.0, 135.0, 135.0, 25.0 ],
-									"text" : "load some patches",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "load some patches"
 								}
 
 							}
@@ -1771,7 +1742,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 311.0, 610.0, 20.0, 20.0 ],
+									"patching_rect" : [ 317.0, 610.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1788,7 +1759,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 197.0, 600.0, 112.0, 40.0 ],
+									"patching_rect" : [ 203.0, 600.0, 112.0, 40.0 ],
 									"text" : "adjust volume level carefully"
 								}
 
@@ -1807,7 +1778,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 218.0, 687.0, 20.0, 20.0 ],
+									"patching_rect" : [ 221.0, 687.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1823,7 +1794,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 108.0, 685.0, 108.0, 25.0 ],
+									"patching_rect" : [ 111.0, 685.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -1863,8 +1834,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 89.0, 457.0, 21.0 ],
-									"text" : "dynamicdsp~ can utilise multithreading to more efficiently manage CPU loads.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "dynamicdsp~ can utilise multithreading to more efficiently manage CPU loads."
 								}
 
 							}
@@ -1877,8 +1847,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 418.0, 436.0, 21.0 ],
-									"text" : " This is limited internally to the number of cores available on the hardware.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : " This is limited internally to the number of cores available on the hardware."
 								}
 
 							}
@@ -1931,8 +1900,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 210.0, 580.0, 36.0 ],
-									"text" : "Multithreading will add a small cpu overhead, so in some situations it may not produce any gain. In others the gain will be significant.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Multithreading will add a small cpu overhead, so in some situations it may not produce any gain. In others the gain will be significant."
 								}
 
 							}
@@ -1945,9 +1913,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 270.0, 530.0, 591.0, 36.0 ],
-									"text" : "The default mapping is for each patch to be assigned to a thread of the same number as the slot it is in. Thus each subsequent slot is assigned to be processed on a subsequent thread.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 270.0, 533.0, 591.0, 36.0 ],
+									"text" : "The default mapping is for each patch to be assigned to a thread of the same number as the slot it is in. Thus each subsequent slot is assigned to be processed on a subsequent thread."
 								}
 
 							}
@@ -1961,8 +1928,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 331.0, 674.0, 50.0 ],
-									"text" : "Automatic load balancing has slightly more overhead, but may result in better cpu usage in siuations where the processing load of each patch is varying in an unpredicatble way, or when there are other changing demands on the hardware. The ideal situation is for all threads to be under equal load to give the most efficient use of cpu power.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Automatic load balancing has slightly more overhead, but may result in better cpu usage in siuations where the processing load of each patch is varying in an unpredicatble way, or when there are other changing demands on the hardware. The ideal situation is for all threads to be under equal load to give the most efficient use of cpu power."
 								}
 
 							}
@@ -1974,9 +1940,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 270.0, 567.0, 478.0, 21.0 ],
-									"text" : "The threadmap can be adjusted in real-time without interrupting audio processing",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 270.0, 570.0, 478.0, 21.0 ],
+									"text" : "The threadmap can be adjusted in real-time without interrupting audio processing"
 								}
 
 							}
@@ -1989,9 +1954,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 270.0, 492.0, 623.0, 36.0 ],
-									"text" : "Threads are wrapped around to the number of active threads. This means that a suitable thread map for a larger number of cores should transfer reasonably well to a lower number of threads (but not vice versa).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 270.0, 495.0, 623.0, 36.0 ],
+									"text" : "Threads are wrapped around to the number of active threads. This means that a suitable thread map for a larger number of cores should transfer reasonably well to a lower number of threads (but not vice versa)."
 								}
 
 							}
@@ -2018,8 +1982,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 308.0, 573.0, 21.0 ],
-									"text" : "When off, each patch is linked statically to a thread, as determined by the thread map (see below).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "When off, each patch is linked statically to a thread, as determined by the thread map (see below)."
 								}
 
 							}
@@ -2032,8 +1995,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 283.0, 495.0, 21.0 ],
-									"text" : "When on, each patch runs on whichever thread becomes available to process it first.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "When on, each patch runs on whichever thread becomes available to process it first."
 								}
 
 							}
@@ -2306,7 +2268,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -2397,7 +2359,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 450.0, 284.5, 20.0, 20.0 ],
+									"patching_rect" : [ 458.0, 285.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -2418,7 +2380,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 330.0, 253.5, 20.0, 20.0 ],
+									"patching_rect" : [ 337.0, 254.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "4",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -2455,8 +2417,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 255.0, 282.0, 192.0, 25.0 ],
-									"text" : "Close a secific patch window"
+									"patching_rect" : [ 255.0, 282.0, 199.0, 25.0 ],
+									"text" : "Close a specific patch window"
 								}
 
 							}
@@ -2469,8 +2431,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 135.0, 251.0, 190.0, 25.0 ],
-									"text" : "Open a secific patch window"
+									"patching_rect" : [ 135.0, 251.0, 197.0, 25.0 ],
+									"text" : "Open a specific patch window"
 								}
 
 							}
@@ -2557,7 +2519,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 203.0, 674.0, 20.0, 20.0 ],
+									"patching_rect" : [ 207.0, 674.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -2573,7 +2535,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 93.0, 672.0, 108.0, 25.0 ],
+									"patching_rect" : [ 97.0, 672.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -2614,8 +2576,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 90.0, 765.0, 36.0 ],
-									"text" : "Patches can be dynamically deleted using either the deletepatch message or clear message. Specific patch windows can also be opened and closed using the open and wclose message followed by an int representing the slot of the window you want to open.",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "Patches can be dynamically deleted using either the deletepatch message or clear message. Specific patch windows can also be opened and closed using the open and wclose message followed by an int representing the slot of the window you want to open."
 								}
 
 							}
@@ -2658,8 +2619,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 235.0, 165.0, 135.0, 25.0 ],
-									"text" : "load some patches",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "load some patches"
 								}
 
 							}
@@ -2892,7 +2852,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"midpoints" : [ 84.5, 353.5, 54.5, 353.5 ],
+									"midpoints" : [ 84.5, 355.5, 54.5, 355.5 ],
 									"source" : [ "obj-5", 0 ]
 								}
 
@@ -2924,7 +2884,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-4", 0 ],
-									"midpoints" : [ 204.5, 359.5, 54.5, 359.5 ],
+									"midpoints" : [ 204.5, 355.5, 54.5, 355.5 ],
 									"source" : [ "obj-6", 0 ]
 								}
 
@@ -2955,7 +2915,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -3017,13 +2977,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 94.0, 158.0, 954.0, 741.0 ],
+						"rect" : [ 0.0, 26.0, 954.0, 741.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -3066,7 +3026,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 220.0, 347.0, 20.0, 20.0 ],
+									"patching_rect" : [ 225.0, 347.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "5",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -3082,7 +3042,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 114.64285671710968, 345.0, 101.0, 25.0 ],
+									"patching_rect" : [ 120.0, 345.0, 101.0, 25.0 ],
 									"text" : "clear all slots"
 								}
 
@@ -3150,7 +3110,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 512.499995112419128, 197.321426689624786, 20.0, 20.0 ],
+									"patching_rect" : [ 514.0, 197.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -3204,7 +3164,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 296.428568601608276, 519.642852187156677, 20.0, 20.0 ],
+									"patching_rect" : [ 300.0, 522.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "2",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -3221,7 +3181,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 182.142855405807495, 509.821423709392548, 112.0, 40.0 ],
+									"patching_rect" : [ 186.0, 512.0, 112.0, 40.0 ],
 									"text" : "adjust volume level carefully"
 								}
 
@@ -3266,9 +3226,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 345.0, 347.0, 521.0, 21.0 ],
-									"text" : "arguments following the patch name are passed as arguments to the patch to be loaded.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 349.0, 363.0, 521.0, 21.0 ],
+									"text" : "arguments following the patch name are passed as arguments to the patch to be loaded."
 								}
 
 							}
@@ -3280,9 +3239,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 345.0, 331.0, 325.0, 21.0 ],
-									"text" : "2 -  the audio processing thread to assign the patch to.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 349.0, 342.0, 325.0, 21.0 ],
+									"text" : "2 -  the audio processing thread to assign the patch to."
 								}
 
 							}
@@ -3294,9 +3252,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 345.0, 316.0, 517.0, 21.0 ],
-									"text" : "1 -  the slot into which to load the patch (replacing any patch already loaded in that slot).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 349.0, 321.0, 517.0, 21.0 ],
+									"text" : "1 -  the slot into which to load the patch (replacing any patch already loaded in that slot)."
 								}
 
 							}
@@ -3308,9 +3265,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 300.0, 301.0, 322.0, 21.0 ],
-									"text" : "two optional ints before the name of the patch specify:",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 304.0, 301.0, 322.0, 21.0 ],
+									"text" : "two optional ints before the name of the patch specify:"
 								}
 
 							}
@@ -3324,8 +3280,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 299.999997138977051, 224.999997854232788, 540.0, 50.0 ],
-									"text" : "Patches are loaded by sending messages to the object. Each patch is loaded into a slot which can be refered to by index number (from 1). The index number of the slot is available within the hosted patch using either the dynamic.this~ or dynamic.patch~ objects.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "Patches are loaded by sending messages to the object. Each patch is loaded into a slot which can be refered to by index number (from 1). The index number of the slot is available within the hosted patch using either the dynamic.this~ or dynamic.patch~ objects."
 								}
 
 							}
@@ -3338,9 +3293,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 234.821426331996918, 194.642855286598206, 275.0, 25.0 ],
-									"text" : "load the named patch into the next free slot",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 237.0, 195.0, 275.0, 25.0 ],
+									"text" : "load the named patch into the next free slot"
 								}
 
 							}
@@ -3386,7 +3340,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 202.64285671710968, 597.0, 20.0, 20.0 ],
+									"patching_rect" : [ 205.0, 597.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -3402,7 +3356,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 92.64285671710968, 595.0, 108.0, 25.0 ],
+									"patching_rect" : [ 95.0, 595.0, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -3456,9 +3410,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 444.642852902412415, 570.535708844661713, 409.934478759765625, 50.0 ],
-									"text" : "3 - to provide arguments to the loaded patch then the next argument should be the symbol \"args\" followed by up to 10 arguments to the patch. These are applied only to the patch loaded at instantiation.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 445.0, 598.0, 409.934478759765625, 50.0 ],
+									"text" : "3 - to provide arguments to the loaded patch then the next argument should be the symbol \"args\" followed by up to 10 arguments to the patch. These are applied only to the patch loaded at instantiation."
 								}
 
 							}
@@ -3470,9 +3423,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 490.178566753864288, 541.964280545711517, 168.0, 21.0 ],
-									"text" : "number of message outlets",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 490.0, 564.0, 168.0, 21.0 ],
+									"text" : "number of message outlets"
 								}
 
 							}
@@ -3484,9 +3436,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 490.178566753864288, 526.785709261894226, 311.0, 21.0 ],
-									"text" : "number of message inlets (shared with signal inlets)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 490.0, 543.0, 311.0, 21.0 ],
+									"text" : "number of message inlets (shared with signal inlets)"
 								}
 
 							}
@@ -3498,9 +3449,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 490.178566753864288, 511.607137978076935, 150.0, 21.0 ],
-									"text" : "number of signal outlets",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 490.0, 522.0, 150.0, 21.0 ],
+									"text" : "number of signal outlets"
 								}
 
 							}
@@ -3512,9 +3462,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 490.178566753864288, 497.321423828601837, 311.0, 21.0 ],
-									"text" : "number of signal inlets (shared with message inlets)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 490.0, 501.0, 311.0, 21.0 ],
+									"text" : "number of signal inlets (shared with message inlets)"
 								}
 
 							}
@@ -3528,8 +3477,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 444.642852902412415, 466.964281260967255, 379.0, 36.0 ],
-									"text" : "2 - to declare a number of inlets/outlets different from the default, the next arguments should be a set of up to 4 ints to set:",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "2 - to declare a number of inlets/outlets different from the default, the next arguments should be a set of up to 4 ints to set:"
 								}
 
 							}
@@ -3542,8 +3490,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 444.642852902412415, 436.607138693332672, 276.0, 21.0 ],
-									"text" : "1 - optional patch name to load (one instance)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "1 - optional patch name to load (one instance)"
 								}
 
 							}

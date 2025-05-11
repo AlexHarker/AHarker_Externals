@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 429.0, 100.0, 736.0, 509.0 ],
+		"rect" : [ 429.0, 100.0, 763.0, 509.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -60,9 +60,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 267.0, 272.0, 275.0, 21.0 ],
-					"text" : "For audio use dynamic.in~ and dynamic.out~.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 284.0, 284.0, 275.0, 21.0 ],
+					"text" : "For audio use dynamic.in~ and dynamic.out~."
 				}
 
 			}
@@ -89,9 +88,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 300.0, 124.0, 201.0, 94.0 ],
+					"patching_rect" : [ 284.0, 98.5, 201.0, 94.0 ],
 					"text" : "use dynamic.this~ to get patch instance and set busy flag\n(note the 1 arg to turn on audio processing for this patch).\n(audio will also be on in a patch without a dynamic.this~).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"textjustification" : 1
 				}
 
 			}
@@ -172,9 +171,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 267.0, 257.0, 459.0, 21.0 ],
-					"text" : "You can use the standard in and out objects for sending messages in and out.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 284.0, 256.0, 459.0, 21.0 ],
+					"text" : "You can use the standard in and out objects for sending messages in and out."
 				}
 
 			}
@@ -414,7 +412,8 @@
 				}
 
 			}
- ]
+ ],
+		"autosave" : 0
 	}
 
 }

@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,7 +113,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -401,9 +401,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 180.0, 156.0, 118.0, 21.0 ],
-									"text" : "drop a folder here!",
-									"textcolor" : [ 0.701960784313725, 0.694117647058824, 0.694117647058824, 1.0 ]
+									"patching_rect" : [ 187.0, 156.0, 118.0, 21.0 ],
+									"text" : "drop a folder here!"
 								}
 
 							}
@@ -414,7 +413,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 180.0, 150.0, 118.0, 33.0 ]
+									"patching_rect" : [ 180.0, 150.0, 132.0, 33.0 ]
 								}
 
 							}
@@ -551,7 +550,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 315.0, 150.0, 367.0, 55.0 ],
+									"patching_rect" : [ 327.0, 150.0, 369.0, 55.0 ],
 									"text" : "The types message allows you to list only certain types of file. Files have a four-character file type (case sensitive)."
 								}
 

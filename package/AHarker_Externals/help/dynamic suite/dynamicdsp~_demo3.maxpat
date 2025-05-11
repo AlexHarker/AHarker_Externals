@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 433.0, 199.0, 532.0, 437.0 ],
+		"rect" : [ 433.0, 199.0, 533.0, 418.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -48,7 +48,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "int", "int" ],
-					"patching_rect" : [ 16.0, 195.0, 168.450556755065918, 23.0 ],
+					"patching_rect" : [ 16.0, 210.0, 168.450556755065918, 23.0 ],
 					"text" : "t i i i"
 				}
 
@@ -61,7 +61,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 16.0, 240.0, 31.0, 23.0 ],
+					"patching_rect" : [ 16.0, 255.0, 31.0, 23.0 ],
 					"text" : "> 0"
 				}
 
@@ -74,7 +74,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 16.0, 330.0, 94.0, 23.0 ],
+					"patching_rect" : [ 15.0, 345.0, 94.0, 23.0 ],
 					"text" : "gate~"
 				}
 
@@ -88,8 +88,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 60.0, 38.0, 276.0, 21.0 ],
-					"text" : "For audio use dynamic.in~ and dynamic.out~.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "For audio use dynamic.in~ and dynamic.out~."
 				}
 
 			}
@@ -102,7 +101,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 165.0, 240.0, 149.0, 23.0 ],
+					"patching_rect" : [ 165.0, 255.0, 149.0, 23.0 ],
 					"text" : "patch slot $1 set to busy"
 				}
 
@@ -116,9 +115,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 180.0, 94.0, 194.0, 94.0 ],
+					"patching_rect" : [ 165.0, 105.0, 194.0, 94.0 ],
 					"text" : "use dynamic.this~ to get patch instance and set busy flag\n(note the 1 arg to turn on audio processing for this patch).\n(audio will also be on in a patch without a dynamic.this~).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 					"textjustification" : 1
 				}
 
@@ -132,7 +130,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 45.0, 105.0, 51.0, 23.0 ],
+					"patching_rect" : [ 45.0, 120.0, 51.0, 23.0 ],
 					"text" : "busy 1"
 				}
 
@@ -145,11 +143,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 165.0, 270.0, 41.0, 23.0 ],
-					"saved_object_attributes" : 					{
-						"attr_comment" : ""
-					}
-,
+					"patching_rect" : [ 165.0, 285.0, 41.0, 23.0 ],
 					"text" : "out 1"
 				}
 
@@ -163,7 +157,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 15.0, 60.0, 102.0, 23.0 ],
+					"patching_rect" : [ 15.0, 75.0, 102.0, 23.0 ],
 					"text" : "route aMessage"
 				}
 
@@ -177,7 +171,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
-					"patching_rect" : [ 15.0, 165.0, 49.0, 23.0 ],
+					"patching_rect" : [ 15.0, 180.0, 49.0, 23.0 ],
 					"text" : "i"
 				}
 
@@ -191,7 +185,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "int", "int", "int" ],
-					"patching_rect" : [ 45.0, 135.0, 103.0, 23.0 ],
+					"patching_rect" : [ 45.0, 150.0, 103.0, 23.0 ],
 					"text" : "dynamic.this~ 1"
 				}
 
@@ -205,8 +199,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 60.0, 15.0, 460.0, 21.0 ],
-					"text" : "You can use the standard in and out objects for sending messages in and out.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "You can use the standard in and out objects for sending messages in and out."
 				}
 
 			}
@@ -220,10 +213,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 15.0, 15.0, 33.0, 23.0 ],
-					"saved_object_attributes" : 					{
-						"attr_comment" : ""
-					}
-,
 					"text" : "in 1"
 				}
 
@@ -237,7 +226,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 300.0, 54.0, 23.0 ],
+					"patching_rect" : [ 90.0, 315.0, 54.0, 23.0 ],
 					"text" : "*~ 0.05"
 				}
 
@@ -251,7 +240,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
-					"patching_rect" : [ 90.0, 270.0, 50.0, 23.0 ],
+					"patching_rect" : [ 90.0, 285.0, 50.0, 23.0 ],
 					"text" : "cycle~"
 				}
 
@@ -265,7 +254,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "float" ],
-					"patching_rect" : [ 90.0, 240.0, 46.0, 23.0 ],
+					"patching_rect" : [ 90.0, 255.0, 46.0, 23.0 ],
 					"text" : "* 235."
 				}
 
@@ -278,7 +267,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 16.0, 360.0, 101.0, 23.0 ],
+					"patching_rect" : [ 15.0, 375.0, 101.0, 23.0 ],
 					"text" : "dynamic.out~ 1"
 				}
 
@@ -343,7 +332,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
-					"midpoints" : [ 24.5, 90.994495987892151, 54.5, 90.994495987892151 ],
+					"midpoints" : [ 24.5, 105.994495987892151, 54.5, 105.994495987892151 ],
 					"order" : 0,
 					"source" : [ "obj-5", 0 ]
 				}
@@ -392,7 +381,8 @@
 				}
 
 			}
- ]
+ ],
+		"autosave" : 0
 	}
 
 }

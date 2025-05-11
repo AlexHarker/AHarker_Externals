@@ -375,8 +375,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 390.0, 21.0 ],
-									"text" : "Here are a few examples of using valconvert~ in a musical context",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "Here are a few examples of using valconvert~ in a musical context"
 								}
 
 							}
@@ -1461,8 +1460,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 75.0, 360.0, 21.0 ],
-									"text" : "It is possible to perform a reverse conversion for any mode.",
-									"textcolor" : [ 0.448296040296555, 0.448296040296555, 0.448296040296555, 1.0 ]
+									"text" : "It is possible to perform a reverse conversion for any mode."
 								}
 
 							}

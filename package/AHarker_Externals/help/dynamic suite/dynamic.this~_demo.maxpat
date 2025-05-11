@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -123,9 +123,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 31.0, 330.0, 369.0, 21.0 ],
-					"text" : "N.B. if you have no arguments - audio processing will be OFF!",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 31.0, 330.0, 441.0, 21.0 ],
+					"text" : "N.B. if you provide no arguments - audio processing will be OFF by default!"
 				}
 
 			}
@@ -152,8 +151,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 548.0, 149.0, 206.0, 21.0 ],
-					"text" : "(defaults to audio off - ie. mute on)",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "(defaults to audio off - ie. mute on)"
 				}
 
 			}
@@ -242,7 +240,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 334.0, 235.0, 80.0, 40.0 ],
+					"patching_rect" : [ 334.0, 237.0, 80.0, 40.0 ],
 					"text" : "Busy Status"
 				}
 
@@ -257,7 +255,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 227.0, 235.0, 80.0, 40.0 ],
+					"patching_rect" : [ 227.0, 237.0, 80.0, 40.0 ],
 					"text" : "Mute Status"
 				}
 
@@ -272,7 +270,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 104.0, 235.0, 80.0, 40.0 ],
+					"patching_rect" : [ 104.0, 237.0, 80.0, 40.0 ],
 					"text" : "Patch Index"
 				}
 

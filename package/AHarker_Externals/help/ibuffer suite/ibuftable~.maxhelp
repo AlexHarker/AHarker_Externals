@@ -647,8 +647,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 173.0, 21.0 ],
-									"text" : "A table based stereo panner",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "A table-based stereo panner"
 								}
 
 							}

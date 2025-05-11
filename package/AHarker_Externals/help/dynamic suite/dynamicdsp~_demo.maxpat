@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -48,9 +48,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 242.0, 295.5, 169.0, 21.0 ],
-					"text" : "(unlock the patch to see #1)",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 270.0, 295.5, 169.0, 21.0 ],
+					"text" : "(unlock the patch to see #1)"
 				}
 
 			}
@@ -77,9 +76,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 270.0, 120.0, 150.0, 40.0 ],
-					"text" : "set a random phasor rate upon patch load",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 330.0, 81.5, 150.0, 40.0 ],
+					"text" : "set a random phasor rate upon patch load"
 				}
 
 			}
@@ -245,7 +243,7 @@
 					"maxclass" : "scope~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 60.0, 60.0, 120.0, 53.0 ]
+					"patching_rect" : [ 49.0, 75.0, 120.0, 53.0 ]
 				}
 
 			}
@@ -259,9 +257,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 240.0, 239.5, 255.0, 54.0 ],
-					"text" : "using #1, the first argument to the patch will end up here, in this case it replaces slot 1 with a voice an octave higher ",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 240.0, 239.5, 258.0, 54.0 ],
+					"text" : "using #1, the first argument to the patch will end up here, in this case it replaces slot 1 with a voice an octave higher "
 				}
 
 			}
@@ -302,9 +299,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 150.0, 406.0, 275.0, 21.0 ],
-					"text" : "For audio use dynamic.in~ and dynamic.out~.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 139.5, 406.0, 275.0, 21.0 ],
+					"text" : "For audio use dynamic.in~ and dynamic.out~."
 				}
 
 			}
@@ -316,9 +312,8 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 150.0, 390.0, 459.0, 21.0 ],
-					"text" : "You can use the standard in and out objects for sending messages in and out.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"patching_rect" : [ 139.5, 375.0, 459.0, 21.0 ],
+					"text" : "You can use the standard in and out objects for sending messages in and out."
 				}
 
 			}
@@ -383,7 +378,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-30", 0 ],
-					"midpoints" : [ 39.5, 56.0, 69.5, 56.0 ],
+					"midpoints" : [ 39.5, 63.5, 58.5, 63.5 ],
 					"order" : 0,
 					"source" : [ "obj-16", 0 ]
 				}
@@ -453,7 +448,8 @@
 				}
 
 			}
- ]
+ ],
+		"autosave" : 0
 	}
 
 }

@@ -48,8 +48,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 28.0, 194.0, 182.0, 21.0 ],
-					"text" : "outputs a hpf if args is set to 1",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "outputs a hpf if args is set to 1"
 				}
 
 			}
@@ -116,8 +115,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 71.0, 46.0, 353.0, 25.0 ],
-					"text" : "using #1, the first argument to the patch will end up here ",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "using #1, the first argument to the patch will end up here "
 				}
 
 			}
@@ -158,8 +156,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 13.0, 280.0, 275.0, 21.0 ],
-					"text" : "For audio use dynamic.in~ and dynamic.out~.",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "For audio use dynamic.in~ and dynamic.out~."
 				}
 
 			}

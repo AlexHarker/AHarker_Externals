@@ -197,8 +197,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 16.0, 79.0, 267.0, 21.0 ],
-									"text" : "The play message takes various arguments:",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "The play message takes various arguments:"
 								}
 
 							}
@@ -753,8 +752,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 551.0, 21.0 ],
-									"text" : "The fifth argument in the play message determines if playback should respond the speed input",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "The fifth argument in the play message determines if playback should respond the speed input"
 								}
 
 							}
@@ -1211,8 +1209,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 15.0, 75.0, 386.0, 21.0 ],
-									"text" : "The volumes for each channel can be set using the vols message",
-									"textcolor" : [ 0.447058823529412, 0.447058823529412, 0.447058823529412, 1.0 ]
+									"text" : "The volumes for each channel can be set using the vols message"
 								}
 
 							}
