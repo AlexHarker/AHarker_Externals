@@ -59,7 +59,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 846.0, 592.0 ],
+						"rect" : [ 0.0, 26.0, 846.0, 592.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -244,7 +244,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 135.0, 103.0, 25.0 ],
 									"text" : "change value",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -328,7 +327,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 28.0, 205.0, 97.0, 40.0 ],
 									"text" : "Select an input",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1150,7 +1148,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 75.0, 270.0, 270.0, 22.0 ],
-									"text" : "0.677778 0.588889 0.722222 0.944444"
+									"text" : "0. 0.25 0.5 0.75"
 								}
 
 							}
@@ -1181,7 +1179,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 75.0, 435.0, 270.0, 23.0 ],
-									"text" : "0.677778 0.588889 0.722222 0.944444"
+									"text" : "0. 0.25 0.5 0.75"
 								}
 
 							}
@@ -1194,7 +1192,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 75.0, 345.0, 270.0, 23.0 ],
-									"text" : "22.675431 15.058364 27.825594 77.426368"
+									"text" : "1. 3.162278 10. 31.622777"
 								}
 
 							}
@@ -1401,7 +1399,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 846.0, 592.0 ],
+						"rect" : [ 34.0, 126.0, 846.0, 592.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1462,7 +1460,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 82.0, 149.0, 148.0, 25.0 ],
 									"text" : "input a value to scale",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1509,8 +1506,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 405.0, 165.0, 255.0, 50.0 ],
-									"text" : "The mode can be set using a message containing the mode name, followed by min in / max in / min out / max out values",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "The mode can be set using a message containing the mode name, followed by min in / max in / min out / max out values"
 								}
 
 							}
@@ -1524,8 +1520,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 347.152008056640625, 450.0, 154.0, 65.0 ],
-									"text" : "Valconvert can initialised by providing arguments in the same format as the messages.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "valconvert can initialised by providing arguments in the same format as the messages."
 								}
 
 							}
@@ -1540,7 +1535,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 82.0, 540.0, 524.0, 25.0 ],
 									"text" : "Converted value out (note that the output is constrained in the range max in - max out)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 

@@ -234,7 +234,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 28.0, 225.0, 97.0, 40.0 ],
 									"text" : "Select an input",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1856,7 +1855,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 90.0, 150.0, 148.0, 25.0 ],
 									"text" : "input a value to scale",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1871,8 +1869,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 420.0, 180.0, 255.0, 50.0 ],
-									"text" : "The mode can be set using a message containing the mode name, followed by min in / max in / min out / max out values",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "The mode can be set using a message containing the mode name, followed by min in / max in / min out / max out values"
 								}
 
 							}
@@ -1887,7 +1884,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 90.0, 539.0, 524.0, 25.0 ],
 									"text" : "Converted value out (note that the output is constrained in the range max in - max out)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -1918,8 +1914,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 359.576147615909576, 450.0, 154.0, 65.0 ],
-									"text" : "Valconvert can initialised by providing arguments in the same format as the messages.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "valconvert~ can initialised by providing arguments in the same format as the messages."
 								}
 
 							}
