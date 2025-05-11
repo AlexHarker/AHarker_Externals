@@ -55,7 +55,6 @@
   <methodlist>
       <method name="signal">
           <arglist>
-              <arg name="signal" type="signal" />
           </arglist>
           <digest>
               Read a range of samples
@@ -68,7 +67,7 @@
       </method>
       <method name="chan">
           <arglist>
-              <arg name="chan" type="message" />
+              <arg name="chan" type="int" />
           </arglist>
           <digest>
               Set the channel to read from
@@ -85,28 +84,9 @@
               Default channel is <m>1</m>.
           </description>
       </method>
-      <method name="endsamp">
-          <arglist>
-              <arg name="endsamp" type="message" />
-          </arglist>
-          <digest>
-              Set the sample to read until
-          </digest>
-          <description>
-              Set the sample for <o>ibuftable~</o> to read until.
-              <br />
-              The message should be formatted as:
-              <br />
-              <br />
-              <m>endsamp</m> / <m>int</m>
-              <br />
-              <br />
-              Default end sample is <m>512</m>.
-          </description>
-      </method>
       <method name="interp">
           <arglist>
-              <arg name="interp" type="message" />
+              <arg name="interp" type="symbol" />
           </arglist>
           <digest>
               Set the interpolation mode
@@ -128,7 +108,7 @@
       </method>
     <method name="set">
         <arglist>
-            <arg name="set" type="message" />
+            <arg name="set" type="symbol" />
         </arglist>
         <digest>
             Set the name of the <o>ibuffer</o>
@@ -144,7 +124,7 @@
     </method>
     <method name="startsamp">
         <arglist>
-            <arg name="startsamp" type="message" />
+            <arg name="startsamp" type="int" />
         </arglist>
         <digest>
             Set the sample to start reading from
@@ -159,6 +139,25 @@
             <br />
             <br />
             Default start sample is <m>0</m>.
+        </description>
+    </method>
+    <method name="endsamp">
+        <arglist>
+            <arg name="endsamp" type="int" />
+        </arglist>
+        <digest>
+            Set the sample to read until
+        </digest>
+        <description>
+            Set the sample for <o>ibuftable~</o> to read until.
+            <br />
+            The message should be formatted as:
+            <br />
+            <br />
+            <m>endsamp</m> / <m>int</m>
+            <br />
+            <br />
+            Default end sample is <m>512</m>.
         </description>
     </method>
   </methodlist>
@@ -227,6 +226,7 @@
     <seealso name="ibufmultitable~" />
     <seealso name="ibufplayer~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">

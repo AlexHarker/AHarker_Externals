@@ -14,7 +14,6 @@
   <methodlist>
     <method name="clear">
         <arglist>
-            <arg name="clear" type="message" />
         </arglist>
         <digest>
             Delete all the hosted ibuffer~s
@@ -25,7 +24,7 @@
     </method>
     <method name="load">
         <arglist>
-            <arg name="load" type="message" />
+            <arg name="load" type="variable" />
         </arglist>
         <digest>
             Load an ibuffer~
@@ -73,6 +72,7 @@
     </entry>
   </misc>
   <seealsolist>
+    <seealso name="buffer~" />
     <seealso name="ibufconcatedrive~" />
     <seealso name="ibufconcatenate~" />
     <seealso name="ibufinfo~" />

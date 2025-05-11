@@ -22,23 +22,22 @@
   </objarglist>
   
   <methodlist>
-      <method name="speed-input">
+      <method name="signal">
           <arglist>
-              <arg name="speed-input" type="signal" />
           </arglist>
           <digest>
               Set the playback speed
           </digest>
           <description>
               A <m>signal</m> input will change the playback speed of the set <o>buffer~</o> / <o>ibuffer~</o>.
-              This will only have an effect if the <m>varispeed flag</m> has been raised on in the <m>play</m> message.
+              This will only have an effect if the <m>varispeed flag</m> has been raised in the <m>play</m> message.
               <br />
-              The playback speed will be centred on the base speed.
+              The playback speed will be centred on the base speed set in the <m>play</m> message.
           </description>
       </method>
       <method name="interp">
           <arglist>
-              <arg name="interp" type="message" />
+              <arg name="interp" type="symbol" />
           </arglist>
           <digest>
               Set the interpolation mode
@@ -60,7 +59,7 @@
       </method>
       <method name="play">
           <arglist>
-              <arg name="play" type="message" />
+              <arg name="play" type="variable" />
           </arglist>
           <digest>
               Playback a(n) (i)buffer~
@@ -87,7 +86,7 @@
       </method>
       <method name="set">
          <arglist>
-             <arg name="set" type="message" />
+             <arg name="set" type="symbol" />
          </arglist>
          <digest>
             Set the name of the (i)buffer for playback
@@ -103,7 +102,6 @@
      </method>
      <method name="stop">
          <arglist>
-             <arg name="stop" type="message" />
          </arglist>
          <digest>
             Stop the playback
@@ -114,7 +112,7 @@
      </method>
      <method name="vols">
          <arglist>
-             <arg name="vols" type="message" />
+             <arg name="vols" type="variable" />
          </arglist>
          <digest>
              Set the volume for each channel
@@ -166,6 +164,7 @@
     <seealso name="ibufmultitable~" />
     <seealso name="ibuftable~" />
     <seealso name="ibuffer~" />
+    <seealso name="buffer~" />
   </seealsolist>
   <misc name="Discussion">
     <entry name="Keywords">
