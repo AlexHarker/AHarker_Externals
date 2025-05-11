@@ -190,8 +190,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 600.0, 266.0, 177.0, 65.0 ],
-									"text" : "If overdrive is on then messages coming out of schedulemessage will be in the high priority thread",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "If overdrive is on then messages coming out of schedulemessage will be in the high priority thread"
 								}
 
 							}

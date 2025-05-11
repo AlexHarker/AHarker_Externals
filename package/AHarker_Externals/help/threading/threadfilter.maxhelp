@@ -228,7 +228,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 390.0, 252.0, 231.0, 94.0 ],
 									"text" : "If overdrive is on then the messages from the metro and qmetro will be separated out - if overdrive is off then there is only one low priority thread and everything will be sent out of the left outlet",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 

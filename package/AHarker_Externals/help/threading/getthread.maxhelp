@@ -97,7 +97,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 420.0, 195.0, 274.0, 137.0 ],
 									"text" : "jit. objects can be put into high priority by using jit.qfaker before the first jit. object in the chain. You should not use jit.qfaker unless you are certain that it is safe to do so. Things like opening files, drawing to the screen, messages that make quicktime calls are *not* interrupt safe. \n\nSee jit.qfaker help file.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -265,7 +264,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 420.0, 120.0, 270.0, 65.0 ],
 									"text" : "All jit. objects are forced into the low priority thread regardless of whether they are triggered by a high priority metro. getthread is useful in monitoring this change.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
@@ -531,7 +529,6 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 360.0, 150.0, 300.0, 79.0 ],
 									"text" : "If overdrive is on then the messages from the metro will be in the high priority thread and those from the qmetro will be in the low priority thread. \n\nElse everything is in the low priority thread.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ],
 									"textjustification" : 1
 								}
 
