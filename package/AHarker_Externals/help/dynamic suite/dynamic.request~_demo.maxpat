@@ -85,8 +85,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 156.0, 106.0, 279.0, 21.0 ],
-					"text" : "here we sample the input every 2000 samples",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "here we sample the input every 2000 samples"
 				}
 
 			}
@@ -99,8 +98,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 75.0, 150.0, 442.0, 21.0 ],
-					"text" : "a non-zero signal input samples and holds the value from the selected inlet",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "a non-zero signal input samples and holds the value from the selected inlet"
 				}
 
 			}

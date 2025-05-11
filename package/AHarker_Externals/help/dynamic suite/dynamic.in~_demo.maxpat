@@ -83,8 +83,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 185.0, 191.0, 127.0, 21.0 ],
-					"text" : "(default is 0 - ie. off).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "(default is 0 - i.e. off)."
 				}
 
 			}
@@ -125,8 +124,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 105.0, 7.0, 240.0, 40.0 ],
-					"text" : "select inlet to fetch audio from (out of range values produce zero output).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "select inlet to fetch audio from (out of range values produce zero output)."
 				}
 
 			}

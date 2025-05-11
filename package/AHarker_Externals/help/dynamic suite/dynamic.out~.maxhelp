@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,7 +113,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -162,7 +162,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 490.0, 301.5, 20.0, 20.0 ],
+									"patching_rect" : [ 493.0, 302.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -199,7 +199,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 196.0, 461.0, 140.0, 25.0 ],
+									"patching_rect" : [ 197.5, 461.5, 140.0, 25.0 ],
 									"text" : "adjust volume level "
 								}
 
@@ -261,8 +261,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 206.0, 123.0, 21.0 ],
-									"text" : "(defualt is 0 - ie. off)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "(default is 0 - ie. off)"
 								}
 
 							}
@@ -337,7 +336,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 212.0, 537.0, 20.0, 20.0 ],
+									"patching_rect" : [ 214.0, 537.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -353,7 +352,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 109.0, 535.0, 101.0, 25.0 ],
+									"patching_rect" : [ 111.0, 535.0, 101.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -437,7 +436,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 261.0, 299.0, 227.0, 25.0 ],
+									"patching_rect" : [ 264.0, 299.0, 227.0, 25.0 ],
 									"text" : "double click to open the host patch"
 								}
 
@@ -501,16 +500,18 @@
  ],
 						"lines" : [ 							{
 								"patchline" : 								{
+									"color" : [ 1.0, 0.0, 0.017153343185782, 1.0 ],
 									"destination" : [ "obj-27", 1 ],
-									"midpoints" : [ 248.5, 450.695652008056641, 186.5, 450.695652008056641 ],
+									"midpoints" : [ 248.5, 446.0, 186.5, 446.0 ],
 									"source" : [ "obj-1", 0 ]
 								}
 
 							}
 , 							{
 								"patchline" : 								{
+									"color" : [ 1.0, 0.0, 0.017153343185782, 1.0 ],
 									"destination" : [ "obj-27", 1 ],
-									"midpoints" : [ 129.5, 452.695652008056641, 186.5, 452.695652008056641 ],
+									"midpoints" : [ 129.5, 446.0, 186.5, 446.0 ],
 									"source" : [ "obj-12", 0 ]
 								}
 

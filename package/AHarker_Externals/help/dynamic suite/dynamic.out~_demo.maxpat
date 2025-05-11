@@ -85,8 +85,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 165.040496826171875, 176.0, 123.0, 21.0 ],
-					"text" : "(defualt is 0 - ie. off)",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "(default is 0 - i.e. off)"
 				}
 
 			}
@@ -101,8 +100,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 180.0, 36.5, 272.0, 40.0 ],
-					"text" : "select outlet to send audio to (out of range values turn off processing for this object).",
-					"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+					"text" : "select outlet to send audio to (out of range values turn off processing for this object)."
 				}
 
 			}
