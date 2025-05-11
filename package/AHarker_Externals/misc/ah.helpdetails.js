@@ -47,7 +47,7 @@ function paint()
             move_to(4, 90);
             var detailstextcolor = this.patcher.getattr("accentcolor");
             set_source_rgba(detailstextcolor);
-            if(longDesc!=null)
+            if (longDesc!=null)
             {
                 wordwrap(longDesc, 105);
             }
