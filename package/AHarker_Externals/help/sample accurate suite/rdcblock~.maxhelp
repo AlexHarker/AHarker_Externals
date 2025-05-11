@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 246.0, 100.0, 800.0, 580.0 ],
+		"rect" : [ 100.0, 100.0, 800.0, 580.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -113,13 +113,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 246.0, 126.0, 800.0, 554.0 ],
+						"rect" : [ 100.0, 126.0, 800.0, 554.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -228,7 +228,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"outlettype" : [ "signal" ],
+									"outlettype" : [ "" ],
 									"patching_rect" : [ 270.0, 269.0, 94.0, 23.0 ],
 									"text" : "rdcblock~ 0"
 								}
@@ -307,7 +307,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 420.0, 671.0, 65.0 ],
-									"text" : "Argument is mode. In mode 0 (default) the filter memory is totally zeroed on reset. In mode 1 the output memory is zeroed, whilst the input memory is set to the value of the incoming sample. Neither will instantly adapt to a new DC level, but mode 1 may be more effective in some cases (it gives ideal performance when there is no other input but the DC). Both modes outperform the situation in which the filter has no reset.",
+									"text" : "T argument sets the mode. In mode 0 (default) the filter memory is totally zeroed on reset. In mode 1 the output memory is zeroed, whilst the input memory is set to the value of the incoming sample. Neither will instantly adapt to a new DC level, but mode 1 may be more effective in some cases (it gives ideal performance when there is no other input but the DC). Both modes outperform the situation in which the filter has no reset.",
 									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
 								}
 
@@ -510,7 +510,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 2,
 									"numoutlets" : 1,
-									"outlettype" : [ "signal" ],
+									"outlettype" : [ "" ],
 									"patching_rect" : [ 495.0, 269.0, 94.0, 23.0 ],
 									"text" : "rdcblock~ 1"
 								}
