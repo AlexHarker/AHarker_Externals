@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 134.0, 172.0, 831.0, 583.0 ],
+		"rect" : [ 100.0, 100.0, 831.0, 583.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,7 +51,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -184,8 +184,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 102.0, 552.0, 79.0 ],
-									"text" : "1 - optional buffer name (otherwise use current (i)buffer~)\n2 - base speed (default 1.)\n3 - start point (ms) (default 0.)\n4 - end point (ms) (default end of buffer - negative numbers also indicate the end of the buffer).\n5 - varispeed flag (int - see the varispeed tab).",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "1 - optional buffer name (otherwise use current (i)buffer~)\n2 - base speed (default 1.)\n3 - start point (ms) (default 0.)\n4 - end point (ms) (default end of buffer - negative numbers also indicate the end of the buffer).\n5 - varispeed flag (int - see the varispeed tab)."
 								}
 
 							}
@@ -297,8 +296,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 157.0, 437.0, 331.0, 36.0 ],
-									"text" : "unlike groove~ or play~, channels are routed directly to outputs without up or down mixing",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "unlike groove~ or play~, channels are routed directly to outputs without up or down mixing"
 								}
 
 							}
@@ -542,13 +540,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 134.0, 198.0, 831.0, 557.0 ],
+						"rect" : [ 100.0, 126.0, 831.0, 557.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -769,8 +767,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 190.0, 211.0, 291.0, 21.0 ],
-									"text" : "varispeed oscillation an octave in either direction",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "varispeed oscillation an octave in either direction"
 								}
 
 							}
@@ -812,8 +809,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 236.0, 165.0, 468.0, 25.0 ],
-									"text" : "play the named buffer all the way through with varispeed (base speed is half)",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "play the named buffer all the way through with varispeed (base speed is half)"
 								}
 
 							}
@@ -841,8 +837,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 148.0, 285.0, 340.0, 25.0 ],
-									"text" : "the signal inlet is used to set the speed at sample level",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "the signal inlet is used to set the speed at sample level"
 								}
 
 							}
@@ -856,8 +851,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 223.0, 135.0, 354.0, 25.0 ],
-									"text" : "play the named buffer all the way through with varispeed ",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "play the named buffer all the way through with varispeed "
 								}
 
 							}
@@ -943,7 +937,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-9", 1 ],
-									"midpoints" : [ 69.5, 399.5, 96.5, 399.5 ],
+									"midpoints" : [ 69.5, 407.0, 96.5, 407.0 ],
 									"order" : 0,
 									"source" : [ "obj-27", 0 ]
 								}
@@ -992,7 +986,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1058,8 +1052,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 45.0, 132.0, 50.0, 25.0 ],
-									"text" : "loop",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "loop"
 								}
 
 							}
@@ -1236,7 +1229,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 749.0, 246.0, 20.0, 20.0 ],
+									"patching_rect" : [ 756.0, 246.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "3",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1307,8 +1300,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 270.0, 176.0, 220.0, 25.0 ],
-									"text" : "play the buffer all the way through",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "play the buffer all the way through"
 								}
 
 							}
@@ -1375,8 +1367,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 588.0, 236.0, 163.0, 40.0 ],
-									"text" : "set the volume level for each output channel",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the volume level for each output channel"
 								}
 
 							}
@@ -1390,8 +1381,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 585.0, 278.0, 180.0, 50.0 ],
-									"text" : "if one of the volume values is zero then processing is switched off for that channel",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "if one of the volume values is zero then processing is switched off for that channel"
 								}
 
 							}
@@ -1609,7 +1599,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1671,7 +1661,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1853,7 +1843,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 187.0, 432.0, 20.0, 20.0 ],
+									"patching_rect" : [ 187.0, 442.5, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ]
@@ -1869,7 +1859,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 77.0, 430.0, 108.0, 25.0 ],
+									"patching_rect" : [ 77.0, 440.5, 108.0, 25.0 ],
 									"text" : "turn on audio"
 								}
 
@@ -1881,7 +1871,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 420.0, 44.0, 44.0 ],
+									"patching_rect" : [ 31.0, 430.5, 44.0, 44.0 ],
 									"prototypename" : "helpfile"
 								}
 
@@ -1908,8 +1898,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 207.0, 179.0, 145.0, 25.0 ],
-									"text" : "set the current buffer",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "set the current buffer"
 								}
 
 							}
@@ -1922,9 +1911,8 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 179.0, 384.0, 173.0, 36.0 ],
-									"text" : "ramp 0 to 1 over the specified playback segment",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"patching_rect" : [ 179.0, 390.0, 173.0, 36.0 ],
+									"text" : "ramp 0 to 1 over the specified playback segment"
 								}
 
 							}
@@ -1937,8 +1925,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 241.0, 360.0, 165.0, 21.0 ],
-									"text" : "bang when playback stops",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "bang when playback stops"
 								}
 
 							}
@@ -1952,8 +1939,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 435.5, 330.0, 289.0, 65.0 ],
-									"text" : "ibufplayer~ supports three different types of cubic interpolation, which use slightly different maths for the interpolation. bspline is the most efficient and also the default.",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "ibufplayer~ supports three different types of cubic interpolation, which use slightly different maths for the interpolation. The default is hermite."
 								}
 
 							}
@@ -1967,8 +1953,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 96.0, 255.0, 105.0, 25.0 ],
-									"text" : "stop playback",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "stop playback"
 								}
 
 							}
@@ -1982,8 +1967,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 80.0, 225.0, 264.0, 25.0 ],
-									"text" : "play the current buffer all the way through",
-									"textcolor" : [ 0.129411764705882, 0.129411764705882, 0.129411764705882, 1.0 ]
+									"text" : "play the current buffer all the way through"
 								}
 
 							}
@@ -2082,7 +2066,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 119.0, 390.0, 58.0, 23.0 ],
+									"patching_rect" : [ 119.0, 396.5, 58.0, 23.0 ],
 									"sig" : 0.0
 								}
 
