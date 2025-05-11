@@ -5,7 +5,7 @@
       Host multiple ibuffer~s in one object
   </digest>
   <description>
-      <o>ibuffermulti~</o> is a dynamic and memory efficient audio file loading solution that can host up to 4096 internal <o>ibuffer~</o>s.
+      <o>ibuffermulti~</o> is a dynamic and memory efficient audio file loading solution for multiple files. Internally it hosts as many <o>ibuffer~</o> objects as required.
   </description>
   
   <objarglist>
