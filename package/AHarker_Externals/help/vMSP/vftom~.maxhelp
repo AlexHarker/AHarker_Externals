@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 549.0, 397.0 ],
+						"rect" : [ 39.0, 126.0, 549.0, 397.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -111,7 +111,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 15.0, 75.0, 481.0, 36.0 ],
+									"patching_rect" : [ 15.0, 75.0, 510.0, 36.0 ],
 									"text" : "This tab demonstrates the difference in CPU usage between the standard ftom~ object against the vftom~ object."
 								}
 
@@ -175,7 +175,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 329.0, 257.0, 160.0, 54.0 ],
-									"text" : "Notice the smaller CPU percentage when using vftom~"
+									"text" : "Notice the smaller CPU percentage when using vftom~",
+									"textjustification" : 1
 								}
 
 							}
@@ -238,7 +239,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 90.0, 310.0, 79.0, 25.0 ],
+									"patching_rect" : [ 90.0, 310.0, 75.0, 25.0 ],
 									"text" : "start dsp"
 								}
 
@@ -256,13 +257,13 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 59.0, 119.0, 640.0, 480.0 ],
+										"rect" : [ 59.0, 119.0, 294.0, 214.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -321,8 +322,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 30.0, 119.0, 147.0, 22.0 ],
-													"text" : "patchername 1000objects"
+													"patching_rect" : [ 30.0, 119.0, 153.0, 22.0 ],
+													"text" : "patchername 1000_objects"
 												}
 
 											}
@@ -429,7 +430,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 31.0, 210.0, 67.0, 23.0 ],
+									"patching_rect" : [ 30.0, 210.0, 67.0, 23.0 ],
 									"text" : "cycle~ 0.1"
 								}
 
@@ -441,8 +442,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 256.0, 114.0, 23.0 ],
-									"text" : "poly~ 1000objects"
+									"patching_rect" : [ 30.0, 256.0, 121.0, 23.0 ],
+									"text" : "poly~ 1000_objects"
 								}
 
 							}
@@ -453,7 +454,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 300.0, 45.0, 45.0 ]
+									"patching_rect" : [ 30.0, 300.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -512,7 +513,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -835,7 +836,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 114.5, 244.637929677963257, 40.5, 244.637929677963257 ],
+									"midpoints" : [ 114.5, 244.637929677963257, 39.5, 244.637929677963257 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -866,7 +867,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -928,13 +929,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 39.0, 126.0, 549.0, 397.0 ],
+						"rect" : [ 0.0, 26.0, 549.0, 397.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1012,7 +1013,7 @@
 									"numinlets" : 6,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 30.0, 180.0, 136.0, 23.0 ],
+									"patching_rect" : [ 30.0, 185.0, 136.0, 23.0 ],
 									"text" : "scale~ -1. 1. 50 8000"
 								}
 
@@ -1068,7 +1069,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 60.0, 210.0, 85.0, 23.0 ],
+									"patching_rect" : [ 90.0, 220.0, 85.0, 23.0 ],
 									"sig" : 0.0
 								}
 
@@ -1084,7 +1085,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 30.0, 270.0, 64.0, 23.0 ],
+									"patching_rect" : [ 30.0, 255.0, 64.0, 23.0 ],
 									"sig" : 0.0
 								}
 
@@ -1098,7 +1099,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 30.0, 240.0, 48.0, 23.0 ],
+									"patching_rect" : [ 30.0, 220.0, 48.0, 23.0 ],
 									"text" : "vftom~"
 								}
 
@@ -1123,6 +1124,7 @@
 						"lines" : [ 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 0 ],
+									"midpoints" : [ 39.5, 213.5, 99.5, 213.5 ],
 									"order" : 0,
 									"source" : [ "obj-10", 0 ]
 								}
@@ -1139,7 +1141,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-7", 0 ],
-									"midpoints" : [ 84.5, 295.0, 39.5, 295.0 ],
+									"midpoints" : [ 84.5, 288.5, 39.5, 288.5 ],
 									"source" : [ "obj-14", 1 ]
 								}
 

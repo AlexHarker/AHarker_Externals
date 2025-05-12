@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 100.0, 616.0, 690.0 ],
+		"rect" : [ 34.0, 100.0, 616.0, 699.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 616.0, 664.0 ],
+						"rect" : [ 34.0, 126.0, 616.0, 673.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -145,7 +145,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
 									"parameter_enable" : 1,
-									"patching_rect" : [ 30.0, 166.0, 94.0, 23.202127397060394 ],
+									"patching_rect" : [ 30.0, 166.398936301469803, 94.0, 23.202127397060394 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_enum" : [ "val1", "val2" ],
@@ -175,7 +175,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 329.0, 257.0, 160.0, 54.0 ],
-									"text" : "Notice the smaller CPU percentage when using vmtof~"
+									"text" : "Notice the smaller CPU percentage when using vmtof~",
+									"textjustification" : 1
 								}
 
 							}
@@ -238,7 +239,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 90.0, 310.0, 79.0, 25.0 ],
+									"patching_rect" : [ 90.0, 310.0, 75.0, 25.0 ],
 									"text" : "start dsp"
 								}
 
@@ -256,13 +257,13 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 59.0, 119.0, 640.0, 480.0 ],
+										"rect" : [ 59.0, 119.0, 289.0, 215.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -321,8 +322,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 30.0, 119.0, 147.0, 22.0 ],
-													"text" : "patchername 1000objects"
+													"patching_rect" : [ 30.0, 119.0, 153.0, 22.0 ],
+													"text" : "patchername 1000_objects"
 												}
 
 											}
@@ -395,7 +396,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 105.0, 210.0, 102.0, 23.0 ],
+									"patching_rect" : [ 105.0, 210.398936301469803, 102.0, 23.0 ],
 									"saved_object_attributes" : 									{
 										"description" : "",
 										"digest" : "",
@@ -416,7 +417,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 30.0, 135.0, 75.0, 23.0 ],
+									"patching_rect" : [ 30.0, 135.398936301469803, 75.0, 23.0 ],
 									"text" : "loadmess 0"
 								}
 
@@ -429,7 +430,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 31.0, 210.0, 67.0, 23.0 ],
+									"patching_rect" : [ 30.0, 210.398936301469803, 67.0, 23.0 ],
 									"text" : "cycle~ 0.1"
 								}
 
@@ -441,8 +442,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 256.0, 114.0, 23.0 ],
-									"text" : "poly~ 1000objects"
+									"patching_rect" : [ 30.0, 256.398936301469803, 121.0, 23.0 ],
+									"text" : "poly~ 1000_objects"
 								}
 
 							}
@@ -453,7 +454,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 300.0, 45.0, 45.0 ]
+									"patching_rect" : [ 30.0, 300.398936301469803, 45.0, 45.0 ]
 								}
 
 							}
@@ -512,7 +513,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -835,7 +836,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 114.5, 244.637929677963257, 40.5, 244.637929677963257 ],
+									"midpoints" : [ 114.5, 244.637929677963257, 39.5, 244.637929677963257 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -866,13 +867,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 616.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 616.0, 673.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -928,13 +929,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 616.0, 664.0 ],
+						"rect" : [ 0.0, 26.0, 616.0, 673.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1004,7 +1005,7 @@
 									"numoutlets" : 3,
 									"outlettype" : [ "", "", "int" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 306.0, 613.0, 20.0, 20.0 ],
+									"patching_rect" : [ 306.0, 623.0, 20.0, 20.0 ],
 									"rounded" : 60.0,
 									"text" : "1",
 									"textcolor" : [ 0.34902, 0.34902, 0.34902, 1.0 ],
@@ -1024,7 +1025,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 225.0, 610.0, 79.0, 25.0 ],
+									"patching_rect" : [ 225.0, 620.0, 79.0, 25.0 ],
 									"text" : "start dsp"
 								}
 
@@ -1072,7 +1073,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "float" ],
-									"patching_rect" : [ 45.0, 270.0, 85.0, 23.0 ],
+									"patching_rect" : [ 46.0, 272.0, 85.0, 23.0 ],
 									"sig" : 0.0
 								}
 
@@ -1492,7 +1493,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 165.0, 600.0, 45.0, 45.0 ],
+									"patching_rect" : [ 165.0, 610.0, 45.0, 45.0 ],
 									"varname" : "autohelp_dac"
 								}
 
@@ -1724,6 +1725,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-32", 1 ],
+									"midpoints" : [ 174.5, 601.0, 200.5, 601.0 ],
 									"order" : 0,
 									"source" : [ "obj-31", 0 ]
 								}
@@ -1764,6 +1766,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-1", 0 ],
+									"midpoints" : [ 39.5, 267.0, 55.5, 267.0 ],
 									"order" : 0,
 									"source" : [ "obj-8", 0 ]
 								}

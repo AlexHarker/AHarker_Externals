@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 617.0, 504.0 ],
+						"rect" : [ 34.0, 126.0, 617.0, 504.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -175,7 +175,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 329.0, 257.0, 139.0, 54.0 ],
-									"text" : "Notice the smaller CPU percentage when using vacos~"
+									"text" : "Notice the smaller CPU percentage when using vacos~",
+									"textjustification" : 1
 								}
 
 							}
@@ -238,7 +239,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 90.0, 310.0, 79.0, 25.0 ],
+									"patching_rect" : [ 90.0, 310.0, 75.0, 25.0 ],
 									"text" : "start dsp"
 								}
 
@@ -256,13 +257,13 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 59.0, 119.0, 640.0, 480.0 ],
+										"rect" : [ 59.0, 119.0, 288.0, 220.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -321,8 +322,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 30.0, 119.0, 147.0, 22.0 ],
-													"text" : "patchername 1000objects"
+													"patching_rect" : [ 30.0, 119.0, 153.0, 22.0 ],
+													"text" : "patchername 1000_objects"
 												}
 
 											}
@@ -429,7 +430,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 31.0, 210.0, 67.0, 23.0 ],
+									"patching_rect" : [ 30.0, 210.0, 67.0, 23.0 ],
 									"text" : "cycle~ 0.1"
 								}
 
@@ -441,8 +442,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 256.0, 114.0, 23.0 ],
-									"text" : "poly~ 1000objects"
+									"patching_rect" : [ 30.0, 256.0, 121.0, 23.0 ],
+									"text" : "poly~ 1000_objects"
 								}
 
 							}
@@ -453,7 +454,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 300.0, 45.0, 45.0 ]
+									"patching_rect" : [ 30.0, 300.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -512,7 +513,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -835,7 +836,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 114.5, 244.637929677963257, 40.5, 244.637929677963257 ],
+									"midpoints" : [ 114.5, 244.637929677963257, 39.5, 244.637929677963257 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -866,7 +867,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -928,13 +929,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 34.0, 126.0, 617.0, 504.0 ],
+						"rect" : [ 0.0, 26.0, 617.0, 504.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,

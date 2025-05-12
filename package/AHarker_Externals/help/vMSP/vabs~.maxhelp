@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 6,
-			"revision" : 1,
+			"revision" : 5,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -51,13 +51,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 0.0, 26.0, 717.0, 441.0 ],
+						"rect" : [ 100.0, 126.0, 717.0, 441.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -159,7 +159,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 330.0, 248.0, 199.0, 40.0 ],
-									"text" : "Notice the smaller CPU percentage when using vabs~"
+									"text" : "Notice the smaller CPU percentage when using vabs~",
+									"textjustification" : 1
 								}
 
 							}
@@ -218,6 +219,7 @@
 									"bubble" : 1,
 									"fontname" : "Arial",
 									"fontsize" : 13.0,
+									"hidden" : 1,
 									"id" : "obj-38",
 									"maxclass" : "comment",
 									"numinlets" : 1,
@@ -240,13 +242,13 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
 ,
 										"classnamespace" : "box",
-										"rect" : [ 59.0, 119.0, 640.0, 480.0 ],
+										"rect" : [ 59.0, 119.0, 288.0, 211.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -305,8 +307,8 @@
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 30.0, 119.0, 147.0, 22.0 ],
-													"text" : "patchername 1000objects"
+													"patching_rect" : [ 30.0, 119.0, 153.0, 22.0 ],
+													"text" : "patchername 1000_objects"
 												}
 
 											}
@@ -429,7 +431,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 31.0, 195.0, 67.0, 23.0 ],
+									"patching_rect" : [ 30.0, 195.0, 67.0, 23.0 ],
 									"text" : "cycle~ 0.1"
 								}
 
@@ -441,8 +443,8 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 241.0, 114.0, 23.0 ],
-									"text" : "poly~ 1000objects"
+									"patching_rect" : [ 30.0, 241.0, 121.0, 23.0 ],
+									"text" : "poly~ 1000_objects"
 								}
 
 							}
@@ -453,7 +455,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 31.0, 285.0, 45.0, 45.0 ]
+									"patching_rect" : [ 30.0, 285.0, 45.0, 45.0 ]
 								}
 
 							}
@@ -512,7 +514,7 @@
 										"appversion" : 										{
 											"major" : 8,
 											"minor" : 6,
-											"revision" : 1,
+											"revision" : 5,
 											"architecture" : "x64",
 											"modernui" : 1
 										}
@@ -835,7 +837,7 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-10", 0 ],
-									"midpoints" : [ 114.5, 229.637929677963257, 40.5, 229.637929677963257 ],
+									"midpoints" : [ 114.5, 229.637929677963257, 39.5, 229.637929677963257 ],
 									"source" : [ "obj-8", 0 ]
 								}
 
@@ -866,7 +868,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -928,13 +930,13 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 6,
-							"revision" : 1,
+							"revision" : 5,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 100.0, 126.0, 717.0, 441.0 ],
+						"rect" : [ 0.0, 26.0, 717.0, 441.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -974,7 +976,6 @@
 									"numinlets" : 1,
 									"numoutlets" : 0,
 									"patching_rect" : [ 510.0, 223.0, 178.0, 54.0 ],
-									"presentation_linecount" : 10,
 									"text" : "limits signal to a positive range to produce amplitude modulation"
 								}
 
