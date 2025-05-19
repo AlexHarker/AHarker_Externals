@@ -1,6 +1,8 @@
 AHarker Externals
 =================
 
+![AHarker Logo](logo.png)
+
 A Set of 80+ Externals for a variety of tasks in Cycling 74's Max by Alex Harker
 
 Overview:
