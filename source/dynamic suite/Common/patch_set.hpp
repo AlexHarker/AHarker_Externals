@@ -179,48 +179,31 @@ public:
 
     void target_free(long argc, t_atom *argv)
     {
-        slot_access slots(m_slots);
-        auto slot_list = slots();
-        
-        t_atom_long max_slot = slot_list.size();
-        t_atom_long lo = 0;
-        t_atom_long hi = max_slot;
-
-        // Get and clip inputs
-
-        t_atom_long in1 = argc > 0 ? std::min(std::max(atom_getlong(argv + 0), t_atom_long(1)), max_slot) : 1;
-        t_atom_long in2 = argc > 1 ? std::min(std::max(atom_getlong(argv + 1), t_atom_long(1)), max_slot) : 1;
-
-        // Load arguments
-
-        if (argc && max_slot)
-        {
-            if (argc > 1)
-            {
-                lo = std::min(in1, in2) - 1;
-                hi = std::max(in1, in2);
-            }
-            else
-                hi = in1;
-        }
-
-        // Search for a free voice
-
-        for (t_atom_long i = lo; i < hi; i++)
-        {
-            if (slot_list[i] && slot_list[i]->get_valid() && !slot_list[i]->get_busy())
-            {
-                m_target_index = i + 1;
-                return;
-            }
-        }
-
-        m_target_index = -1;
+        m_target_index = find_target(argc, argv);
     }
 
     t_atom_long get_target() const
     {
         return m_target_index;
+    }
+    
+    // Send to a free voice without changing the target
+    
+    void send_message_free(long argc, t_atom *argv)
+    {
+        long inlet = proxy_getinlet(m_owner);
+
+        if (argc)
+        {
+            if (atom_gettype(argv) != A_LONG && atom_gettype(argv) != A_FLOAT)
+                slot_action(&T::message, find_target(0, nullptr), inlet, atom_getsym(argv), argc - 1, argv + 1);
+            else if (argc > 1)
+                slot_action(&T::message, find_target(0, nullptr), inlet, gensym("list"), argc - 1, argv + 1);
+            else if (atom_gettype(argv) == A_LONG)
+                slot_action(&T::message, find_target(0, nullptr), inlet, gensym("int"), 1, argv);
+            else
+                slot_action(&T::message, find_target(0, nullptr), inlet, gensym("float"), 1, argv);
+        }
     }
     
     // Process and DSP
@@ -366,6 +349,42 @@ public:
 
 protected:
 
+    t_atom_long find_target(long argc, t_atom *argv)
+    {
+        slot_access slots(m_slots);
+        auto slot_list = slots();
+        
+        t_atom_long max_slot = slot_list.size();
+        t_atom_long lo = 0;
+        t_atom_long hi = max_slot;
+
+        // Get and clip inputs
+
+        t_atom_long in1 = argc > 0 ? std::min(std::max(atom_getlong(argv + 0), t_atom_long(1)), max_slot) : 1;
+        t_atom_long in2 = argc > 1 ? std::min(std::max(atom_getlong(argv + 1), t_atom_long(1)), max_slot) : 1;
+
+        // Load arguments
+
+        if (argc && max_slot)
+        {
+            if (argc > 1)
+            {
+                lo = std::min(in1, in2) - 1;
+                hi = std::max(in1, in2);
+            }
+            else
+                hi = in1;
+        }
+
+        // Search for a free voice
+
+        for (t_atom_long i = lo; i < hi; i++)
+            if (slot_list[i] && slot_list[i]->get_valid() && !slot_list[i]->get_busy())
+                return i + 1;
+
+        return -1;
+    }
+    
     static bool slot_exists(list_type& slots, t_atom_long index)
     {
         return index >= 1 && index <= static_cast<t_atom_long>(slots.size()) && slots[index - 1];
@@ -406,7 +425,7 @@ protected:
         
         return index;
     }
-
+    
     void send_message(t_symbol *msg, long argc, t_atom *argv)
     {
         long inlet = proxy_getinlet(m_owner);

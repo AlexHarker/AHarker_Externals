@@ -76,6 +76,11 @@ struct dynamic_host
         x->patch_set->target_free(argc, argv);
         object_attr_touch((t_object *) x, gensym("target"));
     }
+    
+    static void sendfree(T *x, t_symbol *msg, long argc, t_atom *argv)
+    {
+        x->patch_set->send_message_free(argc, argv);
+    }
 
     // Patcher windows
 
