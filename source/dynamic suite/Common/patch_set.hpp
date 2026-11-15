@@ -217,7 +217,7 @@ public:
         }
         
         if (atom_gettype(argv + 2) != A_LONG && atom_gettype(argv + 2) != A_FLOAT)
-            slot_action(&T::message, find_target(2, argv), inlet, atom_getsym(argv), argc - 3, argv + 3);
+            slot_action(&T::message, find_target(2, argv), inlet, atom_getsym(argv + 2), argc - 3, argv + 3);
         else if (argc > 3)
             slot_action(&T::message, find_target(2, argv), inlet, gensym("list"), argc - 3, argv + 3);
         else if (atom_gettype(argv + 2) == A_LONG)
