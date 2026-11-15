@@ -81,6 +81,11 @@ struct dynamic_host
     {
         x->patch_set->send_message_free(argc, argv);
     }
+    
+    static void sendfreeextents(T *x, t_symbol *msg, long argc, t_atom *argv)
+    {
+        x->patch_set->send_message_free_extents(argc, argv);
+    }
 
     // Patcher windows
 
